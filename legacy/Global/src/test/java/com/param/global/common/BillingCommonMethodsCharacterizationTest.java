@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +28,7 @@ import com.param.global.dto.BillingMasterDto;
 import com.param.global.dto.ContractConsumptionDto;
 import com.param.global.dto.OrderDetailsMasterDto;
 import com.param.global.dto.OrderDetailsPackageMapperDto;
+import com.param.global.dto.OrderMasterDto;
 import com.param.global.dto.PackageConsumptionMasterResDto;
 import com.param.global.dto.PackageConsumptionServiceDetailDto;
 import com.param.global.dto.TPackageConsumptionCapDetailsDto;
@@ -76,6 +78,8 @@ class BillingCommonMethodsCharacterizationTest {
     private IContractConsumptionDao contractConsumptionDao;
     @Mock
     private com.param.global.dao.ITPackageConsumptionCapDetailsDao tPackageConsumptionCapDetailsDao;
+    @Mock
+    private com.param.global.dao.IOrderMasterDao orderMasterDao;
 
     private BillingCommonMethods<Object> billingCommonMethods;
 
@@ -86,6 +90,13 @@ class BillingCommonMethodsCharacterizationTest {
         // matches the field's actual (default) visibility in BillingCommonMethods.java.
         billingCommonMethods.iContractConsumptionDao = contractConsumptionDao;
         billingCommonMethods.iTPackageConsumptionCapDetailsDao = tPackageConsumptionCapDetailsDao;
+        try {
+            java.lang.reflect.Field f = BillingCommonMethods.class.getDeclaredField("iOrderMasterDao");
+            f.setAccessible(true);
+            f.set(billingCommonMethods, orderMasterDao);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private ContractConsumptionDto secondRoundContract(Double coShare, Double balanceCapAmount) {
@@ -1152,6 +1163,236 @@ class BillingCommonMethodsCharacterizationTest {
 
             // pharRecal==1 sets pharmacyReturnFlag=true, passed as the DAO call's last argument.
             verify(tPackageConsumptionCapDetailsDao).updatePackageQuantityCapProductCategory(30, -1, -100.0, false, true);
+        }
+    }
+
+    // =========================================================================================
+    // SHADOW-TEST HARNESS EXPANSION (Step 2), batch 4 -- the 3 thin wrapper methods
+    // (updatePackageServiceCap, updatePackageCap, updatePackageForMultiEncounter) and
+    // saveOrderMaster. Same rigor and process as prior batches.
+    // =========================================================================================
+
+    @Nested
+    @DisplayName("BillingCommonMethods.updatePackageServiceCap -- characterization (current behavior, not verified-correct behavior)")
+    class UpdatePackageServiceCapWrapper {
+
+        @Test
+        @DisplayName("empty/null list: creates a new single-item list on consumptionDto")
+        void emptyList_createsNewList() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setServiceRate(100.0);
+            consumptionDto.setPackageConsumptionAmt(java.math.BigDecimal.ZERO);
+            // orderDetailsPackageMapperDtosList left null
+
+            ContractConsumptionDto result = billingCommonMethods.updatePackageServiceCap(
+                    resDto, srv, consumptionDto, 50.0, 'N', true);
+
+            assertThat(result.getOrderDetailsPackageMapperDtosList()).hasSize(1);
+            verify(tPackageConsumptionCapDetailsDao).updatePackageServiceCap(40, -50.0);
+        }
+
+        @Test
+        @DisplayName("non-empty existing list: appends to it rather than replacing it")
+        void nonEmptyList_appends() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setServiceRate(100.0);
+            consumptionDto.setPackageConsumptionAmt(java.math.BigDecimal.ZERO);
+            List<OrderDetailsPackageMapperDto> existing = new ArrayList<>();
+            existing.add(new OrderDetailsPackageMapperDto());
+            consumptionDto.setOrderDetailsPackageMapperDtosList(existing);
+
+            ContractConsumptionDto result = billingCommonMethods.updatePackageServiceCap(
+                    resDto, srv, consumptionDto, 50.0, 'N', true);
+
+            assertThat(result.getOrderDetailsPackageMapperDtosList()).hasSize(2);
+            assertThat(result.getOrderDetailsPackageMapperDtosList().get(0)).isSameAs(existing.get(0));
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.updatePackageCap -- characterization (current behavior, not verified-correct behavior)")
+    class UpdatePackageCapWrapper {
+
+        @Test
+        @DisplayName("empty/null list: creates a new single-item list on consumptionDto")
+        void emptyList_createsNewList() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            TPackageConsumptionCapDetailsDto capDtls = new TPackageConsumptionCapDetailsDto();
+            capDtls.setPackageConsumptionCapDetailsId(30);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setServiceRate(100.0);
+            consumptionDto.setPackageConsumptionAmt(java.math.BigDecimal.ZERO);
+
+            ContractConsumptionDto result = billingCommonMethods.updatePackageCap(
+                    resDto, capDtls, consumptionDto, 75.0);
+
+            assertThat(result.getOrderDetailsPackageMapperDtosList()).hasSize(1);
+            verify(tPackageConsumptionCapDetailsDao).updatePackageCap(30, -75.0);
+        }
+
+        @Test
+        @DisplayName("URGENT FINDING (logged, not fixed): non-empty existing list: the capAmount PARAMETER is silently ignored -- consumptionDto.getSelfPayable() is used as the cap deduction instead")
+        void nonEmptyList_ignoresCapAmountParameter_usesSelfPayableInstead() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            TPackageConsumptionCapDetailsDto capDtls = new TPackageConsumptionCapDetailsDto();
+            capDtls.setPackageConsumptionCapDetailsId(30);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setServiceRate(100.0);
+            consumptionDto.setPackageConsumptionAmt(java.math.BigDecimal.ZERO);
+            consumptionDto.setSelfPayable(999.0); // unrelated to the intended cap amount below
+            List<OrderDetailsPackageMapperDto> existing = new ArrayList<>();
+            existing.add(new OrderDetailsPackageMapperDto());
+            consumptionDto.setOrderDetailsPackageMapperDtosList(existing);
+
+            // Caller passes 75.0 as the intended cap amount for this new item...
+            ContractConsumptionDto result = billingCommonMethods.updatePackageCap(
+                    resDto, capDtls, consumptionDto, 75.0);
+
+            assertThat(result.getOrderDetailsPackageMapperDtosList()).hasSize(2);
+            // ...but the database write reflects 999.0 (selfPayable), NOT the 75.0 the caller actually
+            // passed. The empty-list branch (see the test above) correctly uses the capAmount
+            // parameter; this non-empty-list branch substitutes an unrelated field instead, for every
+            // package item after the first one added to a given consumptionDto. This directly
+            // determines a real database deduction from the package's remaining cap balance.
+            verify(tPackageConsumptionCapDetailsDao).updatePackageCap(30, -999.0);
+            verify(tPackageConsumptionCapDetailsDao, never()).updatePackageCap(30, -75.0);
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.updatePackageForMultiEncounter -- characterization (current behavior, not verified-correct behavior)")
+    class UpdatePackageForMultiEncounterWrapper {
+
+        @Test
+        @DisplayName("empty/null list: creates a new single-item list AND passes setPkgAmt=true to the delegate")
+        void emptyList_createsNewList_setPkgAmtTrue() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            srv.setAvailableCap(50.0);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setConsumeService(0);
+            consumptionDto.setSelfPayable(999.0); // sentinel -- setPkgAmt's initial value gets
+                                                    // overwritten by the same finding pinned in batch 2
+
+            ContractConsumptionDto result = billingCommonMethods.updatePackageForMultiEncounter(
+                    resDto, srv, /* availableQty */ 10, consumptionDto, /* serviceQty */ 5);
+
+            assertThat(result.getOrderDetailsPackageMapperDtosList()).hasSize(1);
+            verify(tPackageConsumptionCapDetailsDao).updatePackageQty(40, -5);
+        }
+
+        @Test
+        @DisplayName("non-empty existing list: appends AND passes setPkgAmt=false to the delegate, unlike the empty-list case above")
+        void nonEmptyList_appends_setPkgAmtFalse() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            srv.setAvailableCap(50.0);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setConsumeService(0);
+            List<OrderDetailsPackageMapperDto> existing = new ArrayList<>();
+            existing.add(new OrderDetailsPackageMapperDto());
+            consumptionDto.setOrderDetailsPackageMapperDtosList(existing);
+
+            ContractConsumptionDto result = billingCommonMethods.updatePackageForMultiEncounter(
+                    resDto, srv, 10, consumptionDto, 5);
+
+            assertThat(result.getOrderDetailsPackageMapperDtosList()).hasSize(2);
+            // The newly-added item's packageAmount was never set via setPkgAmt (false in this branch)
+            // -- it's still overwritten by the delegate's own ordTotalAmount-based assignment either
+            // way (see batch 2's finding on createOrderDetailsPackageMapperForMultiEncounter), so this
+            // particular true/false distinction has no observable effect on the final packageAmount,
+            // but it IS a real, deliberate difference in what gets passed to the delegate.
+            assertThat(result.getOrderDetailsPackageMapperDtosList().get(1).getPackageAmount())
+                    .isEqualByComparingTo(java.math.BigDecimal.valueOf(250.0)); // 50.0 (availableCap) * 5
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.saveOrderMaster -- characterization (current behavior, not verified-correct behavior)")
+    class SaveOrderMasterDedup {
+
+        private OrderDetailsMasterDto labServiceDetail() {
+            OrderDetailsMasterDto detail = new OrderDetailsMasterDto();
+            detail.setIsLabService('Y');
+            detail.setIsFromServiceSerach('Y');
+            return detail;
+        }
+
+        @Test
+        @DisplayName("no lab-service line items: always saves a new order, dedup lookup never even runs")
+        void noLabService_alwaysSavesNewOrder() throws Exception {
+            OrderMasterDto orderMasterDto = new OrderMasterDto();
+            orderMasterDto.setCreatedDate(1750000000000L);
+            orderMasterDto.setListOrderDetailsMasterDto(new ArrayList<>()); // no lab-service items
+
+            Response res = org.mockito.Mockito.mock(Response.class);
+            when(res.getObject()).thenReturn(555);
+            when(orderMasterDao.saveOrderMaster(any())).thenReturn(res);
+
+            Integer orderId = billingCommonMethods.saveOrderMaster(orderMasterDto, "ORD-001");
+
+            assertThat(orderId).isEqualTo(555);
+            verify(orderMasterDao, never()).getOrderIdForLabService(any(), any());
+            verify(orderMasterDao).saveOrderMaster(orderMasterDto);
+        }
+
+        @Test
+        @DisplayName("FINDING (logged, not fixed): whenever getOrderIdForLabService finds an existing order, saveOrderMaster crashes with an uncaught NullPointerException for any unit not already cached in TimeZoneComponent's static timezone map")
+        void labServiceWithExistingOrderFound_crashesOnUncachedUnitTimezone() throws Exception {
+            OrderMasterDto orderMasterDto = new OrderMasterDto();
+            orderMasterDto.setCreatedDate(1750000000000L);
+            orderMasterDto.setEncounterId(7);
+            orderMasterDto.setAdmissionId(null);
+            orderMasterDto.setOrgUnitId(2);
+            orderMasterDto.setListOrderDetailsMasterDto(Arrays.asList(labServiceDetail()));
+
+            OrderDetailsMasterDto existingOrder = new OrderDetailsMasterDto();
+            existingOrder.setOrderId(999);
+            existingOrder.setOrderDateString("1900-01-01");
+            when(orderMasterDao.getOrderIdForLabService(7, null)).thenReturn(existingOrder);
+
+            // As soon as getOrderIdForLabService returns non-null, saveOrderMaster calls
+            // TimeZoneComponent.getDateByzone(orgUnitId) to compute today's date string for the
+            // same-day comparison. That method looks up a STATIC in-memory map
+            // (TimeZoneComponent.timeZoneMap) that is only ever populated by TimeZoneComponent's own
+            // @PostConstruct init() during a live Spring app's startup -- in any other context
+            // (including this unit test, and plausibly any unit ID not yet queried since the last app
+            // restart in a real deployment), the map lookup returns null, ZoneId.of(null) throws
+            // inside getDateByzone's own try/catch (which swallows it and returns null instead), and
+            // the null Date is then handed to SimpleDateFormat.format(...) back in saveOrderMaster --
+            // which is NOT wrapped in a try/catch at that point, so this throws all the way out.
+            org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () ->
+                    billingCommonMethods.saveOrderMaster(orderMasterDto, "ORD-002"));
+        }
+
+        @Test
+        @DisplayName("lab-service line item present, but isFutureService=true: the dedup lookup is skipped entirely, always saves a new order")
+        void labServiceButFutureService_skipsDedupLookup() throws Exception {
+            OrderMasterDto orderMasterDto = new OrderMasterDto();
+            orderMasterDto.setCreatedDate(1750000000000L);
+            orderMasterDto.setEncounterId(7);
+            orderMasterDto.setListOrderDetailsMasterDto(Arrays.asList(labServiceDetail()));
+            orderMasterDto.setIsFutureService(true);
+
+            Response res = org.mockito.Mockito.mock(Response.class);
+            when(res.getObject()).thenReturn(777);
+            when(orderMasterDao.saveOrderMaster(any())).thenReturn(res);
+
+            Integer orderId = billingCommonMethods.saveOrderMaster(orderMasterDto, "ORD-003");
+
+            // isFutureService=true short-circuits the "(labOrderFlag==1) && (isFutureService==null ||
+            // !isFutureService)" condition, so getOrderIdForLabService is never called at all, even
+            // though a lab-service line item is present.
+            verify(orderMasterDao, never()).getOrderIdForLabService(any(), any());
+            assertThat(orderId).isEqualTo(777);
         }
     }
 }
