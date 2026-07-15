@@ -345,3 +345,23 @@ Wrote `docs/SWEEP_PLAN_exception_swallowing.md`: a batching plan (billing-critic
 Classification: Neither (planning/tooling only, no application code changed). Owner Decision: Pending — needs owner review/approval of the batch plan and its priority order before any batch is executed.
 
 **Notes:** No compile check applicable (no application code changed; scanner script itself was not modified). Isolated worktree `/tmp/legacy-modernization-batch3`, branch `investigate-fix/br094-096-linen`, not merged.
+
+## BR-PENDING-documentupload-hardcoded-pdf-owner-password — Hardcoded PDF owner-password in document-upload utilities, logged as a known issue, deliberately NOT fixed this phase (2026-07-15)
+
+**Owner instruction:** log the hardcoded password in `DocumentUploadUtility.java` as a known issue and do **not** change it in this phase (Phase 1, billing-accuracy work). This entry records the finding only — no code, schema, or data was changed.
+
+**Finding:** `stamper.setEncryption(patientMasterDto.getMrnNumber().getBytes(), "clinivantage".getBytes(), ...)` — an iText `PdfStamper` password-protects patient PDFs using the patient's MRN as the *user* password (first arg) and the string literal `"clinivantage"` as the *owner* password (second arg). The owner password is hardcoded in source, identical across the codebase, and would let anyone who knows it bypass the PDF's permission restrictions on any patient document. Same class of issue as the hardcoded-secret findings already remediated in BR-019/BR-020 (see `docs/SECRETS_REMEDIATION.md`, `docs/SECRETS_REMEDIATION_BATCH2.md`).
+
+**Two occurrences, both confirmed currently unreachable:**
+1. `legacy/ADT/src/main/java/com/param/adt/common/DocumentUploadUtility.java:315` — the occurrence the owner flagged. **Dead code:** it sits entirely inside a block comment spanning lines 305–410 (block-comment markers verified at line 305 `*//*` open and line 410 `}*/` close). Not compiled, not callable.
+2. `legacy/Global/src/main/java/com/param/global/common/DocUploadUtility.java:1457` — a near-duplicate of the same `getFileFromUrl`/`uploadDocumentWithPassword` pair. This copy is **live (uncommented) source**, but a full-tree grep found **no external caller** of either `getFileFromUrl` or `uploadDocumentWithPassword` anywhere outside these two utility classes (the public `uploadDocumentWithPassword` entry point has zero references; `getFileFromUrl` is only called internally by it). So this path is effectively unreachable dead code as well, not an active runtime exposure.
+
+Related but out of scope for this entry (flagged only): `legacy/Global/src/main/java/com/param/global/common/SmsUtility.java` hardcodes `String user = "clinivantage"` as an SMS-gateway username in 7 places — a separate hardcoded-credential item for a future security sweep, not the PDF-password issue logged here.
+
+**Severity: Low** — the secret is present in source (a real hygiene/defense-in-depth concern, and it would become a live exposure if either method is ever re-enabled or wired to a caller), but no reachable execution path uses it today.
+
+**Recommended future fix (deferred, not for this phase):** when a dedicated security-hygiene / dead-code session is scheduled, either delete the two dead `getFileFromUrl`/`uploadDocumentWithPassword` methods outright, or — if the password-protected-PDF feature is to be revived — externalize the owner password to configuration (same `CHANGE_ME_SET_LOCALLY_NOT_IN_GIT` convention already used for `jdbc.password` and the Duo/OAuth secrets sanitized in the git baseline) rather than a source literal. Changing the literal in place would be a Behavioral Change (PDFs encrypted with the old owner password would no longer open with it) requiring owner sign-off, which is a further reason it is out of scope for the billing-accuracy phase.
+
+Classification: Neither (known-issue log only, no code/schema/data change this session). Owner Decision: Pending — owner has explicitly deferred the fix to a later phase; no action requested now beyond recording it.
+
+**Notes:** No compile check applicable (no files changed). Discovered during the pre-commit secret scan of the git baseline (2026-07-15); the git history itself is clean of this value only in the sense that it is a functional PDF-permission password, not one of the connection/API secrets sanitized before the baseline commit — it remains in the committed source at the two locations above by design, pending the deferred fix.

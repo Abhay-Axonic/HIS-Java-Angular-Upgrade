@@ -98,6 +98,8 @@ Genuinely good news, grep-verified: **no hardcoded tax/discount/GST rate literal
 
 ### ⚠ URGENT — ONE-OFF-1: Razorpay rupee→paise conversion via string-splitting produces a 10x-wrong charge for any amount with one decimal digit — live wrong-amount bug, duplicated twice
 
+> **STATUS CORRECTION (2026-07-15): This bug is already fixed and owner-approved.** The fix landed later on the same day this audit was written (see `docs/BUSINESS_RULE_MANIFEST.md` BR-018, `docs/REVIEW_razorpay-amount-fix.md`) but this section was never revisited to reflect that. Re-verified present in the current source as of 2026-07-15 — see `docs/DECISION_NEEDED_RazorPay10xUndercharge.md` for full detail, current status, and the parts of this finding (historical reconciliation, deployment verification, and the two client-trusted-amount endpoints noted below) that are still genuinely open. The description below is preserved as the original historical finding, not current behavior.
+
 `legacy/Billing/src/main/java/com/param/billing/global/controller/RazorPaymentController.java:396-409` (inside `razorPayPaymentLink`) and, byte-for-byte copy-pasted, `:508-519` (inside `getOrderIdForRazorPayPaymentOnBilling`):
 
 ```java

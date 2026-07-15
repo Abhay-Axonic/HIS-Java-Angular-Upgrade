@@ -7,12 +7,84 @@
   },
   "terms": [
     {
-      "term": "example_term_replace_me",
-      "definition": "Replace with your first real business term, e.g. 'invoice_total', 'proration_period', 'billing_cycle'.",
-      "data_type": "e.g. decimal(10,2)",
-      "source_column": "table.column where this lives in the DB",
+      "term": "net_amount",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the final invoiced amount for a bill, after discount and tax, before payment is applied. Plain-English meaning inferred from field name and usage context only -- has not been confirmed against a functional spec or the owner.",
+      "data_type": "Double (see AUDIT_BillingRisk.md RISK-1 -- computed in floating point at some call sites despite BigDecimal storage; also subject to at least 3 different rounding rules per RISK-2, sometimes within the same file)",
+      "source_column": "billing.m_billing_master.net_amount (BillingMaster.java:901-902)",
       "status": "proposed",
-      "notes": ""
+      "notes": "DRAFT -- not final until explicitly approved. Do not treat as authoritative. Owner should confirm: is this pre- or post-tax? Does it include or exclude self/credit payable split?"
+    },
+    {
+      "term": "due_amount",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the outstanding unpaid balance for a payee on a bill -- bill_amount minus payments collected minus disallowed_amount/other_deduction. Inferred from field name and BillingMasterServiceImpl.collectPayment usage, not confirmed against a spec.",
+      "data_type": "Double",
+      "source_column": "billing.t_bill_payee_details.due_amount (BillPayeeDetails.java:204-205)",
+      "status": "proposed",
+      "notes": "DRAFT -- not final until explicitly approved. Owner should confirm the exact subtraction formula and whether disallowed_amount/other_deduction are always netted in before this value is computed."
+    },
+    {
+      "term": "discount_amount",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the total discount applied to a bill, reducing net_amount from the pre-discount total. Inferred from field name only.",
+      "data_type": "Double",
+      "source_column": "billing.m_billing_master.discount_amount (BillingMaster.java:904-905)",
+      "status": "proposed",
+      "notes": "DRAFT -- not final until explicitly approved. Owner should confirm whether this is a flat amount, a computed percentage of a base amount, or can represent multiple stacked discounts."
+    },
+    {
+      "term": "self_payable",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the portion of a billed service amount that the patient (self) is responsible for paying directly, as opposed to credit_payable (see below). Inferred from co-pay/insurance-split context in AUDIT_BillingRisk.md RISK-5 (BillingCommonMethods.java's co-pay/pre-auth-cap split utility) and TContractServiceDetails usage.",
+      "data_type": "Double (see AUDIT_BillingRisk.md RISK-1 -- co-pay split math runs in double/Double, ~150+ near-duplicate call sites in ContractConsumptionServiceImpl.java and ContractConsumptionForCostEstimationServiceImpl.java)",
+      "source_column": "service.t_contract_service_details.self_payable (TContractServiceDetails.java:64-65); also present on pharmacy IssueDetail/SaleDetail",
+      "status": "proposed",
+      "notes": "DRAFT -- not final until explicitly approved. This term appears in at least 3 different entity classes (contract services, pharmacy issue, pharmacy sale) -- owner should confirm whether it means the same thing in all three or needs separate per-context definitions."
+    },
+    {
+      "term": "credit_payable",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the portion of a billed service amount payable by a third party (insurer, corporate, TPA) rather than the patient directly -- the complement of self_payable. Inferred from the same co-pay-split context.",
+      "data_type": "Double",
+      "source_column": "service.t_contract_service_details.credit_payable (TContractServiceDetails.java:61-62); also present on pharmacy IssueDetail/SaleDetail",
+      "status": "proposed",
+      "notes": "DRAFT -- not final until explicitly approved. See self_payable notes -- same multi-entity caveat applies."
+    },
+    {
+      "term": "available_deposit",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the remaining unconsumed balance of a patient deposit, available to be applied against future charges. Inferred from field name and PaymentDepositConsumptionServiceImpl.consumeDeposit usage.",
+      "data_type": "double (primitive, not Double -- DepositMaster.java:458-459)",
+      "source_column": "billing.m_deposit_master.available_deposit (DepositMaster.java:458-459)",
+      "status": "proposed",
+      "notes": "DRAFT -- not final until explicitly approved. FLAGGED RISK (AUDIT_BillingRisk.md RISK-3, ONE-OFF-4): this column is written via an absolute SET with no DB-level lock or version check, and in the refund flow (RefundCNMasterServiceImpl.java) is set directly from a client request payload rather than re-read from the DB -- a stale/concurrent write here can silently overwrite a real balance. Owner should be aware this term's current implementation is flagged as unsafe, independent of whether the definition itself is confirmed correct."
+    },
+    {
+      "term": "consumed_deposit",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the cumulative portion of a patient deposit that has already been applied against charges -- deposit_amount minus available_deposit. Inferred from field name and adjacent available_deposit usage.",
+      "data_type": "double (primitive)",
+      "source_column": "billing.m_deposit_master.consumed_deposit (DepositMaster.java:461-462)",
+      "status": "proposed",
+      "notes": "DRAFT -- not final until explicitly approved. Note this column IS updated safely via a relative SQL update (consumed_deposit = consumed_deposit - :amt, per AUDIT_BillingRisk.md RISK-3) -- unlike its sibling available_deposit, which is not. Owner should confirm whether deposit_amount = available_deposit + consumed_deposit is meant to always hold as an invariant."
+    },
+    {
+      "term": "available_cap",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the remaining unconsumed limit on a package/contract service cap (e.g. an insurance package's spending limit for a given service category), available for further charges before the cap is exhausted.",
+      "data_type": "Double",
+      "source_column": "billing.t_package_consumption_cap_details.available_cap (TPackageConsumptionCapDetailsDaoImpl.java:76-77)",
+      "status": "proposed",
+      "notes": "DRAFT -- not final until explicitly approved. Per AUDIT_BillingRisk.md RISK-5, the sign convention for consuming vs. reversing this cap is a caller-side '* -1' convention at ~40+ call sites, not enforced structurally -- owner should confirm the intended direction convention as part of approving this term."
+    },
+    {
+      "term": "razor_amount",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the bill/payment-link amount in rupees (the major currency unit), as entered or computed on this system's side, before conversion to paise for the Razorpay API. Distinct from the paise amount actually sent to Razorpay (see notes).",
+      "data_type": "Double (RazorpayPaymentReqDto.java:39)",
+      "source_column": "not a DB column -- a request/DTO field only (RazorpayPaymentReqDto.razorAmount), populated per-request",
+      "status": "proposed",
+      "notes": "DRAFT -- not final until explicitly approved. The rupees-to-paise conversion for this field was the subject of a real bug (10x undercharge on amounts ending .10-.90) fixed and owner-approved 2026-07-04 as BR-018 -- see docs/DECISION_NEEDED_RazorPay10xUndercharge.md for full current status. The approved, current conversion rule is: BigDecimal.valueOf(razor_amount).multiply(100).setScale(0, RoundingMode.HALF_UP) -- proposing this as the canonical definition of the conversion itself, not just the field, since RULES.md requires one authoritative definition of any business term and this conversion has already caused one real financial-accuracy bug from being undocumented."
+    },
+    {
+      "term": "tax_percentage",
+      "definition": "DRAFT (AI-proposed 2026-07-15, pending owner confirmation): the tax rate applied to a billable service or item, expressed as a percentage (not a fraction) and DB-sourced per tax master record -- never a hardcoded literal in application code (confirmed clean per AUDIT_BillingRisk.md RISK-6).",
+      "data_type": "Double",
+      "source_column": "public.m_tax.tax_percentage (Tax.java:35-36)",
+      "status": "proposed",
+      "notes": "DRAFT -- not final until explicitly approved. Owner should confirm the percentage-vs-fraction convention (e.g. stored as 18 meaning 18%, not 0.18) -- AUDIT_BillingRisk.md ONE-OFF-5 found at least one call site multiplying by new BigDecimal(0.01) (binary-noise-carrying constructor) to convert this percentage to a fraction, so the convention matters for any future fix in that area."
     }
   ]
 }
