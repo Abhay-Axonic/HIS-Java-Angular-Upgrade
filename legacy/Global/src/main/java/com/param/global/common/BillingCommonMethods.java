@@ -295,7 +295,7 @@ public class BillingCommonMethods<T> {
 
         if (checkFlagUpdateCapOrServiceCap) {
 
-            if (creditPayable > 0) {
+            if (consumptionDto.getUpdateCap() == null && creditPayable > 0) {
                 consumptionDto.setSpecialityId(resDto.getSpecialityId());
                 consumptionDto.setContractId(resDto.getContractId());
                 iContractConsumptionDao.updateCapAmount(consumptionDto, creditPayable);
