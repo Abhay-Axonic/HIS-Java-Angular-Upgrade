@@ -536,8 +536,8 @@ class BillingCommonMethodsCharacterizationTest {
         }
 
         @Test
-        @DisplayName("FINDING (logged, not fixed): unlike its checkFlag=false branch AND the sibling second-round method, the checkFlag=true branch writes to updateCapAmount even when consumptionDto.updateCap is already non-null")
-        void checkFlagTrueBranch_missingTheUpdateCapGuard() {
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_FirstPriorityContractMissingUpdateCapGuard.md, batch 1 finding 4, owner-approved): the checkFlag=true branch now skips updateCapAmount when consumptionDto.updateCap is already non-null, matching its checkFlag=false branch and the sibling second-round method")
+        void checkFlagTrueBranch_nowRespectsTheUpdateCapGuard() {
             ContractConsumptionDto consumptionDto = billContext(false);
             consumptionDto.setUpdateCap('Y'); // non-null -- every other guarded branch in this file
                                                // skips all writes when this is set
@@ -546,11 +546,13 @@ class BillingCommonMethodsCharacterizationTest {
             billingCommonMethods.updatePreAuthAndServiceCapAmountForFirstPriorityContract(
                     consumptionDto, resDto, 500.0, 200.0, null, null, false, /* checkFlag */ true);
 
-            // The checkFlag=true branch (lines ~296-302) only checks `creditPayable > 0` -- it has NO
-            // `consumptionDto.getUpdateCap() == null` guard at all, unlike its own checkFlag=false
-            // branch (see the next test) and unlike updatePreAuthAndServiceCapAmountForSecondContract's
-            // equivalent checkFlag=true branch, which DOES check updateCap==null.
-            verify(contractConsumptionDao).updateCapAmount(consumptionDto, 500.0);
+            // Previously the checkFlag=true branch (lines ~296-302) only checked `creditPayable > 0`
+            // -- no `consumptionDto.getUpdateCap() == null` guard at all, unlike its own checkFlag=
+            // false branch (see the next test) and unlike updatePreAuthAndServiceCapAmountForSecond
+            // Contract's equivalent checkFlag=true branch, which already checked updateCap==null. Now
+            // this branch has the same guard added, so a second/repeat call with updateCap already
+            // set is silently skipped instead of double-writing the contract's cap balance.
+            verify(contractConsumptionDao, never()).updateCapAmount(any(), any());
         }
 
         @Test
