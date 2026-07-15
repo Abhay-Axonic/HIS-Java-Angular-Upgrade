@@ -80,7 +80,7 @@ public class PaymentDepositConsumptionServiceImpl implements IPaymentDepositCons
 				ListIterator<PaymentDepositDetailsDto> listIterator = detailsByDepositIdDtosList.listIterator();
 				if(consumedAmount>0)
 				{
-					while(listIterator.hasNext())
+					while(listIterator.hasNext() && consumedAmount>0)
 					{
 						PaymentDepositDetailsDto paymentDepositDetailsDto = listIterator.next();
 						
