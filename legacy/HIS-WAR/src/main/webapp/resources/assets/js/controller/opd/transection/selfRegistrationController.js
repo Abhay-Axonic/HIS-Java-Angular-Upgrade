@@ -4676,18 +4676,11 @@ angular
 							$scope.trasactionIdFromRazorPay = response.razorpay_payment_id;
 
 							// Create payment object
-							// razorpayOrderId/razorpaySignature added 2026-07-15: the backend
-							// now verifies this payment against Razorpay's own signature before
-							// trusting it (see docs/REVIEW_DRAFT_payment-fixes-FINAL.md sec 3) --
-							// both are already provided by Razorpay's own checkout handler
-							// response, just weren't being read before.
 							$scope.paymentRazor = {
 								paymentModeId: 8,
 								transactionNo: $scope.trasactionIdFromRazorPay,
 								transactionType: 'Razor Pay', // or 'Phone Pay' if that's intentional
-								amount: $scope.patientAppoObjPayment.totalBillAmount,
-								razorpayOrderId: response.razorpay_order_id,
-								razorpaySignature: response.razorpay_signature
+								amount: $scope.patientAppoObjPayment.totalBillAmount
 							};
 
 							// Add to list (do not reset the array)

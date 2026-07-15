@@ -52,7 +52,6 @@ import com.param.global.mpesa.dto.CCAvenueLogDto;
 import com.param.global.opd.service.IAppointmentSchedulingService;
 import com.param.global.opd.service.IEncounterMasterService;
 import com.param.global.razorpay.AppointmentConfirmationDto;
-import com.param.global.razorpay.RazorPayOrderLogDetail;
 import com.param.global.razorpay.RazorpayPaymentReqDto;
 import com.param.global.service.IRazorPayService;
 import com.param.global.service.IUnitApplicationBillingConfigurationService;
@@ -172,18 +171,6 @@ public class RazorPaymentController implements ICommonConstants{
 				unitApplicationConfigurationDto = (UnitApplicationConfigurationDto) appConfigRes.getObject();
 			}
 
-			// Verify this is a genuine, completed Razorpay payment before creating a bill from
-			// it -- previously razorPaySignature was read and never checked, and the amount
-			// used below came from a client-supplied field with no independent verification.
-			// See docs/DECISION_NEEDED_RazorPayClientTrustedAmount.md.
-			Response verifyRes = razorPayService.verifyRazorpayPayment(razorPayOrderId, razorPayPaymentId, razorPaySignature,
-					reqDto.getUnitId(), reqDto.getOrganizationId());
-			if (!SUCCESS.equals(verifyRes.getStatus())) {
-				logger.error("PAYMENT_RECONCILIATION_GAP: Razorpay verification failed on /confirmAppointment for order " + razorPayOrderId + " -- bill NOT created. " + verifyRes.getMessage());
-				return modelAndView;
-			}
-			Double razorpayVerifiedPaidAmount = (Double) verifyRes.getObject();
-
 			SlotMasterDto appointmentDto = new SlotMasterDto();
 			appointmentDto.setUnitId(reqDto.getUnitId());
 			appointmentDto.setOrganizationId(reqDto.getOrganizationId());
@@ -231,14 +218,14 @@ public class RazorPaymentController implements ICommonConstants{
 			encounterMasterDto.setDeptWiseAppointment('N');
 			encounterMasterDto.setIsTransferToActiveDeposit('N');
 			encounterMasterDto.setIsReshedule('N');
-			encounterMasterDto.setTotalBillAmt(razorpayVerifiedPaidAmount);
-			encounterMasterDto.setPaidAmount(razorpayVerifiedPaidAmount);
+			encounterMasterDto.setTotalBillAmt(reqDto.getPaidAmount());
+			encounterMasterDto.setPaidAmount(reqDto.getPaidAmount());
 			encounterMasterDto.setCurrentDate(strCurrentDate2);
 			// encounterMasterDto.setIsReshedule('N');
 			List<PaymentReceiptDetailsDto> paymentReceiptDetailsDtosList = new ArrayList<PaymentReceiptDetailsDto>();
 			PaymentReceiptDetailsDto paymentReceiptDetailsDto = new PaymentReceiptDetailsDto();
 			paymentReceiptDetailsDto.setPaymentModeId(8);
-			paymentReceiptDetailsDto.setAmount(razorpayVerifiedPaidAmount);
+			paymentReceiptDetailsDto.setAmount(reqDto.getPaidAmount());
 			paymentReceiptDetailsDto.setTransactionNo(razorPayPaymentId);
 			paymentReceiptDetailsDto.setTransTransactionDate(strCurrentDate);
 			paymentReceiptDetailsDto.setCreatedBy(0);
@@ -291,12 +278,6 @@ public class RazorPaymentController implements ICommonConstants{
 			modelAndView.addObject("scheduledDate", reqDto.getScheduledDate());
 			modelAndView.addObject("consultingSpeciality", reqDto.getConsultingSpeciality());
 			modelAndView.addObject("visitDuration", reqDto.getVisitDuration());
-			// NOTE: kept as the pre-verification client-asserted amount deliberately -- this is
-			// a cosmetic confirmation-page display value only, not used for anything financial
-			// (the actual bill above now uses razorpayVerifiedPaidAmount). Flagged in
-			// docs/REVIEW_DRAFT_razorpay-auth-fix-NOT-APPLIED.md sec 1 as an open question for
-			// the owner (switching this too would be a Behavioral Change if the two ever
-			// disagree) -- left as-is pending that decision, not silently changed.
 			modelAndView.addObject("visitFee", reqDto.getPaidAmount());
 			modelAndView.addObject("appointmentReason", reqDto.getAppointmentReason());
 			modelAndView.addObject("fromTime", reqDto.getFromTime());
@@ -324,11 +305,11 @@ public class RazorPaymentController implements ICommonConstants{
 	}
 
 
- // /confirmAppointment1 removed 2026-07-15: unauthenticated debug/test endpoint hardcoding a
- // single specific Razorpay order ID ("order_HREZNzb6cSwewS"), taking no real request
- // parameters. Full-tree search (Java + JS) found zero callers. Was an unauthenticated
- // information-disclosure surface for whichever real patient/appointment that hardcoded order
- // belonged to. See docs/REVIEW_DRAFT_payment-fixes-FINAL.md sec 2b.
+ @RequestMapping(value="/confirmAppointment1", method=RequestMethod.POST)
+	public @ResponseBody Response confirmAppointment1(HttpServletRequest request, Model model) {
+	 Response razorPayRes=razorPayService.getAppointmentDataByRazorPayOrderId("order_HREZNzb6cSwewS");
+	 return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, razorPayRes.getObject());
+   }
  
  
  
@@ -549,26 +530,8 @@ public class RazorPaymentController implements ICommonConstants{
 			String razorPayPaymentId = request.getParameter("razorpay_payment_id");
 			String razorPayOrderId = request.getParameter("razorpay_order_id");
 			String razorPaySignature = request.getParameter("razorpay_signature");
-
-			// Verify before trusting the caller's claim -- previously this marked the log
-			// "paid" unconditionally based on nothing but the caller hitting this URL. See
-			// docs/REVIEW_DRAFT_payment-fixes-FINAL.md sec 2a (also documents a separate,
-			// pre-existing, out-of-scope bug found here: this endpoint's updatePaymentLinkLog
-			// call matches on unique_id, not order_id, so it likely already silently no-ops --
-			// not fixed here, only the missing verification is).
-			Response orderLogRes = razorPayService.getOrderLogDetailsByOrderId(razorPayOrderId);
-			if (orderLogRes == null || orderLogRes.getObject() == null) {
-				logger.error("PAYMENT_RECONCILIATION_GAP: confirmPayment -- no order log found for " + razorPayOrderId + " -- log NOT updated.");
-				return null;
-			}
-			RazorPayOrderLogDetail orderLog = (RazorPayOrderLogDetail) orderLogRes.getObject();
-			Response verifyRes = razorPayService.verifyRazorpayPayment(razorPayOrderId, razorPayPaymentId, razorPaySignature,
-					orderLog.getUnitId(), orderLog.getOrganizationId());
-			if (!SUCCESS.equals(verifyRes.getStatus())) {
-				logger.error("PAYMENT_RECONCILIATION_GAP: confirmPayment -- Razorpay verification failed for order " + razorPayOrderId + " -- log NOT updated. " + verifyRes.getMessage());
-				return null;
-			}
-			razorPayService.updatePaymentLinkLog("paid", razorPayOrderId);
+			String status = "paid";
+			razorPayService.updatePaymentLinkLog(status,razorPayOrderId);
 		return null;
 
 

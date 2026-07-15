@@ -79,15 +79,6 @@ public class PaymentReceiptDetailsDto {
 	private String binaryValueDataForSing;
 	private String RequestedUniqueId;
 
-	// Added 2026-07-15: needed to verify a claimed Razorpay payment (paymentModeId == 8)
-	// against Razorpay's own signature before it's trusted -- transactionNo alone (used as
-	// razorpay_payment_id) is not enough to run Utils.verifyPaymentSignature, which needs
-	// order_id + payment_id + signature together. See
-	// docs/REVIEW_DRAFT_payment-fixes-FINAL.md sec 3. Null for any non-Razorpay payment mode,
-	// and for any client that hasn't been updated to send them yet.
-	private String razorpayOrderId;
-	private String razorpaySignature;
-
 	//loyaltyCard changes
 	private double loyaltyCardAmt;
 	
@@ -474,22 +465,6 @@ public class PaymentReceiptDetailsDto {
 
 	public void setRequestedUniqueId(String requestedUniqueId) {
 		RequestedUniqueId = requestedUniqueId;
-	}
-
-	public String getRazorpayOrderId() {
-		return razorpayOrderId;
-	}
-
-	public void setRazorpayOrderId(String razorpayOrderId) {
-		this.razorpayOrderId = razorpayOrderId;
-	}
-
-	public String getRazorpaySignature() {
-		return razorpaySignature;
-	}
-
-	public void setRazorpaySignature(String razorpaySignature) {
-		this.razorpaySignature = razorpaySignature;
 	}
 
 	public String getDeviceName() {

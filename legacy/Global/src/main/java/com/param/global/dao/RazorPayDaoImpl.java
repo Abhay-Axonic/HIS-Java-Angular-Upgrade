@@ -173,22 +173,4 @@ public class RazorPayDaoImpl extends GenericDao<RazorPayOrderLogDetail, Integer>
 		}
 	}
 
-	@Override
-	public Response getOrderLogDetailsByOrderId(String orderId) throws ApplicationException {
-		try {
-			RazorPayOrderLogDetail detail = (RazorPayOrderLogDetail) sf.getCurrentSession()
-				.createSQLQuery("select unit_id as \"unitId\", organization_id as \"organizationId\", amount as \"amount\" "
-					+ "from m_razorpay_order_log_details where order_id = :orderId")
-				.setParameter("orderId", orderId)
-				.setResultTransformer(Transformers.aliasToBean(RazorPayOrderLogDetail.class)).uniqueResult();
-			return new Response<>(SUCCESS, null, COMMON_SUCCESS, null, detail);
-		} catch (HibernateException he) {
-			logger.error("getOrderLogDetailsByOrderId failed", he);
-			throw new ServiceException(he.getMessage());
-		} catch (Exception e) {
-			logger.error("getOrderLogDetailsByOrderId failed", e);
-			throw new ServiceException(e.getMessage());
-		}
-	}
-
 }

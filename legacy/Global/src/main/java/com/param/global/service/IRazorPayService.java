@@ -49,18 +49,6 @@ public interface IRazorPayService
 	@Transactional
 	Response updateRazorPayStatus(Integer razorpayOrderDetId)throws ApplicationException;
 
-	@Transactional
-	Response getOrderLogDetailsByOrderId(String orderId)throws ApplicationException;
 
-	/**
-	 * Verifies a Razorpay payment claim against Razorpay's own signature and order status,
-	 * rather than trusting any client-supplied amount/status. Returns a SUCCESS Response whose
-	 * getObject() is the verified paid amount in rupees (Double) on success, or an ERROR
-	 * Response with a message explaining the failure otherwise. Never throws for an invalid/
-	 * unverifiable payment -- callers should check getStatus(), not rely on an exception.
-	 */
-	@Transactional
-	Response verifyRazorpayPayment(String razorpayOrderId, String razorpayPaymentId, String razorpaySignature,
-			Integer unitId, Integer organizationId) throws ApplicationException;
 
 }

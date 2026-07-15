@@ -92,10 +92,8 @@ import com.param.global.service.IOrderDetailsDiscountService;
 import com.param.global.service.IOrderDetailsMasterService;
 import com.param.global.service.IOrderMasterService;
 import com.param.global.service.IPatientRegistrationService;
-import com.param.global.service.IRazorPayService;
 import com.param.global.service.IUnitApplicationBillingConfigurationService;
 import com.param.global.service.sync.IAppointmentService;
-import org.apache.log4j.Logger;
 import com.param.global.unit.dto.CabinMasterDto;
 import com.param.global.unit.dto.LabConfigurationDto;
 import com.param.global.unit.dto.SmsUtilityConfigInfoDto;
@@ -109,13 +107,6 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/api/billing")
 @SuppressWarnings({ "rawtypes", "unchecked" ,"unused"})
 public class BillingMasterController implements ICommonConstants, IBillingStatusMasterConstant {
-
-	// Added 2026-07-15 alongside the Razorpay payment-verification check below -- this class
-	// had no logger of any kind before. See docs/REVIEW_DRAFT_payment-fixes-FINAL.md sec 3.
-	final static Logger logger = Logger.getLogger(BillingMasterController.class);
-
-	@Autowired
-	private IRazorPayService razorPayService;
 
 	@Autowired
 	private IBillingMasterService iBillingMasterService;
@@ -918,26 +909,6 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 	@RequestMapping(value = "/kiosk/saveAndPay", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public synchronized @ResponseBody Response saveBillFromKiosk(@RequestBody EncounterMasterDto encounterMasterDto) {
 		try {
-			// Verify any claimed Razorpay payment before saving the bill or collecting payment
-			// below -- previously the full paymentReceiptDetailsDtosList (amount, transaction
-			// number, payment mode) was trusted as-is from the client with zero Razorpay
-			// involvement of any kind. Non-Razorpay modes (cash/card/cheque/CCAvenue) are
-			// unchanged -- see docs/REVIEW_DRAFT_payment-fixes-FINAL.md sec 4 for why that's a
-			// deliberate choice for this pass, not an oversight.
-			if (encounterMasterDto.getPaymentReceiptDetailsDtosList() != null) {
-				for (PaymentReceiptDetailsDto payDto : encounterMasterDto.getPaymentReceiptDetailsDtosList()) {
-					if (payDto.getPaymentModeId() != null && payDto.getPaymentModeId() == 8) { // Razorpay
-						Response verifyRes = razorPayService.verifyRazorpayPayment(
-								payDto.getRazorpayOrderId(), payDto.getTransactionNo(), payDto.getRazorpaySignature(),
-								encounterMasterDto.getUnitId(), encounterMasterDto.getOrganizationId());
-						if (!SUCCESS.equals(verifyRes.getStatus())) {
-							logger.error("PAYMENT_RECONCILIATION_GAP: saveBillFromKiosk -- Razorpay payment claim failed verification, bill NOT saved. " + verifyRes.getMessage());
-							return new Response(ERROR, ERROR_CODE, "Payment could not be verified", null, null);
-						}
-					}
-				}
-			}
-
 			int isPaid = 0;
 			if (encounterMasterDto.getPatientId() == 0 || (encounterMasterDto.getRegistrationTypeId()!=null && encounterMasterDto.getRegistrationTypeId()==5))
 				isPaid = 1;
@@ -987,26 +958,13 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 			
 			
 			if(encounterMasterDto.getPaymentReceiptDetailsDtosList()!= null) {
-
+				
 				for (PaymentReceiptDetailsDto dto : encounterMasterDto.getPaymentReceiptDetailsDtosList()) {
-
+					
 					if(dto.getPaymentModeId() == 12 && dto.getPaymentGatewayProviderId() == 2 ) {
 						Response resCcavenue = iDepositMasterService.ccAvenueCheckvalidation(dto.getTransactionNo());
 						if(resCcavenue.getObject() == null) {
 							return new Response<>(ERROR, ERROR_CODE, dto.getTransactionNo()+" This already used in other trancation", null, null);
-						}
-					}
-					// Added 2026-07-15: verify any claimed Razorpay payment against Razorpay's
-					// own signature before this bill/payment is saved -- previously trusted as-is
-					// from the client with zero Razorpay involvement. See
-					// docs/REVIEW_DRAFT_payment-fixes-FINAL.md sec 3.
-					if (dto.getPaymentModeId() != null && dto.getPaymentModeId() == 8) { // Razorpay
-						Response verifyRes = razorPayService.verifyRazorpayPayment(
-								dto.getRazorpayOrderId(), dto.getTransactionNo(), dto.getRazorpaySignature(),
-								encounterMasterDto.getUnitId(), encounterMasterDto.getOrganizationId());
-						if (!SUCCESS.equals(verifyRes.getStatus())) {
-							logger.error("PAYMENT_RECONCILIATION_GAP: saveBillFromKioskFutureDate -- Razorpay payment claim failed verification, bill NOT saved. " + verifyRes.getMessage());
-							return new Response(ERROR, ERROR_CODE, "Payment could not be verified", null, null);
 						}
 					}
 				}
