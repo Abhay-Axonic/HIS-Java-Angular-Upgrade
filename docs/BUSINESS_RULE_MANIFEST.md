@@ -566,3 +566,39 @@ Classification: Neither (known-issue log only, no code change this session). Own
 Classification: Neither (known-issue log only, no code change this session). Owner Decision: Explicitly deferred, per the standing Decision 5 instruction.
 
 **Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 49/49, Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. This closes out the real-calculation-method coverage of `BillingCommonMethods.java` (batches 1-3, 8 methods total, plus the two pre-auth/cap-split methods and their fixes from wave 1/Finding 1). Remaining in this file: 3 thin wrapper methods delegating to already-tested logic, `saveOrderMaster` (real branching but not dollar-math), and 16 pure DTO-construction methods -- the latter explicitly out of scope for this mandate, see the follow-up entry noting that decision.
+
+## BR-PENDING-shadow-wave2-billingcommonmethods-batch4 — URGENT finding: updatePackageCap silently ignores its own capAmount parameter for every package item after the first; plus a saveOrderMaster crash finding; plus explicit scope decision on the remaining 16 methods (2026-07-15)
+
+**Found while writing shadow-test wave-2 characterization tests, Step 2 batch 4 — the last batch of `BillingCommonMethods.java` coverage: the 3 thin wrapper methods (`updatePackageServiceCap`, `updatePackageCap`, `updatePackageForMultiEncounter`) and `saveOrderMaster`.**
+
+**Finding 1 — URGENT, flagged to the owner live, mid-batch: `updatePackageCap`'s non-empty-list branch silently discards its own `capAmount` parameter and substitutes `consumptionDto.getSelfPayable()` instead.**
+
+`legacy/Global/src/main/java/com/param/global/common/BillingCommonMethods.java:376-382`:
+```java
+public ContractConsumptionDto updatePackageCap(PackageConsumptionMasterResDto resDto, TPackageConsumptionCapDetailsDto capDtls, ContractConsumptionDto consumptionDto, double capAmount) {
+    if (consumptionDto.getOrderDetailsPackageMapperDtosList() != null && !consumptionDto.getOrderDetailsPackageMapperDtosList().isEmpty()) {
+        consumptionDto.getOrderDetailsPackageMapperDtosList().add(createOrderDetailsPackageMapperDtoAndUpdatePackageCap(resDto, capDtls, consumptionDto, consumptionDto.getSelfPayable()));
+    } else {
+        List<OrderDetailsPackageMapperDto> mppr = new ArrayList<>();
+        mppr.add(createOrderDetailsPackageMapperDtoAndUpdatePackageCap(resDto, capDtls, consumptionDto, capAmount));
+        consumptionDto.setOrderDetailsPackageMapperDtosList(mppr);
+    }
+    return consumptionDto;
+}
+```
+
+The `else` branch (the **first** package item added to a `consumptionDto`) correctly uses the `capAmount` parameter the caller passed in. The `if` branch (**every** package item added after the first) ignores `capAmount` entirely and uses `consumptionDto.getSelfPayable()` instead — an unrelated field (the patient's self-pay total, not "how much of this line's package cap to consume"). That substituted value flows directly into `iTPackageConsumptionCapDetailsDao.updatePackageCap(capDetailsId, consumeAmt * -1)` — a real database write that reduces the package's remaining cap balance. For any consumption with more than one package line item, every item after the first has its cap deduction determined by `selfPayable`, not by the amount actually intended for that line.
+
+Discovered because the characterization test crashed with a `NullPointerException` on `consumeAmt` (since the test's `consumptionDto.getSelfPayable()` was unset/null) — in real usage `selfPayable` is virtually always some non-null dollar figure, so this doesn't crash in production, it just silently records the wrong cap deduction. Confirmed via a passing test (`UpdatePackageCapWrapper#nonEmptyList_ignoresCapAmountParameter_usesSelfPayableInstead`) demonstrating the database write reflects `selfPayable` (999.0 in the test) instead of the caller's actual `capAmount` (75.0).
+
+**Finding 2:** `saveOrderMaster` crashes with an uncaught `NullPointerException` whenever `getOrderIdForLabService` finds an existing order, for any unit ID not already present in `TimeZoneComponent`'s static in-memory timezone map. That map is only populated by `TimeZoneComponent`'s own `@PostConstruct init()` during a live Spring app's startup; `getDateByzone`'s own internal try/catch swallows the `ZoneId.of(null)` failure and returns `null` instead of throwing, but the null `Date` is then handed to `SimpleDateFormat.format(...)` back in `saveOrderMaster`, which is **not** wrapped in any local try/catch at that point, so the crash propagates all the way out. Confirmed via a passing test (`SaveOrderMasterDedup#labServiceWithExistingOrderFound_crashesOnUncachedUnitTimezone`).
+
+**Severity:** Finding 1 is judged the most severe of the two — a real, silent, active dollar-amount substitution in a database write that directly affects a package's cap balance, same class of urgency as the pharmacy co-share money leak and the missing updateCap guard already fixed this session. Finding 2 is lower-probability (requires both a lab-service line item and an existing same-encounter order, plus an uncached unit) but a real, uncaught crash risk.
+
+**Owner instruction:** log clearly, do not fix (Finding 1 flagged live for the owner's awareness; whether it gets the same fast-track treatment as Finding 4 and the pharmacy money leak is the owner's call, not yet requested for this one as of this entry). No code change made to `BillingCommonMethods.java`. Both findings are pinned by passing test assertions (10 new tests this batch, 58 total in the file).
+
+**Explicit scope decision, recorded per owner instruction (not a silent gap): the remaining 16 pure DTO-construction methods in `BillingCommonMethods.java` are excluded from this shadow-test harness expansion.** These methods (`createOrderDetailsPackageMapper` (132), `createOrderDetailsPayeeMapperDtos`, `createUpdatePayeeDto`, `createPackageRateFromServiceForPackageDto`, `createBillingMasterDto`, `createContractConsumption`, `createContractConsumptionForClone`, `createAdmissionListIpdChargesResDto`, `createServiceSearchResDto` (both overloads), `createEncounterMasterDto`, `createOrderMasterDto`, `createSaleDetailsPayeeObj`, `createOrderPayeeMapperObj`, `setDefaultOrderDetailsParameter`, `createOrderDetaildPayeeObjFinal`) were read in full and confirmed to contain field-copying/DTO-assembly logic only — no arithmetic on money fields. The owner's explicit decision: this is a different risk category (field-mapping correctness, not calculation correctness) and is out of scope for this mandate ("full coverage of Billing/Global/Entity's **money-calculation** paths"). This closes out `BillingCommonMethods.java` for Step 2's purposes: all real-calculation methods across batches 1-4 (10 methods) plus the two pre-auth/cap-split methods from wave 1 (12 methods total) are now characterized; the 16 DTO-construction methods are a recorded, deliberate exclusion, not an oversight.
+
+Classification: Neither (known-issue log only, no code change this session). Owner Decision: Explicitly deferred (findings), explicitly out of scope (the 16 DTO methods).
+
+**Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 58/58, Billing 29/29 (verified from a clean `target/` wipe, twice, to confirm no residual flakiness after the two test corrections this batch required). No local `try/catch` touched, no database column changed, no business term introduced.
