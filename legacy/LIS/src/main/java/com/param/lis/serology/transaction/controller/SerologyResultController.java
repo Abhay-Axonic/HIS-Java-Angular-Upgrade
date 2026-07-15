@@ -335,8 +335,8 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
 			com.param.global.common.Response res1 = null;
 			String pattern = "yyyy-MM-dd HH:mm:ss";
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			String resPublicUrl =  unitApplicationBillingConfigurationService.getPublicUrl(serologyTestResultDto.get(0).getOrgUnitId());
-			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(serologyTestResultDto.get(0).getOrgUnitId()));
+			String resPublicUrl =  unitApplicationBillingConfigurationService.getPublicUrl(serologyTestResultDto.getFirst().getOrgUnitId());
+			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(serologyTestResultDto.getFirst().getOrgUnitId()));
 			for (SerologyTestResultDto dto : serologyTestResultDto) {
 				Response labSampleDetailsMasterRes = null;
 				
@@ -441,8 +441,8 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
 												SendMail = true;
 											}
 										}
-										if(SendMail && (serologyTestResultDto.get(0).getSendMailOnOrderCompletion()!= null && serologyTestResultDto.get(0).getSendMailOnOrderCompletion() ==  false ) &&
-												(serologyTestResultDto.get(0).getTriggerReleaseMail()!= null && serologyTestResultDto.get(0).getTriggerReleaseMail() ==  true)) { 
+										if(SendMail && (serologyTestResultDto.getFirst().getSendMailOnOrderCompletion()!= null && serologyTestResultDto.getFirst().getSendMailOnOrderCompletion() ==  false ) &&
+												(serologyTestResultDto.getFirst().getTriggerReleaseMail()!= null && serologyTestResultDto.getFirst().getTriggerReleaseMail() ==  true)) { 
 											
 											SmsUtilityConfigInfoDto emailinfo = new SmsUtilityConfigInfoDto();
 											emailinfo.setLabSampleDtlsId( newDto.getLabSampleDtlsId());
@@ -491,7 +491,7 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
 			}
 			
 			//mail
-	        if(serologyTestResultDto.get(0).getSendMailOnOrderCompletion()!= null && serologyTestResultDto.get(0).getSendMailOnOrderCompletion() ==  true) {
+	        if(serologyTestResultDto.getFirst().getSendMailOnOrderCompletion()!= null && serologyTestResultDto.getFirst().getSendMailOnOrderCompletion() ==  true) {
 	        	
                 List<String> orderNos = new ArrayList<>();
                 for (SerologyTestResultDto serologyTestResultNewDto : serologyTestResultDto) {
@@ -507,8 +507,8 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
                     }
                 }
 
-				Integer unitId = serologyTestResultDto.get(0).getAssignUnitId() != null && serologyTestResultDto.get(0).getAssignUnitId() > 0 ?
-						serologyTestResultDto.get(0).getAssignUnitId() : serologyTestResultDto.get(0).getOrgUnitId();
+				Integer unitId = serologyTestResultDto.getFirst().getAssignUnitId() != null && serologyTestResultDto.getFirst().getAssignUnitId() > 0 ?
+						serologyTestResultDto.getFirst().getAssignUnitId() : serologyTestResultDto.getFirst().getOrgUnitId();
                 Response  response1 = iBiochemReportReleaseService.getOrderIdByOrderNumber(orderNos, unitId);
                 
                 if(response1.getListObject() != null && response1.getListObject().size()>0) {
@@ -614,13 +614,13 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
                 } 
 			}
 			  
-	        com.param.global.common.Response labres =  iLabConfigurationService.getLabConfigurationList(serologyTestResultDto.get(0).getOrgId(),serologyTestResultDto.get(0).getOrgUnitId());
+	        com.param.global.common.Response labres =  iLabConfigurationService.getLabConfigurationList(serologyTestResultDto.getFirst().getOrgId(),serologyTestResultDto.getFirst().getOrgUnitId());
             
 	           if(labres.getListObject() !=null && labres.getListObject().size()>0) {
 	        	   
 	        	   List<LabConfigurationDto> lablist = labres.getListObject();
 	        	   
-	        	   if(lablist.get(0).getQrCodeRequired() == 'Y' && lablist.get(0).getQrCodeRequired() !=null) {
+	        	   if(lablist.getFirst().getQrCodeRequired() == 'Y' && lablist.getFirst().getQrCodeRequired() !=null) {
 	        		   
 	        		   for (SerologyTestResultDto labResultMasterDto : serologyTestResultDto) {
 	          				
@@ -727,11 +727,11 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
 			Response res =  iSerologyResultService.ResultEntryOrReleaseEntry(list);
 			String pattern = "yyyy-MM-dd HH:mm:ss";
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(list.get(0).getOrgUnitId()));
+			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(list.getFirst().getOrgUnitId()));
 			//mail
-			String resPublicUrl =  unitApplicationBillingConfigurationService.getPublicUrl(list.get(0).getOrgUnitId());
+			String resPublicUrl =  unitApplicationBillingConfigurationService.getPublicUrl(list.getFirst().getOrgUnitId());
 			com.param.global.common.Response res2 = null;
-            if(list.get(0).getSendMailOnOrderCompletion()!= null && list.get(0).getSendMailOnOrderCompletion() ==  true) {
+            if(list.getFirst().getSendMailOnOrderCompletion()!= null && list.getFirst().getSendMailOnOrderCompletion() ==  true) {
                 List<String> orderNos = new ArrayList<>();
                 for (SerologyTestResultDto serologyTestResultDto : list) {
                     if(orderNos.size() ==0 ) {
@@ -746,7 +746,7 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
                     }
                 }
                 
-                Response  response = iBiochemReportReleaseService.getOrderIdByOrderNumber(orderNos,list.get(0).getOrgUnitId());
+                Response  response = iBiochemReportReleaseService.getOrderIdByOrderNumber(orderNos,list.getFirst().getOrgUnitId());
                 
                 if(response.getListObject() != null && response.getListObject().size()>0) {
                     List<OrderMasterDto> orderList = new ArrayList<>();
@@ -808,12 +808,12 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
                                 SmsUtilityConfigInfoDto emailinfo = new SmsUtilityConfigInfoDto();
                                 if(res!=null && res.getListObject()!=null && res.getListObject().size()>0) {
                                 	List<LabSampleDetailsMasterDto> newList = res.getListObject();
-            						emailinfo.setConsultingDoctorId(newList.get(0).getDoctorId());
-         							emailinfo.setAdmitingDoctorId(newList.get(0).getDoctorId());
-         							emailinfo.setReferringDoctorId(newList.get(0).getDoctorId());
-         							emailinfo.setTreatingDoctorId(newList.get(0).getDoctorId());
+            						emailinfo.setConsultingDoctorId(newList.getFirst().getDoctorId());
+         							emailinfo.setAdmitingDoctorId(newList.getFirst().getDoctorId());
+         							emailinfo.setReferringDoctorId(newList.getFirst().getDoctorId());
+         							emailinfo.setTreatingDoctorId(newList.getFirst().getDoctorId());
                                     emailinfo.setLabSampleDtlsIdsList(labSampleDetlsIds);
-                                    emailinfo.setPatientId(newList.get(0).getPatientId());
+                                    emailinfo.setPatientId(newList.getFirst().getPatientId());
                                 }
                                 
                                 emailinfo.setUnitId(dto.getOrgUnitId());
@@ -845,7 +845,7 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
                         } 
                     }
                 } 
-			}else if(list.get(0).getTriggerReleaseMail()!= null && list.get(0).getTriggerReleaseMail() ==  true) { 
+			}else if(list.getFirst().getTriggerReleaseMail()!= null && list.getFirst().getTriggerReleaseMail() ==  true) { 
 
 					if(res!=null && res.getListObject()!=null && res.getListObject().size()>0) {
 						List<LabSampleDetailsMasterDto> newList = res.getListObject();
@@ -865,7 +865,7 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
 			                    }
 			                }
 						
-			                Response  resOrderNo = iBiochemReportReleaseService.getOrderIdByOrderNumber(orderNos,list.get(0).getOrgUnitId());
+			                Response  resOrderNo = iBiochemReportReleaseService.getOrderIdByOrderNumber(orderNos,list.getFirst().getOrgUnitId());
 						
 						
 						for (LabSampleDetailsMasterDto newDto : newList) {
@@ -911,7 +911,7 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
 			                    	 }
 			                    }
 							if(SendMail) {
-								Response exclusion = iBiochemReportReleaseService.getLabExclusion(newDto.getLabSampleDtlsId(), list.get(0).getOrgUnitId(), list.get(0).getOrgId());
+								Response exclusion = iBiochemReportReleaseService.getLabExclusion(newDto.getLabSampleDtlsId(), list.getFirst().getOrgUnitId(), list.getFirst().getOrgId());
 
 								if (exclusion.getObject() != null) {
 
@@ -934,11 +934,11 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
 								emailinfo.setAdmitingDoctorId(newDto.getDoctorId());
 								emailinfo.setReferringDoctorId(newDto.getDoctorId());
 								emailinfo.setTreatingDoctorId(newDto.getDoctorId());
-								emailinfo.setUnitId(list.get(0).getOrgUnitId());
-								emailinfo.setOrganizationId(list.get(0).getOrgId());
+								emailinfo.setUnitId(list.getFirst().getOrgUnitId());
+								emailinfo.setOrganizationId(list.getFirst().getOrgId());
 								emailinfo.setDateTime(date1);
-		                        if(list.get(0).getCreatedBy()!=null) {
-		                        	Integer  empId =iBiochemReportReleaseService.getgetEmpId(list.get(0).getCreatedBy()); 
+		                        if(list.getFirst().getCreatedBy()!=null) {
+		                        	Integer  empId =iBiochemReportReleaseService.getgetEmpId(list.getFirst().getCreatedBy()); 
 				                	emailinfo.setEmployeeId(empId);
 		                        }
 								emailinfo.setTestDesc(newDto.getTestDesc());
@@ -967,13 +967,13 @@ public class SerologyResultController implements ICommonConstants, ITransactionC
 			}
             
             
-            com.param.global.common.Response labres =  iLabConfigurationService.getLabConfigurationList(list.get(0).getOrgId(),list.get(0).getOrgUnitId());
+            com.param.global.common.Response labres =  iLabConfigurationService.getLabConfigurationList(list.getFirst().getOrgId(),list.getFirst().getOrgUnitId());
             
 	           if(labres.getListObject() !=null && labres.getListObject().size()>0) {
 	        	   
 	        	   List<LabConfigurationDto> lablist = labres.getListObject();
 	        	   
-	        	   if(lablist.get(0).getQrCodeRequired() == 'Y' && lablist.get(0).getQrCodeRequired() !=null) {
+	        	   if(lablist.getFirst().getQrCodeRequired() == 'Y' && lablist.getFirst().getQrCodeRequired() !=null) {
 	        		   
 	        		   for (SerologyTestResultDto labResultMasterDto : list) {
 	          				

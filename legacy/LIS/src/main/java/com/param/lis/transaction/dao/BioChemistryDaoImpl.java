@@ -503,7 +503,7 @@ public class BioChemistryDaoImpl extends GenericDao<LabSampleDetailsMaster, Inte
       Integer flag = null;
       LabSampleDetailsMaster labSampleDetailsMaster;
       if (!listlabSampleDetailsMasterDto.isEmpty()) {
-    	  Date date = TimeZoneComponent.getDateByzone(listlabSampleDetailsMasterDto.get(0).getOrgUnitId());
+    	  Date date = TimeZoneComponent.getDateByzone(listlabSampleDetailsMasterDto.getFirst().getOrgUnitId());
     	  
         for (Iterator iterator = listlabSampleDetailsMasterDto.iterator(); iterator.hasNext();) {
           LabSampleDetailsMasterDto labSampleDetailsMasterDto =
@@ -663,7 +663,7 @@ public class BioChemistryDaoImpl extends GenericDao<LabSampleDetailsMaster, Inte
     try {
       LabSampleDetailsMaster labSampleDetailsMaster;
       if (!listlabSampleDetailsMasterDto.isEmpty()) {
-    	  Date date = TimeZoneComponent.getDateByzone(listlabSampleDetailsMasterDto.get(0).getOrgUnitId());
+    	  Date date = TimeZoneComponent.getDateByzone(listlabSampleDetailsMasterDto.getFirst().getOrgUnitId());
     	  
         for (Iterator iterator = listlabSampleDetailsMasterDto.iterator(); iterator.hasNext();) {
           LabSampleDetailsMasterDto labSampleDetailsMasterDto =
@@ -690,7 +690,7 @@ public class BioChemistryDaoImpl extends GenericDao<LabSampleDetailsMaster, Inte
     try {
 
     	 Date date = TimeZoneComponent.getDateByzone(listLabResultMasterDto!=null && listLabResultMasterDto.size()>0 
-    			 ? listLabResultMasterDto.get(0).getOrgUnitId() : null);
+    			 ? listLabResultMasterDto.getFirst().getOrgUnitId() : null);
     	
       for (Iterator iterator = listLabResultMasterDto.iterator(); iterator.hasNext();) 
       {
@@ -804,7 +804,7 @@ public class BioChemistryDaoImpl extends GenericDao<LabSampleDetailsMaster, Inte
     try {
 
     	 Date date = TimeZoneComponent.getDateByzone(listLabResultMasterDto!=null && listLabResultMasterDto.size()>0 
-    			 ? listLabResultMasterDto.get(0).getOrgUnitId() : null );
+    			 ? listLabResultMasterDto.getFirst().getOrgUnitId() : null );
       for (Iterator iterator = listLabResultMasterDto.iterator(); iterator.hasNext();) 
       
       {
@@ -1225,7 +1225,7 @@ public Response saveInformTo(InformToMasterDto dto) throws ApplicationException 
 			master.setUpdatedDate(TimeZoneComponent.getDateByzone(dto.getUnitId()));
 			master.setNote(dto.getNote());
 			master.setUpdatedBy(dto.getUpdatedBy());
-			master.setInformDate((dto.getInformDate()!=null ? GlobalCommonDateUtils.getDate(dto.getInformDate(), "dd-M-yyyy HH:mm:ss") : TimeZoneComponent.getDateByzone(dto.getUnitId())));;
+			master.setInformDate((dto.getInformDate()!=null ? GlobalCommonDateUtils.getDate(dto.getInformDate(), "dd-M-yyyy HH:mm:ss") : TimeZoneComponent.getDateByzone(dto.getUnitId())));
 			sessionFactory.getCurrentSession().update(master);
 			return new Response(SUCCESS, SUCCESS_200, COMMON_UPDATE, null, null);
 		}
@@ -1270,7 +1270,7 @@ public Response getInformTo(InformToMasterDto dto) throws ApplicationException {
 						.setResultTransformer(Transformers.aliasToBean(InformToMasterDto.class)).list();
 				if(list!=null && list.size()>0)
 				{
-					InformToMasterDto idto  =list.get(0);
+					InformToMasterDto idto  =list.getFirst();
 					return new Response(SUCCESS, SUCCESS_200, null, list, idto);
 				}
 				else {

@@ -100,8 +100,8 @@ public class SampleTypeMediaMappingMasterDaoImpl extends  GenericDao<SampleTypeM
 
 			Integer result = sessionFactory.getCurrentSession().getNamedQuery("UPDATE_SAMPLE_TYPE_MEDIA_MAPPER")
 					.setParameter("isDeleted", 'Y')
-					.setParameter("orgId", listsampleTypeMediaMappingMasterDto.get(0).getOrgId())
-					.setParameter("sampleId", listsampleTypeMediaMappingMasterDto.get(0).getSampleId())
+					.setParameter("orgId", listsampleTypeMediaMappingMasterDto.getFirst().getOrgId())
+					.setParameter("sampleId", listsampleTypeMediaMappingMasterDto.getFirst().getSampleId())
 					.executeUpdate();
 			if (result > 0) {
 				for (Iterator iterator = listsampleTypeMediaMappingMasterDto.iterator(); iterator.hasNext();) {

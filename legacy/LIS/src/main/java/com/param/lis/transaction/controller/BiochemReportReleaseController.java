@@ -159,13 +159,13 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
 		{
 		    String pattern = "yyyy-MM-dd HH:mm:ss";
 		    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		    String date1=simpleDateFormat.format(TimeZoneComponent.getDateByzone(listLabResultMasterDto.get(0).getOrgUnitId()));
+		    String date1=simpleDateFormat.format(TimeZoneComponent.getDateByzone(listLabResultMasterDto.getFirst().getOrgUnitId()));
 
 			response = iBiochemReportReleaseService.saveReportReleaseWorkList(listLabResultMasterDto,"");
 			
-			String resPublicUrl =  unitApplicationBillingConfigurationService.getPublicUrl(listLabResultMasterDto.get(0).getAssignUnit());
+			String resPublicUrl =  unitApplicationBillingConfigurationService.getPublicUrl(listLabResultMasterDto.getFirst().getAssignUnit());
 			
-            if(listLabResultMasterDto.get(0).getSendMailOnOrderCompletion()!= null && listLabResultMasterDto.get(0).getSendMailOnOrderCompletion() ==  true) {
+            if(listLabResultMasterDto.getFirst().getSendMailOnOrderCompletion()!= null && listLabResultMasterDto.getFirst().getSendMailOnOrderCompletion() ==  true) {
                 
                 List<String> orderNos = new ArrayList<>();
                 for (LabResultMasterDto labResultMasDto : listLabResultMasterDto) {
@@ -181,8 +181,8 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
                     }
                 }
                 
-                Response  res = iBiochemReportReleaseService.getOrderIdByOrderNumber(orderNos,listLabResultMasterDto.get(0).getAssingnedFrom() != null ?
-						listLabResultMasterDto.get(0).getAssingnedFrom() : listLabResultMasterDto.get(0).getAssignUnit());
+                Response  res = iBiochemReportReleaseService.getOrderIdByOrderNumber(orderNos,listLabResultMasterDto.getFirst().getAssingnedFrom() != null ?
+						listLabResultMasterDto.getFirst().getAssingnedFrom() : listLabResultMasterDto.getFirst().getAssignUnit());
                 
                 if(res.getListObject() != null && res.getListObject().size()>0) {
                     List<OrderMasterDto> orderList = new ArrayList<>();
@@ -269,17 +269,17 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
 								 }
 								   String criticalUrl= "";
 			                        if(resPublicUrl == null) {
-			                        	criticalUrl= ServletUtils.getBaseUrl(request)+"/LIS/BioChemistry/pathology/report/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.get(0).getAssignUnit()
-			                            		+"/"+listLabResultMasterDto.get(0).getOrgId();  
+			                        	criticalUrl= ServletUtils.getBaseUrl(request)+"/LIS/BioChemistry/pathology/report/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.getFirst().getAssignUnit()
+			                            		+"/"+listLabResultMasterDto.getFirst().getOrgId();  
 			                        }else {
-			                        	criticalUrl= resPublicUrl+"/LIS/BioChemistry/pathology/report/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.get(0).getAssignUnit()
-			                            		+"/"+listLabResultMasterDto.get(0).getOrgId(); 
+			                        	criticalUrl= resPublicUrl+"/LIS/BioChemistry/pathology/report/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.getFirst().getAssignUnit()
+			                            		+"/"+listLabResultMasterDto.getFirst().getOrgId(); 
 			                        }
 			                    emailinfo.setLabReportUrl(criticalUrl);
 			                    
                                 
                                  emailinfo.setPatientId(dto.getPatientId());
-                                emailinfo.setUnitId(listLabResultMasterDto.get(0).getAssingnedFrom());
+                                emailinfo.setUnitId(listLabResultMasterDto.getFirst().getAssingnedFrom());
                                 emailinfo.setOrganizationId(dto.getOrgId());
                                 emailinfo.setDateTime(date1);
                                 if(dto.getCreatedBy()!=null) {
@@ -338,7 +338,7 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
                         }
                     }
                 }
-            }else if(listLabResultMasterDto.get(0).getTriggerReleaseMail()!= null && listLabResultMasterDto.get(0).getTriggerReleaseMail() ==  true) {
+            }else if(listLabResultMasterDto.getFirst().getTriggerReleaseMail()!= null && listLabResultMasterDto.getFirst().getTriggerReleaseMail() ==  true) {
 			
 				if(response.getListObject()!=null && response.getListObject().size()>0) {
 					List<LabResultMasterDto> mstrList = response.getListObject();
@@ -358,8 +358,8 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
 		                    }
 		                }
 					
-		                Response  resOrderNo = iBiochemReportReleaseService.getOrderIdByOrderNumber(orderNos,listLabResultMasterDto.get(0).getAssingnedFrom() != null ?
-								listLabResultMasterDto.get(0).getAssingnedFrom() : listLabResultMasterDto.get(0).getAssignUnit());
+		                Response  resOrderNo = iBiochemReportReleaseService.getOrderIdByOrderNumber(orderNos,listLabResultMasterDto.getFirst().getAssingnedFrom() != null ?
+								listLabResultMasterDto.getFirst().getAssingnedFrom() : listLabResultMasterDto.getFirst().getAssignUnit());
 		                
 					for (LabResultMasterDto dto : mstrList ) {
 						
@@ -405,7 +405,7 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
 		                    	 }
 		                    }
 						if(SendMail) {
-							Response exclusion = iBiochemReportReleaseService.getLabExclusion(dto.getLabSampleDtlsId(), listLabResultMasterDto.get(0).getAssignUnit(), listLabResultMasterDto.get(0).getOrgId());
+							Response exclusion = iBiochemReportReleaseService.getLabExclusion(dto.getLabSampleDtlsId(), listLabResultMasterDto.getFirst().getAssignUnit(), listLabResultMasterDto.getFirst().getOrgId());
 
 							if (exclusion.getObject() != null) {
 
@@ -442,11 +442,11 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
 								 }
 								   String criticalUrl= "";
 			                        if(resPublicUrl == null) {
-			                        	criticalUrl= ServletUtils.getBaseUrl(request)+"/LIS/BioChemistry/pathology/report/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.get(0).getAssignUnit()
-			                            		+"/"+listLabResultMasterDto.get(0).getOrgId();  
+			                        	criticalUrl= ServletUtils.getBaseUrl(request)+"/LIS/BioChemistry/pathology/report/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.getFirst().getAssignUnit()
+			                            		+"/"+listLabResultMasterDto.getFirst().getOrgId();  
 			                        }else {
-			                        	criticalUrl= resPublicUrl+"/LIS/BioChemistry/pathology/report/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.get(0).getAssignUnit()
-			                            		+"/"+listLabResultMasterDto.get(0).getOrgId(); 
+			                        	criticalUrl= resPublicUrl+"/LIS/BioChemistry/pathology/report/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.getFirst().getAssignUnit()
+			                            		+"/"+listLabResultMasterDto.getFirst().getOrgId(); 
 			                        }
 			                    emailinfo.setLabReportUrl(criticalUrl);
 			                    
@@ -461,12 +461,12 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
 									emailinfo.setTreatingDoctorId(admDto.getDoctorId()!= null ?admDto.getDoctorId() : null);
 								}
 								
-								emailinfo.setUnitId(listLabResultMasterDto.get(0).getAssignUnit());
-								emailinfo.setOrganizationId(listLabResultMasterDto.get(0).getOrgId());
+								emailinfo.setUnitId(listLabResultMasterDto.getFirst().getAssignUnit());
+								emailinfo.setOrganizationId(listLabResultMasterDto.getFirst().getOrgId());
 								emailinfo.setDateTime(date1);
-		                        if(listLabResultMasterDto.get(0).getCreatedBy()!=null) {
+		                        if(listLabResultMasterDto.getFirst().getCreatedBy()!=null) {
 		                        	
-				                	Integer  empId =iBiochemReportReleaseService.getgetEmpId(listLabResultMasterDto.get(0).getCreatedBy()); 
+				                	Integer  empId =iBiochemReportReleaseService.getgetEmpId(listLabResultMasterDto.getFirst().getCreatedBy()); 
 				                	emailinfo.setEmployeeId(empId);
 		                        }
 								emailinfo.setTestDesc(dto.getTestDesc());
@@ -486,7 +486,7 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
 		                       	   	  emailinfo.setCompanyId(null);
 		                              emailinfo.setInsuranceId(null);
 		                       }
-								emailinfo.setSrfId(listLabResultMasterDto.get(0).getSrfId()!=null ? listLabResultMasterDto.get(0).getSrfId():null);
+								emailinfo.setSrfId(listLabResultMasterDto.getFirst().getSrfId()!=null ? listLabResultMasterDto.getFirst().getSrfId():null);
 								emailinfo.setRptFileName("pathologyReport_GroupPrint.rpt");
 								res2 = smsUtilityService.getEmailUtilityByTriggerId(ISmsUtilityConstants.PATHOLOGY_REPORT, emailinfo);
 								
@@ -505,11 +505,11 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
 		                        
 		                        String str= "";
 		                        if(resPublicUrl == null) {
-		                        	str= ServletUtils.getBaseUrl(request)+"/LIS/BioChemistry/QR/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.get(0).getAssignUnit()
-		                            		+"/"+listLabResultMasterDto.get(0).getOrgId();  
+		                        	str= ServletUtils.getBaseUrl(request)+"/LIS/BioChemistry/QR/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.getFirst().getAssignUnit()
+		                            		+"/"+listLabResultMasterDto.getFirst().getOrgId();  
 		                        }else {
-		                        	str= resPublicUrl+"/LIS/BioChemistry/QR/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.get(0).getAssignUnit()
-		                            		+"/"+listLabResultMasterDto.get(0).getOrgId(); 
+		                        	str= resPublicUrl+"/LIS/BioChemistry/QR/"+dto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.getFirst().getAssignUnit()
+		                            		+"/"+listLabResultMasterDto.getFirst().getOrgId(); 
 		                        }
 		                        
 		                		  
@@ -524,13 +524,13 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
 				}
 			}
             
-           com.param.global.common.Response labres =  iLabConfigurationService.getLabConfigurationList(listLabResultMasterDto.get(0).getOrgId(),listLabResultMasterDto.get(0).getAssignUnit());
+           com.param.global.common.Response labres =  iLabConfigurationService.getLabConfigurationList(listLabResultMasterDto.getFirst().getOrgId(),listLabResultMasterDto.getFirst().getAssignUnit());
             
            if(labres.getListObject() !=null && labres.getListObject().size()>0) {
         	   
         	   List<LabConfigurationDto> lablist = labres.getListObject();
         	   
-        	   if(lablist.get(0).getQrCodeRequired() == 'Y' && lablist.get(0).getQrCodeRequired() !=null) {
+        	   if(lablist.getFirst().getQrCodeRequired() == 'Y' && lablist.getFirst().getQrCodeRequired() !=null) {
         		   
         		   for (LabResultMasterDto labResultMasterDto : listLabResultMasterDto) {
           				
@@ -545,10 +545,10 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
                        
                        String str= "";
                        if(resPublicUrl == null) {
-                       	str= ServletUtils.getBaseUrl(request)+"/LIS/BioChemistry/QR/"+labResultMasterDto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.get(0).getAssignUnit()
+                       	str= ServletUtils.getBaseUrl(request)+"/LIS/BioChemistry/QR/"+labResultMasterDto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.getFirst().getAssignUnit()
                    		+"/"+labResultMasterDto.getOrgId()+"/"+r.toString();  
                        }else {
-                       	str= resPublicUrl+"/LIS/BioChemistry/QR/"+labResultMasterDto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.get(0).getAssignUnit()
+                       	str= resPublicUrl+"/LIS/BioChemistry/QR/"+labResultMasterDto.getLabSampleDtlsId()+"/"+listLabResultMasterDto.getFirst().getAssignUnit()
                    		+"/"+labResultMasterDto.getOrgId()+"/"+r.toString(); 
                        }
                        
@@ -575,7 +575,7 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
        			 	Response bucketRes =iBiochemReportReleaseService.getbucketTypeForUpload(labResultMasterDto.getOrgId(),labResultMasterDto.getAssignUnit());
        			    int bucketType =(int) bucketRes.getObject();
        			 
-					 docPath =  docUploadUtility.updateQRFile(bos,organizationMasterDto.getOrganizationFolder(),r.toString(),labResultMasterDto.getOrgId(),listLabResultMasterDto.get(0).getAssignUnit());
+					 docPath =  docUploadUtility.updateQRFile(bos,organizationMasterDto.getOrganizationFolder(),r.toString(),labResultMasterDto.getOrgId(),listLabResultMasterDto.getFirst().getAssignUnit());
 
 					   Response awsCredResponse = iBiochemReportReleaseService.getAwsCreds();
 					   OrganizationMasterDto awsCredDto = (OrganizationMasterDto) awsCredResponse.getObject();
@@ -782,7 +782,7 @@ public class BiochemReportReleaseController implements ICommonConstants, IError,
                     
                     SmsUtilityConfigInfoDto emailinfo = new SmsUtilityConfigInfoDto();
                     
-                    Response  res1 =iBiochemReportReleaseService.getDoctorIdByLabSampleDetailsId(LabSampleDetailsMasterList.get(0).getLabSampleDtlsId());
+                    Response  res1 =iBiochemReportReleaseService.getDoctorIdByLabSampleDetailsId(LabSampleDetailsMasterList.getFirst().getLabSampleDtlsId());
                     
                     if(res1.getObject() != null ) {
                         AdmissionDto admDto = (AdmissionDto) res1.getObject();

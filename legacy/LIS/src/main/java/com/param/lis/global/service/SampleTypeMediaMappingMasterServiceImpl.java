@@ -144,7 +144,7 @@ public class SampleTypeMediaMappingMasterServiceImpl implements ISampleTypeMedia
 				long time = TimeZoneComponent.getDateByzone(0).getTime();
 				sampleTypeMediaMappingMaster.setCreatedDate(time);
 				sampleTypeMediaMappingMasterDto.setUpdatedDate(time);
-				sampleTypeMediaMappingMaster.setSampleId(sampleTypeMediaMappingMasterDto.getSampleId());;
+				sampleTypeMediaMappingMaster.setSampleId(sampleTypeMediaMappingMasterDto.getSampleId());
 				sampleTypeMediaMappingMaster.setMediaId(mediaId);
 				sampleTypeMediaMappingMaster.setSampleMediaStatus(sampleTypeMediaMappingMasterDto.getSampleMediaStatus());
 				sampleTypeMediaMappingMaster.setOrgId(sampleTypeMediaMappingMasterDto.getOrgId());

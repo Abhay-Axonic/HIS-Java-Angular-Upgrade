@@ -26,7 +26,7 @@ public class CheckReportType implements ITransactionConstants {
 							labResultDetailsViewDto.setReportType(NORMAL_REPORT);
 							return labResultDetailsViewDto;
 						}
-						Double result = new Double(labResultDetailsViewDto.getFinalResult());
+						Double result = Double.valueOf(labResultDetailsViewDto.getFinalResult());
 						if (result >= labResultDetailsViewDto.getParameterMin().doubleValue()
 								&& result <= labResultDetailsViewDto.getParameterMax().doubleValue()) {
 							labResultDetailsViewDto.setResultTypeFlag('N');

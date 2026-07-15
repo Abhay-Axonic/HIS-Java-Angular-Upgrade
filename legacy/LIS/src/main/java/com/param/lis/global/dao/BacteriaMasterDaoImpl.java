@@ -119,7 +119,7 @@ public class BacteriaMasterDaoImpl extends  GenericDao<BacteriaMaster, Integer> 
 			BacteriaMaster bacteriaMaster = findById(unitId);
 			if (bacteriaMaster.getBacteriaId() != 0)
 			{
-				bacteriaMaster.setStatus(unitStatus);;
+				bacteriaMaster.setStatus(unitStatus);
 				BacteriaMaster bacteriaMst = update(bacteriaMaster);
 				return new Response(SUCCESS, SUCCESS_200,REPORT_TYPRACTIVATE_SUCC, null, bacteriaMst);
 				

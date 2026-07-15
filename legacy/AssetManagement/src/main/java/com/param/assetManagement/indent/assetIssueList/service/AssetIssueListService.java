@@ -217,13 +217,13 @@ public class AssetIssueListService implements IAssetIssueListService {
 		Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 		// Deduct issued quantity from the batch store stock
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 		Integer inTransitQuantity = GlobalDao.getTransitQuantityByBatch(storeId, batch.getId());
 		Integer tQty = inTransitQuantity + leaseQuantity;
-		batch.getStoreStockList().get(0).settQty(tQty);
+		batch.getStoreStockList().getFirst().settQty(tQty);
 		// Add stock transaction
 		StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-				batch.getStoreStockList().get(0).getStore(), d.getId());
+				batch.getStoreStockList().getFirst().getStore(), d.getId());
 //		sessionService.setEntityDefaults(stockTransaction);	
 		stockTransaction.setCreateDefaults(organizationId,unitId,
 				userId);
@@ -294,7 +294,7 @@ public class AssetIssueListService implements IAssetIssueListService {
 		return new AsseccoriesResponse(issueAccessory.getBatch().getId(), issueAccessory.getBatch().getBatchNo(),
 				issueAccessory.getBatch().getItem().getId(), issueAccessory.getBatch().getItem().getCode(),
 				issueAccessory.getBatch().getItem().getName(),
-				issueAccessory.getBatch().getStoreStockList().get(0).getAvailableQty());
+				issueAccessory.getBatch().getStoreStockList().getFirst().getAvailableQty());
 	}
 
 	@Override

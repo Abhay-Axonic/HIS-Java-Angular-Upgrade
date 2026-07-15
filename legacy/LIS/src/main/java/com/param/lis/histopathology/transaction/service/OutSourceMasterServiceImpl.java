@@ -109,7 +109,7 @@ public class OutSourceMasterServiceImpl  implements IOutSourceMasterService, ICo
 		  if(!listOutSourceMasterDto.isEmpty())
 		  {
 			  
-			Date dt= TimeZoneComponent.getDateByzone(listOutSourceMasterDto.get(0).getOrgUnitId());
+			Date dt= TimeZoneComponent.getDateByzone(listOutSourceMasterDto.getFirst().getOrgUnitId());
 			  Response<LabSampleDetailsMaster, Integer> sampleStatusRes =null;
 			  for (Iterator iterator =listOutSourceMasterDto.iterator(); iterator.hasNext();) 
 			  {
@@ -255,7 +255,7 @@ public class OutSourceMasterServiceImpl  implements IOutSourceMasterService, ICo
 			//iMailingService.sentRegistrationMailToPatient(patientRegistrationDto);
 			String pattern = "yyyy-MM-dd HH:mm:ss";
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(list!=null && list.size()>0 ? list.get(0).getOrgUnitId():null));
+			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(list!=null && list.size()>0 ? list.getFirst().getOrgUnitId():null));
 			com.param.global.common.Response res1 = null;
 			for (SearchDto dto : list) {
 				SmsUtilityConfigInfoDto emailinfo = new SmsUtilityConfigInfoDto();

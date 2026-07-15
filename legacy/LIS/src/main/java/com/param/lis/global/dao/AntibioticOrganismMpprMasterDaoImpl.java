@@ -151,8 +151,8 @@ public class AntibioticOrganismMpprMasterDaoImpl extends GenericDao<AntibioticOr
 
 			Integer result = sessionFactory.getCurrentSession().getNamedQuery("UPDATE_ANTIBIOTIC_MAPPER_ORGANISM")
 					.setParameter("isDeleted", 'Y')
-					.setParameter("orgId", listAntibioticOrganismMpprMasterDto.get(0).getOrgId())
-					.setParameter("organismId", listAntibioticOrganismMpprMasterDto.get(0).getOrganismId())
+					.setParameter("orgId", listAntibioticOrganismMpprMasterDto.getFirst().getOrgId())
+					.setParameter("organismId", listAntibioticOrganismMpprMasterDto.getFirst().getOrganismId())
 					.executeUpdate();
 			if (result > 0) {
 				for (Iterator iterator = listAntibioticOrganismMpprMasterDto.iterator(); iterator.hasNext();) {

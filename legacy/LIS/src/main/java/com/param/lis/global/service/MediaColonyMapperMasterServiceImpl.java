@@ -131,7 +131,7 @@ public class MediaColonyMapperMasterServiceImpl implements IMediaColonyMapperMas
 				long time = TimeZoneComponent.getDateByzone(0).getTime();
 				mediaColonyMapperDto.setUpdatedDate(time);
 				mediaColonyMapperDto.setMediaId(mediaColonyMapperMasterDto.getMediaId());
-				mediaColonyMapperDto.setColonyId(colonyId);;
+				mediaColonyMapperDto.setColonyId(colonyId);
 				mediaColonyMapperDto.setStatus(mediaColonyMapperMasterDto.getStatus());
 				mediaColonyMapperDto.setOrgId(mediaColonyMapperMasterDto.getOrgId());
 				mediaColonyMapperDto.setUpdatedBy(mediaColonyMapperMasterDto.getUpdatedBy());

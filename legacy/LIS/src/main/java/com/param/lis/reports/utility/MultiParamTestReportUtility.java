@@ -62,7 +62,7 @@ public class MultiParamTestReportUtility implements  ICommonConstants, IError,IT
 	 static String formatDecimal(String value) {
        try {
            NumberFormat formatter = new DecimalFormat("#0.00");
-           return formatter.format(new Double(value));
+           return formatter.format(Double.valueOf(value));
        } catch (Exception e) {
            logger.error("Exception", e);
        }
@@ -83,7 +83,7 @@ public class MultiParamTestReportUtility implements  ICommonConstants, IError,IT
 	static String formatDecimal(double value) {
 		try {
 			NumberFormat formatter = new DecimalFormat("#0.00");
-			return formatter.format(new Double(value));
+			return formatter.format(Double.valueOf(value));
 		} catch (Exception e) {
 			logger.error("Exception", e);
 		}

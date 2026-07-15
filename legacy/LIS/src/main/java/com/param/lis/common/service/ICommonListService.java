@@ -88,9 +88,9 @@ public interface ICommonListService
 	
 	public Response getTextualReferenceRanges(Integer orgId,Integer orgUnitId) throws ApplicationException;
 
-	public Response getMicrobiologyTestList(Integer orgId,Integer orgUnitId)throws ApplicationException;;
+	public Response getMicrobiologyTestList(Integer orgId,Integer orgUnitId)throws ApplicationException;
 	
-	public Response getSendThroughList()throws ApplicationException;;
+	public Response getSendThroughList()throws ApplicationException;
 	
 	public Response getRequestTypeList()throws ApplicationException;
 	

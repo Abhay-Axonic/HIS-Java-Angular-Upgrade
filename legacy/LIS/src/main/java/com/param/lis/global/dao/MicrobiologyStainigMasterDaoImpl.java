@@ -126,7 +126,7 @@ implements IMicrobiologyStainigMasterDao, ICommonConstants, IError{
 			MicrobiologyStainMaster organisumGroupMaster = findById(microStainId);
 			if (organisumGroupMaster.getMicroStainId() != 0)
 			{
-				organisumGroupMaster.setStatus(organisumGroupStatus);;
+				organisumGroupMaster.setStatus(organisumGroupStatus);
 				MicrobiologyStainMaster organisumGroupMst = update(organisumGroupMaster);
 				return new Response(SUCCESS, SUCCESS_200,MICRO_STAINIG_ACTIVATE_SUCC, null, organisumGroupMst);
 				

@@ -26,6 +26,6 @@ public interface IMachineMasterDao {
 	public Response getTotalMachineMasterRecord(Integer organisationId, Integer unitId)
 			throws ApplicationException;
 
-	public Response getActiveMachineList(MachineMasterDto machineMasterDto)throws ApplicationException;;
+	public Response getActiveMachineList(MachineMasterDto machineMasterDto)throws ApplicationException;
 
 }

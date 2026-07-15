@@ -124,7 +124,7 @@ public class UnitMasterDaoImpl extends  GenericDao<LabUnitMaster, Integer> imple
 			LabUnitMaster labUnitMaster = findById(unitId);
 			if (labUnitMaster.getUnitId() != 0)
 			{
-				labUnitMaster.setStatus(unitStatus);;
+				labUnitMaster.setStatus(unitStatus);
 				LabUnitMaster unitMst = update(labUnitMaster);
 				return new Response(SUCCESS, SUCCESS_200, UNIT_ACTIVATE_SUCC, null, unitMst);
 				

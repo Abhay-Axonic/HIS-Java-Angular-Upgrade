@@ -102,13 +102,13 @@ private SessionService sessionService;
 					detail.getBatch() != null ? detail.getBatch().getItem().getName() : null,
 					detail.getBatch() != null ? detail.getBatch().getModelNumber() : null,
 					detail.getBatch().getGoodReceiptNoteDetail() != null
-							? detail.getBatch().getGoodReceiptNoteDetail().get(0).getGoodReceiptNote().getGrnNumber()
+							? detail.getBatch().getGoodReceiptNoteDetail().getFirst().getGoodReceiptNote().getGrnNumber()
 							: null,
 					detail.getBatch().getGoodReceiptNoteDetail() != null
-							? detail.getBatch().getGoodReceiptNoteDetail().get(0).getGoodReceiptNote().getId()
+							? detail.getBatch().getGoodReceiptNoteDetail().getFirst().getGoodReceiptNote().getId()
 							: null,
 					detail.getBatch().getGoodReceiptNoteDetail() != null
-							? detail.getBatch().getGoodReceiptNoteDetail().get(0).getGoodReceiptNote().getAddedDate()
+							? detail.getBatch().getGoodReceiptNoteDetail().getFirst().getGoodReceiptNote().getAddedDate()
 							: null,
 					detail.getBatch() != null ? detail.getBatch().getLotNo() : null,
 					detail.getBatch() != null ? detail.getBatch().getCop() : null,

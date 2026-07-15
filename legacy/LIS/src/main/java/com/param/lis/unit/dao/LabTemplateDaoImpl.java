@@ -140,7 +140,7 @@ public class LabTemplateDaoImpl extends AbstractDao<Integer, LabTemplateMasterDt
 						.getNamedQuery("UPDATE_BY_LAB_TEMPLATE_ID")
 						.setParameter("labTemplateId", labTemplateMasterDto.getLabTemplateId())
 						.setParameter("orgId", labTemplateMasterDto.getOrgId())
-						.setParameter("specialityId", labTemplateMasterDto.getListSpecialtyTemplateMapperDto().get(0).getSpecialityId())
+						.setParameter("specialityId", labTemplateMasterDto.getListSpecialtyTemplateMapperDto().getFirst().getSpecialityId())
 						.executeUpdate();
 				
 				if(labTemplateMstUpdate >0) {

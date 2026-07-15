@@ -120,7 +120,7 @@ public class BlockMasterDaoImpl extends  GenericDao<BlockMaster, Integer> implem
 			BlockMaster bacteriaMaster = findById(unitId);
 			if (bacteriaMaster.getBlockId() != 0)
 			{
-				bacteriaMaster.setStatus(unitStatus);;
+				bacteriaMaster.setStatus(unitStatus);
 				BlockMaster bacteriaMst = update(bacteriaMaster);
 				return new Response(SUCCESS, SUCCESS_200,BLOCK_ACTIVATE_SUCC, null, bacteriaMst);
 				

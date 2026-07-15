@@ -68,13 +68,13 @@ public class MicroscopicExaminationServiceImpl  implements IMicroscopicExaminati
         boolean flag=  false;
         
         LabSampleDetailsMasterDto labSampleDetailsMasterDto = new LabSampleDetailsMasterDto();
-        labSampleDetailsMasterDto.setCreatedBy(listMicroscopicExaminationMaster.get(0).getCreatedBy());
-        labSampleDetailsMasterDto.setLabSampleDtlsId(listMicroscopicExaminationMaster.get(0).getLabSampleDtlsId());
-        labSampleDetailsMasterDto.setCreatedDate(new Date(listMicroscopicExaminationMaster.get(0).getCreatedDate()));
-        labSampleDetailsMasterDto.setAssignUnit(listMicroscopicExaminationMaster.get(0).getOrgUnitId());
-        labSampleDetailsMasterDto.setPerformedUnit(listMicroscopicExaminationMaster.get(0).getOrgUnitId());
-        labSampleDetailsMasterDto.setOrgId(listMicroscopicExaminationMaster.get(0).getOrgId());
-        labSampleDetailsMasterDto.setOrgUnitId(listMicroscopicExaminationMaster.get(0).getOrgUnitId());
+        labSampleDetailsMasterDto.setCreatedBy(listMicroscopicExaminationMaster.getFirst().getCreatedBy());
+        labSampleDetailsMasterDto.setLabSampleDtlsId(listMicroscopicExaminationMaster.getFirst().getLabSampleDtlsId());
+        labSampleDetailsMasterDto.setCreatedDate(new Date(listMicroscopicExaminationMaster.getFirst().getCreatedDate()));
+        labSampleDetailsMasterDto.setAssignUnit(listMicroscopicExaminationMaster.getFirst().getOrgUnitId());
+        labSampleDetailsMasterDto.setPerformedUnit(listMicroscopicExaminationMaster.getFirst().getOrgUnitId());
+        labSampleDetailsMasterDto.setOrgId(listMicroscopicExaminationMaster.getFirst().getOrgId());
+        labSampleDetailsMasterDto.setOrgUnitId(listMicroscopicExaminationMaster.getFirst().getOrgUnitId());
         
         
        for (Iterator iterator = listMicroscopicExaminationMaster.iterator(); iterator.hasNext();) {

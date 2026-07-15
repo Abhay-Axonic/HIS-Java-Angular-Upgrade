@@ -181,7 +181,6 @@ public class MachineMasterDaoImpl extends GenericDao<MachineMaster, Integer>
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			 ;
 		}
 	}
 }

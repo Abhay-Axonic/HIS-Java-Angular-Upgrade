@@ -119,7 +119,7 @@ public class SpecimanMasterDaoImpl extends  GenericDao<SpecimanMaster, Integer> 
 			SpecimanMaster specimanMaster = findById(unitId);
 			if (specimanMaster.getSpecimanId() != 0)
 			{
-				specimanMaster.setStatus(unitStatus);;
+				specimanMaster.setStatus(unitStatus);
 				SpecimanMaster antibioticMst = update(specimanMaster);
 				return new Response(SUCCESS, SUCCESS_200,SPECIMAN_ACTIVATE_SUCC, null, antibioticMst);
 				

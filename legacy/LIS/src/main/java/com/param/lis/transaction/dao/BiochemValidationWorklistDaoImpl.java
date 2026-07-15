@@ -540,15 +540,15 @@ public Response consolidatedWorklistSearch(SearchDto searchDto) throws Applicati
 	        if(res.getListObject() != null && res.getListObject().size()>0) {
 		    	   
 		    	   List<LabConfigurationDto> list = res.getListObject();
-		    	  c = list.get(0).getSkipValidation();
-		    	   conflag = list.get(0).getConsolidatedResultEntry();
-		    	   subDeptIds.add(list.get(0).getBiochemistryId()!=null ? list.get(0).getBiochemistryId() :0);
-		    	   subDeptIds.add(list.get(0).getHematologyId()!=null ? list.get(0).getHematologyId() :0);
-		    	   subDeptIds.add(list.get(0).getMicrobiologyId()!=null ? list.get(0).getMicrobiologyId() :0);
-		    	   subDeptIds.add(list.get(0).getHistopathologyId()!=null ? list.get(0).getHistopathologyId() :0);
-		    	   subDeptIds.add(list.get(0).getCystopathologyId()!=null ? list.get(0).getCystopathologyId() :0);
-		    	   subDeptIds.add(list.get(0).getSerologyId()!=null ? list.get(0).getSerologyId() :0);
-		    	   subDeptIds.add(list.get(0).getClinicalPathologyId() !=null ? list.get(0).getClinicalPathologyId() :0);
+		    	  c = list.getFirst().getSkipValidation();
+		    	   conflag = list.getFirst().getConsolidatedResultEntry();
+		    	   subDeptIds.add(list.getFirst().getBiochemistryId()!=null ? list.getFirst().getBiochemistryId() :0);
+		    	   subDeptIds.add(list.getFirst().getHematologyId()!=null ? list.getFirst().getHematologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getMicrobiologyId()!=null ? list.getFirst().getMicrobiologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getHistopathologyId()!=null ? list.getFirst().getHistopathologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getCystopathologyId()!=null ? list.getFirst().getCystopathologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getSerologyId()!=null ? list.getFirst().getSerologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getClinicalPathologyId() !=null ? list.getFirst().getClinicalPathologyId() :0);
 		       }
 	     
 	      List<Integer> statusIds = new ArrayList<Integer>(); 
@@ -1330,15 +1330,15 @@ public Response consolidatedWorklistTypeSearch(SearchDto searchDto) throws Appli
 			if (res.getListObject() != null && res.getListObject().size() > 0) {
 
 				List<LabConfigurationDto> listGet = res.getListObject();
-				c = listGet.get(0).getSkipValidation();
-				conflag = listGet.get(0).getConsolidatedResultEntry();
-				subDeptIds.add(listGet.get(0).getBiochemistryId() != null ? listGet.get(0).getBiochemistryId() : 0);
-				subDeptIds.add(listGet.get(0).getHematologyId() != null ? listGet.get(0).getHematologyId() : 0);
-				subDeptIds.add(listGet.get(0).getMicrobiologyId() != null ? listGet.get(0).getMicrobiologyId() : 0);
-				subDeptIds.add(listGet.get(0).getHistopathologyId() != null ? listGet.get(0).getHistopathologyId() : 0);
-				subDeptIds.add(listGet.get(0).getCystopathologyId() != null ? listGet.get(0).getCystopathologyId() : 0);
-				subDeptIds.add(listGet.get(0).getSerologyId() != null ? listGet.get(0).getSerologyId() : 0);
-				subDeptIds.add(listGet.get(0).getClinicalPathologyId() != null ? listGet.get(0).getClinicalPathologyId() : 0);
+				c = listGet.getFirst().getSkipValidation();
+				conflag = listGet.getFirst().getConsolidatedResultEntry();
+				subDeptIds.add(listGet.getFirst().getBiochemistryId() != null ? listGet.getFirst().getBiochemistryId() : 0);
+				subDeptIds.add(listGet.getFirst().getHematologyId() != null ? listGet.getFirst().getHematologyId() : 0);
+				subDeptIds.add(listGet.getFirst().getMicrobiologyId() != null ? listGet.getFirst().getMicrobiologyId() : 0);
+				subDeptIds.add(listGet.getFirst().getHistopathologyId() != null ? listGet.getFirst().getHistopathologyId() : 0);
+				subDeptIds.add(listGet.getFirst().getCystopathologyId() != null ? listGet.getFirst().getCystopathologyId() : 0);
+				subDeptIds.add(listGet.getFirst().getSerologyId() != null ? listGet.getFirst().getSerologyId() : 0);
+				subDeptIds.add(listGet.getFirst().getClinicalPathologyId() != null ? listGet.getFirst().getClinicalPathologyId() : 0);
 			}
 
 //	      List<Integer> statusIds = new ArrayList<Integer>();

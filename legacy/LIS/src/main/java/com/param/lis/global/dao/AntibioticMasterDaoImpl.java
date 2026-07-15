@@ -116,7 +116,7 @@ public class AntibioticMasterDaoImpl extends  GenericDao<AntibioticMaster, Integ
 			AntibioticMaster antibioticMaster = findById(unitId);
 			if (antibioticMaster.getAntibioticId() != 0)
 			{
-				antibioticMaster.setStatus(antibioticStatus);;
+				antibioticMaster.setStatus(antibioticStatus);
 				AntibioticMaster antibioticMst = update(antibioticMaster);
 				return new Response(SUCCESS, SUCCESS_200, ANTIBIOTIC_ACTIVATE_SUCC, null, antibioticMst);
 				

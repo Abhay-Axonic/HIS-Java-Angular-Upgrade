@@ -230,7 +230,7 @@ public class LabCentralReceivingDaoImpl extends GenericDao<LabSampleDetailsMaste
 		try {
 
 			if (!listLabSampleDetailsMasterDto.isEmpty()) {
-				Date date = TimeZoneComponent.getDateByzone(listLabSampleDetailsMasterDto.get(0).getOrgUnitId());
+				Date date = TimeZoneComponent.getDateByzone(listLabSampleDetailsMasterDto.getFirst().getOrgUnitId());
 				LabSampleDetailsMaster lSampleDetailsMaster;
 				for (Iterator iterator = listLabSampleDetailsMasterDto.iterator(); iterator.hasNext();) {
 					LabSampleDetailsMasterDto labSampleDetailsMasterDto = (LabSampleDetailsMasterDto) iterator.next();
@@ -495,7 +495,7 @@ public class LabCentralReceivingDaoImpl extends GenericDao<LabSampleDetailsMaste
 		try {
 		
 			if (listlabLabSampleDetailsMasterDto != null) {
-				Date date = TimeZoneComponent.getDateByzone(listlabLabSampleDetailsMasterDto.get(0).getOrgUnitId());
+				Date date = TimeZoneComponent.getDateByzone(listlabLabSampleDetailsMasterDto.getFirst().getOrgUnitId());
 				for (Iterator iterator = listlabLabSampleDetailsMasterDto.iterator(); iterator.hasNext();) {
 
 					LabSampleDetailsMasterDto labSampleDetailsMasterDto = (LabSampleDetailsMasterDto) iterator.next();

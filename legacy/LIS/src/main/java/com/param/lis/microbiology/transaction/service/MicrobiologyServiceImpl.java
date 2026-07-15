@@ -147,11 +147,11 @@ public class MicrobiologyServiceImpl implements IMicrobiologyService, ICommonCon
 			throws ApplicationException {
 		try {
 			
-			Integer labSampleDtlsId = listTMicroSampleMediaDto.get(0).getLabSampleDtlsId();
+			Integer labSampleDtlsId = listTMicroSampleMediaDto.getFirst().getLabSampleDtlsId();
 			
-			Integer orgId = listTMicroSampleMediaDto.get(0).getOrgId();
+			Integer orgId = listTMicroSampleMediaDto.getFirst().getOrgId();
 			
-			Integer orgUniId = listTMicroSampleMediaDto.get(0).getOrgUnitId();
+			Integer orgUniId = listTMicroSampleMediaDto.getFirst().getOrgUnitId();
 			
 			
 			Response res = iMicrobiologyDao.getAddedMediaForIncuabation(labSampleDtlsId, orgId, orgUniId);

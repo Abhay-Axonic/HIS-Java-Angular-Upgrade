@@ -113,7 +113,7 @@ public class OrganisumGroupMasterDaoImpl extends  GenericDao<OrganismGroupMaster
 			OrganismGroupMaster organisumGroupMaster = findById(organisumGroupId);
 			if (organisumGroupMaster.getOrganismGroupId() != 0)
 			{
-				organisumGroupMaster.setStatus(organisumGroupStatus);;
+				organisumGroupMaster.setStatus(organisumGroupStatus);
 				OrganismGroupMaster organisumGroupMst = update(organisumGroupMaster);
 				return new Response(SUCCESS, SUCCESS_200,ORGANISUM_GROUP_ACTIVATE_SUCC, null, organisumGroupMst);
 				

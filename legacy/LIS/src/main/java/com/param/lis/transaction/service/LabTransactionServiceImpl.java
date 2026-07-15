@@ -174,7 +174,7 @@ public class LabTransactionServiceImpl implements ILabTransactionService, ICommo
 			
 				List<LabConfigurationDto> listLabConfig= new ArrayList<>();
 				listLabConfig.addAll(res11.getListObject());
-				LabConfigurationDto labdto11 = listLabConfig.get(0);
+				LabConfigurationDto labdto11 = listLabConfig.getFirst();
 			
 			 Map<Integer, List<LabSampleDetailsMasterDto>>  mapDetails =  new HashMap<Integer,List<LabSampleDetailsMasterDto>>();  
 			 
@@ -322,7 +322,7 @@ public class LabTransactionServiceImpl implements ILabTransactionService, ICommo
 							if(res11.getListObject() != null && res11.getListObject().size()>0) {
 								List<LabConfigurationDto> list= new ArrayList<>();
 								list.addAll(res11.getListObject());
-								LabConfigurationDto labdto = list.get(0);
+								LabConfigurationDto labdto = list.getFirst();
 								
 								List<LabSampleDetailsMasterDto> labSampleDetailsList = labSampleRes.getListObject1();
 								List<LabSampleDetailsMasterDto> labSampleList = new ArrayList<>();
@@ -365,12 +365,12 @@ public class LabTransactionServiceImpl implements ILabTransactionService, ICommo
 										
 										for (LabSampleDetailsMasterDto sampleDetailsObj : labSampleDetailsList) {
 											
-											if(sampleDetailsObj.getOrderDetailsId().equals(sampleDetailsDto.get(0).getOrderDetailsId())) {
+											if(sampleDetailsObj.getOrderDetailsId().equals(sampleDetailsDto.getFirst().getOrderDetailsId())) {
 												barcodeDto.setLabSampleDtlsId(sampleDetailsObj.getLabSampleDtlsId());
 											}
 										}
-										barcodeDto.setDeptName(sampleDetailsDto.get(0).getDeptName());
-										barcodeDto.setSampleName(sampleDetailsDto.get(0).getSampleName());
+										barcodeDto.setDeptName(sampleDetailsDto.getFirst().getDeptName());
+										barcodeDto.setSampleName(sampleDetailsDto.getFirst().getSampleName());
 										barcodeDtoList.add(barcodeDto);
 									
 								}
@@ -593,7 +593,7 @@ public class LabTransactionServiceImpl implements ILabTransactionService, ICommo
 			Character byDepartment = 'Y';
 			Character barcodeSys = 'Y';
 			Date date = TimeZoneComponent.getDateByzone(listLabSampleMasterDto!=null && listLabSampleMasterDto.size() > 0 
-					? listLabSampleMasterDto.get(0).getOrgUnitId() : null);
+					? listLabSampleMasterDto.getFirst().getOrgUnitId() : null);
 			 List<BarcodeDto> barcodeDtoList = new ArrayList<>();
 			 List<Integer> finalIds = new LinkedList<>(); 
 			 Set<Integer> orderIds = new HashSet<>(); 
@@ -612,10 +612,10 @@ public class LabTransactionServiceImpl implements ILabTransactionService, ICommo
 	    		 return res;
 	    	 }
 			 
-	    	 com.param.global.common.Response res11 = ILabConfigurationDao.getLabConfigurationList(listLabSampleMasterDto.get(0).getOrgId(),listLabSampleMasterDto.get(0).getOrgUnitId());
+	    	 com.param.global.common.Response res11 = ILabConfigurationDao.getLabConfigurationList(listLabSampleMasterDto.getFirst().getOrgId(),listLabSampleMasterDto.getFirst().getOrgUnitId());
 	    	 List<LabConfigurationDto> listLabConfig= new ArrayList<>();
 				listLabConfig.addAll(res11.getListObject());
-				LabConfigurationDto labdto11 = listLabConfig.get(0);
+				LabConfigurationDto labdto11 = listLabConfig.getFirst();
 			for (LabSampleMasterDto labSampleMasterDto : listLabSampleMasterDto) {
 				
 				 Map<Integer, List<LabSampleDetailsMasterDto>>  mapDetails =  new HashMap<Integer,List<LabSampleDetailsMasterDto>>();  
@@ -741,7 +741,7 @@ public class LabTransactionServiceImpl implements ILabTransactionService, ICommo
 							    	 if(res11.getListObject() != null && res11.getListObject().size()>0) {
 											List<LabConfigurationDto> list= new ArrayList<>();
 											list.addAll(res11.getListObject());
-											LabConfigurationDto labdto = list.get(0);
+											LabConfigurationDto labdto = list.getFirst();
 											List<LabSampleDetailsMasterDto> labSampleDetailsList = labSampleRes.getListObject1();
 											List<LabSampleDetailsMasterDto> labSampleList = new ArrayList<>();
 											labSampleList.addAll(dto.getListLabSampleDetailsMaster());
@@ -783,12 +783,12 @@ public class LabTransactionServiceImpl implements ILabTransactionService, ICommo
 													
 													for (LabSampleDetailsMasterDto sampleDetailsObj : labSampleDetailsList) {
 														
-														if(sampleDetailsObj.getOrderDetailsId().equals(sampleDetailsDto.get(0).getOrderDetailsId())) {
+														if(sampleDetailsObj.getOrderDetailsId().equals(sampleDetailsDto.getFirst().getOrderDetailsId())) {
 															barcodeDto.setLabSampleDtlsId(sampleDetailsObj.getLabSampleDtlsId());
 														}
 													}
-													barcodeDto.setDeptName(sampleDetailsDto.get(0).getDeptName());
-													barcodeDto.setSampleName(sampleDetailsDto.get(0).getSampleName());
+													barcodeDto.setDeptName(sampleDetailsDto.getFirst().getDeptName());
+													barcodeDto.setSampleName(sampleDetailsDto.getFirst().getSampleName());
 													barcodeDtoList.add(barcodeDto);
 												
 											}

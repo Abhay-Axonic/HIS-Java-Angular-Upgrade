@@ -119,7 +119,7 @@ public class IncubationTestMasterDaoImpl extends  GenericDao<IncubationTestMaste
 			IncubationTestMaster incubationTestMaster = findById(unitId);
 			if (incubationTestMaster.getIncubationTestId() != 0)
 			{
-				incubationTestMaster.setStatus(unitStatus);;
+				incubationTestMaster.setStatus(unitStatus);
 				IncubationTestMaster incubationMst = update(incubationTestMaster);
 				return new Response(SUCCESS, SUCCESS_200,INCUBATION_TEST_MASTER_ADD_SUCC, null, incubationMst);
 				

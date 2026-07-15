@@ -114,7 +114,7 @@ public class SensitivityTestResultMasterDaoImpl extends  GenericDao<SensitivityM
 			SensitivityMaster sensitivityTestResultMaster = findById(sensitivityTestResulId);
 			if (sensitivityTestResultMaster.getSensitivityId() != 0)
 			{
-				sensitivityTestResultMaster.setStatus(sensitivityTestResultStatus);;
+				sensitivityTestResultMaster.setStatus(sensitivityTestResultStatus);
 				SensitivityMaster wtfilmStudyMst = update(sensitivityTestResultMaster);
 				return new Response(SUCCESS, SUCCESS_200,SENSITIVITY_ACTIVATE_SUCC, null, wtfilmStudyMst);
 				

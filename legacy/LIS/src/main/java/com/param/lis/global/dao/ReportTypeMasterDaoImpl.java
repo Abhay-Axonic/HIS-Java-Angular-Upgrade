@@ -121,7 +121,7 @@ public class ReportTypeMasterDaoImpl extends  GenericDao<ReportTypeMaster, Integ
 			ReportTypeMaster reportTypeMaster = findById(unitId);
 			if (reportTypeMaster.getReportTypeId() != 0)
 			{
-				reportTypeMaster.setStatus(unitStatus);;
+				reportTypeMaster.setStatus(unitStatus);
 				ReportTypeMaster reagentMst = update(reportTypeMaster);
 				return new Response(SUCCESS, SUCCESS_200,REPORT_TYPRACTIVATE_SUCC, null, reagentMst);
 				

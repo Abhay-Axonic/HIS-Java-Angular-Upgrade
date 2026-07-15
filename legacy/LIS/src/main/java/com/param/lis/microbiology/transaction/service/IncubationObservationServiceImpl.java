@@ -217,7 +217,7 @@ public class IncubationObservationServiceImpl
 					 
 					 List<SensitivityTestResultDetailsMasterDto> listTMicroIncubationDetailsMasterList = res1.getListObject();
 					 
-					 tMicroIncubationMasterDto.setSensitivityResultId(listTMicroIncubationDetailsMasterList.get(0).getSensitivityResultId());
+					 tMicroIncubationMasterDto.setSensitivityResultId(listTMicroIncubationDetailsMasterList.getFirst().getSensitivityResultId());
 					 
 					 tMicroIncubationMasterDto.setSensitivityTestResultDetailsMasterDto(listTMicroIncubationDetailsMasterList);
 				 }

@@ -132,8 +132,8 @@ public class OrganismGroupOrganismMapperMasterDaoImpl extends GenericDao<Organis
 			Integer result = sessionFactory.getCurrentSession()
 					        .getNamedQuery("UPDATE_ORGANIGROUP_ORGANI_CLASS_MAPPER")
 					        .setParameter("isDeleted", 'Y')
-					        .setParameter("orgId",listmediaColonyMapperMasterDto.get(0).getOrgId())
-					        .setParameter("organismGroupId", listmediaColonyMapperMasterDto.get(0).getOrganismGroupId()).executeUpdate();
+					        .setParameter("orgId",listmediaColonyMapperMasterDto.getFirst().getOrgId())
+					        .setParameter("organismGroupId", listmediaColonyMapperMasterDto.getFirst().getOrganismGroupId()).executeUpdate();
 			//System.out.println("===========>"+result);
 			if(result>0)
 			{

@@ -114,7 +114,7 @@ public class BacteriaClassficationMasterDaoImpl extends  GenericDao<BactClassifi
 			BactClassificationMaster BacteriaClassficationMaster = findById(unitId);
 			if (BacteriaClassficationMaster.getBactClassificationId() != 0)
 			{
-				BacteriaClassficationMaster.setStatus(unitStatus);;
+				BacteriaClassficationMaster.setStatus(unitStatus);
 				BactClassificationMaster bacteriaClassficationMst = update(BacteriaClassficationMaster);
 				return new Response(SUCCESS, SUCCESS_200,BACTERIA_CLASSFICATION_INACTIVATE_SUCC, null, bacteriaClassficationMst);
 				

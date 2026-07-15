@@ -116,7 +116,7 @@ public class ReagentMasterDaoImpl extends  GenericDao<ReagentMaster, Integer> im
 			ReagentMaster reagentMaster = findById(unitId);
 			if (reagentMaster.getReagentId() != 0)
 			{
-				reagentMaster.setStatus(unitStatus);;
+				reagentMaster.setStatus(unitStatus);
 				ReagentMaster reagentMst = update(reagentMaster);
 				return new Response(SUCCESS, SUCCESS_200, REAGENT_ACTIVATE_SUCC, null, reagentMst);
 				

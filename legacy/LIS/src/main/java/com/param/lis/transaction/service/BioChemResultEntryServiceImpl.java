@@ -195,7 +195,7 @@ public class BioChemResultEntryServiceImpl
 											.findFirst();
 		    					  paramRefrengMasterDto = paramRefrengMstDto.orElse(null);
 		    				  }else {
-		    					  paramRefrengMasterDto = parameterMasterDto.getListParamRefrengMaster().get(0);
+		    					  paramRefrengMasterDto = parameterMasterDto.getListParamRefrengMaster().getFirst();
 		    				  }
 							
 
@@ -256,7 +256,7 @@ public class BioChemResultEntryServiceImpl
 											.findFirst();
 		    					  paramTextualRanageMstDto = ParamTextualRanageMstDto.orElse(null);
 		    				  }else {
-		    					  paramTextualRanageMstDto = parameterMasterDto.getListParamTextualRanageMaster().get(0);
+		    					  paramTextualRanageMstDto = parameterMasterDto.getListParamTextualRanageMaster().getFirst();
 		    				  }
 							if (paramTextualRanageMstDto != null) {
 								labResultDetailsViewDto.setParameterId(paramTextualRanageMstDto.getParameterId());
@@ -312,7 +312,7 @@ public class BioChemResultEntryServiceImpl
 											.findFirst();
 		    					  paramMultiTextualRangeMasterDto = paramMultiTextualRangeMstDto.orElse(null);
 		    				  }else {
-		    					  paramMultiTextualRangeMasterDto = parameterMasterDto.getListParamMultiTextualRangeMaster().get(0);
+		    					  paramMultiTextualRangeMasterDto = parameterMasterDto.getListParamMultiTextualRangeMaster().getFirst();
 		    				  }
 							if (paramMultiTextualRangeMasterDto != null) {
 								labResultDetailsViewDto
@@ -518,8 +518,8 @@ public class BioChemResultEntryServiceImpl
 			
 			String senderId = null;
 			UnitApplicationConfigurationDto unitApplicationConfigurationDto = new UnitApplicationConfigurationDto();
-			unitApplicationConfigurationDto.setOrganizationId(list.get(0).getOrgId());
-			unitApplicationConfigurationDto.setUnitId(list.get(0).getOrgUnitId());
+			unitApplicationConfigurationDto.setOrganizationId(list.getFirst().getOrgId());
+			unitApplicationConfigurationDto.setUnitId(list.getFirst().getOrgUnitId());
 			com.param.global.common.Response  appConfigRes = iUnitApplicationBillingConfigurationDao.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
 		    UnitApplicationConfigurationDto appDto = (UnitApplicationConfigurationDto)appConfigRes.getObject();
 			if(appDto != null){
