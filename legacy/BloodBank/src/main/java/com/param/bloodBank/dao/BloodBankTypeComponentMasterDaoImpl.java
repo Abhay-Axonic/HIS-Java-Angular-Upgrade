@@ -73,9 +73,9 @@ public class BloodBankTypeComponentMasterDaoImpl extends GenericDao< BloodBankTy
 			Integer result = sessionFactory.getCurrentSession()
 					.getNamedQuery("UPDATE_BLOOD_BANK_TYPE_COMPONENT_MASTER")
 					.setParameter("isDeleted", 'Y')
-					.setParameter("organizationId", listBloodBankTypeComponentMasterDto.get(0).getOrganizationId())
-					.setParameter("unitId", listBloodBankTypeComponentMasterDto.get(0).getUnitId())
-					.setParameter("bloodBagTypeId", listBloodBankTypeComponentMasterDto.get(0).getBloodBagTypeId())
+					.setParameter("organizationId", listBloodBankTypeComponentMasterDto.getFirst().getOrganizationId())
+					.setParameter("unitId", listBloodBankTypeComponentMasterDto.getFirst().getUnitId())
+					.setParameter("bloodBagTypeId", listBloodBankTypeComponentMasterDto.getFirst().getBloodBagTypeId())
 					.executeUpdate();
 			if (result > 0) {
 				for (Iterator iterator = listBloodBankTypeComponentMasterDto.iterator(); iterator.hasNext();) {

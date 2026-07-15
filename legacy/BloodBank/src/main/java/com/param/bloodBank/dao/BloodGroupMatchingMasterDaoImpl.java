@@ -38,21 +38,21 @@ public class BloodGroupMatchingMasterDaoImpl  extends GenericDao<BloodGroupMatch
 	public Response saveBloodGroupMatchingMaster(List<BloodGroupMatchingMasterDto> bloodBagMatchingMasterDto) {
 		try {
 			
-			bloodBagMatchingMasterDto.get(0).getComponentId();
+			bloodBagMatchingMasterDto.getFirst().getComponentId();
 			
 			List<BloodGroupMatchingMasterDto> list = sessionFactory.getCurrentSession()
 					.createSQLQuery(" select blood_group_matching_id as \"bloodGroupMatchingId\" "
 									+" from blood_bank.m_blood_group_matching_master  "
-									+ "where component_id="+bloodBagMatchingMasterDto.get(0).getComponentId()+" "
-									+ " and organization_id="+bloodBagMatchingMasterDto.get(0).getOrganizationId()+" and unit_id="+bloodBagMatchingMasterDto.get(0).getUnitId())
+									+ "where component_id="+bloodBagMatchingMasterDto.getFirst().getComponentId()+" "
+									+ " and organization_id="+bloodBagMatchingMasterDto.getFirst().getOrganizationId()+" and unit_id="+bloodBagMatchingMasterDto.getFirst().getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(BloodGroupMatchingMasterDto.class)).list();
 			if(list.size()>0) {
 				
 				Integer count = sessionFactory.getCurrentSession()
 						.createSQLQuery("UPDATE blood_bank.m_blood_group_matching_master " 
 										+ "SET status='I' " 
-										+ "where component_id="+bloodBagMatchingMasterDto.get(0).getComponentId()+" "
-										+ " and organization_id="+bloodBagMatchingMasterDto.get(0).getOrganizationId()+" and unit_id="+bloodBagMatchingMasterDto.get(0).getUnitId())
+										+ "where component_id="+bloodBagMatchingMasterDto.getFirst().getComponentId()+" "
+										+ " and organization_id="+bloodBagMatchingMasterDto.getFirst().getOrganizationId()+" and unit_id="+bloodBagMatchingMasterDto.getFirst().getUnitId())
 						                .executeUpdate();
 				
 			}

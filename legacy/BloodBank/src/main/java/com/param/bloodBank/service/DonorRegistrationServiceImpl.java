@@ -323,7 +323,7 @@ try {
 				post.setEntity(input);
 				HttpResponse response = httpClient.execute(post);
 				if (response != null) {
-					if (response.getStatusLine().getStatusCode() == new Integer(SUCCESS_CODE)) {
+					if (response.getStatusLine().getStatusCode() == Integer.valueOf(SUCCESS_CODE)) {
 						String json = EntityUtils.toString(response.getEntity(),"UTF-8");
 						JSONObject jsonObj = new JSONObject(json);
 						Integer errorCode = Integer.parseInt(jsonObj.getString("ErrorCode"));
