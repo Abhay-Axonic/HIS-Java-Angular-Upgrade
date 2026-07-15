@@ -741,8 +741,8 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 									{
 										//<---1.2.2.1.2.1 If cap amount is greater than service rates then assign the rates to credit payable
 										//<---1.2.2.1.2.2 Else whatever amount remaining in the cap will be credit payable rest o the amount will be self payable
-										creaditPayable = netAmt < resDto.getBalanceAmount() ? netAmt : netAmt-resDto.getBalanceAmount();
-										selfPayable = netAmt < resDto.getBalanceAmount() ? 0.0 : resDto.getBalanceAmount();
+										creaditPayable = netAmt < resDto.getBalanceAmount() ? netAmt : resDto.getBalanceAmount();
+										selfPayable = netAmt < resDto.getBalanceAmount() ? 0.0 : netAmt-resDto.getBalanceAmount();
 										
 										/*if(netAmt < resDto.getBalanceAmount())
 										{
