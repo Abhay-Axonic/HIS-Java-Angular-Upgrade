@@ -356,6 +356,9 @@ public class BillingCommonMethods<T> {
             }
         }
 
+        consumptionDto.setSelfPayable(totalSelfPayable);
+        consumptionDto.setCreaditPayable(totalCreditPayable);
+
         return consumptionDto;
     }
 
