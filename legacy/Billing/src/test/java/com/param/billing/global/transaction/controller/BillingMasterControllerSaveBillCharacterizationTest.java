@@ -142,14 +142,19 @@ class BillingMasterControllerSaveBillCharacterizationTest {
     class NoServerSideData {
 
         @Test
-        @DisplayName("rejects the save outright when getOrderSumNetAndSelfCreditAmount returns no object -- checkSameAmount stays true by default, never gets a chance to become false")
-        void rejectsOutright_whenServerHasNoMatchingOrderData() throws Exception {
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 5, owner-approved): rejects the save with an honest \"unable to verify\" message when getOrderSumNetAndSelfCreditAmount returns no object, instead of the misleading \"already in process by other user\"")
+        void rejectsWithHonestMessage_whenServerHasNoMatchingOrderData() throws Exception {
             BillingMasterDto dto = billingMasterDto(false, orderDetail(1, 100.0, 50.0, 50.0));
             stubServerSideSums(null, null, null);
 
             Response<?, ?> result = controller.saveBill(dto, null);
 
-            assertThat(result.getMessage()).isEqualTo("This bill is already in process by other user!");
+            // Previously this exact "no data found" case fell through to checkSameAmount's default
+            // (true, never set false since the object==null block is skipped entirely) and returned
+            // the same message used for a genuine amount mismatch -- "already in process by other
+            // user" -- even though no concurrent edit was ever actually detected. Now it's caught by
+            // its own explicit check, ahead of checkSameAmount, with an honest message.
+            assertThat(result.getMessage()).isEqualTo("Unable to verify this bill's current amount -- please retry, or contact support if this persists.");
             verify(iBillingMasterService, never()).saveBillService(any());
         }
     }
