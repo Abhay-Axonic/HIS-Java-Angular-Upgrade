@@ -1,7 +1,7 @@
 package com.param.billing.global.transaction.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -64,14 +64,17 @@ import com.param.global.dto.UnitApplicationConfigurationDto;
  * receipt-details list, patientId=null) are deliberately chosen to route execution around those
  * branches so this suite can stay focused, not to hide them.
  *
- * DIVERGENCE FOUND WHILE WRITING THIS TEST (flagged, not fixed -- needs an owner decision, not a
- * unilateral AI fix): two of the three SMS-trigger branches null-guard `isInterimOrFinalBill` before
- * comparing it to a literal (`reqDto.getIsInterimOrFinalBill() != null && ... == 2`), but the third
- * does not (`reqDto.getIsInterimOrFinalBill() == 1`, no null check) -- a request with
- * isInterimOrFinalBill left null throws a real NullPointerException (auto-unboxing null) on that one
- * branch, unlike its two siblings. Because the whole method is wrapped in a catch-all that rethrows
- * as BillingException, the caller sees a generic billing exception, not a distinguishable NPE -- see
- * UnguardedNullCheck#throwsWhenIsInterimOrFinalBillIsNullOnTheUnguardedBranch below.
+ * DIVERGENCE FOUND WHILE WRITING THIS TEST -- FIXED 2026-07-15
+ * (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 3, owner-approved). Previously: two of
+ * the three SMS-trigger branches null-guard `isInterimOrFinalBill` before comparing it to a literal
+ * (`reqDto.getIsInterimOrFinalBill() != null && ... == 2`), but the third did not
+ * (`reqDto.getIsInterimOrFinalBill() == 1`, no null check) -- a request with isInterimOrFinalBill left
+ * null threw a real NullPointerException (auto-unboxing null) on that one branch, unlike its two
+ * siblings; because the whole method is wrapped in a catch-all that rethrows as BillingException, the
+ * caller saw a generic billing exception, not a distinguishable NPE. Now: the third branch has the
+ * same `!= null &&` guard as the other two, copied verbatim -- see
+ * UnguardedNullCheck#noLongerThrowsWhenIsInterimOrFinalBillIsNull below, which now pins the fixed
+ * (graceful-skip) behavior instead of the crash.
  *
  * Per Decision 4 (owner-approved): assertions use exact equality, not RULES.md's $0.01 tolerance.
  */
@@ -415,12 +418,12 @@ class BillingMasterServiceImplCollectPaymentCharacterizationTest {
     }
 
     @Nested
-    @DisplayName("UnguardedNullCheck -- flagged during test authoring, not fixed, needs an owner decision")
+    @DisplayName("UnguardedNullCheck -- confirms this branch now mirrors its two siblings' null guard")
     class UnguardedNullCheck {
 
         @Test
-        @DisplayName("throws when isInterimOrFinalBill is null and visitTypeId is not OP -- the one SMS-trigger branch missing the null guard its two siblings have")
-        void throwsWhenIsInterimOrFinalBillIsNullOnTheUnguardedBranch() {
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 3, owner-approved): no longer throws when isInterimOrFinalBill is null and visitTypeId is not OP -- the branch is simply skipped, and the rest of collectPayment still completes")
+        void noLongerThrowsWhenIsInterimOrFinalBillIsNull() {
             stubAppConfig(config(SELF_PAYEE_ID, 'Y', 'Y', 'N'));
             BillPayeeDetailsResDto selfPayee = new BillPayeeDetailsResDto();
             selfPayee.setPayeeId(SELF_PAYEE_ID);
@@ -431,13 +434,17 @@ class BillingMasterServiceImplCollectPaymentCharacterizationTest {
 
             BillPaymentCollectionReqDto req = request(SELF_PAYEE_ID, 100.0, 100.0);
             req.setIsInterimOrFinalBill(null);
-            req.setVisitTypeId(2); // anything other than OP (1)
+            req.setVisitTypeId(2); // anything other than OP (1) -- the branch that used to crash
 
-            // The whole method wraps everything in a catch-all that rethrows as BillingException, so
-            // the real NullPointerException (from auto-unboxing a null Integer in `== 1`) never
-            // surfaces to the caller as an NPE -- it comes out as a generic billing exception.
-            assertThatThrownBy(() -> service.collectPayment(req))
-                    .isInstanceOf(com.param.global.billing.controller.BillingException.class);
+            // Previously threw a NullPointerException (auto-unboxing a null Integer in `== 1`),
+            // wrapped by the method's catch-all into a BillingException. Now the added `!= null &&`
+            // guard makes the condition simply false, the branch body (the SMS call) never runs, and
+            // collectPayment completes normally -- same as its two already-guarded sibling branches.
+            assertThatNoException().isThrownBy(() -> service.collectPayment(req));
+
+            // The rest of the payment-collection flow still completes: the bill summary is still
+            // updated, same as any other successful payment.
+            verify(billingMasterDao).updateBillSummaryAmount(any(BillingMasterDto.class));
         }
     }
 }

@@ -2252,7 +2252,8 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				smsInfo.setRecieptId(recieptId);
 				smsUtilityService.getSmsUtilityByTriggerId(ISmsUtilityConstants.IP_FINAL_BILL, smsInfo);
 			}
-			if (billRes.getStatus().equals(SUCCESS) && reqDto.getIsInterimOrFinalBill() == 1
+			if (billRes.getStatus().equals(SUCCESS) && reqDto.getIsInterimOrFinalBill() != null
+					&& reqDto.getIsInterimOrFinalBill() == 1
 					&& reqDto.getVisitTypeId() != OP) {
 				SmsUtilityConfigInfoDto smsInfo = new SmsUtilityConfigInfoDto();
 				smsInfo.setUnitId(reqDto.getUnitId());
