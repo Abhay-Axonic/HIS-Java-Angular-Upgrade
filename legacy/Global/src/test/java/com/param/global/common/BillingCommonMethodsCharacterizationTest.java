@@ -34,17 +34,26 @@ import com.param.global.dto.ContractConsumptionDto;
  * co-pay/pre-auth-cap split -- highest fan-in of any calculation in scope: this exact method has 7
  * call sites across ContractConsumptionServiceImpl.java alone).
  *
- * KNOWN GAP FOUND WHILE WRITING THIS TEST (flagged, not fixed -- needs an owner decision, not a
- * unilateral AI fix): at every one of its 7 call sites, this method's caller pre-computes its own
- * local totalSelfPayable/totalCreditPayable, calls this method, and captures the return value -- but
- * the co-share-percentage and pre-auth-ceiling adjustments this method computes for those two figures
- * are LOCAL to the method (Double parameters are pass-by-value in Java) and are never written onto the
- * returned ContractConsumptionDto (it only gets setContractId called on it). The DATABASE writes
- * (updatePreAuthAmount / updateCapAmount / updateServiceCapAmount) DO receive the correctly-adjusted
- * amount. This means: the pre-auth/cap ledger in the database reflects the co-share/pre-auth
- * adjustment, but the caller's own totalSelfPayable/totalCreditPayable -- which is what ultimately
- * becomes the patient's bill -- does not. See BillingCommonMethodsCharacterizationTest#returnedDto_doesNotCarryTheAdjustedTotals
- * below, which asserts this gap explicitly so it can never silently change without this test failing.
+ * GAP FOUND WHILE WRITING THIS TEST -- FIXED 2026-07-15
+ * (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 1, owner-approved, after review of
+ * concrete before/after dollar examples for all 7 call sites). Previously: at every one of its 7 call
+ * sites, this method's caller pre-computed its own local totalSelfPayable/totalCreditPayable, called
+ * this method, and captured the return value -- but the co-share-percentage and pre-auth-ceiling
+ * adjustments this method computes for those two figures were LOCAL to the method (Double parameters
+ * are pass-by-value in Java) and were never written onto the returned ContractConsumptionDto (it only
+ * got setContractId called on it). The DATABASE writes (updatePreAuthAmount / updateCapAmount /
+ * updateServiceCapAmount) always received the correctly-adjusted amount -- only the returned object,
+ * and therefore the caller's own running totals (which is what ultimately becomes the patient's bill),
+ * did not.
+ *
+ * Now: this method also stamps the adjusted totalSelfPayable/totalCreditPayable onto the returned
+ * consumptionDto via setSelfPayable/setCreaditPayable, mirroring the sibling
+ * updatePreAuthAndServiceCapAmountForFirstPriorityContract's existing pattern. Critically, all 7 call
+ * sites in ContractConsumptionServiceImpl.java were updated to read the correction back via plain
+ * ASSIGNMENT (totalSelfPayable = creditAndSelfAmountDto.getSelfPayable()), not accumulation (+=) --
+ * this method receives and returns the caller's entire running total, not a per-round delta the way
+ * the sibling method does, so copying the sibling callers' += pattern verbatim would have silently
+ * double-counted the adjustment. See ReturnValueGap below, which now pins the fixed behavior.
  */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BillingCommonMethods.updatePreAuthAndServiceCapAmountForSecondContract -- characterization (current behavior, not verified-correct behavior)")
@@ -222,12 +231,12 @@ class BillingCommonMethodsCharacterizationTest {
     }
 
     @Nested
-    @DisplayName("KNOWN GAP -- flagged during test authoring, not fixed, needs an owner decision")
+    @DisplayName("ReturnValueGap -- FIXED 2026-07-15: the returned dto now carries the adjusted totals")
     class ReturnValueGap {
 
         @Test
-        @DisplayName("the returned dto does NOT carry the co-share/pre-auth-adjusted totalSelfPayable or totalCreditPayable")
-        void returnedDto_doesNotCarryTheAdjustedTotals() {
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 1, owner-approved): the returned dto now carries the co-share/pre-auth-adjusted totalSelfPayable and totalCreditPayable")
+        void returnedDto_nowCarriesTheAdjustedTotals() {
             ContractConsumptionDto secondRound = secondRoundContract(/* coShare */ 20.0, 1000.0);
             ContractConsumptionDto consumptionDto = billContext(false);
             consumptionDto.setSelfPayable(null);
@@ -237,22 +246,20 @@ class BillingCommonMethodsCharacterizationTest {
                     secondRound, 300.0, 700.0, 300.0, null, null,
                     consumptionDto, true, null, /* fromContact */ true);
 
-            // The database write DOES receive the co-share-adjusted amount (240.0, not 300.0) --
-            // confirmed by CoShareAdjustment#reducesDatabaseAmountByCoSharePercent above.
-            // But the object the caller gets back has NEITHER selfPayable NOR creaditPayable set to
-            // any adjusted value -- they remain exactly as the caller left them (null, in this test).
-            // This means the caller's own totalSelfPayable/totalCreditPayable local variables (which
-            // is what actually becomes the patient's bill) never learn about the co-share adjustment
-            // unless the caller duplicates this exact math itself -- and reading
-            // ContractConsumptionServiceImpl.java's 7 call sites, it does not.
+            // The database write receives the co-share-adjusted amount (240.0, not 300.0) --
+            // confirmed by CoShareAdjustment#reducesDatabaseAmountByCoSharePercent above. Now the
+            // object the caller gets back carries the SAME adjustment: 20% of 300.0 = 60.0 shifts
+            // from credit to self, so totalSelfPayable (700.0 + 60.0 = 760.0) and totalCreditPayable
+            // (300.0 - 60.0 = 240.0) are both stamped onto the returned dto -- previously they stayed
+            // exactly as the caller left them (null, in this test).
             assertThat(returned).isSameAs(consumptionDto);
-            assertThat(returned.getSelfPayable()).isNull();
-            assertThat(returned.getCreaditPayable()).isNull();
+            assertThat(returned.getSelfPayable()).isEqualTo(760.0);
+            assertThat(returned.getCreaditPayable()).isEqualTo(240.0);
         }
 
         @Test
-        @DisplayName("only setContractId is ever called on the returned dto -- selfPayable/creaditPayable setters are never invoked by this method")
-        void onlyContractIdIsMutatedOnTheReturnedDto() {
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 1, owner-approved): setContractId AND the adjusted selfPayable/creaditPayable are now both invoked on the returned dto, overwriting whatever the caller had set before the call")
+        void contractIdAndAdjustedTotals_areBothMutatedOnTheReturnedDto() {
             ContractConsumptionDto secondRound = secondRoundContract(20.0, 1000.0);
             ContractConsumptionDto consumptionDto = billContext(false);
             consumptionDto.setContractId(1);
@@ -264,9 +271,13 @@ class BillingCommonMethodsCharacterizationTest {
                     consumptionDto, true, null, true);
 
             assertThat(consumptionDto.getContractId()).isEqualTo(secondRound.getContractId());
-            // Unchanged from what the caller set before the call -- proves this method never touches them.
-            assertThat(consumptionDto.getSelfPayable()).isEqualTo(111.0);
-            assertThat(consumptionDto.getCreaditPayable()).isEqualTo(222.0);
+            // Previously these stayed exactly as the caller had set them (111.0/222.0), proving the
+            // method never touched them. Now they're overwritten with the freshly computed adjusted
+            // totals -- 700.0 + 60.0 (20% co-share of 300.0) = 760.0 self, 300.0 - 60.0 = 240.0
+            // credit -- unrelated to whatever pre-existing values consumptionDto happened to carry
+            // going in.
+            assertThat(consumptionDto.getSelfPayable()).isEqualTo(760.0);
+            assertThat(consumptionDto.getCreaditPayable()).isEqualTo(240.0);
         }
     }
 }

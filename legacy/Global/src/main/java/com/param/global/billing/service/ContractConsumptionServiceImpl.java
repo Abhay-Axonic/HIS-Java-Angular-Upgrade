@@ -959,6 +959,8 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 										
 										ContractConsumptionDto creditAndSelfAmountDto = 
 												billingCommonMethods.updatePreAuthAndServiceCapAmountForSecondContract(secondRound,creaditPayableSecondRound,totalSelfPayable,totalCreditPayable,secondRounfCoShare,preAuthAmount,consumptionDto,true,null,true);
+										totalSelfPayable = creditAndSelfAmountDto.getSelfPayable();
+										totalCreditPayable = creditAndSelfAmountDto.getCreaditPayable();
 										/*if(secondRound.getCoShare()!=null && secondRound.getCoShare()>0)
 										{
 											secondRounfCoShare  = ((secondRound.getCoShare()*0.01)*creaditPayableSecondRound);
@@ -1023,6 +1025,8 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 												
 												ContractConsumptionDto creditAndSelfAmountDto = 
 														billingCommonMethods.updatePreAuthAndServiceCapAmountForSecondContract(secondRound,creaditPayableSecondRound,totalSelfPayable,totalCreditPayable,secondRounfCoShare,preAuthAmount,consumptionDto,false,null,true);
+												totalSelfPayable = creditAndSelfAmountDto.getSelfPayable();
+												totalCreditPayable = creditAndSelfAmountDto.getCreaditPayable();
 												
 											/*	if(secondRound.getCoShare()!=null && secondRound.getCoShare()>0)
 												{
@@ -1105,6 +1109,8 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 													
 													ContractConsumptionDto creditAndSelfAmountDto = 
 															billingCommonMethods.updatePreAuthAndServiceCapAmountForSecondContract(secondRound,creaditPayableSecondRound,totalSelfPayable,totalCreditPayable,secondRounfCoShare,preAuthAmount,consumptionDto,false,1.00,true);
+													totalSelfPayable = creditAndSelfAmountDto.getSelfPayable();
+													totalCreditPayable = creditAndSelfAmountDto.getCreaditPayable();
 													
 													/*
 													if(secondRound.getCoShare()!=null && secondRound.getCoShare()>0)
@@ -2367,6 +2373,8 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 									{
 										ContractConsumptionDto creditAndSelfAmountDto = 
 												billingCommonMethods.updatePreAuthAndServiceCapAmountForSecondContract(secondRound,creaditPayableSecondRound,totalSelfPayable,totalCreditPayable,secondRounfCoShare,preAuthAmount,consumptionDto,true,null,true);
+										totalSelfPayable = creditAndSelfAmountDto.getSelfPayable();
+										totalCreditPayable = creditAndSelfAmountDto.getCreaditPayable();
 									/*	
 										if(secondRound.getCoShare()!=null && secondRound.getCoShare()>0)
 										{
@@ -2431,6 +2439,8 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 												
 												ContractConsumptionDto creditAndSelfAmountDto = 
 														billingCommonMethods.updatePreAuthAndServiceCapAmountForSecondContract(secondRound,creaditPayableSecondRound,totalSelfPayable,totalCreditPayable,secondRounfCoShare,preAuthAmount,consumptionDto,true,null,false);
+												totalSelfPayable = creditAndSelfAmountDto.getSelfPayable();
+												totalCreditPayable = creditAndSelfAmountDto.getCreaditPayable();
 												
 											/*	
 												if(preAuthAmount!=null && consumptionDto.isApplyAuth())
@@ -2469,6 +2479,8 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 													
 													ContractConsumptionDto creditAndSelfAmountDto = 
 															billingCommonMethods.updatePreAuthAndServiceCapAmountForSecondContract(secondRound,creaditPayableSecondRound,totalSelfPayable,totalCreditPayable,secondRounfCoShare,preAuthAmount,consumptionDto,true,1.00,false);
+													totalSelfPayable = creditAndSelfAmountDto.getSelfPayable();
+													totalCreditPayable = creditAndSelfAmountDto.getCreaditPayable();
 													
 													/*
 													
@@ -2995,6 +3007,8 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 										{
 											ContractConsumptionDto creditAndSelfAmountDto = 
 													billingCommonMethods.updatePreAuthAndServiceCapAmountForSecondContract(secondRound,creaditPayableSecondRound,totalSelfPayable,totalCreditPayable,secondRounfCoShare,preAuthAmount,consumptionDto,true,null,true);
+											totalSelfPayable = creditAndSelfAmountDto.getSelfPayable();
+											totalCreditPayable = creditAndSelfAmountDto.getCreaditPayable();
 											/*
 											
 											if(secondRound.getCoShare()!=null && secondRound.getCoShare()>0)
