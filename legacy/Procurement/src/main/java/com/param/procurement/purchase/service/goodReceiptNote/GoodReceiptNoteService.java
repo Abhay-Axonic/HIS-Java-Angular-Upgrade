@@ -1749,7 +1749,7 @@ public class GoodReceiptNoteService implements IGoodReceiptNoteService {
 				detail.setUpdatedDate(TimeZoneComponent.getDateByzone(goodReceiptNote.getUnitId()));
 				detail.setUpdatedByUser(grnStatusDto.getUserId());
 				
-				List<TaxComponentDetailsDto> taxDetailsList = grnDao.getTaxDetails(detail.getTax().getId());
+				List<TaxComponentDetailsDto> taxDetailsList = grnDao.getTaxDetails(detail.getTax()!=null ? detail.getTax().getId():0);
 				
 				Double commTaxAmount = detail.getTotalAmount() - (detail.getTotalDiscount()!=null ? detail.getTotalDiscount() :0);
 				

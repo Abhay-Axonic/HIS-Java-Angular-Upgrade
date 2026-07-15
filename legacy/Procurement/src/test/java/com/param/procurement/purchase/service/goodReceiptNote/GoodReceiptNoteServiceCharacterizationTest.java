@@ -1,7 +1,6 @@
 package com.param.procurement.purchase.service.goodReceiptNote;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -42,28 +41,30 @@ import com.param.procurement.purchase.dto.goodReceiptNote.GRNStatusDto;
  * differences precisely so neither can silently drift closer together or further apart without a
  * test failing.
  *
- * CONFIRMED DIVERGENCES FROM Inventory's ReturnableGatepassService#submitReturnableGatepass (flagged,
- * not fixed -- needs an owner decision per Decision 5 of docs/DECISION_NEEDED_ShadowTestHarnessApproach.md):
+ * CONFIRMED DIVERGENCES FROM Inventory's ReturnableGatepassService#submitReturnableGatepass (originally
+ * 3, flagged per Decision 5 of docs/DECISION_NEEDED_ShadowTestHarnessApproach.md -- #2 has since been
+ * fixed, owner-approved; #1 and #3 remain open, sitting in the slower joint-triage list):
  *
- * 1. DISCOUNT NETTING: this method computes commTaxAmount = totalAmount - totalDiscount (defaulting
- *    to 0 when totalDiscount is null) before taxing. Inventory's version taxes the raw totalAmt with
- *    NO discount subtraction at all -- despite ReturnableGatepassDetail having its own populated
- *    totalDiscount field (confirmed via grep: set from item.getTotalDiscount() at 12 call sites
- *    elsewhere in ReturnableGatepassService.java), which the tax-computation block simply never reads.
- *    Whether "goods receipt" and "goods return" tax should legitimately differ this way, or whether
- *    one of the two is a bug, is a real business question -- not decided here.
+ * 1. DISCOUNT NETTING (still open): this method computes commTaxAmount = totalAmount - totalDiscount
+ *    (defaulting to 0 when totalDiscount is null) before taxing. Inventory's version taxes the raw
+ *    totalAmt with NO discount subtraction at all -- despite ReturnableGatepassDetail having its own
+ *    populated totalDiscount field (confirmed via grep: set from item.getTotalDiscount() at 12 call
+ *    sites elsewhere in ReturnableGatepassService.java), which the tax-computation block simply never
+ *    reads. Whether "goods receipt" and "goods return" tax should legitimately differ this way, or
+ *    whether one of the two is a bug, is a real business question -- not decided here.
  *
- * 2. NULL-TAX-REFERENCE HANDLING: Inventory guards with
- *    `detail.getTax()!=null ? detail.getTax().getId() : 0`. This method calls `detail.getTax().getId()`
- *    directly, with no null check and no surrounding try/catch at that specific line (the try/catch
- *    only wraps the per-component loop body, not the getTaxDetails call itself) -- a detail with a
- *    null Tax reference throws an uncaught NullPointerException out of the whole method today. See
- *    NullTaxReference#throwsNullPointerException_whenTaxIsNull below, which pins this as current
- *    (crash-prone) behavior.
+ * 2. NULL-TAX-REFERENCE HANDLING -- FIXED 2026-07-15 (docs/DECISION_NEEDED_GrnNullTaxReferenceCrash.md,
+ *    owner-approved). Previously: this method called `detail.getTax().getId()` directly, with no null
+ *    check and no surrounding try/catch at that specific line, so a detail with a null Tax reference
+ *    threw an uncaught NullPointerException out of the whole method, aborting the entire batch
+ *    approval. Now: guards with `detail.getTax()!=null ? detail.getTax().getId() : 0`, the exact line
+ *    already live in Inventory's parallel flow (same DAO interface/method). See
+ *    NullTaxReference#fallsBackToZero_whenTaxIsNull_insteadOfCrashing below, which now pins the fixed
+ *    (graceful-skip) behavior instead of the crash.
  *
- * 3. NO SOFT-DELETE GUARD: Inventory skips details where `getIsDeleted()` is true. This method's loop
- *    has no equivalent check at all -- every detail in the list is processed unconditionally. See
- *    NoDeletedGuard#processesEveryDetailRegardlessOfDeletedFlag below.
+ * 3. NO SOFT-DELETE GUARD (still open): Inventory skips details where `getIsDeleted()` is true. This
+ *    method's loop has no equivalent check at all -- every detail in the list is processed
+ *    unconditionally. See NoDeletedGuard#processesEveryDetailRegardlessOfDeletedFlag below.
  *
  * Per Decision 4 (owner-approved): assertions use exact equality, not RULES.md's $0.01 tolerance.
  */
@@ -231,15 +232,20 @@ class GoodReceiptNoteServiceCharacterizationTest {
     class NullTaxReference {
 
         @Test
-        @DisplayName("throws NullPointerException when a detail's tax reference is null -- no guard, unlike Inventory's fallback-to-0")
-        void throwsNullPointerException_whenTaxIsNull() {
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_GrnNullTaxReferenceCrash.md, owner-approved): falls back to id=0 instead of crashing, matching Inventory's existing pattern -- taxDetailsList comes back empty, tax processing is skipped for that line, and the rest of the batch (including the goodReceiptNote status update) still completes")
+        void fallsBackToZero_whenTaxIsNull_insteadOfCrashing() throws Exception {
             GoodReceiptNoteDetail detail = detail(55, 1000.0, 0.0, 0.0, /* tax */ null, 7);
             GoodReceiptNote grn = goodReceiptNote(0, 1, Arrays.asList(detail));
 
             when(grnDao.getGoodReceiptNote(1)).thenReturn(grn);
+            // No stub for getTaxDetails(0) -- Mockito's default answer for a List-returning method
+            // is an empty list, matching Inventory's confirmed real-DAO behavior for an unmatched id.
 
-            assertThatThrownBy(() -> service.approveGoodReceiptNote(request(1, 42)))
-                    .isInstanceOf(NullPointerException.class);
+            service.approveGoodReceiptNote(request(1, 42));
+
+            verify(grnDao).getTaxDetails(0); // the fallback fired, not a crash
+            verify(taxComponentDetailsDao, never()).saveTaxComponentDetails(any()); // nothing to save, no tax components for id=0
+            verify(grnDao).updateGoodReceiptNote(grn); // the rest of the batch still completes
         }
     }
 
