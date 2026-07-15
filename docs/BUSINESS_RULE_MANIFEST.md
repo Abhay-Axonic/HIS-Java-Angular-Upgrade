@@ -519,3 +519,34 @@ Classification: Neither (known-issue log only, no code change this session). Own
 Classification: Neither (known-issue log only, no code change this session — same precedent as the prior BR-PENDING entries from this harness effort). Owner Decision: Explicitly deferred, per the standing Decision 5 instruction.
 
 **Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 25/25, Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. This is batch 1 of an explicitly open-ended Step 2 expansion (`BillingCommonMethods.java` has ~30 public methods; `ContractConsumptionServiceImpl.java` has ~16, several thousands of lines each — full coverage will take multiple further batches, reported incrementally per owner instruction).
+
+## BR-PENDING-shadow-wave2-billingcommonmethods-batch2 — Known issues, NOT fixed: a money-conservation bug in updatePreAuthForPharmacyContract (flagged live, urgent) plus 5 further findings across the package-consumption-cap methods (2026-07-15)
+
+**Found while writing shadow-test wave-2 characterization tests, Step 2 batch 2.** Not fixed, per the standing owner instruction (Decision 5). Covers `updatePreAuthForPharmacyContract`, `createOrderDetailsPackageMapperDtoAndUpdatePackageCap`, `createOrderDetailsPackageMapperDtoAndUpdatePackageServiceCap`, and `createOrderDetailsPackageMapperForMultiEncounter`, all in `Global/.../common/BillingCommonMethods.java`.
+
+**Finding 1 — flagged to the owner live, mid-batch, as genuinely urgent: `updatePreAuthForPharmacyContract` loses money from the combined total whenever a co-share percentage applies.** Lines 607-610:
+```java
+if (resDto.getCoShare() != null) {
+    creditPayable = GlobalCommonDateUtils.getAmount(creditPayable - (creditPayable * (resDto.getCoShare() / 100)));
+    selfPayable = GlobalCommonDateUtils.getAmount(selfPayable + (creditPayable * (resDto.getCoShare() / 100)));
+}
+```
+Line 1 reassigns `creditPayable` to the reduced value *first*. Line 2 then computes the amount added to `selfPayable` off that **already-reduced** `creditPayable`, not the original amount the co-share percentage was meant to apply to. Concrete example (confirmed via a passing test, `PreAuthForPharmacyContract#coShareAdjustment_moneyConservationBug`): `creditPayable=$1000`, `coShare=20%` → `creditPayable` becomes `$800` (correct: 20% of $1000 removed) → `selfPayable` becomes `$160` (20% of the already-reduced $800, not $1000) → **the combined total shrinks from $1000 to $960; $40 has simply disappeared**, not merely disagreed between two places the way Finding 1 (the co-pay/pre-auth split gap, fixed earlier today) did. This is a live pharmacy-billing pre-authorization calculation.
+
+**Finding 2:** in the same method, a `preauthId` set on `resDto` but absent from the `preAuthDetails` map throws an uncaught `NullPointerException` via auto-unboxing (`preAuthDetails.get(resDto.getPreauthId()) >= 0`). Confirmed via a passing test.
+
+**Finding 3:** `createOrderDetailsPackageMapperDtoAndUpdatePackageCap` accumulates `consumptionDto.packageConsumptionAmt` by the line's `serviceRate`, while its near-identically-named sibling `createOrderDetailsPackageMapperDtoAndUpdatePackageServiceCap` accumulates the same field by `consumeAmt` instead — two methods with parallel structure and purpose use a different basis for the same running total. Not necessarily wrong (the two may track conceptually different things — package-level cap vs. service-level cap consumption), but worth an owner's confirmation. Confirmed via passing tests in both nested test classes.
+
+**Finding 4:** `createOrderDetailsPackageMapperForMultiEncounter`'s `availableQty >= serviceQty` branch silently discards the caller's `setPkgAmt` flag — if `setPkgAmt=true`, `packageAmount` is initially set from `consumptionDto.getSelfPayable()`, but this branch unconditionally overwrites it a few lines later with the freshly computed `ordTotalAmount`, regardless of what the caller asked for. Confirmed via a passing test using a sentinel value (999.0) that never survives to the returned dto.
+
+**Finding 5 (the more concrete of the two branch inconsistencies): the same method's `availableQty < serviceQty` (partial-fulfillment) branch hardcodes `packageQty`, the cap-DAO deduction, and the service detail's remaining balance to `1`, `-1`, and `0` respectively — not derived from the actual remaining quantity being processed.** With `availableQty=3` and `serviceQty=5` (2 units still genuinely needed after exhausting the 3 available), the method still reports `packageQty=1`, deducts only `1` unit via `updatePackageQty(...,-1)`, and zeroes the service detail's balance regardless of the real remaining amount. Confirmed via a passing test.
+
+**Finding 6:** the two branches of the same method derive `netAmount` via genuinely different formulas — the `availableQty >= serviceQty` branch sets `netAmount = consumptionDto.getFinalPrice()` (an unrelated, pre-existing carried-over value, no arithmetic at all), while the `availableQty < serviceQty` branch computes `netAmount = ordTotalAmount - packageConsumptionAmt` (a real subtraction). Confirmed via passing tests in both branches.
+
+**Severity:** Finding 1 is judged the most urgent of this batch — a real, silent money-conservation defect in a live pharmacy pre-authorization calculation, flagged to the owner immediately rather than held for a batch summary. Finding 5 is the second most concrete — hardcoded values that don't track actual partial-fulfillment quantities look like a real defect, not a deliberate simplification, though not investigated further this session. Findings 2, 3, 4, 6 are lower-probability edge cases or design-consistency observations, included per Decision 5's "log every surfaced inconsistency" instruction.
+
+**Owner instruction:** log clearly, do not fix (all 6, including Finding 1 -- the owner may choose to fast-track any of these separately, same process as the GRN crash and batch-1 finding 4 fast-tracks, but no such request has been made for this batch as of this entry). No code change made to `BillingCommonMethods.java`. All 6 findings are pinned by passing test assertions (11 new tests this batch, 36 total in the file), not just described in prose.
+
+Classification: Neither (known-issue log only, no code change this session). Owner Decision: Explicitly deferred, per the standing Decision 5 instruction.
+
+**Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 36/36, Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. This is batch 2 of the open-ended Step 2 expansion; `ContractConsumptionServiceImpl.java` (the much larger target, ~16 methods, several thousand lines each) has not yet been started.
