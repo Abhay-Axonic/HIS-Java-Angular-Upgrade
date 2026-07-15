@@ -602,3 +602,27 @@ Discovered because the characterization test crashed with a `NullPointerExceptio
 Classification: Neither (known-issue log only, no code change this session). Owner Decision: Explicitly deferred (findings), explicitly out of scope (the 16 DTO methods).
 
 **Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 58/58, Billing 29/29 (verified from a clean `target/` wipe, twice, to confirm no residual flakiness after the two test corrections this batch required). No local `try/catch` touched, no database column changed, no business term introduced.
+
+## BR-PENDING-shadow-wave2-contractconsumption-smallmethods — Known issue, NOT fixed: consumeServiceFromContractAfterTariffChange's row loop lets the last row silently win, same defect class as batch-1 finding 1 (2026-07-15)
+
+**Found while writing shadow-test wave-2 characterization tests for `ContractConsumptionServiceImpl.java`'s 13 small methods (Step 3, first sub-task).** Not fixed, per the standing owner instruction (Decision 5). This entry covers only the 13 small methods (~300 lines combined); the 3 giant methods in the same class (`consumeServiceFromContract`, `consumeServiceFromContractPackage`, `consumePackageFromContract`) are handled separately with a targeted, branch-prioritized approach, reported in their own entries.
+
+**Finding — `consumeServiceFromContractAfterTariffChange`: with multiple rows returned by `getServiceDetailsByContractIdAfterTariffChange`, only the LAST row's `serviceRate` survives; every earlier row is silently discarded.** `Global/.../billing/service/ContractConsumptionServiceImpl.java`, lines 3297-3312:
+```java
+List<ContractConsumptionDto> serviceDetailslist = iContractConsumptionDao.getServiceDetailsByContractIdAfterTariffChange(consumptionDto);
+for(ContractConsumptionDto resDto : serviceDetailslist) {
+    finalDto.setServiceRate(resDto.getServiceRate());
+}
+return new Response(SUCCESS, SUCCESS_CODE, "Service is not mapped with the tariff..!!", null, finalDto);
+```
+The loop unconditionally overwrites `finalDto`'s `serviceRate` on every iteration with no filtering, no `break`, and no "first/best match" logic — whatever row the DAO happens to return last determines the tariff-changed rate returned to the caller, regardless of list order having any real meaning. This is the same defect shape as batch-1 finding 1 (`taxCalculation`'s GST bracket loop) — a second, independent instance of "last item in a loop silently wins" found in this same class hierarchy. Confirmed via a passing test (`ConsumeServiceFromContractAfterTariffChange#multipleRows_lastServiceRateWins`) using 2 rows with different rates, asserting the returned dto's `serviceRate` matches only the second row's value.
+
+**Severity:** moderate — this method's own return message ("Service is not mapped with the tariff") suggests it's meant to run when the DAO returns rows needing reconciliation after a tariff change; if that lookup ever legitimately returns more than one row (not confirmed this session whether it does in current production data), the rate actually used is determined by result-set ordering, not by any business rule distinguishing the rows.
+
+**Owner instruction:** log clearly, do not fix. No code change made to `ContractConsumptionServiceImpl.java`. Confirmed via a passing test assertion, not just described in prose. The other 12 small methods in this batch (`resetContractCapping`, `addCapAmount`, `addCapContract`, `addCapPackage`, `getActivePaymentEntitlement`, `isConsultationAmountPaidBySelf`, `getPatientClassByVisit`, `getIsBedChargesService`, `getGstApplicableForBillingBedCategory`, `getGstDetails`, `getSerivceRateGlobalAfterTariffChange`, `getSerivceRateGlobal`) were characterized with no further findings surfaced — their current behavior (including `getSerivceRateGlobal`'s consultation-rate lookup, its consultationAmount-already-set skip path, and its payee/package mapper construction) matches what a straightforward reading of the code would predict, pinned by passing tests but not flagged as defects.
+
+**Note on `getSerivceRateGlobal`/`getSerivceRateGlobalAfterTariffChange` test approach:** `getSerivceRateGlobal` calls `this.consumeServiceFromContract(...)` internally — the 1,842-line giant method not yet characterized. Rather than block this batch on that method, its tests use `Mockito.spy(service)` with `doReturn(...).when(spyService).consumeServiceFromContract(dto)` to stub only that one delegate call, isolating `getSerivceRateGlobal`'s own logic (the surrounding lookups and mapper construction) from the uncharacterized method it happens to call into. `getSerivceRateGlobalAfterTariffChange` delegates to `consumeServiceFromContractAfterTariffChange`, which IS one of the 13 small methods and already characterized above, so that test lets the real delegate run.
+
+Classification: Neither (known-issue log only, no code change this session — same precedent as the prior BR-PENDING entries from this harness effort). Owner Decision: Explicitly deferred, per the standing Decision 5 instruction.
+
+**Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 62/62 (26 new tests this batch, 36 pre-existing from `BillingCommonMethodsCharacterizationTest`), Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. This is the first sub-task of Step 3 (`ContractConsumptionServiceImpl.java`'s 13 small methods); the 3 giant methods are reported separately.
