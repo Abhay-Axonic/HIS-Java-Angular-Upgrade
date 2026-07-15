@@ -116,7 +116,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("getActiveKitList failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
@@ -149,7 +148,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("searchKitByKitName failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -183,7 +181,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("searchInstrumentByKitName failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -223,7 +220,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("searchInstrumentAsKit failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -249,7 +245,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("searchInstrumentByName failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
@@ -273,7 +268,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("getAllInstrumentList failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
@@ -337,7 +331,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("searchInstrumentByMultipleFields failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
@@ -375,7 +368,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("getKitWithEquipments failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
@@ -457,7 +449,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("createKit failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -489,7 +480,6 @@ public class KitMasterDaoImpl extends GenericDao<KitMaster, Integer> implements 
 			logger.error("getKitByNameAndCode failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 

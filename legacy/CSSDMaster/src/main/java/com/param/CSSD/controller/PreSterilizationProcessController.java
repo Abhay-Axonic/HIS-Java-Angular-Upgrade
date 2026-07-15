@@ -42,9 +42,9 @@ public class PreSterilizationProcessController implements ICommonConstants {
 			if(preSterilizationProcessDto.getIsInstrument()) {
 			 Response resp = iPreSterilizationProcessService.saveInstrumentAsKit(preSterilizationProcessDto);
 			 PreSterilizationProcessDto dto = (PreSterilizationProcessDto)(resp.getObject());
-			 Response resp1 = iPreSterilizationProcessService.getKitInstrumentId(dto.getKitId(),preSterilizationProcessDto.getKitInstrumentList().get(0).getInstrumentId());
+			 Response resp1 = iPreSterilizationProcessService.getKitInstrumentId(dto.getKitId(),preSterilizationProcessDto.getKitInstrumentList().getFirst().getInstrumentId());
 			 Integer kitInstrumentId = (Integer) resp1.getObject();
-			 preSterilizationProcessDto.getKitInstrumentList().get(0).setKitInstrumentId(kitInstrumentId);
+			 preSterilizationProcessDto.getKitInstrumentList().getFirst().setKitInstrumentId(kitInstrumentId);
 			 Response res1= iPreSterilizationProcessService.saveCleanedWorklist(preSterilizationProcessDto);
 			}else {
 				Response res2=iPreSterilizationProcessService.saveCleanedWorklist(preSterilizationProcessDto); 

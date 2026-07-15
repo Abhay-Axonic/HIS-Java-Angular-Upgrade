@@ -234,7 +234,7 @@ public class CSSDOpeningStockDaoImpl extends GenericDao<CssdOpeningBalanceStock,
 					.setParameter("openingBalanceId", request.getId())
 					.setResultTransformer(Transformers.aliasToBean(CssdOpeningStockDto.class)).list();
 
-			if (kitList.get(0).getIsKit().equals('Y')) {
+			if (kitList.getFirst().getIsKit().equals('Y')) {
 				for (CssdOpeningStockDto dto1 : kitList) {
 					List<CssdOpeningStockDto> kitInstumentList = new ArrayList<CssdOpeningStockDto>();
 					for (CssdOpeningStockDto dto2 : instrumentList) {

@@ -158,7 +158,6 @@ public class SterilizationTypeMasterDaoImpl extends GenericDao<SterilizationType
 			logger.error("createSterilizationType failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 

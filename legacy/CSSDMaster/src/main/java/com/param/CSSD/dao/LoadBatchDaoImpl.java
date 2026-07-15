@@ -85,7 +85,7 @@ public class LoadBatchDaoImpl extends GenericDao<LoadBatch, Integer>
 				.setResultTransformer(Transformers.aliasToBean(PreSterilizationProcessDto.class)).list();
 				
 				if(!list.isEmpty()) {
-					if(list.get(0).getStatus().equals("Unsterilized")) {
+					if(list.getFirst().getStatus().equals("Unsterilized")) {
 						finalListForLoadBatch.add(dto);
 					}
 				}else {

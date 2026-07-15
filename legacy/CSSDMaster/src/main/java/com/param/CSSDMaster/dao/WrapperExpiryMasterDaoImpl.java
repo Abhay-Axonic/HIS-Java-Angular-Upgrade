@@ -128,7 +128,6 @@ public class WrapperExpiryMasterDaoImpl extends GenericDao<WrapperExpiryMaster, 
 			logger.error("getActiveWrapperExpiryByCode failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -209,7 +208,6 @@ public class WrapperExpiryMasterDaoImpl extends GenericDao<WrapperExpiryMaster, 
 			logger.error("createWrapperExpiry failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
