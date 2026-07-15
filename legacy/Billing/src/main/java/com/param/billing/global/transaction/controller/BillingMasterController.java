@@ -287,6 +287,10 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 				
 			}
 			
+			if(orderDetailsRes.getObject() == null){
+				return new Response<>(ERROR, ALREADY_EXIST_CODE, "Unable to verify this bill's current amount -- please retry, or contact support if this persists.", null, null);
+			}
+
 			if(checkSameAmount){
 				return new Response<>(ERROR, ALREADY_EXIST_CODE, "This bill is already in process by other user!", null, null);
 			}
