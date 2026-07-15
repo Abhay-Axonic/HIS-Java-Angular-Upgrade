@@ -167,7 +167,7 @@ public class LinenIssueAcceptanceService implements ILinenIssueAcceptanceService
 
 				storeStock.setAvailableQty(balanceQuantity);
 				StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), issueQuantity,
-						batch.getStoreStockList().get(0).getStore(),0);
+						batch.getStoreStockList().getFirst().getStore(),0);
 //				sessionService.setEntityDefaults(stockTransaction);
 
 				stockTransaction.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),
@@ -183,7 +183,7 @@ public class LinenIssueAcceptanceService implements ILinenIssueAcceptanceService
 					request.getUserId());
 			Integer avaialableStoreStock = GlobalDao.getStoreStockByBatch(storeId, batch.getId());
 			StockTransaction stockTransaction=new StockTransaction(avaialableStoreStock, screen, screen.getCode(),
-					issueQuantity, batch.getStoreStockList().get(0).getStore(),0);
+					issueQuantity, batch.getStoreStockList().getFirst().getStore(),0);
 //			sessionService.setEntityDefaults(stockTransaction);	
 			stockTransaction.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),
 					request.getUserId());
