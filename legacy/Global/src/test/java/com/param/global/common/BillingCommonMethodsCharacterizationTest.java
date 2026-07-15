@@ -635,8 +635,8 @@ class BillingCommonMethodsCharacterizationTest {
         }
 
         @Test
-        @DisplayName("URGENT FINDING (logged, not fixed): applying coShare loses money from the combined total -- selfPayable is credited off the ALREADY-REDUCED creditPayable, not the original amount")
-        void coShareAdjustment_moneyConservationBug() {
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_PharmacyContractCoShareMoneyLeak.md, batch 2 finding 1, owner-approved): applying coShare now conserves the combined total -- selfPayable is credited off the ORIGINAL creditPayable, before it's reassigned")
+        void coShareAdjustment_conservesTotal() {
             ContractConsumptionDto resDto = new ContractConsumptionDto();
             resDto.setCoShare(20.0); // 20%
             PharmacyBillCommonDto dto = new PharmacyBillCommonDto();
@@ -644,17 +644,17 @@ class BillingCommonMethodsCharacterizationTest {
             ContractConsumptionDto result = billingCommonMethods.updatePreAuthForPharmacyContract(
                     resDto, /* creditPayable */ 1000.0, /* selfPayable */ 0.0, dto, new java.util.HashMap<>());
 
-            // Line 1 reassigns creditPayable FIRST: 1000.0 - (1000.0 * 0.20) = 800.0.
-            // Line 2 then computes the selfPayable addition off that ALREADY-REDUCED 800.0, not the
-            // original 1000.0: 0.0 + (800.0 * 0.20) = 160.0 -- not the 200.0 that was actually removed
-            // from creditPayable. $200 left creditPayable; only $160 arrived at selfPayable.
+            // Previously, creditPayable was reassigned to its reduced value FIRST, then selfPayable's
+            // addition was computed off that already-reduced amount -- 0.0 + (800.0 * 0.20) = 160.0,
+            // not the 200.0 that was actually removed from creditPayable, so $40 vanished from the
+            // combined total (1000.0 -> 960.0). Now selfPayable is computed FIRST, from the still-
+            // original creditPayable (1000.0), matching the line order already used correctly in both
+            // sibling co-share calculations in this file: 0.0 + (1000.0 * 0.20) = 200.0. creditPayable
+            // is then reduced by that same 200.0: 1000.0 - 200.0 = 800.0.
+            assertThat(result.getSelfPayable()).isEqualTo(200.0);
             assertThat(result.getCreaditPayable()).isEqualTo(800.0);
-            assertThat(result.getSelfPayable()).isEqualTo(160.0);
-            // The combined total shrank from 1000.0 (1000.0 credit + 0.0 self) to 960.0 (800.0 + 160.0)
-            // -- $40 has simply disappeared from this calculation. Not a values-disagree-elsewhere gap
-            // like BR-PENDING-copay-preauth-split-return-value-gap (Finding 1) -- the total itself is
-            // wrong, in a live pharmacy-billing pre-authorization calculation.
-            assertThat(result.getCreaditPayable() + result.getSelfPayable()).isEqualTo(960.0);
+            // The combined total is now conserved: 800.0 + 200.0 = 1000.0, matching what came in.
+            assertThat(result.getCreaditPayable() + result.getSelfPayable()).isEqualTo(1000.0);
         }
 
         @Test

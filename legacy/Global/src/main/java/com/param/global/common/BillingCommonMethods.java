@@ -605,8 +605,8 @@ public class BillingCommonMethods<T> {
 
         ContractConsumptionDto res = new ContractConsumptionDto();
         if (resDto.getCoShare() != null) {
-            creditPayable = GlobalCommonDateUtils.getAmount(creditPayable - (creditPayable * (resDto.getCoShare() / 100)));
             selfPayable = GlobalCommonDateUtils.getAmount(selfPayable + (creditPayable * (resDto.getCoShare() / 100)));
+            creditPayable = GlobalCommonDateUtils.getAmount(creditPayable - (creditPayable * (resDto.getCoShare() / 100)));
         }
 
         if (resDto.getPreauthId() != null && preAuthDetails.get(resDto.getPreauthId()) >= 0) {
