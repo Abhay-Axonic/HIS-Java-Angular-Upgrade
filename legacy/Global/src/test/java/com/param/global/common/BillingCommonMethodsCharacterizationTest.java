@@ -21,7 +21,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.param.global.billing.dao.IContractConsumptionDao;
+import com.param.global.billing.dto.PharmacyBillCommonDto;
 import com.param.global.dto.ContractConsumptionDto;
+import com.param.global.dto.OrderDetailsPackageMapperDto;
+import com.param.global.dto.PackageConsumptionMasterResDto;
+import com.param.global.dto.PackageConsumptionServiceDetailDto;
+import com.param.global.dto.TPackageConsumptionCapDetailsDto;
 
 /**
  * WAVE-1 CHARACTERIZATION TEST -- DRAFT, NOT YET REVIEWED OR APPROVED.
@@ -65,6 +70,8 @@ class BillingCommonMethodsCharacterizationTest {
 
     @Mock
     private IContractConsumptionDao contractConsumptionDao;
+    @Mock
+    private com.param.global.dao.ITPackageConsumptionCapDetailsDao tPackageConsumptionCapDetailsDao;
 
     private BillingCommonMethods<Object> billingCommonMethods;
 
@@ -74,6 +81,7 @@ class BillingCommonMethodsCharacterizationTest {
         // Package-private field injection (no Spring context needed for this unit) -- same package,
         // matches the field's actual (default) visibility in BillingCommonMethods.java.
         billingCommonMethods.iContractConsumptionDao = contractConsumptionDao;
+        billingCommonMethods.iTPackageConsumptionCapDetailsDao = tPackageConsumptionCapDetailsDao;
     }
 
     private ContractConsumptionDto secondRoundContract(Double coShare, Double balanceCapAmount) {
@@ -595,6 +603,274 @@ class BillingCommonMethodsCharacterizationTest {
             verify(contractConsumptionDao).updateCapAmount(consumptionDto, 300.0);
             assertThat(result.getSelfPayable()).isEqualTo(300.0); // 100.0 + (500.0 - 300.0)
             assertThat(result.getCreaditPayable()).isEqualTo(300.0);
+        }
+    }
+
+    // =========================================================================================
+    // SHADOW-TEST HARNESS EXPANSION (Step 2), batch 2 -- updatePreAuthForPharmacyContract,
+    // createOrderDetailsPackageMapperDtoAndUpdatePackageCap,
+    // createOrderDetailsPackageMapperDtoAndUpdatePackageServiceCap,
+    // createOrderDetailsPackageMapperForMultiEncounter. Same rigor and process as wave 1/batch 1:
+    // characterize current behavior, log findings, fix nothing.
+    // =========================================================================================
+
+    @Nested
+    @DisplayName("BillingCommonMethods.updatePreAuthForPharmacyContract -- characterization (current behavior, not verified-correct behavior)")
+    class PreAuthForPharmacyContract {
+
+        @Test
+        @DisplayName("no coShare, no preauthId: credit/self pass through completely unmodified")
+        void noAdjustments_passThrough() {
+            ContractConsumptionDto resDto = new ContractConsumptionDto();
+            PharmacyBillCommonDto dto = new PharmacyBillCommonDto();
+
+            ContractConsumptionDto result = billingCommonMethods.updatePreAuthForPharmacyContract(
+                    resDto, /* creditPayable */ 500.0, /* selfPayable */ 100.0, dto, new java.util.HashMap<>());
+
+            assertThat(result.getCreaditPayable()).isEqualTo(500.0);
+            assertThat(result.getSelfPayable()).isEqualTo(100.0);
+            verifyNoInteractions(contractConsumptionDao);
+        }
+
+        @Test
+        @DisplayName("URGENT FINDING (logged, not fixed): applying coShare loses money from the combined total -- selfPayable is credited off the ALREADY-REDUCED creditPayable, not the original amount")
+        void coShareAdjustment_moneyConservationBug() {
+            ContractConsumptionDto resDto = new ContractConsumptionDto();
+            resDto.setCoShare(20.0); // 20%
+            PharmacyBillCommonDto dto = new PharmacyBillCommonDto();
+
+            ContractConsumptionDto result = billingCommonMethods.updatePreAuthForPharmacyContract(
+                    resDto, /* creditPayable */ 1000.0, /* selfPayable */ 0.0, dto, new java.util.HashMap<>());
+
+            // Line 1 reassigns creditPayable FIRST: 1000.0 - (1000.0 * 0.20) = 800.0.
+            // Line 2 then computes the selfPayable addition off that ALREADY-REDUCED 800.0, not the
+            // original 1000.0: 0.0 + (800.0 * 0.20) = 160.0 -- not the 200.0 that was actually removed
+            // from creditPayable. $200 left creditPayable; only $160 arrived at selfPayable.
+            assertThat(result.getCreaditPayable()).isEqualTo(800.0);
+            assertThat(result.getSelfPayable()).isEqualTo(160.0);
+            // The combined total shrank from 1000.0 (1000.0 credit + 0.0 self) to 960.0 (800.0 + 160.0)
+            // -- $40 has simply disappeared from this calculation. Not a values-disagree-elsewhere gap
+            // like BR-PENDING-copay-preauth-split-return-value-gap (Finding 1) -- the total itself is
+            // wrong, in a live pharmacy-billing pre-authorization calculation.
+            assertThat(result.getCreaditPayable() + result.getSelfPayable()).isEqualTo(960.0);
+        }
+
+        @Test
+        @DisplayName("pre-auth ceiling exceeded, dto.getConsume()=true: caps creditPayable and writes the pre-auth consumption to the database")
+        void preAuthCeilingExceeded_consumeTrue() {
+            ContractConsumptionDto resDto = new ContractConsumptionDto();
+            resDto.setPreauthId(99);
+            PharmacyBillCommonDto dto = new PharmacyBillCommonDto();
+            dto.setConsume(true);
+            java.util.Map<Integer, Double> preAuthDetails = new java.util.HashMap<>();
+            preAuthDetails.put(99, 300.0);
+
+            ContractConsumptionDto result = billingCommonMethods.updatePreAuthForPharmacyContract(
+                    resDto, /* creditPayable */ 500.0, /* selfPayable */ 100.0, dto, preAuthDetails);
+
+            verify(contractConsumptionDao).updatePreAuthAmount(99, 300.0);
+            assertThat(result.getCreaditPayable()).isEqualTo(300.0);
+            assertThat(result.getSelfPayable()).isEqualTo(300.0); // 100.0 + (500.0 - 300.0)
+        }
+
+        @Test
+        @DisplayName("pre-auth ceiling exceeded, dto.getConsume()=false: the adjustment still happens, but the database write is skipped")
+        void preAuthCeilingExceeded_consumeFalse() {
+            ContractConsumptionDto resDto = new ContractConsumptionDto();
+            resDto.setPreauthId(99);
+            PharmacyBillCommonDto dto = new PharmacyBillCommonDto();
+            dto.setConsume(false);
+            java.util.Map<Integer, Double> preAuthDetails = new java.util.HashMap<>();
+            preAuthDetails.put(99, 300.0);
+
+            ContractConsumptionDto result = billingCommonMethods.updatePreAuthForPharmacyContract(
+                    resDto, 500.0, 100.0, dto, preAuthDetails);
+
+            verify(contractConsumptionDao, never()).updatePreAuthAmount(any(), any());
+            // The cap-adjustment arithmetic runs regardless of getConsume() -- only the DB write is gated.
+            assertThat(result.getCreaditPayable()).isEqualTo(300.0);
+            assertThat(result.getSelfPayable()).isEqualTo(300.0);
+        }
+
+        @Test
+        @DisplayName("FINDING (logged, not fixed): a preauthId not present in preAuthDetails throws a NullPointerException via auto-unboxing")
+        void preauthIdMissingFromMap_throwsNpe() {
+            ContractConsumptionDto resDto = new ContractConsumptionDto();
+            resDto.setPreauthId(77);
+            PharmacyBillCommonDto dto = new PharmacyBillCommonDto();
+
+            org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () ->
+                    billingCommonMethods.updatePreAuthForPharmacyContract(
+                            resDto, 500.0, 100.0, dto, new java.util.HashMap<>()));
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.createOrderDetailsPackageMapperDtoAndUpdatePackageCap -- characterization (current behavior, not verified-correct behavior)")
+    class PackageCapMapper {
+
+        @Test
+        @DisplayName("builds the mapper dto, accumulates packageConsumptionAmt by serviceRate (not consumeAmt), and writes the negated consumeAmt to the cap DAO")
+        void buildsMapperAndUpdatesCap() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            resDto.setPackageId(10);
+            resDto.setPackageName("Basic Package");
+            resDto.setPackageCode("PKG01");
+            TPackageConsumptionCapDetailsDto capDtls = new TPackageConsumptionCapDetailsDto();
+            capDtls.setPackageConsumptionMasterId(20);
+            capDtls.setPackageConsumptionCapDetailsId(30);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setServiceRate(250.0);
+            consumptionDto.setPackageConsumptionAmt(java.math.BigDecimal.valueOf(1000.0));
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderDetailsPackageMapperDtoAndUpdatePackageCap(
+                    resDto, capDtls, consumptionDto, /* consumeAmt */ 150.0);
+
+            assertThat(result.getPackageId()).isEqualTo(10);
+            assertThat(result.getIsPackageService()).isEqualTo('Y');
+            assertThat(result.getIsCapService()).isEqualTo('Y');
+            assertThat(result.getPackageAmount()).isEqualByComparingTo(java.math.BigDecimal.valueOf(150.0));
+            assertThat(result.getServiceAmount()).isEqualByComparingTo(java.math.BigDecimal.valueOf(250.0));
+            // The running accumulator is incremented by serviceRate (250.0), NOT consumeAmt (150.0) --
+            // worth noting precisely, since the sibling method below accumulates by consumeAmt instead.
+            assertThat(consumptionDto.getPackageConsumptionAmt()).isEqualByComparingTo(java.math.BigDecimal.valueOf(1250.0));
+            verify(tPackageConsumptionCapDetailsDao).updatePackageCap(30, -150.0);
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.createOrderDetailsPackageMapperDtoAndUpdatePackageServiceCap -- characterization (current behavior, not verified-correct behavior)")
+    class PackageServiceCapMapper {
+
+        @Test
+        @DisplayName("isUpdatePackageService=true: writes to the service-cap DAO and stamps the service-detail/master ids onto the mapper dto")
+        void updatesServiceCap_whenFlagTrue() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            resDto.setPackageId(10);
+            resDto.setPackageName("X");
+            resDto.setPackageCode("Y");
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            srv.setPackageConsumptionMasterId(50);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setServiceRate(300.0);
+            consumptionDto.setPackageConsumptionAmt(java.math.BigDecimal.ZERO);
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderDetailsPackageMapperDtoAndUpdatePackageServiceCap(
+                    resDto, srv, consumptionDto, /* consumeAmt */ 200.0, /* isCapService */ 'N', /* isUpdatePackageService */ true);
+
+            // Here the accumulator is incremented by consumeAmt (200.0) -- NOT serviceRate, unlike the
+            // sibling createOrderDetailsPackageMapperDtoAndUpdatePackageCap above, which uses serviceRate.
+            assertThat(consumptionDto.getPackageConsumptionAmt()).isEqualByComparingTo(java.math.BigDecimal.valueOf(200.0));
+            verify(tPackageConsumptionCapDetailsDao).updatePackageServiceCap(40, -200.0);
+            assertThat(result.getPacakgeConsumptionServiceDetailId()).isEqualTo(40);
+            assertThat(result.getPackageConsumptionMasterId()).isEqualTo(50);
+        }
+
+        @Test
+        @DisplayName("isUpdatePackageService=false: the DAO write and the two id fields are skipped, but packageConsumptionAmt still accumulates")
+        void skipsServiceCapUpdate_whenFlagFalse() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setServiceRate(300.0);
+            consumptionDto.setPackageConsumptionAmt(java.math.BigDecimal.ZERO);
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderDetailsPackageMapperDtoAndUpdatePackageServiceCap(
+                    resDto, srv, consumptionDto, 200.0, 'N', /* isUpdatePackageService */ false);
+
+            verify(tPackageConsumptionCapDetailsDao, never()).updatePackageServiceCap(any(), any());
+            assertThat(result.getPacakgeConsumptionServiceDetailId()).isNull();
+            assertThat(consumptionDto.getPackageConsumptionAmt()).isEqualByComparingTo(java.math.BigDecimal.valueOf(200.0));
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.createOrderDetailsPackageMapperForMultiEncounter -- characterization (current behavior, not verified-correct behavior)")
+    class MultiEncounterPackageMapper {
+
+        @Test
+        @DisplayName("consumeService != 0: the entire quantity/pricing block is skipped, only the common fields are set")
+        void skipsEntireBlock_whenAlreadyConsumed() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            resDto.setPackageId(10);
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            srv.setPackageConsumptionMasterId(50);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setConsumeService(1); // non-zero -- "already consumed"
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderDetailsPackageMapperForMultiEncounter(
+                    resDto, srv, /* availableQty */ 10, consumptionDto, /* serviceQty */ 5, /* setPkgAmt */ false);
+
+            assertThat(result.getPackageId()).isEqualTo(10);
+            assertThat(result.getPacakgeConsumptionServiceDetailId()).isEqualTo(40);
+            assertThat(result.getPackageQty()).isNull(); // never touched -- the whole inner block was skipped
+            verifyNoInteractions(tPackageConsumptionCapDetailsDao);
+        }
+
+        @Test
+        @DisplayName("consumeService==0, availableQty >= serviceQty: full quantity satisfied, rate comes from the package's availableCap, setPkgAmt's initial packageAmount gets silently overwritten")
+        void fullQuantitySatisfied_setPkgAmtOverwritten() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            srv.setAvailableCap(50.0);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setConsumeService(0);
+            consumptionDto.setSelfPayable(999.0); // sentinel -- see the finding below
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderDetailsPackageMapperForMultiEncounter(
+                    resDto, srv, /* availableQty */ 10, consumptionDto, /* serviceQty */ 5, /* setPkgAmt */ true);
+
+            // FINDING (logged, not fixed): setPkgAmt=true initially sets packageAmount from
+            // consumptionDto.getSelfPayable() (999.0), but this specific branch (availableQty >=
+            // serviceQty) unconditionally OVERWRITES packageAmount a few lines later with the freshly
+            // computed ordTotalAmount -- setPkgAmt's effect is silently discarded whenever this branch
+            // runs, regardless of what the caller passed.
+            assertThat(result.getPackageAmount()).isEqualByComparingTo(java.math.BigDecimal.valueOf(250.0)); // NOT 999.0
+            assertThat(result.getPackageQty()).isEqualTo(5);
+            assertThat(consumptionDto.getServiceRate()).isEqualTo(50.0); // from srv.getAvailableCap()
+            assertThat(consumptionDto.getOrdTotalAmount()).isEqualTo(250.0); // 50.0 * 5
+            assertThat(consumptionDto.getSelfPayable()).isEqualTo(0.0); // reset unconditionally
+            assertThat(srv.getBalanceQuantity()).isEqualTo(5); // 10 - 5
+            verify(tPackageConsumptionCapDetailsDao).updatePackageQty(40, -5);
+        }
+
+        @Test
+        @DisplayName("FINDING (logged, not fixed): consumeService==0, availableQty < serviceQty (partial fulfillment): packageQty and the DAO deduction are hardcoded to 1, not the actual remaining quantity")
+        void partialQuantity_hardcodedToOne() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            srv.setAvailableCap(40.0);
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setConsumeService(0);
+            consumptionDto.setServiceRate(80.0); // used as the per-unit rate in THIS branch, unlike the
+                                                  // if-branch above, which instead takes the rate from
+                                                  // srv.getAvailableCap() -- a real asymmetry between
+                                                  // the two branches' rate source.
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderDetailsPackageMapperForMultiEncounter(
+                    resDto, srv, /* availableQty */ 3, consumptionDto, /* serviceQty */ 5, false);
+
+            // Remaining quantity actually needed after exhausting availableQty=3 of the requested 5 is
+            // 2 -- but packageQty is hardcoded to 1, and the DAO deduction is hardcoded to -1, not -2.
+            // srv.getBalanceQuantity() is likewise hardcoded to 0, not derived from any calculation.
+            assertThat(result.getPackageQty()).isEqualTo(1);
+            verify(tPackageConsumptionCapDetailsDao).updatePackageQty(40, -1);
+            assertThat(srv.getBalanceQuantity()).isEqualTo(0);
+            // packageConsumptionAmt = availableQty(3) * srv.getAvailableCap()(40.0) = 120.0
+            assertThat(consumptionDto.getPackageConsumptionAmt()).isEqualByComparingTo(java.math.BigDecimal.valueOf(120.0));
+            // ordTotalAmount = serviceRate(80.0, carried over unchanged) * the NEW serviceQty (5-3=2) = 160.0
+            assertThat(consumptionDto.getOrdTotalAmount()).isEqualTo(160.0);
+            // FINDING: netAmount here is a real subtraction (ordTotalAmount - packageConsumptionAmt =
+            // 160.0 - 120.0 = 40.0) -- a DIFFERENT formula from the if-branch above, which sets
+            // netAmount = consumptionDto.getFinalPrice() (an unrelated carried-over value, no
+            // subtraction at all). The two branches derive netAmount inconsistently.
+            assertThat(consumptionDto.getNetAmount()).isEqualTo(40.0);
+            assertThat(consumptionDto.getSelfPayable()).isEqualTo(40.0); // set equal to netAmount here
         }
     }
 }
