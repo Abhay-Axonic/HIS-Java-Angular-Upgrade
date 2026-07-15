@@ -626,3 +626,31 @@ The loop unconditionally overwrites `finalDto`'s `serviceRate` on every iteratio
 Classification: Neither (known-issue log only, no code change this session — same precedent as the prior BR-PENDING entries from this harness effort). Owner Decision: Explicitly deferred, per the standing Decision 5 instruction.
 
 **Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 62/62 (26 new tests this batch, 36 pre-existing from `BillingCommonMethodsCharacterizationTest`), Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. This is the first sub-task of Step 3 (`ContractConsumptionServiceImpl.java`'s 13 small methods); the 3 giant methods are reported separately.
+
+## BR-FIXED-consumeservicefromcontract-balancecap-swap — FIXED: consumeServiceFromContract no longer swaps self/credit payable when a type==2 amount-capped contract's balance is exceeded (2026-07-15)
+
+**Found while mapping `consumeServiceFromContract`'s branches for targeted shadow-test characterization (Step 3, giant-method pass, first sub-task paused to fast-track this).** Flagged live to the owner the moment it was found, proposed in `docs/DECISION_NEEDED_ConsumeServiceFromContractBalanceCapSwap.md`, reviewed and approved, then applied exactly as proposed.
+
+**The bug:** `Global/.../billing/service/ContractConsumptionServiceImpl.java:744-745`, inside the `resDto.getType()==2` (service-cap) branch's amount-tracked balance-cap handling. When a service's net amount exceeded the contract's remaining balance cap, `creaditPayable`/`selfPayable` were computed backwards — the patient (`selfPayable`) was billed the cap amount, and the contract/insurer (`creaditPayable`) was billed only the leftover overage. The sibling `resDto.getType()==1` cap branch 150 lines earlier in the same method (lines 590-593) has the correct, opposite semantics: contract absorbs up to the cap, patient absorbs the overage.
+
+**Before:**
+```java
+creaditPayable = netAmt < resDto.getBalanceAmount() ? netAmt : netAmt-resDto.getBalanceAmount();
+selfPayable = netAmt < resDto.getBalanceAmount() ? 0.0 : resDto.getBalanceAmount();
+```
+
+**After (applied):**
+```java
+creaditPayable = netAmt < resDto.getBalanceAmount() ? netAmt : resDto.getBalanceAmount();
+selfPayable = netAmt < resDto.getBalanceAmount() ? 0.0 : netAmt-resDto.getBalanceAmount();
+```
+
+Only the else-branch (second operand) of each ternary was swapped; the already-correct "cap not exceeded" true-branches were untouched, as was the sibling type==1 branch and the quantity-capped sibling immediately below this one.
+
+**Example:** service costs $500, contract has $300 left on its balance cap. Before: contract billed $200 (the overage), patient billed $300 (the cap). After: contract billed $300 (up to the cap), patient billed $200 (the overage). Combined total was always conserved ($500 either way) — this was a misallocation bug, not a money-vanishes bug like the pharmacy co-share leak.
+
+**Owner instruction:** fast-tracked, same treatment as Finding 4 and the pharmacy co-share leak. Approved and applied exactly as proposed. Confirmed via `ConsumeServiceFromContractBalanceCapFixTest#balanceCapExceeded_creditGetsCapAmount_selfGetsOverage` (renamed from `ConsumeServiceFromContractUrgentFindingTest` now that the finding is fixed rather than pending), asserting the corrected call arguments (`creaditPayable=300.0, selfPayable=200.0`).
+
+Classification: **Financial Correctness**. Owner Decision: Approved and applied, per `docs/DECISION_NEEDED_ConsumeServiceFromContractBalanceCapSwap.md`.
+
+**Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 85/85, Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. The broader targeted characterization of `consumeServiceFromContract`'s remaining risky branches (and of `consumeServiceFromContractPackage`/`consumePackageFromContract`) remains paused pending owner direction, unrelated to this fix's completion.

@@ -26,26 +26,25 @@ import com.param.global.opd.dao.IEncounterMasterDao;
 import com.param.global.opd.service.IEncounterMasterService;
 
 /**
- * URGENT FINDING -- flagged live to the owner per standing instruction, not held for a batch
- * summary. Isolated confirming test for one specific branch of {@code consumeServiceFromContract}
- * (Global/.../billing/service/ContractConsumptionServiceImpl.java, lines 740-745): when a
- * first-priority, amount-capped (type==2) contract's remaining balance is exceeded by the
- * service's net amount, {@code selfPayable} and {@code creaditPayable} are computed with the
- * cap-amount and the overage SWAPPED relative to the sibling type==1 cap branch 150 lines above
- * it in the very same method (lines 590-593), which is the sibling's demonstrably-intended,
- * consistent behavior: contract absorbs up to the cap, patient absorbs the overage. Here it is the
- * opposite: the patient is billed the CAP amount and the contract is billed only the OVERAGE.
+ * FIXED 2026-07-15: owner-approved regression test for the balance-cap swap bug in
+ * {@code consumeServiceFromContract} (Global/.../billing/service/ContractConsumptionServiceImpl.java,
+ * lines 740-745). Was: when a first-priority, amount-capped (type==2) contract's remaining balance
+ * was exceeded by the service's net amount, {@code selfPayable} and {@code creaditPayable} were
+ * computed with the cap-amount and the overage SWAPPED relative to the sibling type==1 cap branch
+ * 150 lines above it in the same method (lines 590-593) -- the patient was billed the CAP amount
+ * and the contract was billed only the OVERAGE. Now: the cap amount goes to the contract (up to
+ * what it owes) and the overage goes to the patient, matching the sibling branch's semantics.
+ * See docs/DECISION_NEEDED_ConsumeServiceFromContractBalanceCapSwap.md for the full proposal this
+ * fix was approved from.
  *
  * This test does not exercise the whole method's full downstream response construction (out of
  * scope for a quick confirming test) -- it captures the arguments passed into
  * billingCommonMethods.updatePreAuthAndServiceCapAmountForFirstPriorityContract(...), which is
- * where the already-swapped creaditPayable/selfPayable values are read off. The swap has already
- * happened by the time this call is made -- nothing this mocked method might do internally can
- * fix it, so mocking it out does not hide the bug.
+ * where the (now-corrected) creaditPayable/selfPayable values are read off.
  */
 @ExtendWith(MockitoExtension.class)
-@DisplayName("URGENT: consumeServiceFromContract swaps self/credit payable when a type==2 amount-capped contract's balance is exceeded")
-class ConsumeServiceFromContractUrgentFindingTest {
+@DisplayName("FIXED: consumeServiceFromContract no longer swaps self/credit payable when a type==2 amount-capped contract's balance is exceeded")
+class ConsumeServiceFromContractBalanceCapFixTest {
 
     @Mock private IContractConsumptionDao contractConsumptionDao;
     @Mock private IEncounterMasterDao encounterMasterDao;
@@ -64,8 +63,8 @@ class ConsumeServiceFromContractUrgentFindingTest {
     }
 
     @Test
-    @DisplayName("netAmt=500, remaining balance cap=300 -> contract billed 200 (overage), patient billed 300 (the cap) -- backwards")
-    void balanceCapExceeded_selfAndCreditPayableAreSwapped() {
+    @DisplayName("netAmt=500, remaining balance cap=300 -> contract billed 300 (up to the cap), patient billed 200 (the overage) -- correct")
+    void balanceCapExceeded_creditGetsCapAmount_selfGetsOverage() {
         ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
         consumptionDto.setContractId(1);
         consumptionDto.setVisitTypeId(1); // OP
@@ -106,8 +105,8 @@ class ConsumeServiceFromContractUrgentFindingTest {
         lenient().when(contractConsumptionDao.getPatientClassAndPercentageByVisit(any())).thenReturn(null);
 
         ContractConsumptionDto passthrough = new ContractConsumptionDto();
-        passthrough.setCreaditPayable(200.0);
-        passthrough.setSelfPayable(300.0);
+        passthrough.setCreaditPayable(300.0);
+        passthrough.setSelfPayable(200.0);
         when(billingCommonMethods.updatePreAuthAndServiceCapAmountForFirstPriorityContract(
                 any(), any(), any(), any(), any(), eq(null), eq(true), eq(false)))
                 .thenReturn(passthrough);
@@ -116,12 +115,11 @@ class ConsumeServiceFromContractUrgentFindingTest {
 
         service.consumeServiceFromContract(consumptionDto);
 
-        // Confirms the FINDING: the amount routed to the contract/insurer (creditPayable arg,
-        // position 3) is the $200 overage, and the amount routed to the patient (selfPayable arg,
-        // position 4) is the $300 cap -- the opposite of the sibling type==1 branch's semantics
-        // (contract pays up to the cap, patient pays the overage), which would be creditPayable=
-        // $300, selfPayable=$200 for these same inputs.
+        // Confirms the FIX: the amount routed to the contract/insurer (creditPayable arg,
+        // position 3) is the $300 cap, and the amount routed to the patient (selfPayable arg,
+        // position 4) is the $200 overage -- matching the sibling type==1 branch's semantics
+        // (contract pays up to the cap, patient pays the overage).
         org.mockito.Mockito.verify(billingCommonMethods).updatePreAuthAndServiceCapAmountForFirstPriorityContract(
-                eq(consumptionDto), eq(resDto), eq(200.0), eq(300.0), any(), eq(null), eq(true), eq(false));
+                eq(consumptionDto), eq(resDto), eq(300.0), eq(200.0), any(), eq(null), eq(true), eq(false));
     }
 }
