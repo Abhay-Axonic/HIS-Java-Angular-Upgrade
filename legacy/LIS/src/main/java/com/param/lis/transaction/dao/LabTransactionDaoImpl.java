@@ -769,7 +769,7 @@ public class LabTransactionDaoImpl extends GenericDao<LabSampleMaster, Integer>
 		try {
 			Date date = TimeZoneComponent
 					.getDateByzone(listLabSampleDetailsMasterDto != null && listLabSampleDetailsMasterDto.size() > 0
-							? listLabSampleDetailsMasterDto.get(0).getOrgUnitId()
+							? listLabSampleDetailsMasterDto.getFirst().getOrgUnitId()
 							: null);
 			Integer result = null;
 			for (Iterator iterator = listLabSampleDetailsMasterDto.iterator(); iterator.hasNext();) {
@@ -3940,9 +3940,9 @@ public class LabTransactionDaoImpl extends GenericDao<LabSampleMaster, Integer>
 
 			listLabSampleDetailsMasterDto = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_LAB_ORDER_DETAILS_FOR_OPD_BILLING")
-					.setParameter("orgId", searchDto.get(0).getOrgId())
-					.setParameter("orgUnitId", searchDto.get(0).getOrgUnitId()).setParameterList("orderIds", orderIds)
-					.setParameter("deptId", searchDto.get(0).getDeptId()).setParameter("ordCancelled", 'N')
+					.setParameter("orgId", searchDto.getFirst().getOrgId())
+					.setParameter("orgUnitId", searchDto.getFirst().getOrgUnitId()).setParameterList("orderIds", orderIds)
+					.setParameter("deptId", searchDto.getFirst().getDeptId()).setParameter("ordCancelled", 'N')
 					.setParameter("sampleStatus", 'A').setParameter("unitStatus", 'A')
 					.setParameter("sampleStatusId", SAMPLE_RECOLLECTED).setParameter("patientStatusId", REPAT_PATIRNT)
 					.setResultTransformer(Transformers.aliasToBean(LabSampleDetailsMasterDto.class)).list();

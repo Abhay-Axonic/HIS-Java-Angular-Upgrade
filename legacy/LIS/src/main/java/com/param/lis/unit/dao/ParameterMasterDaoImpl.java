@@ -525,7 +525,6 @@ public Response getActiveParameterList(ParameterMasterDto parameterMasterDto) th
 		logger.error("Exection", e);
 		throw new ServiceException(e.getMessage());
 	} finally {
-		 ;
 	}
 }
 

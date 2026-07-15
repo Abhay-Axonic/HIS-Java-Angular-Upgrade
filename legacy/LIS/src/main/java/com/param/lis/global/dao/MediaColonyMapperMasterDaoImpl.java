@@ -134,8 +134,8 @@ public class MediaColonyMapperMasterDaoImpl extends GenericDao<MediaColonyMapper
 			Integer result = sessionFactory.getCurrentSession()
 					        .getNamedQuery("UPDATE_MEDIACOLONY_CLASS_MAPPER")
 					        .setParameter("isDeleted", 'Y')
-					        .setParameter("orgId",listmediaColonyMapperMasterDto.get(0).getOrgId())
-					        .setParameter("mediaId", listmediaColonyMapperMasterDto.get(0).getMediaId()).executeUpdate();
+					        .setParameter("orgId",listmediaColonyMapperMasterDto.getFirst().getOrgId())
+					        .setParameter("mediaId", listmediaColonyMapperMasterDto.getFirst().getMediaId()).executeUpdate();
 			//System.out.println("===========>"+result);
 			if(result>0)
 			{

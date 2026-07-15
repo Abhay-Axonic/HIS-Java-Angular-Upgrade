@@ -89,7 +89,7 @@ public class SingleParamTestMasterDaoImpl extends GenericDao<TestMaster, Integer
     	  
 				if (testMasterDto.getTestType() == 0) {
 					
-					ParameterMasterDto parameterMasterDto = testMasterDto.getListParameterMasterDto().get(0);
+					ParameterMasterDto parameterMasterDto = testMasterDto.getListParameterMasterDto().getFirst();
 					parameterMasterDto.setTestType(SINGLE_PARAM_TEST);
 					parameterMasterDto.setIsMultyparameter('N');
 					parameterMasterDto.setStatus('A');

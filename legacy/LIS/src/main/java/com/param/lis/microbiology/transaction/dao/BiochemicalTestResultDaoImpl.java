@@ -64,27 +64,27 @@ implements IBiochemicalTestResultDao, ICommonConstants, ITransactionConstants, I
     	
     	 List<Integer> statusId = new ArrayList<Integer>();
 		    
-    	 if(list1.get(0).getMacroscopicExaminationApplicable() == 'Y') {
+    	 if(list1.getFirst().getMacroscopicExaminationApplicable() == 'Y') {
 				
 				statusId = BIOCHEMICAL_SAMPLE_STATUS_IDS;
 				
-			}else if(list1.get(0).getIncubationMasterApplicable() == 'Y') {
+			}else if(list1.getFirst().getIncubationMasterApplicable() == 'Y') {
 				
 				statusId =  Arrays.asList(INCUBATION_OBJSERVATION_COMPLETED,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else  if(list1.get(0).getIsWorklistDepartment() == 'Y') {
+			}else  if(list1.getFirst().getIsWorklistDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SEND_FOR_INCUBATION_OBERVATION,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else if(list1.get(0).getIsAcceptanceInDepartment() == 'Y') {
+			}else if(list1.getFirst().getIsAcceptanceInDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SAMPLE_ACCEPTED,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else if(list1.get(0).getIsSampleAcceptanceApplicable() == 'Y') {
+			}else if(list1.getFirst().getIsSampleAcceptanceApplicable() == 'Y') {
 				
 				statusId = Arrays.asList(SAMPLE_SEND_TO_DEPT,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else if (list1.get(0).getIsSendToCrApplicable() != null && list1.get(0).getIsSendToCrApplicable() == 'Y') {
+			}else if (list1.getFirst().getIsSendToCrApplicable() != null && list1.getFirst().getIsSendToCrApplicable() == 'Y') {
 							
 				statusId = Arrays.asList(SAMPLE_SEND_TO_CR,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
@@ -132,27 +132,27 @@ implements IBiochemicalTestResultDao, ICommonConstants, ITransactionConstants, I
     	
     	 List<Integer> statusId = new ArrayList<Integer>();
 		    
-    	 if(list1.get(0).getMacroscopicExaminationApplicable() == 'Y') {
+    	 if(list1.getFirst().getMacroscopicExaminationApplicable() == 'Y') {
 				
 				statusId = BIOCHEMICAL_SAMPLE_STATUS_IDS;
 				
-			}else if(list1.get(0).getIncubationMasterApplicable() == 'Y') {
+			}else if(list1.getFirst().getIncubationMasterApplicable() == 'Y') {
 				
 				statusId =  Arrays.asList(INCUBATION_OBJSERVATION_COMPLETED,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else  if(list1.get(0).getIsWorklistDepartment() == 'Y') {
+			}else  if(list1.getFirst().getIsWorklistDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SEND_FOR_INCUBATION_OBERVATION,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else if(list1.get(0).getIsAcceptanceInDepartment() == 'Y') {
+			}else if(list1.getFirst().getIsAcceptanceInDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SAMPLE_ACCEPTED,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else if(list1.get(0).getIsSampleAcceptanceApplicable() == 'Y') {
+			}else if(list1.getFirst().getIsSampleAcceptanceApplicable() == 'Y') {
 				
 				statusId = Arrays.asList(SAMPLE_SEND_TO_DEPT,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else if (list1.get(0).getIsSendToCrApplicable() != null && list1.get(0).getIsSendToCrApplicable() == 'Y') {
+			}else if (list1.getFirst().getIsSendToCrApplicable() != null && list1.getFirst().getIsSendToCrApplicable() == 'Y') {
 							
 				statusId = Arrays.asList(SAMPLE_SEND_TO_CR,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
@@ -282,27 +282,27 @@ public Response biochemicalWorkListSearch(SearchDto searchDto) throws Applicatio
     	
     	 List<Integer> statusId = new ArrayList<Integer>();
 		    
-    	 if(list1.get(0).getMacroscopicExaminationApplicable() == 'Y') {
+    	 if(list1.getFirst().getMacroscopicExaminationApplicable() == 'Y') {
 				
 				statusId = BIOCHEMICAL_SAMPLE_STATUS_IDS;
 				
-			}else if(list1.get(0).getIncubationMasterApplicable() == 'Y') {
+			}else if(list1.getFirst().getIncubationMasterApplicable() == 'Y') {
 				
 				statusId =  Arrays.asList(INCUBATION_OBJSERVATION_COMPLETED,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else  if(list1.get(0).getIsWorklistDepartment() == 'Y') {
+			}else  if(list1.getFirst().getIsWorklistDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SEND_FOR_INCUBATION_OBERVATION,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else if(list1.get(0).getIsAcceptanceInDepartment() == 'Y') {
+			}else if(list1.getFirst().getIsAcceptanceInDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SAMPLE_ACCEPTED,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else if(list1.get(0).getIsSampleAcceptanceApplicable() == 'Y') {
+			}else if(list1.getFirst().getIsSampleAcceptanceApplicable() == 'Y') {
 				
 				statusId = Arrays.asList(SAMPLE_SEND_TO_DEPT,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				
-			}else if (list1.get(0).getIsSendToCrApplicable() != null && list1.get(0).getIsSendToCrApplicable() == 'Y') {
+			}else if (list1.getFirst().getIsSendToCrApplicable() != null && list1.getFirst().getIsSendToCrApplicable() == 'Y') {
 							
 				statusId = Arrays.asList(SAMPLE_SEND_TO_CR,DURING_BIOCHEMICAL_RESULT_ENTRY);
 				

@@ -75,7 +75,7 @@ public Response getReportReleaseWorkList(BioChemParamDto bioChemParamDto) throws
 	       if(res.getListObject() != null && res.getListObject().size()>0) {
 	    	   
 	    	   List<LabConfigurationDto> list = res.getListObject() ;
-	    	  c = list.get(0).getSkipValidation();
+	    	  c = list.getFirst().getSkipValidation();
 	       }
 	      
 	       List<Integer> statusIds = new ArrayList<Integer>(); 
@@ -176,7 +176,7 @@ public Response getReportReleaseWorkListCount(BioChemParamDto bioChemParamDto) t
 			       if(res.getListObject() != null && res.getListObject().size()>0) {
 			    	   
 			    	   List<LabConfigurationDto> list = res.getListObject() ;
-			    	  c = list.get(0).getSkipValidation();
+			    	  c = list.getFirst().getSkipValidation();
 			       }
 			       if(c.equals('Y')) {
 			    		statusIds = Arrays.asList(RESULT_ENTRY_DONE,PROVISIONAL_REPORT_RELEASED);
@@ -420,7 +420,7 @@ public Response getFilteredReportReleaseWorkList(SearchDto searchDto) throws App
 	           if(res.getListObject() != null && res.getListObject().size()>0) {
 	        	   
 	        	   List<LabConfigurationDto> list = res.getListObject() ;
-	        	  c = list.get(0).getSkipValidation();
+	        	  c = list.getFirst().getSkipValidation();
 	           }
 	           
 	           if(c.equals('Y')) {
@@ -651,15 +651,15 @@ public Response ConsolidatedReleaseWorkList(SearchDto searchDto) throws Applicat
 	       if(res.getListObject() != null && res.getListObject().size()>0) {
 	    	   
 	    	   List<LabConfigurationDto> list = res.getListObject();
-	    	  c = list.get(0).getSkipValidation();
-	    	   conflag = list.get(0).getConsolidatedResultEntry();
-	    	   subDeptIds.add(list.get(0).getBiochemistryId()!=null ? list.get(0).getBiochemistryId() :0);
-	    	   subDeptIds.add(list.get(0).getHematologyId()!=null ? list.get(0).getHematologyId() :0);
-	    	   subDeptIds.add(list.get(0).getMicrobiologyId()!=null ? list.get(0).getMicrobiologyId() :0);
-	    	   subDeptIds.add(list.get(0).getHistopathologyId()!=null ? list.get(0).getHistopathologyId() :0);
-	    	   subDeptIds.add(list.get(0).getCystopathologyId()!=null ? list.get(0).getCystopathologyId() :0);
-	    	   subDeptIds.add(list.get(0).getSerologyId()!=null ? list.get(0).getSerologyId() :0);
-	    	   subDeptIds.add(list.get(0).getClinicalPathologyId() !=null ? list.get(0).getClinicalPathologyId() :0);
+	    	  c = list.getFirst().getSkipValidation();
+	    	   conflag = list.getFirst().getConsolidatedResultEntry();
+	    	   subDeptIds.add(list.getFirst().getBiochemistryId()!=null ? list.getFirst().getBiochemistryId() :0);
+	    	   subDeptIds.add(list.getFirst().getHematologyId()!=null ? list.getFirst().getHematologyId() :0);
+	    	   subDeptIds.add(list.getFirst().getMicrobiologyId()!=null ? list.getFirst().getMicrobiologyId() :0);
+	    	   subDeptIds.add(list.getFirst().getHistopathologyId()!=null ? list.getFirst().getHistopathologyId() :0);
+	    	   subDeptIds.add(list.getFirst().getCystopathologyId()!=null ? list.getFirst().getCystopathologyId() :0);
+	    	   subDeptIds.add(list.getFirst().getSerologyId()!=null ? list.getFirst().getSerologyId() :0);
+	    	   subDeptIds.add(list.getFirst().getClinicalPathologyId() !=null ? list.getFirst().getClinicalPathologyId() :0);
 	       }
 	       
 	      List<Integer> statusIds = new ArrayList<Integer>();
@@ -873,9 +873,9 @@ public Response consolidatedSerologyReleaseSearch(SearchDto searchDto) throws Ap
 	       if(res.getListObject() != null && res.getListObject().size()>0) {
 	    	   
 	    	   List<LabConfigurationDto> list = res.getListObject() ;
-	    	  c = list.get(0).getSkipValidation();
+	    	  c = list.getFirst().getSkipValidation();
 	    	  
-	    	  if(list.get(0).getSerologyId() == null ){
+	    	  if(list.getFirst().getSerologyId() == null ){
 	    		  return new Response(SUCCESS, SUCCESS_200_MESSAGE, "No Records Found.",null, 0);
 	    	  }
 	    	  
@@ -1071,15 +1071,15 @@ public Response ConsolidatedReleaseWorkTypeSearchList(SearchDto searchDto) throw
 	        if(res.getListObject() != null && res.getListObject().size()>0) {
 		    	   
 		    	   List<LabConfigurationDto> list = res.getListObject();
-		    	  c = list.get(0).getSkipValidation();
-		    	   conflag = list.get(0).getConsolidatedResultEntry();
-		    	   subDeptIds.add(list.get(0).getBiochemistryId()!=null ? list.get(0).getBiochemistryId() :0);
-		    	   subDeptIds.add(list.get(0).getHematologyId()!=null ? list.get(0).getHematologyId() :0);
-		    	   subDeptIds.add(list.get(0).getMicrobiologyId()!=null ? list.get(0).getMicrobiologyId() :0);
-		    	   subDeptIds.add(list.get(0).getHistopathologyId()!=null ? list.get(0).getHistopathologyId() :0);
-		    	   subDeptIds.add(list.get(0).getCystopathologyId()!=null ? list.get(0).getCystopathologyId() :0);
-		    	   subDeptIds.add(list.get(0).getSerologyId()!=null ? list.get(0).getSerologyId() :0);
-		    	   subDeptIds.add(list.get(0).getClinicalPathologyId() !=null ? list.get(0).getClinicalPathologyId() :0);
+		    	  c = list.getFirst().getSkipValidation();
+		    	   conflag = list.getFirst().getConsolidatedResultEntry();
+		    	   subDeptIds.add(list.getFirst().getBiochemistryId()!=null ? list.getFirst().getBiochemistryId() :0);
+		    	   subDeptIds.add(list.getFirst().getHematologyId()!=null ? list.getFirst().getHematologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getMicrobiologyId()!=null ? list.getFirst().getMicrobiologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getHistopathologyId()!=null ? list.getFirst().getHistopathologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getCystopathologyId()!=null ? list.getFirst().getCystopathologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getSerologyId()!=null ? list.getFirst().getSerologyId() :0);
+		    	   subDeptIds.add(list.getFirst().getClinicalPathologyId() !=null ? list.getFirst().getClinicalPathologyId() :0);
 		       }
 	        
 	       List<Integer> statusIds = new ArrayList<Integer>(); 
@@ -1088,7 +1088,7 @@ public Response ConsolidatedReleaseWorkTypeSearchList(SearchDto searchDto) throw
 			       if(res.getListObject() != null && res.getListObject().size()>0) {
 			    	   
 			    	   List<LabConfigurationDto> list = res.getListObject() ;
-			    	  c = list.get(0).getSkipValidation();
+			    	  c = list.getFirst().getSkipValidation();
 			       }
 			       if(c.equals('Y')) {
 			    		statusIds = Arrays.asList(RESULT_ENTRY_DONE,PROVISIONAL_REPORT_RELEASED);
@@ -1190,7 +1190,7 @@ public Response ConsolidatedReleaseWorkTypeSearchList(SearchDto searchDto) throw
 		  }
 
 		  if(searchDto.getSearchField()!="") {
-			  createdQuery.setParameter("searchField", searchDto.getSearchField());;
+			  createdQuery.setParameter("searchField", searchDto.getSearchField());
 		  }
 
 		  List<LabResultMasterDto> listLabResultMasterDto = createdQuery
@@ -1268,7 +1268,7 @@ public Response consolidatedSerologyReleaseTypeSearch(SearchDto searchDto) throw
 	       if(res.getListObject() != null && res.getListObject().size()>0) {
 	    	   
 	    	   List<LabConfigurationDto> list = res.getListObject() ;
-	    	  c = list.get(0).getSkipValidation();
+	    	  c = list.getFirst().getSkipValidation();
 	       }
 	       if(c.equals('Y')) {
 	    		statusIds = Arrays.asList(RESULT_ENTRY_DONE);
@@ -1394,7 +1394,7 @@ public Response getFilteredReportReleaseTypeSearchWorkList(SearchDto searchDto) 
 	       if(res.getListObject() != null && res.getListObject().size()>0) {
 	    	   
 	    	   List<LabConfigurationDto> list = res.getListObject() ;
-	    	  c = list.get(0).getSkipValidation();
+	    	  c = list.getFirst().getSkipValidation();
 	       }
 	      
 	       if(c.equals('Y')) {

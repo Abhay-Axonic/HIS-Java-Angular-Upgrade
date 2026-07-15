@@ -51,7 +51,7 @@ public Response getOutSourceDetailsByOutSourceId(OutSourceDetailMasterDto outSou
 				.setResultTransformer(Transformers.aliasToBean(OutSourceDetailMasterDto.class)).list();
 		
 		if(listOutSourceDetailMasterDto != null && !listOutSourceDetailMasterDto.isEmpty())
-			return new Response(SUCCESS, SUCCESS_200, null, null, listOutSourceDetailMasterDto.get(0));
+			return new Response(SUCCESS, SUCCESS_200, null, null, listOutSourceDetailMasterDto.getFirst());
 		else
 			return new Response(ERROR, ERR_500, "No Out Source Details Records Found.", null, null);
 		

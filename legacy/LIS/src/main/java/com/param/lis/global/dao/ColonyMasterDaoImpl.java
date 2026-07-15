@@ -120,7 +120,7 @@ public class ColonyMasterDaoImpl extends  GenericDao<ColonyMaster, Integer> impl
 			ColonyMaster colonyMaster = findById(colonyId);
 			if (colonyMaster.getColonyId() != 0)
 			{
-				colonyMaster.setStatus(colonyStatus);;
+				colonyMaster.setStatus(colonyStatus);
 				ColonyMaster colonyMst = update(colonyMaster);
 				return new Response(SUCCESS, SUCCESS_200,COLONY_ACTIVATE_SUCC, null, colonyMst);
 				

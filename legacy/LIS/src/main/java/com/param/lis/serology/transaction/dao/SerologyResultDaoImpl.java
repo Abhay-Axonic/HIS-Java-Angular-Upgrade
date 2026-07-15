@@ -222,7 +222,7 @@ public class SerologyResultDaoImpl  implements ISerologyResultDao, ICommonConsta
 		       if(res.getListObject() != null && res.getListObject().size()>0) {
 		    	   
 		    	   List<LabConfigurationDto> list = res.getListObject() ;
-		    	  c = list.get(0).getSkipValidation();
+		    	  c = list.getFirst().getSkipValidation();
 		       }
 			
 		       if(c.equals('Y')) {
@@ -646,7 +646,7 @@ public class SerologyResultDaoImpl  implements ISerologyResultDao, ICommonConsta
 	@Override
 	public Response getSerologyReportValidationDetails(List<Integer> labSampleDtlsIds) throws ApplicationException {
 		try {
-			List<SerologyTestResultDto> SerologyTestResultList = new ArrayList<>();;
+			List<SerologyTestResultDto> SerologyTestResultList = new ArrayList<>();
 			try 
 			{
 				List<SerologyTestResultDto> list = null;
@@ -789,7 +789,7 @@ public class SerologyResultDaoImpl  implements ISerologyResultDao, ICommonConsta
 				       if(res.getListObject() != null && res.getListObject().size()>0) {
 				    	   
 				    	   List<LabConfigurationDto> list = res.getListObject() ;
-				    	  c = list.get(0).getSkipValidation();
+				    	  c = list.getFirst().getSkipValidation();
 				       }
 				       if(c.equals('Y')) {
 				    		statusIds = Arrays.asList(RESULT_ENTRY_DONE,PROVISIONAL_REPORT_RELEASED);
@@ -1050,7 +1050,7 @@ public class SerologyResultDaoImpl  implements ISerologyResultDao, ICommonConsta
 		       if(res.getListObject() != null && res.getListObject().size()>0) {
 		    	   
 		    	   List<LabConfigurationDto> list = res.getListObject() ;
-		    	  c = list.get(0).getSkipValidation();
+		    	  c = list.getFirst().getSkipValidation();
 		       }
 			
 		       if(c.equals('Y')) {

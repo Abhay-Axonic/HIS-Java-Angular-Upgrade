@@ -33,7 +33,7 @@ public class PathologyMachineParameterServiceImpl implements IPathologyMachinePa
 			MachineParameterMpperDto machineParameterMpperDto) throws ApplicationException {
          try{
         	 MachineParameterMpperDto dto=new MachineParameterMpperDto();
-        	 dto=machineParameterMpperDto.getMachinePathalogyParameterMpperDtoList().get(0);
+        	 dto=machineParameterMpperDto.getMachinePathalogyParameterMpperDtoList().getFirst();
         	 Response res=iPathologyMachineParaDao.getPathalogyMachineParameterListByMachineId(dto);
         	 if(res.getStatus().equals("success")) {
         		 return new Response(ERROR, null, "Machine already mapped", null, null);

@@ -66,9 +66,9 @@ public class TemplateServiceMapperDaoImpl extends GenericDao<TemplateServiceMapp
 			Integer result = sessionFactory.getCurrentSession()
 					.getNamedQuery("UPDATE_TEMPLATE_SERVICE_MAPPER")
 					.setParameter("isDeleted", 'Y')
-					.setParameter("organizationId", listTemplateServiceMapperDto.get(0).getOrganizationId())
-					.setParameter("unitId", listTemplateServiceMapperDto.get(0).getUnitId())
-					.setParameter("serviceId", listTemplateServiceMapperDto.get(0).getServiceId())
+					.setParameter("organizationId", listTemplateServiceMapperDto.getFirst().getOrganizationId())
+					.setParameter("unitId", listTemplateServiceMapperDto.getFirst().getUnitId())
+					.setParameter("serviceId", listTemplateServiceMapperDto.getFirst().getServiceId())
 					.executeUpdate();
 			if (result > 0) {
 				for (Iterator iterator = listTemplateServiceMapperDto.iterator(); iterator.hasNext();) {

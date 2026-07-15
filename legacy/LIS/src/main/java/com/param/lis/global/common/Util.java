@@ -12,8 +12,8 @@ public class Util {
         String userName = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
  
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails)principal).getUsername();
+        if (principal instanceof UserDetails details) {
+            userName = details.getUsername();
         } else {
             userName = principal.toString();
         }

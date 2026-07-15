@@ -92,9 +92,9 @@ public interface ICommonListDao
 	
 	public Response getSendThroughList()throws ApplicationException;
 	
-	public Response getRequestTypeList()throws ApplicationException;;
+	public Response getRequestTypeList()throws ApplicationException;
 	
-	public Response getAuthorizationStatusList() throws ApplicationException;;
+	public Response getAuthorizationStatusList() throws ApplicationException;
 	
 	public Response getSerologyFindings(Integer orgId,Integer orgUnitId)throws ApplicationException;
 

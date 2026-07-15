@@ -113,7 +113,7 @@ public class StainigMasterDaoImpl extends  GenericDao<StainigMaster, Integer> im
 			StainigMaster organisumGroupMaster = findById(organisumGroupId);
 			if (organisumGroupMaster.getStainigId() != 0)
 			{
-				organisumGroupMaster.setStatus(organisumGroupStatus);;
+				organisumGroupMaster.setStatus(organisumGroupStatus);
 				StainigMaster organisumGroupMst = update(organisumGroupMaster);
 				return new Response(SUCCESS, SUCCESS_200,STAINIG_ACTIVATE_SUCC, null, organisumGroupMst);
 				

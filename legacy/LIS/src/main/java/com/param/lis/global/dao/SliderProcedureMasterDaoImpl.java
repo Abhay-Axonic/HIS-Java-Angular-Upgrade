@@ -114,7 +114,7 @@ public class SliderProcedureMasterDaoImpl extends  GenericDao<SlideProcedureMast
 			SlideProcedureMaster slideProcedureMaster = findById(slideProcedureId);
 			if (slideProcedureMaster.getSlideProcedureId() != 0)
 			{
-				slideProcedureMaster.setStatus(slideProcedureStatus);;
+				slideProcedureMaster.setStatus(slideProcedureStatus);
 				SlideProcedureMaster bacteriaMst = update(slideProcedureMaster);
 				return new Response(SUCCESS, SUCCESS_200,REPORT_TYPRACTIVATE_SUCC, null, bacteriaMst);
 				

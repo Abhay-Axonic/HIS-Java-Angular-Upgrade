@@ -134,8 +134,8 @@ public class AntibioticGroupAddtionMasterDaoImpl extends GenericDao<AntibioticGr
 
 			Integer result = sessionFactory.getCurrentSession().getNamedQuery("UPDATE_ANTIBIOTIC_GROUP_MAPPER")
 					.setParameter("isDeleted", 'Y')
-					.setParameter("orgId", listAntibioticGroupAdditionMasterDto.get(0).getOrgId())
-					.setParameter("antiboiticGroupId", listAntibioticGroupAdditionMasterDto.get(0).getAntiboiticGroupId())
+					.setParameter("orgId", listAntibioticGroupAdditionMasterDto.getFirst().getOrgId())
+					.setParameter("antiboiticGroupId", listAntibioticGroupAdditionMasterDto.getFirst().getAntiboiticGroupId())
 					.executeUpdate();
 			if (result > 0) {
 				for (Iterator iterator = listAntibioticGroupAdditionMasterDto.iterator(); iterator.hasNext();) {

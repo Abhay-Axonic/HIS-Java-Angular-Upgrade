@@ -321,8 +321,8 @@ public class BiochemReportReleaseServiceImpl implements IBiochemReportReleaseSer
 			//Code for Send Sms
 			String senderId = null;
 			UnitApplicationConfigurationDto unitApplicationConfigurationDto = new UnitApplicationConfigurationDto();
-			unitApplicationConfigurationDto.setOrganizationId(listLabResultMasterDto != null && !listLabResultMasterDto.isEmpty() ? listLabResultMasterDto.get(0).getOrgId() : 0);
-			unitApplicationConfigurationDto.setUnitId(listLabResultMasterDto != null && !listLabResultMasterDto.isEmpty() ? listLabResultMasterDto.get(0).getOrgUnitId() : 0);
+			unitApplicationConfigurationDto.setOrganizationId(listLabResultMasterDto != null && !listLabResultMasterDto.isEmpty() ? listLabResultMasterDto.getFirst().getOrgId() : 0);
+			unitApplicationConfigurationDto.setUnitId(listLabResultMasterDto != null && !listLabResultMasterDto.isEmpty() ? listLabResultMasterDto.getFirst().getOrgUnitId() : 0);
 			com.param.global.common.Response  appConfigRes = iUnitApplicationBillingConfigurationDao.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
 		    UnitApplicationConfigurationDto appDto = (UnitApplicationConfigurationDto)appConfigRes.getObject();
 			if(appDto != null){
@@ -333,7 +333,7 @@ public class BiochemReportReleaseServiceImpl implements IBiochemReportReleaseSer
 			}
 			
 			Date date = TimeZoneComponent.getDateByzone(listLabResultMasterDto!=null && listLabResultMasterDto.size()>0 
-					?listLabResultMasterDto.get(0).getOrgUnitId() : null);
+					?listLabResultMasterDto.getFirst().getOrgUnitId() : null);
 			List<LabResultMasterDto> newResLsit = new ArrayList<>();
 		  for (Iterator iterator = listLabResultMasterDto.iterator(); iterator.hasNext();) 
 		  {
@@ -452,14 +452,14 @@ public class BiochemReportReleaseServiceImpl implements IBiochemReportReleaseSer
 	      throws ApplicationException {
 	    try {
 	    	Date date = TimeZoneComponent.getDateByzone(listLabResultMasterDto!=null && listLabResultMasterDto.size()>0 
-	    			? listLabResultMasterDto.get(0).getOrgUnitId() : null);
-	    	String unitLogo = iGlobalUnitMasterService.getUnitImage(listLabResultMasterDto.get(0).getOrgUnitId());
+	    			? listLabResultMasterDto.getFirst().getOrgUnitId() : null);
+	    	String unitLogo = iGlobalUnitMasterService.getUnitImage(listLabResultMasterDto.getFirst().getOrgUnitId());
 	    	
 			//Code for Send Sms
 			String senderId = null;
 			UnitApplicationConfigurationDto unitApplicationConfigurationDto = new UnitApplicationConfigurationDto();
-			unitApplicationConfigurationDto.setOrganizationId(listLabResultMasterDto.get(0).getOrgId());
-			unitApplicationConfigurationDto.setUnitId(listLabResultMasterDto.get(0).getOrgUnitId());
+			unitApplicationConfigurationDto.setOrganizationId(listLabResultMasterDto.getFirst().getOrgId());
+			unitApplicationConfigurationDto.setUnitId(listLabResultMasterDto.getFirst().getOrgUnitId());
 			com.param.global.common.Response  appConfigRes = iUnitApplicationBillingConfigurationDao.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
 		    UnitApplicationConfigurationDto appDto = (UnitApplicationConfigurationDto)appConfigRes.getObject();
 			if(appDto != null){
@@ -512,7 +512,7 @@ public class BiochemReportReleaseServiceImpl implements IBiochemReportReleaseSer
    					{
    					  
    						Response<SingParamTestResDto, Integer> multiParamTestRes = this.getReportReleaseWorkListDetails(bioChemParamDtoList);
-   						SingParamTestResDto singParamTestResDto = multiParamTestRes.getListObject().get(0);
+   						SingParamTestResDto singParamTestResDto = multiParamTestRes.getListObject().getFirst();
    						singParamTestResDto.setUnitLogo(unitLogo);
    						//SendReportToMail.sendMail(labResultMasterDto.getPatientMail(), fileName, MultiParamTestReportUtility.generateMultiParamReportToMail(labResultMasterDto, singParamTestResDto));
    						SendReportToMail.sendMail(labResultMasterDto.getPatientMail(), fileName, this.getLabReport(labResultMasterDto.getLabTestResId(), labResultMasterDto.getOrgId(), labResultMasterDto.getOrgUnitId()));
@@ -530,7 +530,7 @@ public class BiochemReportReleaseServiceImpl implements IBiochemReportReleaseSer
    					{
    						Response<SingParamTestResDto, Integer> singleParamTestRes = this
    								.getReportReleaseWorkListDetails(bioChemParamDtoList);
-   						SingParamTestResDto singParamTestResDto = singleParamTestRes.getListObject().get(0);
+   						SingParamTestResDto singParamTestResDto = singleParamTestRes.getListObject().getFirst();
    						singParamTestResDto.setUnitLogo(unitLogo);
    						SendReportToMail.sendMail(labResultMasterDto.getPatientMail(), fileName, this.getLabReport(labResultMasterDto.getLabTestResId(), labResultMasterDto.getOrgId(), labResultMasterDto.getOrgUnitId()));
    						//SendReportToMail.sendMail(labResultMasterDto.getPatientMail(), fileName, SingleParamTestReportUtility.generateSingleParamReportToMail(labResultMasterDto, singParamTestResDto));

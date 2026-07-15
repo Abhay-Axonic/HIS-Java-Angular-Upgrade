@@ -145,7 +145,7 @@ public class BioChemResultEntryDaoImpl extends GenericDao<LabResultMaster, Integ
 		   			
 		   		}else if (bioChemParamDto.getIsSendToCrApplicable() != null && bioChemParamDto.getIsSendToCrApplicable() == 'Y') {
 		   						
-		   			statusIds =Arrays.asList(SAMPLE_SEND_TO_CR,SAMPLE_COLLECTED);;
+		   			statusIds =Arrays.asList(SAMPLE_SEND_TO_CR,SAMPLE_COLLECTED);
 		   			
 		   		}else {
 		   			
@@ -271,7 +271,7 @@ public class BioChemResultEntryDaoImpl extends GenericDao<LabResultMaster, Integ
        if(res.getListObject() != null && res.getListObject().size()>0) {
     	   
     	   List<LabConfigurationDto> list = res.getListObject() ;
-    	  c = list.get(0).getSkipValidation();
+    	  c = list.getFirst().getSkipValidation();
        }
        
        
@@ -1267,7 +1267,7 @@ public class BioChemResultEntryDaoImpl extends GenericDao<LabResultMaster, Integ
 	        labResultMaster.setManualResultEnterTime(currentTimeWithZone);
 	        labResultMaster.setManualValidationTime(currentTimeWithZone);
 	        labResultMaster.setManualReleaseTime(currentTimeWithZone);
-	        labResultMaster.setReportType(labResultMasterDto.getListLabSampleResultDetailsMaster().get(0).getReportType() != null ? labResultMasterDto.getListLabSampleResultDetailsMaster().get(0).getReportType(): labResultMasterDto.getReportType());
+	        labResultMaster.setReportType(labResultMasterDto.getListLabSampleResultDetailsMaster().getFirst().getReportType() != null ? labResultMasterDto.getListLabSampleResultDetailsMaster().getFirst().getReportType(): labResultMasterDto.getReportType());
 	        labResultMaster.setResultAuthorisedFlag('Y');
 	        labResultMaster.setSampleStatusId(8);
 	        labResultMaster.setStatus('A');
@@ -2184,7 +2184,7 @@ public class BioChemResultEntryDaoImpl extends GenericDao<LabResultMaster, Integ
                if(res.getListObject() != null && res.getListObject().size()>0) {
                    
                    List<LabConfigurationDto> list = res.getListObject() ;
-                  c = list.get(0).getSkipValidation();
+                  c = list.getFirst().getSkipValidation();
                }
                 for (Iterator iterator1 =
                     labResultMst.getListLabSampleResultDetailsMaster().iterator(); iterator1.hasNext();) {

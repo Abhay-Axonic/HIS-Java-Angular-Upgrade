@@ -71,23 +71,23 @@ public class MicroscopicExaminationDaoImpl extends GenericDao<MicroscopicExamina
     	
    	 List<Integer> statusId = new ArrayList<Integer>();
 	    
-	 	if(list1.get(0).getBiochemicalTestingApplicable() == 'Y') {
+	 	if(list1.getFirst().getBiochemicalTestingApplicable() == 'Y') {
 			
 			statusId = MICROSCOPI_EXA_SAMPLE_STATUS_IDS;
 			
-		}else if(list1.get(0).getMacroscopicExaminationApplicable() == 'Y') {
+		}else if(list1.getFirst().getMacroscopicExaminationApplicable() == 'Y') {
 			
 			statusId = Arrays.asList(MACROSCOPIC_EXAMINATION_COMPLETED,MICROSCOPIC_EXAMINATION); 
 			
-		}else if(list1.get(0).getIncubationMasterApplicable() == 'Y') {
+		}else if(list1.getFirst().getIncubationMasterApplicable() == 'Y') {
 			
 			statusId = Arrays.asList(INCUBATION_OBJSERVATION_COMPLETED,MICROSCOPIC_EXAMINATION);
 			
-		}else  if(list1.get(0).getIsWorklistDepartment() == 'Y') {
+		}else  if(list1.getFirst().getIsWorklistDepartment() == 'Y') {
 			
 			statusId = Arrays.asList(SEND_FOR_INCUBATION_OBERVATION,MICROSCOPIC_EXAMINATION);
 			
-		}else if(list1.get(0).getIsAcceptanceInDepartment() == 'Y') {
+		}else if(list1.getFirst().getIsAcceptanceInDepartment() == 'Y') {
 			
 			statusId = Arrays.asList(SAMPLE_ACCEPTED,MICROSCOPIC_EXAMINATION);
 			
@@ -135,23 +135,23 @@ public class MicroscopicExaminationDaoImpl extends GenericDao<MicroscopicExamina
     	
     	 List<Integer> statusId = new ArrayList<Integer>();
 		    
-    	 	if(list1.get(0).getBiochemicalTestingApplicable() == 'Y') {
+    	 	if(list1.getFirst().getBiochemicalTestingApplicable() == 'Y') {
 				
 				statusId = MICROSCOPI_EXA_SAMPLE_STATUS_IDS;
 				
-			}else if(list1.get(0).getMacroscopicExaminationApplicable() == 'Y') {
+			}else if(list1.getFirst().getMacroscopicExaminationApplicable() == 'Y') {
 				
 				statusId = Arrays.asList(MACROSCOPIC_EXAMINATION_COMPLETED,MICROSCOPIC_EXAMINATION); 
 				
-			}else if(list1.get(0).getIncubationMasterApplicable() == 'Y') {
+			}else if(list1.getFirst().getIncubationMasterApplicable() == 'Y') {
 				
 				statusId = Arrays.asList(INCUBATION_OBJSERVATION_COMPLETED,MICROSCOPIC_EXAMINATION);
 				
-			}else  if(list1.get(0).getIsWorklistDepartment() == 'Y') {
+			}else  if(list1.getFirst().getIsWorklistDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SEND_FOR_INCUBATION_OBERVATION,MICROSCOPIC_EXAMINATION);
 				
-			}else if(list1.get(0).getIsAcceptanceInDepartment() == 'Y') {
+			}else if(list1.getFirst().getIsAcceptanceInDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SAMPLE_ACCEPTED,MICROSCOPIC_EXAMINATION);
 				
@@ -396,31 +396,31 @@ public Response getMicroScopicExaminationListSearch(SearchDto searchDto) throws 
     	
     	 List<Integer> statusId = new ArrayList<Integer>();
 		    
-    	 	if(list1.get(0).getBiochemicalTestingApplicable() == 'Y') {
+    	 	if(list1.getFirst().getBiochemicalTestingApplicable() == 'Y') {
 				
 				statusId = MICROSCOPI_EXA_SAMPLE_STATUS_IDS;
 				
-			}else if(list1.get(0).getMacroscopicExaminationApplicable() == 'Y') {
+			}else if(list1.getFirst().getMacroscopicExaminationApplicable() == 'Y') {
 				
 				statusId = Arrays.asList(MACROSCOPIC_EXAMINATION_COMPLETED,MICROSCOPIC_EXAMINATION); 
 				
-			}else if(list1.get(0).getIncubationMasterApplicable() == 'Y') {
+			}else if(list1.getFirst().getIncubationMasterApplicable() == 'Y') {
 				
 				statusId = Arrays.asList(INCUBATION_OBJSERVATION_COMPLETED,MICROSCOPIC_EXAMINATION);
 				
-			}else  if(list1.get(0).getIsWorklistDepartment() == 'Y') {
+			}else  if(list1.getFirst().getIsWorklistDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SEND_FOR_INCUBATION_OBERVATION,MICROSCOPIC_EXAMINATION);
 				
-			}else if(list1.get(0).getIsAcceptanceInDepartment() == 'Y') {
+			}else if(list1.getFirst().getIsAcceptanceInDepartment() == 'Y') {
 				
 				statusId = Arrays.asList(SAMPLE_ACCEPTED,MICROSCOPIC_EXAMINATION);
 				
-			}else if(list1.get(0).getIsSampleAcceptanceApplicable() == 'Y') {
+			}else if(list1.getFirst().getIsSampleAcceptanceApplicable() == 'Y') {
 				
 				statusId = Arrays.asList(SAMPLE_SEND_TO_DEPT,MICROSCOPIC_EXAMINATION);
 				
-			}else if (list1.get(0).getIsSendToCrApplicable() != null && list1.get(0).getIsSendToCrApplicable() == 'Y') {
+			}else if (list1.getFirst().getIsSendToCrApplicable() != null && list1.getFirst().getIsSendToCrApplicable() == 'Y') {
 							
 				statusId = Arrays.asList(SAMPLE_SEND_TO_CR,MICROSCOPIC_EXAMINATION);
 				

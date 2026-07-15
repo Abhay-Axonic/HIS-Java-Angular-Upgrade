@@ -133,12 +133,12 @@ public class ReportHandOverServiceImpl
 		try {
 			String resPublicUrl = null;
 			if(list != null && list.size() >0) {
-			 resPublicUrl =  unitApplicationBillingConfigurationService.getPublicUrl(list.get(0).getOrgUnitId());
+			 resPublicUrl =  unitApplicationBillingConfigurationService.getPublicUrl(list.getFirst().getOrgUnitId());
 			}
 			//iMailingService.sentRegistrationMailToPatient(patientRegistrationDto);
 			String pattern = "yyyy-MM-dd HH:mm:ss";
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(list!=null && list.size()>0 ? list.get(0).getOrgUnitId():null));
+			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(list!=null && list.size()>0 ? list.getFirst().getOrgUnitId():null));
 			com.param.global.common.Response res1 = null;
 			for (LabResultMasterDto dto : list) {
 				SmsUtilityConfigInfoDto emailinfo = new SmsUtilityConfigInfoDto();
@@ -262,7 +262,7 @@ public class ReportHandOverServiceImpl
 			String resMsg = "Mail Sent successfully";
 			String resFailedMsg = "";
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(dtoList!=null && dtoList.size()>0 ? dtoList.get(0).getUnitId(): null));
+			String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(dtoList!=null && dtoList.size()>0 ? dtoList.getFirst().getUnitId(): null));
 			for (SmsUtilityConfigInfoDto dto : dtoList) {
 				SmsUtilityConfigInfoDto emailinfo = new SmsUtilityConfigInfoDto();
 				emailinfo.setUnitId(dto.getUnitId());

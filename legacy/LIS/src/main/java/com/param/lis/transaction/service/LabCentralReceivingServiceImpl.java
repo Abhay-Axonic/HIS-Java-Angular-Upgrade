@@ -163,7 +163,7 @@ public class LabCentralReceivingServiceImpl implements ILabCentralReceivingServi
 		try
 		{
 			Date date = TimeZoneComponent.getDateByzone(listLabSampleMasterDto!=null && listLabSampleMasterDto.size()>0 
-					 ? listLabSampleMasterDto.get(0).getOrgUnitId() : null);
+					 ? listLabSampleMasterDto.getFirst().getOrgUnitId() : null);
 			
 			 List<BarcodeDto> barcodeDtoList = new ArrayList<>();
 			for (Iterator iterator = listLabSampleMasterDto.iterator(); iterator.hasNext();) 
@@ -197,8 +197,8 @@ public class LabCentralReceivingServiceImpl implements ILabCentralReceivingServi
 			    	 barcodeDto.setPatientId(labSampleMst.getPatientId());
 			    	 barcodeDto.setSampleId(labSampleMst.getSampleId());
 			    	 barcodeDto.setLabSampleId(labSampleMst.getLabSampleId());
-			    	 barcodeDto.setVisitType(labSampleMasterDto.getListLabSampleDetailsMaster().get(0).getVisitType());
-			    	 barcodeDto.setDeptName(labSampleMasterDto.getListLabSampleDetailsMaster().get(0).getDeptName());
+			    	 barcodeDto.setVisitType(labSampleMasterDto.getListLabSampleDetailsMaster().getFirst().getVisitType());
+			    	 barcodeDto.setDeptName(labSampleMasterDto.getListLabSampleDetailsMaster().getFirst().getDeptName());
 			    	 barcodeDto.setGenerationDateTime(GlobalCommonDateUtils.getStringDate(labSampleMst.getSampleGenDatetime(), "dd/MM/yyyy"));
 			    	 barcodeDto.setGenerationTime(GlobalCommonDateUtils.getStringDate(labSampleMst.getSampleGenDatetime(), "HH:mm:ss"));
 			    	 barcodeDtoList.add(barcodeDto);

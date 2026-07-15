@@ -27,6 +27,6 @@ public Response getTotalMachineMasterRecord(Integer organisationId, Integer unit
 		throws ApplicationException;
 
 public Response getActiveMachineList(MachineMasterDto machineMasterDto)
-		throws ApplicationException;;
+		throws ApplicationException;
 
 }

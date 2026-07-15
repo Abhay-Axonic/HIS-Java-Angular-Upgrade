@@ -193,7 +193,6 @@ public class MachineParameterDaoImpl extends GenericDao<MachineParameter, Intege
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			 ;
 		}
 	}
 
@@ -214,7 +213,6 @@ public class MachineParameterDaoImpl extends GenericDao<MachineParameter, Intege
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			 ;
 		}
 	}
 
@@ -235,7 +233,6 @@ public class MachineParameterDaoImpl extends GenericDao<MachineParameter, Intege
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			 ;
 		}
 	}
 }

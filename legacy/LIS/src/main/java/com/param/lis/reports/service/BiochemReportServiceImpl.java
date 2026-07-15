@@ -57,8 +57,8 @@ public class BiochemReportServiceImpl implements IBiochemReportService, ICommonC
 		try {
 
 			
-			   Date date = TimeZoneComponent.getDateByzone(listLabResultMasterDto!=null && listLabResultMasterDto.size()>0?listLabResultMasterDto.get(0).getOrgUnitId():null);
-			   String unitLogo = iGlobalUnitMasterService.getUnitImage(listLabResultMasterDto.get(0).getOrgUnitId());
+			   Date date = TimeZoneComponent.getDateByzone(listLabResultMasterDto!=null && listLabResultMasterDto.size()>0?listLabResultMasterDto.getFirst().getOrgUnitId():null);
+			   String unitLogo = iGlobalUnitMasterService.getUnitImage(listLabResultMasterDto.getFirst().getOrgUnitId());
 			if (!listLabResultMasterDto.isEmpty()) {
 				
 				
@@ -91,7 +91,7 @@ public class BiochemReportServiceImpl implements IBiochemReportService, ICommonC
 					{
 					  
 						Response<SingParamTestResDto, Integer> multiParamTestRes = iBiochemReportReleaseService.getReportReleaseWorkListDetails(bioChemParamDtoList);
-						SingParamTestResDto singParamTestResDto = multiParamTestRes.getListObject().get(0);
+						SingParamTestResDto singParamTestResDto = multiParamTestRes.getListObject().getFirst();
 						singParamTestResDto.setUnitLogo(unitLogo);
 					    this.generateMultyParamReport(labResultMasterDto, singParamTestResDto,servletRequest,servletResponse);
 						
@@ -100,7 +100,7 @@ public class BiochemReportServiceImpl implements IBiochemReportService, ICommonC
 						
 						Response<SingParamTestResDto, Integer> singleParamTestRes = iBiochemReportReleaseService
 								.getReportReleaseWorkListDetails(bioChemParamDtoList);
-						SingParamTestResDto singParamTestResDto = singleParamTestRes.getListObject().get(0);
+						SingParamTestResDto singParamTestResDto = singleParamTestRes.getListObject().getFirst();
 						singParamTestResDto.setUnitLogo(unitLogo);
 						 this.generateSingleParamReport(labResultMasterDto, singParamTestResDto,servletRequest,servletResponse);
 					}
@@ -167,7 +167,7 @@ public class BiochemReportServiceImpl implements IBiochemReportService, ICommonC
 			   Response res=iBiochemReportReleaseDao.printCoverSheetReports(labResultId!=null?labResultId:0) ;			
 			   List<LabResultMasterDto> list=res.getListObject();
 			if (list.size()>0) {
-				 Date date = TimeZoneComponent.getDateByzone(list.get(0).getOrgUnitId());
+				 Date date = TimeZoneComponent.getDateByzone(list.getFirst().getOrgUnitId());
 				for (Iterator iterator = list.iterator(); iterator.hasNext();) 
 				{
 					
@@ -194,7 +194,7 @@ public class BiochemReportServiceImpl implements IBiochemReportService, ICommonC
 					{
 					  
 						Response<SingParamTestResDto, Integer> multiParamTestRes = iBiochemReportReleaseService.getReportReleaseWorkListDetails(bioChemParamDtoList);
-						SingParamTestResDto singParamTestResDto = multiParamTestRes.getListObject().get(0);
+						SingParamTestResDto singParamTestResDto = multiParamTestRes.getListObject().getFirst();
 					    this.generateMultyParamReport(labResultMasterDto, singParamTestResDto,servletRequest,servletResponse);
 						
 					} else if (labResultMasterDto.getTestType()==SINGLE_PARAM_TEST) {
@@ -202,7 +202,7 @@ public class BiochemReportServiceImpl implements IBiochemReportService, ICommonC
 						
 						Response<SingParamTestResDto, Integer> singleParamTestRes = iBiochemReportReleaseService
 								.getReportReleaseWorkListDetails(bioChemParamDtoList);
-						SingParamTestResDto singParamTestResDto = singleParamTestRes.getListObject().get(0);
+						SingParamTestResDto singParamTestResDto = singleParamTestRes.getListObject().getFirst();
 						 this.generateSingleParamReport(labResultMasterDto, singParamTestResDto,servletRequest,servletResponse);
 					}
 					Response reportRS = iBioChemistryService.biochemFinalReportRelease(labSampleDetailsMasterDto);

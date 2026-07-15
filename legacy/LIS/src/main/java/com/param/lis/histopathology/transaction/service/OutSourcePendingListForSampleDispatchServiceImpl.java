@@ -90,7 +90,7 @@ public class OutSourcePendingListForSampleDispatchServiceImpl  implements IOutSo
 		  if(!listOutSourceMasterDto.isEmpty())
 		  {
 			  
-              Date dt= TimeZoneComponent.getDateByzone(listOutSourceMasterDto.get(0).getOrgUnitId());
+              Date dt= TimeZoneComponent.getDateByzone(listOutSourceMasterDto.getFirst().getOrgUnitId());
               Response<LabSampleDetailsMaster, Integer> sampleStatusRes =null;
               
 			  for (Iterator iterator =listOutSourceMasterDto.iterator(); iterator.hasNext();) 

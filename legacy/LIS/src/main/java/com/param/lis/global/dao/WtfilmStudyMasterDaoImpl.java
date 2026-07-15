@@ -114,7 +114,7 @@ public class WtfilmStudyMasterDaoImpl extends  GenericDao<WtfilmStudyMaster, Int
 			WtfilmStudyMaster wtfilmStudyMaster = findById(unitId);
 			if (wtfilmStudyMaster.getWetfilmStudyId() != 0)
 			{
-				wtfilmStudyMaster.setStatus(unitStatus);;
+				wtfilmStudyMaster.setStatus(unitStatus);
 				WtfilmStudyMaster wtfilmStudyMst = update(wtfilmStudyMaster);
 				return new Response(SUCCESS, SUCCESS_200,WTIFILMSTUDY_ACTIVATE_SUCC, null, wtfilmStudyMst);
 				
