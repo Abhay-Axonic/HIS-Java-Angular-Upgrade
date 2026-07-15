@@ -201,7 +201,7 @@ public class DietOrderDaoImpl implements IDietOrderDao,ICommonConstants {
 							
 			if(!patientDetailsList.isEmpty())
 			{
-				return new Response(SUCCESS, null, null,null,patientDetailsList.get(0));
+				return new Response(SUCCESS, null, null,null,patientDetailsList.getFirst());
 			}
 			else
 			{

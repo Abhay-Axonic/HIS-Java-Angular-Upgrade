@@ -53,7 +53,7 @@ public class DietPlanningDaoImpl implements IDietPlanningDao,ICommonConstants {
 				Query updateQue = sessionFactory.getCurrentSession()
 						.createSQLQuery("update  kitchen.diet_order set status ='I' where patient_id = :patientId and diet_preference_id in (:dietPreferenceId)")
 						.setParameter("patientId", dietPlanningDto.getPatientId())
-						.setParameter("dietPreferenceId", dietOrderByPatientId.get(0).getDietPreferenceId());
+						.setParameter("dietPreferenceId", dietOrderByPatientId.getFirst().getDietPreferenceId());
 
 				updateQue.executeUpdate();
 			}
@@ -82,7 +82,7 @@ public class DietPlanningDaoImpl implements IDietPlanningDao,ICommonConstants {
 				return new Response(SUCCESS, "200", "Patient Discharged", null, null);
 			}
 
-			Integer admissionId = (Integer) query1.list().get(0);
+			Integer admissionId = (Integer) query1.list().getFirst();
 
 			Query query = sessionFactory.getCurrentSession()
 					.createQuery("select admissionDetails.floorId as floorId,"
@@ -419,7 +419,7 @@ public class DietPlanningDaoImpl implements IDietPlanningDao,ICommonConstants {
 			
 			if(!dietPrefList.isEmpty())
 			{
-				return new Response(SUCCESS, null, null, null,dietPrefList.get(0));
+				return new Response(SUCCESS, null, null, null,dietPrefList.getFirst());
 			}
 			else
 			{

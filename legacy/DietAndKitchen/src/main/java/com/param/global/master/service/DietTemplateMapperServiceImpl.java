@@ -268,7 +268,7 @@ public class DietTemplateMapperServiceImpl implements IDietTemplateMapperService
 				dietTemplateDto.setMealDetailsList(mealDetailsList);
 			}
 
-			return new Response(SUCCESS, null, null, null, dietTemplateList.get(0));
+			return new Response(SUCCESS, null, null, null, dietTemplateList.getFirst());
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -367,7 +367,7 @@ public class DietTemplateMapperServiceImpl implements IDietTemplateMapperService
 				dietTemplateDto.setMealDetailsList(mealDetailsList);
 			}
 
-			return new Response(SUCCESS, null, null, null, dietTemplateList.get(0));
+			return new Response(SUCCESS, null, null, null, dietTemplateList.getFirst());
 
 			}
 			else
