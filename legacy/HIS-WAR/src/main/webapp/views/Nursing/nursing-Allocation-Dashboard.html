@@ -1,0 +1,279 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+        <fieldset class="main-fieldset">
+        	<div class="row">
+        		<div class="custom-sub-tab padding-left-right-set4 ">
+					<ul class="tabs nav nav-tabs">
+						<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width10 active" style="">
+							<a href="" ng-click="setFirstTabLevel(1)">Create Roster</a>
+						</li>
+						<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+							<a href="" ng-click="setFirstTabLevel(2)" class="">View Roster</a>
+						</li>
+					</ul>
+				</div>
+				<div class="row padding-left-right-set4">
+					<!-- *********** Tab 1 - Create Roster start ***********  -->
+					<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+						<div class="row">
+							<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container padding-top2">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select class="text-input floating-label dirty" ng-disabled="updateBtnFlag==true" ng-model="commonObj.wardId" ng-change="getMappedNurseByWardId(commonObj.wardId);">
+											  <option value=""  > Select Ward </option>
+											     <option ng-repeat="info in wardList" ng-value="{{info.wardId}}"  value="{{info.wardId}}">{{info.wardName}}</option>
+										</select> <label for="code">Ward<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							<!-- 	<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container padding-top2">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select class="text-input floating-label dirty" >
+											  		<option value=""  > Select Nurse </option>
+												</select> <label for="code">Nurse<span class="star">*</span></label>
+												
+												for multi selection<label for="" class="">Nurse<span class="star">*</span></label>
+													<div class="custom-drop-down-btn"  options="" selected-model=""></div>
+												
+											</div>
+										</div>
+									</div>
+								</div> -->
+								<div ng-if="saveBtnFlag==true" class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-clock-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+												<input type="text" autocomplete="off" class="text-input floating-label dirty"
+															name="fromDatepicker" id="fromDatepicker"
+														    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+															placeholder="DD/MM/YYYY" ng-model="commonObj.fromDate"
+															model-view-value="true" is-open="fromDatepicker.opened"
+															datepicker-options="dateOptions" show-button-bar="false"
+															ng-click="openFromDatePicker()"  required>
+													<label for="description" class=""> Date (From) <span class="star">*</span></label>
+												</div>
+											</div>
+									</div>
+								</div>
+								<div  ng-if="saveBtnFlag==true" class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-clock-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+															name="toDatepicker" id="toDatepicker"
+														    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+															placeholder="DD/MM/YYYY" ng-model="commonObj.toDate"
+															model-view-value="true" is-open="toDatepicker.opened"
+															datepicker-options="dateOptions" show-button-bar="false"
+															ng-click="openToDatePicker()"  required>
+															<label for="description" class=""> Date-Till<span class="star">*</span></label>
+												</div>
+											</div>
+									</div>
+								</div>
+								<div ng-if="saveBtnFlag==true" class="col-lg-2 col-sm-2 col-md-2 text-width-auto padding-top5" style="    margin-top: 11px;">
+						              <div class="common-save-button" style="padding-top:  0px;">
+						                <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" ng-click="add(commonObj.fromDate,commonObj.toDate);" title="Add">
+						                  <i class="fa fa-plus" aria-hidden="true"></i>
+						                </a>
+						              </div>
+						        </div>
+						         <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+									<div class=" ">
+									    <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveShift();"
+															ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+											<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateShift()"
+															ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+											<!-- <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="saveShift();" data-toggle="modal"  data-target="">
+											<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a> -->
+									</div>
+								</div>
+							</div>
+							<div class="row padding-left-right-set4 padding-top10">
+								<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll500">
+								  <table ng-show="isAdded=='Y' " id="main-table" class="main-table" ng-class="dateDiff>10 ? 'width300':dateDiff<=5 ?'width100':'width200'">
+								    <thead>
+								     	 <tr >
+							        		<th  ng-class="dateDiff > 10 ? 'width3 text-center':dateDiff < 5 ? 'width20 text-center':'width5 text-center'" scope="col">Nurse</th>
+								        	<th ng-repeat="info1 in nurseShiftList track by $index" class="text-center" scope="col" colspan="2">{{info1.shiftDate}}</th>
+								       		<!--  <th ng-repeat="date in nurseShiftList" class="text-center" scope="col" colspan="2" id="{{date.shiftDate}}">{{date.shiftDate}}</th> -->
+					  					</tr>
+								    </thead>
+								    <tbody>
+								     	<tr >
+								        	<td  ng-class="dateDiff > 10 ? 'width3 text-center':dateDiff < 5 ? 'width20 text-center':'width5 text-center'" scope="col" ></td>
+								        	<td ng-repeat-start="info2 in shiftHeaderList track by $index">Shift</td>
+								        	<td ng-repeat-end>Bed No.</td>
+								      	</tr>
+								      	<tr ng-repeat="nurseAllocShift in nurseAllocAndShiftList">
+								        	<td  ng-class="dateDiff > 10 ? 'width3 text-center':dateDiff < 5 ? 'width20 text-center':'width5 text-center'" scope="col" >
+												<div class="form-group has-error">
+												<select class="border-dropdown" ng-disabled="updateBtnFlag==true" ng-model="nurseAllocShift.nurseId" ng-change=checkNurseExist(nurseAllocShift);>
+													  <option value="" class="text-center" > Select Nurse </option>
+													     <option ng-repeat="info in nurseAllocShift.nurseList" ng-value="{{info.userId}}"  value="{{info.userId}}">{{info.nurseName}}</option>
+												</select> 
+												</div>
+											</td>
+									        <td ng-repeat-start="info3 in nurseAllocShift.nurseShiftList track by $index" >
+												<div class="form-group has-error">
+												<!-- <select class="border-dropdown" data-ng-model="info.shiftId" > -->
+													<select class="border-dropdown" data-ng-model="info3.shiftId" data-ng-change="checkShift(info3,$index,nurseAllocShift)"> 
+														<option selected="" value="">Shift</option>
+													     <option data-ng-repeat="info in shiftList" data-ng-value="{{info.shiftId}}" value="{{info.shiftId}}">{{info.shiftName}}</option>
+													</select>
+												</div>
+											</td>
+									        <td ng-repeat-end >
+												<div class="form-group has-error" >
+													<!-- <label for="" name="{{info.bedId+$index}}" ng-model="nurseShiftList[$index].bedIdList[$index].bedId" class="LISDynamicLabel"></label>  -->
+															<div class="custom-drop-down-btn" ng-dropdown-multiselect="" class="LISDynamicLabel"
+																options="info3.bedIdList" selected-model="nurseAllocShift.nurseShiftList[$index].selectedbedList" extra-settings="dropDownSetting1" >
+													</div>
+												</div>
+											</td>
+								      </tr>
+								    </tbody>
+								  </table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- *********** Tab 1 - Create Roster end ***********  -->
+					<!-- *********** Tab 2 - View Roster start ***********  -->
+					<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+						<div class="row">
+						<div class="row padding-top8" >
+							 <div  class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-clock-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+												<input type="text" autocomplete="off" class="text-input floating-label dirty"
+															name="fromDatepicker" id="fromDatepickerObj"
+														    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+															placeholder="DD/MM/YYYY" ng-model="fromDate"
+															model-view-value="true" is-open="fromDatepickerObj.opened"
+															datepicker-options="dateOptionss" show-button-bar="false"
+															ng-click="openFromDatePickerObj()"  required>
+													<label for="description" class=""> Date (From) <span class="star">*</span></label>
+												</div>
+											</div>
+									</div>
+							</div>
+							<div   class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-clock-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="toDatepicker" id="toDatepickerObj"
+												    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="toDate"
+													model-view-value="true" is-open="toDatepickerObj.opened"
+													datepicker-options="dateOptionss" show-button-bar="false"
+													ng-click="openToDatePickerObj()"  required>
+													<label for="description" class=""> Date-Till<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div  class="col-lg-2 col-sm-2 col-md-2 text-width-auto padding-top5" style="	margin-top: 11px;">
+					              <div class="common-save-button" style="padding-top:  0px;">
+					                <a href="" class="btn btn-primary btn-save-box-shadow" id="show" name="show" style="width: auto;" ng-click="showRoasterFun()" title="Show Roster">
+					                  <!-- <i class="fa fa-plus" aria-hidden="true"></i> -->Show Roster
+					                </a>
+					              </div>
+					        </div>
+					       <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+									<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" ng-model="searchKeyword" style="margin-top: 0px" >
+									<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+						</div>
+						<div class="row padding-left-right-set4 padding-top10">
+							<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll500">
+							    <table ng-if="showRoaster=='Y'" id="main-table" class="main-table" ng-class="dateDiffForShow>10 ? 'width300':dateDiffForShow<=5 ?'width100':'width200'">
+								    <thead> 
+								          <tr>
+								        <th ng-class="dateDiffForShow>10 ?'width2':dateDiffForShow<=5 ?'width8':'width4' " scope="col">Ward</th>
+								        <th ng-class="dateDiffForShow>10 ?'width3':dateDiffForShow<=5 ?'width12':'width6' " scope="col">Nurse</th>
+								        <th class="text-center" scope="col" colspan="2" ng-repeat="nurseshiftList in nurseShiftListFinal">{{nurseshiftList.shiftDate}}</th>
+								        <th class="width2 text-center" style="z-index: 1023;">Status</th>
+										<th class="width2 text-center">Action</th>
+								      </tr>
+								    </thead>
+								    <tbody>
+								    <tr >
+								        <td ng-class="dateDiffForShow>10 ?'width2':dateDiffForShow<=5 ?'width8':'width4' " scope="col"></td>
+								        <td ng-class="dateDiffForShow>10 ?'width3':dateDiffForShow<=5 ?'width12':'width6' " scope="col"></td>
+								        <td ng-repeat-start="nurseshiftList in nurseShiftListFinal">Shift</td>
+								        <td ng-repeat-end>Bed No.</td>
+								        <td class="width2 text-center">-</td>
+								        <td class="width2 text-center">-</td>
+								      </tr>
+								      <!-- <tr ng-if="finalNurseList.length==0 && showRoaster=='Y'" align="center">No roster available for selected dates</tr> -->
+								       <tr ng-repeat="list in finalNurseList|filter:searchKeyword">
+								        <td ng-class="dateDiffForShow>10 ?'width2':dateDiffForShow<=5 ?'width8':'width4' " scope="col" >{{list.wardName}}</td>
+								        <td ng-class="dateDiffForShow>10 ?'width3':dateDiffForShow<=5 ?'width12':'width6' " scope="col" >{{list.nurseName}}</td>
+								        <td ng-if="list.nurseId==shiftobj.nurseId" ng-repeat-start="shiftobj in shiftListNurseFinal">{{shiftobj.shiftName}}</td>
+								        <td ng-if="list.nurseId==shiftobj.nurseId" ng-repeat-end>{{shiftobj.bedName}}</td>
+								        <td class="width2 vertical-middle text-center">
+														<label class="switch"> 
+															<input type="checkbox" ng-model="list.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(list)">
+															<div class="slider round"></div>
+														</label>
+													</td>
+											<td class="width2 text-center" title="Edit">
+											  <a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(list)" ></i></a>
+											<!-- <i class="fa fa-pencil" style="color: #3131d2;" aria-hidden="true " title="Edit"></i>
+											&nbsp -->
+											<!-- <i class="fa fa-times" style="color: #3131d2;" aria-hidden="true " title="Remove"></i> -->
+										</td>
+								      </tr> 
+								    </tbody>
+								  </table> 
+								</div>
+							</div>						
+						</div>
+					</div>
+					<!-- *********** Tab 2 - View Roster end ***********  -->
+				</div>
+        	</div>
+		</fieldset>
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script type="text/javascript">
+$( document ).ready(function() {
+	$(".selectedServicesList").hide();
+	$(".selectedPageName").text("Nursing Allocation Dashboard");
+	$(".sidebar-nav li").each(function() {
+	$(this).find("a").parents("li").removeClass("active");
+	$('a[href$="nursingAllocationDashboard"]').parents("li").addClass("active");
+	
+});
+});
+</script>

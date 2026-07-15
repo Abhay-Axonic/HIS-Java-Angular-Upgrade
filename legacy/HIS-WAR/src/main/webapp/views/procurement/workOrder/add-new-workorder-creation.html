@@ -1,0 +1,769 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-top10">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="row input-container padding-top2">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							        <div class="form-group" >
+										<select class="text-input floating-label" name="trustId"   ng-model="StoreWorkOrder.storeId" convert-to-number  ng-disabled="Readonlybtn==true"   required>
+											<option ng-repeat="info in getStoreList" value="{{info.id}}">{{info.store}}</option>
+										</select><label for="code">Store</label>
+									</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="row input-container padding-top2">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+			                            <input type="text" autocomplete="off" class="text-input floating-label" ng-disabled="Readonlybtn==true"
+												tabindex="1" ng-model="StoreWorkOrder.vendorName" placeholder="Search" 
+												uib-typeahead="group.detail   for group in SearchVendorNames($viewValue)" typeahead-editable="false" 
+												typeahead-on-select="selectVendorTemp($item, $model, $label);" name="vendorName"  
+												aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-86-2495" typeahead-min-length="1">
+	                                              </ul>
+	                                       <label for="vendorName">Vendor</label>
+			                 </div>
+						</div>
+					</div>
+				</div>
+		 		
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<!-- <div class="">
+								<input type="text" autocomplete="off" name="description"  class="text-input floating-label" > 
+								<label for="description" class="">Delivery Date</label>
+							</div> -->
+							<div class="">
+										<input type="text" autocomplete="off"  class="text-input floating-label dirty" ng-disabled="Readonlybtn==true"
+															 name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+															placeholder="DD/MM/YYYY" ng-model="StoreWorkOrder.deliveryDate"
+															model-view-value="true" is-open="datepicker3.opened"
+															datepicker-options="dateOptions1" 
+															show-button-bar="false"	ng-click="openDatePicker3()" required>
+																<label for="description" class="">Delivery Date</label>
+						     </div>							
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="row input-container padding-top2">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label" ng-model="StoreWorkOrder.billTypeId" ng-disabled="Readonlybtn==true" convert-to-number>
+									<option value=""></option>
+									<option value="1">Credit</option>
+									<option value="2">Cash</option>
+								</select> <label for="code">Bill Type</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+						<!-- 	<select class="text-input floating-label">
+								<option></option>
+								<option>-</option>
+								description
+							</select>  -->
+							<select class="text-input floating-label" ng-disabled="Readonlybtn==true"   ng-model="StoreWorkOrder.contractTypeId"   ng-change="getcontractTypeList(StoreWorkOrder.contractTypeId)" convert-to-number required>
+						   <option ng-repeat="info in getOrderlist" value="{{info.id}}">{{info.description}}</option>
+						   </select>
+							<label for="code">Order Type</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+						<!-- 	<select class="text-input floating-label">
+								<option></option>
+								<option>-</option>
+								description
+							</select>  -->
+							<select class="text-input floating-label" ng-disabled="Readonlybtn==true"   ng-model="StoreWorkOrder.againstTypeId"   convert-to-number required>
+						   <option ng-repeat="info in requestTypeslist" value="{{info.id}}">{{info.description}}</option>
+						   </select>
+							<label for="code">Against Type</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+				<div class="">
+					<a href="">
+						<input type="button" ng-click="AddAssets()" id="updateBtn" ng-disabled="Readonlybtn==true" value="Add Asset" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 margin-top0 text-width-auto">
+				<div class="">
+					<a href="" title="Document Upload" class="btn btn-primary btn-save-box-shadow width-100" data-toggle="modal" ng-click="WorkorderuploadDocument();" data-target="#documentUploadModalForPOCreation" >
+						<i class="fa fa-upload" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 margin-top0 text-width-auto">
+				<div class="">
+					<a href="" title="Clear" class="btn btn-primary btn-save-box-shadow width-100" ng-click="clearWorkorderObj()" ng-class="{disabled: Readonlybtn==true}">
+						<i class="fa fa-eraser" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="row padding-top10 padding-left-right-set4">
+				<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll380">
+				  <table id="main-table" class="main-table width100"><!-- width120 -->
+				    <thead>
+				      <tr>
+				        <th class="fixed width3" scope="col">Sr. No.</th>
+				        <th scope="col" class="width10">Item Description</th>
+				        <th scope="col" class="width3">Qty</th>
+<!-- 				        <th scope="col" class="width3">UOM</th> -->
+				        <th scope="col" class="width5">Rate</th>
+				        <th scope="col" class="width5">Total Amount</th>
+				        <th scope="col" class="width3">Disc %</th>
+				        <th scope="col" class="width5">Disc Amount</th>
+				        <th scope="col" class="width5">Tax code</th>
+				        <th scope="col" class="width3">Tax %</th>
+				        <th scope="col" class="width3">Tax Amount</th>
+				        <th scope="col" class="width5">Staged Work Order</th>
+				        <th scope="col" class="width3">Net Amount</th>
+				        <th class="last-col-fixed width18" scope="col">Remarks</th>
+				        <th class="last-col-fixed width5">Action</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				      <tr ng-repeat="workOrderItemDetail in workOrderItemDetailsList track by $index">
+				        <td class="fixed">{{ $index+1 }}</td>
+				        <td>
+							<div ng-if="workOrderItemDetail.serviceName==null">
+								<input type="text" autocomplete="off"  
+										name="vendorName" typeahead-min-length="1"
+										class="text-input floating-label" ng-model="workOrderItemDetail.itemName"
+										uib-typeahead="group.itemDetails   for group in searchWorkorderItem($viewValue)"
+										typeahead-on-select="selectSearchItemName($item, $model, $label,$index);" ng-disabled="Readonlybtn==true">
+							<!-- <input type="text" autocomplete="off" class="text-input floating-label" 
+							tabindex="3" ng-model="workOrderItemDetail.itemName" placeholder="Search"  
+							ng-disabled="StoreWorkOrder.contractTypeId==1 || Readonlybtn==true"
+							uib-typeahead="group.itemDetails   for group in searchWorkorderItem($viewValue )" 
+							typeahead-editable="true" typeahead-on-select="selectSearchItemName($item, $model, $label,$index);" 
+							name="vendorName" autocomplete="false" aria-autocomplete="list" aria-expanded="false" 
+							aria-owns="typeahead-86-2495" typeahead-min-length="1"> -->
+							</div>
+							<div ng-if="workOrderItemDetail.serviceName!=null">{{workOrderItemDetail.serviceName}}</div>
+				        </td>
+				        <td>
+							<input type="text" autocomplete="off" id="qty" focus-me="focusInput" numbers-only ng-model="workOrderItemDetail.itemQuantity" 
+							ng-disabled="Readonlybtn==true" ng-blur="calculate(workOrderItemDetail,$index,'')"class="w-100">
+						</td>
+				        <td>
+							<input type="text" autocomplete="off" is-number ng-disabled="Readonlybtn==true" 
+							ng-model="workOrderItemDetail.itemRate" ng-blur="calculate(workOrderItemDetail,$index,'')" 
+							class="w-100">
+						</td>
+				        <td><input type="text" autocomplete="off" is-number  ng-model="workOrderItemDetail.itemMrp" disabled="disabled" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" is-number ng-disabled="Readonlybtn==true" ng-model="workOrderItemDetail.itemDiscPercentage" ng-blur="calculate(workOrderItemDetail,$index,'DP')" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" is-number ng-disabled="Readonlybtn==true" ng-model="workOrderItemDetail.itemDiscAmount" ng-blur="calculate(workOrderItemDetail,$index,'DA')" class="w-100"></td>
+				        <td>
+
+							          <!--  <select class="w-100" ng-model="workOrderItemDetail.itemTaxId"
+										ng-change="setTaxWorkorderItem(object.taxPercentage, workOrderItemDetail ,$index); " data-ng-options="object.name for object in selectedTaxList">
+										</select>
+											 -->
+						<select ng-model="workOrderItemDetail.taxpercentObj" ng-disabled="Readonlybtn==true" class="text-input floating-label"
+										ng-options="x as x.name for x in selectedTaxList track by x.id"
+										ng-change="setTaxWorkorderItem(workOrderItemDetail.taxpercentObj,workOrderItemDetail,$index)"
+										class="form-control" 
+										ng-required="true">
+						</select>
+				        </td>
+				        <td><input type="text" autocomplete="off" is-number  ng-model="workOrderItemDetail.itemTax"  disabled="disabled" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" is-number disabled="disabled" ng-model="workOrderItemDetail.itemTaxAmount"  class="w-100"></td>
+				        <td>
+							<div class="">
+								<button style="background:none;border:none;color:#23527c" data-target="#staged_Workorder_Creation" ng-click="stagedWorkOrderInfoOnClick(workOrderItemDetail, $index)"
+				                data-toggle="modal" title="Staged WorkOrder">
+				                  <i class="fa fa-info-circle"></i>
+				                </button>
+							</div>
+						</td>
+				        <td><input type="text" autocomplete="off" is-number  disabled="disabled" ng-model="workOrderItemDetail.itemNetAmount"  class="w-100"></td>
+				        <td class="last-col-fixed"><textarea  ng-model="workOrderItemDetail.itemRemark"  ng-disabled="Readonlybtn==true"  rows="1" type="text" autocomplete="off" class="w-100"></textarea></td>
+				        <td class="last-col-fixed">
+							<div class="">
+								<button class="btn btn-info" style="width:36px" ng-click="addnewItem()" ng-disabled="Readonlybtn==true" ng-if="StoreWorkOrder.contractTypeId==2 " ><b>+</b></button>
+								<button class="btn btn-info" style="width:36px" ng-click="removenewItem($index);"  value="-" ng-disabled="Readonlybtn==true" ng-if="workOrderItemDetailsList.length > 1"><b>-</b></button>
+							</div>
+						</td>
+				      </tr>
+				      <!-- <tr>
+				        <td class="fixed"></td>
+				        <td><input type="text" autocomplete="off" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" class="w-100"></td>
+				        <td><input type="text" autocomplete="off" class="w-100"></td>
+				        <td class="last-col-fixed"><textarea rows="1" type="text" autocomplete="off" class="w-100"></textarea></td>
+				        <td class="last-col-fixed">
+							<div class="">
+								<button class="btn btn-info" style="width: 36px" ng-click=""><b>+</b></button>&nbsp;
+								<button class="btn btn-info" style="width: 36px" ng-click=""><b>-</b></button>
+							</div>
+						</td>
+				      	</tr> -->
+						</tbody>
+					    <tfoot>
+					      <tr>
+					        <td class="fixed border-right-none"></td>
+					        <td class="text-right border-left-none"></td>
+					        <td></td>
+					        <td></td>
+					        <td></td>
+					        <td></td>
+					        <td></td>
+					        <td></td>
+					        <td></td>
+					        <td></td>
+					        <td></td>
+					        <td></td>
+					        <td class="last-col-fixed"></td>
+					        <td class="last-col-fixed"></td>
+					      </tr>
+					    </tfoot>
+				  </table>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+	      <fieldset>
+	        <div class="row padding-left-right-set4">
+	          <div class="col-lg-12 col-md-12 col-sm-12">
+	            <table class=" table table-bordered">
+	              <tbody>
+	                <tr>
+	                  <th class="width6">
+	                    <label>Payment Terms</label>
+	                  </th>
+	                  <td class="width12" colspan="3">
+	                    <textarea rows="2"  ng-disabled="Readonlybtn==true" ng-model="StoreWorkOrder.paymentTerms" class="vertical-middle ng-pristine ng-untouched ng-valid ng-empty dirty" style="height: auto !important;"></textarea>
+	                  </td>
+	                  <th>
+	                  	<label>Guarantee Warranty</label>
+	                  </th>
+	                  <td class="width8" colspan="3">
+	                    <textarea  ng-model="StoreWorkOrder.guaranteeWarranty" ng-disabled="Readonlybtn==true"  rows="2" maxlength="100" class="vertical-middle ng-pristine ng-valid dirty ng-empty ng-valid-maxlength ng-touched" style="height: auto !important;" spellcheck="false"></textarea>
+	                  </td>		
+	                </tr>
+	                
+	                <tr>
+	                	   <th class="width8">
+		                    <label>Total Amount</label>
+		                  </th>
+		                  <td class="width8 ng-binding">INR  {{parseFloatNum(totalAmount)}}
+		                  </td>
+		                <th class="width10">
+		                  <label>Total Other Charges </label>
+		                </th>
+		                <td class="width8">
+		                  <div class="col-md-8 ng-binding">INR
+		                   {{parseFloatNum(otherChargeAmount)}}
+		                  </div>
+		                  <div class="col-md-1 text-left vertical-middle padding-top5">
+		                    <a ng-click="AddOthercharges()" ng-disabled="Readonlybtn==true" title="Other Charges">
+		                      <i class="fa fa-plus-circle"></i>
+		                    </a>
+		                  </div>
+		                </td>
+						<th class="width6"><label>Disc Amount</label></th>
+						<td class="width8 ng-binding">INR
+							{{parseFloatNum(totalDiscAmount)}}</td>
+						<td class="width7"></t>
+						<td class="width8 ng-binding"></td>
+					</tr>
+					 <tr>
+	                	<th class="width8">
+		                    <label>Tax Amount</label>
+		                  </th>
+		                  <td class="width8 ng-binding">INR{{parseFloatNum(totalTaxAmount)}}</td>
+		                <th class="width10">
+		                  <label>Round Off</label>
+		                </th>
+		                <td class="width8">
+		                  <div class="col-md-8 ng-binding">INR {{parseFloatNum(roundoff)}}
+		                  </div>
+		                  
+		                </td>
+						<th class="width6"><label> Net Amount</label></th>
+						<td class="width8 ng-binding">INR   {{parseFloatNum(totalNetAmount)}}</td>
+						<td class="width7"></t>
+						<td class="width8 ng-binding"></td>
+					</tr>
+	              </tbody>
+	            </table>
+	          </div>
+	        </div>
+				<div class="row padding-left-right-set4">
+					<input type="checkbox" name="isReverseTax" ng-model="StoreWorkOrder.isReverseTax"  id="isReverseTax" ng-disabled="Readonlybtn==true">
+					<label class="color-black margin-left5" for="isReverseTax">Reverse Charge Applicable</label>
+				</div>
+			</fieldset>
+	      <div class="row margin-top10">
+	        <div class="col-lg-10 col-md-10 col-sm-10"></div>
+	        <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+	          <a href="" ng-click="saveWorkOrderCreationRequest()" ng-disabled="Readonlybtn==true" >
+	            <input type="button" value="{{btnText}}" class="btn btn-primary btn-save-box-shadow" ng-disabled="Readonlybtn==true">
+	          </a>
+	        </div>
+	        <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+	          <a href="#/workOrderCreation">
+	            <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+	          </a>
+	        </div>
+	      </div>
+	    </div>
+	</div>
+</div>
+<!-- DocumentUploadModal START -->
+<div id="documentUploadModalForPOCreation" class="modal fade ng-scope in" role="dialog" data-backdrop="static">
+			<div class="modal-dialog">
+				<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+				<div class="modal-content">
+					<div class="modal-header padding-zero">
+						<div class="modal-title patient-details-row">
+							Document Upload
+							<button type="button" class="close" ng-click="removeAllDocforworkorder()" data-dismiss="modal">&times;</button>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="row">
+					<div class="row padding-left-right-set4">
+						<table class="table table-bordered">
+								<tbody>
+							</tbody>
+						</table>
+					</div>
+					
+					<div class="row margin-top10 common-sub-table padding-left-right-set4">
+					<table class="table table-striped table-bordered" id="">
+							<thead>
+								<tr>
+									<th class="UHID-width"> Document Type</th>
+									<th class="UHID-width"> Document Upload (Allowed uploads *.txt, *.pdf, *.docx, *.doc)</th>
+									<th class="status">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="docObj in WorkorderuploadDocumentOBJList track by $index">
+									<td>
+										<div>
+											<select class="text-input floating-label dirty" ng-model="docObj.documentTypeId"  ng-disabled="Readonlybtn==true"  >
+												<option selected value>Select Document Type</option>
+												<option ng-repeat="docType in documentTypeList" value="{{docType.documentTypeId}}" >{{docType.documentTypeName}}</option>
+											</select> 
+										</div>
+									</td>
+									<td>
+										<div>
+											<input type="file" name="file{{$index}}" id="fileId" file-model="docObj.file" ng-disabled="Readonlybtn==true" accept="application/msword,text/plain, application/pdf" validfile>
+											<p ng-show="fileError" style="color:red;">{{fileError}}</p>
+										</div>
+									</td>
+									<td>
+										<div class="">
+											<button class="btn btn-info" style="width:36px" ng-click="addDocforworkorder();" ng-disabled="Readonlybtn==true""><b>+</b></button>
+											<button class="btn btn-info" style="width:36px" ng-click="removeDocforworkorder($index);" value="-" ng-disabled="Readonlybtn==true"  ng-if="$index!=0"><b>-</b></button>
+                    	                    <!-- ngIf: $index > 0 --> &nbsp;&nbsp;
+										</div>
+									</td>
+								</tr>
+							</tbody> 
+						</table>
+				</div>
+				<div class="row margin-top10 common-sub-table padding-left-right-set4">
+					<table class="table table-striped table-bordered">
+						<thead>
+								<tr>
+									
+									<th class="width10">Document Type</th>
+									<th class="width10">Document Upload Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat = "documentObj in documentlist |orderBy:column:reverse|filter:searchKeyword track by $index">
+									<td class="width10">
+										<div>
+										  {{documentObj.documentTypeName}}
+										</div>
+									</td>
+									<td class="width10">
+									<div>
+									 <a fancybox ng-click="openImage(documentObj);">View</a>
+									</div>
+									</td>
+								</tr>
+							</tbody>
+					</table>
+					<table class="table table-bordered">
+					           
+						 <tbody><!-- ngIf: (documentlist|filter:searchKeyword)=='' || (documentlist|filter:searchKeyword)==null --><tr ng-if="(documentlist|filter:searchKeyword)=='' || (documentlist|filter:searchKeyword)==null" class="ng-scope">
+							<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+						</tr><!-- end ngIf: (documentlist|filter:searchKeyword)=='' || (documentlist|filter:searchKeyword)==null -->
+					</tbody></table>
+				</div>
+				 <div class="modal-footer his-style" style="border: none;">
+				 	<div class="row">
+						<div class="col-lg-1 col-sm-1 col-md-1 float_right padding-left-right-set0"> 
+		 					<input type="button" value="Save" ng-click="uploadWorkorderuploadDocument()" ng-disabled="Readonlybtn==true"  class="btn btn-primary btn-save-box-shadow">
+		 				</div>
+				 	</div>
+				</div>
+				</div>
+						</div>
+					</div>
+					<!-- <div class="modal-footer" style="border: none;">
+						<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="sendToDepartment();">Ok</button>
+						<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+					</div> -->
+				</div>
+			</div>
+		</div>
+<!-- DocumentUploadModal END -->
+
+<!-- OtherChargesModal START -->
+<div id="otherCharges_Modal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Other Charges
+          <button type="button" class="close" data-dismiss="modal" ng-click="closePopUp(true);">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">Other Charges</th>
+                  <th class="width6">Amount</th>
+                  <th class="width2">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="AddOtherchargesObj in AddOtherchargesList">
+                  <td>
+                    <!-- <select ng-model="charges.otherCharge" class="select-box floating-label"
+                      data-ng-options="otherCharge.otherCharges for otherCharge in getAllOtherChargesList"
+                      ng-change="charges.isChargesValid=false" ng-class="{borderRed: charges.isChargesValid}"></select> -->
+                      
+                      <select class="text-input floating-label dirty" ng-model="AddOtherchargesObj.otherchargeTypeId" convert-to-number  ng-disabled="Readonlybtn==true"  >
+												<option selected value>Select OtherCharges</option>
+												<option ng-repeat="otherchargeType in getAllOtherChargesDropDownList" value="{{otherchargeType.id}}">{{otherchargeType.description}}</option>
+					   </select> 
+                  </td>
+                  <td>
+                    <input  type="text" autocomplete="off" ng-model="AddOtherchargesObj.otherChargeAmount" ng-blur="getOtherchargeamountPopup()"
+                      allow-decimal-numbers class="w-100"  ng-disabled="Readonlybtn==true"  >
+                  </td>
+                  <td>
+                    <div>
+                      <input type="button" ng-click="AddOtherChargeObj()" ng-disabled="Readonlybtn==true" value="+"
+                        class="btn btn-primary btn-save-box-shadow width35"
+                        >
+                      <input type="button" ng-click="RemoveOtherChargeObj( $index)" ng-disabled="Readonlybtn==true"  value="-"
+                        class="btn btn-primary btn-save-box-shadow width35" ng-if="$index !== 0">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th class="text-right">Total Amount</th>
+                  <th>{{parseFloatNum(otherChargeAmountpopup)}}</th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row his-style">
+          <div class="col-md-10"></div>
+          <div class="col-md-2 padding-left0px-right6px">
+            <div class="common-save-button">
+              <input type="button" ng-click="AddOtherchargeSave()" value="Save"
+                class="btn btn-primary btn-save-box-shadow">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- OtherChargesModal START -->
+
+
+<div id="addNewItemWasteStore" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Add Item List
+					<button type="button" ng-click="" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll	">
+				<fieldset>
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+									
+<!-- 										<select name="assetCategory" id="assetCategory" class="text-input floating-label dirty" data-ng-options="category.category for category in assetCategoryList" -->
+<!-- 										> -->
+<!-- 										</select> -->
+										<select class="text-input floating-label" name="assetCategory"   ng-model="assetObject.assetCategoryId" ng-change="getProductCategoryList(assetObject.assetCategoryId)" convert-to-number  required>
+										<option value="">-</option>
+										<option ng-repeat="info in assetCategoryList" value="{{info.id}}">{{info.category}}</option>
+									    </select>
+
+										<label for="code">Asset Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+<!-- 										<select name="productCategory" id="productCategory" class="text-input floating-label dirty" data-ng-options="x as x.category for x in productCategoriesList track by x.id" -->
+<!-- 										 ng-model="assetObject.productCategoryId"> -->
+<!-- 										</select> -->
+										<select class="text-input floating-label" name="productCategory"   ng-model="assetObject.productCategoryId"  convert-to-number  required>
+										<option value="">-</option>
+										<option ng-repeat="info in productCategoriesList" value="{{info.id}}">{{info.category}}</option>
+									    </select>
+										<label for="code">Product Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" ng-change="searchNewItem()"
+										class="text-input floating-label" ng-model="itemCode">
+										<label for="description" class="LISDynamicLabel">Item Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id=""  ng-change="searchNewItem()"
+										class="text-input floating-label" ng-model="itemName" ng-trim="false">
+										<label for="description" class="LISDynamicLabel">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style">
+							<div class="common-save-button">
+								<a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" style="width: auto;" ng-click="searchNewItem()">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row common-popup-height-350">
+						<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="width1 text-center media-middle ">
+											<input type="checkbox" ng-model="selectAllRows" ng-click="selectAllItems()" />
+										</th>
+										<th class="width10">Asset Category
+											<div class="float_right" ng-click="sortType = 'assetCategory'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Product Category
+											<div class="float_right" ng-click="sortType = 'productCategory'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Item Code
+											<div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Item Name
+											<div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in searchNewItemList | filter : itemCode  | orderBy:sortType:sortReverse">
+										<td class="text-center">
+											<input id="isSelected" name="isSelected" ng-model="item.isSelected" type="checkbox"  ng-click="selectItem(item.isSelected);">
+										</td>
+										<td>{{item.assetCategory}}</td>
+										<td>{{item.productCategory}}</td>
+										<td>{{item.itemCode}}</td>
+										<td>{{item.itemName}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-11"></div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Add"  class="btn btn-primary btn-save-box-shadow" 
+							 ng-click="addItems()">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+		<div id="staged_Workorder_Creation" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Workorder Amount Splitwise
+          <button type="button" ng-click="closeStagedPopUp()" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">
+                    Working Stage 
+                  </th>
+                  <th class="width3">
+                    Percentage 
+                  </th>
+                  <th class="width6">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="stagedWorkOrder in workOrderCreationStagedListData">
+                  <td><input type="text" autocomplete="off" ng-disabled="Readonlybtn==true" ng-model="stagedWorkOrder.stageName" ng-blur="checkBatch(bonus,$index)" ng-class="{borderRed: vm.model.batchNumber[$index]}" ng-change="vm.model.batchNumber[$index] = false"
+                   class="select-box ng-pristine ng-valid dirty ng-not-empty ng-valid-maxlength ng-touched" id="batch_1" maxlength="20" style=""></td>
+                  <td>
+                    <input type="text" ng-disabled="Readonlybtn==true" autocomplete="off" ng-blur="calculatePercentage()" ng-model="stagedWorkOrder.percentage" class="select-box" maxlength="5" allow-decimal-numbers>
+                  </td>
+                  <td class="width3" style="width: 2.8% !important">
+                  <input type="button" value="+" ng-click="addStage()" class="btn btn-primary btn-save-box-shadow width35" ng-disabled="Readonlybtn==true">
+                  <input type="button" value="-" ng-click="lessStage(stagedWorkOrder)" class="btn btn-primary btn-save-box-shadow width35" ng-if="$index != 0 " ng-disabled="Readonlybtn==true">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row his-style">
+          <div class="col-md-10"></div>
+          <div class="col-md-2 padding-left0px-right6px">
+            <div class="common-save-button">
+              <input type="button" value="Save" ng-click="stagedWorkOrderModalOnClick()"
+                class="btn btn-primary btn-save-box-shadow" ng-disabled="Readonlybtn==true">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>

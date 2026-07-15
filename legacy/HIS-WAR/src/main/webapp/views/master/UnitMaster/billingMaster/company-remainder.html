@@ -1,0 +1,438 @@
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset class="">
+			<div class="row padding-top5">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+					<fieldset class="normalRegistration sub-fieldset">
+						<div class="row">
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group">
+											<select class="text-input floating-label" ng-model="paymentEntitlementId" ng-change="getCompanyMasterList(paymentEntitlementId)">
+												<option value="">-</option>
+												<option ng-repeat="paymentEntitlement in paymentEntitlementList" value="{{paymentEntitlement.id}}"
+													ng-if="paymentEntitlement.id != 1">{{paymentEntitlement.name}}</option>
+											</select> <label for="code">Payment Entitlement Type</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label" ng-model="companyId" ng-change="getAssociateCompanyMasterList(companyId)">
+												<option value="">-</option>
+												<option ng-repeat="companyMaster in companyMasterList" value="{{companyMaster.id}}">{{companyMaster.name}}</option>
+											</select> <label for="code">Company</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label" ng-model="companyContarctObj.associateCompanyId" ng-disabled="isDisable">
+														<option value="">-</option>
+														<option ng-repeat="associateCompanyMaster in associateCompanyMasterList" value="{{associateCompanyMaster.id}}" >{{associateCompanyMaster.name}}</option>
+													
+											</select> <label for="code">TPA</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+												
+													<input name="fromDate"
+														id="date1" type="text" autocomplete="off" class="text-input floating-label dirty"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" tabindex="13"  ng-model="toDate"
+														model-view-value="true" is-open="popup.opened"
+														datepicker-options="dateOptions" show-button-bar="false" ng-click="open()" />
+												
+												<label for="" class="LISDynamicLabel">Date (From)</label>
+											</div>
+									</div>
+										<!-- <div class="width-div-for-patient-reg ">
+										<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="searchCompanyRemainder()">
+										<i class="fa fa-search" style="font-size: 21px" aria-hidden="true"></i></a>
+									</div> -->
+								</div>
+							</div>
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											
+													<input name="toDate"
+													id="date2" type="text" autocomplete="off" class="text-input floating-label dirty"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" tabindex="13" ng-model="fromDate"
+													model-view-value="true" is-open="popup1.opened"
+													datepicker-options="dateOptions" show-button-bar="false" ng-click="open1()"/>
+												
+												<label for="description" class="">Date-Till</label>
+											</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 pull-right text-width-auto">
+								<div class="common-save-button" style="padding-top:0px;"> 
+									 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" id="searchBtn" ng-click="searchCompanyRemainder()">
+									 	<i class="fa fa-search" aria-hidden="true"></i> 
+									 </a> 
+								</div> 
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+			<div class="row margin-top4 padding-left-right-set4">
+			<div class="col-lg-8 col-md-8 col-sm-8">
+					<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="pagination.pageSize='10'" 
+								ng-model="pagination.pageSize" 
+								ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" data-target="#confirmLogout"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword"
+						style="margin-top: 0px"> <i
+						class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div>
+			<div class="row padding-top5 padding-left-right-set4">
+				<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll510">
+				  <table id="main-table" class="main-table width100">
+				    <thead>
+						<tr>
+							<th class="width1 th-bg text-center"><input type="checkbox" ng-model="selectedAll" ng-click="checkAll();"></th>
+							<th class="width10"><span class="">Invoice Date</span></th>
+							<th class="width10">Invoice No</th>
+							<th class="width10">Credit Bill Amount</th>
+							<th class="width10">Due Amount</th>
+							<th class="width10">Amount Received</th>
+							<th class="width5 text-center">Reminder</th>
+						</tr>
+					</thead>
+				    <tbody>
+				      <tr ng-repeat="info in pagination.data|orderBy:column:reverse|filter:searchKeyword ">
+						<td class="text-center"><input type="checkbox" ng-model="info.doctorShare"></td>
+					    <td>{{info.invoiceDate | date : "dd/MM/y h:mm a"}}</td>
+						<td>{{info.invoiceNumber}}</td>
+						<td class="text-right">{{info.dueAmount}}</td>
+						<td class="text-right">{{info.creditBillAmount}}</td>
+
+						<td class="text-center vertical-middle"><a>
+						<i class="fa fa-money" data-toggle="modal"
+								data-target="#reminderModal" title="Reminder" ng-click="saveCompanyReminder(info,$index);"></i></a></td>
+						<td class="text-center vertical-middle">
+						<a class="cursor-pointer" data-toggle="modal" ng-click="showDetails(info.details,$index)"
+								data-target="#detailsreminderModal" title="Reminder Details">Details
+						</a></td>
+						<!-- <td>
+							<a href="" data-toggle="modal" data-target="#tpaCreditPartyRemainderBillDetails">Details</a>
+						</td> -->
+
+					</tr>
+					<tr ng-if="(companyRemainderList|filter:searchKeyword)=='' || (companyRemainderList|filter:searchKeyword)==null">
+						<td colspan="7"><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+					</tr>
+				  </table>
+				</div>
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+
+</div>
+
+
+
+<!-- TPA CREDIT PARTY REMAINDER BILL DETAILS POPUP -->
+<div id="tpaCreditPartyRemainderBillDetails"
+	class="common-large-popup modal fade ng-scope in his-style"
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Bill Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body row">
+				<div class="col-md-12">
+					<div class="row margin-top4">
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search"
+								style="margin-top: 0px"> <i
+								class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+					<fieldset
+						class="normalRegistration sub-fieldset border-none useActiveDepositList">
+						<div class="row serachedPatientList margin-top10">
+							<div
+								class="col-md-12 col-lg-12  fix-height-scroll230 padding-left-right-set4">
+								<table class="table table-bordered  margin-top8">
+									<tr>
+										<th class="width1"></th>
+										<th class="width10"><span class="">Bill Date</span></th>
+										<th class="width10">Bill No</th>
+										<th class="width10">UHID</th>
+										<th class="width10">Patient Name</th>
+										<th class="width10">Total Bill Amount</th>
+										<th class="width10">Net Payable</th>
+										<th class="width10">Paid Amount</th>
+										<th class="width10">Balance Amount</th>
+										<th class="width10">Previous Quieries</th>
+									</tr>
+									<tr>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+									</tr>
+									<tr>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+									</tr>
+
+								</table>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Reminder Modal START -->
+<div id="reminderModal"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Reminder
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div
+								class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" my-date-picker ng-model="reminderDate" 
+													class="text-input floating-label"> <label
+													for="description" class="LISDynamicLabel">Reminder
+													Date</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="code" rows="4" id="noteReject"
+										class="text-input floating-label ng-pristine ng-valid ng-empty ng-touched"
+										ng-model="noteRemark" style=""></textarea>
+									<label for="code">Remark</label>
+								</div>
+							</div>
+						</div>
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"
+					id="" ng-click="saveCompanyReminderData();">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- reminder Modal END -->
+
+<!-- details Reminder Modal START -->
+<div id="detailsreminderModal"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div
+								class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id=""  ng-disabled="true" ng-model="reminderDetails.createdDate" 
+													class="text-input floating-label"> <label
+													for="description" class="LISDynamicLabel">Reminder
+													Date</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="code" rows="1" id="noteReject" ng-model="reminderDetails.remark"  ng-disabled="true"
+										class="text-input floating-label ng-pristine ng-valid ng-empty ng-touched"
+										ng-model="noteReject" style=""></textarea>
+									<label for="code">Details</label>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="code" rows="1" id="noteReject"  ng-model="reminderDetails.response"
+										class="text-input floating-label ng-pristine ng-valid ng-empty ng-touched"
+										ng-model="noteReject" style=""></textarea>
+									<label for="code">Response</label>
+								</div>
+							</div>
+						</div>
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"
+					id="" ng-click="updateCompanyRemarkData(reminderDetails)">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END -->
+
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script>
+
+$(document).ready(function() {
+	 
+	 $(".selectedPageName").text("Company Reminder");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="companyRemainder"]').parents("li").addClass("active");
+});
+
+
+
+</script>

@@ -1,0 +1,1127 @@
+ <!-- Page Content -->
+ <div id="page-content-wrapper" class="clockPopupOver ">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width10 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Doctor</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+						<a href="" ng-click="setFirstTabLevel(2)"
+						class="employeeRegRadioParent">Specialty</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					<div class="row margin-top10">
+						<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					        <div class=" ">
+					        
+						        <a href="" class="btn btn-primary btn-save-box-shadow disabled" title="Save" data-toggle="modal" id="saveSpecialityDoc" ng-click="saveDoctorCosultationMaper()" ng-if="saveBtnFlag">
+						        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+						      
+						        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateDoctorCosultationMaper()" ng-if="updateBtnFlag">
+						        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			
+					        </div>
+					     </div> -->
+					     <div class="col-md-6 col-sm-7 padding-left-right-set4">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage=10" ng-model="noOfRecordsPerPage"
+										ng-change="setNoOfRecords();" class="search-popUp-ddl" convert-to-number>
+											<option value="10">10</option>   	
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries
+									</label>
+								</div>
+						</div>
+					</div>
+				</div>
+					     <div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<div class="">
+								<a href="">
+									<input type="button" value="Add New"  class="btn btn-primary btn-save-box-shadow" ng-click="clearFields();" data-toggle="modal" data-target="#doctorAddNew">
+								</a>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+							<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+						<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div> -->
+						
+					</div>
+					<!-- table start-->
+							<div class="row padding-top10 padding-left-right-set4">
+								<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll450"><!-- fix-height-scroll525 -->
+								  <table id="main-table" class="main-table width100">
+								    <thead>
+								     <tr class="">
+										<th class="width10">Specialty
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width14">Doctor
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width12">Payment Entitlement
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width12">Comapny
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width12">Insurance Comapny
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6" colspan="2">New Visit 
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6" colspan="2">Follow up Visit
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6" colspan="2">Secondary Visit
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width2 text-center vertical-middle" style="z-index:1023">Status(n)</th>
+										<th class="width2 text-center vertical-middle">Action taken</th>
+									</tr>
+								    </thead>
+								    <tbody>
+								      <tr ng-repeat="info in doctorConsultationMasterList|filter:searchKeyword">
+										<td>{{info.specialityName}}</td>
+										<td>{{info.doctorName}}</td>
+										<td>{{info.paymentEntitlement}}</td>
+										<td>{{info.companyName}}</td>
+										<td>{{info.insuranceCompanyName}}</td>
+										
+										<td class="width12">
+											<span>{{info.newVisitServiceName}}</span>
+										</td>										
+											<td>{{info.newVisitRate!=null ? info.newVisitRate : '-'}}</td>
+										
+										
+										<td class="width12">
+											<span>{{info.followupVisitServiceName}}</span>
+										</td>
+										
+										<td>{{info.followupVisitRate!=null ? info.followupVisitRate : '-'}}</td>
+										
+										<td class="width12">
+											<span>{{info.secondaryVisitServiceName}}</span>
+										</td>
+											<td>{{info.secondaryVisitRate!=null ? info.secondaryVisitRate : '-'}}</td>
+										<td class="text-center">
+											<label class="switch"> 
+											<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info.doctorConsultationServiceMapperId,info.status)">
+											<div class="slider round"></div>
+											</label>
+										</td>
+										<td class="text-center vertical-middle">
+											<span>
+												<a title="Edit" ng-click="getDetailsById(info.doctorConsultationServiceMapperId)">
+													<i class="fa fa-pencil" aria-hidden="true"></i>
+												</a>
+											</span>
+										</td> 
+										
+										<!-- <td class="text-center vertical-middle">
+											<span>
+												<a title="Edit" ng-click="getDetailsById(info.doctorConsultationServiceMapperId)">
+													<i class="fa fa-pencil" aria-hidden="true"></i>
+												</a>
+											</span>
+											<span class="padding-left10"><a href="#/detailsMaterialPending">Details</a></span>
+										</td> -->
+									</tr>
+								    </tbody>
+								  </table>
+								</div>
+						<div class="row  sss"><!-- margin-bottom45 -->
+							<ul ng-if="pager.pages.length" class="pagination table-list"
+								style="font-size: 14px;">
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(1,'true')">First</a></li>
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+								<li ng-repeat="page in pager.pages"
+									ng-class="{active:pager.currentPage === page}"><a
+									ng-click="setPage(page,'true')">{{page}}</a></li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+							<!-- Table END -->
+					
+						
+							
+				</div>
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					
+					<div class="row margin-top10">
+						<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					        <div class=" ">
+					        
+						        <a href="" class="btn btn-primary btn-save-box-shadow disabled" title="Save" data-toggle="modal" id="saveFrDeptSepciality" ng-click="saveDoctorCosultationMaper()" ng-if="saveBtnFlag">
+						        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+						      
+						        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateDoctorCosultationMaper()" ng-if="updateBtnFlag">
+						        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			
+					        </div>
+					     </div> -->
+						<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div> -->
+						  <div class="col-md-6 col-sm-7 padding-left-right-set4">
+							<div class="row">
+								<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+									<div class="search">
+										<label class="show-entries">Show 
+											<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+											ng-init="recordPerPage=10" ng-model="recordPerPage"
+											ng-change="setRecordsPerPage();" class="search-popUp-ddl" convert-to-number>
+												<option value="10">10</option>   	
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+											</select> entries
+										</label>
+									</div>
+							</div>
+					</div>
+				</div>
+						<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto pull-right">
+							<div class="">
+								<a href="">
+									<input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow" ng-click="clearFields();" data-toggle="modal" data-target="#specialtyAddNew">
+								</a>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+							<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top:0px" ng-model="searchString">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+						
+						<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+							<input type="button" class="btn" style="margin-top: 0px"> <i class="" aria-hidden="true"></i>
+						</div> -->
+					</div>
+						<!-- table start-->
+							<div class="row padding-top10 padding-left-right-set4">
+								<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll525">
+								  <table id="main-table" class="main-table width100">
+								    <thead>
+								      <tr class="">
+											<th class="width6">Specialty
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<!-- <th class="width6">Doctor
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th> -->
+											<!-- <th class="width6">Grade
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th> -->
+											<th class="width6">Payment Entitlement
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<th class="width12">Comapny
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width12">Insurance Comapny
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+											<th class="width6" colspan="2">New Visit
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<th class="width6" colspan="2">Follow up Visit
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<th class="width6" colspan="2">Secondary Visit
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<th class="width2 text-center vertical-middle" style="z-index:1023">Status(n)</th>
+											<th class="width2 text-center vertical-middle">Action taken</th>
+										</tr>
+								    </thead>
+								    <tbody>
+								      <tr ng-repeat="info in doctorConsultationSpecialityList|filter:searchString">
+										<td>{{info.specialityName}}</td>
+										<td>{{info.paymentEntitlement}}</td>
+											<td>{{info.companyName}}</td>
+												<td>{{info.insuranceCompanyName}}</td>
+										<td>{{info.newVisitServiceName}}</td>
+										<td>{{info.newVisitRate!=null ? info.newVisitRate :' -'}}</td>
+										<td>{{info.followupVisitServiceName}}</td>
+										<td>{{info.followupVisitRate ? info.followupVisitRate : '-'}}</td>
+										<td>{{info.secondaryVisitServiceName}}</td>
+										<td>{{info.secondaryVisitRate ? info.secondaryVisitRate :' -'}}</td>
+										<!-- <td class="text-center vertical-middle">
+											<span>
+												<a title="Edit" ng-click="removeDept($index)">
+													<i class="fa fa-pencil" aria-hidden="true"></i>
+												</a>
+											</span>
+											<span class="padding-left10"><a href="#/detailsMaterialPending">Details</a></span>
+										</td> -->
+										<td class="text-center">
+											<label class="switch"> 
+											<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info.doctorConsultationServiceMapperId,info.status)">
+											<div class="slider round"></div>
+											</label>
+										</td>
+										<td class="text-center vertical-middle">
+											<span>
+												<a title="Edit" ng-click="getDetailsById(info.doctorConsultationServiceMapperId)">
+													<i class="fa fa-pencil" aria-hidden="true"></i>
+												</a>
+											</span>
+										</td> 
+									</tr>
+								    </tbody>
+								  </table>
+								</div>
+									<div class="row  sss"><!-- margin-bottom45 -->
+							<ul ng-if="pager1.pages.length" class="pagination table-list"
+								style="font-size: 14px;">
+								<li ng-class="{disabled:pager1.currentPage === 1}"><a
+									ng-click="setPageForSpeciality(1,'true')">First</a></li>
+								<li ng-class="{disabled:pager1.currentPage === 1}"><a
+									ng-click="setPageForSpeciality(pager1.currentPage - 1,'true')">Previous</a></li>
+								<li ng-repeat="page in pager1.pages"
+									ng-class="{active:pager1.currentPage === page}"><a
+									ng-click="setPageForSpeciality(page,'true')">{{page}}</a></li>
+								<li ng-class="{disabled:pager1.currentPage === pager1.totalPagesForSpeciality}">
+									<a ng-click="setPageForSpeciality(pager1.currentPage + 1,'true')">Next</a>
+								</li>
+								<li ng-class="{disabled:pager1.currentPage === pager1.totalPagesForSpeciality}">
+									<a ng-click="setPageForSpeciality(pager1.totalPagesForSpeciality,'true')">Last</a>
+								</li>
+							</ul>
+						</div>
+							</div>
+							
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="doctorAddNew" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Add New
+					<button type="button" class="close" data-dismiss="modal"  ng-click="clearFields();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+			<div class="enabled" id="doctorSpecialityDivId">
+				<div class="row padding-left-right-set4 margin-top10">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<input type="hidden" ng-model="doctorConsultationObj.doctorConsultationServiceMapperId">
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<!-- <div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.specialityId" convert-to-number ng-change="getDoctorsBySpecialityId(doctorConsultationObj.specialityId)" ng-disabled="disableField">
+										<option>Select Specialty</option>
+										<option ng-repeat="info in specialityMasterList" ng-if="info.deptWiseAppointment=='N'" value="{{info.specialityId}}" >{{info.specialityName}}</option>
+									</select> <label for="code">Specialty<span class="star">*</span></label>
+								</div> -->
+								<div class="">
+									<label for="" class="LISDynamicLabel">Specialty</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""  ng-click="getDoctorsBySpecialityId()"
+										options="specialityMasterList" selected-model="selectedspecialityMasterList" >
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<!-- <div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.doctorId" convert-to-number ng-disabled="disableField">
+										
+										<option ng-repeat="info in doctorList" value="{{info.doctorId}}">Dr. {{info.firstName}} {{info.lastName}}</option>
+									</select> <label for="code">Doctor<span class="star">*</span></label>
+								</div> -->
+								<div class="">
+									<label for="" class="LISDynamicLabel">Doctor</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""  options="doctorList" selected-model="selectedDoctorList" >
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="">
+									<label for="" class="LISDynamicLabel">Payment Entitlement</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""  options="paymentEntList" selected-model="selectedPaymentEntList" ng-click="clickedPaymentEntitlement()">
+									</div>
+								</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-show="companyFlag == true">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group">
+											<select class="text-input floating-label" ng-model="companyId" ng-change="getAssociateCompanyMasterList(companyId)" >
+													<option value="">Select Company</option>
+												<option ng-repeat="companyMaster in companyMasterList" value="{{companyMaster.id}}">{{companyMaster.name}}</option>
+											</select> <label for="code">Company</label>
+										</div>
+									</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-show="insurenceFlag == true" >
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="form-group">
+												<select class="text-input floating-label" ng-model="associateCompanyId"  >
+															<option>Select Insurance Company</option>
+														<option ng-repeat="associateCompanyMaster in associateCompanyMasterList" value="{{associateCompanyMaster.id}}" >{{associateCompanyMaster.name}}</option>
+													</select>
+												<label for="code">Insurance Company</label>
+											</div>
+										</div>
+										</div>
+									</div>
+									
+									
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.newVisitServiceId" convert-to-number>
+										<option ng-repeat="info in servicesList" value="{{info.serviceMasterId}}">{{info.serviceStandardName}}</option>
+									</select> <label for="code">New Visit<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.followupVisitServiceId" convert-to-number>
+										
+										<option ng-repeat="info in servicesList" value="{{info.serviceMasterId}}">{{info.serviceStandardName}}</option>
+									</select> <label for="code">Follow Up Visit<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.secondaryVisitServiceId" convert-to-number>
+										
+										<option ng-repeat="info in servicesList" value="{{info.serviceMasterId}}">{{info.serviceStandardName}}</option>
+									</select> <label for="code">Secondary Visit<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row margin-top10">
+					<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				        <div class=" ">
+				        
+					        <a href="" class="btn btn-primary btn-save-box-shadow disabled" title="Save" data-toggle="modal" id="saveSpecialityDoc" ng-click="saveDoctorCosultationMaper()" ng-if="saveBtnFlag">
+					        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					      
+					        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateDoctorCosultationMaper()" ng-if="updateBtnFlag">
+					        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		
+				        </div>
+				     </div> -->
+				     <div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<div class="">
+							<a href="">
+								<input type="button" value="Add"  ng-click="addConsultationCombination()" class="btn btn-primary btn-save-box-shadow">
+							</a>
+						</div>
+					</div>
+					<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+						<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div> -->
+					
+				</div>
+				</div>
+				<!-- table start-->
+							<div class="row padding-top10 padding-left-right-set4">
+								<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+								  <table id="main-table" class="main-table width100">
+								    <thead>
+								     <tr class="">
+										<th class="width6">Specialty
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6">Doctor
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6">Payment Entitlement
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6" >Company 
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6"  >Insurance Company
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6" colspan="2">New Visit 
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										
+										<th class="width6" colspan="2">Follow up Visit
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6" colspan="2">Secondary Visit
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width2 text-center vertical-middle">Action</th>
+									</tr>
+								    </thead>
+								    <tbody>
+								      <tr ng-repeat="info in doctorConsultationList" > 
+										<td>{{info.specialityName}}</td>
+										<td>{{info.doctorName}}</td>
+										<td>{{info.paymentEntitlement}}</td>
+										<td class="width7">
+											<span>{{info.companyName}}</span>
+										</td>
+										<td class="width7">
+											<span>{{info.insuranceCompanyName}}</span>
+										</td>
+										
+										<td class="width7">
+											<span>{{info.newVisitServiceName}}</span>
+										</td>
+										<td class="width3">
+											<span>
+												<input numbers-only type="text" autocomplete="off" maxlength="5" class="w-100" ng-model="info.newVisitRate">
+											</span>
+										</td>
+										
+										<td class="width7">
+											<span>{{info.followupVisitServiceName}}</span>
+										</td>
+										<td class="width3">
+											<span>
+												<input numbers-only type="text" autocomplete="off" maxlength="5" class="w-100" ng-model="info.followupVisitRate">
+											</span>
+										</td>
+										<td class="width7">
+											<span>{{info.secondaryVisitServiceName}}</span>
+										</td>
+										<td class="width3">
+											<span>
+												<input numbers-only type="text" autocomplete="off" maxlength="5" class="w-100" ng-model="info.secondaryVisitRate">
+											</span>
+										</td>
+										
+										<td class="text-center vertical-middle">
+											<span ng-if="updateBtnFlag==false">
+												<a title="Remove " ng-click="remove($index)">
+													<i class="fa fa-remove" aria-hidden="true"></i>
+												</a>
+											</span>
+											<span ng-if="updateBtnFlag==true">
+												-
+											</span>
+										</td> 
+										
+										<!-- <td class="text-center vertical-middle">
+											<span>
+												<a title="Edit" ng-click="getDetailsById(info.doctorConsultationServiceMapperId)">
+													<i class="fa fa-pencil" aria-hidden="true"></i>
+												</a>
+											</span>
+											<span class="padding-left10"><a href="#/detailsMaterialPending">Details</a></span>
+										</td> -->
+									</tr>
+								    </tbody>
+								  </table>
+								</div>
+							</div>
+							<!-- Table END -->
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-show="IsVisibleDoc" ng-click="saveDoctorCosultationMaper()" ng-if="saveBtnFlag"> Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id=""  ng-show="IsVisibleDoc" ng-click="updateDoctorCosultationMaper()" ng-if="updateBtnFlag">Update</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="emptyList()">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="specialtyAddNew" class="modal fade ng-scope in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Add New
+					<button type="button" class="close" data-dismiss="modal"  ng-click="clearFields();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+			<div class="enabled" id="specialityDivId">
+				<div class="row padding-left-right-set4 margin-top10">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<input type="hidden" ng-model="doctorConsultationObj.doctorConsultationServiceMapperId">
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<!-- <div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.specialityId" convert-to-number ng-disabled="disableField">
+										<option>Select Speciality</option>
+										<option ng-repeat="info in specialityList" ng-if="info.deptWiseAppointment=='Y'" value="{{info.specialityId}}" >{{info.specialityName}}</option>
+									</select> <label for="code">Speciality<span class="star">*</span></label>
+								</div> -->
+								<div class="">
+									<label for="" class="LISDynamicLabel">Specialty</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect="" 
+										options="deptWiseSpecialityMasterList" selected-model="selectedspecialityMasterDeptList" >
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<label for="" class="LISDynamicLabel">Payment Entitlement</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""  options="paymentEntList" selected-model="selectedPaymentEntDeptList"  ng-click="clickedPaymentEntitlementDept()">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-show="companyFlag == true">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group">
+											<select class="text-input floating-label" ng-model="companyId" ng-change="getAssociateCompanyMasterList(companyId)" >
+													<option value="">Select Company</option>
+												<option ng-repeat="companyMaster in companyMasterList" value="{{companyMaster.id}}">{{companyMaster.name}}</option>
+											</select> <label for="code">Company</label>
+										</div>
+									</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-show="insurenceFlag == true" >
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="form-group">
+												<select class="text-input floating-label" ng-model="associateCompanyId"  >
+															<option>Select Insurance Company</option>
+														<option ng-repeat="associateCompanyMaster in associateCompanyMasterList" value="{{associateCompanyMaster.id}}" >{{associateCompanyMaster.name}}</option>
+													</select>
+												<label for="code">Insurance Company</label>
+											</div>
+										</div>
+										</div>
+									</div>
+					<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.doctorId" ng-disabled="disableField">
+										
+										<option ng-repeat="info in doctorList" value="{{info.doctorId}}">Dr. {{info.firstName}} {{info.lastName}}</option>
+									</select> <label for="code">Doctor<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.newVisitServiceId" convert-to-number>
+										<option ng-repeat="info in servicesList" value="{{info.serviceMasterId}}">{{info.serviceStandardName}}</option>
+									</select> <label for="code">New Visit<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.followupVisitServiceId" convert-to-number>
+										
+										<option ng-repeat="info in servicesList" value="{{info.serviceMasterId}}">{{info.serviceStandardName}}</option>
+									</select> <label for="code">Followup Visit<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="doctorConsultationObj.secondaryVisitServiceId" convert-to-number>
+										
+										<option ng-repeat="info in servicesList" value="{{info.serviceMasterId}}">{{info.serviceStandardName}}</option>
+									</select> <label for="code">Secondary Visit<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+				<div class="row margin-top10">
+						<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					        <div class=" ">
+					        
+						        <a href="" class="btn btn-primary btn-save-box-shadow disabled" title="Save" data-toggle="modal" id="saveFrDeptSepciality" ng-click="saveDoctorCosultationMaper()" ng-if="saveBtnFlag">
+						        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+						      
+						        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateDoctorCosultationMaper()" ng-if="updateBtnFlag">
+						        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			
+					        </div>
+					     </div> -->
+						<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div> -->
+						
+						<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto pull-right">
+							<div class="">
+								<a href="">
+									<input type="button" value="Add" ng-click="addConsultationCombinationDept()" class="btn btn-primary btn-save-box-shadow">
+								</a>
+							</div>
+						</div>
+						
+						<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+							<input type="button" class="btn" style="margin-top: 0px"> <i class="" aria-hidden="true"></i>
+						</div> -->
+					</div>
+					</div>
+						<!-- table start-->
+							<div class="row padding-top10 padding-left-right-set4">
+								<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+								  <table id="main-table" class="main-table width100">
+								    <thead>
+								      <tr class="">
+											<th class="width6">Specialty
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<!-- <th class="width6">Doctor
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th> -->
+											<!-- <th class="width6">Grade
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th> -->
+											<th class="width6">Payment Entitlement
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<th class="width6" >Company 
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6"  >Insurance Company
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+											<th class="width6" colspan="2">New Visit
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<th class="width6" colspan="2">Follow up Visit
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<th class="width6" colspan="2">Secondary Visit
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<th class="width2 text-center vertical-middle">Action</th>
+										</tr>
+								    </thead>
+								    <tbody>
+								      <tr ng-repeat="info in doctorConsultationDeptList|filter:searchKeyword">
+										<td>{{info.specialityName}}</td>
+										<td>{{info.paymentEntitlement}}</td>
+										<!-- <td>{{info.doctorName}}</td> -->
+										<!-- <td>-</td> -->
+										<td class="width7">
+											<span>{{info.companyName}}</span>
+										</td>
+										<td class="width7">
+											<span>{{info.insuranceCompanyName}}</span>
+										</td>
+										<td class="width7">{{info.newVisitServiceName}}</td>
+										<td class="width3"><input numbers-only type="text" autocomplete="off" maxlength="4" class="w-100" ng-model="info.newVisitRate"></td>
+										<td class="width7">{{info.followupVisitServiceName}}</td>
+										<td class="width3"><input numbers-only type="text" autocomplete="off" maxlength="4" class="w-100" ng-model="info.followupVisitRate"></td>
+										<td class="width7">{{info.secondaryVisitServiceName}}</td>
+										<td class="width3"><input numbers-only type="text" autocomplete="off" maxlength="4" class="w-100" ng-model="info.secondaryVisitRate"></td>
+										<td class="text-center vertical-middle">
+											<span ng-if="updateBtnFlag==false">
+												<a title="remove" ng-click="removeDept($index)">
+													<i class="fa fa-remove" aria-hidden="true"></i>
+												</a>
+											</span>
+											<span ng-if="updateBtnFlag==true">
+												-
+											</span>
+											
+											<!-- <span class="padding-left10"><a href="#/detailsMaterialPending">Details</a></span> -->
+										</td>
+										<!-- <td class="text-center vertical-middle">
+											<span>
+												<a title="Edit" ng-click="getDetailsById(info.doctorConsultationServiceMapperId)">
+													<i class="fa fa-pencil" aria-hidden="true"></i>
+												</a>
+											</span>
+											<span class="padding-left10"><a href="#/detailsMaterialPending">Details</a></span>
+										</td> -->
+									</tr>
+								    </tbody>
+								  </table>
+								</div>
+							</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id=""  ng-show="IsVisibleDept" ng-click="saveDoctorCosultationMaper()" ng-if="saveBtnFlag">Save</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id=""  ng-show="IsVisibleDept" ng-click="updateDoctorCosultationMaper()" ng-if="updateBtnFlag">Update</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="emptyList()">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div id="already_exist" class="modal fade ng-scope in  kiosk-small-modal" role="dialog" style="    margin-top: -89px;">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10 padding-bottom30"><span>{{message}}</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary width40" id="saveBtn" data-toggle="modal" ng-click="overrideDoctorCon()">Save And Override</button> <!-- "  -->
+					<button type="button" data-dismiss="modal" class="btn btn-primary width20" id="" data-toggle="modal" >Cancel</button>
+				</div>
+			</div>
+		</div>
+</div>
+<modal visible="showModal"></modal>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$( document ).ready(function() {
+	$(".selectedPageName").text("Doctor Consultation Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="doctorConsulationMaster"]').parents("li").addClass("active");
+});
+</script>

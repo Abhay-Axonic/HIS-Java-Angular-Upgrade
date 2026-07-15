@@ -1,0 +1,133 @@
+				
+				<div class="row margin-top4 padding-left-right-set1 his-style">
+				
+				<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+				</div>
+				
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="submitRequest()"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<!-- <input type="text" autocomplete="off" class="text-search-box" style="margin-top: 0px" ng-model="groupName" placeholder="Search"
+                       uib-typeahead="group.patientName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                       typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  required style="margin-top: 0px"/> -->
+                     <input type="text" autocomplete="off" class="text-search-box" style="margin-top: 0px" ng-model="searchKeyword" ng-change="searchWardInitiateRequest(searchKeyword)" placeholder="Search"
+                         style="margin-top: 0px"/> 
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+				
+				<div class="row padding-top5 padding-left-right-set4">
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll420">
+					  <table id="main-table" class="main-table width100">
+					    <thead>
+							<!-- ##### change added by kaustubh -->
+							<tr class="">
+								<th class="width1"></th>
+<!-- 								<th class="width8">UHID</th> -->
+								<th class="patient-doc-details-width">Patient Details</th>
+								<th class="width8">Ward</th>
+								<th class="width6">Bed No.</th><!-- Room/Bed -->
+								<th class="width8">Current Bed Category</th>
+								<!-- <th class="patient-doc-details-width">Required Ward</th> -->
+								<th class="patient-doc-details-width">Required Bed Category</th>
+								<th class="patient-doc-details-width">Reason for Transfer</th>
+								<th class="width15">Remark</th>
+							</tr>
+						</thead>
+					    <tbody>
+					      <tr ng-repeat="info in pagination.data" ng-if="info.transferStatusId == '1' || info.transferStatusId == '5' || info.transferStatusId == '9'">
+								
+								<td><input type="radio" name="radioName" value="info.admissionId" ng-model="admittedPatient" ng-click="selectPatient(info)"/>
+<!-- 								<td>{{info.uhidnumber}}</td> -->
+<!-- 								<td ng-init='age=getAge(info.dob)'> -->
+<!-- 									<div ng-if="info.patientId > 0">{{info.patientFullName+' '+age+'/'+info.genderCode}}</div> -->
+<!-- 									<div  ng-if="info.tPatientId > 0">{{info.patientFullName+' '+info.dob+'/'+info.genderCode}}</div> -->
+<!-- 								</td> -->
+                                <td class="text-center width15">
+                                    <div class="row patient-details" id="45#1247#2_new" >
+                                        <div class="col-lg-3 col-sm-12 col-md-3">
+                                            <div class="" >
+                                                <img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+                                            <div class="patient-name">{{info.prefixDesc+' '+info.patientFullName}}
+                                        </div>
+                                            <div class="patient-details">
+                                                <span class="patient-details patient">{{info.ageStr}}/ </span>
+                                                <span class="patient-details patient">{{info.genderCode}}</span>
+                                                <!-- <span class="patient-details patient" >||||||
+                                                <span class="patient-details patient" >info</span> -->
+                                            </div>
+                                            <div class="patient">{{info.uhidnumber}}</div>
+                                        </div>
+                                    </div>
+                                </td>
+
+								<td>{{info.wardName}}</td>
+								<td>{{info.bedNumber}}</td>
+								<td>
+									{{info.bedCategoryDesc}}
+								</td>
+								<!-- <td class="vertical-middle">
+									<select class="w-100" ng-model="info.requiredWardId" >
+										<option value="">Select Ward</option>
+										<option ng-repeat="ward in wardActiveList" ng-if="ward.wardId != info.wardId" value="{{ward.wardId}}">{{ward.wardName}}</option>
+									</select>
+								</td> -->
+								<td class="vertical-middle text-center">
+									<select class="w-100" ng-model="info.requiredBedCategory" ng-disabled="info.admissionId != itemSelecteds.admissionId">
+										<option value="">Select Bed Category</option>
+										<option ng-repeat="bedC in bedCategoryList" value="{{bedC.bedCategoryId+'_'+bedC.hierarchyId
+										}}">{{bedC.bedCategoryDesc}}</option>
+									</select>
+								</td>
+								<td title="Reason Type -'Transfer'" class="vertical-middle text-center">
+								<select class="w-100" ng-model="info.reasonId" ng-disabled="info.admissionId != itemSelecteds.admissionId" >
+										<option value="">Select Reason</option>
+										<option ng-repeat="reason in reasonList" ng-if="reason.reasonTypeId == 9" value="{{reason.reasonMasterId}}">{{reason.reasonDesc}}</option>
+									</select></td>
+								
+								<td class="vertical-middle"><input  ng-model="info.remark" class="text-box-style w-100" type="text" autocomplete="off"  ng-disabled="info.disable"></td>
+								
+							</tr>
+					    </tbody>
+					  </table>
+					</div>
+					<div class="row margin-bottom45 center-block">
+					<ul class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+				</div>

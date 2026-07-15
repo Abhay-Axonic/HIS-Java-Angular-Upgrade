@@ -1,0 +1,277 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="row margin-top10">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"><b class="padding-right10">Return Date:</b> <label>{{vm.model.assetReturnAcceptanceDetailData.returnDate
+						| date:'dd/MM/yyyy'}}</label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"><b class="padding-right10">Return No:</b><label>{{vm.model.assetReturnAcceptanceDetailData.returnNo}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"><b class="padding-right10">Returning Store:</b> <label>{{vm.model.assetReturnAcceptanceDetailData.toStore}}</label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"><b class="padding-right10">Accepting Store:</b><label>{{vm.model.assetReturnAcceptanceDetailData.fromStore}}</label>
+				</span>
+			</div>
+		</div>
+
+		<div class="row padding-left-right-set4 padding-top4 padding-top10 height500-table-with-scroll">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered first-checkBox-padding">
+					<thead class="mainServiceTableCommon">
+						<tr>
+							<th class="width1  text-center">
+								<input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" ng-change="vm.model.valueOnChange(item, true)"
+								 ng-disabled="vm.model.assetReturnAcceptanceDetailData.approvalStatusId != 10">
+							</th>
+							<th class="width8">
+								Asset Code
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">
+								Asset Name
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">
+								Stock Available
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width7">
+								Return Qty
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width10">
+								Batch No
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">
+								Accept Quantity
+							</th>
+							<th class="width8">
+								Reject Quantity
+							</th>
+							<th class="width8">
+								Reject
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in vm.model.assetReturnAcceptanceDetailData.item | orderBy:sortType:sortReverse">
+							<td class="width1  text-center">
+								<input type="checkbox" ng-model="item.isSelected" ng-disabled="vm.model.assetReturnAcceptanceDetailData.approvalStatusId != 10"
+								 ng-click="vm.model.SelectItem(item)" ng-change="vm.model.valueOnChange(item, false)" />
+							</td>
+							<td>{{item.itemCode}}</td>
+							<td>{{item.itemName}}</td>
+							<td>{{item.availableQuantity}}</td>
+							<td>{{item.returnQuantity}}</td>
+							<td>{{item.batchNo}}</td>
+							<td>
+								<div class="row approved-qty-remark">
+									<input type="text" autocomplete="off" class="w-100" ng-model="item.acceptedQuantity" ng-blur="vm.model.ApprovedQuantity(item)"
+									 ng-if="!item.isDisabled" numbers-only>
+									<div ng-if="item.isDisabled">{{!!item.acceptedQuantity ? item.acceptedQuantity : 0 }}</div>
+								</div>
+							</td>
+							<td>{{item.rejectedQuantity}}</td>
+							<td>
+								<div class="checkbox">
+									<label class="switch switch-small">
+										<input type="checkbox" class="switchInput" ng-disabled="item.isDisabled" ng-click="vm.model.RejectionPopup(item)"
+										 ng-model="item.isReject">
+										<div class="slider round slider-small"></div>
+									</label>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class=" col-lg-1 col-md-1 col-sm-2 text-right">
+					<!-- <label>Remark:</label> -->
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-6 padding-left-right-se4">
+					<!-- <textarea rows="2" class="form-control" readonly></textarea> -->
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+					<a ng-click="vm.model.saveAssetReturnAcceptance()">
+						<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow"
+						ng-disabled="vm.model.assetReturnAcceptanceDetailData.status == 'Completed'">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+					<a href="#/assetReturnAcceptance">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<div id="qtyaccepatReject" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Rejection
+					<button type="button" ng-click="vm.model.ModalDismiss('qtyaccepatReject')" class="close">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-6 col-md-6 col-sm-12">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="rejectQty" name="rejectQty" ng-model="vm.model.rejectQty" class="text-input floating-label dirty"
+										 numbers-only>
+										<label for="rejectQty">Qty</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select name="rejectReason" id="rejectReason" class="text-input floating-label" ng-model="vm.model.rejectReason">
+											<option value="">Select Reason</option>
+											<option ng-repeat="datum in vm.model.reasons" value="{{datum.id}}">{{datum.reason}}</option>
+										</select>
+										<label for="rejectReason">Select Reason</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="rejectNote" rows="4" id="rejectNote" maxlength="100" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+									 ng-model="vm.model.rejectNote" ng-class="{dirty: vm.model.rejectNote}"></textarea>
+									<label for="rejectNote">Note</label>
+								</div>
+							</div>
+						</div>
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" ng-disabled="!vm.model.rejectQty" id="saveBtn" class="btn btn-primary" ng-click="vm.model.SaveAcceptReject()">Save</button>
+			</div>
+		</div>
+	</div>
+</div> 
+<!-- view details modal start -->
+<div id="viewDetailsAccessoriesModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Accessory Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 padding-left-right-set4 margin-top4 height420-table-with-scroll" id="">
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<th class="width8">
+										<div>Accessory Code </div>
+									</th>
+									<th class="width12">
+										<div>Accessory Description</div>
+									</th>
+									<th class="width12">
+										<div>Specification</div>
+									</th>
+									<th class="width4">
+										Action
+									</th>
+								</tr>
+								<tr>
+									<td>AS-1311</td>
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer his-style" style="border: none;">
+				<div class="row">
+					<div class="col-lg-10 col-sm-10 col-md-10">
+					</div>
+					<div class="col-lg-2 col-sm-2 col-md-2 text-width-auto pull-right">
+						<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" data-dismiss="modal">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- view details modal end -->
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".selectedPageName").text("Asset Return Acceptance");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="directAssetReturnAcceptance"]').parents("li").addClass("active");
+	});    
+</script>

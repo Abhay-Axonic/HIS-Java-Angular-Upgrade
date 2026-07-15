@@ -1,0 +1,1059 @@
+<style>
+
+	.height400-table-with-scroll {
+    min-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+table>tbody>tr.td-bg-yellow > td
+	{
+		background-color : #F1F1F1 !important;
+	}
+	table>tbody>tr.td-bg-blue > td
+	{
+		background-color : #D1E5FF !important;
+	}
+	table>tbody>tr.td-bg-green > td
+	{
+		background-color : #D7FFC5 !important;
+	}
+	table>tbody>tr.td-bg-red > td
+	{
+		color : red !important;
+		
+	}
+	table>tbody>tr.td-bg-red-and-yellow > td
+	{
+		background-color : #F7FB7D !important;
+		color : red !important;
+	}
+		table>tbody>tr.td-bg-red-and-green > td
+	{
+		background-color : #7DFB9B !important;
+		color : red !important;
+	}
+		table>tbody>tr.td-bg-red-and-blue > td
+	{
+		background-color : #FFB2B2 !important;
+		color : red !important;
+	}
+	.z-index-9999{
+		z-index: 9999 !important;
+	}
+	
+	
+.color-indiction-yellow-lab-div
+{
+	/* width: 12px; */
+    height: 15px;
+    background-color: #F1F1F1;
+   /*  position: absolute; */
+    margin-top: 4px;
+    /* margin-left: 201px; */
+}
+.color-indiction-blue-lab-div
+{
+	/* width: 12px; */
+    height: 15px;
+    background-color: #D1E5FF;
+  /*   position: absolute; */
+    margin-top: 4px;
+   /*  margin-left: 281px; */
+}
+.color-indiction-green-lab-div
+{
+	/* width: 12px; */
+    height: 15px;
+    background-color: #D7FFC5;
+  /*   position: absolute; */
+    margin-top: 4px;
+   /*  margin-left: 281px; */
+}	
+.color-indiction-red-lab-div
+{
+	/* width: 12px; */
+    height: 15px;
+    background-color: #FFB2B2;
+  /*   position: absolute; */
+    margin-top: 4px;
+   /*  margin-left: 281px; */
+}	
+</style>
+<!-- Page Content -->
+
+<div id="page-content-wrapper" style="padding-bottom: 0px !important;">
+<form id="34543" name="phlebotomy" novalidate>
+	<div class="container-fluid his-style">
+		<div class="row padding-left-right-set4 margin-top4">
+			<div class="col-lg-2 col-md-2 col-sm-2">
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+							<div class="row input-container padding-top10">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											name="datepicker" id="datepicker"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="fromDate"
+											model-view-value="true" is-open="popup.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="open()" required="" style="">
+										<label for="code" class="">Date (From) </label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+							<div class="row input-container padding-top10">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											name="datepicker" id="datepicker"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY"  ng-model="toDate"
+											model-view-value="true" is-open="popup1.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="open1();" required="" style="">
+										<label for="code" class="">Date-Till</label>
+									</div>
+								</div>
+							</div>
+						</div>
+			  </div>
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container padding-top10">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<input type="text" autocomplete="off"
+										 class="text-input floating-label" tabindex="3"
+										 ng-model="patientId"
+										 placeholder="Search"
+										 uib-typeahead=" patient.patientWithUhid for patient in getPhlebotomyPatientList($viewValue)"
+										 typeahead-editable="false"
+										 typeahead-on-select="selectPatient($item, $model, $label);"
+										 name="patientName"  ng-blur="checkPatient();"/>
+								<label for="description" class="LISDynamicLabel">Patient Search</label>
+							</div>
+						</div>
+					</div>
+				</div>
+						
+				 <div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 padding-top10">
+				 	<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 ">
+				 			<div class="row input-container padding-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-dot-circle-o" style="    margin-left: -8px !important;" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="code"  ng-model="uhid"  id="" class="text-input floating-label">
+										<label for="description" class="LISDynamicLabel">UHID</label>
+									</div>
+								</div>
+							</div>
+				 	</div>
+					<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 " style="margin-top: -8px;">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+								<i class="fa fa-dot-circle-o padding-top12" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 ">
+								<div class="">
+									<label for="" class="LISDynamicLabel multi-select-label">Visit Type</label>
+									<div class="custom-drop-down-btn" style="border-radius: 10px;height: 37px;border: 1px solid !important"
+										ng-dropdown-multiselect="" options="visityTypeList"
+										selected-model="selectedVisitType"
+										>
+									</div>
+								</div>
+							</div>
+						</div>	
+					</div>		
+					
+				</div> 
+				
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container padding-top12">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="orderStatusId">
+									<option selected value>-</option>
+									<option value="4">Canceled</option>
+									<option value="3">Completed</option>
+									<option value="2">Partial Completed</option>
+									<option value="1">Pending</option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Order Status</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 padding-top10">
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-dot-circle-o ddp-padding-top padding-top2" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label ng-touched dirty"
+										ng-model="labSortingId" name="labSortingId" required convert-to-number>
+										<option value="null">Select Lab Sorting Criteria</option>
+										<option ng-repeat="info in labSortingList" value="{{info.id}}">{{info.displayName}}</option>
+									</select>
+									<label for="" class="LISDynamicLabel">Default Sorting Parameter</label>
+								</div>
+							</div>			
+						</div>
+					</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set1 text-width-auto pull-right padding-top10" style="margin-top: 17px;">
+					<div class="common-save-button"> 
+						 <a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" style="width: auto;" ng-click="searchPhlebotomyWorkList();" >
+						 	<i class="fa fa-search"  aria-hidden="true"></i> 
+						 </a> 
+					</div> 
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15 text-width-auto pull-right" style="margin-top: 17px;">
+					<div class="common-save-button" style="padding-top:0px;"> 
+							 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" ng-click="clearFields();" title="Clear"> 
+							 	<i class="fa fa-eraser"   aria-hidden="true"></i> 
+							 </a> 
+					</div> 
+				</div>
+			</div>
+		<div class="row padding-left-right-set4 margin-top4">
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 width-auto">
+				<div class="row">
+					<div class="search">
+						<label class="show-entries">Show <select
+							name="DataTables_Table_0_length"
+							aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='25'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								 <option value="25">25</option> 
+								<option value="50">50</option>
+								<option value="75">75</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-7 col-md-5 col-sm-5 padding-left-right-set4">
+				<!-- <div ng-include="'./views/common/common-index-for-indication-of-status.html'" class="padding-top4"></div> -->
+				<div class="row">
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0">
+								<div class="color-indiction-yellow-lab-div"></div>
+							</div>
+							<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set4 text-width-auto">
+								<span class="color-indication-red-span">Pending</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0">
+								<div class="color-indiction-blue-lab-div" ></div>
+							</div>
+							<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 width-auto" >
+								<span class="color-indication-orange-span">Partially Complete</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0">
+								<div class="color-indiction-green-lab-div" ></div>
+							</div>
+							<div class="col-lg-7 col-md-7 col-sm-7s padding-left-right-set4 text-width-auto">
+								<span class="color-indication-green-span">Complete</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+								<div class="color-indiction-red-lab-div" ></div>
+							</div>
+							<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set0">
+								<span class="color-indication-red-span">Emergency Services</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-5 col-sm-5 padding-left-right-set4" style="height: 20px;">
+						<div class="row"  style="height: 20px;">
+							<div class="col-lg-1 col-md-1 col-sm-1" style="font-size: 14px;">
+								<i class="fa fa-header" style="color:#FFA500;padding-top: 5px;"></i>
+							</div>
+							<div class="col-lg- col-md-9 col-sm-9">
+								<span class="color-indication-red-span" style="padding-left: 4px;">Home Sample Collection</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div  ng-show="isBillManipulationAllowed" class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_left padding-top10 radio-container"  style="border: 1px solid #ccc;border-radius: 5px;width:180px;text-align:center">
+					<span >
+						<input id="all_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="otherRegistrationType trigger ng-pristine ng-untouched ng-valid ng-not-empty" value="1" ng-change="filterByDummyServices(isDummyService)">
+						<label for="all_Radio">All</label>
+					</span>
+				<span >
+						<input id="real_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="employeeRegRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="2" ng-change="filterByDummyServices(isDummyService)">
+						<label for="real_Radio">Real</label>
+					</span>
+				<span >
+						<input id="dummy_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="dependentRedRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="3" ng-change="filterByDummyServices(isDummyService)">
+						<label for="dummy_Radio">Dummy</label>
+					</span>
+			</div>
+
+			<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set0 float-right">
+		        <input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword" ng-change= "searchType(searchKeyword)" >
+		        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+		    </div>
+		</div>
+		<div class="row padding-left-right-set4 padding-top8">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<div class="table-container">
+					   <div class="table-container-header">
+					      <table class="table table-striped table-hover table-condensed table-bordered">
+					         <thead>
+					            <tr class="">
+					            	<th class="width8" title="UHID">UHID</th>
+					            	<th class="width8" title="Bill No.">Bill No.</th>
+									<th class="width5" title="Order No.">Order No.</th>
+					            	<th class="width12" title="Patient Details">Patient Details</th>
+					            	<!-- <th class="width6" title="Test Name">Details</th> -->
+					            	<th class="width10" title="Doctor Details">Doctor Details</th>
+					            	<!-- <th class="width10" title="Referral Details">Referral Details</th>
+					            	<th class="width8" title="Payment Entitlement">Payment Entitlement</th> -->
+					            	<th class="width6" title="Order Status">Order Status</th>
+					            	<th class="width8" title="Order Date and Time">Order Date and Time</th>
+					            	<!-- <th class="width6" title="Priority">Priority</th> -->
+									<th class="width5" title="Visit Type">Visit Type</th>
+									<th class="width8 text-center" title="Action taken">Action taken</th>
+								</tr>
+					         </thead>
+					      </table>
+					   </div>
+					   <table class="table table-bordered">
+							<tr ng-if="(phlebotomyWorkList|filter:searchKeyword)=='' || (phlebotomyWorkList|filter:searchKeyword)==null ">
+								<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;"><b>No Record Found....</b></p></td>
+							</tr>
+						</table>
+					   <div class="table-container-body fix-height-scroll500" style="overflow: overlay;">
+					      <table class="table table-striped table-hover table-condensed table-bordered">
+					         <tbody>
+					          <tr ng-repeat="workist in phlebotomyWorkList|orderBy:column:reverse track by $index" ng-class="getClassForColor(workist);">
+								<td class="width8"  title="{{workist.uhid}}">{{workist.uhid}}</td>
+								<td class="width8"  title="{{workist.billNumber}}">{{workist.billNumber}}</td>
+								<td class="width5"  title="{{workist.orderNo}}">{{workist.orderNo}}</td>
+								<td class="width12" title="{{workist.patientDetails}}">{{workist.patientDetails}}</td>
+								<!-- <td class="width6"> </td> -->
+                                <td class="width10" title="{{workist.doctorDetails}}">{{workist.doctorDetails}}</td>
+								<!-- <td class="width8">
+									<div ng-if ="workist.paymentEntitlementId == 1">Self&nbsp;&nbsp;
+										<a data-target="#companyInfo" data-toggle="modal" ng-click="getCompanyName($index,workist);"><i
+												class="fa fa-info-circle"></i></a>
+									</div>
+									<div ng-if ="workist.paymentEntitlementId == 2">Insurance&nbsp;&nbsp;
+										<a data-target="#companyInfo" data-toggle="modal" ng-click="getCompanyName($index,workist);"><i
+												class="fa fa-info-circle"></i></a>
+									</div>
+									<div ng-if ="workist.paymentEntitlementId == 3">Company&nbsp;&nbsp;
+										<a data-target="#companyInfo" data-toggle="modal" ng-click="getCompanyName($index,workist);"><i
+												class="fa fa-info-circle"></i></a>
+									</div>
+								</td> -->
+								<td class="width6"  title="{{getOrderStatus(workist.orderStatusId)}}">{{getOrderStatus(workist.orderStatusId)}}</td>
+								<td class="width8"  title="{{getDateByFormat(workist.createdDateString,true)}}">{{getDateByFormat(workist.createdDateString,true)}}</td>
+							<!-- 	<td class="width6"  title="{{workist.priorityName}}">{{workist.priorityName}}</td> -->
+								<td class="width5"  title="{{workist.visitType}}">{{workist.visitType}}</td>
+								  <td ng-if="workist.homeCollection" class="width8" style="justify-content: space-around;">
+									<!-- <a class="cursor-pointer" ng-click="getWorkListDetails(workist.orgId,workist.orgUnitId,workist.orderId);" >
+										Details
+									</a> -->
+									<i ng-if ="workist.homeCollection" title="Home Sample Collection" class="fa fa-header" aria-hidden="true" style="margin-left: 10px; margin-right: 8px; color:#FFA500;"></i>
+									<i class="fa fa-info-circle"  aria-hidden="true" title="Details"
+                                    ng-click="getTestDetails(workist.orderId)"></i>
+									<a title="Send User Name" ng-if="outsourceLabId != undefined && outsourceLabId != null && outsourceLabId != 0" ng-click="resendOrderToneuronPlus(workist)"><i class="fa fa-share-square" aria-hidden="true"></i></a>&nbsp;
+							
+									<a fancybox target ="_blank" href="{{workist.neuronPlusUrl}}" ng-if="workist.neuronPlusUrl != null && neuronPlus != 'N'"><span class="fa fa-eye"></span></a>
+									<i class="fa fa-print" aria-hidden="true" title="Print " style="color: #254edb !important;" ng-click="printReport(workist.orderId);"></i>&nbsp;
+									<a class="cursor-pointer" ng-click="validateWorkListDetails(workist);" >
+										Details
+									</a>
+									<a style="float: right;" ng-if="workist.visitTypeId == 1" data-toggle="modal" title="Patient History" ng-click="getPatHis(workist)" data-target="#patHisPopup"><i class="fa fa-file-o" style="font-size:18px"></i></a>
+								</td>
+								  <td ng-if="!workist.homeCollection" class="width8 text-center" >
+									  <!-- <a class="cursor-pointer" ng-click="getWorkListDetails(workist.orgId,workist.orgUnitId,workist.orderId);" >
+                                          Details
+                                      </a> -->
+<!--									  <i ng-if ="workist.homeCollection" class="fa fa-header" aria-hidden="true" style="color:red; margin-left: 15px; margin-right: 8px;"></i>-->
+									  <i class="fa fa-info-circle"  aria-hidden="true"
+										 ng-click="getTestDetails(workist.orderId)" title="Details"></i>
+									  <a title="Send User Name" ng-if="outsourceLabId != undefined && outsourceLabId != null && outsourceLabId != 0" ng-click="resendOrderToneuronPlus(workist)"><i class="fa fa-share-square" aria-hidden="true"></i></a>&nbsp;
+
+									  <a fancybox target ="_blank" href="{{workist.neuronPlusUrl}}" ng-if="workist.neuronPlusUrl != null && neuronPlus != 'N'"><span class="fa fa-eye"></span></a>
+									  <i class="fa fa-print" aria-hidden="true" title="Print " style="color: #254edb !important;" ng-click="printReport(workist.orderId);"></i>&nbsp;
+									  <a class="cursor-pointer" ng-click="validateWorkListDetails(workist);" >
+										  Details
+									  </a>
+									  <a style="float: right;" ng-if="workist.visitTypeId == 1" data-toggle="modal" title="Patient History" ng-click="getPatHis(workist)" data-target="#patHisPopup"><i class="fa fa-file-o" style="font-size:18px"></i></a>
+								  </td>
+							</tr>
+					         </tbody>
+					      </table>
+					   </div>
+					</div>
+				
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;margin-top: 5px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+</div>
+
+
+
+<!-- confirmreschedulePopup START -->
+<div id="patHisPopup"class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog" style="width: 35% !important;">
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Patient History
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="col-md-12 col-lg-12 col-sm-12 form-group" style="padding: 10px !important;">
+					  <textarea ng-model="patHistory" rows="10" cols="55"></textarea>
+						  
+					</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="" ng-click="updateHistory();" >Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="" >Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--confirmreschedulePopup END -->
+
+
+
+
+<div id="phlebotomyWorkListDetails" class="modal fade ng-scope in padding-left0 common-large-popup"
+	role="dialog" data-keyboard="false" data-backdrop="static">
+<form name="phlebotomyDetails" novalidate>
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Phlebotomy Work List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row patient-details-row">
+					<div class="col-md-11 col-sm-11 col-xs-11 ">
+						<span class="profile_pic margin-left10"> 
+						<img alt=""
+							src="{{(labSampleDetails[0].imagePath!=null && labSampleDetails[0].imagePath!='') ? labSampleDetails[0].imagePath:(labSampleDetails[0].genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}"" class="img-circle"
+							style="width: 30px">
+						</span> <span class="margin-left10">{{labSampleDetails[0].patientDetails}}</span>
+						<span class="margin-left10"><b class="padding-right5 ">UHID
+								:</b>{{labSampleDetails[0].uhid}}</span>
+						<!-- <span class="margin-left10">
+							<b class="padding-right10 ">Priority :</b> {{labSampleDetails[0].priorityName}}
+						</span> -->
+						<span class="margin-left10">{{labSampleDetails[0].doctorDetails}}</span>
+						<!-- <span class="margin-left10">
+							<b class="padding-right10 ">Visit Type :</b>{{labSampleDetails[0].visitType}}
+						</span> -->
+					</div>
+				</div>
+				<div class="row padding-left-right-set4	">
+					<div
+						class="col-lg-12 col-md-12 common-popup-height-350 padding-top10">
+						<table class="table table-bordered table-striped">
+							<tr class="table-th-bg">
+								<th class="width6">Visit Type
+								<!-- <th>Test Code</th> -->
+								<th class="">Test Name</th>
+								<th class="width3">Clinical Note</th>
+								<th class="width4 ng-hide">Profile Code</th>
+								<th>Department</th>
+								<th class="width8">Container To Be Used</th>
+								<th>Sample</th>
+								<th>Min Sample</th>
+								<th class="width14">Bar Code (Print All <i
+									class="fa fa-print" aria-hidden="true" ng-click = printAllBarcode()></i>)
+								</th>
+								<th ng-if="manualSampleCollectionTime == 'Y'">ManualCollectionTime</th>
+								<!-- <th class="status ng-hide">Aliquote Needed</th> -->
+								<th class="width6">
+									<label class="checkbox-inline" for="sampleCollect">
+										<input type="checkbox" ng-model="selectedAll" ng-click="checkAll();" id="sampleCollect"><span></span><b>Sample Collect</b></label>
+								</th>
+								<th class="status">OutSource</th>
+								<th class="width6">SRF Id</th>
+								<th class="width12" title="Sample Date">Assign Unit</th>
+								<th class="width8" title="Sample Date">Tariff Name</th>
+							</tr>
+
+							<tr ng-repeat="worklstDetail in phlebotomyWorkListDetails|orderBy:'orderDetailsId' track by $index" ng-class="getClassForColor1(worklstDetail);">
+								<td>{{labSampleDetails[0].visitType}}</td>
+								<!-- <td>{{worklstDetail.testCode}}</td> -->
+								<td>{{worklstDetail.testDesc}} {{worklstDetail.collectionTime!=null?'**':''}}</td>
+								<td class="text-center">
+								   <a ng-click="showClinicalNote(worklstDetail)"><i class="fa fa-info-circle" title="Clinical note" data-toggle="modal" data-target="#clinicalNoteShow"></i></a>
+								</td>
+								<td class="ng-hide">{{worklstDetail.panelCode==null?'-':worklstDetail.panelCode}}</td>
+								<td>{{worklstDetail.deptName}}</td>
+								<td>{{worklstDetail.containerName}}</td>
+								<td>{{worklstDetail.sampleName}}</td>
+								<td>{{worklstDetail.sampleVolume}}&nbsp{{worklstDetail.unitName}}</td>
+								<td><input type="text" maxlength="16" autocomplete="off" class="width60"  ng-disabled="(isPrebarcodeGenerantion == 'Y'? true : (worklstDetail.labSampleDtlsId!=null ? true : !worklstDetail.sampleStatusId))" ng-model="worklstDetail.sampleBarcode" ng-blur = "validateBarcode(worklstDetail,$index)" >&nbsp;<span><i
+										class="fa fa-print" aria-hidden="true" ng-click="reprintBarCode(worklstDetail.sampleBarcode,worklstDetail.labSampleDtlsId);" ></i></span></td>
+
+									<td class="width10" ng-if="manualSampleCollectionTime == 'Y'">
+									
+										 <div><input type="text" autocomplete="off" class="w-100"
+											name="datepicker" id="datepicker"
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											onkeydown="event.preventDefault()" model-view-value="true"
+											ng-model="worklstDetail.manualDate"
+											is-open="datepickerMedicationHistory.opened[$index]"
+											datepicker-options="dateOptionsMedicationHistory"
+											show-button-bar="false"
+											ng-click="openDatePickerMedicationHistory($index)" ng-disabled="worklstDetail.labSampleDtlsId!=null">
+										</div>
+										
+										<div style="margin-top: 4px;">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off" name="description"
+													id=""ng-model="worklstDetail.manaulTime"
+													class="text-input floating-label"
+													ng-init="initClockPicker()" ng-disabled="worklstDetail.labSampleDtlsId!=null">
+											</div>
+
+										</div>
+									</td>
+									<!--  ng-model="slots.appointmentTime"	 <td class="ng-hide"><input type="checkbox"
+									ng-model="worklstDetail.isAlliquoteReq" ng-true-value="'Y'"
+									ng-false-value="'N'"></td> -->
+								<td>
+									<label class="checkbox-inline">
+										<input type="checkbox"
+											   ng-model="worklstDetail.sampleStatusId" ng-disabled="worklstDetail.labSampleDtlsId!=null">
+										<span></span>
+									</label>
+								</td>
+								<td>
+									<label class="checkbox-inline">
+										<input type="checkbox"
+											   ng-model="worklstDetail.isOutsourced" ng-true-value="'Y'"
+											   ng-false-value="'N'" ng-click="openOutsourcePopup(worklstDetail,$index);">
+										<span></span>
+									</label>
+								</td>
+								<td class="width6"> 
+								<div class="form-group col-lg-9 col-md-12 padding-left-right-set4">
+										<input type="text" autocomplete="off" title="{{worklstDetail.srfId}}" name="srfId" class="urgent-text width150" ng-model="worklstDetail.srfId"
+										 ng-disabled="(worklstDetail.labSampleDtlsId!=null ? true : !worklstDetail.sampleStatusId)"/>
+								</div>
+								</td>
+								<td class="width4">
+								    <select class="text-input floating-label ng-touched dirty"
+										ng-model="worklstDetail.assignUnit" name="unitId"  ng-change="getPerformTestId(worklstDetail)" required convert-to-number>
+										<option ng-repeat="unitObj in unitMasterList" ng-if="unitObj.processingUnit==true" value="{{unitObj.unitId}}">{{unitObj.unitName}}</option>
+									</select>
+								</td>
+								<td class="width8">
+								    {{worklstDetail.tariffDesc}}
+								</td>	
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary"  ng-click="checkConfiguration();">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" data-dismiss="modal"  ng-click="checkConfiguration();" ng-disabled="savePhlrbotomy == true">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>	
+</div>
+
+<div id="sampleBarCode" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Barcode	Preview
+					<span class="padding-left10"><i style="font-size:16px;align:right" class="fa" ng-click="printBarCode()">&#xf02f;</i></span>			
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div id="barcodePrintingId" style="background:#fff;padding:10px;">
+						<div class="row">
+						<!--  -->
+						<!-- <div class="col-lg-4 col-md-4 col-sm-12"></div>
+						<div class="col-lg-4 col-md-4 col-sm-12"> -->
+
+						<div class="col-lg-12 col-md-12 col-sm-12"  ng-repeat="barcode in barcodeList track by $index">
+								<table style="font: 14px monospace !important;padding-left: 25px !important;">
+									<tbody><!-- font-weight: bold !important; -->
+										<!-- <tr style="font: 19px monospace !important;">
+											<td colspan="2">
+												<span style="font-weight: bold !important;">Sample No. : </span><span style="font-weight: bold !important;">{{barcode.code}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td colspan="2">
+												<span class="ng-binding" style="font-weight: bold !important;">UHID : </span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.uhid}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="font-weight: bold !important;">Name :</span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.patientDetails}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="font-weight: bold !important;">Date :</span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.generationDateTime}}</span>
+											</td>
+										</tr>
+										<tr style="font: 15px monospace !important; ">
+											<td colspan="2">
+												<barcode type="{{barcode.type}}" string="{{barcode.code}}" options="options" render="img"></barcode>
+											</td>
+										</tr> -->
+										<tr style="font: 19px monospace !important;">
+											<td colspan="2" style="padding-left: 10px !important;">
+												<span style="font-weight: bold !important;">{{barcode.patientDetails}}</span>
+											</td>
+										</tr>
+										<tr style="font: 15px monospace !important;">
+											<td colspan="2" style="padding-left: 20px !important;">
+												<barcode type="{{barcode.type}}" string="{{barcode.code}}" options="options" render="img"></barcode>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<!-- <span class="ng-binding" style="font-weight: bold !important;">UHID : </span> -->
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.code}}</span>
+											</td>
+											<td>
+												<!-- <span class="ng-binding" style="font-weight: bold !important;">Date :</span> -->
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.generationDateTime}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="padding-left: 40px !important;font-weight: bold !important;text-align: center;">{{barcode.sampleName}}</span>
+											</td>
+										</tr>
+										<!-- <tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="font-weight: bold !important;">Date :</span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.generationDateTime}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="font-weight: bold !important;">Name :</span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.sampleName}}</span>
+											</td>
+										</tr> -->
+									</tbody>
+								</table>
+							<!-- barcode - code --></div>
+					</div>
+					
+				</div>
+		
+		</div>
+	</div>
+</div>
+</div>
+<!-- counterDetailsModal START -->
+<div id="labPinModal" class="modal fade ng-scope common-small-popup in" role="dialog" ng-form="labPinForm" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Pin Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10 row padding-top10">
+					<div class="col-md-3 col-lg-3 col-sm-3">
+						<span>Enter Pin</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6 form-group" show-errors>
+					  <input type="password" id="password-field" class="text-input floating-label dirty"  name="labPin" ng-model="labPin" ng-maxlength="4" ng-minlength="4" numbers-only required>
+					  <span toggle="#password-field" class="fa fa-fw fa-eye toggle-password" style="float: right; margin-left: -25px; margin-top: -25px; position: relative; z-index: 2;"></span>
+						<p class="help-block" ng-if="labPinForm.labPin.$error.required">Pin is required</p>
+						<p class="help-block" ng-if="labPinForm.labPin.$error.maxlength||labPinForm.labPin.$error.minlength">4 Digit Pin is Required.</p>
+						  
+					</div>
+					
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button"  class="btn btn-primary width13" ng-click="checkLabPin();" ng-class="{disabled: disablePinBtn}">Ok</button> -->
+				  <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" ng-click="checkLabPin();" ng-class="{disabled: disablePinBtn}">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- outSourceConfirmation START -->
+<div id="outSourceConfirmation"class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header padding-zero">
+                <div class="modal-title patient-details-row">
+                    Outsource Service
+                    <button type="button" class="close" data-dismiss="modal" ng-click="clearOutSourceService();">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    {{msg}}
+                </div>
+            </div>
+            <div class="modal-footer" style="border: none;">
+                <div class="row">
+                    <div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+                        <button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal" ng-click="clearOutSourceService();">
+                        <i class="fa fa-times" aria-hidden="true"></i> </button>
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+                        <button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" data-dismiss="modal"  ng-click="updateOutSourceService();">
+                        <i class="fa fa-check" aria-hidden="true"></i> </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--outSourceConfirmation END -->
+
+<!-- assignUnitConfirmation START -->
+<div id="assignUnitConfirmation"class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header padding-zero">
+                <div class="modal-title patient-details-row">
+                    Assign Unit Confirmation
+                    <button type="button" class="close" data-dismiss="modal" ng-click="clearAssignUnit();">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    Do You Want To Change Assign Unit ? 
+                </div>
+            </div>
+            <div class="modal-footer" style="border: none;">
+                <div class="row">
+                    <div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+                        <button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal" ng-click="clearAssignUnit();">
+                        <i class="fa fa-times" aria-hidden="true"></i> </button>
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+                        <button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" data-dismiss="modal"  ng-click="updateAssignUnit();">
+                        <i class="fa fa-check" aria-hidden="true"></i> </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--assignUnitConfirmation END -->
+
+<div id="clinicalNoteShow" class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-bottom10">
+						<div class="padding-left-right-10">
+							<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10 padding-bottom10">
+								<div class="row">
+								 	  <span class="bed-mang-box-icon"  ng-show="comorbidityFlag"  style="font-size:13px;"><b>Diagnosis:</b> {{finalString}}</span>
+								    </div>
+							 		<div class="row input-container">
+										<!-- <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div> -->
+										<div class="col-lg-11 col-sm-11 col-md-11"><label><b>Clinical Note:</b></label>
+											<div class="">
+												<textarea rows="3" class="width-100" disabled="disabled"
+															ng-model="clinObj.showclinicalNote"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+			</div>
+				</div>
+				
+			</div>
+		</div>
+</div>
+
+<!--companyInfo START -->
+<div id="companyInfo" class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-bottom10">
+						<div class="padding-left-right-10">
+							<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10 padding-bottom10">
+							 		<div class="row input-container">
+										<div class="col-lg-11 col-sm-11 col-md-11">
+										<table class="table table-bordered">
+											<tbody>
+												<tr>
+													<th class="width15">
+														<div>Name</div>
+													</th>
+												</tr>
+												<tr>
+													<td>
+														<div>{{companyName}}</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+<!--companyInfo END -->
+
+
+
+<div id="phlebotomyWorkList" class="common-medium-popup modal fade ng-scope in" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Details
+                   <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body row">
+                <div class="row height400-table-with-scroll" style>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 padding-left-right-set4">
+                            <table class="table table-bordered  margin-top8">
+                                <tbody><tr >
+                                    <th class="width25">
+                                        <span class="">Test Name</span>
+                                    </th>
+                                    <td title="{{testAndPaymentDetails.testDesc}}">{{testAndPaymentDetails.testDesc}}</td>
+                                    </tr>
+                                    <tr>
+                                    <th class="width10">
+                                        Referral Details
+                                    </th>
+                                    <td title="{{testAndPaymentDetails.referralName}}">{{testAndPaymentDetails.referralName}}</td>
+                                    </tr>
+                                    <tr>
+                                    <th class="width10">
+                                        Payment Entitlement
+                                    </th>
+                                     <td >
+									<div ng-if ="testAndPaymentDetails.paymentEntitlementId == 1">Self
+									</div>
+									<div ng-if ="testAndPaymentDetails.paymentEntitlementId == 2">Insurance
+									</div>
+									<div ng-if ="testAndPaymentDetails.paymentEntitlementId == 3">Company
+									</div>
+								</td>
+                                    </tr>
+                                    <tr>
+                                     <th class="width10">
+                                        Payee Name
+                                    </th>
+                                    <td title="{{testAndPaymentDetails.companyDesc}}">{{testAndPaymentDetails.companyDesc}}</td>
+                                    </tr>
+                                </tr>
+
+                             </tbody>
+                             </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="validatePatient" class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog" style="width: 415px !important; margin: 161px auto !important;"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Validate Patient
+					<button type="button" class="close" ng-click="closevalidatePop();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10 padding-bottom10 padding-left-right-set">
+				
+					<div class="col-lg-11 col-md-10 col-sm-10 padding-left-right-set0 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" name="" id="patientValidate"  ng-model="validateUhid"class="text-input floating-label dirty"  ng-keypress= "validateEquealPatient($event)" autocomplete="off"> 
+									<label for="" class="LISDynamicLabel">Validate Patient(Scan / Enter patient number) &nbsp;</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer padding-top10" style="border:none;">
+				<button type="button" class="btn btn-primary width20" id="cancelBtn" ng-click="closevalidatePop();" >Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="checkBillSettlePopUp"class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header padding-zero">
+                <div class="modal-title patient-details-row">
+                     Confirmation
+                    <button type="button" class="close" data-dismiss="modal" ng-click="clearOutSourceService();">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                     Bill is not settle yet...!Do you want to continue?
+                </div>
+            </div>
+            <div class="modal-footer" style="border: none;">
+                <div class="row">
+                    <div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+                        <button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal" ng-click="cancelBeforBillSettle();">
+                        <i class="fa fa-times" aria-hidden="true"></i> </button>
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+                        <button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" data-dismiss="modal"  ng-click="continueBeforBillSettle();">
+                        <i class="fa fa-check" aria-hidden="true"></i> </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+
+	$(".selectedPageName").text("Phlebotomy Work List");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="phlebotomyWorkList"]').parents("li").addClass("active");
+	
+	$(".toggle-password").click(function() {
+
+		  $(this).toggleClass("fa-eye fa-eye-slash");
+		  var input = $($(this).attr("toggle"));
+		  if (input.attr("type") == "password") {
+		    input.attr("type", "text");
+		  } else {
+		    input.attr("type", "password");
+		  }
+		});
+	$('.clockpicker').clockpicker();
+</script>

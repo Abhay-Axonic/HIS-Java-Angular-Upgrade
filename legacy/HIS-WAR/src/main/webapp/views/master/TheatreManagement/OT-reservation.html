@@ -1,0 +1,2273 @@
+<style>
+<!--.table>tbody>tr.bgGreen > td-->
+<!--{-->
+<!--    background-color: #b4da80 !important;-->
+<!--}-->
+<!--.table>tbody>tr.bgRed > td -->
+<!--{-->
+<!--    background-color: #f94545 !important;-->
+<!--}-->
+<!--.table>tbody>tr.bgGrey > td -->
+<!--{-->
+<!--    background-color: #b3abab !important;-->
+<!--}-->
+	i{
+ color:#FFB800;
+}
+
+.fa-stop-circle-o {
+color: #FFB800;
+}
+	label{
+	color:#00003B;
+	}
+<!--	span{-->
+<!--		color:#00003B;-->
+<!--		}-->
+	.LISDynamicLabel{
+	 color:#00003B;
+	}
+ul.tabs li{
+background-color: #FFB800;
+}
+
+	.custom-sub-tab .nav-tabs>li.active>a, .custom-sub-tab .nav-tabs>li.active>a:focus, .custom-sub-tab .nav-tabs>li.active>a:hover {
+	color: #00003B !important;
+	}
+
+	.customRadioBtn input[type="radio"]:checked + label {
+    border: 1px solid #afa6a6;
+    /* text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4); */
+}
+
+.radioBtn{
+filter: opacity(0.8);
+accent-color: chocolate;
+}
+
+
+
+
+
+
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">		
+		<!-- ************** top row start **************** -->
+		<div class="row">
+			<div class="row" ng-hide="hidePatientDetails">
+				<div id="mediaType" class="row uk-input-group input-checkbox">													
+					<label class="radio-inline"><input type="radio" name="complaints" class="radioBtn" value="1" ng-model="regiType" ng-click="newPatientChange()"> New</label>
+					<label class="radio-inline"><input type="radio" name="complaints" class="radioBtn" value="2" ng-model="regiType" ng-click="registerPatientChange()">Registered</label>
+				</div>
+				<form ng-show="regiType == 1"><!-- name="modalityForm"  novalidate -->
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label dirty"
+											name="prefixId" ng-model="patientObj.prefixId"
+											convert-to-number
+											ng-change="selectGender(patientObj.prefixId)" required >
+											<option value="">Select Prefix</option>
+											<option ng-repeat="info in prefixList"
+												value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+										</select> <label for="code" style="color:#00003B;">Prefix <span class="star">*</span></label>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+										<input only-letters-input type="text" autocomplete="off"  	name="firstName" ng-model="patientObj.firstName" class="text-input floating-label dirty" style="text-transform: capitalize" required ><!--  only-letters-input -->
+											<label  style="color:#00003B;"  >First Name <span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input only-letters-input type="text" autocomplete="off"  id="" name="middleName" class="text-input floating-label dirty"  ng-model="patientObj.middleName" value="" style="text-transform: capitalize" ><!--  only-letters-input  -->
+										<label for="description" style="color:#00003B;"  >Middle Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-10 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input only-letters-input type="text" autocomplete="off"  name="lastName" class="text-input floating-label dirty"  ng-model="patientObj.lastName" value="" style="text-transform: capitalize" required> <!-- only-letters-input -->
+										<label  style="color:#00003B;" >Last Name <span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<select class="text-input floating-label dirty" name="genderId"
+										ng-model="patientObj.genderId" convert-to-number required >
+										<option value=""></option>
+										<option ng-repeat="sex in genderList" value="{{sex.id}}">{{sex.desc}}</option>
+									</select> <label for="code" style="color:#00003B;">Gender<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<input type="text" autocomplete="off" 
+										class="text-input floating-label dirty" name="datepicker"
+										id="datepicker" uib-datepicker-popup="dd/MM/yyyy"
+										ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+										ng-model="datepicker" model-view-value="true"
+										is-open="datepickerDob.opened" onkeydown="event.preventDefault()"
+										datepicker-options="dateOptions" show-button-bar="false"
+										ng-click="openDatePicker()" ng-readonly="true"
+										ng-blur="calculateAge()" required> <label for="description"
+										class="" style="color:#00003B;">Birth Date<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<span class=""> <i class="fa fa-repeat"
+										aria-hidden="true"></i><br>
+<!--										<p style="font-size: 9px;color:#00003B;">Age</p>-->
+									</span>
+								</div>
+								
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off"  numbers-only ng-maxlength="3" id="age" class="text-input floating-label dirty" ng-model="age" ng-blur="myFunct(age)"  value="" >
+										<label for="description"  style="color:#00003B;" >Age <span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-10 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<input numbers-only type="text" autocomplete="off" name="mobileNo" id=""  class="text-input floating-label dirty" ng-model="patientObj.mobileNumber"  maxlength="{{registrationFieldObj.mobileDigit}}" required >
+										<label for="description"  style="color:#00003B;" >Mobile No. <span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<input type="text" autocomplete="off"   id="email" name="email" class="text-input floating-label dirty" ng-model="patientObj.email"  value="" required> 
+									<label for="description" class="" style="color:#00003B;">Email Id <span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id=""  ng-model="patientObj.remark" class="text-input floating-label " > 
+										<label for="description" style="color:#00003B;" >Remark</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</form>
+			</div>
+			<div class="row margin-top5" ng-show="regiType == 2"  ng-hide="hidePatientDetails">
+				<div ng-include="'./views/common/common-patient-search-appointment-schdule.html'"></div>
+			</div>
+			<div class="row padding-left-right-set4" ng-show="regiType == 2" ng-hide="hidePatientDetails">
+				<!-- Custom Radio Btn -->
+				<div id="mediaType" class="row uk-input-group customRadioBtn">													
+					<span>
+							<input id="opd_rdoBtn" name="opd_ipd_ER_DCrdoBtn" type="radio"  ng-value="1" ng-model="visitTypeId" checked="checked" class="otherRegistrationType trigger" >
+							<label for="opd_rdoBtn">OPD</label>
+					</span>
+					<span>
+							<input id="ipd_rdoBtn" name="opd_ipd_ER_DCrdoBtn" type="radio"  ng-value="2" ng-model="visitTypeId" class="otherRegistrationType trigger" >
+							<label for="ipd_rdoBtn">IPD</label>
+					</span>
+					<span>
+							<input id="ER_rdoBtn" name="opd_ipd_ER_DCrdoBtn" type="radio"   ng-value="4" ng-model="visitTypeId" class="otherRegistrationType trigger" >
+							<label for="ER_rdoBtn">ER</label>
+					</span>
+					<span>
+							<input id="DC_rdoBtn" name="opd_ipd_ER_DCrdoBtn" type="radio"  ng-value="3" ng-model="visitTypeId"  class="otherRegistrationType trigger" >
+							<label for="DC_rdoBtn">DC</label>
+					</span>
+				</div>
+			</div>
+			<div ng-if="(commonObj.visitTypeId != null && commonObj.visitTypeId != 1 && commonObj.encounterId == null && commonObj.admissionId != null)">
+				<div class="margin-top8"  ng-show="regiType == 2"  ng-hide="hidePatientDetails && editOtReservationflag" ng-include="'./views/common/patient-demography-opd.html'"></div>
+			</div>
+			<div ng-if="(commonObj.visitTypeId == 1 && commonObj.encounterId!=null && commonObj.admissionId == null)">
+				<div class="margin-top8"  ng-show="regiType == 2"  ng-hide="hidePatientDetails && editOtReservationflag" ng-include="'./views/common/patient-demography-info.html'"></div>
+			</div>
+			<div ng-if="(commonObj.visitTypeId == null && commonObj.encounterId == null) || (commonObj.visitTypeId == null && commonObj.admissionId == null)">
+				<div class="margin-top8"  ng-show="regiType == 2"  ng-hide="hidePatientDetails && editOtReservationflag" ng-include="'./views/common/patient-demography-info.html'"></div>
+			</div>
+			<div class="row margin-top5">
+				<!-- ********** tabs row start ************** -->
+				<div class="row">
+					<div class="custom-sub-tab padding-left-right-set4 ">
+						<ul class="tabs nav nav-tabs">
+							<li  ng-class="{ active : isSetFirstTabLevel(001) }" id="" class="width12" style="">
+								<a href="" ng-click="switchTab();setFirstTabLevel(001);" style="color:#00003B">Clinical Service Details</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(002) }" class="width12" style="">
+								<a href="" ng-click="setFirstTabLevel(002);getScheduleDetailsProc();getActiveOperationTheatreList();" style="color:#00003B" class="">Scheduling Details</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- ********** tabs row end ************** -->
+				
+				<!-- ********** tabs Procedure Details row start ************** -->
+				<div class="row padding-left-right-set4">
+					<div ng-show="isSetFirstTabLevel(001) "  class="second-level-tab-display-div">	
+						<fieldset class="normalRegistration sub-fieldset ng-scope">
+							<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container padding-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<select ng-model="procedureSubSpeciality"
+													class="text-input floating-label"
+													ng-options="x as x.specialityName for x in specialityList track by x.specialityId"
+													ng-change="selectSpeciality(procedureSubSpeciality);"
+													class="form-control" ng-required="true"
+													>
+												</select>
+											 <label style="color:#00003B;">Speciality <!-- <span class="star">*</span> --></label>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container padding-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<input type="text" autocomplete="off" name="description" id="procedureOrderId"
+													class="text-input floating-label"
+													ng-model="procedureSearch" 
+													uib-typeahead="procedureMasterList.serviceStandardName + '|' +procedureMasterList.cptCode for procedureMasterList in searchProcedures($viewValue)"
+													typeahead-on-select="selectProcedureName($item, $model, $label)">
+												<label for="description"  style="color:#00003B;">Clinical Service<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container padding-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-calendar" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+                                                name="dateOptionsProc" id="dateOptionsProc"
+                                                uib-datepicker-popup="dd/MM/yyyy"  
+                                                placeholder="DD/MM/YYYY" ng-model="procedureDate"
+                                                model-view-value="true" is-open="procedureOpen.opened"
+                                                datepicker-options="dateOptionsProc" show-button-bar="false"
+                                                ng-click="openproc()"   onkeydown="event.preventDefault()">
+											<label for="description" style="color:#00003B;">Date of Clinical Service<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		                        	<div class="row input-container padding-top10">
+		                             	<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+		                                     <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+		                                 </div>
+		                                 <div class="col-lg-11 col-sm-11 col-md-11">
+		                                   <div class="clockpicker">
+		                                     <input type="text" autocomplete="off" name="description" id=""  ng-model="preferedTime" class="text-input floating-label"  ng-init="initClockPicker()" ng-disabled="isDisabled" > 
+		                                      <label for="description" style="color:#00003B; font-size: 12px;">Clinical Service Time<span class="star">*</span></label>
+		                                   </div>    
+		                                 </div>
+		                             </div>
+		                         </div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set">
+									<label>Priority</label>
+										<div id="mediaType" class="customRadioBtn">
+											<span> <input id="billDiscount" name="discount"
+												type="radio" value="0" val="yes"
+												ng-model="procedureOrderMaster.urgency" checked="checked">
+												<label for="billDiscount"
+												ng-click="setNormalEmergency('0');">Normal</label>
+											</span> <span> <input id="groupDiscount" name="discount"
+												type="radio" value="1"
+												ng-model="procedureOrderMaster.urgency"> <label
+												for="groupDiscount" ng-click="setNormalEmergency('1');">Emergency</label>
+											</span>
+										</div>
+								</div>
+								<div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-10 padding-top10">
+									<div class="row input-container padding-top10">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<textarea type="text" autocomplete="off" name="description" id="searchServiceId"
+													class="text-input floating-label dirty" 
+													ng-model="procedureOrderMaster.requestReason" rows="1"></textarea> <label
+													for="description"  style="top: -14px !important; color:#00003B;">Reason
+													for Request</label>
+											</div>
+										</div>
+								</div>
+							</div>
+							<div class="row">
+									<div class="col-lg-2 col-sm-2 col-md-2 text-width-auto pull-right">
+										<div class="common-save-button" ng-if="getSaveProceudreFlag == true">
+											<a href="" data-toggle="modal" data-target=""
+												class="btn btn-primary btn-save-box-shadow"
+												style="width: auto;"  ng-disabled = "true"> <i
+												class="fa fa-plus" style="color:#ffffff" aria-hidden="true"></i></a>
+										</div>
+										<div class="common-save-button" ng-if="getSaveProceudreFlag == false">
+											<a href="" data-toggle="modal" data-target=""
+												class="btn btn-primary btn-save-box-shadow" style="border: 1px solid #2A83F2 !important;
+    background-color: #EBF4FF !important;
+    color: #2A83F2 !important;" value="+"
+												style="width: auto;" ng-click="addNewProc();"> 
+												<i class="fa fa-plus"  aria-hidden="true"></i></a>
+										</div>
+									</div>
+								<!-- 	<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top5">
+										<div class="ng-scope" style="">
+											<input type="button" class="btn btn-info text-width-auto" style="background-color: #FFB800;"
+												ng-click="showCalender();" value="Surgical Calendar">&nbsp;
+										</div>
+									</div> -->
+							</div>
+							<div
+									class="row padding-left-right-set4 table-container padding-top8">
+									<div class="table-container">
+										<div class="table-container-header">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<thead>
+													<tr>
+														<th class="width4 vertical-top" title="Speciality"><span
+															class="">Request No.</span></th>
+														<th class="width6 vertical-top" title="Speciality"><span
+															class="">Speciality</span></th>
+														<th class="width8 vertical-top" title="Procedure"><span
+															class="">Procedure</span></th>
+														<th class="width6 vertical-top" title="Date of Procedure"><span
+															class="">Date of Procedure</span></th>
+														<th class="width6 vertical-top" title="Procedure Time"><span
+															class="">Procedure Time</span></th>	
+														<th class="width4 vertical-top" title="Priority"><span
+															class="">Priority</span></th>
+														<th class="width10 vertical-top"
+															title="Reason For Request"><span class="">Reason
+																For Request</span></th>
+														<th class="width4 vertical-top" title="Procedure Sequence"><span
+															class="">Procedure</span></th>
+														<th class="width6">Procedure Details</th>
+														<th class="width4 text-center vertical-top" title="Action taken" ng-if="getSaveProceudreFlag == false"><span
+															class="">Action taken</span></th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="table-container-body"
+											style="overflow: overlay; background: #fff;">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<tbody>
+													<tr
+														ng-repeat="procedreOrderObj in procedureOrderList track by $index" ng-init="parentIndex=$index">
+														<td class="width4">
+															<div ng-if="procedreOrderObj.proReqId == 0">New
+																Request</div>
+															<div ng-if="procedreOrderObj.proReqId != 0">ReqNo
+																-{{procedreOrderObj.proReqId}}</div>
+														</td>
+														<td class="width6">{{procedreOrderObj.specialityName}}</td>
+														<td class="width8">{{procedreOrderObj.procedureName}}</td>
+														<td class="width6">{{procedreOrderObj.preferedDateTime}}</td>
+														<td class="width6">{{procedreOrderObj.preferedTime}}</td>
+														<td class="width4">{{(procedreOrderObj.urgency==0)?"Normal":"Emergency"}}</td>
+														<td class="width10"><textarea type="text" autocomplete="off" class="text-input floating-label" rows="1" disabled="disabled">{{procedreOrderObj.requestReason}}</textarea></td>
+														<!-- <td class="width4">{{(procedreOrderObj.isPrimarySecondary=='Y')?"Primary":"Secondary"}}</td> -->
+														<td class="width4">
+															<select class="text-input floating-label" id="ProcedureSequence" ng-model="procedreOrderObj.procedureSequence" ng-change="changeProcedureSequence(parentIndex,1)">
+																<option ng-repeat="info in procedureOrderedSequenceList " ng-value="info.id" value="{{info.id}}">{{info.sequenceName}}</option>
+															</select> 
+														</td>
+														<td class="width6 text-center"><a
+															data-target="#procedureOrderInfo" data-toggle="modal"
+															ng-click="getProcedureConfigDetails($index,1);"><i
+																class="fa fa-info-circle"></i></a></td>
+														<td class="width4 text-center"><!-- <a class=""
+															title="Edit"><i class="fa fa-pencil"
+																ng-click="editProcedureOder(procedreOrderObj ,$index)"></i></a>&nbsp; -->
+															<a><i class="fa fa-times"
+																ng-click="removeProcedureOder($index,1);"></i></a></td>
+													</tr>
+													<tr ng-repeat="procedreOrderObj in orderedProcedureList track by $index" ng-init="parentIndex=$index">
+														<td class="width4">ReqNo
+															-{{procedreOrderObj.proReqId}}</td>
+														<td class="width6">{{procedreOrderObj.specialityName}}</td>
+														<td class="width8">{{procedreOrderObj.procedureName}}</td>
+														<td class="width6">{{procedreOrderObj.preferedDateTime}}</td>
+														<td class="width6">{{procedreOrderObj.preferedTime}}</td>
+														<td class="width4">{{(procedreOrderObj.urgency==0)?"Normal":"Emergency"}}</td>
+														<td class="width10"><textarea type="text" autocomplete="off" class="text-input floating-label" rows="1" disabled="disabled">{{procedreOrderObj.requestReason}}</textarea></td>
+														<!-- <td class="width4">{{(procedreOrderObj.isPrimarySecondary=='Y')?"Primary":"Secondary"}}</td> -->
+														<td class="width4">
+															<select class="text-input floating-label" id="ProcedureSequence" ng-model="procedreOrderObj.procedureSequence" ng-change="changeProcedureSequence(parentIndex,2)">
+																<option ng-repeat="info in procedureSequenceList " ng-value="info.id" value="{{info.id}}">{{info.sequenceName}}</option>
+															</select> 
+														</td>
+														<td class="width6 text-center">
+															<a data-target="#procedureOrderInfo" data-toggle="modal" ng-click="getProcedureConfigDetails($index,2);">
+																<i class="fa fa-info-circle"></i>
+															</a>
+														</td>
+														<td class="width4 text-center"  ng-if="getSaveProceudreFlag == false">
+														 	<a class="" title="Edit"><i class="fa fa-pencil" ng-click="editProcedureOder(procedreOrderObj ,$index)"></i></a>&nbsp;
+															<a><i class="fa fa-times" ng-click="cancelProcedure($index,2);"></i></a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+
+									</div>
+								</div>
+						</fieldset>
+				
+						<!-- <div class="row">
+							<div class="col-lg-1 col-md-1 padding-left-right-set4 float_right margin-top10">
+								<button type="button" class="btn btn-primary btn-save-box-shadow" ng-click="saveDetails();">Save</button>
+							</div>
+						</div> -->
+					</div>
+				</div>
+				<!-- ********** tabs Procedure Details row end ************** -->
+				<!-- ********** tabs Scheduling Details row start ************** -->
+				<div class="row padding-left-right-set4">
+					<div ng-show="isSetFirstTabLevel(002) "  class="second-level-tab-display-div">	
+						<div class="row">
+						<div class="row padding-top10">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+								<div class="row">
+									<div class="custom-sub-tab padding-left-right-set4 ">
+										<ul class="tabs nav nav-tabs">
+											<li  ng-class="{ active : isSetSecondTabLevel(111) }" id="" class="width12 active" style="">
+												<a href="" ng-click="setSecondTabLevel(111)">OT</a>
+											</li>
+											<li ng-class="{ active : isSetSecondTabLevel(112) }" class="width12" style="">
+												<a href="" ng-click="setSecondTabLevel(112)" class="">Staff</a>
+											</li>
+											<li ng-class="{ active : isSetSecondTabLevel(113) }" class="width18" style="">
+												<a href="" ng-click="setSecondTabLevel(113)" class="">Equipment</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-1 col-sm-1 padding-left-right-set4 text-width-auto pull-right padding-top10" style="margin-top:-10px;">
+						        <div class="">
+						        	<button class="btn btn-primary" data-toggle="modal" id="updateBtn"  data-target="#change_of_date_modal">Change of Date</button>
+						        </div>
+						    </div>
+							<div class="col-lg-4 col-md-4 col-sm-7 padding-left-right-set4 pull-right" style="padding-top: 8px;">
+								<div class="row">
+									<div class="col-lg-3 col-md-4 col-sm-3 padding-left-right-set4">
+										<div class="row">
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="color-indiction-green-div"></div>
+											</div>
+											<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set0 long-text-overflow">
+												<span class="color-indication-green-span">Available</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-3 col-md-4 col-sm-3 padding-left-right-set4">
+										<div class="row">
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="color-indiction-Red-div"></div>
+											</div>
+											<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set0">
+												<span class="color-indication-red-span">Unavailable</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-3 col-md-4 col-sm-3 padding-left-right-set4">
+										<div class="row">
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="color-indiction-Grey-div"></div>
+											</div>
+											<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set0">
+												<span class="color-indication-grey-span">Maintenance</span>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="row padding-left-right-set4">
+				<div ng-show="isSetSecondTabLevel(111)" class="second-level-tab-display-div" style="">
+					<div class="row padding-top5">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="theatreObj" class="text-input floating-label"
+										ng-options="x as x.theatreName for x in activeOperationTheatreList track by x.operationTheatreId"
+										ng-change="getOperationTableByTheatreId(theatreObj.operationTheatreId,0,$index)"
+										class="form-control" 
+										ng-required="true">
+										</select>
+										 <label for="code">Operation Theatre</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+									<select ng-model="tableObj" class="text-input floating-label"
+										ng-options="x as x.tableName for x in activeOperationTableList track by x.operationTableId"
+										class="form-control" 
+										ng-required="true">
+										</select>
+										 <label for="code">Operating Table</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+							<div class="">
+								<a href="">
+									<input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-click="addOTDetails();">
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 table-container padding-top5">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width1">Operation Theatre</th>
+											<th class="width4">Operation Table</th>
+											<th class="width1 text-center">Action taken</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll300" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr  ng-repeat = "info in otList">
+											<td class="width1" ng-style="setColor(info)" ng-if="info.status=='A'">
+												<select name="" id="" ng-model="info.selectedTheatreId" class="text-input floating-label"  ng-change="getOperationTableByTheatreId(info.selectedTheatreId,1,$index)">
+													<option value="" selected>Select Theatre</option>
+													<option value="{{theatre.operationTheatreId}}" ng-value="theatre.operationTheatreId" 
+													ng-repeat="theatre in info.theatreList">{{theatre.theatreName}}</option>
+												
+												</select>
+											</td>
+											<td class="width4" ng-style="setColor(info)" ng-if="info.status=='A'">
+												<select name="" id="" ng-model="info.selectedTableId" class="text-input floating-label" 
+												ng-change="checkAvailableOTSlot(info,0);">
+													<option value="" selected>Select Table</option>
+													<option value="{{table.operationTableId}}" ng-value="table.operationTableId" 
+													ng-repeat="table in info.tableList">{{table.tableName}}</option>
+												</select>
+											</td>
+											<td class="width1 text-center" ng-style="setColor(info)" ng-if="info.status=='A'">
+												<i class="fa fa-times"  title="Remove" ng-click="removeOTDetails($index,0);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<tr  ng-repeat = "info in otAddedList">
+											<td class="width1" ng-style="setColor(info)">{{info.theatreTypeName}}</td>
+											<td class="width4" ng-style="setColor(info)">{{info.tableName}}</td>
+											<td class="width1 text-center" ng-style="setColor(info)">
+												<i class="fa fa-times"  title="Remove" ng-click="removeOTDetails($index,1);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<!-- <tr class="bgRed">
+											<td class="width1"></td>
+											<td class="width4"></td>
+											<td class="width1 text-center">
+												<i class="fa fa-times"  title="Remove"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<tr class="bgGrey">
+											<td class="width1"></td>
+											<td class="width4"></td>
+											<td class="width1 text-center">
+												<i class="fa fa-times"  title="Remove"></i>&nbsp;&nbsp;
+											</td>
+										</tr> -->
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-show="isSetSecondTabLevel(112)" class="second-level-tab-display-div" style="">
+					<div class="row padding-top5">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="roleObj" class="text-input floating-label"
+												ng-options="x as x.roleName for x in otimsRoleList track by x.roleId"
+												class="form-control" 
+												ng-change="getStaffListByRoleId(roleObj.roleId,0)"
+												ng-required="true">
+											</select>
+										 <label for="code">Role</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="staffObj" class="text-input floating-label"
+												ng-options="x as x.userName for x in staffList track by x.userId"
+												class="form-control" 
+												ng-required="true">
+											</select>
+										 <label for="code">Staff Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+							<div class="">
+								<a href="">
+									<input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-click="addStaffSDetails();">
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 table-container padding-top5">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width1">Role</th>
+											<th class="width4">Staff Name</th>
+											<th class="width1 text-center">Action taken</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll300" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="info in otAddedStaffDetailsList">
+											<td class="width1" ng-style="setColor(info)" >{{info.roleName}}</td>
+											<td class="width4" ng-style="setColor(info)" >{{info.userName}}</td>
+											<td class="width1 text-center" ng-style="setColor(info)" >
+												<i class="fa fa-times"  title="Remove" ng-click="removeStaffDetails($index,0);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<tr ng-repeat="info in otStaffDetailsList">
+											<td class="width1" ng-style="setColor(info)" ng-if="info.status=='A'">{{info.roleName}}</td>
+											<td class="width4" ng-style="setColor(info)" ng-if="info.status=='A'">
+												<select ng-model="info.selectedStaffId" class="text-input floating-label"
+													ng-options="x as x.userName for x in info.staffList track by x.userId"
+													class="form-control" 
+													ng-change = "checkAvailabilityOfStaff(info,1,$index);"
+													ng-required="true">
+												</select>
+											</td>
+											<td class="width1 text-center" ng-style="setColor(info)" ng-if="info.status=='A'">
+												<i class="fa fa-times"  title="Remove" ng-click="removeStaffDetails($index,1);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-show="isSetSecondTabLevel(113)" class="second-level-tab-display-div" style="">
+					<div class="row padding-top5">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="equipmentTypeObj" class="text-input floating-label"
+												ng-options="x as x.category for x in equipmentTypeList track by x.id"
+												class="form-control" 
+												ng-change="getEquipmentNamesByEquipmentId(equipmentTypeObj)"
+												ng-required="true">
+											</select>
+										 <label for="code">Equipment Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="equipmentNameObj" class="text-input floating-label"
+												ng-options="x as x.itemName for x in equipmentNameList track by x.id"
+												class="form-control" 
+												ng-required="true">
+										</select>
+										<label for="description" class="">Equipment Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+							<div class="">
+								<a href="">
+									<input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-click="addEquipmentDetails();">
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 table-container padding-top5">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width1">Equipment Type</th>
+											<th class="width4">Equipment Name</th>
+											<th class="width4">Equipment Name And Batch</th>
+											<th class="width1 text-center">Action taken</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll300" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="info in equipmentDetailList">
+											<td class="width1" ng-style="setColor(info)">{{info.equipmentTypeName}}</td>
+											<td class="width4" ng-style="setColor(info)">{{info.equipmentName}}</td>
+											<td class="width4" ng-style="setColor(info)">{{info.itemName}}</td>
+											<td class="width1 text-center" ng-style="setColor(info)">
+												<i class="fa fa-times"  title="Remove " ng-click="removeEquipment($index,0);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<tr ng-repeat="info in equipmentBatchList">
+											<td class="width1" ng-style="setColor(info)">{{info.equipmentTypeName}}</td>
+											<td class="width4" ng-style="setColor(info)">{{info.itemName}}</td>
+											<td class="width4" ng-style="setColor(info)">
+											 	<select ng-model="info.selectedItemBatchObj" class="text-input floating-label"
+												ng-options="x as x.itemName for x in info.itemBatchList track by x.batchId"
+												class="form-control" 
+												ng-change="checkAvailabilityOfEquipment(info,$index,0);"
+												ng-required="true">
+											</select>
+											</td>
+											<td class="width1 text-center" ng-style="setColor(info)">
+												<i class="fa fa-times"  title="Remove" ng-click="removeEquipment($index,1);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+						</div>
+							<div class="row">
+								<div class="col-lg-1 col-md-1 padding-left-right-set4 float_right margin-top10">
+									<button type="button" class="btn btn-primary btn-save-box-shadow" id="saveBtn" ng-click="saveProcedureSchedule();">Save</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+				<!-- ********** tabs Scheduling Details row end ************** -->
+			</div>
+			
+		</div>
+		<!-- ************** top row end **************** -->
+	</div>
+</div>
+<!-- ************change of date modal start ************** -->
+ <div id="change_of_date_modal" class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Change Of Date
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body"><!-- <div class="margin-left10"><span>Are you sure you want to Save?</span></div> -->
+				<div class="row padding-top8">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+						<div class="row input-container padding-top10">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 ">
+								<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+                                            name="dateOptionsProc1" id="dateOptionsProc1"
+                                            uib-datepicker-popup="dd/MM/yyyy" 
+                                            placeholder="DD/MM/YYYY" ng-model="changeOfDate"
+                                            model-view-value="true" is-open="datepickerOpen1.opened"
+                                            datepicker-options="dateOptions1" show-button-bar="false"
+                                            ng-click="openDatepicker1()"  >
+								<label for="description" class="LISDynamicLabel">Prefer Date<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+                             <div class="row input-container padding-top10">
+                                 <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                     <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                 </div>
+                                 <div class="col-lg-10 col-sm-10 col-md-10">
+                                 <div class="clockpicker">
+                                     <input type="text" autocomplete="off" name="description" id="" ng-model="changeOfTime" class="text-input floating-label"  ng-init="initClockPicker()" ng-disabled="isDisabled" > 
+                                     <label for="description" class="LISDynamicLabel">Prefer Time<span class="star">*</span></label>
+                                 </div>    
+                                 </div>
+                             </div>
+                         </div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="changeDatefunc();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn" ng-click="cancelChangeDate();">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ************change of date modal end ************** -->
+<!-- procedureOrderInfo modal START -->
+<div id="procedureOrderInfo"
+	class="modal fade common-large-popup his-style ng-scope in"
+	role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;margin-left: -31px;background-size: 210px 80px !important;">
+				<div class="modal-title">
+					Procedure Details
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="modal-title patient-details-row" ng-if="indexFlag==1">
+					{{procedureOrderList[currentIndex].specialityName}}-{{procedureOrderList[currentIndex].procedureName}}
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-title patient-details-row" ng-if="indexFlag==2">
+					{{orderedProcedureList[orderedCurrentIndex].specialityName}}-{{orderedProcedureList[orderedCurrentIndex].procedureName}}
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="row padding-top8">
+					<div class="custom-sub-tab padding-left-right-set4 ">
+						<ul class="tabs nav nav-tabs">
+							<li ng-class="{ active : isSetThirdTabLevel(30) }" id=""
+								class="width12 active" style=""><a href=""
+								ng-click="setThirdTabLevel(30)">Procedure Details</a></li>
+							<li ng-class="{ active : isSetThirdTabLevel(31) }" id=""
+								class="width8" style=""><a href=""
+								ng-click="setThirdTabLevel(31)">Consent</a></li>
+							<li ng-class="{ active : isSetThirdTabLevel(32) }" class="width8"
+								style=""><a href="" ng-click="setThirdTabLevel(32)"
+								class="">Checklist</a></li>
+							<li ng-class="{ active : isSetThirdTabLevel(33) }" class="width5"
+								style=""><a href="" ng-click="setThirdTabLevel(33)"
+								class="">Staff</a></li>
+
+							<li ng-class="{ active : isSetThirdTabLevel(36) }" class="width8"
+								style=""><a href="" ng-click="setThirdTabLevel(36)"
+								class="">Equipment</a></li>
+							<li ng-class="{ active : isSetThirdTabLevel(37) }" class="width6"
+								style=""><a href="" ng-click="setThirdTabLevel(37)"
+								class="">Services</a></li>
+
+
+							<li ng-class="{ active : isSetThirdTabLevel(311) }"
+								class="width12" style=""><a href=""
+								ng-click="setThirdTabLevel(311)" class="">Patient Education</a>
+							</li>
+
+							<li ng-class="{ active : isSetThirdTabLevel(312) }"
+								class="width12" style=""><a href=""
+								ng-click="setThirdTabLevel(312)" class="">Medication</a></li>
+
+
+							<li ng-class="{ active : isSetThirdTabLevel(314) }"
+								class="width10" style=""><a href=""
+								ng-click="setThirdTabLevel(314)" class="">Implant</a></li>
+
+						</ul>
+					</div>
+					<div class="row padding-left-right-set4">
+						<!-- Procedure Details Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(30)"
+							class="second-level-tab-display-div" style="">
+							<div
+								class="row padding-top5 padding-bottom10 padding-left-right-set4"
+								ng-if="indexFlag==1">
+
+								<label class="checkbox-inline padding-top8"> <input
+									type="checkbox" value=""
+									ng-model="procedureOrderList[currentIndex].isIcuRequired"
+									ng-checked="procedureOrderList[currentIndex].isIcuRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">ICU Required
+								</label> <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="procedureOrderList[currentIndex].isBloodComponentRequired"
+									ng-checked="procedureOrderList[currentIndex].isBloodComponentRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">Blood
+									Component Required</label> <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="procedureOrderList[currentIndex].isPacRequired"
+									ng-checked="procedureOrderList[currentIndex].isPacRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">PAC
+									Required</label> <!-- <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="procedureOrderList[currentIndex].isPrimarySecondary"
+									ng-checked="procedureOrderList[currentIndex].isPrimarySecondary =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'"
+									 ng-disabled="true">Is Primary</label> --><!-- ng-change="checkPrimary()" -->
+							</div>
+							<div
+								class="row padding-top5 padding-bottom10 padding-left-right-set4"
+								ng-if="indexFlag==2">
+
+								<label class="checkbox-inline padding-top8"> <input
+									type="checkbox" value=""
+									ng-model="orderedProcedureList[orderedCurrentIndex].isIcuRequired"
+									ng-checked="orderedProcedureList[orderedCurrentIndex].isIcuRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">ICU
+									Required
+								</label> <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="orderedProcedureList[orderedCurrentIndex].isBloodComponentRequired"
+									ng-checked="orderedProcedureList[orderedCurrentIndex].isBloodComponentRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">Blood
+									Component Required</label> <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="orderedProcedureList[orderedCurrentIndex].isPacRequired"
+									ng-checked="orderedProcedureList[orderedCurrentIndex].isPacRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">PAC
+									Required</label> <!-- <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="orderedProcedureList[orderedCurrentIndex].isPrimarySecondary"
+									ng-checked="orderedProcedureList[orderedCurrentIndex].isPrimarySecondary =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'"
+									ng-change="checkPrimary()" ng-disabled="true">Is
+									Primary</label> -->
+							</div>
+						</div>
+						<!-- Procedure Details Tab Content END -->
+						<!-- Consent Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(31)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="consentTypeObj"
+													class="text-input floating-label"
+													ng-options="x as x.consentTypeMasterName for x in consentTypeList track by x.consentTypeMasterId"
+													ng-change="getconsentListByTypeId(consentTypeObj);"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="code">Type</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="consentObj"
+													class="text-input floating-label"
+													ng-options="x as x.consentMasterName for x in consentList track by x.consentMasterId"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="code">Consent</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add"
+											class="btn btn-primary btn-save-box-shadow"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width3">Type</th>
+													<th class="width10">Consent</th>
+													<th class="width1"></th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderConsentList"
+													ng-if="indexFlag==1">
+													<td class="width3">{{info.consentTypeMasterName}}</td>
+													<td class="width10">{{info.consentMasterName}}</td>
+													<td class="width1 text-center">
+														<div ng-if="info.templateType==1">
+															<a class="" title="Info" data-toggle="modal"
+																data-target="#veiwChecklistTemplate"><i
+																class="fa fa-info-circle"
+																ng-click="getCurrentIndex($index);"></i></a>
+														</div>
+														<div ng-if="info.templateType==2">
+															<a class="" title="Info" data-toggle="modal"
+																data-target="#procedureTemplateUploadedModal"><i
+																class="fa fa-info-circle"
+																ng-click="getCurrentIndex($index);"></i></a>
+														</div>
+
+													</td>
+													<!-- <td class="width2 text-center"><a class=""
+														title="Remove"><i class="fa fa-times"
+															ng-click="removeConsent($index);"></i></a>&nbsp;&nbsp; <a class="" title="View"><i class="fa fa-eye"></i></a>
+													</td> -->
+												</tr>
+												<tr
+													ng-repeat="info in orderedProcedureList[orderedCurrentIndex].procedureOrderConsentList"
+													ng-if="indexFlag==2">
+													<td class="width3">{{info.consentTypeMasterName}}</td>
+													<td class="width10">{{info.consentMasterName}}</td>
+													<td class="width1 text-center">
+														<div ng-if="info.templateType==1">
+															<a class="" title="Info" data-toggle="modal"
+																data-target="#veiwChecklistTemplate"><i
+																class="fa fa-info-circle"
+																ng-click="getCurrentIndex($index);"></i></a>
+														</div>
+														<div ng-if="info.templateType==2">
+															<a class="" title="Info" data-toggle="modal"
+																data-target="#procedureTemplateUploadedModal"><i
+																class="fa fa-info-circle"
+																ng-click="getCurrentIndex($index);"></i></a>
+														</div>
+
+													</td>
+													<!-- <td class="width2 text-center"><a class=""
+														title="Remove"><i class="fa fa-times"></i></a>&nbsp;&nbsp;
+														<a class="" title="View"><i class="fa fa-eye"></i></a>
+													</td> -->
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Consent Tab Content END -->
+
+						<!-- Checklist Tab Checklist START -->
+						<div ng-show="isSetThirdTabLevel(32)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select class="text-input floating-label"
+													ng-model="stageObj.stageId" convert-to-number
+													ng-change="getcheckListByTypeId(stageObj.stageId);" ng-disabled="true">
+													<option value=""></option>
+													<option value="1">Consent</option>
+													<option value="2">Pre-Operative</option>
+													<option value="3">Intra-Operative</option>
+													<option value="4">Post-Operative</option>
+													<option value="5">Discharge</option>
+												</select> <label for="code">Stage</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="checklistObj"
+													class="text-input floating-label"
+													ng-options="x as x.description for x in checklistNameList track by x.checklistMasterId"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="description" class="">Checklist Name</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add"
+											class="btn btn-primary btn-save-box-shadow"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width10">Stage</th>
+													<th class="width10">Checklist Name</th>
+													<th class="width10">Role</th>
+													<th class="width10">Checklist Item</th>
+													<!-- <th class="width2 text-center">Action</th> -->
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderCheckList"
+													ng-if="indexFlag==1">
+													<td class="width10">
+														<div ng-if="info.stageId==1">Consent</div>
+														<div ng-if="info.stageId==2">Pre-Operative</div>
+														<div ng-if="info.stageId==3">Intra-Operative</div>
+														<div ng-if="info.stageId==4">Post-Operative</div>
+														<div ng-if="info.stageId==5">Discharge</div>
+														<div ng-if="info.stageId==6">Ward</div>
+													</td>
+													<td class="width10">{{info.description}}</td>
+													<td class="width10">{{info.roleName}}</td>
+													<td class="width10"><a class="" data-toggle="modal"
+														data-target="#checklistItemsModal"
+														ng-click="getChecklistNameListById(info);"><i
+															class="fa fa-info-circle"></i></a></td>
+													<!-- <td class="width2 text-center"><a class=""
+														title="Remove"><i class="fa fa-times"
+															ng-click="removeChecklist($index);"></i></a>&nbsp;&nbsp;</td> -->
+												</tr>
+												<tr
+													ng-repeat="info in  orderedProcedureList[orderedCurrentIndex].procedureOrderCheckList"
+													ng-if="indexFlag==2">
+													<td class="width10">
+														<div ng-if="info.stageId==1">Consent</div>
+														<div ng-if="info.stageId==2">Pre-Operative</div>
+														<div ng-if="info.stageId==3">Intra-Operative</div>
+														<div ng-if="info.stageId==4">Post-Operative</div>
+														<div ng-if="info.stageId==5">Discharge</div>
+													</td>
+													<td class="width10">{{info.description}}</td>
+													<td class="width10">{{info.roleName}}</td>
+													<td class="width10"><a class="" data-toggle="modal"
+														data-target="#checklistItemsModal"
+														ng-click="getChecklistNameListById(info);"><i
+															class="fa fa-info-circle"></i></a></td>
+													<!-- <td class="width2 text-center"><a class=""
+														title="Remove"><i class="fa fa-times"></i></a>&nbsp;&nbsp;
+													</td> -->
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Checklist Tab Content END -->
+
+						<!-- Staff Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(33)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="staffObj"
+													class="text-input floating-label"
+													ng-options="x as x.roleName for x in otimsRoleList track by x.roleId"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="code">Role</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<input type="text" autocomplete="off" numbers-only name="description" id=""
+													class="text-input floating-label"
+													ng-model="commonStaffObj.staffNumber" ng-disabled="true"> <label
+													for="description" class="">Number</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add"
+											class="btn btn-primary btn-save-box-shadow"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width1">Role</th>
+													<th class="width1">Number</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderStaffList"
+													ng-if="indexFlag==1">
+													<td class="width1">{{info.roleName}}</td>
+													<td class="width1	"><input type="text" autocomplete="off" numbers-only
+														class="select-box" ng-model="info.staffNumber" /></td>
+												</tr>
+												<tr
+													ng-repeat="info in orderedProcedureList[orderedCurrentIndex].procedureOrderStaffList"
+													ng-if="indexFlag==2">
+													<td class="width1">{{info.roleName}}</td>
+													<td class="width1	"><input type="text" autocomplete="off" numbers-only
+														class="select-box" ng-model="info.staffNumber" /></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Staff Tab Content END -->
+
+						<!-- Equipment Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(36)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="equipmentTypeObj"
+													class="text-input floating-label"
+													ng-options="x as x.category for x in equipmentTypeList track by x.id"
+													class="form-control"
+													ng-change="getEquipmentNamesByEquipmentId(equipmentTypeObj.id)"
+													ng-required="true" ng-disabled="true">
+												</select> <label for="code">Equipment Type</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="equipmentNameObj"
+													class="text-input floating-label"
+													ng-options="x as x.name for x in equipmentNameList track by x.id"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="description" class="">Equipment Name</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add"
+											class="btn btn-primary btn-save-box-shadow"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width10">Equipment Category</th>
+													<th class="width10">Equipment Name</th>
+													<th class="width1">Qty</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderEquipmentList"
+													ng-if="indexFlag==1">
+													<td class="width10">{{info.equipmentTypeName}}</td>
+													<td class="width10">{{info.itemName}}</td>
+													<td class="width1"><input type="text" autocomplete="off" numbers-only
+														name="description" id="" class="text-input floating-label"
+														ng-model="info.qty"></td>
+												</tr>
+												<tr
+													ng-repeat="info in orderedProcedureList[orderedCurrentIndex].procedureOrderEquipmentList"
+													ng-if="indexFlag==2">
+													<td class="width10">{{info.equipmentTypeName}}</td>
+													<td class="width10">{{info.itemName}}</td>
+													<td class="width1"><input type="text" autocomplete="off" numbers-only
+														name="description" id="" class="text-input floating-label"
+														ng-model="info.qty"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Equipment Tab Content END -->
+
+						<!-- Services Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(37)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto pull-right">
+									<div class="">
+										<a href=""> <input
+											type="button" value="Add Service"
+											class="btn btn-primary btn-save-box-shadow"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+								<div
+									class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+									<input type="text" autocomplete="off" class="text-search-box dirty"
+										placeholder="Search" style="margin-top: 0px"> <i
+										class="fa fa-search common-search-text-icon"
+										aria-hidden="true"></i>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width5">Specialty</th>
+													<th class="width5">Sub Specialty</th>
+													<th class="width5">Code</th>
+													<th class="width5">Clinical Service Name</th>
+													
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderServiceList"
+													ng-if="indexFlag==1">
+													<td class="width5">{{info.specialityName}}</td>
+													<td class="width5">{{info.subSpecialityName}}</td>
+													<td class="width5">{{info.serviceStandardCode}}</td>
+													<td class="width5">{{info.serviceStandardName}}</td>
+												</tr>
+												<tr
+													ng-repeat="info in orderedProcedureList[orderedCurrentIndex].procedureOrderServiceList"
+													ng-if="indexFlag==2">
+													<td class="width5">{{info.specialityName}}</td>
+													<td class="width5">{{info.subSpecialityName}}</td>
+													<td class="width5">{{info.serviceStandardCode}}</td>
+													<td class="width5">{{info.serviceStandardName}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Services Tab Content END -->
+
+						<!-- PatientEducation Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(311)"
+							class="second-level-tab-display-div" style="">
+							<fieldset class="padding-top0">
+								<!-- main-fieldset -->
+								<legend class="main-heading-div">Patient Education</legend>
+							</fieldset>
+							<div class="row">
+								<div class="row margin-top0">
+									<div id="formeo-editor"></div>
+									<div id="myHtml" class="render-form" style="display: none"></div>
+								</div>
+								<div class="col-lg-12 col-md-12" ng-if="indexFlag==1">
+									<textarea name="editor" type="text" autocomplete="off" id="editor" rows="12"
+										cols="50" ck-editor
+										ng-model="procedureOrderList[currentIndex].procedureOrderPatientEducationDto.patientEducationTempale" readonly></textarea>
+								</div>
+								<div class="col-lg-12 col-md-12" ng-if="indexFlag==2">
+									<textarea name="editor" type="text" autocomplete="off" id="editor" rows="12"
+										cols="50" ck-editor
+										ng-model="orderedProcedureList[orderedCurrentIndex].procedureOrderPatientEducationDto.patientEducationTempale"
+										readonly></textarea>
+								</div>
+							</div>
+						</div>
+						<!-- PatientEducation Tab Content END -->
+
+						<!-- Medication Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(312)"
+							class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div
+									class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+									<label class="switch"> <input type="checkbox"
+										ng-true-value="'Y'" ng-false-value="'N'"
+										ng-model="encounterDetailsObj.isItemOrKit"
+										class="ng-pristine ng-untouched ng-valid ng-empty"
+										ng-click="selectItemOrKit(encounterDetailsObj.isItemOrKit)">
+										<div class="slider round"></div>
+									</label>
+								</div>
+								<div
+									class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									Item List/Kit</div>
+								<div
+									class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<div ng-if="encounterDetailsObj.isItemOrKit=='Y'">
+													<input type="text" autocomplete="off" class="text-input floating-label"
+														name="groupName" 
+														ng-model="encounterDetailsObj.kitName" ng-disabled="true"> <label
+														for="description" class="LISDynamicLabel">Medication
+														Kit</label>
+												</div>
+												<div ng-if="encounterDetailsObj.isItemOrKit!='Y'">
+													<input type="text" autocomplete="off" class="text-input floating-label"
+														name="groupName" 
+														ng-model="encounterDetailsObj.itemName" ng-disabled="true"> <label
+														for="description" class="LISDynamicLabel">Medication</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top8">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width20"><span class="">Medication
+															Name</span></th>
+													<th class="width8"><span class="">Item/Kit</span></th>
+													<th class="width5"><span class="">Qty</span></th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="medication in procedureOrderList[currentIndex].medicationDetailsList"
+													ng-if="indexFlag==1">
+													<td class="width20">
+														<div
+															ng-if="medication.isItemOrKit==N || medication.isItemOrKit=='N'">{{medication.itemName}}</div>
+														<div
+															ng-if="medication.isItemOrKit!=N || medication.isItemOrKit!='N'">{{medication.kitName}}</div>
+													</td>
+													<td class="width8">
+														<div
+															ng-if="medication.isItemOrKit==N || medication.isItemOrKit=='N'">Item</div>
+														<div
+															ng-if="medication.isItemOrKit!=N && medication.isItemOrKit!='N'">Kit</div>
+													</td>
+													<td class="width5" ng-model="medicationObj.qty"><input
+														type="text" autocomplete="off" numbers-only class="select-box"
+														ng-model="medication.qty" /></td>
+												</tr>
+												<tr
+													ng-repeat="medication in orderedProcedureList[orderedCurrentIndex].medicationDetailsList"
+													ng-if="indexFlag==2">
+													<td class="width20">
+														<div
+															ng-if="medication.isItemOrKit==N || medication.isItemOrKit=='N'">{{medication.itemName}}</div>
+														<div
+															ng-if="medication.isItemOrKit!=N || medication.isItemOrKit!='N'">{{medication.kitName}}</div>
+													</td>
+													<td class="width8">
+														<div
+															ng-if="medication.isItemOrKit==N || medication.isItemOrKit=='N'">Item</div>
+														<div
+															ng-if="medication.isItemOrKit!=N && medication.isItemOrKit!='N'">Kit</div>
+													</td>
+													<td class="width5" ng-model="medicationObj.qty"><input
+														type="text" autocomplete="off" numbers-only class="select-box"
+														ng-model="medication.qty" /></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Medication Tab Content END -->
+
+						<!-- Surgical Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(313)"
+							class="second-level-tab-display-div" style=""></div>
+						<!-- Surgical Tab Content END -->
+
+						<!-- Implant Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(314)"
+							class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div
+									class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+									<label class="switch"> <input type="checkbox"
+										ng-true-value="'Y'" ng-false-value="'N'"
+										ng-model="implantObj.isItemOrKit"
+										class="ng-pristine ng-untouched ng-valid ng-empty"
+										ng-disabled="true">
+										<div class="slider round"></div>
+									</label>
+								</div>
+								<div
+									class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									Item List/Kit</div>
+								<div
+									class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<div ng-if="implantObj.isItemOrKit=='Y'">
+													<input type="text" autocomplete="off" class="text-input floating-label"
+														tabindex="3" placeholder="Search"
+														name="groupName" 
+														ng-model="implantObj.kitName"> <label
+														for="description" class="LISDynamicLabel">Kit</label>
+												</div>
+												<div ng-if="implantObj.isItemOrKit!='Y'">
+													<input type="text" autocomplete="off" class="text-input floating-label"
+														tabindex="3" placeholder="Search"
+														name="groupName" 
+														ng-model="implantObj.itemName" ng-disabled="true"> <label
+														for="description" class="LISDynamicLabel">Implant</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div
+								class="row padding-left-right-set4 table-container padding-top8">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width20"><span class="">Implant Name</span></th>
+													<th class="width8"><span class="">Item/Kit</span></th>
+													<th class="width5"><span class="">Qty</span></th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="dataItem in procedureOrderList[currentIndex].implantDetailsList"
+													ng-if="indexFlag==1">
+													<td class="width20">
+														<div
+															ng-if="dataItem.isItemOrKit==N || dataItem.isItemOrKit=='N'">{{dataItem.itemName}}</div>
+														<div
+															ng-if="dataItem.isItemOrKit!=N && dataItem.isItemOrKit!='N'">{{dataItem.kitName}}</div>
+													</td>
+													<td class="width8">
+														<div
+															ng-if="dataItem.isItemOrKit==N || dataItem.isItemOrKit=='N'">Item</div>
+														<div
+															ng-if="dataItem.isItemOrKit!=N && dataItem.isItemOrKit!='N'">Kit</div>
+													</td>
+													<td class="width5" ng-model="implantObj.qty"><input
+														type="text" autocomplete="off" numbers-only class="select-box"
+														ng-model="dataItem.qty" /></td>
+												</tr>
+												<tr
+													ng-repeat="dataItem in orderedProcedureList[orderedCurrentIndex].implantDetailsList"
+													ng-if="indexFlag==2">
+													<td class="width20">
+														<div
+															ng-if="dataItem.isItemOrKit==N || dataItem.isItemOrKit=='N'">{{dataItem.itemName}}</div>
+														<div
+															ng-if="dataItem.isItemOrKit!=N && dataItem.isItemOrKit!='N'">{{dataItem.kitName}}</div>
+													</td>
+													<td class="width8">
+														<div
+															ng-if="dataItem.isItemOrKit==N || dataItem.isItemOrKit=='N'">Item</div>
+														<div
+															ng-if="dataItem.isItemOrKit!=N && dataItem.isItemOrKit!='N'">Kit</div>
+													</td>
+													<td class="width5" ng-model="implantObj.qty"><input
+														type="text" autocomplete="off" numbers-only class="select-box"
+														ng-model="dataItem.qty" /></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<!-- Implant Tab Content END -->
+
+
+
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width7" ng-show="isSetThirdTabLevel(312)" ng-click="addMedicationDetails()" id="">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary width7" ng-show="isSetThirdTabLevel(314)" ng-click="addImplantDetails()" id="">Save</button>
+				 -->
+				<button type="button" data-dismiss="modal" id="okBtn"
+					class="btn btn-primary width7" >OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- procedureOrderInfo Modal END -->
+
+<!-- templateAddServiceModal START -->
+<div id="templateAddServiceModal" data-backdrop="static"
+	class="modal fade ng-scope in common-medium-popup" role="dialog"
+	data-keyboard="false" data-backdrop="static"
+	style="background: rgba(0, 0, 0, 0.33) !important;">
+	<!-- data-keyboard="false" data-backdrop="static" -->
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Add Service
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top8">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id=""
+										class="text-input floating-label" ng-model="search"
+										typeahead-min-length="2" 
+										uib-typeahead="serviceMaster.serviceStandardName + '|' +serviceMaster.serviceStandardCode for serviceMaster in searchServices($viewValue)"
+										typeahead-on-select="addServiceToServiceListTemp($item, $model, $label);search=null">
+									<label for="description" class="">Service Code</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id=""
+										class="text-input floating-label" ng-model="search"
+										typeahead-min-length="2" 
+										uib-typeahead="serviceMaster.serviceStandardName + '|' +serviceMaster.serviceStandardCode for serviceMaster in searchServices($viewValue)"
+										typeahead-on-select="addServiceToServiceListTemp($item, $model, $label);search=null">
+									<label for="description" class="">Clinical Service Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div
+						class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 margin-top0 text-width-auto his-style">
+						<div class="">
+							<a href="" id="searchBtn" class="btn btn-primary btn-save-box-shadow width-100">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row his-style padding-top5">
+					<div
+						class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 float_right">
+						<input type="text" autocomplete="off" class="text-search-box dirty"
+							placeholder="Search" style="margin-top: 0px"> <i
+							class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+				<div
+					class="row padding-left-right-set4 table-container padding-top10">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<!-- <th class="width2 text-center"><input type="checkbox"></th> -->
+										<th class="width5">Specialty</th>
+										<th class="width5">Sub Specialty</th>
+										<th class="width5">Code</th>
+										<th class="width5">Clinical Service Name</th>
+										<th class="width2">Action taken</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll500"
+							style="overflow: overlay;">
+							<!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="info in addServicesList">
+										<!-- <td class="width2 text-center"><input type="checkbox" ng-model="info.status" ng-true-value="true" ng-false-value="false"></td> -->
+										<td class="width5">{{info.specialityName}}</td>
+										<td class="width5">{{info.subSpecialityName}}</td>
+										<td class="width5">{{info.serviceStandardCode}}</td>
+										<td class="width5">{{info.serviceStandardName}}</td>
+										<td class="width2"><a> <i class="fa fa-times"
+												aria-hidden="true"
+												ng-click="removeTempAddedServices($index)"></i>
+										</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal"
+					class="btn btn-primary width10" id="" ng-click="addSrvices();">Add</button>
+				<button type="button" data-dismiss="modal"
+					class="btn btn-primary width10">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- templateAddServiceModal END -->
+
+<!--  veiwChecklistTemplate START -->
+<div id="veiwChecklistTemplate" class="modal fade ng-scope in" data-backdrop="static"
+	role="dialog" style="background: rgba(0, 0, 0, 0.33) !important;"
+	data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Notes
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row  padding-left-right-10">
+					<div class="row margin-top10">
+						<div id="formeo-editor"></div>
+						<div id="myHtml" class="render-form" style="display: none"></div>
+					</div>
+					<div class="col-lg-12 col-md-12" ng-if="indexFlag==1">
+						<textarea name="editor" type="text" autocomplete="off" id="editor" rows="10"
+							cols="50"
+							ng-model="procedureOrderList[currentIndex].procedureOrderConsentList[consentCurrentIndex].template"
+							ck-editor></textarea>
+					</div>
+					<div class="col-lg-12 col-md-12" ng-if="indexFlag==2">
+						<textarea name="editor" type="text" autocomplete="off" id="editor" rows="10"
+							cols="50"
+							ng-model="orderedProcedureList[orderedCurrentIndex].procedureOrderConsentList[consentCurrentIndex].template"
+							ck-editor readonly></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- veiwChecklistTemplate END -->
+
+<!-- procedureTemplateUploadedModal Modal START -->
+<div id="procedureTemplateUploadedModal" class="modal fade ng-scope in" data-backdrop="static"
+	role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					View Document
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div
+					class="row padding-left-right-set4 padding-top4 padding-bottom5">
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<th class="width15">
+									<div>File Name</div>
+								</th>
+
+								<th class="width8 text-center">
+
+									<div>Action taken</div>
+								</th>
+							</tr>
+							<tr ng-if="indexFlag==1">
+								<td>
+									<div>{{procedureOrderList[currentIndex].procedureOrderConsentList[consentCurrentIndex].documentName}}</div>
+								</td>
+								<td class="text-center"><a
+									href="{{procedureOrderList[currentIndex].procedureOrderConsentList[consentCurrentIndex].filePath}}"><span
+										class="margin-left10" title="view"><i class="fa fa-eye"
+											aria-hidden="true"></i></span></a></td>
+
+							</tr>
+							<tr ng-if="indexFlag==2">
+								<td>
+									<div>{{orderedProcedureList[orderedCurrentIndex].procedureOrderConsentList[consentCurrentIndex].documentName}}</div>
+								</td>
+								<td class="text-center"><a
+									href="{{orderedProcedureList[orderedCurrentIndex].procedureOrderConsentList[consentCurrentIndex].filePath}}"><span
+										class="margin-left10" title="view"><i class="fa fa-eye"
+											aria-hidden="true"></i></span></a></td>
+
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<!--  procedureTemplateUploadedModal Modal END -->
+
+<!-- checklistItemsModal START -->
+<div id="checklistItemsModal" data-backdrop="static"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Checklist Items
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div
+					class="row padding-left-right-set4 table-container padding-top4">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width12">Checklist Items</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;">
+							<!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="info in checklistItemList">
+										<td class="width12">{{info.description}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn"
+					id="" ng-click="">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- checklistItemsModal END -->
+
+<!-- Comform Save Dashboard START -->
+<div id="confirmSave"class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					OTIMS Dashboard
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top4">
+					<label for="description" class="LISDynamicLabel">Do you want to Save ?</label>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="saveProcedureSchedule();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Comform Save Dashboard END -->
+
+<!-- Comform Save Dashboard START -->
+<div id="resourceNotAvailable"class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Resources not available
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top4">
+					<label for="description" class="LISDynamicLabel"> Resources not available , still do you want to save ?</label>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="finalSave();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Comform Save Dashboard END -->
+
+
+
+<!-- Switch TAb START -->
+<div id="switchTab"class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Switch Tab
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top4">
+					<label for="description" class="LISDynamicLabel">Schedule details will  getting wiped out still  do you want to continue ?</label>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="yesSwitch()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--  Switch TAb  END -->
+
+
+
+<!-- Cancel Ordered Procedure Modal START -->
+<div id="cancelOrderedProcedure" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);">
+        <div class="modal-dialog"> 
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title patient-details-row">
+                        Rejection
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 padding-left-right-set">
+                            <div class="row input-container margin-top10">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+                                        <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <select class="text-input floating-label dirty"  id="rejectReasonId" name="code" ng-model="orderedProcedureList[idxForCancelOrderedProc].reasonId">
+                                            <!-- <option value="">Select Reason</option> -->
+                                            <option ng-repeat="info in procedureCancellationReasonList" value="{{info.reasonMasterId}}" >{{info.reasonDesc}}</option>
+                                            </select>        
+                                            <label for="code">Select Reasons</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="row input-container margin-top10">
+                                        <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                            <i class="fa fa-sticky-note" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                            <div class="">
+                                                <textarea name="code" rows="4" id="noteReject"
+                                                    class="text-input floating-label" ng-model="orderedProcedureList[idxForCancelOrderedProc].reasonNote"></textarea>
+                                                <label for="code">Note</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                    <!-- <button type="button" data-dismiss="modal" class="btn btn-primary" id=""  ng-click="removeProcedureOder(idxForCancelOrderedProc,2);" >Save</button> -->
+                    <div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Save"   ng-click="removeProcedureOder(idxForCancelOrderedProc,2);">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div> 
+<!-- Cancel Ordered Procedure Modal END -->
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("OT Reservation");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="OTreservation"]').parents("li").addClass("active");
+	
+	/* ************ graph demo start ************** */
+	var ctx = document.getElementById("myChart").getContext('2d');
+	// Define the data 
+	// Define the data 
+	var data = [22006299,	15834918,	14919501,	14797756,	14433147,	13524139,	11877109,	11862073,	11779606, 10452000]; // Add data values to array
+	
+	var labels = ["Tokyo",	"Mumbai",	"Mexico City",	"Shanghai",	"Sao Paulo",	"New York",	"Karachi","Buenos Aires",	"Delhi","Moscow"]; // Add labels to array
+	// End Defining data
+	
+	// End Defining data
+	var myChart = new Chart(ctx, {
+	    type: 'bar',
+	    data: {
+	        labels: labels,
+	        datasets: [{
+	            label: 'Population', // Name the series
+	            data: data, // Specify the data values array
+	            backgroundColor: [ // Specify custom colors
+	                'rgba(255, 99, 132, 0.2)',
+	                'rgba(54, 162, 235, 0.2)',
+	                'rgba(255, 206, 86, 0.2)',
+	                'rgba(75, 192, 192, 0.2)',
+	                'rgba(153, 102, 255, 0.2)',
+	                'rgba(255, 159, 64, 0.2)'
+	            ],
+	            borderColor: [ // Add custom color borders
+	                'rgba(255,99,132,1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)',
+	                'rgba(75, 192, 192, 1)',
+	                'rgba(153, 102, 255, 1)',
+	                'rgba(255, 159, 64, 1)'
+	            ],
+	            borderWidth: 1 // Specify bar border width
+	        }]
+	    },
+	    options: {
+	      responsive: true, // Instruct chart js to respond nicely.
+	      maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+	    }
+	});
+	/* ************ graph demo end ************* */
+});
+</script>

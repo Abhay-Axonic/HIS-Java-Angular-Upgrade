@@ -1,0 +1,48 @@
+<style>
+	.hideDropdown {
+		display: none;
+	}
+</style>
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!--old name -change(25-Oct) Sub Store Master -->
+		</fieldset>
+		<div class="row schedulerTabs">
+			<ul class="tabs nav nav-tabs">
+				<li ng-class="{ active : vm.model.activeTab == 1 }" style="width:250px;"><!-- background-color:#5F9EA0; -->
+					<a href ng-click="vm.model.SetActiveTab(1)">Product Category Mapping</a>
+				</li>
+				<li ng-class="{ active : vm.model.activeTab ==  2 }" style="width:250px">
+					<a href ng-click="vm.model.SetActiveTab(2);vm.model.pagination.data=[];" ng-model="vm.model.activeTab">Item Restriction</a>
+				</li>
+			</ul>
+		</div>
+		<div class="row">
+			<div class="" ui-view>
+
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+	});
+	$(".selectedPageName").text("Product Restriction Master");
+	$(".sidebar-nav li").each(function () {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="productRestriction/productCategoryMapping"]').parents("li").addClass("active");
+
+	$("#chkCheckbox").click(function () {
+		if ($(this).is(":checked")) {
+			$(".hideDropdown").show();
+		} else {
+			$(".hideDropdown").hide();
+		}
+	});
+</script>

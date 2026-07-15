@@ -1,0 +1,206 @@
+<!-- /********************************************************************************************************************************************
+Procurement - quotation - GRN Settlement details page
+Created by - Nikita Chintawar
+Created Date - 10-Oct-2019 
+/********************************************************************************************************************************************/ -->
+<!-- Page Content -->
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <fieldset>
+            <div class="row margin-top10">
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span class="margin-left10">
+                        <b class="padding-right10 ">Receipt No. :{{vm.model.grnSettledList.receiptnumber}}</b>  
+                    </span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span class="margin-left10">
+                        <b class="padding-right10 ">Receipt Date:{{vm.model.grnSettledList.receiptdate | date:'dd/MM/yyyy'}}</b> 
+                    </span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span class="margin-left10">
+                        <b class="padding-right10 ">Vendor Name :{{vm.model.grnSettledList.vendorname}}</b>  
+                    </span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right- cloneset4 padding-top10">
+                    <span class="margin-left10" style="word-break: break-all">
+                        <b class="padding-right10 ">Paid Amount :{{vm.model.grnSettledList.paidamount}}</b> 
+                    </span>
+                </div>
+            </div>
+            <div class="row margin-top4">
+                <div class="col-md-12 col-lg-12 col-sm-8 padding-left-right-set4">
+                    <fieldset>
+                        <div class="row table-container padding-left-right-set4 padding-top5">
+                            <div class="table-container-header">
+                                <table class="table table-striped table-hover table-condensed table-bordered first-checkBox-padding">
+                                    <thead>
+                                        <tr>
+                                            <th class="width5">
+                                                GRN Store
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'storeName', sortReverse = !sortReverse)">
+                                                    <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="margin-top-8">
+                                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                GRN Type
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'grnDate', sortReverse = !sortReverse)">
+                                                    <div>
+                                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="margin-top-8">
+                                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                GRN Date
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'grnNo', sortReverse = !sortReverse)">
+                                                <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="margin-top-8">
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                GRN No.
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceNo', sortReverse = !sortReverse)">
+                                                <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="margin-top-8">
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                Invoice No.
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceNo', sortReverse = !sortReverse)">
+                                                <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="margin-top-8">
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                Invoice Date
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceNo', sortReverse = !sortReverse)">
+                                                <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="margin-top-8">
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                Status
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceNo', sortReverse = !sortReverse)">
+                                                <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="margin-top-8">
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                Net Amount
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceNo', sortReverse = !sortReverse)">
+                                                <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="margin-top-8">
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                Paid Amount
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceNo', sortReverse = !sortReverse)">
+                                                <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="margin-top-8">
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                Balance Amount
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceNo', sortReverse = !sortReverse)">
+                                                <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="margin-top-8">
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                </div>
+                                                </div>
+                                            </th>
+                                            <th class="width5">
+                                                Payment Status
+                                                <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceNo', sortReverse = !sortReverse)">
+                                                <div>
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="margin-top-8">
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                </div>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="table-container-body" style="height: 400px; overflow-y: overlay;">
+                                <table class="table table-striped table-hover table-condensed table-bordered">
+                                    <tbody>
+                                        <tr ng-repeat="info in vm.model.grnSettledList.settledDetails">
+                                            <td class="width5" title="{{info.storename}}">{{info.storename}}</td>
+                                            <td class="width5" title="{{info.grntype}}">{{info.grntype}}</td>
+                                            <td class="width5" title="{{info.grndate | date:'dd/MM/yyyy'}}">{{info.grndate | date:'dd/MM/yyyy'}}</td>
+                                            <td class="width5" title="{{info.grnnumber}}">{{info.grnnumber}}</td>
+                                            <td class="width5" title="{{info.invoicenumber}}">{{info.invoicenumber}}</td>
+                                            <td ng-if="info.stringDate!=true"class="width5" title="{{info.invoicedate | date:'dd/MM/yyyy'}}">{{info.invoicedate | date:'yyyy/MM/dd'}}</td>
+                                            <td ng-if="info.stringDate==true" class="width5" title="{{info.invoicedate}}">{{info.invoicedate}}</td>
+                                            <td class="width5" title="{{info.status}}">{{info.status}}</td>
+                                            <td class="width5" title="{{info.netamount}}">{{info.netamount | number:2}}</td>
+                                            <td class="width5" title="{{info.paidamount}}">{{info.paidamount}}</td>
+                                            <td class="width5" title="{{info.balanceamount}}">{{info.balanceamount}}</td>
+                                            <td class="width5" title="{{info.paymentstatus}}">{{info.paymentstatus}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>        
+                    </fieldset>
+                </div>
+            </div>
+            <footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20 padding-top20">
+                <div class="row his-style padding-right20">
+                    <div class="col-lg-10 col-md-10"></div>
+                    <div class="col-lg-1 col-md-1 padding-left0px-right6px">
+                    
+                    </div>
+                    <div class="col-lg-1 col-md-1 padding-left0px-right6px">
+                    <div class="common-save-button">
+                        <a ng-click="vm.model.NavigateToBack()">
+                            <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+                        </a>
+                    </div>
+                    </div>
+                </div>
+            </footer>
+        </fieldset>
+    </div>
+</div>

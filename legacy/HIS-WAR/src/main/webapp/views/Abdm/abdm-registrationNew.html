@@ -1,0 +1,3169 @@
+
+<style>
+.bottom-border {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.abdm-clickable-card {
+	cursor: pointer;
+	transition: box-shadow 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.abdm-clickable-card:hover {
+	border: 1px solid orange;
+	box-shadow: rgba(38, 38, 38, 0.4) 0px 1px 3px;
+	transform: translateY(-1px);
+}
+
+#qrDetailsPopup .modal-title,
+#mobileNumberValidaionPoupUpCreateABHA .modal-title {
+	font-size: 11px !important;
+	line-height: 13px !important;
+	max-width: 145px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+}
+
+#qrDetailsPopup .modal-content {
+	position: relative;
+}
+
+#qrDetailsPopup .modal-header {
+	position: static;
+}
+
+#qrDetailsPopup .qr-modal-title-text {
+	display: block;
+	max-width: 145px;
+	max-height: 28px;
+	overflow: hidden;
+	white-space: normal;
+}
+
+#qrDetailsPopup .modal-title .close {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	margin: 0 !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-header {
+	justify-content: flex-start !important;
+	align-items: flex-start !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA h5.modal-title {
+	margin: 18px 0 0 24px !important;
+	max-width: 145px;
+	max-height: 28px;
+	font-size: 11px !important;
+	line-height: 13px !important;
+	white-space: normal;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-body p {
+	font-size: 14px !important;
+	line-height: 20px !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-dialog {
+	max-width: 420px !important;
+	margin: 70px auto !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-content {
+	border-radius: 8px !important;
+	overflow: visible !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-header {
+	position: relative;
+	display: block !important;
+	border-bottom: 0 !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-body {
+	padding: 48px 36px 34px !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-body .row,
+#mobileNumberValidaionPoupUpCreateABHA .modal-body .col-md-12 {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-body .card,
+#mobileNumberValidaionPoupUpCreateABHA .modal-body .card-body {
+	border: 0 !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+	background: transparent !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-body img {
+	height: 72px !important;
+	margin-bottom: 18px !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-body p {
+	max-width: 340px;
+	margin: 0 auto 12px !important;
+	color: #000a42;
+	font-size: 14px !important;
+	font-weight: 400 !important;
+	line-height: 20px !important;
+	text-align: center;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-body .btn {
+	min-width: 100px;
+	height: 32px;
+	padding: 6px 18px !important;
+	border: 0 !important;
+	border-radius: 16px !important;
+	background: #eaf2ff !important;
+	color: #006dff !important;
+	font-size: 14px !important;
+	line-height: 18px;
+	box-shadow: none !important;
+}
+
+#mobileNumberValidaionPoupUpCreateABHA .modal-footer {
+	display: none;
+}
+
+.abdm-work-panel {
+	margin: 12px 0 4px;
+	padding: 14px;
+	background: #f8fbfc;
+	border: 1px solid #cfe7e8;
+	border-radius: 6px;
+}
+
+.abdm-work-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(220px, 1fr));
+	gap: 14px;
+}
+
+.abdm-work-card {
+	min-height: 126px;
+	padding: 12px;
+	background: #fff;
+	border: 1px solid #d9e6eb;
+	border-radius: 6px;
+	box-shadow: 0 1px 3px rgba(16, 52, 77, 0.08);
+}
+
+.abdm-work-card-title {
+	margin: 0 0 14px;
+	padding-bottom: 7px;
+	color: #12385f;
+	font-size: 13px;
+	font-weight: 700;
+	border-bottom: 1px solid #e5eef2;
+}
+
+.abdm-field-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px 12px;
+	align-items: end;
+}
+
+.abdm-field-grid.abdm-field-grid-single {
+	grid-template-columns: 1fr auto;
+}
+
+.abdm-field {
+	min-width: 0;
+}
+
+.abdm-field .input-container,
+.abdm-field .row.input-container {
+	margin: 0 !important;
+}
+
+.abdm-field .polymer-icon {
+	padding-top: 7px;
+}
+
+.abdm-field input[type="text"],
+.abdm-field select {
+	width: 100% !important;
+	height: 34px !important;
+}
+
+.abdm-field-label {
+	display: block;
+	margin-bottom: 3px;
+	color: #5d6f7b;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 14px;
+}
+
+.abdm-readonly-value {
+	min-height: 34px;
+	padding: 8px 10px;
+	color: #12385f;
+	background: #eef7f8;
+	border: 1px solid #d6e7ea;
+	border-radius: 4px;
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.abdm-card-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 14px;
+}
+
+.abdm-card-actions .btn {
+	min-width: 76px;
+	height: 32px;
+}
+
+.abdm-info-action {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	margin-top: 18px;
+	color: #008f88;
+	border: 1px solid #9fdad8;
+	border-radius: 50%;
+	background: #f2ffff;
+}
+
+.abdm-legacy-link-row {
+	display: none !important;
+}
+
+@media (max-width: 1200px) {
+	.abdm-work-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+
+</style>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<div id="page-content-wrapper" style="height: 630px;">
+	<div class="">
+	<!--  create ABAHA start-->
+	     <div >
+				<div class='row pt-4 pb-4' ng-if="createAbhass">
+				 <fieldset class=""><!-- main-fieldset -->
+					<legend class="main-heading-div"  style=" text-align: center;  font-size: 20px; ">Create ABHA Number</legend>
+				</fieldset>
+				 <div class="row" style="padding-top:20px !important">
+					   <div class="col-md-4"></div>
+					    <div class="col-md-4">
+						 <div class="card abdm-clickable-card" ng-click="setFirstPage()" style ="height: 200px !important;">
+						    <div class="card-body">
+						    <div class="row">
+						    	<div class="col-md-12">
+						    		<div class="img-container text-center">
+						    			<img src="resources/assets/images/icon/AadharSVG.svg" style="height: 80px !important;">
+						    		</div>
+						    	</div>
+						    </div>
+						     <div class="row pt-2">
+						    	<div class="col-md-12 text-center">
+						    		<label style="font-weight:400;font-size:15px">Create your ABHA number using <br><span style="color:orange;font-weight:700">Aadhaar</span></label>
+						    	</div>
+						    </div>
+						    </div>
+					     </div>
+					    </div>
+					   <div class="col-md-4"></div>
+					   </div>
+				    </div>
+    
+				<div class="row padding-left-right-set4 table-container padding-top0" ng-if="createAbhadiv">
+				 <fieldset class=""><!-- main-fieldset -->
+					<legend class="main-heading-div" >ABHA Address Creation</legend>
+				</fieldset>
+					<div class="table-container" style="">
+					  <!-- More rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Enter Aadhaar Number
+									 </th>
+									 <th class="width2 text-right">
+									     <button type="button" style="color: green;"  ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;" id="submitButton" ng-disabled="isButtonDisabled" ng-click="next('createAbhadivChack')" >Send OTP</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;height: auto;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr >
+									
+									<td vertical-middle">
+									      <div class="row">
+											<input type="password" name="password" id="textInput"
+												maxlength="12" ng-model="aadhar.myAadharNumber" autocomplete="off" placeholder="Please Enter Aadhaar Number" />
+											<span id="password-field"
+												class="fa fa-fw fa-eye field-icon toggle-password"
+												onclick="myFunction()"></span>
+										</div> 
+										  <div  ng-repeat="consent in consents" ng-init="isLast = $last">
+										    <input type="checkbox" id="{{ consent.id }}" style="vertical-align: top;" name="checkbox_group" ng-model="consent.checked" ng-change="handleCheckboxChange(consent, isLast)">
+										    <label for="{{ consent.id }}" ng-bind-html="consent.label"></label><br>
+										
+										      <div class="col-md-6" ng-show="consent.showChildCheckboxes">
+										        <label>
+										            <input type="checkbox" id="additionalCheckbox1_{{ consent.id }}" ng-model="consent.additionalConsent1.checked">
+										            I, {{userName}}, confirm that I have duly informed and explained the beneficiary of the 
+										            contents of consent for aforementioned purposes.
+										
+										        </label><br>
+										        <label>
+										            <input type="checkbox" id="additionalCheckbox2_{{ consent.id }}" ng-model="consent.additionalConsent2.checked">
+										           I,  <input type="text" ng-model="patientName"> , have been explained about the consent as stated above and hereby provide my consent for the aforementioned purposes.
+										        </label><br>
+										        <!-- Add more additional checkboxes as needed -->
+										    </div>
+										</div>
+									    </form>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	
+	     <div ng-if="createOTP">
+			     <fieldset class="">
+					<legend class="main-heading-div" >Enter OTP</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- Mo re rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Aadhaar OTP
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;"  ng-click="next('createOTPCheck')" >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+									
+									
+									<form  name="name1" >
+									      <div class="row">
+									          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.otpInput"  maxlength="6" numbers-only
+										                   autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty"> 
+											 		   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														<input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.mobileInput" maxlength="10" numbers-only
+										                   autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty" >
+											 		   </div>
+													</div>
+												</div>
+												
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button type="button" style="color: green;" ng-click="resendOtp()" ng-disabled="timer>0">Resend OTP</button>
+														
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+							                                 <button type="button" style="color: green;" ng-click="next('createOTPCheck')" >Submit OTP</button>
+													   </div>
+													</div>
+												</div>
+												
+									      </div>
+									      
+									      <div class="row">
+									          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <lable>Aadhaar OTP</lable>
+											 		   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <lable>Mobile Number</lable>
+											 		   </div>
+													</div>
+												</div>
+												
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <label>OTP will Expire : {{ timer }}</label> 
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center"></div>
+													</div>
+												</div>
+												
+									      </div>
+									</form> 
+									
+										   
+									</td>
+								</tr>
+								<!-- <tr>
+									<td class="width2">Mobile Number </td>
+									<td class="width4" vertical-middle">
+									       <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.mobileInput" 
+										   class="ng-pristine ng-untouched ng-valid ng-empty" >
+									</td>
+								</tr> -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+	      <div ng-if="updateMobiletest">
+			     <fieldset class="">
+					<legend class="main-heading-div" >Enter OTP</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- Mo re rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Mobile OTP
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;"  ng-click="updateMobileNumber()" >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">Mobile OTP </td>
+									<td class="width4 vertical-middle">
+									
+									
+									<form  name="name1" >
+									      <div class="row">
+									            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.mobileInput" 
+										                   autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty"> 
+											 		   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button type="button" style="color: green;" ng-click="updateMobileNumber()">Verify</button>
+														
+													   </div>
+													</div>
+												</div>
+									      </div>
+									      
+									      <div class="row">
+									          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <lable>Mobile Number</lable>
+											 		   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center"></div>
+													</div>
+												</div>
+												
+									      </div>
+									</form> 
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+
+ <div ng-if="updateMobiletestOTP">
+			     <fieldset class="">
+					<legend class="main-heading-div" >Enter OTP</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- Mo re rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Mobile OTP
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;"  ng-click="enrollMobileNumber()" >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">Mobile OTP </td>
+									<td class="width4 vertical-middle">
+									
+									
+									<form  name="name1" >
+									      <div class="row">
+									          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <input type="text" id="motorDeficitshh" name="motorDeficits4" maxlength="6" ng-model="createOTPObject.otpInput" 
+										                   autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty"> 
+											 		   </div>
+													</div>
+												</div>
+												
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button type="button" style="color: green;" ng-click="updateMobileNumber()" ng-disabled="timer>0">Resend OTP</button> OTP will Expire : {{ timer }}
+														
+													   </div>
+													</div>
+												</div>
+												
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button type="button" style="color: green;" ng-click="enrollMobileNumber()">Verify</button>
+														
+													   </div>
+													</div>
+												</div>
+									      </div>
+									      
+									      <div class="row">
+									          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <lable>Mobile OTP</lable>
+											 		   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center"></div>
+													</div>
+												</div>
+												
+									      </div>
+									</form> 
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+	      
+	      <div ng-if="updateMobileNumberstrip">
+			     <fieldset class="">
+					<legend class="main-heading-div" >Enter OTP</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- Mo re rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Mobile OTP
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;"  ng-click="next('createOTPCheck')" >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+									
+									
+									<form  name="name1" >
+									      <div class="row">
+									          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.otpInput" 
+										                   autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty"> 
+											 		   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button type="button" style="color: green;" ng-click="resendOtp()" ng-disabled="timer>0">Resend OTP</button>
+														
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+							                                 <button type="button" style="color: green;" ng-click="enrollMobileNumber()" >Submit OTP</button>
+													   </div>
+													</div>
+												</div>
+												
+									      </div>
+									      
+									      <div class="row">
+									          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <lable>Aadhaar OTP</lable>
+											 		   </div>
+													</div>
+												</div>
+												
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <label>OTP will Expire : {{ timer }}</label> 
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center"></div>
+													</div>
+												</div>
+												
+									      </div>
+									</form> 
+									
+										   
+									</td>
+								</tr>
+								
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+	      
+	       <div class='row pt-4 pb-4' ng-if="alreadyExistAbhaPopuopCreateABHA"><!--  ng-if="alreadyExistAbhaPopuop"-->
+					   <div class="col-md-4"></div>
+					    <div class="col-md-4">
+					     <div class="card" style ="height: 200px !important;">
+						    <div class="card-body">
+						    <div class="row">
+						    	<div class="col-md-12">
+						    		<div class="img-container text-center">
+						    			<img src="resources/assets/images/icon/error_icon.png" style="height: 40px !important;">
+						    		</div>
+						    	</div>
+						    </div>
+						     <div class="row pt-2">
+						    	<div class="col-md-12 text-center">
+						    		<label style="font-weight:400;font-size:15px"><span style="color:orange;font-weight:700">ABHA Account Exist</span></label>
+						    	</div>
+						    	<div class="col-md-12 text-center">
+						    		<label style="font-weight:400;font-size:15px">We have found an ABHA xxxx-xxxx-xxxx-{{abhaNumber}} against the <br> Aadhaar number provided by you </label>
+						    	</div>
+						    	<div class="col-md-12 text-center">
+						    	<button style="color:orange;font-weight:700" ng-click="viewProfileCreateABHA()">View Profile</button>
+						    	</div>
+						    </div>
+						    </div>
+					     </div>
+					    </div>
+					   <div class="col-md-4"></div>
+				    </div>
+				    
+	      <div class='row pt-4 pb-4' ng-if="alreadyExistAbhaPopuop"><!--  ng-if="alreadyExistAbhaPopuop"-->
+					   <div class="col-md-4"></div>
+					    <div class="col-md-4">
+					     <div class="card" style ="height: 200px !important;">
+						    <div class="card-body">
+						    <div class="row">
+						    	<div class="col-md-12">
+						    		<div class="img-container text-center">
+						    			<img src="resources/assets/images/icon/error_icon.png" style="height: 40px !important;">
+						    		</div>
+						    	</div>
+						    </div>
+						     <div class="row pt-2">
+						    	<div class="col-md-12 text-center">
+						    		<label style="font-weight:400;font-size:15px"><span style="color:orange;font-weight:700">ABHA Account Exist</span></label>
+						    	</div>
+						    	<div class="col-md-12 text-center">
+						    		<label style="font-weight:400;font-size:15px">We have found an ABHA xxxx-xxxx-xxxx-{{abhaNumber}} against the <br> Aadhaar number provided by you </label>
+						    	</div>
+						    	<div class="col-md-12 text-center">
+						    	<button style="color:orange;font-weight:700" ng-click="viewProfile()">View Profile</button>
+						    	</div>
+						    </div>
+						    </div>
+					     </div>
+					    </div>
+					   <div class="col-md-4"></div>
+				    </div>
+				   
+	      
+	      <div ng-if="createOTPForUnlinked" >
+			     <fieldset class="">
+					<legend class="main-heading-div" >Enter OTP</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- Mo re rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Mobile OTP
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;"  ng-click="next('createOTPCheck')" >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+									
+									
+									<form  name="name1" >
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <lable> <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.otpInput"  maxlength="6" numbers-only
+										                    class="ng-pristine ng-untouched ng-valid ng-empty" > Mobile OTP</lable>
+											 		   </div>
+													</div>
+												</div>
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+													  <div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center" ng-if="checkAndGenerate =='false'">
+														 <button type="button" style="color: green;" ng-if="checkAndGenerate =='false'" ng-click="resendMobileUnlinkedOtp()" ng-disabled="timer>0">Resend OTP</button> OTP will Expire : {{ timer }}
+													   </div> 
+													</div>
+												</div>
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+							                                 <button type="button" style="color: green;" ng-click="next('createOTPForUnlinkedCheck')" >Submit OTP</button>
+													   </div>
+													</div>
+												</div>
+											</form> 
+									
+										   
+									</td>
+								</tr>
+								<!-- <tr>
+									<td class="width2">Mobile Number </td>
+									<td class="width4" vertical-middle">
+									       <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.mobileInput" 
+										   class="ng-pristine ng-untouched ng-valid ng-empty" >
+									</td>
+								</tr> -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+	      
+	        <div ng-if="verifyhOTP" >
+			     <fieldset class="">
+					<legend class="main-heading-div" >Enter OTP</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- Mo re rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Mobile OTP
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;"  ng-click="next('createOTPCheck')" >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+									      <div>
+									        <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.verifyotpInput"  maxlength="6" numbers-only
+										   class="ng-pristine ng-untouched ng-valid ng-empty" >
+									      </div>
+									      <div>
+									          <button type="button" style="color: green;" ng-click="resendOtp()" >Resend OTP</button>
+									      </div>
+									       <div>
+									          <button type="button" style="color: green;" ng-click="next('createOTPCheck')" >Submit OTP</button>
+									      </div>
+										   
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+	       <div ng-if="profileDetails" >
+			     <fieldset class="">
+					<legend class="main-heading-div" >Profile Details</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- Mo re rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Profile Details
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;"  ng-click="enrollAbhaAddress()" >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">Please Enter a unique Abha Address </td>
+									<td class="width4" vertical-middle">
+										<div class="row"></div>
+										<div class="col-md-6">
+										
+										 <input type="text" id="profileDetailsNew" name="motorDeficits4" ng-model="createOTPObject.profileDetails" 
+											   class="ng-pristine ng-untouched ng-valid ng-empty" autocomplete="off" >
+											   <p>
+											   <span class="error-message" ng-show="!validateAbha(authOBJECT.suggestions)">
+											      <ul id="validation-rules">
+											        <li id="rule1" ng-class="{'text-success': rule1(authOBJECT.suggestions), 'text-muted': !rule1(authOBJECT.suggestions)}">
+											          <i class="bi" ng-class="{'bi-check-circle': rule1(authOBJECT.suggestions), 'bi-x-circle': !rule1(authOBJECT.suggestions)}"></i>
+											          Minimum length of 8 characters
+											        </li>
+											        <li id="rule2" ng-class="{'text-success': rule2(authOBJECT.suggestions), 'text-muted': !rule2(authOBJECT.suggestions)}">
+											          <i class="bi" ng-class="{'bi-check-circle': rule2(authOBJECT.suggestions), 'bi-x-circle': !rule2(authOBJECT.suggestions)}"></i>
+											          Maximum length of 18 characters
+											        </li>
+											        <li id="rule3" ng-class="{'text-success': rule3(authOBJECT.suggestions), 'text-muted': !rule3(authOBJECT.suggestions)}">
+											          <i class="bi" ng-class="{'bi-check-circle': rule3(authOBJECT.suggestions), 'bi-x-circle': !rule3(authOBJECT.suggestions)}"></i>
+											          Special characters allowed: 1 dot (.) and/or 1 underscore (_)
+											        </li>
+											        <li id="rule4" ng-class="{'text-success': rule4(authOBJECT.suggestions), 'text-muted': !rule4(authOBJECT.suggestions)}">
+											          <i class="bi" ng-class="{'bi-check-circle': rule4(authOBJECT.suggestions), 'bi-x-circle': !rule4(authOBJECT.suggestions)}"></i>
+											          Special characters cannot be at the start or end
+											        </li>
+											        <li id="rule5" ng-class="{'text-success': rule5(authOBJECT.suggestions), 'text-muted': !rule5(authOBJECT.suggestions)}">
+											          <i class="bi" ng-class="{'bi-check-circle': rule5(authOBJECT.suggestions), 'bi-x-circle': !rule5(authOBJECT.suggestions)}"></i>
+											          Only alphanumeric characters, dot or underscore in between
+											        </li>
+											      </ul>
+											    </span> </p>
+										</div>
+										 <div class="col-md-6">
+										 <div class="row">
+										 <div class="col-md-12">Suggested Abha Address, Select from Suggestions or Enter Manually</div>
+										 	<div class="col-md-12 padding-left-right-set4" ng-repeat="info in phrSuggestions">
+											    <div class="row input-container">
+											      <div class="col-lg-12 padding-left-right-set4 ">
+											        <label>
+											          <input
+											            type="radio"
+											            id="suggestion"
+											            name="suggestion"
+											            ng-model="authOBJECT.suggestions"
+											            ng-click="setSuggestion()"
+											            value="{{info}}"
+											            class="ng-pristine ng-untouched ng-valid ng-empty"
+											          />
+											          {{info}}
+											        </label>
+											      </div>
+											    </div>
+											  </div>
+											</div>
+										 </div>
+										
+										
+									    
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+	      <div ng-if="createPhrAddress" >
+			     <fieldset class="">
+					<legend class="main-heading-div" >PHR Details</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- Mo re rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    PHR Details
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;"  ng-click="next('createOTPCheck')" >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">Your ABHA Address  </td>
+									<td class="width4" vertical-middle">
+										<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+											<div class="row input-container">
+										         <lable><input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.profileDetails" 
+											   class="ng-pristine ng-untouched ng-valid ng-empty" >Your ABHA Address</lable>
+										      </div>
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+											<div class="row input-container">
+										         <lable><input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.healthNumber" 
+											   class="ng-pristine ng-untouched ng-valid ng-empty" >Your  ABHA Number </lable>
+										      </div>
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+											<div class="row input-container">
+										        <button type="button" style="color: green;" ng-click="profileAccountNewForNew()" >Preview PNG</button>
+										      </div>
+										</div>
+									</td>
+								</tr>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+	      <div ng-if="enterMobileNumber" >
+			     <fieldset class="">
+					<legend class="main-heading-div" >Mobile Number</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- Mo re rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									   Enter Mobile Number
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()" >Reset</button>
+									     <button type="button" style="color: green;" ng-click="next('enterMobileNumber')" >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">Enter mobile number you want to link with ABHA </td>
+									<td class="width4" vertical-middle">
+									
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+											<div class="row input-container">
+										         <lable><input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.mobileInput" 
+										   class="ng-pristine ng-untouched ng-valid ng-empty" > </lable>
+										      </div>
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+											<div class="row input-container">
+										        <button type="button" style="color: green;" ng-click="next('enterMobileNumber')" >Proceed</button>
+										      </div>
+										</div>
+										
+										   
+									</td>
+								</tr>
+								<!-- <tr>
+									<td class="width2">Mobile Number </td>
+									<td class="width4" vertical-middle">
+									       <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="createOTPObject.mobileInput" 
+										   class="ng-pristine ng-untouched ng-valid ng-empty" >
+									</td>
+								</tr> -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+	      <!--  create ABAHA end-->
+	       <!--  Alrady ABAHA start-->
+	<div ng-if="enterOtp" >
+			     <fieldset class=""><!-- main-fieldset -->
+					<legend class="main-heading-div" >Enter OTP</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- More rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Mobile OTP
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()">Reset</button>
+									     <button type="button" style="color: green;"  ng-click="next('enterOtpCheck')" >Confirm</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+									       <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="enterOtpObject.confirmOTP" 
+										   class="ng-pristine ng-untouched ng-valid ng-empty">
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	
+	
+	<div ng-if="addressAbha" >
+			     <fieldset class=""><!-- main-fieldset -->
+					<legend class="main-heading-div" ng-click="openVerificationDiv()"  style=" text-align: center;  font-size: 20px; " >Already have ABHA ?</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0" ng-if="abhaVerificationDiv == true">
+					<div class="table-container">
+					  <!-- More rows... -->
+					</table>
+						<div class="table-body" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr ng-if="searchOTPVerification">
+								    <td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+										 <div class="row margin-top10 abdm-link-row" style="height:50px !important">
+												<form  name="name1" >
+													<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+														<div class="row input-container">
+															<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 ">
+																<input type="text"  name="aadhaarCode" class="floating-label" placeholder="OTP" ng-model="search.searchByHealthOTP" 
+																 style="width: 100%;height: 30px !important;">
+														   </div>
+														</div>
+													</div>
+													<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+															<div class="row input-container">
+																<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+																 <button type="button"  ng-click="CONFIRMByHealthId()">Validate</button>
+															   </div>
+															</div>
+														</div>
+												</form>
+											</div>
+									</td>
+								</tr>
+								
+								
+									<tr ng-if="abbhaAddressVerficationofV3">
+									<td class="width3 vertical-middle">
+									<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+									 <div class="row margin-top10 " style="height:50px !important">
+								      	<select class="floating-label" ng-model="verifyObjABHAAddAndNum.fetchByIdV3"  ng-change="resetABHAAddAndNumBack()"style="width: 50%;height: 30px !important;">
+								          	<option  value="0">Please Select Login Criteria</option>
+											<option  value="3">ABHA Address</option>
+										</select>
+										<label> Login Criteria</label>
+										</div>
+										
+									</div>
+									</td>
+									<td class="width6 vertical-middle" >
+									
+									<div class="row margin-top10 " style="height:50px !important" ng-if="abbhaAddressVerficationofSearchSlide ==true">
+											<form  name="name1" >
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 ">
+														
+														    <div ng-if="verifyObjABHAAddAndNum.fetchByIdV3 == 3">
+														       	<input type="text"  name="aadhaarCode" class="floating-label" 
+														       	 placeholder="ABHA Address" ng-model="verifyObjABHAAddAndNum.dataV3"
+														       	autocomplete="off" style="width: 100%;height: 30px !important;" 
+														       	ng-disabled="verifyObjABHAAddAndNum.fetchByIdV3 == '' || verifyObjABHAAddAndNum.fetchByIdV3 ==  undefined">
+														    </div>
+														    
+														     
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button  ng-if="verifyObjABHAAddAndNum.fetchByIdV3 == 3" type="button"  ng-click="searchAbhaAddress()">Verify</button>
+													   </div>
+													</div>
+												</div>
+											</form>
+										</div>
+										
+									    <div class="row margin-top10 " style="height:50px !important"  ng-if="abbhaAddressVerficationofV3AuthMode == true">
+											<form  name="name1" >
+													<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4" ng-repeat="info in authModesAbhaAddress" ng-if="info != 'DEMOGRAPHICS' && fetchDataView==false">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center" >
+														  <lable><input type="radio" id="otpMode" name="otpMode" ng-model="verifyObjABHAAddAndNum.loginOtpVerificationDescV3"
+														   value="{{info}}"  class="ng-pristine ng-untouched ng-valid ng-empty">{{info}}</lable>
+													   </div>
+													</div>
+												</div>
+												
+												<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button  ng-if="verifyObjABHAAddAndNum.fetchByIdV3 == 3" type="button"  ng-click="resuestOTPAbhaAddress()">Verify</button>
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button type="button"  ng-click="verifyObjABHAAddAndNumBack()">Back</button>
+													   </div>
+													</div>
+												</div>
+											</form>
+										</div>
+										
+								      	 
+									</td>
+								</tr>
+								
+								
+								<tr ng-if="abbhaAddressVerficationofV3slide2">
+									<td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+										<form  name="name1" >
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													  <lable> <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="verifyObjABHAAddAndNum.otpInputV3" 
+									                   autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty"  maxlength="6" numbers-only >Enter OTP</lable>
+										 		   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													<div  ng-if="verifyObjABHAAddAndNum.fetchByIdV3 == 3"> <button type="button" style="color: green;" ng-click="searchAbhaAddressResend()" ng-disabled="timer>0">Resend OTP</button> OTP will Expire : {{ timer }} </div>
+												   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+						                                 <button type="button" style="color: green;" ng-if="verifyObjABHAAddAndNum.fetchByIdV3 == 3" ng-click="verifyOTPAbhaAddress()" >Submit OTP</button>
+												   </div>
+												</div>
+											</div>
+										</form> 
+									</td>
+								</tr>
+								
+								
+								<tr ng-if="verifyABHAaddressAndNumber">
+									<td class="width3 vertical-middle">
+									<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+									 <div class="row margin-top10 " style="height:50px !important">
+								      	<select class="floating-label" ng-model="verifyObjABHAAddAndNum.fetchById"  ng-change="resetABHAAddAndNumBack()"style="width: 50%;height: 30px !important;">
+								          	<option  value="0">Please Select Login Criteria</option>
+											<option  value="4">ABHA Number</option>
+										</select>
+										<label> Login Criteria</label>
+										</div>
+										
+									</div>
+									</td>
+									<td class="width6 vertical-middle" >
+								      	 <div class="row margin-top10 " style="height:50px !important" ng-if="firstSlideABHAddress ==true" >
+											<form  name="name1" >
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 ">
+														
+														     <div ng-if="verifyObjABHAAddAndNum.fetchById == 4">
+														         <input type="text"  name="aadhaarCode" class="floating-label" maxlength="17" 
+														           ng-model="verifyObjABHAAddAndNum.data" 
+														          autocomplete="off" style="width: 100%;height: 30px !important;"
+														           ng-disabled="verifyObjABHAAddAndNum.fetchById == '' || verifyObjABHAAddAndNum.fetchById ==  undefined">
+														     <p style="font-size: 12px; color: grey;">For Example: xx-xxxx-xxxx-xxx</p>
+														    </div>
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button  type="button"  ng-click="clickSearch()">Search</button>
+													   </div>
+													</div>
+												</div>
+											</form>
+										</div>
+										 <div class="row margin-top10 " style="height:50px !important"  ng-if="secondSlideABHAddress ==true">
+											<form  name="name1" >
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 ">
+														
+														   <input id="aadharOTPlOGIN" name="loginOtpVerification"
+															type="radio" ng-model="verifyObjABHAAddAndNum.loginOtpVerification" value="1"
+															class="ng-pristine ng-untouched ng-valid ng-not-empty">
+															<label for="dayRadio" id="comp_day_id">Aadhaar OTP</label>
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 ">
+														
+														   <input id="mobileOTPlOGIN" name="loginOtpVerification"
+															type="radio" ng-model="verifyObjABHAAddAndNum.loginOtpVerification" value="2"
+															class="ng-pristine ng-untouched ng-valid ng-not-empty">
+															<label for="dayRadio" id="comp_day_id">Mobile OTP</label>
+													   </div>
+													</div>
+												</div>
+														<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button  type="button"  ng-click="verifyObjABHAAddAndNumLogin()">Verify</button>
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														 <button type="button"  ng-click="verifyObjABHAAddAndNumBack()">Back</button>
+													   </div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</td>
+								</tr>
+
+
+								<tr ng-if="verifyOtpForLoginABHAaddressAndNumber">
+									<td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+										<form  name="name1" >
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													  <lable> <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="verifyObjABHAAddAndNum.otpInput" 
+									                   autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty"  maxlength="6" numbers-only>Enter OTP</lable>
+										 		   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													 <div ng-if="verifyObjABHAAddAndNum.fetchById == 4"><button type="button" style="color: green;"  ng-click="verifyObjABHAAddAndNumResendOtp()" ng-disabled="timer>0">Resend OTP</button> OTP will Expire : {{ timer }}</div>
+												   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+						                                 <button type="button" style="color: green;" ng-if="verifyObjABHAAddAndNum.fetchById == 4" ng-click="verifyObjABHAAddAndNumOtpForLogin()" >Submit OTP</button>
+												   </div>
+												</div>
+											</div>
+										</form> 
+									</td>
+								</tr>
+								
+								
+								
+								<tr ng-if="verifyAadharOrMobile">
+									<td class="width4" vertical-middle">
+								      	<select class="floating-label" ng-model="verifyObj.fetchById" style="width: 50%;height: 30px !important;">
+								          	<option  value="0">Please Select Login Criteria</option>
+											<option  value="1">Aadhaar</option>
+											<!-- <option  value="2">Mobile</option> -->
+										</select>
+									</td>
+									<td class="width4" vertical-middle">
+								      	 <div class="row margin-top10 " style="height:50px !important">
+											<form  name="name1" >
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 ">
+														
+														    <div ng-if="verifyObj.fetchById == 1">
+														       	<input type="text"  name="aadhaarCode" class="floating-label" 
+														       	 placeholder="Aadhaar Number" ng-model="verifyObj.data" maxlength="12" 
+														       	autocomplete="off" style="width: 100%;height: 30px !important;" 
+														       	ng-disabled="verifyObj.fetchById == '' || verifyObj.fetchById ==  undefined" numbers-only>
+														    </div>
+														    
+														    <!--  <div ng-if="verifyObj.fetchById == 2">
+														         <input type="text"  name="aadhaarCode" class="floating-label" maxlength="10" 
+														          placeholder="Mobile Number" ng-model="verifyObj.data" 
+														          autocomplete="off" style="width: 100%;height: 30px !important;"
+														           ng-disabled="verifyObj.fetchById == '' || verifyObj.fetchById ==  undefined" numbers-only>
+														    </div> -->
+													   </div>
+													</div>
+												</div>
+                                            
+											
+                                               <!-- <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+											    <div class="row">
+											       <div class="col-md-3"> <p id="captcha" class="ng-binding">Captcha*: {{ captchaExpression }}</p></div>
+											        <div class="col-md-4">
+                                                        <input type="text" id="userAnswer" ng-model="verifyObj.userAnswer" class="ng-valid dirty ng-dirty ng-touched ng-empty" style="">
+											         <button ng-click="refreshCaptcha()">refresh</button>
+											         <button type="button" ng-click="fetchDetailsForLogin()">Verify</button>
+                                                     <p id="result" class="ng-binding">Incorrect. Try again.</p>
+                                                    </div>
+											    </div>
+											    </div> -->
+											    
+											    <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+											    <div class="row">
+													<div class="col-md-2"></div>
+													    <div class="col-md-2" style="vertical-align: middle;display: block;padding-top: 10px;font-weight: bold;/* margin-left: 10px; */">
+													   <i class="fa fa-refresh" ng-click="refreshCaptcha()" style="/* margin-left: 10px; */"></i> Captcha *
+													</div>
+													<div class="col-md-2">
+													
+													<p id="captcha" style="
+													   height: 34px;
+													   padding: 6px 12px;
+													   font-size: 18px;
+													   line-height: 1.42857143;
+													   color: #555;
+													   background-color: #fff;
+													   background-image: none;
+													   border: 1px solid #ff9a9a;
+													   border-radius: 4px;
+													   margin-right: 15px !important;
+													   color: #ff0000;
+													   " class="ng-binding">{{ captchaExpression }}</p>
+													</div>
+											        <div class="col-md-4">
+                                                        <input type="text" id="userAnswer" ng-model="verifyObj.userAnswer" class="ng-valid dirty ng-dirty ng-touched ng-not-empty ng-valid-parse" style="">
+											         
+											         <button ng-if="verifyObj.fetchById == 1" type="button" ng-click="fetchDetailsForLogin()">Verify</button>
+											         
+                                                    </div>
+											    </div>
+											    </div>
+											    
+												<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-3 col-sm-3 col-md-3 padding-left-right-set4 text-center">
+														 <button type="button"  ng-click="fetchDetailsForLogin()">Verify</button>
+													   </div>
+													</div>
+												</div> -->
+											</form>
+										</div>
+									</td>
+								</tr>
+								
+								<tr ng-if="verifyOtpForLoginDiv">
+									<td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+										<form  name="name1" >
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													  <lable> <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="verifyOtpObject.otpInput" 
+									                   autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty" maxlength="6" numbers-only >Enter OTP</lable>
+										 		   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													 <button type="button" style="color: green;" ng-click="fetchDetailsForLoginResendOtp()" ng-disabled="timer>0">Resend OTP</button> OTP will Expire : {{ timer }}
+												   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+						                                 <button type="button" style="color: green;" ng-click="verifyOtpForLogin()" >Submit OTP</button>
+												   </div>
+												</div>
+											</div>
+										</form> 
+									</td>
+								</tr>
+								
+
+
+                              <tr ng-if="verifyAadharOrMobileSearch">
+									<td class="width4" vertical-middle">
+								      	<select class="floating-label" ng-model="verifyObj.fetchByIdMobile" style="width: 50%;height: 30px !important;">
+								          	<option  value="0">Please Select Login Criteria</option>
+											<option  value="2">Mobile</option> 
+										</select>
+									</td>
+									<td class="width4" vertical-middle">
+								      	 <div class="row margin-top10 " style="height:50px !important">
+											<form  name="name1" >
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 ">
+														     <div ng-if="verifyObj.fetchByIdMobile == 2">
+														         <input type="text"  name="aadhaarCode" class="floating-label" maxlength="10" 
+														          placeholder="Mobile Number" ng-model="verifyObj.dataMobile" 
+														          autocomplete="off" style="width: 100%;height: 30px !important;"
+														           ng-disabled="verifyObj.fetchByIdMobile == '' || verifyObj.fetchByIdMobile ==  undefined" numbers-only>
+														    </div>
+													   </div>
+													</div>
+												</div>
+                                            
+											
+                                               
+											    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+											    <div class="row">
+													<div class="col-md-2"></div>
+													  
+													<div class="col-md-2">
+												
+													</div>
+											        <div class="col-md-4">
+											        
+											         <button ng-if="verifyObj.fetchByIdMobile == 2" type="button" ng-click="searchAbhaNumberByMobileNumber()">Search</button>
+                                                    </div>
+											    </div>
+											    </div>
+											    
+												
+											</form>
+										</div>
+									</td>
+								</tr>
+								
+								<tr ng-if="verifyOtpForLoginByMobileNumber">
+									<td class="width2">OTP </td>
+									<td class="width4" vertical-middle">
+										<form  name="name1" >
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													  <lable> <input type="text" id="motorDeficitshh" name="motorDeficits4" ng-model="verifyOtpObject.otpInput" 
+									                   autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty" maxlength="6" numbers-only >Enter OTP</lable>
+										 		   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													 <button type="button" style="color: green;" ng-click="fetchDetailsForLoginResendOtpaaaa()" ng-disabled="timer>0">Resend OTP</button> OTP will Expire : {{ timer }}
+												   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+						                                 <button type="button" style="color: green;" ng-click="verifyOtpForLoginNewwwww()" >Submit OTP</button>
+												   </div>
+												</div>
+											</div>
+										</form> 
+									</td>
+								</tr>
+								
+
+								
+								
+								<tr ng-if="createNewAccount" style="height: 67px !important;">
+									<td class="width2">Create New ABHA  </td>
+									<td class="width4" vertical-middle">
+										<form  name="name1" >
+											<div class="row input-container">
+										   <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+													<div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 text-center" ng-if="verifyObj.fetchById ==1">
+													  <b>We did not find any ABHA number linked to this Aadhaar number. 
+													  Please use ABHA linked Aadhaar number... Please click Create New ABHA!!!!</b>
+												    </div>
+													<div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 text-center" ng-if="verifyObj.fetchById ==2">
+													 <b>We did not find any ABHA number linked to this mobile number. 
+													  Please use ABHA linked mobile number... Please click Create New ABHA!!!!</b>
+												    </div>
+											</div>
+											</div>
+											
+												<div class="row input-container">
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 text-center">
+						                                 <button type="button" style="color: green;" ng-click="init();setFirstPage()" >Create New ABHA</button>
+												   </div>
+											</div>
+											</div>
+											
+										</form> 
+									</td>
+								</tr>
+								
+								
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	
+	
+	 <div ng-if="authontification" >
+			     <fieldset class=""><!-- main-fieldset -->
+					<legend class="main-heading-div" >ABHA Authentication Mode</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- More rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Authentication Mode
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()">Reset</button>
+									     <button type="button" style="color: green;" ng-click="next('authontificationCheck')"  >Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">Click  on radio button </td>
+									<td class="width4" vertical-middle">
+									
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4" ng-repeat="info in authMethod" ng-if="info != 'DEMOGRAPHICS' && fetchDataView==false">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center" >
+														  <lable><input type="radio" id="otpMode" name="otpMode" ng-model="authOBJECT.authMode"  ng-click="next('authontificationCheck')"  value="{{info}}"  class="ng-pristine ng-untouched ng-valid ng-empty">{{info}}</lable>
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4" ng-if="fetchDataView==true">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center" >
+														  <lable><input type="radio" id="otpMode" name="otpMode" ng-model="authOBJECT.authMode"  ng-click="next('authontificationCheck')"  value="DEMOGRAPHICS"  class="ng-pristine ng-untouched ng-valid ng-empty">DEMOGRAPHICS</lable>
+													   </div>
+													</div>
+												</div>
+									    <!--  <form  name="name1" >
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <lable><input type="radio" id="otpMode" name="otpMode" ng-model="authOBJECT.authMode" value="MOBILE_OTP"  class="ng-pristine ng-untouched ng-valid ng-empty">Mobile OTP</lable>
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														   <lable><input type="radio" id="aadharMode" name="aadharMode" ng-model="authOBJECT.authMode" value="AADHAAR_OTP" class="ng-pristine ng-untouched ng-valid ng-empty">Aadhar OTP</lable>
+													   </div>
+													</div>
+												</div>
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														    <lable><input type="radio" id="demoMode" name="demoMode" ng-model="authOBJECT.authMode" value="DEMOGRAPHICS" class="ng-pristine ng-untouched ng-valid ng-empty">Demographics Details</lable>
+							
+													   </div>
+													</div>
+												</div>
+											</form>  -->
+											<!-- <form  name="name1" >
+												<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4" ng-repeat=" info in authMethod track by $index ">
+													<div class="row input-container">
+														<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+														  <lable><input type="radio" id="otpMode_{{}}" name="otpMode" ng-model="authOBJECT.authMode" value="MOBILE_OTP"  class="ng-pristine ng-untouched ng-valid ng-empty">Mobile OTP</lable>
+													   </div>
+													</div>
+												</div>
+											</form>	 -->
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	
+		
+			     <div ng-if="demograpgyAbha" >
+			     <fieldset class=""><!-- main-fieldset -->
+					<legend class="main-heading-div" >Demographics Details</legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				<div class="row padding-left-right-set4 table-container padding-top0">
+					<div class="table-container">
+					  <!-- More rows... -->
+					</table>
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+								<tr>
+									<th class="width1 text-left">
+									    Demographics Details
+									 </th>
+									 <th class="width2 text-right">
+									   <button type="button" style="color: green;" ng-click="init()">Reset</button>
+									     <button type="button" style="color: green;">Next</button>
+									 </th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+									<td class="width2">Name </td>
+									<td class="width4" vertical-middle">
+									      <input type="text"  name="aadhaarCode" class="floating-label" placeholder="xyz@sbx" ng-model="obj.sbxId" 
+								           style="width: 50%;height: 30px !important;">
+									</td>
+								</tr>
+								<tr>
+									<td class="width2">Gender </td>
+									<td class="width4" vertical-middle">
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													  <lable><input type="radio" id="male" name="male" ng-model="gender" value="1" class="ng-pristine ng-untouched ng-valid ng-empty">Male</lable>
+												   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													   <lable><input type="radio" id="female" name="female" ng-model="gender" value="2"class="ng-pristine ng-untouched ng-valid ng-empty">Female</lable>
+												   </div>
+												</div>
+											</div>
+											<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+												<div class="row input-container">
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+													    <lable><input type="radio" id="other" name="other" ng-model="gender" value="3"class="ng-pristine ng-untouched ng-valid ng-empty">Other</lable>
+						
+												   </div>
+												</div>
+											</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="width2">Date of birth </td>
+									<td class="width4" vertical-middle">
+									      <input type="text"  name="aadhaarCode" class="floating-label" placeholder="01/01/2023" ng-model="dateOfBirth" 
+								          style="width: 50%;height: 30px !important;">
+									</td>
+								</tr>
+								
+								<tr>
+									<td class="width2">Mobile number </td>
+									<td class="width4" vertical-middle">
+									      <input type="text"  name="aadhaarCode" class="floating-label" placeholder="9986699666" ng-model="mobileNumber" 
+								          style="width: 50%;height: 30px !important;">
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	      
+	       <div class="row padding-top20"  >
+			     <fieldset class=""><!-- main-fieldset -->
+					<legend class="main-heading-div">Link Care Context </legend>
+				</fieldset>
+				<div class="abdm-work-panel">
+					<form name="abdmLinkCareContextForm">
+						<div class="abdm-work-grid">
+							<div class="abdm-work-card">
+								<h4 class="abdm-work-card-title">Token Link</h4>
+								<div class="abdm-field-grid abdm-field-grid-single">
+									<div class="abdm-field">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<input type="text" autocomplete="off" name="description" id="tokenLinkPatientSearch" class="text-input floating-label" ng-model="patientName" typeahead-min-length="0" uib-typeahead="serviceMaster.patientName for serviceMaster in searchPatient($viewValue)" typeahead-on-select="addSelectedPatient($item, $model, $label);setDateAndTime2()">
+												<label for="tokenLinkPatientSearch">Search Patient<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+									<div class="abdm-field">
+										<span class="abdm-field-label">Date Time</span>
+										<div class="abdm-readonly-value">{{dateAndTime2}}</div>
+									</div>
+								</div>
+								<div class="abdm-card-actions">
+									<input type="button" ng-click="hipInitiateLinkingByGeerateToken()" value="Link" class="btn btn-primary btn-save-box-shadow">
+								</div>
+							</div>
+							<div class="abdm-work-card">
+								<h4 class="abdm-work-card-title">Deep Link SMS</h4>
+								<div class="abdm-field-grid abdm-field-grid-single">
+									<div class="abdm-field">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<input type="text" autocomplete="off" name="description" id="deepLinkPatientSearch" class="text-input floating-label" ng-model="patientNameDeepLink" typeahead-min-length="0" uib-typeahead="serviceMaster.patientName for serviceMaster in searchPatientDeepLink($viewValue)" typeahead-on-select="addSelectedPatientDeepLink($item, $model, $label)">
+												<label for="deepLinkPatientSearch">Search Patient For Deep Link SMS<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="abdm-card-actions">
+									<input type="button" ng-click="notifyToABDM()" value="DeepLink" class="btn btn-primary btn-save-box-shadow">
+								</div>
+							</div>
+							<div class="abdm-work-card">
+								<h4 class="abdm-work-card-title">Encounter Link</h4>
+								<div class="abdm-field-grid">
+									<div class="abdm-field">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<input type="text" autocomplete="off" name="description" id="encounterLinkPatientSearch" class="text-input floating-label" ng-model="patientNameNew" typeahead-min-length="0" uib-typeahead="serviceMaster.patientName for serviceMaster in searchPatientNew($viewValue)" typeahead-on-select="addSelectedPatientNew($item, $model, $label)">
+												<label for="encounterLinkPatientSearch">Search Patient<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+									<div class="abdm-field">
+										<select class="text-input floating-label dirty" ng-model="selectedVisitType" ng-change="updateDropdowns()">
+											<option value="">Select</option>
+											<option value="OP">OP</option>
+											<option value="IP">IP</option>
+										</select>
+										<label for="code">Visit Type.</label>
+									</div>
+									<div class="abdm-field" ng-if="selectedVisitType === 'OP'">
+										<select class="text-input floating-label dirty" id="" ng-model="link.selectedEncounter" ng-change="setDateAndTime($event)">
+											<option value="">Select Encounter Number</option>
+											<option ng-repeat="info in getEncounterNumberList " date="{{info.careContextTime}}" ng-value="{{info.encounterNumber}}">{{info.encounterNumber}}</option>
+										</select>
+										<label for="encounter">Encounter Number</label>
+									</div>
+									<div class="abdm-field" ng-if="selectedVisitType === 'IP'">
+										<select class="text-input floating-label dirty" id="" ng-model="link.selectedEncounter" ng-change="setDateAndTime()">
+											<option value="">Select Admission Number</option>
+											<option ng-repeat="info in getAdmissionNumberList " ng-value="{{info.admissionNumber}}">{{info.admissionNumber}}</option>
+										</select>
+										<label for="admission">Admission Number</label>
+									</div>
+									<div class="abdm-field">
+										<span class="abdm-field-label">Visit Date Time</span>
+										<div class="abdm-readonly-value">{{dateAndTime}}</div>
+									</div>
+									<div class="abdm-field">
+										<a class="abdm-info-action" title="Granted HiType" data-toggle="modal" data-target="#hiTypeModel1">
+											<i class="fa fa-info-circle"></i>
+										</a>
+									</div>
+								</div>
+								<div class="abdm-card-actions">
+									<input type="button" ng-click="hipInitiateLinkingByGeerateTokenNew()" value="Link" class="btn btn-primary btn-save-box-shadow">
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- Situation Table START -->
+				
+				 <div class="row margin-top10 abdm-legacy-link-row" style="height:50px !important">
+					<form  name="name1" >
+				
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+								<input type="text" autocomplete="off" name="description" 
+									id="searchServiceId" class="text-input floating-label"
+									ng-model="patientName" 
+									typeahead-min-length="0" uib-typeahead="serviceMaster.patientName for serviceMaster in searchPatient($viewValue)"
+									typeahead-on-select="addSelectedPatient($item, $model, $label);setDateAndTime2()">
+								       <label for="code">Search Patient<span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+							   </div>
+							</div>
+						</div>
+						 <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" style="margin-top: 13px;">
+				            <div class="">
+				             {{dateAndTime2}}
+				            </div>
+				        </div>
+						
+						<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+								<input style="width: 50px !important;" type="button" ng-click="hipInitiateLinkingByGeerateToken()" value="Link" class="btn btn-primary btn-save-box-shadow">
+							   </div>
+							</div>
+						</div>
+						
+						<div class="col-lg-3 col-md-2 col-sm-2 padding-left-right-set4 margin-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+								<input type="text" autocomplete="off" name="description" 
+									id="searchServiceId" class="text-input floating-label"
+									ng-model="patientNameDeepLink" 
+									typeahead-min-length="0" uib-typeahead="serviceMaster.patientName for serviceMaster in searchPatientDeepLink($viewValue)"
+									typeahead-on-select="addSelectedPatientDeepLink($item, $model, $label)">
+								       <label for="code">Search Patient For Deep Link SMS<span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+							   </div>
+							</div>
+						</div>
+						
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+								<input style="width: 80px !important;" type="button" ng-click="notifyToABDM()" value="DeepLink" class="btn btn-primary btn-save-box-shadow">
+							   </div>
+							</div>
+						</div>
+						
+					</form>
+					</div>
+					
+					
+					 <div class="row margin-top10 abdm-link-row-compact abdm-legacy-link-row" style="height:50px !important">
+    <form name="name1">
+        <!-- Patient Name Search -->
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top10">
+            <div class="row input-container">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11">
+                    <div class="">
+                        <input type="text" autocomplete="off" name="description" 
+                               id="searchServiceId" class="text-input floating-label"
+                               ng-model="patientNameNew" 
+                               typeahead-min-length="0" uib-typeahead="serviceMaster.patientName for serviceMaster in searchPatientNew($viewValue)"
+                               typeahead-on-select="addSelectedPatientNew($item, $model, $label)">
+                        <label for="code">Search Patient<span class="star">*</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visit Type Dropdown -->
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" style="margin-top: 13px;">
+            <div class="">
+                <select class="text-input floating-label dirty" ng-model="selectedVisitType" ng-change="updateDropdowns()">
+                    <option value="">Select</option>
+                    <option value="OP">OP</option>
+                    <option value="IP">IP</option>
+                </select>
+                <label for="code">Visit Type.</label>
+            </div>
+        </div>
+
+        <!-- Encounter Dropdown for OP (Add margin-left for spacing) -->
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" ng-if="selectedVisitType === 'OP'" style="margin-left: 20px; margin-top: 13px;">
+            <div>
+                <!-- <select class="text-input floating-label dirty" ng-model="selectedEncounter" 
+                        ng-options="encounter.encounterNumber for encounter in getEncounterNumberList" ng-change="onEncounterChange(selectedEncounter)">
+                    <option value="">Select Encounter Number</option>
+                </select> -->
+                
+             <!--   <select class="text-input floating-label dirty"
+        ng-model="selectedEncounter"
+        ng-options="encounter.encounterNumber as encounter.encounterNumber for encounter in getEncounterNumberList track by encounter.encounterNumber">
+    <option value="">Select Encounter Number</option>
+</select>
+ -->
+ 
+               <select class="text-input floating-label dirty" id="" ng-model="link.selectedEncounter" ng-change="setDateAndTime($event)">
+               <option value="">Select Encounter Number</option>
+				<option ng-repeat="info in getEncounterNumberList " date="{{info.careContextTime}}" ng-value="{{info.encounterNumber}}">{{info.encounterNumber}}</option>
+			  </select> 
+
+                <label for="encounter">Encounter Number</label>
+            </div>
+        </div>
+
+        <!-- Admission Dropdown for IP (Add margin-left for spacing) -->
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" ng-if="selectedVisitType === 'IP'" style="margin-left: 20px; margin-top: 13px;">
+            <div>
+                <!-- <select class="text-input floating-label dirty"
+                        ng-model="selectedAdmission"
+                        ng-options="admission.admissionNumber for admission in getAdmissionNumberList">
+                    <option value="">Select Admission Number</option>
+                </select> -->
+                
+                <select class="text-input floating-label dirty" id="" ng-model="link.selectedEncounter" ng-change="setDateAndTime()"> 
+               <option value="">Select Admission Number</option>
+				<option ng-repeat="info in getAdmissionNumberList " ng-value="{{info.admissionNumber}}">{{info.admissionNumber}}</option>
+			  </select>
+                
+                
+                <label for="admission">Admission Number</label>
+            </div>
+        </div>
+         
+         <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" style="margin-top: 5px;padding-left: 70px !important">
+            <div class="">
+              <label for="admission">Visit Date Time</label></br>
+             {{dateAndTime}}
+             
+            </div>
+        </div>
+          <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4" style="margin-top: 16px;padding-left: 70px !important">
+                 <a title="Granted HiType" data-toggle="modal" data-target="#hiTypeModel1">
+						 <i class="fa fa-info-circle"></i>
+			    </a>
+						        
+        </div>
+
+        <!-- Link Button -->
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+            <div class="row input-container">
+                <div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center" style="margin-top: 13px;">
+                    <input style="width: 50px !important;" type="button" ng-click="hipInitiateLinkingByGeerateTokenNew()" value="Link" class="btn btn-primary btn-save-box-shadow">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+					 
+					
+					
+					
+					
+					
+					
+					
+							  
+				
+	      </div>
+	      
+	       <div class="row padding-top20" style="padding-top:30px !important" >
+			     <fieldset class=""><!-- main-fieldset -->
+					<legend class="main-heading-div">Share Details </legend>
+				</fieldset>
+				<!-- Situation Table START -->
+				
+				 <div class="row margin-top10 " style="height:50px !important">
+					<form  name="name1" >
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4 text-center">
+								   <a ng-click="generateQRcode()"><i class="fa fa-qrcode fa-3x" aria-hidden="true"></i></a>
+							   </div>
+							</div>
+						</div>
+					</form>
+					</div>
+							  
+				<div class="row padding-left-right-set4 table-container padding-top10 abdm-action-card">
+					<div class="table-container">
+					  <!-- More rows... -->
+						
+						<div class="table-container-body" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							 <table class="table table-bordered">
+                                                                    <tr>
+                                                                        <th class="width15"><span class="">ABHA Number</span></th>
+                                                                        <th class="width10"><span class="">ABHA Address</span></th>
+                                                                        <th class="width10"><span class="">Name</span></th>
+                                                                        <th class="width5"><span class="">Gender</span></th>
+                                                                        <th class="width5"><span class="">Mobile</span></th>
+                                                                        <th class="width10"><span class="">Token Number</span></th>
+                                                                        <th class="width10">Date of birth</th>
+                                                                        <th class="width10"><span class="">Action</span></th>
+                        
+                                                                    </tr>
+                                                                    <tr ng-repeat="info in shareList">
+                                                                        <td lass="width15 text-center">
+                                                                            {{info.abhaId}}
+                                                                        </td><!-- {{info.ceratedDateNew | date : dateFormat}} -->
+                                                                        <td lass="width10 text-center" >
+                                                                            {{info.sbxId}}
+                                                                        </td>
+                                                                        <td lass="width10 text-center">{{info.name}}</td>
+                                                                        <td lass="width5 text-center">
+                                                                               {{info.gender}} 
+                                                                        </td>
+                                                                        <td class="width5 text-center"> {{info.mobileNumber}}</td>
+                                                                          <td class="width10 text-center"> {{info.tokenNumber}}</td>
+                                                                        <td lass="width10 text-center">{{info.dob}}</td>
+                                                                        <td class="width10 text-center">
+                                                                           <!--  <a><i class="text-center fa-color" title="View" aria-hidden="true" ng-click="fetchModeForView(info)"> View</i></a> -->
+                                                                             <a><i class="text-center fa-color" title="View" aria-hidden="true" ng-click="fetchModeForView(info)"> Register</i></a>
+                                                                            <!--  <a><i class="text-center fa-color" title="View" aria-hidden="true" ng-click="hipInitiateLinkingByGeerateToken(info)"> Link Care Context</i></a> -->
+                                                                        </td>
+                        
+                                                                    </tr>
+                                                                </table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+	       <div class="row padding-top20" style="padding-top:30px !important" >
+			     <fieldset class="">
+					<legend class="main-heading-div">Discover Details </legend>
+				</fieldset>
+				<div class="row padding-left-right-set4 table-container padding-top10 abdm-action-card">
+					<div class="table-container">
+						<div class="table-container-body" style="overflow: overlay;"> 
+							 <table class="table table-bordered">
+                                                                    <tr>
+                                                                        <th class="width15"><span class="">ABHA Number</span></th>
+                                                                        <th class="width15"><span class="">ABHA Address</span></th>
+                                                                        <th class="width10"><span class="">Name</span></th>
+                                                                        <th class="width5"><span class="">Gender</span></th>
+                                                                        <th class="width5"><span class="">Mobile</span></th>
+                                                                        <th class="width10"><span class="">Action</span></th>
+                        
+                                                                    </tr>
+                                                                    <tr ng-repeat="info in getPatientReqDetails">
+                                                                        <td lass="width15 text-center">
+                                                                            {{info.healthId}}
+                                                                        </td><!-- {{info.ceratedDateNew | date : dateFormat}} -->
+                                                                        <td lass="width15 text-center" >
+                                                                            {{info.healthNumber}}
+                                                                        </td>
+                                                                        <td lass="width10 text-center">{{info.name}}</td>
+                                                                        <td lass="width5 text-center">
+                                                                               {{info.gender}} 
+                                                                        </td>
+                                                                        <td class="width5 text-center"> {{info.mobileNumber}}</td>
+                                                                        <td class="width10 text-center">
+                                                                             <a><i class="text-center fa-color" title="View" aria-hidden="true" ng-click="fetchModeForView(info)"> Register</i></a>
+                                                                        </td>
+                        
+                                                                    </tr>
+                                                                </table>
+						</div>
+					</div>
+				</div> 
+	      </div>
+		
+	</div>
+	
+	
+	
+
+<div id="pngCardPopUP" class="modal fade ng-scope common-medium-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Show PNG card
+				</div>
+			</div>
+			<div class="modal-body">
+		        <div class="body-content">
+		        
+		        	<div class="row padding-top10 ">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" data-dismiss="modal"  title="Ok" id="otpOk" ng-click="closePNGcard()">Registration</button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right" ng-if="enrollmentEnrolByAadhaarObject.isNew == false">
+						  <button class="btn btn-primary btn-save-box-shadow  width100" data-dismiss="modal"  ng-click="getsuggesionForNew()">Create New ABHA</button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						 <a href="#" id="link1" ng-click="downloadImage()"><b>Download</b></a>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+					  <div class="img-container text-center">
+					    <img id="printButton" src="resources/assets/images/icon/icons8-printer-50.png" style="height: 20px !important;">
+					  </div>
+					</div>
+
+				</div>
+				
+		        <div class="row margin-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group"  id="pngCard">  
+									<img width="500" height="450" ng-src="{{pngCard}}" alt="Base64 Image" />
+								</div>
+							</div>
+						</div>
+					</div>
+			      </div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+			   	<div class="row padding-top10 ">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" data-dismiss="modal"  title="Ok" id="otpOk" ng-click="closePNGcard()" >OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="hipInitiateLinkingByGenerateTokenModel" class="modal fade ng-scope common-medium-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					HIP Initiate Linking
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true"></span>
+                    </button>
+				</div>
+			</div>
+			<div class="modal-body">
+		        <div class="body-content">
+             <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group"  id="pngCard">  
+									Link Care Context
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+			   	<div class="row padding-top10 ">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" data-dismiss="modal" aria-label="Close" title="Ok" id="otpOk" ng-click="hipInitiateLinkingcarecontext()" >OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div id="hipInitiateLinkingByGenerateTokenModel1" class="modal fade ng-scope common-medium-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					HIP Initiate Linking
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true"></span>
+                    </button>
+				</div>
+			</div>
+			<div class="modal-body">
+		        <div class="body-content">
+             <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group"  id="pngCard">  
+									Link Care Context
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+			   	<div class="row padding-top10 ">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" data-dismiss="modal" aria-label="Close" title="Ok" id="otpOk" ng-click="hipInitiateLinkingcarecontext1()" >OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<!--   <div id="hipInitiateLinkingByGenerateTokenModel" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					HIP Initiate Linking
+					 <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true"></span>
+                    </button>
+				</div>
+			</div>
+			<div class="modal-body">
+		        <div class="body-content">
+		        <div class="row margin-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group"  id="pngCard">  
+									Link Care Context
+								</div>
+							</div>
+						</div>
+					</div>
+			      </div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+			   	<div class="row padding-top10 ">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" data-dismiss="modal" aria-label="Close" title="Ok" id="otpOk" ng-click="hipInitiateLinkingcarecontext()" >OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>  -->
+
+
+
+
+
+
+<div id="mobileNumberValidaionPoupUpCreateABHA" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false">
+	<div class="modal-dialog" style="max-width: 500px; margin: 30px auto;">
+		<div class="modal-content" style="border-radius: 10px; overflow: hidden;">
+			<div class="modal-header" style="border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center;">
+				<h5 class="modal-title" style="margin: 0; font-size: 2rem; font-weight: 500;">Mobile Number Validation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 1.5rem;">
+                    <span aria-hidden="true"></span>
+                </button>
+
+			</div>
+			<div class="modal-body" style="padding: 20px;">
+		        <div class="body-content">
+		          <div class="row pt-4 pb-4">
+					    <div class="col-md-12">
+					     <div class="card" style="border: none; box-shadow: none;">
+                    <div class="card-body text-center" style="padding: 0;">
+                        <img src="resources/assets/images/icon/32px-Eo_circle_green_checkmark.svg.png" alt="Success" style="height: 80px; margin-bottom: 15px;">
+                        <p style="font-size: 1.75rem; font-weight: 400; margin-bottom: 15px;" ng-if ="updateMobileNumberstrip == false" >Mobile Number for communication is same as Aadhaar Number. No additional information required.</p>
+                        <p style="font-size: 1.75rem; font-weight: 400; margin-bottom: 15px;" ng-if ="updateMobileNumberstrip == true" >Mobile Number for communication is different as Aadhaar Number. No additional information required.</p>
+                        
+                             <div ng-if ="updateMobileNumberstrip == false">
+						    	    <div ng-if ="enrollmentEnrolByAadhaarObject.isNew == true">
+						    	        <button type="button" class="btn btn-primary" ng-click="getsuggesionForNew()" style="background-color: #007bff; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px;">Continue</button>
+						    	        
+						    	    </div>
+						    		<div ng-if ="enrollmentEnrolByAadhaarObject.isNew == false">
+						    	        <button type="button" class="btn btn-primary" ng-click="profileAccountNewCreateABHA()" style="background-color: #007bff; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px;">Continue</button>
+						    	        
+						    	    </div>
+						    	</div>
+						        <div ng-if ="updateMobileNumberstrip == true">
+						    	     <button type="button" class="btn btn-primary" ng-click="updateMobileNumber()" style="background-color: #007bff; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px;">Continue</button>
+						    	     
+						    	</div>
+                    </div>
+                </div>
+
+					    </div>
+					  
+				    </div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="row">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <div id="mobileNumberValidaionPoupUpCreateABHA" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false"  style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+				</div>
+			</div>
+			<div class="modal-body">
+		        <div class="body-content">
+		          <div class='row pt-4 pb-4' >
+					    <div class="col-md-12">
+					     <div class="card"   style ="height: 200px !important;">
+						    <div class="card-body">
+						    <div class="row">
+						    	<div class="col-md-12">
+						    		<div class="img-container text-center">
+						    			<img src="resources/assets/images/icon/32px-Eo_circle_green_checkmark.svg.png" style="height: 80px !important;">
+						    		</div>
+						    	</div>
+						    </div>
+						     <div class="row pt-2">
+						    	<div class="col-md-12 text-center" ng-if ="updateMobileNumberstrip == false" >
+						    		<label style="font-weight:400;font-size:15px">Mobile Number for communication is same as<br>Aadhaar Number. No additional information required</label>
+						    	</div>
+						    	<div class="col-md-12 text-center" ng-if ="updateMobileNumberstrip == true" >
+						    		<label style="font-weight:400;font-size:15px">Mobile Number for communication is different as<br>Aadhaar Number. No additional information required</label>
+						    	</div>
+						    	<div ng-if ="updateMobileNumberstrip == false">
+						    	    <div ng-if ="enrollmentEnrolByAadhaarObject.isNew == true">
+						    	        <button   ng-click="getsuggesionForNew()">Continue</button>
+						    	    </div>
+						    		<div ng-if ="enrollmentEnrolByAadhaarObject.isNew == false">
+						    	        <button   ng-click="profileAccountNewCreateABHA()">Continue</button>
+						    	    </div>
+						    	</div>
+						        <div ng-if ="updateMobileNumberstrip == true">
+						    	     <button ng-click="updateMobileNumber()">Continue</button>
+						    	</div>
+						    </div>
+						    </div>
+					     </div>
+					    </div>
+					  
+				    </div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="row">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>   -->
+
+
+<!-- <div id="mobileNumberValidaionPoupUpCreateABHA" class="modal fade show" role="dialog" tabindex="-1" style="display: block;">
+    <div class="modal-dialog" style="max-width: 500px; margin: 30px auto;">
+        <div class="modal-content" style="border-radius: 10px; overflow: hidden;">
+            <div class="modal-header" style="border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center;">
+                <h5 class="modal-title" style="margin: 0; font-size: 1.25rem; font-weight: 500;">Mobile Number Validation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 1.5rem;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <div class="card" style="border: none; box-shadow: none;">
+                    <div class="card-body text-center" style="padding: 0;">
+                        <img src="resources/assets/images/icon/32px-Eo_circle_green_checkmark.svg.png" alt="Success" style="height: 80px; margin-bottom: 15px;">
+                        <p  ng-if ="updateMobileNumberstrip == false"  style="font-size: 1rem; font-weight: 400; margin-bottom: 15px;">Mobile Number for communication is same as Aadhaar Number. No additional information required.</p>
+                         <p   ng-if ="updateMobileNumberstrip == true"  style="font-size: 1rem; font-weight: 400; margin-bottom: 15px;">Mobile Number for communication is different as Aadhaar Number. Do you need to update ?.</p>
+                         
+                         
+                            <div ng-if ="updateMobileNumberstrip == false">
+			    	    <div ng-if ="enrollmentEnrolByAadhaarObject.isNew == true">
+			    	         <button type="button" class="btn btn-primary" ng-click="getsuggesionForNew()" style="background-color: #007bff; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px;">Continue</button>
+			    	    </div>
+			    		<div ng-if ="enrollmentEnrolByAadhaarObject.isNew == false">
+			    	         <button type="button" class="btn btn-primary" ng-click="profileAccountNewCreateABHA()" style="background-color: #007bff; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px;">Continue</button>
+			    	    </div>
+			    	</div>
+			        <div ng-if ="updateMobileNumberstrip == true">
+			    	      <button type="button" class="btn btn-primary" ng-click="updateMobileNumber()" style="background-color: #007bff; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px;">Continue</button>
+			    	</div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ -->
+
+<div id="mobileNumberValidaionPoupUp" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+				</div>
+			</div>
+			<div class="modal-body">
+		        <div class="body-content">
+		          <div class='row pt-4 pb-4' >
+					    <div class="col-md-12">
+					     <div class="card"   style ="height: 200px !important;">
+						    <div class="card-body">
+						    <div class="row">
+						    	<div class="col-md-12">
+						    		<div class="img-container text-center">
+						    			<img src="resources/assets/images/icon/32px-Eo_circle_green_checkmark.svg.png" style="height: 80px !important;">
+						    		</div>
+						    	</div>
+						    </div>
+						     <div class="row pt-2">
+						    	<div class="col-md-12 text-center" ng-if ="updateMobileNumberstrip == false" >
+						    		<label style="font-weight:400;font-size:15px">Mobile Number for communication is same as<br>Aadhaar Number. No additional information required</label>
+						    	</div>
+						    	<div class="col-md-12 text-center" ng-if ="updateMobileNumberstrip == true" >
+						    		<label style="font-weight:400;font-size:15px">Mobile Number for communication is different as<br>Aadhaar Number. No additional information required</label>
+						    	</div>
+						    	<div ng-if ="updateMobileNumberstrip == false">
+						    	    <div ng-if ="enrollmentEnrolByAadhaarObject.isNew == true">
+						    	        <button   ng-click="getsuggesionForNew()">Continue</button>
+						    	    </div>
+						    		<div ng-if ="enrollmentEnrolByAadhaarObject.isNew == false">
+						    	        <button   ng-click="profileAccountNew()">Continue</button>
+						    	    </div>
+						    	</div>
+						        <div ng-if ="updateMobileNumberstrip == true">
+						    	     <button ng-click="updateMobileNumber()">Continue</button>
+						    	</div>
+						    </div>
+						    </div>
+					     </div>
+					    </div>
+					  
+				    </div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="row">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="otpModal" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Enter your OTP and Mobile Number
+				</div>
+			</div>
+			<div class="modal-body">
+		        <div class="body-content">
+		        
+		        <div class="row margin-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" >  
+									<input type="text" id="otpInput" ng-model ="otpInput" maxlength="6" numbers-only placeholder="Enter OTP">
+									<label for="code">Enter OTP</label>
+								</div>
+							</div>
+						</div> 
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" >  
+									<input type="text" id="otpInput" ng-model ="mobileInput" placeholder="Enter Mobile Number">
+									<label for="description" class="">Enter Mobile Number</label>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+		   </div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" id="otpOk" ng-click="verifyOTP()">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="modal fade common-small-popup" id="qrDetailsPopup"
+	role="dialog" style="z-index: 100000; padding-top: 150px !important;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="margin-left: 30%;">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					<span class="qr-modal-title-text">Scan this code from your PHR App</span>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<div class="body-content">
+					<div>
+						<div id="qrcode" style="width : 200;height : 200" class="text-center"></div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border: none;">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							data-dismiss="modal" title="Ok" ng-click="getShareDetailsd()"> <i
+							class="fa fa-check-circle" style="font-size: 18px"
+							aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="modal fade common-small-popup" id="confirmOTP"
+	role="dialog" style="z-index: 100000; padding-top: 150px !important;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="margin-left: 30%;">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Enter OTP
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<div class="body-content">
+					<div>
+						<input type="text" ng-model="confirmOTP"  maxlength="6" numbers-only placeholder="Enter OTP">
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border: none;">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							data-dismiss="modal" title="ok" ng-click="callConfirm()"> <i
+							class="fa fa-check-circle" style="font-size: 18px"
+							aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade common-small-popup" id="shareDetails"
+	role="dialog" style="z-index: 100000; padding-top: 150px !important;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="margin-left: 30%;">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Share Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<div class="body-content">
+					<div>
+						{{shareObject}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border: none;">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							data-dismiss="modal" title="ok" ng-click="fetchMode()"> <i
+							class="fa fa-check-circle" style="font-size: 18px"
+							aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade common-small-popup" id="loginVerifyV3"
+	role="dialog" style="z-index: 100000; padding-top: 150px !important;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="margin-left: 30%;">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Verify  Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<div class="body-content">
+				      <div>
+						Name:<b>{{patientDetails.name}}</b>
+					</div>
+					<div>
+						ABHA Address:<b>{{patientDetails.preferredAbhaAddress}}</b>
+					</div>
+					<div>
+					   ABHA Number <b>{{patientDetails.ABHANumber}}</b>
+					</div>
+					<div>
+					   Mobile number:<b>{{patientDetails.mobile}}</b>
+					</div>
+					<div>
+					   Date of Birth:<b>{{patientDetails.dayOfBirth}}-{{patientDetails.monthOfBirth}}-{{patientDetails.yearOfBirth}}</b>
+					</div>
+					<div ng-if="patientDetails.gender =='F'">
+					   Gender :<b>Female</b>
+					</div>
+					<div ng-if="patientDetails.gender =='M'">
+					    Gender :<b>Male</b>
+					</div>
+					<div>
+					   Address :<b>{{patientDetails.address}}</b>
+					</div>
+					<div>
+					   State Name :<b>{{patientDetails.stateName}}</b>
+					</div>
+					<div>
+					   Pin Code :<b>{{patientDetails.pincode}}</b>
+					</div>
+					<div ng-if="profilePhoto">
+					   <img width="100" height="100" ng-src="{{profilePhoto}}" alt="Base64 Image" />
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border: none;">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							data-dismiss="modal" title="ok" ng-click="profileAccountVerify()"> <i
+							class="fa fa-check-circle" style="font-size: 18px"
+							aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	</div>
+	
+	
+	<div class="modal fade common-small-popup" id="loginVerifyV3New"
+	role="dialog" style="z-index: 100000; padding-top: 150px !important;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="margin-left: 30%;">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Verify  Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<div class="body-content">
+				     <div>
+						Name:<b>{{patientDetails.fullName}}</b>
+					</div>
+					<div>
+						ABHA Address:<b>{{patientDetails.abhaAddress}}</b>
+					</div>
+					<div>
+					   ABHA Number <b>{{patientDetails.ABHANumber}}</b>
+					</div>
+					<div>
+					   Mobile number:<b>{{patientDetails.mobile}}</b>
+					</div>
+					<div>
+					   Date of Birth:<b>{{patientDetails.dateOfBirth}}</b>
+					</div>
+					<div ng-if="patientDetails.gender =='F'">
+					   Gender :<b>Female</b>
+					</div>
+					<div ng-if="patientDetails.gender =='M'">
+					    Gender :<b>Male</b>
+					</div>
+					<div>
+					   Address :<b>{{patientDetails.address}}</b>
+					</div>
+					<div>
+					   State Name :<b>{{patientDetails.stateName}}</b>
+					</div>
+					<div>
+					   Pin Code :<b>{{patientDetails.pinCode}}</b>
+					</div>
+					<div ng-if="profilePhoto">
+					   <img width="100" height="100" ng-src="{{profilePhoto}}" alt="Base64 Image" />
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border: none;">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							data-dismiss="modal" title="ok" ng-click="phrCardAbhaAddress()"> <i
+							class="fa fa-check-circle" style="font-size: 18px"
+							aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	</div>
+	
+	
+<div class="modal fade common-large-popup" id="loginVerifyV3Mobile"
+	role="dialog" style="z-index: 100000; padding-top: 150px !important;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="margin-left: 30%;">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Verify  Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<div class="body-content">
+				<div class='row pt-4 pb-4'>
+					   <div class="col-md-12">
+					        <div>
+					          <!--  <select class="text-input floating-label dirty" id="icpcsystem" ng-model="verifyObj.ABHANumber">
+									<option ng-repeat="info in loginVerifyOTPObject " ng-value="{{info.ABpreferredAbhaAddress}}" value="{{info.preferredAbhaAddress}}">{{info.preferredAbhaAddress}}</option>
+							   </select> -->
+							   
+							   <div class="row serachedPatientList padding-left-right-set4">
+								<div class="col-md-12 col-lg-12  fix-height-scroll230">
+									<table class="table table-bordered  margin-top4">
+										<thead>
+											<tr>
+										 		<th><span class="">Sr No.</span></th>
+												<th><span class="">Abha Number </span></th>
+												<th><span class="">Name </span></th>
+												<th><span class="">Gender </span></th>
+												<th><span class="">Action </span></th>
+											</tr>
+										</thead>
+										<tbody>
+											 <tr ng-repeat="info in searchABHANbumberByMobileNumber track by $index">
+												<td>{{info.index}}</td>
+												<td>{{info.ABHANumber}}</td>
+												<td>{{info.name}}</td>
+												<td>{{info.gender}}</td>
+												<td>
+													<a href="" class="btn btn-primary btn-save-box-shadow width100"
+														data-dismiss="modal" title="ok" ng-click="verifyUserforMobileNew(info)"> <i
+														class="fa fa-check-circle" style="font-size: 18px"
+														aria-hidden="true"></i></a>
+						                        </td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+				 
+					        </div>
+					   </div>
+				    </div>
+				</div>
+			</div>
+			
+			<!-- <div class="modal-footer" style="border: none;">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							data-dismiss="modal" title="ok" ng-click="verifyUser()"> <i
+							class="fa fa-check-circle" style="font-size: 18px"
+							aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div> -->
+
+		</div>
+	</div>
+	</div>
+
+<div class="modal fade common-small-popup" id="confirmWithMobileOtp"
+	role="dialog" style="z-index: 100000; padding-top: 150px !important;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="margin-left: 30%;">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Share Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<div class="body-content">
+				     <div>
+						{{confirmWithMobileOtpResponseNew.name}}
+					</div>
+					<div>
+						{{confirmWithMobileOtpResponseNew.mobile}}
+					</div>
+					<div>
+						{{confirmWithMobileOtpResponseNew.healthIdNumber}}
+					</div>
+					<div>
+					    {{confirmWithMobileOtpResponseNew.healthId}}
+					</div>
+					<div ng-if="profilePhoto">
+					   <img width="100" height="100" ng-src="{{profilePhoto}}" alt="Base64 Image" />
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border: none;">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							data-dismiss="modal" title="ok" ng-click="closePNGcard()"> <i
+							class="fa fa-check-circle" style="font-size: 18px"
+							aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	</div>
+	<div id="hiTypeModel1" class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row" style="">
+					Linked  HiTypes
+					<button type="button" class="close" style="" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row serachedPatientList padding-left-right-set4">
+					<div class="col-md-12 col-lg-12  fix-height-scroll230">
+						<table class="table table-bordered  margin-top4">
+							<thead>
+								<tr>
+							 		<th><span class="">Sr No.</span></th>
+									<th><span class="">Hi Types </span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in linkedCareContextList track by $index">
+									<td>{{$index+1}}</td>
+									<td>{{info.hiType}}</td>
+									
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+		<div class="modal fade common-small-popup" id="confirmPopup"
+			role="dialog" style="z-index: 100000; padding-top: 150px !important;"
+			data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog" style="margin-left: 30%;">
+				<!-- Modal content -->
+				<div class="modal-content">
+					<div class="modal-header padding-zero">
+						<div class="modal-title patient-details-row">
+							Click Here to Confirm
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="body-content">
+							<div>Click on Ok to Confirm</div>
+
+							<div></div>
+						</div>
+					</div>
+					<div class="modal-footer" style="border: none;">
+						<div
+							class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+							<div class=" ">
+								<a href="" class="btn btn-primary btn-save-box-shadow width100"
+									data-dismiss="modal" title="ok" ng-click="callConfirm()"> <i
+									class="fa fa-check-circle" style="font-size: 18px"
+									aria-hidden="true"></i></a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+		
+
+
+	
+<!-- Include jsqr library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<script src="resources/assets/js/controller/opd/transection/qrcode.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="path/to/angular.js"></script>
+<script src="barcode-scanner.js"></script>
+
+<modal visible="showModal"></modal> 
+<script>
+		$(".selectedPageName").text("ABDM Registration Master");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="cabinMaster"]').parents("li").addClass("active");
+		
+		
+		angular.element(document).ready(function() {
+		    angular.element('#reader').html5_qrcode(function(data) { // start webcam
+		          console.log(data); // print QR code content
+		          angular.element("#reader").html5_qrcode_stop(); // stop webcam 
+		        },
+		        function(error) {
+		          console.log(error);
+		        },
+		        function(videoError) {
+		          console.log(videoError);
+		        }
+		    );
+		});
+</script>
+
+<script>
+  document.getElementById('printButton').addEventListener('click', function() {
+	    var printContents = document.getElementById('pngCard').innerHTML;
+	    
+	    var printWindow = window.open('', '', 'height=842,width=595');
+	    printWindow.document.write('<html><head><title>Print</title>');
+	    printWindow.document.write('<style>@page { size: A4; margin: 10mm; } body { margin: 0; padding: 0; } #printSection { width: 100%; height: auto; page-break-inside: avoid; }</style>');
+	    printWindow.document.write('</head><body>');
+	    printWindow.document.write('<div id="printSection">' + printContents + '</div>');
+	    printWindow.document.write('</body></html>');
+	    printWindow.document.close();
+	    printWindow.print();
+	  });
+  
+</script>
+
+
+<script>
+function myFunction() {
+	var passwordField = document.getElementById('password-field');
+  var x = document.getElementById("textInput");
+  if (x.type === "password") {
+    x.type = "text";
+    passwordField.classList.remove('fa-eye');
+    passwordField.classList.add('fa-eye-slash');
+  } else {
+    x.type = "password";
+    passwordField.classList.remove('fa-eye-slash');
+    passwordField.classList.add('fa-eye');
+  }
+}
+</script>

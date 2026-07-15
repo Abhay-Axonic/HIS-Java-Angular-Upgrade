@@ -1,0 +1,281 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="col-md-12 col-lg-12 col-sm-12 padding-left-right-set0">
+		<fieldset>
+			<!-- <legend class="heading-div">Table</legend> -->
+			<div class="row margin-top10">
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-plus-o " aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+						
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForFromDate" id="datePickerForFromDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForFromDate" model-view-value="true" is-open="datePickerForFromDate.opened"
+									   datepicker-options="dateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForFromDate()" required="" style="">
+									
+									<label for="code" class="">
+									Date (From)</label>
+							 </div>
+					</div>
+						</div>
+					</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-minus-o " aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForToDate" id="datePickerForToDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForToDate" model-view-value="true" is-open="datePickerForToDate.opened"
+									   datepicker-options="dateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForToDate()" required="" style=""> <label
+								for="code">Date-Till</label>
+						   </div>
+					    </div>
+						</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container margin-top4">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label" name="fromStore"
+								ng-model="selectedRequestingStore"
+								ng-options="data.storeId as data.storeName for data in requestingStoreList" required>
+								</select> <label for="requestingStore">Store (Requestor)</label>
+				  			</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container margin-top4">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label" name="toStore"
+								ng-model="selectedIssuingStore"
+								 ng-options="data.storeId as data.storeName for data in issuingStoreList" required>
+								</select> <label for="issuingStore">Store (Issuer)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container ">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-bullseye" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="requestNo">
+								<label for="code">Request No.</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-2 col-md-2 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container margin-top2">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10">
+							<div class="">
+								<select class="text-input floating-label" ng-model="selectedSterilizationRequestStatus">
+									<option value="">All</option>
+									<option value="Cancelled">Cancelled</option>
+									<option value="Closed">Closed</option>
+									<option value="New">New</option>
+									<option value="Pending">Pending</option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Status(n)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-sm-2 col-md-2 padding-top10">
+							<div class="common-save-button" style="padding-top:  0px;">
+								<a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" style="width: auto;" ng-click="getSterilizationRequestByMultipleFields()">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+			</div>
+			<div class="row margin-top4 padding-left-right-set0">
+				   <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="#/sterilizationDirectIssue" class="btn btn-primary btn-save-box-shadow" title="Save">
+							Direct Request
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+					<input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid dirty ng-empty" ng-model="search" placeholder="Search" style="margin-top:0px">
+					<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div>
+				<div class="row padding-top4 padding-left-right-set4">
+					<div
+						class="col-lg-12 col-md-12 col-sm-12 height380-table-with-scroll">
+						<table
+							class="table table-bordered first-checkBox-padding margin-top4">
+							<!-- mainServiceTable -->
+							<thead class="mainServiceTableCommon">
+								<tr>
+									<th class="width8">Request No.</th>
+									<th class="width8">Request (Date)</th>
+									<th class="width8">Store (Requestor)</th>
+									<th class="width8">Store (Issuer)</th>
+									<th class="width10">Remark</th>
+									<th class="width5">Status(n)</th>
+									<th class="width8 text-center vertical-middle">Action taken</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- <tr>
+									<td class="text-center" colspan="11">
+										<p>No Record Found</p>
+									</td>
+								</tr> -->
+							<tr ng-if="sterilizationRequestList.length==0"><td class="text-center" colspan="7">{{loadingMessage}}</td></tr>		
+						<tr ng-repeat="info in pagination.data">
+							<td>{{info.requestNo}}</td>
+							<td>{{info.createdDate}}</td>
+							<td>{{info.requestingStore}}</td>
+							<td>{{info.issueingStore}}</td>
+							<td>{{info.remark}}</td>
+							<td>{{info.status}}</td>
+							<td class="padding-edit-button-table text-center">
+											<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+												<a title="Edit" ng-class="{disabled: isDisabled(info)}" ui-sref="updateSterilizationRequest({requestNo: info.requestNo})"  ><i class="fa fa-pencil" aria-hidden="true"></i></a>
+											</div>
+											<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+												<a title="Print"><i class="fa fa-print" aria-hidden="true"></i></a>
+											</div>
+											<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+												<a title="Cancel"><i class="fa fa-times-circle-o" ng-class="{disabled: isDisabled(info)}" aria-hidden="true" data-toggle="modal" data-target="#CancelModal" ng-click="toCancel(info)"></i></a>
+											</div>
+											<div class="col-lg-6 col-md-6 padding-left-right-set4 text-right">
+												<a ui-sref="detailsSterilizationRequest({requestNo: info.requestNo})" title="View">Details</a>
+											</div>
+							</td>
+						</tr>
+							</tbody>
+						</table>
+					</div>
+				<div class="row margin-bottom45 center-block">
+				<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+					style="font-size: 14px; cursor: pointer;">
+					<li ng-class="{disabled:pagination.currentPage === 1}"><a
+						ng-click="pagination.setFirstPage(pagination)">First</a>
+					</li>
+					<li ng-class="{disabled:pagination.currentPage === 1}"><a
+						ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+					</li>
+					<li ng-repeat="page in pagination.getPagesList(pagination)"
+						ng-class="{active:pagination.currentPage === page}"><a
+						ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+					</li>
+					<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+						<a ng-click="pagination.setNextPage(pagination)">Next</a>
+					</li>
+					<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+						<a ng-click="pagination.setLastPage(pagination)">Last</a>
+					</li>
+				</ul>
+			</div>
+				</div>
+			</fieldset>
+		</div>
+	</div>
+</div>
+
+<!-- CanellationModal Start -->
+	<div id="CancelModal" class="modal fade ng-scope in common-small-popup" role="dialog" style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Canellation
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" id="cancelReasonId"
+											ng-options="data.id as data.reason for data in cancelReasonsList" name="code" ng-model="cancelReasonId">
+											<!-- <option value="">Select Reason</option> -->
+											<!-- ngRepeat: info in reasonList -->
+											</select>		
+											<label for="code">Select Reasons</label>
+										</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-sticky-note" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<textarea name="code" rows="4" id="cancelReasonNote" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty" ng-model="cancelReasonNote"></textarea>
+												<label for="code">Note</label>
+											</div>
+										</div>
+									</div>
+									<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="cancelSterilizationRequest()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- CanellationModal END -->
+
+<script type="text/javascript">
+	$(".selectedPageName").text("Sterilization Request");
+	$(".sidebar-nav li").each(function () {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="sterilizationRequest"]').parents("li").addClass("active");
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

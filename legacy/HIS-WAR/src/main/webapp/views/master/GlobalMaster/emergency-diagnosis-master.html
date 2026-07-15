@@ -1,0 +1,167 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<form>
+			<div class="row">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<input type="text" autocomplete="off" class="text-input floating-label"
+									tabindex="2" ng-model="common.diagnosisName"
+									placeholder="Search"
+									uib-typeahead="group.diagnosisName+'|'+group.code  for group in searchGroupListDesc($viewValue)"
+									typeahead-editable="false"
+									typeahead-on-select="selectDignosisIdForDescription($item, $model, $label,initVal);"
+									name="groupName" 
+									typeahead-min-length="3" convert-to-number>
+								<label for="description" class="LISDynamicLabel">ICD 10<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="row margin-top10">
+					
+				</div>
+			</form>
+		</fieldset>
+		<div class="row padding-top4">
+			<div class="col-md-4 col-sm-4 padding-left-right-set4">
+				<div class="row">
+					<div class="padding-left-right-set4" >
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8 col-sm-8 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto ">
+							<div class=" ">
+								<a href="" class="btn btn-primary btn-save-box-shadow"
+									title="Save" data-toggle="modal" ng-click="save()"
+									ng-if="saveBtnFlag"> <i class="fa fa-floppy-o"
+									style="font-size: 21px" aria-hidden="true"></i></a> 
+									<a href=""
+									class="btn btn-primary btn-save-box-shadow" title="Update"
+									data-toggle="modal" ng-click="update()"
+									ng-if="updateBtnFlag"> <i class="fa fa-floppy-o"
+									style="font-size: 21px" aria-hidden="true"></i></a>
+							</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set0 float_right">
+						<input type="text" autocomplete="off" class="text-search-box oneeeee" placeholder="Search" style="margin-top: 0px;" ng-model="searchKeyword">
+						 <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top2">
+		
+			<div class="col-md-12 fix-height-scroll600">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+
+							<th>ICD10 Code</th>
+							<th>ICD10 Description</th>
+							<th class="width5 text-center">Status(n)</th>
+							<th class="width5 text-center">Action taken</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in commonList|orderBy:column:reverse|filter:searchKeyword">
+						    <td>{{info.code}}</td>
+							<td>{{info.diagnosisName}}</td>
+							<td class="text-center">
+								<label class="switch"> 
+									<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.emergencyDiagnosisMapperId,info.status)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<td class="padding-edit-button-table text-center vertical-middle">
+								<a title="Edit" ng-click="showUpdateBtn(info)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ********** fieldDetailsModal POPUP start **********  -->
+<div id="fieldDetailsModal" class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Gender Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row serachedPatientList padding-left-right-set4">
+					<div class="col-md-12 col-lg-12  fix-height-scroll230">
+						<table class="table table-bordered  margin-top4">
+							<thead>
+								<tr>
+							 		<th><span class="">Sr No.</span></th>
+									<th><span class="">Gender</span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in listOfGenderByDiagnosisId  track by $index">
+									<td>{{$index+1}}</td>
+									<td>{{info.genderDesc}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<modal visible="showModal"></modal>
+<!-- ********** fieldDetailsModal POPUP End **********  -->
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$(".selectedPageName").text("ICD Diagnosis Mapper");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="ICDdiagnosisMaster"]').parents("li").addClass("active");
+	});
+</script>

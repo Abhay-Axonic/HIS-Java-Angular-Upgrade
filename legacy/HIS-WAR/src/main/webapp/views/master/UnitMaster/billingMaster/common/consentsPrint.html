@@ -1,0 +1,475 @@
+
+<style>
+
+table>tbody>tr.td-bg-gray > td
+{
+	color : 	#808080 !important;
+}
+video::-webkit-media-controls-mute-button {
+display:none;
+
+}
+video::-webkit-media-controls-volume-slider {
+display:none;
+}
+</style>
+
+
+
+ <div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset class="" style="margin-top:-5px !important">
+			 	
+				 <!-- <div ng-include="'./views/common/common-patient-search-opd.html'"></div> -->
+				 <div ng-include="'./views/common/common-patient-search-admission-type-wise.html'"></div> 
+			 	<!-- <div ng-include="'./views/common/common-patient-details.html'"></div> -->
+			 	
+				<div class="row his-style">
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" ng-if="admissionType == 1">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-11 col-md-10 ">
+								<div class="">
+								<select ng-model="encounterObj"
+									class="text-input floating-label"
+									ng-options="x as x.encounterNumber for x in encounterList track by x.encounterId"
+									class="form-control" ng-required="true" ng-change="getEncounterNumber(encounterObj);">
+								</select><label for="code">Encounter List</label>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-11 col-md-10 ">
+								<div class="">
+										<select ng-model="consentTypeObj" class="text-input floating-label"
+										ng-options="x as x.consentTypeMasterName for x in consentTypeList track by x.consentTypeMasterId"
+										ng-change="getconsentListByTypeId(consentTypeObj);"
+										class="form-control" 
+										ng-required="true">
+										</select> <label for="code">Consent Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+								<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-11 col-md-10 ">
+								<div class="">
+									<select ng-model="consentObj" class="text-input floating-label"
+												ng-options="x as x.consentMasterName for x in consentList track by x.consentMasterId"
+												class="form-control" 
+												ng-required="true">
+											</select> <label for="code">Consent (n)</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+						<div class="common-save-button" style="padding-top:  0px;"> 
+							 <a href="" ng-click="addConsent();" id="updateBtn" class="btn btn-primary btn-save-box-shadow" style="width: auto;"  >
+							 	View
+							 </a> 
+						</div> 
+					</div>
+				</div>
+				
+			<div class="row padding-top4 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll500">
+			  <table id="main-table" class="main-table ">
+			    <thead>
+			      <tr>
+			        <th class="width6">Encounter Details</th>
+			        <th class="width6">Created Date</th>
+			       	<th class="width6">Visit Type</th>
+			       	<th class="width6">Consent Type</th>
+			       	<th class="width6">Consent(n)</th>
+			       <!-- 	<th class="width6">Status</th> -->
+			       	<th class="width4">Document Upload</th>
+			       	<th class="width4">Video Consent</th>
+			       	<th class="width6">Action taken</th>
+			      </tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-repeat="info in consentDetailList " ng-class="getClassForColor(info)">
+			      	 <td>{{info.visitNumber}}</td>
+			      	 <td>{{info.createdDate}}</td>
+			         <td>
+			         <div ng-if = "info.visiteTypeId == 1"> OP </div>
+			         <div ng-if = "info.visiteTypeId == 2"> IP </div>
+			         <div ng-if = "info.visiteTypeId == 3"> DC </div>
+			         <div ng-if = "info.visiteTypeId == 4"> ER </div>
+			         </td>
+			         <td>{{info.consentTypeMasterName}}</td>
+			         <td>{{info.consentMasterName}}</td>
+			         <!-- <td>-</td> -->
+			         <td class="text-center">
+			         <a ng-click="getCurrentIndexForDoc($index,info);" ><i class="fa fa-upload"></i></a>
+					</td>
+			         <td class="text-center"><a data-target="#videoUploadPopup" data-toggle="modal"
+						ng-click="getCurrentIndexForVideo($index,info);"><i class="fa fa-info-circle"></i></a>
+					</td>
+			           <td> 
+			         	<div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%; " ng-if = "info.status != 'I' ">
+		                	<a title="Edit" ng-click="editConsentDetails(info,$index)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+		                </div>
+			         	<div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%;">
+		                	<a title="Print "><i class="fa fa-print" aria-hidden="true" ng-click="consentPrintReport(info,$index)"></i></a>
+		                </div>
+		                <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%; " ng-if = "info.status != 'I' ">
+		                	<a title="Cancel "><i class="fa fa-ban" aria-hidden="true" ng-click="cancelRequest(info);"></i></a>
+		               	</div>
+		               	<div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%; " ng-if = "info.status != 'I' ">
+		                	 <a href="" ng-click="triggerMail(info);" id="sendBtn" class="btn btn-primary btn-save-box-shadow" style="width: auto;"  >
+							 	Send Mail
+							 </a> 
+		               	</div>
+			         </td>
+			      </tr>
+			      <tr ng-if="consentDetailList == 0 || consentDetailList == null"><td colspan = "12"><center>No records found..!!</center></td></tr>
+			    </tbody>
+			  </table>
+			</div>
+		</div>
+				
+		</fieldset>
+</div>
+
+</div>
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+
+
+<div ng-include="'./views/master/UnitMaster/billingMaster/common/split-bill.html'"></div>
+
+
+
+
+  <!--  veiwChecklistTemplate START -->
+<div id="veiwChecklistTemplate" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Notes
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class='' ng-include="'./views/common/patient-demography-opd.html'" ng-if="admissionType == 1"></div>
+			<div class='' ng-include="'./views/common/patient-demography-info.html'" ng-if="admissionType != 1"></div> 
+			<div class="modal-body">
+				<div class="row  padding-left-right-10">
+					<div class="row margin-top10">
+						<div id="formeo-editor"></div>
+						<div id="myHtml" class="render-form" style="display: none"></div>
+					</div>
+					<div class="col-lg-12 col-md-12">
+						<textarea name="editor" type="text" autocomplete="off" id="editor" rows="10" cols="50" ng-model="templateObj"  ck-editor ></textarea>
+					</div>
+				</div>
+				
+				<div class="row  padding-left-right-10">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="saveConsentDetails()" >
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- veiwChecklistTemplate END -->
+
+	<!-- Modal START -->
+<div id="procedureTemplateUploadedModal" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					View Document
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class='' ng-include="'./views/common/patient-demography-opd.html'" ng-if="admissionType == 1"></div>
+			<div class='' ng-include="'./views/common/patient-demography-info.html'" ng-if="admissionType != 1"></div> 
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 padding-top4 padding-bottom5">
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<th class="width15">
+									<div>File Name</div>
+								</th>
+								
+								<th class="width8 text-center">
+									
+									<div>Action</div>
+								</th>
+							</tr>
+							<tr>
+								<td>
+									<div>{{documentName}}</div>
+								</td>
+								<td class="text-center">
+								 <a fancybox ng-click="openImage()">View</a>
+									<!-- <a href="{{consentDetailList[currentIndex].filePath}}"><span class="margin-left10" title="view"><i class="fa fa-eye" aria-hidden="true"></i></span></a>
+ -->							</td>
+								
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<div class="row padding-left-right-set4 padding-top4 padding-bottom5">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="saveConsentDetails()" >
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+				
+			</div>
+		
+		</div>
+	</div>
+</div>
+<!-- Modal END -->
+ 
+<div id="docUploadPopup" class="modal common-medium-popup fade ng-scope in"  data-backdrop="static" role="dialog">
+	<div class="modal-dialog"> 
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Document Upload Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-bottom10 padding-top10">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<div class="fix-height-scroll230 padding-top10" style="overflow:overlay !important;">
+						<table class="table table-striped table-bordered" id="documentUpload">
+							<thead>
+								<tr>
+									<th class="UHID-width"> Document Type</th>
+									<th class="UHID-width"> Document Upload (Allowed uploads *.txt, *.pdf, *.docx, *.doc)</th>
+									<th class="status">Action taken</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="docObj in documentDetailsList track by $index">
+									<td>
+										<div>
+											<select class="text-input floating-label dirty" ng-model="docObj.documentTypeId">
+												<option selected value>Select Document Type</option>
+												<option ng-repeat="docType in documentTypeList" value="{{docType.documentTypeId}}">{{docType.documentTypeName}}</option>
+											</select> 
+										</div>
+									</td>
+									<td>
+										<div>
+											<input type="file" name="file{{$index}}" file-model="docObj.file" id="fileId" accept="application/msword,text/plain, application/pdf" validfile>
+											<p ng-show="fileError" style="color:red;">{{fileError}}</p>
+										</div>
+									</td>
+									<td>
+										<div class="">
+											<button class="btn btn-info" style="width:36px" ng-click="addDocDetails();" ng-disabled = "consentDetailList[currentIndexDoc].status == 'I'"><b>+</b></button>
+											<button class="btn btn-info" style="width:36px" ng-click="removeDocDetails($index);" id="cancelBtn" ng-if="$index!=0"><b>-</b></button>
+                    	                    <!-- ngIf: $index > 0 --> &nbsp;&nbsp;
+										</div>
+									</td>
+								</tr><!-- end ngRepeat: data in dataList -->
+							</tbody>
+						</table>
+						</div>
+					</div>
+				</div>
+				<div class="table-container">
+					<div class="table-container-header">
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="width10">File Name</th>
+									<th class="width10">Document Type Name</th>
+									<th class="width5">Created Date</th>
+									<th class="width5">View</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body fix-height-scroll150" style="overflow: overlay; ">
+						<table  class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat = "documentObj in savedDocumentList|orderBy:column:reverse|filter:searchKeywordhhh track by $index">
+									<td class="width10">
+										<div>
+										  {{documentObj.documentName}}
+										</div>
+									</td>
+									<td class="width10">
+										<div>
+										  {{documentObj.documnetTypeName}}
+										</div>
+									</td>
+									<td class="width5">
+										<div>
+										  {{documentObj.createdDate}}
+										</div>
+									</td>
+									<td class="width5">
+										<div>
+											<a fancybox target ="_blank" href="https://docs.google.com/viewer?embedded=true&url={{documentObj.documentPath}}">View</a> 
+											<a href="" ng-click="deactiveDocById(documentObj);" id="cancelBtn" class="btn btn-primary btn-save-box-shadow" style="    border-radius: 20px;
+    width: 31px !important;"><i class="fa fa-times" aria-hidden="true"></i></a>
+										</div>
+										
+									</td>
+						</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border:none;">
+				 <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save"   ng-click="uploadConsentDocs();"  ng-disabled = "consentDetailList[currentIndexDoc].status == 'I'" >
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+ 
+ 
+<!-- videoUploadPopup START -->
+<div id="videoUploadPopup" class="modal fade ng-scope in common-medium-popup" data-backdrop="static" role="dialog">
+	<div class="modal-dialog">
+	<form name="uploadForm" novalidate>
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Video Upload
+					<button type="button" class="close" data-dismiss="modal" ng-click="stopCapture();" >&times;</button>
+				</div>
+			</div>
+			<div class='' ng-include="'./views/common/patient-demography-opd.html'" ng-if="admissionType == 1"></div>
+			<div class=''  ng-include="'./views/common/patient-demography-info.html'" ng-if="admissionType != 1"></div> 
+			<div class="modal-body">
+				 <div class="row">
+                        <div class="padding5 a2">
+                            <div class="row">
+                                <div class="card-height">
+                                    <div class="text-center">
+										<h2>Camera Preview</h2>
+										<video id="cameraPreview" muted="muted" width="350" height="250" autoplay
+											controls></video>
+										<p>
+											<button class="btn btn-primary btn-save-box-shadow" value="Save"  id="startButton" ng-click="startCapture();"  ng-disabled = "consentDetailList[currentIndexVideo].status == 'I'">Start</button>
+											<button class="btn btn-primary btn-save-box-shadow" value="Update" id="stopButton" ng-click="stopCapture();" ng-disabled = "consentDetailList[currentIndexVideo].status == 'I'">Stop</button>
+											<!-- <button ng-click="makeSnapshot(snapCount)">Capture</button> -->
+										</p>
+									</div>
+                                </div>
+                            </div>
+                            <div class="row padding-left-right-set4 padding-top4 padding-bottom5">
+								<table class="table table-bordered">
+									<tbody>
+									<tr>
+										<th class="width15">
+											<div>File Name</div>
+										</th>
+										<th class="width8">
+											<div>Created Date</div>
+										</th>
+										<th class="width8 text-center">
+											<div>Action taken</div>
+										</th>
+									</tr>
+									<tr ng-repeat = "info in uploadedVideo">
+										<td>
+											<div>{{info.videoName}}</div>
+										</td>
+										<td>{{info.createdDate}}</td>
+										<td class="text-center">
+											 <a href="{{info.videoPath}}" target="_blank">View</a>
+											 <a href="" ng-click="deactiveVideoById(info);" class="btn btn-primary btn-save-box-shadow" style="width: auto;"><i class="fa fa-times" aria-hidden="true"></i></a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+                        </div>
+                    </div>
+				</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" ng-click="stopCapture();"  data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="uploadVideo();" ng-disabled = "consentDetailList[currentIndexVideo].status == 'I'">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- videoUploadPopup END -->
+
+<modal visible="showModal"></modal>
+<div ng-include="'./views/common/billing/comon-package.html'" class="ng-scope" style=""></div>
+<script>
+
+$(document).ready(function() {
+	//$(".patienttSearchResult").hide();
+	$(".useActiveDepositList").hide();
+	
+	 $(".sponserTable").hide();
+	 
+	 $(".selectedPageName").text("IPD Charge");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="opdBilling"]').parents("li").addClass("active");
+});
+
+$(".useActiveDeposit").click(function()
+{
+	$(".useActiveDepositList").toggle();
+})
+
+$(".insuranceRadio").click(function()
+{
+	$(".insuranceTable").show();
+	$(".sponserTable").hide();
+})
+$(".sponsorRadio").click(function()
+{
+	$(".sponserTable").show();
+	$(".insuranceTable").hide();
+})
+
+
+
+</script>

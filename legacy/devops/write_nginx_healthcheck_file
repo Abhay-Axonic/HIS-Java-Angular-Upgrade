@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+cat > ./HIS-WAR/src/main/webapp/healthcheck.html << EOF1
+<HTML>
+  <HEAD>
+    <TITLE>NGINX status</TITLE>
+  </HEAD>
+  <BODY>
+    <H1>OK</H1>
+    <h2>Branch: "$CI_COMMIT_REF_NAME"</h2>
+    <h2>Commit SHA: "$CI_COMMIT_SHA"</h2>   
+   </BODY>
+</HTML>
+EOF1
+
+cat > ./HIS-WAR/src/main/webapp/healthcheck.json << EOF2
+{
+  "branch":"$CI_COMMIT_REF_NAME",
+  "commit":"$CI_COMMIT_SHA"
+}
+EOF2

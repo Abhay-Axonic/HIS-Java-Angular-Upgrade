@@ -1,0 +1,241 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="libraries/datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+  <link rel="stylesheet" type="text/css" href="resources/assets/css/jquery-clockpicker.min.css?version=2.04" />
+  <link rel="stylesheet" type="text/css" href="http://weareoutman.github.io/clockpicker/dist/jquery-clockpicker.min.css" />
+  <script src="http://weareoutman.github.io/clockpicker/dist/jquery-clockpicker.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="libraries/datetimepicker/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+  <link rel="stylesheet" href="email.multiple.css">
+
+
+  <title>Video Conferencing Schedule</title>
+  <style>
+    html { margin-top: 20px; }
+    .text-box{
+      padding: 4px !important;
+    font-size: 14px !important;
+    height: 40px  !important;
+    width: 80%  !important;
+
+    }
+    .form-control{
+      padding: 4px !important;
+    font-size: 14px !important;
+    height: 40px  !important;
+    width: 100%  !important;
+
+    }
+    
+    .date-picker-set{
+      padding:9px 12px 8px 12px !important;
+      height:40px !important;
+    }
+    .width-100{
+      height: 45px !important;
+    font-size: 16px !important;
+    width: 100% !important;
+    }
+    .margin-top30{
+      margin-top: 30px !important;
+    }
+    .margin-bottom30{
+      margin-bottom: 30px !important;
+    }
+  .panel-border{
+    margin-top: 40px !important;
+    padding: 10px 10px 10px 40px !important;
+    border: 1px solid #ddd !important;
+    }
+   </style>
+</head>
+
+<body>
+
+  <div class="ui container">
+    <div class="row">
+      <div class="col-md-3">
+         <img alt="" src="resources/assets/images/logo/axonicLogo.png"  class="img-responsive img-responsive-logo "  width="270px" height="60px">
+      </div>
+      <div class="col-md-9">
+        <h1 class="ui header">Video Conference Scheduler</h1>
+      </div>
+    </div>
+    <form id="frm-holder">
+      <div class=" row  panel-border">
+        <div class="row ">
+
+
+          <div class="form-group col-sm-4 col-sm-4">
+            <label for="EmailId">Doctor Email</label>
+            <input class="form-control " type="text" autocomplete="off" placeholder="Enter Doctor Email" ng-model="doctorMails" id="dr-email" name="EmailIdone">
+          </div>
+
+          <div class="form-group col-sm-4 col-sm-4">
+            <label for="">Patient Email</label>
+            <input class="form-control" type="text" autocomplete="off" placeholder="Enter Patient Email" ng-model="patientsMails" id="" name=""  >
+          </div>
+          <div class="form-group col-sm-4 col-sm-4">
+            <label for="meeting-time">Choose a date for your appointment</label>
+            <div>
+              <div class="input-append date">
+                <div class="input-group date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                  <input id="txt-conf-datetime" class="form-control" 
+                 name="fromDatepicker" id="fromDatepicker"
+								    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="fromDatepicker"
+									model-view-value="true" is-open="fromDatepicker.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openFromDatePicker()"  required>
+                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input1" value=""><br>
+                
+              </div>
+            </div>
+
+          </div>
+          <div class="form-group col-sm-4 col-sm-4">
+            <label for="meeting-time">Choose a time for your appointment</label>
+            <div>
+              <div class="input-append date">
+                <div class="input-group date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                  <div class="clockpicker">
+					<input type="text" autocomplete="off" name="description" id="" placeholder="HH:mm" class="text-input floating-label"  ng-model="time" 
+					onkeydown="event.preventDefault()"  > 
+				</div>
+                  <!-- <input type="text" autocomplete="off" name="code"
+										class="text-input floating-label dirty" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.wheelInTime" 
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.wheelInTime = getFormattedDate(vm.model.timeSheet.wheelInTime,true)" ng-class="{disabled: saveFlag  == true}" /> -->
+                </div>
+                <input type="hidden" id="dtp_input1" value=""><br>
+                
+              </div>
+            </div>
+
+          </div>
+          <div class="form-group col-sm-6 col-sm-6">
+            <label for="">Remark</label>
+            <textarea type="text" autocomplete="off" name="description" id="" ng-model="remark" class="text-input floating-label" rows="4"></textarea>
+          </div>
+
+        </div>
+        <div class="row margin-top10 margin-bottom30">
+          <div class="col-md-5 col-sm-5"></div>
+          <div class="col-md-2 col-sm-2">
+            <button id="btn-send-invite" class="btn width-100 btn-primary" ng-click="sndMeetingInvite1234()"> Send Meeting Invite </button>
+          </div>
+          <div class="col-md-5 col-sm-5"></div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+
+<script src="resources/assets/js/jquery-clockpicker.min.js"></script>
+<script type="text/javascript">
+$('.clockpicker').clockpicker();
+</script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // attach datepicker
+      $(function () {
+        $('.form_datetime').datetimepicker({
+          //language:  'fr',
+          weekStart: 1,
+          todayBtn: 1,
+          autoclose: 1,
+          todayHighlight: 1,
+          startView: 2,
+          forceParse: 0,         
+          format: "dd MM yyyy - hh:ii",
+          minuteStep: 15,
+          startDate: new Date(),
+          pickerPosition: 'bottom-left'
+        });
+      });
+
+      // check and set for dr email id 
+      $(function () {
+        var dreid = getQueryParams()["dreid"];
+        if (dreid != undefined || dreid != null) {
+          $("#dr-email").val(decodeURI(dreid));
+        }
+      });
+
+      // check and set for patient email id 
+      $(function () {
+        var pteid = getQueryParams()["pteid"];
+        if (pteid != undefined || pteid != null) {
+          $("#pt-email").val(decodeURI(pteid));
+        }
+      });
+
+      var getQueryParams = function () {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+          hash = hashes[i].split('=');
+          vars.push(hash[0]);
+          vars[hash[0]] = hash[1];
+        }
+        return vars;
+      }
+
+      $("#btn-send-invite").click(function () {
+
+        var isValid = validateInput();
+        if (isValid)
+          sendEmail();
+        return false;
+      });
+
+      var validateInput = function () {
+
+        var $form = $("#frm-holder")[0];
+        if ($form.checkValidity()) {
+          return true;
+        }
+        else {
+          $form.reportValidity();
+          return false;
+        }
+      }
+
+      var clearInputValues = function () {
+        $("#dr-email").val("");
+        $("#pt-email").val("");
+        $("#txt-conf-datetime").val("");
+      }
+
+/*       var sendEmail = function () {
+
+        var data = {
+          "EmailIdone": $("#dr-email").val(),
+          "EmailIdtwo": $("#pt-email").val(),
+          "meetingdatetime": $("#txt-conf-datetime").val()
+        }
+
+     
+          .done(function () {
+
+            alert("Conference Invitation was send successfully.");
+          });
+      }
+
+    }); */
+
+
+  </script>
+
+
+
+<div class="datetimepicker datetimepicker-dropdown-bottom-left dropdown-menu" style="left: 1181.33px; z-index: 1010;"><div class="datetimepicker-minutes" style="display: none;"><table class=" table-condensed"><thead><tr><th class="prev" style="visibility: hidden;"><span class="glyphicon glyphicon-arrow-left"></span> </th><th colspan="5" class="switch">10 July 2020</th><th class="next" style="visibility: visible;"><span class="glyphicon glyphicon-arrow-right"></span> </th></tr></thead><tbody><tr><td colspan="7"><span class="minute disabled">17:00</span><span class="minute disabled">17:15</span><span class="minute disabled">17:30</span><span class="minute">17:45</span></td></tr></tbody><tfoot><tr><th colspan="7" class="today">Today</th></tr><tr><th colspan="7" class="clear" style="display: none;">Clear</th></tr></tfoot></table></div><div class="datetimepicker-hours" style="display: none;"><table class=" table-condensed"><thead><tr><th class="prev" style="visibility: hidden;"><span class="glyphicon glyphicon-arrow-left"></span> </th><th colspan="5" class="switch">10 July 2020</th><th class="next" style="visibility: visible;"><span class="glyphicon glyphicon-arrow-right"></span> </th></tr></thead><tbody><tr><td colspan="7"><span class="hour disabled">0:00</span><span class="hour disabled">1:00</span><span class="hour disabled">2:00</span><span class="hour disabled">3:00</span><span class="hour disabled">4:00</span><span class="hour disabled">5:00</span><span class="hour disabled">6:00</span><span class="hour disabled">7:00</span><span class="hour disabled">8:00</span><span class="hour disabled">9:00</span><span class="hour disabled">10:00</span><span class="hour disabled">11:00</span><span class="hour disabled">12:00</span><span class="hour disabled">13:00</span><span class="hour disabled">14:00</span><span class="hour disabled">15:00</span><span class="hour disabled">16:00</span><span class="hour active">17:00</span><span class="hour">18:00</span><span class="hour">19:00</span><span class="hour">20:00</span><span class="hour">21:00</span><span class="hour">22:00</span><span class="hour">23:00</span></td></tr></tbody><tfoot><tr><th colspan="7" class="today">Today</th></tr><tr><th colspan="7" class="clear" style="display: none;">Clear</th></tr></tfoot></table></div><div class="datetimepicker-days" style="display: block;"><table class=" table-condensed"><thead><tr><th class="prev" style="visibility: hidden;"><span class="glyphicon glyphicon-arrow-left"></span> </th><th colspan="5" class="switch">July 2020</th><th class="next" style="visibility: visible;"><span class="glyphicon glyphicon-arrow-right"></span> </th></tr><tr><th class="dow">Mo</th><th class="dow">Tu</th><th class="dow">We</th><th class="dow">Th</th><th class="dow">Fr</th><th class="dow">Sa</th><th class="dow">Su</th></tr></thead><tbody><tr><td class="day old disabled">29</td><td class="day old disabled">30</td><td class="day disabled">1</td><td class="day disabled">2</td><td class="day disabled">3</td><td class="day disabled">4</td><td class="day disabled">5</td></tr><tr><td class="day disabled">6</td><td class="day disabled">7</td><td class="day disabled">8</td><td class="day disabled">9</td><td class="day today">10</td><td class="day">11</td><td class="day">12</td></tr><tr><td class="day">13</td><td class="day">14</td><td class="day">15</td><td class="day">16</td><td class="day">17</td><td class="day">18</td><td class="day">19</td></tr><tr><td class="day">20</td><td class="day">21</td><td class="day">22</td><td class="day">23</td><td class="day">24</td><td class="day">25</td><td class="day">26</td></tr><tr><td class="day">27</td><td class="day">28</td><td class="day">29</td><td class="day">30</td><td class="day">31</td><td class="day new">1</td><td class="day new">2</td></tr><tr><td class="day new">3</td><td class="day new">4</td><td class="day new">5</td><td class="day new">6</td><td class="day new">7</td><td class="day new">8</td><td class="day new">9</td></tr></tbody><tfoot><tr><th colspan="7" class="today">Today</th></tr><tr><th colspan="7" class="clear" style="display: none;">Clear</th></tr></tfoot></table></div><div class="datetimepicker-months" style="display: none;"><table class="table-condensed"><thead><tr><th class="prev" style="visibility: hidden;"><span class="glyphicon glyphicon-arrow-left"></span> </th><th colspan="5" class="switch">2020</th><th class="next" style="visibility: visible;"><span class="glyphicon glyphicon-arrow-right"></span> </th></tr></thead><tbody><tr><td colspan="7"><span class="month disabled">Jan</span><span class="month disabled">Feb</span><span class="month disabled">Mar</span><span class="month disabled">Apr</span><span class="month disabled">May</span><span class="month disabled">Jun</span><span class="month">Jul</span><span class="month">Aug</span><span class="month">Sep</span><span class="month">Oct</span><span class="month">Nov</span><span class="month">Dec</span></td></tr></tbody><tfoot><tr><th colspan="7" class="today">Today</th></tr><tr><th colspan="7" class="clear" style="display: none;">Clear</th></tr></tfoot></table></div><div class="datetimepicker-years" style="display: none;"><table class="table-condensed"><thead><tr><th class="prev" style="visibility: hidden;"><span class="glyphicon glyphicon-arrow-left"></span> </th><th colspan="5" class="switch">2020-2029</th><th class="next" style="visibility: visible;"><span class="glyphicon glyphicon-arrow-right"></span> </th></tr></thead><tbody><tr><td colspan="7"><span class="year disabled ">2019</span><span class="year">2020</span><span class="year">2021</span><span class="year">2022</span><span class="year">2023</span><span class="year">2024</span><span class="year">2025</span><span class="year">2026</span><span class="year">2027</span><span class="year">2028</span><span class="year">2029</span><span class="year ">2030</span></td></tr></tbody><tfoot><tr><th colspan="7" class="today">Today</th></tr><tr><th colspan="7" class="clear" style="display: none;">Clear</th></tr></tfoot></table></div></div></body></html>

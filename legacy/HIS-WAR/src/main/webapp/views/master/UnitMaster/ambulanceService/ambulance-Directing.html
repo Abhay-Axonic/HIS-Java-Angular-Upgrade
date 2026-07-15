@@ -1,0 +1,52 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	<form name="ambulanceRoutingForm" novalidate >
+	<div class="row padding-top12">
+		<div class="row">
+		<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+		
+		<div id='map-canvas' name="map-canvas" ng-model="ambulanceRoute.map-canvas" style="height: 350px; width: 500px;"></div>
+		<button id='getDirectionsBtn' class="" ng-click="getDirections()" ></button>
+		<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.099859588297!2d73.76832171436946!3d18.569536172522586!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b94abb53326b%3A0xae60a22712a5f227!2sNandan+Acura+Rd%2C+Laxman+Nagar%2C+Baner%2C+Pune%2C+Maharashtra+411045!5e0!3m2!1sen!2sin!4v1557478956029!5m2!1sen!2sin" 
+				width="500" height="350" frameborder="0" style="border:0" allowfullscreen></iframe>
+				
+<!-- 			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="">
+						<input type="text" autocomplete="off" class="text-input floating-label"  name="ambFacilities" ng-model="ambulanceFacilities.ambFacilities" required="required"> 
+							<label for="description" class="LISDynamicLabel">Ambulance Facilities<span class="star">*</span></label>
+						<p class="help-block" ng-if="ambulanceFacilitiesForm.ambFacilities.$error.required">Ambulance Facilities is required</p>
+						<input type="hidden" name="ambulanceFacilitiesMasterId" ng-model="ambulanceFacilities.ambulanceFacilitiesMasterId" class="text-input floating-label">
+					</div>
+				</div>
+			</div> -->
+		</div>
+	 </div>
+	</div>
+	</form>
+	
+		<modal visible="showModal"></modal>
+	</div> 
+</div>		
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script async defer type="text/javascript" 
+src="https://maps.googleapis.com/maps/api/js?client=AIzaSyByzi2CnxJm4Cjp9rqTiOOniSI4zAzjnho&v=quarterly&callback=initMap">
+</script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	var documentHeight = $(window).height();
+	var sideBarHeight = documentHeight - 55;
+	 $(".selectedPageName").text("Ambulance Directing");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="ambulanceRouting"]').parents("li").addClass("active");
+});
+</script>	

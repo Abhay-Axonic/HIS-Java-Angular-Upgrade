@@ -1,0 +1,21 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<!-- Patient Search -->
+			<div ng-include="'./views/common/MPShah-common-patient-search-opd-without-counter.html'" class="ng-scope" style=""></div>
+		</div>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Patient List");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="MPShahPatientList"]').parents("li").addClass("active");
+});
+</script>

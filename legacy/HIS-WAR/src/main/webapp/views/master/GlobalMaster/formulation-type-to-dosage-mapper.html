@@ -1,0 +1,260 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<legend class="heading-div">Formulation Type to Dosage Mapper</legend>
+			<div class="row margin-top4">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group" >
+								<select  class="text-input floating-label" ng-model="commonObj.formulationTypeId">
+								   <option  value="">Select</option>
+									<option ng-repeat="info in formulationTypeList" ng-value="{{info.id}}" value="{{info.id}}">{{info.type}}</option>
+								</select>
+								<label for="code">Formulation Type</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10 ">
+							<div>
+								<input type="text" autocomplete="off" name="code"  class="text-input floating-label" ng-model="commonObj.dosageForm">
+								<label for="code">Dosage Form</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-10 text-width-auto">
+					<div id="mediaType" class="row uk-input-group customRadioBtn">													
+						<span>
+							<input id="coversion_Factor" name="coversionFactor_frequency" type="radio" ng-model="commonObj.factorId" value="1" checked="checked" class="otherRegistrationType trigger" >
+							<label for="coversion_Factor"> Conversion Factor</label>
+						</span>
+						<span>
+							<input id="frequency_rdo" name="coversionFactor_frequency" type="radio" ng-model="commonObj.factorId" value="2" class="employeeRegRadio" >
+							<label for="frequency_rdo">Frequency</label>
+						</span>
+					</div>
+				</div>
+				<!-- <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-10 margin-top10"> this field hide/show on selection of radiobtn
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10 ">
+							<div>
+								<input type="text" autocomplete="off" name="code"  class="text-input floating-label" >
+								<label for="code">Conversion Value</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+			</div>
+			
+			<div ng-if="commonObj.factorId==1" class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 margin-top10 padding-left-right-10">
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 ">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<div>
+										<input type="text" autocomplete="off" name="code"  class="text-input floating-label" ng-model="commonObj.fromConversionFactor"  >
+										<label for="code">Conversion Factor</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 ">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<div class="form-group" >
+										<select  class="text-input floating-label dirty" ng-model="commonObj.fromConversionFactorUnit">
+											<option  value="">Select</option>
+											<option ng-repeat="info in unitList" ng-value="{{info.id}}" value="{{info.id}}">{{info.unit}}</option>
+										</select>
+										<label for="code">Unit</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 text-width-auto">
+					<a href="" class="btn btn-primary btn-save-box-shadow ng-scope" style="margin-top: 13px;" title="" id="exchangeBtn">
+						<i class="fa fa-exchange" aria-hidden="true" style="color:#2A83F2 !important;"></i>
+					</a>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 margin-top10 padding-left-right-10">
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 ">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<div>
+										<input type="text" autocomplete="off" name="code"  class="text-input floating-label" ng-model="commonObj.toConversionFactor">
+										<label for="code">Conversion Factor</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 ">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<div class="form-group" >
+										<select  class="text-input floating-label dirty" ng-model="commonObj.toConversionFactorUnit"> 
+											<option  value="">Select</option>
+											<option ng-repeat="info in unitList" ng-value="{{info.id}}" value="{{info.id}}">{{info.unit}}</option>
+										</select>
+										<label for="code">Unit</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-left-right-set1">
+				<div class="col-lg-6 col-md-6 col-sm-7 padding-left-right-set4 padding-top10">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+							<div class="search">
+							<label class="show-entries">Show 
+							<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage" ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+						</div>
+					</div>
+				</div>
+			   <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto margin-top10">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class="">
+							 <a class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="save();" ng-if="saveBtnFlag">
+							 	<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+							 </a>
+							 
+							  <a class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="update();" ng-if="updateBtnFlag">
+							 	<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+							 </a>
+							 
+			      		</div>
+				    </div>
+				</div>
+				 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right margin-top10">
+					 <input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword" ng-keyup="searchRecord();">
+					  <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				 </div>
+			</div>
+			
+			
+			<div class="row padding-left-right-set4 margin-top4">
+				<div class="col-lg-12 col-md-12 col-sm-12"><!-- fix-height-scroll110 -->
+						
+						<table class="table table-bordered">
+							<thead>
+							<tr class="">
+								<th class="width8 ">Formulation Type</th>
+								<th class="width6 ">Dosage Form</th>
+								<th class="width6 ">Conversion Factor</th>
+								<th class="width6 ">Conversion Value</th>
+								<th class="width6 ">Frequency</th>
+								<!-- <th class="width6 ">Frequency Value</th> -->
+								<th class="width6 ">Status(n) </th>
+								<th class="width6 ">Action taken </th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="info in commonList">
+								<td class=" text-center">{{info.formulationType}}</td><!-- Formulation Type -->
+								<td class=" text-center">{{info.dosageForm}}</td><!-- Dosage Form -->
+								<td class="text-center" ><!-- Conversion Factor -->
+									<i class="fa fa-times" ng-if="info.factorId!=1" style="color: #3131d2;" aria-hidden="true " title="false"></i>
+									<i class="fa fa-check" ng-if="info.factorId==1" style="color: #3131d2;" aria-hidden="true " title="true"></i>
+									<!-- <i class="fa fa-check" style="color: #3131d2;" aria-hidden="true " title="true"></i> -->
+								</td>
+								<td class=" text-center" ng-if="info.factorId==1"><!-- Conversion Value -->
+								{{info.fromConversionFactor}} {{info.fromConversionUnit}} = 
+								<!-- <a style="width:30px;" href="" class="btn btn-primary btn-save-box-shadow ng-scope" title="" > 
+						         <i class="fa fa-exchange" aria-hidden="true"></i>
+					            </a> -->
+								  {{info.toConversionFactor}} {{info.toConversionUnit}}
+									<!-- <input type="text" autocomplete="off" class="select-box"> -->
+								</td>
+								<td class="text-center" ng-if="info.factorId==2"></td>
+								<td class="text-center" ><!-- Frequency -->
+								   <i class="fa fa-times" ng-if="info.factorId!=2" style="color: #3131d2;" aria-hidden="true " title="false"></i>
+									<i class="fa fa-check" ng-if="info.factorId==2" style="color: #3131d2;" aria-hidden="true " title="true"></i>
+									<!-- <i class="fa fa-check" style="color: #3131d2;" aria-hidden="true "></i> -->
+								</td>
+								<td class="text-center vertical-middle">
+									<label class="switch"> 
+										<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.formulationDosageMappId,info.status)">
+										<div class="slider round"></div>
+									</label>
+								</td> <!-- status --> 
+								<td class="text-center"><!-- Action -->
+									<a><i class="fa fa-pencil" aria-hidden="true" title="Edit"  ng-click="showUpdateBtn(info);"></i></a>
+								</td>
+							</tr>
+						</tbody>
+						</table>
+						<div class="row margin-bottom45 sss">
+							<ul ng-if="pager.pages.length" class="pagination table-list"
+								style="font-size: 14px;">
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(1,'true')">First</a></li>
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+								<li ng-repeat="page in pager.pages"
+									ng-class="{active:pager.currentPage === page}"><a
+									ng-click="setPage(page,'true')">{{page}}</a></li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+			</div>
+		</fieldset>
+	</div>
+</div>
+
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$(".selectedPageName").text("Formulation Type to Dosage Mapper");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="formulationTypeToDosageMapper"]').parents("li").addClass("active");
+	});
+</script>

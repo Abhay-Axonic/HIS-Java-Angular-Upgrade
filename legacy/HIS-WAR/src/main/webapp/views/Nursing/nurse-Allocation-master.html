@@ -1,0 +1,419 @@
+<div id="page-content-wrapper" class="ng-scope">
+	<div class="container-fluid his-style">
+	  <div class="row padding-left-right-set4 padding-top10">
+		<!-- CheckBox -->
+		<label class="radio-inline"><input type="radio" name="q" ng-model="visitTypeId" value="1" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);" >OP</label>
+		<label class="radio-inline"><input type="radio" name="q" ng-model="visitTypeId" value="2" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);">IP</label>
+		<label class="radio-inline"><input type="radio" name="q" ng-model="visitTypeId" value="3" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);">Day Care</label>
+		<label class="radio-inline"><input type="radio" name="q" ng-model="visitTypeId" value="4" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);">ER</label>
+	</div>
+	
+	<div class="row" ng-show="visitTypeId ==1 ">
+	  <form action="" name="nurseAlloForm" novalidate="novalidate">
+	   <div class="row padding-top10">
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="roleId" ng-model="commonObj.roleId" ng-change="getNurseListByRoleId(commonObj.roleId);" required="required">
+							 <option value=""> Select Grade/Level</option>
+							     <option ng-repeat="info in roleList" ng-value="{{info.roleId}}"  value="{{info.roleId}}">{{info.roleName}}</option>
+						</select> <label for="code">Grade/Level<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloForm.roleId.$error.required">Grade is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="userId" ng-model="commonObj.userId" required="required">
+						          <option value=""  > Select Nurse </option>
+							     <option ng-repeat="info in nurseList" ng-value="{{info.userId}}"  value="{{info.userId}}">{{info.empName}}</option>
+						</select> <label for="code">Nurse<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloForm.userId.$error.required">Nurse name is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="speciality" ng-model="nurseAllocOpObj.specialityId" ng-change="getDoctorBySpeciality(nurseAllocOpObj.specialityId)" required="required">
+							<option value=""></option>
+							<option ng-repeat="info in specialityList" ng-if="info.isClinicalSpeciality =='Y'" ng-value="{{info.specialityId}}" value="{{info.specialityId}}">{{info.specialityName}}</option>
+						</select> <label for="code">Specialty<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloForm.speciality.$error.required">Specialty is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="doctor" ng-model="nurseAllocOpObj.doctorId" ng-change="getDoctorCabinMapperByDoctorId(nurseAllocOpObj.doctorId);" required="required">
+							<option value=""></option>
+							<option ng-repeat="info in doctorList" ng-value="{{info.doctorId}}" value="{{info.doctorId}}">{{info.firstName+' '+info.lastName}}</option>
+						</select> <label for="code">Doctor<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloForm.doctor.$error.required">Doctor is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+  </div>
+
+		<div class="row padding-top10" >
+		     <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="cabin" ng-model="nurseAllocOpObj.cabinId" required="required">
+							<option value=""></option>
+							<option ng-repeat="info in cabinList" ng-value="{{info.cabinId}}" value="{{info.cabinId}}">{{info.cabinDesc}}</option>
+						</select> <label for="code">Cabin<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloForm.cabin.$error.required">Cabin is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		 <div ng-if="updateBtnFlag==true" class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="">
+						<select class="text-input floating-label" ng-model="opvisitTypeIdForUpdate"  ng-change="getVisitTypeForOp(opvisitTypeIdForUpdate);">
+							<option value=""></option>
+							<option ng-repeat="info in finalVisitTypeList" ng-value="info.visitTypeId" value="info.visitTypeId">{{info.visitType}}</option>
+						</select> <label for="code">Visit Type</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+	  
+	 <div class="row padding-top10">
+	   	<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					 <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+										ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+										
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="update()"
+										ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		      		</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px"  ng-model="searchKeyword">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 padding-top10">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width10">Grade/Level</th>
+							<th class="width10">Nurse</th>
+							<th class="width10">Specialty</th>
+							<th class="width10">Cabin</th>
+							<th class="width10">Doctor</th>
+							<th class="width5 text-center">
+									Status(n)
+								</th>
+							<th class="width5 text-center">Action taken</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in nurseAllocationOpList|orderBy:column:reverse|filter:searchKeyword">
+							<td>{{info.roleName}}</td>
+							<td>{{info.nurseName}}</td>
+							<td>{{info.specialityName}}</td>
+							<td>{{info.cabinDesc}}</td>
+							<td>{{info.doctorName}}</td>
+							<td class="vertical-middle text-center">
+											<label class="switch">
+											<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.nurseAllocationId,info.status)">
+											<div class="slider round"></div>
+										</label>
+										</td>
+							<td class="padding-edit-button-table text-center"> 
+								  <a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.nurseAllocationId)" ></i></a>
+								<!-- <span><a href=""><i class="fa fa-times" aria-hidden="true" title="Cancel"></i></a></span> -->
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div  ng-show="visitTypeId ==1" class="row margin-bottom45 sss">
+					     <ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					    </ul>
+				   </div>
+			</div>
+		</div>
+	</div>	
+	
+	<div class="row"  ng-show="visitTypeId !=1 ">
+	 
+	  <form action="" name="nurseAlloIPForm" novalidate="novalidate">
+	   <div class="row padding-top10">
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="roleIdIP" ng-model="commonObj.roleId" ng-change="getNurseListByRoleId(commonObj.roleId);" required="required">
+							 <option value="" > Select Grade </option>
+							     <option ng-repeat="info in roleList" ng-value="{{info.roleId}}"  value="{{info.roleId}}">{{info.roleName}}</option>
+						</select> <label for="code">Grade/Level<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloIPForm.roleIdIP.$error.required">Grade is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="userIdIP" ng-model="commonObj.userId" required="required">
+						          <option value=""  > Select Nurse </option>
+							     <option ng-repeat="info in nurseList" ng-value="{{info.userId}}"  value="{{info.userId}}">{{info.empName}}</option>
+						</select> <label for="code">Nurse<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloIPForm.userIdIP.$error.required">Nurse name is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" ng-if="visitTypeId==2" show-errors>
+						<select class="text-input floating-label" name="ward" ng-model="nurseAllocIpObj.wardId" ng-change="getNursingStationByWardId(nurseAllocIpObj.wardId);" required="required">
+							  <option value=""  > Select Ward </option>
+							     <option ng-repeat="info in wardIdListIp" ng-value="{{info.wardId}}"  value="{{info.wardId}}">{{info.wardName}}</option>
+						</select> <label for="code">Ward<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloIPForm.ward.$error.required">Ward is required</p>
+					</div>
+					<div class="form-group"  ng-if="visitTypeId==3" show-errors>
+						<select class="text-input floating-label" name="ward" ng-model="nurseAllocIpObj.wardId" ng-change="getNursingStationByWardId(nurseAllocIpObj.wardId);" required="required">
+							  <option value=""  > Select Ward </option>
+							     <option ng-repeat="info in wardIdListDayCare" ng-value="{{info.wardId}}"  value="{{info.wardId}}">{{info.wardName}}</option>
+						</select> <label for="code">Ward<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloIPForm.ward.$error.required">Ward is required</p>
+					</div>
+					<div class="form-group"  ng-if="visitTypeId==4" show-errors>
+						<select class="text-input floating-label" name="ward" ng-model="nurseAllocIpObj.wardId" ng-change="getNursingStationByWardId(nurseAllocIpObj.wardId);" required="required">
+							  <option value=""  > Select Ward </option>
+							     <option ng-repeat="info in wardIdListEr" ng-value="{{info.wardId}}"  value="{{info.wardId}}">{{info.wardName}}</option>
+						</select> <label for="code">Ward<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloIPForm.ward.$error.required">Ward is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="nursingStation" ng-model="nurseAllocIpObj.nursingStationId" required="required">
+							 <option value=""  > Select Nursing Station </option>
+							     <option ng-repeat="info in nursingStationList" ng-value="{{info.nursingStationId}}"  value="{{info.nursingStationId}}">{{info.nursingStationDesc}}</option>
+						</select> <label for="code">Nursing Station<span class="star">*</span></label>
+						<p class="help-block" ng-if="nurseAlloIPForm.nursingStation.$error.required">Nursing Station is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		 </div>
+		 
+		 <div class="row padding-top10">
+		  <div ng-if="updateBtnFlag==true" class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="">
+						<select class="text-input floating-label" ng-model="ipVisitUpdate" ng-change="getVisitType(ipVisitUpdate)">
+							<option ng-repeat="info1 in finalVisitTypeList"  ng-value="{{info1.visitTypeId}}" value="{{info1.visitTypeId}}">{{info1.visitType}}</option>
+						</select> <label for="code">Visit Type</label>
+					</div>
+				</div>
+			</div>
+		  </div>
+		</div>
+		
+		</form>
+	 
+	  <div class="row padding-top10">
+	  	<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					 <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+										ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+										
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="update()"
+										ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		      		</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px"  ng-model="searchKeyword">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 padding-top10">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width10">Grade/Level</th>
+							<th class="width10">Nurse</th>
+							<th class="width10">Ward</th>
+							<th class="width10">Nursing Station</th>
+							<th class="width5 text-center">
+									Status(n)
+								</th>
+							<th class="width5 text-center">Action taken</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in nurseAllocationIpList|orderBy:column:reverse|filter:searchKeyword">
+							<td>{{info.roleName}}</td>
+							<td>{{info.nurseName}}</td>
+							<td>{{info.wardName}}</td>
+							<td>{{info.nursingStationDesc}}</td>
+							<td class="vertical-middle text-center">
+											<label class="switch">
+											<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.nurseAllocationId,info.status)">
+											<div class="slider round"></div>
+										</label>
+										</td>
+							<td class="padding-edit-button-table text-center"> 
+								  <a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.nurseAllocationId)" ></i></a>
+								<!-- <span><a href=""><i class="fa fa-times" aria-hidden="true" title="Cancel"></i></a></span> -->
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div   ng-show="visitTypeId !=1 " class="row margin-bottom45 sss">
+					     <ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					    </ul>
+				   </div>
+			</div>
+		</div>
+	</div>	
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+<script type="text/javascript">
+function handleChange(checkbox) {
+    if(checkbox.checked == true){
+    	$("#op").attr('style','display:block');	
+    	
+    }else    if(checkbox.checked == false){
+    	$("#ip").attr('style','display:none');	
+    	
+    }
+}
+$( document ).ready(function() {
+	$(".selectedServicesList").hide();
+	$(".selectedPageName").text("Nurse Allocation Master");
+	$(".sidebar-nav li").each(function() {
+	$(this).find("a").parents("li").removeClass("active");
+	$('a[href$="nurseAllocationMaster"]').parents("li").addClass("active");
+	});
+});
+</script>

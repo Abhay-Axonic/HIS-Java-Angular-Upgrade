@@ -1,0 +1,495 @@
+<style>
+    /*radioButton code Start*/
+input[type=radio].css-radioBtn {
+    display: none;
+}
+
+
+input[type=radio].css-radioBtn + label.css-label{
+    font-weight: 500 !important;
+    font-size: 13px;
+    padding-left: 36px;
+    height: 30px;
+    display: inline-block;
+    line-height: 36px;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    vertical-align: middle;
+    cursor: pointer;
+    font-family: 'Montserrat' !important;
+    background-image: url('resources/assets/images/icon/dashboard/radioBtnOff1.png');
+}
+
+
+input[type=radio].css-radioBtn:checked + label.css-label {
+    font-weight: 500 !important;
+    font-size: 13px;
+    background-image: url('resources/assets/images/icon/dashboard/radioBtnOn.png');
+}
+/*radioButton code End*/
+</style>
+
+<div id="page-content-wrapper" class="ng-scope" style="height: 675px;">
+    <div class="container-fluid his-style">
+        <div class="padding-top4" ng-include="'./views/common/common-patient-search-opd-without-counter.html'" style="margin-top:-5px"></div>
+        <div class="padding-top8 padding-left-right-set4" ng-include="'./views/common/patient-demography-info.html'"></div>
+        <form name="admissionrequestform" novalidate >
+            <label style="font-weight: bold !important;">Code Blue</label>
+            <div class="row">
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                   <!-- <div class="row input-container">
+                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-md-10">
+                            <div class="">
+                                <input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+                                       placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+                                       datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+                                <label for="code">Date and Time of Code Blue </label>
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <button class="btn btn-primary" id="updateBtn">
+                        Date and Time of Code Blue
+                    </button>
+
+                </div>
+
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+<!--                    <div class="row input-container">-->
+<!--                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">-->
+<!--                            <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>-->
+<!--                        </div>-->
+<!--                        <div class="col-lg-10 col-sm-10 col-md-10">-->
+<!--                            <div class="">-->
+<!--                                <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"-->
+<!--                                       ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"-->
+<!--                                       show-button-bar="false" ng-click="vm.model.OpenToDate()">-->
+<!--                                <label for="description" class="LISDynamicLabel">Date and Time of Arrest</label>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <button class="btn btn-primary" id="updateBtn">
+                        Date and Time of Arrest
+                    </button>
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+                            <i class="fa fa-bullseye" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-10 col-md-10">
+                            <div class="form-group"   show-errors>
+                                <select class="text-input floating-label" convert-to-number name="patientCategoryId" ng-model="admissionRequest.patientCategoryId" ng-disabled="fieldDisabled" required>
+                                    <option ng-repeat="infoCat in patientCategoryList" value="{{infoCat.patientCategoryId}}" >{{infoCat.patientCategory}}</option>
+                                </select>
+                                <label for="code">Patient Category<span class="star">*</span></label>
+                                <p class="help-block" ng-if="admissionrequestform.patientCategoryId.$error.required">Patient category is required</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <label style="font-weight: bold !important;">Arrest</label>
+            <div class="row">
+               <div class= "col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                   <input type="radio"
+                          name="color-radio"
+                          class="css-radioBtn"
+                          id="cardiacA"
+                          ng-model="arrest.selected"
+                          value="cardiacA" >
+                   <label class="css-label" for="cardiacA">Cardiac Arrest</label>
+               </div>
+
+                <div class= "col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                   <input type="radio"
+                          name="color-radio"
+                          class="css-radioBtn"
+                          id="respiratoryA"
+                          ng-model="arrest.selected"
+                          value="respiratoryA" >
+                   <label class="css-label" for="respiratoryA">Respiratory Arrest</label>
+               </div>
+                <div class= "col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                   <input type="radio"
+                          name="color-radio"
+                          class="css-radioBtn"
+                          id="Witnessed"
+                          ng-model="arrest.selected"
+                          value="Witnessed" >
+                   <label class="css-label" for="Witnessed">Witnessed</label>
+               </div>
+
+                <div class= "col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                   <input type="radio"
+                          name="color-radio"
+                          class="css-radioBtn"
+                          id="Unwitnessed"
+                          ng-model="arrest.selected"
+                          value="Unwitnessed" >
+                   <label class="css-label" for="Unwitnessed">Unwitnessed</label>
+               </div>
+            </div>
+
+            <label style="font-weight: bold !important;">Breathing at Onset</label>
+            <div class="row">
+               <div class= "col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                   <input type="radio"
+                          name="color-radio"
+                          class="css-radioBtn"
+                          id="sponteneous"
+                          ng-model="breathing.selected"
+                          value="sponteneous" >
+                   <label class="css-label" for="sponteneous">Sponteneous</label>
+               </div>
+
+                <div class= "col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                   <input type="radio"
+                          name="color-radio"
+                          class="css-radioBtn"
+                          id="agonal"
+                          ng-model="breathing.selected"
+                          value="agonal" >
+                   <label class="css-label" for="agonal">Agonal</label>
+               </div>
+                <div class= "col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                   <input type="radio"
+                          name="color-radio"
+                          class="css-radioBtn"
+                          id="assisted"
+                          ng-model="breathing.selected"
+                          value="assisted" >
+                   <label class="css-label" for="assisted">Assisted</label>
+               </div>
+
+                <div class= "col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                   <input type="radio"
+                          name="color-radio"
+                          class="css-radioBtn"
+                          id="aponic"
+                          ng-model="breathing.selected"
+                          value="aponic" >
+                   <label class="css-label" for="aponic">Aponic</label>
+               </div>
+
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                            <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-md-10">
+                            <div class="">
+                                <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+                                       ng-model="vm.model.TimeFDateTime" model-view-value="true" is-open="vm.model.fromDateOptionsTimeT" datepicker-options="vm.model.TimeFDate"
+                                       show-button-bar="false" ng-click="vm.model.OpenToDateTime()">
+                                <label for="description" class="LISDynamicLabel">Time of first assisted ventilation</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <label style="font-weight: bold !important;">
+                Size of ETT tube
+            </label>
+            <div class="row">
+                <table class="table table-bordered first-checkBox-padding margin-top4">
+                    <thead>
+                    <tr>
+                        <th>Inner Diameter (mm)</th>
+                        <th>Outer Diameter (mm)</th>
+                        <th>Length Tube (mm)</th>
+                        <th>Cuff Diagonal (mm)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                         <td>
+                             <div class="col-lg-7 col-sm-10 col-md-10">
+                                 <div class="form-group"   show-errors>
+                                     <select class="text-input floating-label" convert-to-number name="patientCategoryId" required>
+                                         <option  ></option>
+                                     </select>
+                                 </div>
+                             </div>
+                         </td>
+                         <td>
+                             <div class="col-lg-7 col-sm-10 col-md-10">
+                                 <div class="form-group"   show-errors>
+                                     <select class="text-input floating-label" convert-to-number name="patientCategoryId" required>
+                                         <option  ></option>
+                                     </select>
+                                 </div>
+                             </div>
+                         </td>
+                         <td>
+                             <div class="col-lg-7 col-sm-10 col-md-10">
+                                 <div class="form-group"   show-errors>
+                                     <select class="text-input floating-label" convert-to-number name="patientCategoryId" required>
+                                         <option  ></option>
+                                     </select>
+                                 </div>
+                             </div>
+                         </td>
+                         <td>
+                             <div class="col-lg-7 col-sm-10 col-md-10">
+                                 <div class="form-group"   show-errors>
+                                     <select class="text-input floating-label" convert-to-number name="patientCategoryId" required>
+                                         <option  ></option>
+                                     </select>
+                                 </div>
+                             </div>
+                         </td>
+                    </tbody>
+                </table>
+            </div>
+            <label style="font-weight: bold !important;">Medications Given</label>
+            <div class="row">
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="medications.Epinephrine" ><span></span>Epinephrine</label>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="medications.Atropine" ><span></span>Atropine</label>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="medications.Amiodranone" ><span></span>Amiodranone</label>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="medications.Lidocaine" ><span></span>Lidocaine</label>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="medications.Magnesium" ><span></span>Magnesium</label>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="medications.Calcium" ><span></span>Calcium </label>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="medications.Bicarbonate" ><span></span>Bicarbonate</label>
+                </div>
+            </div>
+
+            <label style="font-weight: bold !important;">
+                Defibrillation
+            </label>
+
+            <div class="row">
+                <table class="table table-bordered first-checkBox-padding margin-top4" style="width: 30%;">
+                    <thead>
+                    <tr>
+                        <th class="width5">
+                            Usage
+                        </th>
+                        <th class="width5">
+                            Joule
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                       <td>
+                           <div class="col-lg-7 col-sm-10 col-md-10">
+                               <div class="form-group"   show-errors>
+                                   <select class="text-input floating-label" convert-to-number name="patientCategoryId" required>
+                                       <option  ></option>
+                                   </select>
+                               </div>
+                           </div>
+                       </td>
+                       <td>
+                           <div class="col-lg-7 col-sm-10 col-md-10">
+                               <div class="form-group"   show-errors>
+                                   <select class="text-input floating-label" convert-to-number name="patientCategoryId" required>
+                                       <option  ></option>
+                                   </select>
+                               </div>
+                           </div>
+                       </td>
+                    </tbody>
+                </table>
+            </div>
+
+            <label style="font-weight: bold !important;">
+                Vitals
+            </label>
+            <div class="row">
+                <table class="table table-bordered first-checkBox-padding margin-top4" style="width: 50%;">
+                    <thead>
+                    <tr>
+                        <th class="width5">
+                            Heart Rate
+                        </th>
+                        <th class="width5">
+                            BP
+                        </th>
+                        <th class="width5">
+                            Pulse
+                        </th>
+                        <th class="width5">
+                            Respiration Rate
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <td>
+                            <input  type="text" autocomplete="off" name="description" id=""  class="text-input floating-label dirty ng-pristine ng-valid ng-empty ng-touched"   style="">
+                        </td>
+                        <td>
+                            <input  type="text" autocomplete="off" name="description" id=""  class="text-input floating-label dirty ng-pristine ng-valid ng-empty ng-touched"   style="">
+                        </td>
+                        <td>
+                            <input  type="text" autocomplete="off" name="description" id=""  class="text-input floating-label dirty ng-pristine ng-valid ng-empty ng-touched"   style="">
+                        </td>
+                        <td>
+                            <input  type="text" autocomplete="off" name="description" id=""  class="text-input floating-label dirty ng-pristine ng-valid ng-empty ng-touched"   style="">
+                        </td>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <label style="font-weight: bold !important;">
+                Outcome
+            </label>
+            <div class="row">
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                            <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-md-10">
+                            <div class="">
+                                <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+                                       ng-model="vm.model.resuscitationDateTR" model-view-value="true" is-open="vm.model.resuscitationDateT" datepicker-options="vm.model.TimeFResuscitation"
+                                       show-button-bar="false" ng-click="vm.model.resuscitationDateFun()">
+                                <label for="description" class="LISDynamicLabel">Resuscitation End date and time</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+                        <div class="col-lg-11 col-sm-11 col-md-11 ">
+                            <div class="">
+                                <input  type="text" autocomplete="off" name="description" id=""  class="text-input floating-label dirty ng-pristine ng-valid ng-empty ng-touched" ng-model="resuscitationR"  style=""> <label for="description" class="">Reason for ending resuscitation</label>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <label style="font-weight: bold !important;">
+                Status
+            </label>
+
+            <div class="row">
+                <div class= "col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <input type="radio"
+                           name="color-radio"
+                           class="css-radioBtn"
+                           id="Alive"
+                           ng-model="status.selected"
+                           value="Alive" >
+                    <label class="css-label" for="Alive">Alive</label>
+                </div>
+                <div class= "col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <input type="radio"
+                           name="color-radio"
+                           class="css-radioBtn"
+                           id="Alive"
+                           ng-model="status.selected"
+                           value="Alive" >
+                    <label class="css-label" for="Alive">Dead</label>
+                </div>
+            </div>
+            <div class="row">
+
+
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                            <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-md-10">
+                            <div class="">
+                                <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+                                       ng-model="vm.model.TimeFDate" model-view-value="true" is-open="vm.model.toDateOpenedTimeDateTime" datepicker-options="vm.model.TimeFDate"
+                                       show-button-bar="false" ng-click="vm.model.OpenToDateTimeDeath()">
+                                <label for="description" class="LISDynamicLabel">Date and time death declared </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                        <div class="">
+                            <input  type="text" autocomplete="off" name="description" id=""  class="text-input floating-label dirty ng-pristine ng-valid ng-empty ng-touched" ng-model="Observations"  style=""> <label for="description" class="">Observations</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                        <div class="">
+                            <input  type="text" autocomplete="off" name="description" id=""  class="text-input floating-label dirty ng-pristine ng-valid ng-empty ng-touched" ng-model="Death"  style=""> <label for="description" class="">Cause of Death</label>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="spontaneous" ><span></span>No spontaneous movements</label>
+                </div>
+
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="respiratory" ><span></span>No respiratory efforts</label>
+                </div>
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="papable" ><span></span>No heart sounds / papable pulse</label>
+                </div>
+
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="corneal" ><span></span>No corneal reflex</label>
+                </div>
+
+                <div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                    <label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="pupils" ><span></span>Pupils are fixed and dilated</label>
+                </div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-lg-1 col-md-1 padding-left-right-set4 float-right">
+                    <button class="btn btn-primary" id="saveBtn" ng-click="saveCodeBlue()">Save</button>
+                </div>
+                <div class="col-lg-1 col-md-1 padding-left-right-set4 float-right">
+                    <button class="btn btn-primary" id="saveBtn" ng-click="saveCodeBlue()">Save As Draft</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // $(".patienttSearchResult").hide();
+         $(".selectedPageName").text("Linen Indent");
+        $(".sidebar-nav li").each(function() {
+            $(this).find("a").parents("li").removeClass("active");
+        });
+        $('a[href$="linenIndent"]').parents("li").addClass("active");
+    });
+
+
+</script>

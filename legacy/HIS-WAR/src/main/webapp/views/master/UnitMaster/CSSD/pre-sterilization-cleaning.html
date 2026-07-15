@@ -1,0 +1,404 @@
+<!-- <script type="text/javascript" src="resources/assets/js/controller/CSSD/unit/viewPreSterilizationCleaningController.js"></script> -->
+<div id="page-content-wrapper" style="overflow-y:inherit;">
+	<div class="container-fluid his-style">
+	
+	<div class="main-heading-div">
+				<div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div>
+			</div>
+			
+			
+		<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : !secondTabSelected }" id="nor" class="width15" style="">
+						<a href="" ng-click="setTab(1)">Pending Cleaning</a>
+					</li>
+					<li ng-class="{ active : secondTabSelected }" class="width10" style="">
+						<a href="" ng-click="setTab(2)" class="employeeRegRadioParent">Cleaned List</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="!secondTabSelected" class="second-level-tab-display-div" style="">
+					<div class="row">
+						<div
+							class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<!-- <div class="col-lg-11 col-sm-11 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id=""
+											class="text-input floating-label dirty"> <label
+											for="code">From Date</label>
+									</div>
+								</div> -->
+							<div class="col-lg-11 col-sm-11 col-md-11">
+							  <div class="">
+						
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForPendingFromDate" id="datePickerForPendingFromDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForPendingFromDate" model-view-value="true" is-open="datePickerForPendingFromDate.opened"
+									   datepicker-options="dateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForPendingFromDate()" required>
+									
+									<label for="code" class="">
+									Date (From)</label> <!-- Date should be selected from-to Date  -->
+							  </div>
+					       </div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<!-- <div class="col-lg-11 col-sm-11 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id=""
+											class="text-input floating-label dirty"> <label
+											for="code">To Date</label>
+									</div>
+								</div> -->
+						<div class="col-lg-11 col-sm-11 col-md-10">
+						    <div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForPendingToDate" id="datePickerForPendingToDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForPendingToDate" model-view-value="true" is-open="datePickerForPendingToDate.opened"
+									   datepicker-options="dateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForPendingToDate()" required> <label
+								for="code">Date-Till</label>
+						   </div>
+					    </div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id=""
+											class="text-input floating-label dirty" ng-model="searchNameForPending"> <label
+											for="code">Kit Name/Instrument Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<!-- <div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label dirty" name="code">
+											<option value="">All</option>
+										</select> <label for="code">Status</label>
+									</div>
+								</div>
+							</div> -->
+						</div>
+						<div
+							class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+							<div class=" ">
+								<a href="" class="btn btn-primary btn-save-box-shadow"  ng-click="getPendingCleaningWorklistByMultipleFields()"
+									title="Search"><i class="fa fa-search" aria-hidden="true"></i></a>
+							</div>
+						</div>
+						<!-- <div
+							class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+							<div class=" ">
+								<a href="#/addNewPreSterilizationCleaning"
+									class="btn btn-primary btn-save-box-shadow" title="Add New">Add
+									New</a>
+							</div>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div  class="row padding-left-right-set4 >
+				<!-- class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" -->
+				
+				<!-- <div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id=""
+								class="text-input floating-label dirty" ng-model="searchName"> <label
+								for="code">Kit Name</label>
+						</div>
+					</div>
+				</div> -->
+				<div ng-show="secondTabSelected" class="second-level-tab-display-div" style="">
+					<div class="row">
+						<div
+							class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<!-- <div class="col-lg-11 col-sm-11 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id=""
+											class="text-input floating-label dirty"> <label
+											for="code">From Date</label>
+									</div>
+								</div> -->
+								<div class="col-lg-11 col-sm-11 col-md-11">
+							  <div class="">
+							  
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForCleanedFromDate" id="datePickerForCleanedFromDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForCleanedFromDate" model-view-value="true" is-open="datePickerForCleanedFromDate.opened"
+									   datepicker-options="dateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForCleanedFromDate()" required>
+									
+									<label for="code" class="">
+									Date (From)</label> <!-- Date should be selected from-to Date  -->
+							  </div>
+					       </div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<!-- <div class="col-lg-11 col-sm-11 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id=""
+											class="text-input floating-label dirty"> <label
+											for="code">To Date</label>
+									</div>
+								</div> -->
+						<div class="col-lg-11 col-sm-11 col-md-10">
+						    <div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForCleanedToDate" id="datePickerForCleanedToDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForCleanedToDate" model-view-value="true" is-open="datePickerForCleanedToDate.opened"
+									   datepicker-options="dateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForCleanedToDate()" required> <label
+								for="code">Date-Till</label>
+						   </div>
+					    </div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id=""
+											class="text-input floating-label dirty" ng-model="searchNameForCleaned"> <label
+											for="code">Kit Name/Instrument Name </label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<!-- <select class="text-input floating-label dirty" name="code">
+											<option value=""></option>
+										</select> <label for="code">Status</label> -->
+									<select class="text-input floating-label dirty" name="code" ng-model="selectedCleaningStatus" required>
+										<option value="">All</option>
+										<option value="Completed">Completed</option>
+										<option value="Pending">Pending</option>
+										</select> <label for="code">Status(n)</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+							<div class=" ">
+								<a href="" class="btn btn-primary btn-save-box-shadow" ng-click="getCleanedWorklistByMultipleFields()"
+									title="Search"><i class="fa fa-search" aria-hidden="true" ></i></a>
+							</div>
+						</div>
+						<div
+							class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+							<div class=" ">
+								<a href="#/addNewPreSterilizationCleaning"
+									class="btn btn-primary btn-save-box-shadow" title="Add New">Add
+									New</a>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>
+		<div class="row margin-top8 padding-left-right-set4" ng-if="!secondTabSelected">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width10">
+								Transition No.
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								Kit Code/Instrument Code
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								Kit Name/Instrument Name
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								 Date
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width3">
+								Status
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width2 text-center">
+								Action
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-if="preKitListPendingCleaning.length==0"><td class="text-center" colspan="6">{{loadingMsg}}</td></tr>
+					   <!--  <tr ng-repeat="data in (isSetFirstTabLevel(1) ? preKitListPendingCleaning:preKitList)"> -->
+						<tr ng-repeat="data in preKitListPendingCleaning">
+							<td>{{data.transitionNumber}}</td>
+							<td>{{data.code}}</td>
+							<td>{{data.name}}</td>
+							<td>{{data.created_date}}</td>
+							<td>{{data.status}}</td>
+							<td class="text-center"><a ui-sref="viewPendingCleaningList({transitionNumber: data.transitionNumber})" title="View"><i class="fa fa-eye"></i></a></td>
+						</tr>
+					</tbody>
+					
+
+				</table>
+			</div>
+		</div>
+		
+		
+		
+		<div class="row margin-top8 padding-left-right-set4" ng-if="secondTabSelected">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width10">
+								Transition No.
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								Kit Code/Instrument Code
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								Kit Name/Instrument Name
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								 Date
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width3">
+								Status
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width2 text-center">
+								Action
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-if="preKitList.length==0"><td class="text-center" colspan="6">{{loadingMsg}}</td></tr>
+						<tr ng-repeat="data in preKitList">
+							<td>{{data.transitionNumber}}</td>
+							<td>{{data.code}}</td>
+							<td>{{data.name}}</td>
+							<td>{{data.created_date}}</td>
+							<td>{{data.status}}</td>
+							<td class="text-center"><a ui-sref="viewCleanedList({transitionNumber: data.transitionNumber})" title="View"><i class="fa fa-eye"></i></a></td>
+						</tr>
+					</tbody>
+					
+
+				</table>
+			</div>
+		</div>
+		
+		
+	</div>
+</div>
+
+<!-- <script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+});
+  
+  $(".selectedPageName").text("Cleaned Worklist");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="preSterilizationCleaning"]').parents("li").addClass("active");
+
+</script> -->

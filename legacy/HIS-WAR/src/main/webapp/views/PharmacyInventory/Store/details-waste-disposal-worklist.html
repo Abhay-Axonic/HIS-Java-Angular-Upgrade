@@ -1,0 +1,261 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="row padding-top4">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Request No. :</b>
+					<label>{{vm.model.wasteDisposalDetailData.requestNo}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Request Date:
+					</b>
+					<label>{{vm.model.wasteDisposalDetailData.requestDate | date:'dd/MM/yyyy'}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">
+						Store :</b>
+					<label>{{vm.model.wasteDisposalDetailData.storeName}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 "> Type :
+					</b>
+					<label>{{vm.model.wasteDisposalDetailData.assetType}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Requested By :
+					</b>
+					<label>{{vm.model.wasteDisposalDetailData.requestedBy}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Witness :
+					</b>
+					<label>{{vm.model.wasteDisposalDetailData.witnessName}}</label>
+				</span>
+			</div>
+		</div>
+		<!-- Assets Table START -->
+		<div class="row padding-left-right-set4" ng-show="vm.model.wasteDisposalDetailData.assetTypeId == 1">
+			<div class="container-fluid his-style">
+				<div class="table-container padding-left-right-set4 padding-top5">
+					<div class="table-container-header">
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<thead class="mainServiceTableCommon">
+								<tr>
+									<th class="width5" title="Item Code">Item Code
+										<div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width5" title="Item Name">Item Name
+										<div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6" title="Generic Name">Generic Name
+										<div class="float_right" ng-click="sortType = 'genericName'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width4" title="UOM Type">UOM
+										<div class="float_right" ng-click="sortType = 'uomType'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width4" title="UOM Unit">UOM Unit
+										<div class="float_right" ng-click="sortType = 'uomUnit'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width4" title="Batch No.">Batch No.
+										<div class="float_right" ng-click="sortType = 'batchNo'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width5" title="Expiry Date">Expiry Date
+										<div class="float_right" ng-click="sortType = 'expiryDate'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width4" title="Scrap Quantity"> Accepted Qty
+										<div class="float_right" ng-click="sortType = 'scrapQuantity'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6" title="Reason for Scrap">Reason for Scrap
+										<div class="float_right" ng-click="sortType = 'scrapReason'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width7" title="Disposed Quantity">Disposed Qty
+										<div class="float_right" ng-click="sortType = 'disposeQuantity'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body" style="height:400px; overflow-y: scroll;">
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat="disposal in vm.model.wasteDisposalDetailData.items | orderBy:sortType:sortReverse">
+									<td class="width5" title="{{disposal.itemCode}}">{{disposal.itemCode}}</td>
+									<td class="width5" title="{{disposal.itemName}}">{{disposal.itemName}}</td>
+									<td class="width6" title="{{disposal.genericName}}">{{disposal.genericName}}</td>
+									<td class="width4" title="{{disposal.uomType}}">{{disposal.uomType}}</td>
+									<td class="width4" title="{{disposal.uomUnit}}">{{disposal.uomUnit}}</td>
+									<td class="width4" title="{{disposal.batchNo}}">{{disposal.batchNo}}</td>
+									<td class="width5" title="{{disposal.expiryDate | date:'MMM-yyyy'}}">{{disposal.expiryDate | date:'MMM-yyyy'}}</td>
+									<td class="width4" title="{{disposal.acceptedQuantity}}">{{disposal.acceptedQuantity}}</td>
+									<td class="width6" title="{{disposal.scrapReason}}">{{disposal.scrapReason}}</td>
+									<td style="width: 6.81%!important;" title="{{disposal.disposeQuantity}}">
+										<div ng-if="vm.model.wasteDisposalDetailData.status == 'Pending'">
+											<input type="text" autocomplete="off" numbers-only ng-model="disposal.disposeQuantity">
+										</div>
+										<div ng-if="disposal.scrapQuantity == disposal.disposeQuantity && vm.model.wasteDisposalDetailData.status == 'Completed'">{{disposal.disposeQuantity}}</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Assets Table END -->
+		<!-- Consumable Table START -->
+		<div class="row padding-left-right-set4" ng-show="vm.model.wasteDisposalDetailData.assetTypeId == 2">
+			<div class="col-lg-12 col-md-12 common-popup-height-350 padding-top10">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width5">Item Code</th>
+							<th class="width5">Item Name</th>
+							<th class="width5">Serial No.</th>
+							<th class="width5">Lot No.</th>
+							<th class="width4"> Scrap Qty</th>
+							<th class="width10">Reason for Scrap</th>
+							<th class="width3">Disposed Qty</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<input class="w-100" type="text" autocomplete="off">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- Consumable Table END -->
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style padding-right20">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon" ng-if="!vm.model.wasteDisposalDetailData.witnessName">
+									<i class="fa fa-caret-square-o-right " aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="" ng-if="!vm.model.wasteDisposalDetailData.witnessName">
+										<select ng-disabled="vm.model.wasteDisposalDetailData.statusId == 4" class="text-input floating-label dirty" ng-model="vm.model.witnessId">
+											<option value="">Select Witness</option>
+											<option ng-repeat="witness in vm.model.wasteDisposalDetailData.witnessDetails" value="{{witness.id}}">{{witness.name}}</option>
+										</select>
+										<label for="code">Witness</label>
+									</div>
+									<div class="" ng-if="vm.model.wasteDisposalDetailData.witnessName">
+		
+										<label for="code">
+											<b>Witness:</b> {{vm.model.wasteDisposalDetailData.witnessName}}</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-8 padding-left-right8">
+							</div>
+				<div class="col-md-1 col-sm-1 padding-left0px-right6px">
+					<div class="">
+						<input type="button" value="Save" ng-click="vm.model.SaveApproval()" ng-hide="vm.model.wasteDisposalDetailData.approvalStatus != 'Pending'" class="btn btn-primary btn-save-box-shadow">
+
+					</div>
+				</div>
+				<div class="col-md-1 col-sm-1 padding-left0px-right6px">
+					<div class="">
+						<a href="#/wasteAssetDisposalWorklist">
+							<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>

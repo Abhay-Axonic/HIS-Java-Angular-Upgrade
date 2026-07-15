@@ -1,0 +1,17 @@
+package com.param.assetManagement.maintenance.dao;
+
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceScheduleDto;
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceSparesComsumptionDto;
+import com.param.global.common.Response;
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface ICorrectiveMaintenanceSparesComsumptionDao {
+
+	Response saveCorrectiveMaintenanceSparesComsumption(CorrectiveMaintenanceSparesComsumptionDto dto)throws ApplicationException;
+
+	Response getCorrectiveMainSparesComsumptionByitemId(CorrectiveMaintenanceSparesComsumptionDto correctiveMaintenanceSparesComsumptionDto)throws ApplicationException;
+
+	Response getSparesComsumptionlistById(CorrectiveMaintenanceScheduleDto orrectiveMaintenanceScheduleDto)throws ApplicationException;
+
+}

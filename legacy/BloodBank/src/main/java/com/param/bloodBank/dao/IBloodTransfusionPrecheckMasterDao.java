@@ -1,0 +1,27 @@
+package com.param.bloodBank.dao;
+
+import com.param.bloodBank.dto.BloodTransfusionPrecheckMasterDto;
+import com.param.global.common.Response;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings({"rawtypes"})
+public interface IBloodTransfusionPrecheckMasterDao {
+
+	Response saveBloodTransfusionPrecheckMaster(BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto) throws ApplicationException;
+
+	Response updateBloodTransfusionPrecheckMasterStatus(
+			BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto) throws ApplicationException;
+
+	Response getBloodTransfusionPrecheckMasterList(BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto) throws ApplicationException;
+
+	Response getActiveBloodTransfusionPrecheckMasterList(
+			BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto)  throws ApplicationException;
+
+	Response getBloodTransfusionPrecheckMasterListPagination(
+			BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto)throws ApplicationException;
+
+	Response getBloodTransfusionPrecheckMasterListCount(
+			BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto)throws ApplicationException;
+
+}

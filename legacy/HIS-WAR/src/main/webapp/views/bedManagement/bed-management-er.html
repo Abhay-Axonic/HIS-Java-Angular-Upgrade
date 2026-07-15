@@ -1,0 +1,2531 @@
+<style>
+        .k-treeview .k-in {
+            padding: 5px;
+        }
+        .emptyDetails
+        {
+        	    padding-top: 106px !important;
+        }
+        .emptyBed
+        {
+        	height: 102px !important;
+        	    font-size: medium;
+    margin-left: 25px;
+        }
+        .visibilityHidden
+        {
+        	visibility: hidden;
+        }
+        .his-style select {
+   		 	padding-bottom: 6px !important;
+    	}
+
+	.card{
+	border: 1px solid;
+    padding: 10px;
+    border-radius: 15px;
+	margin-top: 5px;
+	box-shadow: none !important;
+	border: 1px solid #00003
+	}
+
+	.female-btn {
+    border-radius: 10px;
+    border: 1px solid #BD1F75;
+    width: 18% !important;
+    background-color: #BD1F75 !important;
+}
+
+.male-btn {
+    border: 1px solid #2A83F2;
+    border-radius: 10px;
+    width: 18% !important;
+    background-color: #2A83F2 !important;
+}
+
+#btnDivAlign {
+    border-right: none !important;
+    border-left: none !important;
+    margin-top: 4px;
+    border-radius: 10px;
+    border-bottom: none !important;
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid;
+    text-align: center;
+	}
+
+.bed-management .map-of-bed {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 14px;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.bed-management .map-of-bed::before,
+.bed-management .map-of-bed::after {
+	display: none;
+}
+
+.bed-management .map-of-bed > [class*="col-"] {
+	float: none !important;
+	width: 100% !important;
+	max-width: 100%;
+	min-width: 0;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin-bottom: 0;
+	display: block;
+}
+
+.bed-management .map-of-bed > [class*="col-"] > div,
+.bed-management .map-of-bed > [class*="col-"] > div > .card {
+	width: 100%;
+	min-width: 0;
+}
+
+.bed-management .map-of-bed .card {
+	width: 100%;
+	max-width: 100%;
+	height: auto !important;
+	min-height: 0;
+	overflow: hidden;
+	box-sizing: border-box;
+	padding-bottom: 6px;
+}
+
+.bed-management .map-of-bed .card .row {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.bed-management .map-of-bed .card [class*="col-"] {
+	min-width: 0;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+.bed-management .map-of-bed .divSecond .col-md-6 img,
+.bed-management .map-of-bed .divSecond img[src*="Bed Images"],
+.bed-management .map-of-bed .divSecond img[src*="Male Bed"],
+.bed-management .map-of-bed .divSecond img[src*="Female Bed"] {
+	width: 100% !important;
+	max-width: 220px;
+	height: auto !important;
+	margin-left: 0 !important;
+	object-fit: contain;
+}
+
+.bed-management .map-of-bed .divSecond .col-md-6:first-child {
+	width: 55%;
+	padding: 0 4px;
+}
+
+.bed-management .map-of-bed .divSecond .col-md-6:last-child {
+	width: 45%;
+	padding: 0 4px;
+}
+
+.bed-management .map-of-bed .text-center img[src*="Male bed"],
+.bed-management .map-of-bed .text-center img[src*="Female bed"],
+.bed-management .map-of-bed .text-center img[src*="femaleBirthingBed"],
+.bed-management .map-of-bed .text-center img[src*="Bed Images"] {
+	width: 100% !important;
+	max-width: 180px;
+	height: auto !important;
+}
+
+.bed-management .map-of-bed .text-center img[src*="green.png"],
+.bed-management .map-of-bed .text-center img[src*="orange.png"],
+.bed-management .map-of-bed .text-center img[src*="canstockphoto"],
+.bed-management .map-of-bed .text-center img[src*="DialysisChair"],
+.bed-management .map-of-bed .text-center img[src*="Reserved"] {
+	width: 65px !important;
+	height: auto !important;
+}
+
+.bed-management .map-of-bed .MEWS-Nursing-Div,
+.bed-management .map-of-bed .bed-no-span[style*="112%"],
+.bed-management .map-of-bed [style*="width: 112%"] {
+	width: 100% !important;
+	max-width: 100%;
+	margin-left: 0 !important;
+	box-sizing: border-box;
+}
+
+.bed-management .map-of-bed #btnDivAlign {
+	width: 100% !important;
+	max-width: 100%;
+	margin-left: 0 !important;
+}
+
+.bed-management .map-of-bed .marginLeft.marginTop {
+	float: none !important;
+	margin-left: 0 !important;
+	margin-top: 4px !important;
+	text-align: right;
+}
+
+.bed-management .map-of-bed .divSecond > .col-md-12 {
+	margin-left: 0 !important;
+	margin-top: 0 !important;
+	width: 100%;
+	padding: 0;
+}
+
+.bed-management .map-of-bed .divSecond .card {
+	overflow: visible;
+	width: 100%;
+	max-width: 100%;
+	height: auto !important;
+	min-height: 110px;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+.bed-management .map-of-bed .divSecond .card > .row {
+	width: 100%;
+	margin: 0;
+}
+
+.bed-management .map-of-bed .emptyDetails {
+	padding-top: 0 !important;
+	min-height: 0 !important;
+}
+
+@media (max-width: 1024px) {
+	.bed-management .map-of-bed {
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+		gap: 12px;
+	}
+}
+
+@media (max-width: 767px) {
+	.bed-management .map-of-bed {
+		grid-template-columns: 1fr;
+	}
+}
+
+
+</style>
+<div ng-if="erDivFlag">
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+			<legend class="main-heading-div commonPatientSearch cursor-pointer">
+				<div class="row" id="storeSelection">
+					<div class="col-lg-10 col-md-9 col-sm-6"></div>
+					<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set1 pull-right">
+						<span class="heading-name-font">{{nursingStationCookieShow}} </span>
+						<span class="heading-name-font pull-right" title="Change Nursing Station" data-toggle="modal" 
+							ng-click="isWardChanged()">
+							<i class="fa fa-stack-exchange" aria-hidden="true"></i>
+						</span>
+					</div>
+				</div>
+			</legend>
+            <div class="container-fluid his-style">
+            	<!-- <div class="row margin-top10">
+            		<div class="col-md-8"></div>
+					<div class="col-md-3">
+						<div>
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="width-div-for-patient-reg ">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Save"><i class="fa fa-floppy-o" style="font-size:21px" aria-hidden="true"></i></a>	
+						</div>
+					</div>
+				</div> -->
+					<div class="row"  ng-hide="patientSearchDiv">
+            		<div class="col-md-7"></div>
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="select-float">
+									<select class="text-input floating-label" ng-model="bedsearch.erBedTypeAllocation">
+										<option></option>
+										<option value="1">ER</option>
+										<option value="2">Obervation</option>
+										<option value="3">Resuctination</option>
+									</select> <label for="code">Allocation Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off"  tabindex="3" name="groupName" placeholder="Search" ng-model="groupName"  uib-typeahead="group.firstName+' '+group.lastName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                        typeahead-editable="false" typeahead-on-select="selectPatientIdOnSearch($item, $model, $label);"   id="" class="text-input floating-label" required>
+									<label for="description" class="LISDynamicLabel">Patient Search</label>
+										</div>
+									</div>
+								</div>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2 padding-left0px-right6px margin-top10">
+						<div class="common-save-button">
+							<a href=""  class="btn btn-primary btn-save-box-shadow" style="width: 36%;margin-top: 10px;" id="searchBtn" ng-click="patientSearchByMultipleCriteria()">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+            	</div>
+            	
+				
+			<div class="row " ng-show="patientSearchDiv">
+            		<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-building" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group select-float">
+									<select class="text-input floating-label" name="code" ng-model="bedsearch.floorId" ng-change="getAdmittedPatientByIds('floor')">
+									<option></option>
+									<option ng-repeat="info in activeFloorList" value="{{info.floorId}}">{{info.floorName}}</option>
+									</select>		
+									<label for="code">Select Floor</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group select-float">
+									<select class="text-input floating-label" name="code" ng-model="bedsearch.wardId" ng-change="getAdmittedPatientByIds('ward')">
+										<option ng-repeat="info in wardList" value="{{info.wardId}}">{{info.wardName}}</option>
+									</select>		
+									<label for="code">Select Ward</label>
+								</div>
+							</div>
+						</div>
+					</div>
+            		<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-hospital-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group">
+									<select class="text-input floating-label" name="code" ng-model="bedsearch.nursingStationId">
+										<option ng-repeat="info in nursingStationList" value="{{info.nursingStationId}}">{{info.nursingStationDesc}}</option>
+									</select>		
+									<label for="code">Select Nursing Station</label>
+								</div>
+							</div>
+						</div>
+					</div>
+            		<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-bed" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group">
+									<select class="text-input floating-label" name="code" ng-model="bedsearch.bedCategoryId">
+									<option ng-repeat="info in bedCategoryList" value="{{info.bedCategoryId}}">{{info.bedCategoryDesc}}</option>
+									</select>		
+									<label for="code">Select Ward Bed Category</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-bed" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group">
+									<!-- <input type="text" autocomplete="off"  tabindex="3" name="groupName" placeholder="Search" ng-model="groupName"  uib-typeahead="group.firstname+' '+group.lastname+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                        typeahead-editable="false" typeahead-on-select="selectPatientIdOnSearch($item, $model, $label);"   id="" class="text-input floating-label" required> -->
+                        <input type="text" autocomplete="off"  tabindex="3" name="serachPatient" placeholder="Search" ng-model="serachPatient"  id="" class="text-input floating-label" required>
+									<label for="description" class="LISDynamicLabel">Patient Search</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2 padding-left0px-right6px margin-top0">
+						<div class="common-save-button">
+							<a href=""  class="btn btn-primary btn-save-box-shadow" style="width: 40%;    margin-top: 10px;" id="searchBtn" ng-click="patientSearchByMultipleCriteria()">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+            	</div>
+		   		<div class="col-md-12 bed-management">
+		   		<fieldset   class="main-fieldset" ng-repeat="info in patientBedList">
+					<legend id="hideshowRoom_{{info.roomId}}" ng-click="hideTabDetailsRoom(info)" ng-if="isShowPatientByBed=='N'" class="heading-div">{{info.roomDesc}}</legend>
+					<div class="row patient-row margin-top10 margin-bottom10 map-of-bed" id="roomListshow_{{info.roomId}}">
+
+						<div class="col-md-2 col-sm-4 col-xs-4" ng-repeat="mapList in info.roomList | filter:serachPatient" ng-if="isShowPatientByBed=='N' || (mapList.bedId == info.bedId && isShowPatientByBed=='Y') ">
+							<div class="card">
+								<div class="row">
+									<div class="col-md-12 col-sm-10 col-xs-10">
+										<div class="patient-details" ng-if="mapList.admissionId > 0">
+											<div ng-show="{{mapList.patientId > 0}}" ng-init='age=getAge(mapList.dob)' class="long-text-overflow" title="{{mapList.pFirstName+' '+age+'/'+mapList.genderCode}}">
+												<img ng-if="mapList.genderCode != 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='N' " src="resources/assets/images/icon/bed/Expert Doctor Icons/male.png" alt="Avatar" style="margin-left: -3px;width: 35px;float: inline-start;margin-top: -2px;">
+												<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.isLaborWard == 'N' && mapList.ishemodialysisward=='N' "  src="resources/assets/images/icon/bed/Expert Doctor Icons/female.png"  alt="Avatar" style="margin-left: -3px;width: 35px;float: inline-start;margin-top: -2px;">
+												<b title="{{mapList.pFirstName || ''}}">
+													{{ (mapList.pFirstName || '').substring(0,25) }}
+													<span ng-if="mapList.pFirstName && mapList.pFirstName.length > 25">
+													...
+												  </span>
+												</b>
+												<img  src="resources/assets/images/icon/bed/Expert Doctor Icons/MD Medicine.png" alt="Avatar" style="width: 42px;float: inline-end;margin-top: -6px;">
+												<br>
+												<b>{{mapList.ageStr +'/'+mapList.genderCode}}</b>
+											</div>
+											<div ng-show="{{mapList.tPatientId > 0}}">
+												<b>{{mapList.pFirstName}}</b><br>
+												<b>{{mapList.dob+'/'+mapList.genderCode}}</b>
+											</div>
+											<div id="div1">
+
+												<div class="divFirst" ng-show="!mapList.showDetails">
+													<div id="btnDivAlign">
+														<button type="button"
+
+																ng-click="mapList.showDetails = !mapList.showDetails"
+																ng-class="{
+														'female-btn': mapList.genderCode == 'F' &&
+																	  mapList.admissionId > 0 &&
+																	  mapList.isLaborWard == 'N' &&
+																	  mapList.ishemodialysisward == 'N',
+
+														'male-btn': mapList.genderCode != 'F' &&
+																	mapList.admissionId > 0 &&
+																	mapList.ishemodialysisward == 'N'
+													}">
+															<i class="fa"
+															   ng-class="{
+														   'fa-arrow-down': !mapList.showDetails,
+														   'fa-arrow-up': mapList.showDetails
+													   }"
+															   style="color: #fff;font-size: 13px !important;">
+															</i>
+														</button>
+													</div>
+													<div>
+														<div class="col-md-7">
+															<div><b class="padding-right5" style="font-style: italic;">UHID</b>{{mapList.uhidnumber}}</div>
+															<div><b class="padding-right10" style="font-style: italic;">DOA</b>{{mapList.doa}}</div>
+															<div><b class="padding-right10" style="font-style: italic;">PDD</b>{{mapList.pdd}}</div>
+															<div><b class="" style="font-style: italic;">{{mapList.paymentEntitlementDesc}}</b></div>
+															<div><br></div>
+														</div>
+														<div class="col-md-5">
+															<div ng-if="mapList.admissionId > 0 && hideIcons==true ">
+																<div class="row">
+																	<div class="bed-mang-box-icon col-md-4" ng-if="mapList.allergy > 0"><a  ng-click="allergy(mapList);"><img src="resources/assets/images/icon/bed/Transactional Icons/allergy.png" title="Allergy" alt="Allergy" style="width:25px"></a></div>
+																	<div class="bed-mang-box-icon col-md-4" ng-if="mapList.labOrder>0"><a ng-click="generateSampleCollection(mapList);"><img src="resources/assets/images/icon/bed/new/PatientDiagnosticsNew.png" title="Patient Diagnostics" alt="Patient Diagnostics" style="width:25px"></a></div>
+																	<div class="bed-mang-box-icon col-md-4" ng-if="mapList.drugAdministration>0"><a ng-click="drugAdminstrator(mapList)" href=""><img src="resources/assets/images/icon/bed/new/DrugAdministrationNew.png" title="Drug Administration" alt="Drug Administration" style="width:25px"></a></div>
+																	<!-- <div class="bed-mang-box-icon" ng-if="mapList.imaging>0"><a ng-click="generateSampleCollection(mapList);" href=""><img src="resources/assets/images/icon/bed/new/imaging.png" title="Imaging" alt="Imaging" style="width:25px"></a></div> -->
+																	<!-- <div class="bed-mang-box-icon" ng-if="mapList.nbm > 0"><img src="resources/assets/images/icon/bed/new/NBM.png" title="NBM" alt="NBM" style="width:25px" data-toggle="modal" data-target="#NBMdetailsModal" ></div> -->
+																	<div class="bed-mang-box-icon col-md-4" ng-if="mapList.procedureOrder > 0"><a  ng-click="getOrderedProcedureList(mapList);"><img src="resources/assets/images/icon/bed/new/ProcedureOrderNew.png" title="Procedure Order" alt="Procedure Order" style="width:25px" data-toggle="modal" data-target="#procedureOrderdetailsModal"></a></div>
+																	<div class="bed-mang-box-icon col-md-4" ><a href="https://meet.jit.si/EmedsecRoom" target="blank"><img src="resources/assets/images/icon/bed/new/MeetingNew.png" title="Meeting" alt="Meeting" style="width:25px"></a></div>
+																	<div class="bed-mang-box-icon col-md-4" ng-if="mapList.pocOrders>0"><a ng-click="goToPOCWorklist(mapList)" href=""><img src="resources/assets/images/icon/bed/new/POC Worklist.png" title="POC" alt="POC Worklist" style="width:25px"></a></div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												</div>
+												<div class="divSecond" ng-show="!mapList.showDetails">
+													<div class="patient-details emptyDetails" ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) &&  (mapList.bedStatusId != 5 && mapList.bedStatusId != 4)">
+
+													</div>
+													<div class="patient-details" ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) &&  (mapList.bedStatusId == 5 || mapList.bedStatusId == 4)">
+														<div
+																class="long-text-overflow emptyBed text-center"
+																title="Reserved" style="">
+															<img  src="resources/assets/images/icon/bed/Reserved icon.png" alt="Avatar">
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-12" style="margin-left: -7px;margin-top: -19px;">
+															<div class="card" style="border: none;">
+																<div class="col-md-6">
+																	<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.isLaborWard == 'N' && mapList.ishemodialysisward=='N' " src="resources/assets/images/icon/bed/Bed Images/Female Bed.png" alt="Avatar" style="width: 256px;margin-left: -24px;" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																	<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.isLaborWard == 'Y' " src="resources/assets/images/icon/bed/femaleBirthingBed.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																	<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='Y' " src="resources/assets/images/icon/bed/DialysisChairInpatient.png" style="width: 33px;" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																	<img ng-if="mapList.genderCode != 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='N' " src="resources/assets/images/icon/bed/Bed Images/Male Bed.png"  style="width: 256px;margin-left: -24px;" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																	<img ng-if="mapList.genderCode != 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='Y' " src="resources/assets/images/icon/bed/DialysisChairInpatient.png"  style="width: 33px;" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																	<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 3" src="resources/assets/images/icon/bed/green.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}">
+																	<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 2" src="resources/assets/images/icon/bed/canstockphoto30970775.jpg" alt="Avatar" title="{{mapList.bedCategoryDesc +' '+ mapList.housekeepingStatusDesc}} ">
+																	<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 6" src="resources/assets/images/icon/bed/canstockphoto30970775.jpg" alt="Avatar" title="{{mapList.bedCategoryDesc +' '+ mapList.housekeepingStatusDesc}}">
+																	<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 5" src="resources/assets/images/icon/bed/orange.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}">
+																	<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 4" src="resources/assets/images/icon/bed/orange.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}">
+																</div>
+																<div class="col-md-6">
+																	<div class="margin-top10" ng-style="set_color(mapList.totalScore)" ng-if="mapList.admissionId" style="margin-left: 26px;border: 1px solid #F0793A;padding: 4px;border-radius: 10px;background-color: #FFF0EC !important;width: 112%;">
+																		<a ng-href=" " class=" font-white" ng-click="addCollection1(mapList)">
+																			<span data-toggle="modal" style="color:#F0793A;"  data-target="#MEWSdetailsModal1">MEWS</span>
+																			<span style="font-weight: 700;color: #F0793A;" ng-model="mapList.totalScore" id="totalScore" >{{mapList.totalScore}}</span>
+																		</a>
+																	</div>
+																	<div class="row bed-number margin-top0">
+																		<div class="col-md-2 col-sm-2 ng-scope padding-top4" ng-if="mapList.genderId==2 && mapList.obgynSpecialityId!=null && hideIcons==true ">
+																<span class="font-size12 bed-notify-icon">
+																	<img src="resources/assets/images/icon/bed/labor-transfer.png" alt="Avatar" title="{{mapList.isLaborWard == 'Y' ? 'Transfer to Previous Ward' :'Transfer to Labor Ward' }}" style="width:20px" ng-click="showLaborTransferPopup(mapList);">
+																</span>
+																		</div>
+																		<div class="col-md-2 col-sm-2 ng-scope padding-top4" ng-if="mapList.ishemodialysisward=='Y' && hideIcons==true">
+																<span class="font-size12 bed-notify-icon">
+																	<img src="resources/assets/images/icon/bed/labor-transfer.png" alt="Avatar" style="width:20px" ng-click="hemodialysisTransferRequest(mapList);">
+																</span>
+																		</div>
+																	</div>
+
+																	<div class=" bg-red margin-top10 visibilityHidden"  ng-style="set_color(mapList.totalScore)" ng-if="mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0" style="width: auto !important;">
+																		<a ng-href="#/bedManagement/MEWShistory" class=" font-white" ng-disabled="hideIcons==false" ng-click="addCollection(mapList)">
+																			<span data-toggle="modal" data-target="#MEWSdetailsModal">MEWS</span>
+																			<span style="font-weight: 700" ng-model="mapList.totalScore" id="totalScore" >{{mapList.totalScore}}</span>
+																		</a>
+																	</div>
+																	<div class="row bed-number margin-top4">
+																		<div class="col-lg-8 col-md-8 col-sm-8 bed-no-span long-text-overflow  bg-blue margin-top4 ng-scope" style="margin-left: 26px;border-radius: 10px;background-color: #670099 !important;width: 112%;">
+																			<a  class="font-white" ng-click="addCollection2(mapList)" >
+																				<span style="margin-left: 5px;">Nursing Scale</span>
+																			</a>
+																		</div>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-lg-12 col-md-8 col-sm-8 bed-no-span long-text-overflow  margin-top4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;width: 112%;color:#00003b">
+																				<span class="font-size12 cursor-pointer" title="{{mapList.bedNumber}}" style="font-size: 13px !important;padding: 10px;">
+																					{{mapList.bedNumber}}
+																				</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="div2" id="div2" ng-show="mapList.showDetails">
+												<div class="col-lg-12 col-md-8 col-sm-8 bed-no-span long-text-overflow margin-top4 text-center"
+													 style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b">
+												<span style="font-size: 13px !important;padding: 10px;">
+													Bed Details
+												</span>
+												</div>
+												<div class="row">
+													<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;">
+														<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Patient on Infusion Pump.png" title="Patient on Infusion Pump"  alt="Avatar" style="width: 64px;margin-left: -15px;cursor: pointer">
+														<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+													</div>
+
+													<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;">
+														<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Bed on  Hold.png" title="Bed on  Hold" alt="Avatar" style="width: 64px;margin-left: -15px;cursor: pointer">
+														<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+													</div>
+													<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;">
+														<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Patient on Infusion Pump.png" title="Patient on Infusion Pump" alt="Avatar" style="margin-left: -15px;width: 64px;cursor: pointer">
+														<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;margin-top: -3px !important;">
+														<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Patient  Absconding.png" title="Patient  Absconding" alt="Avatar" style="width: 64px;margin-left: -15px;cursor: pointer">
+														<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+													</div>
+
+													<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;margin-top: -3px !important;">
+														<img  src="resources/assets/images/icon/bed/Bed Detail Icons/ECG  Ordered.png" title="ECG  Ordered" alt="Avatar" style="width: 64px;margin-left: -15px;cursor: pointer">
+														<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+													</div>
+													<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;margin-top: -3px !important;">
+														<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Bed on  Hold.png" title="Bed on  Hold" alt="Avatar" style="margin-left: -15px;width: 64px;cursor: pointer">
+														<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+													</div>
+												</div>
+
+												<div id="btnDivAlign">
+													<button type="button"
+
+															ng-click="mapList.showDetails = !mapList.showDetails"
+															ng-class="{
+														'female-btn': mapList.genderCode == 'F' &&
+																	  mapList.admissionId > 0 &&
+																	  mapList.isLaborWard == 'N' &&
+																	  mapList.ishemodialysisward == 'N',
+
+														'male-btn': mapList.genderCode != 'F' &&
+																	mapList.admissionId > 0 &&
+																	mapList.ishemodialysisward == 'N'
+													}">
+														<i class="fa"
+														   ng-class="{
+														   'fa-arrow-down': !mapList.showDetails,
+														   'fa-arrow-up': mapList.showDetails
+													   }"
+														   style="color: #fff;font-size: 13px !important;">
+														</i>
+													</button>
+												</div>
+
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<div ng-if = "mapList.isShortLeave == 'Y'" class="overlay">
+								<i class="icon fa fa-eye" data-toggle="modal" data-target="#shortLeave"></i>
+								<span>Short Leave</span>
+							</div>
+						</div>
+					</div>
+    				<legend id="hideshowWard_{{info.wardId}}" ng-click="hidetabDetails(info)" ng-if="isShowPatientByBed=='N' && info.bedListNew !== undefined && info.bedListNew !== null && info.bedListNew.length > 0 && info.wardName !== undefined && info.wardName !== null && info.wardName !== ''" class="heading-div">{{info.wardName}}</legend>
+			    	<div class="row patient-row margin-top10 margin-bottom10 map-of-bed" id="bedlistshow_{{info.wardId}}">
+			    	
+			    		<div class="col-md-2 col-sm-4 col-xs-4" ng-repeat="mapList in info.bedListNew | filter:serachPatient" ng-if="isShowPatientByBed=='N' || (mapList.bedId == info.bedId && isShowPatientByBed=='Y') ">
+			    			<div class="card">
+			    				<div class="row">
+			    					<div class="col-md-10 col-sm-10 col-xs-10">
+			    						 <div class="patient-details" ng-if="mapList.admissionId > 0">
+										    <div ng-show="{{mapList.patientId > 0}}" ng-init='age=getAge(mapList.dob)' class="long-text-overflow" title="{{mapList.pFirstName+' '+age+'/'+mapList.genderCode}}">
+												<b>{{mapList.pFirstName+'/'+mapList.ageStr +'/'+mapList.genderCode}}</b>
+											</div>
+											<div ng-show="{{mapList.tPatientId > 0}}">
+											<b>{{mapList.pFirstName+' '+mapList.dob+'/'+mapList.genderCode}}</b>
+											</div> 
+										    <div><b class="padding-right5 color-blue">UHID</b>{{mapList.uhidnumber}}</div>
+										    <div><b class="padding-right10 color-blue">DOA</b>{{mapList.doa}}</div>
+										    <div><b class="padding-right10 color-blue">PDD</b>{{mapList.pdd}}</div>
+										    <div><b class="color-blue">{{mapList.paymentEntitlementDesc}}</b></div>
+										    <div><br></div>
+								 		</div>
+								 		 <div class="patient-details emptyDetails" ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) &&  (mapList.bedStatusId != 5 && mapList.bedStatusId != 4)">
+										    
+								 		</div>
+								 		 <div class="patient-details" ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) &&  (mapList.bedStatusId == 5 || mapList.bedStatusId == 4)">
+											<div
+												class="long-text-overflow emptyBed text-center"
+												title="Reserved" style="">
+												<img  src="resources/assets/images/icon/bed/Reserved icon.png" alt="Avatar">
+											</div>
+										</div>
+								  		<div class="text-center">
+								  			<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.isLaborWard == 'N' && mapList.ishemodialysisward=='N' " src="resources/assets/images/icon/bed/Female bed.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+								  			<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.isLaborWard == 'Y' " src="resources/assets/images/icon/bed/femaleBirthingBed.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+								  			<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='Y' " src="resources/assets/images/icon/bed/DialysisChairInpatient.png" style="width: 33px;" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+								  			<img ng-if="mapList.genderCode != 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='N' " src="resources/assets/images/icon/bed/Male bed.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+								  			<img ng-if="mapList.genderCode != 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='Y' " src="resources/assets/images/icon/bed/DialysisChairInpatient.png"  style="width: 33px;" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+								  			<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 3" src="resources/assets/images/icon/bed/green.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}">
+								  			<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 2" src="resources/assets/images/icon/bed/canstockphoto30970775.jpg" alt="Avatar" title="{{mapList.bedCategoryDesc +' '+ mapList.housekeepingStatusDesc}} ">
+								  			<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 6" src="resources/assets/images/icon/bed/canstockphoto30970775.jpg" alt="Avatar" title="{{mapList.bedCategoryDesc +' '+ mapList.housekeepingStatusDesc}}">
+								  			<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 5" src="resources/assets/images/icon/bed/orange.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}">
+								  			<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 4" src="resources/assets/images/icon/bed/orange.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}">
+								  		</div>
+								  		
+								  		<div class="margin-top10" ng-style="set_color(mapList.totalScore)" ng-if="mapList.admissionId" style="border: 1px solid #F0793A;padding: 4px;border-radius: 10px;background-color: #FFF0EC !important;width: 112%;">
+								  			<a ng-href=" " class=" font-white" ng-click="addCollection1(mapList)">
+								  			<span data-toggle="modal" style="color: #F0793A;" data-target="#MEWSdetailsModal1">MEWS</span>
+								  			<span style="font-weight: 700;color: #F0793A;" ng-model="mapList.totalScore" id="totalScore" >{{mapList.totalScore}}</span>
+								  			</a>
+								  		</div> 
+								  		<div class="row bed-number margin-top0">
+<!-- 											<div class="col-lg-8 col-md-8 col-sm-8 bed-no-span long-text-overflow  bg-blue margin-top4 ng-scope"> 
+												<a ng-href="" class="font-white" href=""> 
+												<span>Nursing Scale </span> 
+ 												</a>
+ 											</div> -->
+											<div class="col-md-2 col-sm-2 ng-scope padding-top4" ng-if="mapList.genderId==2 && mapList.obgynSpecialityId!=null && hideIcons==true "><!-- obgynSpecialityId!=null -->
+												<span class="font-size12 bed-notify-icon">
+													<img src="resources/assets/images/icon/bed/labor-transfer.png" alt="Avatar" title="{{mapList.isLaborWard == 'Y' ? 'Transfer to Previous Ward' :'Transfer to Labor Ward' }}" style="width:20px" ng-click="showLaborTransferPopup(mapList);">
+												</span>
+											</div>
+												<div class="col-md-2 col-sm-2 ng-scope padding-top4" ng-if="mapList.ishemodialysisward=='Y' && hideIcons==true"><!-- obgynSpecialityId!=null -->
+												<span class="font-size12 bed-notify-icon">
+													<img src="resources/assets/images/icon/bed/labor-transfer.png" alt="Avatar" style="width:20px" ng-click="hemodialysisTransferRequest(mapList);">
+												</span>
+											</div>
+											</div>
+								  		
+								  		 <div class=" margin-top10 visibilityHidden"  ng-style="set_color(mapList.totalScore)" ng-if="mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0" >
+								  			<a ng-href="#/bedManagement/MEWShistory" class=" font-white" ng-disabled="hideIcons==false" ng-click="addCollection(mapList)">
+								  			<span data-toggle="modal" data-target="#MEWSdetailsModal">MEWS</span>
+								  			<span style="font-weight: 700" ng-model="mapList.totalScore" id="totalScore" >{{mapList.totalScore}}</span>
+								  			</a>
+								  		</div> 
+					    				<div class="row bed-number margin-top4">
+					    				    <div class="col-lg-8 col-md-8 col-sm-8 bed-no-span long-text-overflow  bg-blue margin-top4 ng-scope" style="border-radius: 10px;background-color: #670099 !important;width: 112%;">
+												<a  class="font-white" ng-click="addCollection2(mapList)" >
+												<span style="margin-left: 5px;">Nursing Scale</span>
+												</a>
+											</div>
+											
+								  		  <div class="col-lg-8 col-md-8 col-sm-8 bed-no-span long-text-overflow  margin-top4">
+								  		  	<span class="font-size12 cursor-pointer" title="{{mapList.bedNumber}}">
+									  			{{mapList.bedNumber}}
+									  		</span>
+								  		  </div>
+								  	 <!--   <div class=" col-md-2 col-sm-2" ng-if="mapList.admissionId > 0 && hideIcons==true ">
+								  		  	 <span class="font-size12 bed-notify-icon">
+									  			<img src="resources/assets/images/icon/bed/money orenge.png" alt="Avatar" style="width:20px">
+									  		</span> 
+								  		  </div>   -->
+								  		  <!-- <div class=" col-md-2 col-sm-2" ng-if="mapList.admissionId > 0 && hideIcons==true ">
+								  		  	<span data-toggle="modal" data-target="#patientServices" ng-click="popupData(mapList)"><span class="ellipsis-div"><i class="fa fa-ellipsis-v" aria-hidden="true"  ></i></span></span>
+								  		  </div> -->
+								  		</div>
+			    					</div>
+			    					<div class="col-md-1 col-sm-1 col-xs-1 height201" ng-if="mapList.admissionId > 0 && hideIcons==true ">
+			    					
+			    						<div class="bed-mang-box-icon" ng-if="mapList.allergy > 0"><a  ng-click="allergy(mapList);"><img src="resources/assets/images/icon/bed/new/AllergyNew.png" title="Allergy" alt="Allergy" style="width:25px"></a></div>
+			    						<div class="bed-mang-box-icon" ng-if="mapList.labOrder>0"><a ng-click="generateSampleCollection(mapList);"><img src="resources/assets/images/icon/bed/new/PatientDiagnosticsNew.png" title="Patient Diagnostics" alt="Patient Diagnostics" style="width:25px"></a></div>
+			    						<div class="bed-mang-box-icon" ng-if="mapList.drugAdministration>0"><a ng-click="drugAdminstrator(mapList)" href=""><img src="resources/assets/images/icon/bed/new/DrugAdministrationNew.png" title="Drug Administration" alt="Drug Administration" style="width:25px"></a></div>
+			    						<!-- <div class="bed-mang-box-icon" ng-if="mapList.imaging>0"><a ng-click="generateSampleCollection(mapList);" href=""><img src="resources/assets/images/icon/bed/new/imaging.png" title="Imaging" alt="Imaging" style="width:25px"></a></div> -->
+			    						<!-- <div class="bed-mang-box-icon" ng-if="mapList.nbm > 0"><img src="resources/assets/images/icon/bed/new/NBM.png" title="NBM" alt="NBM" style="width:25px" data-toggle="modal" data-target="#NBMdetailsModal" ></div> -->
+			    						<div class="bed-mang-box-icon" ng-if="mapList.procedureOrder > 0"><a  ng-click="getOrderedProcedureList(mapList);"><img src="resources/assets/images/icon/bed/new/ProcedureOrderNew.png" title="Procedure Order" alt="Procedure Order" style="width:25px" data-toggle="modal" data-target="#procedureOrderdetailsModal"></a></div>
+			    						<div class="bed-mang-box-icon" ><a href="https://meet.jit.si/EmedsecRoom" target="blank"><img src="resources/assets/images/icon/bed/Transactional Icons/Rounded Video.png" title="Meeting" alt="Meeting" style="width:25px"></a></div>
+										<div class="bed-mang-box-icon" ng-if="mapList.pocOrders>0"><a ng-click="goToPOCWorklist(mapList)" href=""><img src="resources/assets/images/icon/bed/new/POC Worklist.png" title="POC" alt="POC Worklist" style="width:25px"></a></div>
+			    					</div>
+			    				</div>
+							</div>
+							<div ng-if = "mapList.isShortLeave == 'Y'" class="overlay">
+								<i class="icon fa fa-eye" data-toggle="modal" data-target="#shortLeave"></i>
+								<span>Short Leave</span>
+							</div>
+			    		</div>
+			    	</div>
+			    	</fieldset>
+			    	
+			    </div>
+  			</div>
+	</div>
+	
+	
+	<div class="modal fade common-large-popup" id="patientServices" role="dialog">
+			<div class="modal-dialog">
+			<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="modal-title patient-details-row">
+							Patient Services
+							<button type="button" class="close" data-dismiss="modal">X</button>
+						</div>
+					</div>
+					<div class="modal-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="" ng-include="'./views/common/patient-demography.html'"></div>
+								</div>
+							</div>
+							<div class="row margin-top10 margin-left10 his-style">
+								<!-- <div class="col-md-2 col-sm-2 col-xs-2">
+									<input type="text" autocomplete="off" placeholder="Search" class="search-box-for-bed">
+									<i class="fa fa-search errspan" aria-hidden="true"></i>
+								</div> -->
+								<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+									<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top:0px">
+									<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+								</div> -->
+							</div>
+							<div class="row margin-top10 margin-left10 margin-bottom10">
+								<div class="col-md-12" ng-hide="patientSearchDiv">
+									<a id="anchorTag" href="#/drugAdministrator"></a><div id="anchorTagID"><a>Drug Administration</a></div>
+									<a id="anchorTag1" href="#/sampleCollection"></a><div id="anchorTagID1"><a>Sample Collection</a></div>
+									<a id="anchorTag2" href="#/pendingNursingOrder"></a><div id="anchorTagID2"><a>Nursing Order</a></div>
+								    <a id="anchorTag3" ng-click="callAdmissionNote()" ng-if="patientSearchDiv == false" ><div id="anchorTagID3"  ng-if="patientSearchDiv == false">Admission Note</div></a>
+								</div>
+								<div class="col-md-12">
+									<div id="example">
+									    <div class="demo-section k-content">
+									        <div class="box-col">
+									            <div kendo-tree-view="tree"
+									             k-data-source="treeData"
+									             k-on-change="selectedItem = dataItem">
+									                <span k-template>
+									                     <a ng-click="closePopUpWithRedirect(dataItem.link)">{{dataItem.text}}</a> <!-- <button class='k-button' ng-click='click(dataItem)'>Select</button> -->
+									                 </span>
+									             </div>
+									        </div>
+									    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	 <!-- ************************** START SHORT LEAVE POPUP ********************************-->
+	<div id="shortLeave" class="modal fade ng-scope in common-small-popup" role="dialog">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Short Leave Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							 <div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"  class="text-input floating-label dirty" name="datepicker" id="datepicker"  
+										uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" 
+					            		ng-model="datepicker"  model-view-value="true"
+					            		is-open="datepicker.opened" datepicker-options="dateOptions" show-button-bar="false" ng-click="openDatePicker()">
+										<label for="code">Date</label>
+									</div>
+								</div>
+							</div>  
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="clockpicker">
+										<input type="text" autocomplete="off" class="text-input floating-label" name="PDD">
+										<label for="PDD">Time</label>
+									</div>
+								</div>
+							</div>
+							<div class="row input-container margin-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-sticky-note" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<textarea name="code" rows="4" id=""
+													class="text-input floating-label"></textarea>
+												<label for="code">Note</label>
+											</div>
+										</div>
+									</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	 <!-- ************************** START SHORT LEAVE POPUP ********************************-->
+<!--**************************  NBM details modal start ************************** -->
+<div id="NBMdetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Nill By Mouth
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row common-popup-height-350-overflow-x">
+					<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set0">
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<th class="width1 text-center">
+										<input type="checkbox"/>
+									</th>
+									<th class="width10">
+										<span class="">From Date</span>
+									</th>
+									<th class="width10">
+										<span class="">To Date</span>
+									</th>
+									<th class="width10">
+										Adviced By
+									</th>
+									<th class="width3 text-center">
+										Add
+									</th>
+								</tr>
+								<tr>
+									<td class="text-center media-middle">
+										<input type="checkbox"/>
+									</td>
+									<td>
+									<!-- 	<input type="text" autocomplete="off" ng-model="c1" class="select-box" id="formDatepicker" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" /> -->
+									<input type="text" autocomplete="off"  class="datepicker-width text-input floating-label dirty" name="datepicker" id="datepicker"  
+										uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" 
+					            		ng-model="datepicker"  model-view-value="true"
+					            		is-open="datepicker.opened" datepicker-options="dateOptions" show-button-bar="false" ng-click="openDatePicker()"> <label for="code" class="">
+									</td>
+									<td>
+										<!-- <input type="text" autocomplete="off" ng-model="c2" class="select-box" id="toDatepicker" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" /> -->
+									<input type="text" autocomplete="off" class="datepicker-width text-input floating-label dirty"
+									name="datepickerPdd" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datepickerPdd"
+									model-view-value="true" is-open="datepickerPdd.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerPdd()" required> 
+									</td>
+									<td>
+										<label>Varun Sharma</label>
+									</td>
+									<td class="media-middle">
+										<input type="button" value="+" class=" btn btn-info add-dynamic-row" style="width:36px">
+										<!-- <input type="button" value="-" class="btn btn-info" style="padding: 0 4px;"> -->
+									</td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="row">
+					<div class="col-md-8"></div>
+					<div class="col-md-2 padding-left-right-10">	
+						<button type="button" data-dismiss="modal" class="btn btn-primary width100">Stop</button>
+					</div>
+					<div class="col-md-2 ">	
+						<button type="button" data-dismiss="modal" class="btn btn-primary width100">Extend</button>				
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--**************************  NBM details modal end ************************** -->
+<!--**************************  Flag details modal start ************************** -->
+<div id="flagDetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Flag Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row ">
+					<div class="row">
+						<div class="row">
+							<div class="col-lg-4 col-md-6 col-sm-6 padding-left-right-set4 margin-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-search" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group select-float">
+											<input type="text" autocomplete="off" name="code" class="text-input floating-label">		
+											<label for="">Dieases</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-6 col-sm-6 padding-left-right-set4 margin-top10 text-width-auto">
+								<div class="row input-container border-set-type">
+									<label for="" class="font-weight700">Alert :</label>
+									<input type="radio" name="FixedAssestRadioB" id ="">
+										<label for="FixedAssestRadioB" class="checkbox-margin-left-right">Yes</label>
+									<input type="radio" name="FixedAssestRadioB" id="FixedAssestRadioB2" >
+										<label for="FixedAssestRadioB2" class="checkbox-margin-left-right">No</label>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-2 col-sm-2 padding-left0px-right6px margin-top10">
+								<div class="">
+									<a href=""  class="btn btn-primary btn-save-box-shadow ">
+										<i class="fa fa-floppy-o" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="row "><!--  -->
+							<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set0 common-popup-height-350">
+								<table class="table table-bordered">
+									<tbody>
+										<tr>
+											<th class="width57">
+												<span class="">Flag Name</span>
+											</th>
+											<th class="width10">
+												Alert
+											</th>
+											<th class="width10">
+												Active/Inactive
+											</th>
+											<th class="width10">
+												Action
+											</th>
+										</tr>
+										<!-- <tr>
+											<td colspan="4"> -->
+									</tbody>
+								</table>
+								<div class="col-lg-12 col-md-12 padding-left-right-set0 ">
+										<table class="table table-bordered table-striped">
+											<tbody>
+												<tr>
+													<td colspan="4">
+														<b>Active</b>
+													</td>
+												</tr>
+												<tr>
+													<td class="width30 media-middle">
+														<div>Flag 1</div>
+													</td>
+													<td class="width5">
+														<label class="switch">
+															<input type="checkbox">
+															<div class="slider round"></div>
+														</label>
+													</td>
+													<td class="width5">
+														<label class="switch">
+															<input type="checkbox">
+															<div class="slider round"></div>
+														</label>
+													</td>
+													<td class="width5 text-center media-middle">
+														<div>
+															<i class="fa fa-exclamation-triangle txt_gray"></i>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+											<!-- </td>
+										</tr> -->
+									<div class="col-lg-12 col-md-12 padding-left-right-set0 ">
+										<!-- <table>
+											<tbody>
+												<tr>
+													<td colspan="4"> -->
+														<table class="table table-bordered table-striped">
+															<tbody>
+																<tr>
+																	<td colspan="4">
+																		<b>Entered in error</b>
+																	</td>
+																</tr>
+																<tr>
+																	<td class="width28">
+																		<div>Flag 2</div>
+																	</td>
+																	<td class="width5">
+																		<div>Active</div>
+																	</td>
+																	<td class="width5">
+																		<div></div>
+																	</td>
+																	<td class="width5 text-center">
+																		<div>
+																			<i class="fa fa-exclamation-triangle color-red"></i>
+																		</div>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													<!-- </td>
+												</tr>
+										</tbody>
+									</table> -->
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--**************************  Flag details modal end ************************** -->
+<!--**************************  Procedure details modal start ************************** -->
+<div id="procedureOrderdetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Procedure Order Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body common-popup-height-350">
+				<div class="row ">
+					<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set0">
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<th class="width8">
+										<span class="">Date Of Procedure</span>
+									</th>
+									<th class="width10">
+										<span class="">Procedure Name</span>
+									</th>
+									<th class="width10">
+										Surgeon	
+									</th>
+									<th class="width10">
+										Consent Status 
+									</th>
+									<th class="width10">
+										Destination Post Procedure 
+									</th>
+									<!-- <th class="width5">
+										Action 
+									</th> -->
+								</tr>
+								<tr ng-repeat="procedreOrderObj in orderedProcedureList">
+									<td>
+										<!-- <input type="text" autocomplete="off"  ng-model="cal" class="select-box" id="formDatepicker" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" /> -->
+										<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty"
+										name="datepicker" id="datepicker"
+										uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+										placeholder="DD/MM/YYYY" ng-model="datepicker"
+										model-view-value="true" is-open="datepicker.opened"
+										datepicker-options="dateOptions" show-button-bar="false"
+										ng-click="openDatePicker()" required> <label for="code" class=""> -->
+										{{procedreOrderObj.preferedDateTime}}
+									</td>
+									<td>
+										{{procedreOrderObj.procedureName}}
+									</td>
+									<td>
+										{{procedreOrderObj.doctorName}}
+									</td>
+									<td>
+										{{(procedreOrderObj.urgency==0)?"Normal":"Urgent"}}
+									</td>
+									<td>
+										-
+									</td>
+									<!-- <td class="text-center">
+										<div class="col-md-4 ">
+											<a title="Edit" class="padding-left-right-5"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+										</div>
+										<div class="col-md-4 ">
+											<a title="Save" class="padding-left-right-5"><i class="fa fa-floppy-o" aria-hidden="true" ></i></a>
+										</div>
+										<div class="col-md-4 ">
+											<a title="Cancel" class="padding-left-right-5"><i class="fa fa-times-circle-o" aria-hidden="true" data-toggle="modal" data-target="#confirmCancel"></i></a>
+										</div>
+									</td>	 -->
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--**************************  Procedure details modal start ************************** -->
+<!--**************************  MEWS details modal start ************************** -->
+<div id="MEWSdetailsModal1" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Modified Early Warning Score For Clinical Deterioration
+
+					<button type="button" class="close" data-dismiss="modal" ng-click="statego()">&times;</button>
+
+				</div>
+				
+				
+			</div>
+			<div class="modal-body">
+				<div class="row">
+			        <div class="col-md-12">
+			         <div class="" ng-include="'./views/common/patient-demography.html'"></div>
+			        </div>
+			     </div>
+				<div class="row">
+					<div class="row margin-top4">
+						<!-- <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="tab-btn-primary">
+								<a class="btn btn-primary btn-save-box-shadow" ng-href="#/mapOfBedForER/MEWShistory">History</a>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="tab-btn-primary">
+								<a class="btn btn-primary  btn-save-box-shadow" ng-href="#/mapOfBedForER/MEWSnew" >Add</a>
+							</div>
+						</div> -->
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 custom-sub-tab">
+							<ul class="tabs nav nav-tabs">
+								<li ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="width10 active" style="">
+									<a href="" ng-click="setFirstTabLevel(1)">History</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+									<a href="" ng-click="setFirstTabLevel(2)" class="">Add</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row">
+						<!-- <div class="col-md-12 col-sm-12 margin-top10 fix-height-scroll500"  ui-view></div> -->
+						<div class="row padding-left-right-set4">
+							<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div ">
+								<div class="row fix-height-scroll500" >
+									 <div ng-include="'./views/bedManagement/MEWS-history.html'"  class="ng-scope"></div> 
+								</div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div">
+								<div class="row fix-height-scroll500"  >
+									<div ng-include="'./views/bedManagement/MEWS-new.html'"  class="ng-scope"></div> 
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="margin-top8"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- For Nursing Station Popup -->
+<div id="nursingStationModal"  data-backdrop="static"  class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Select Nursing Station
+					<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10 padding-bottom10">
+					<div class="col-md-5 col-lg-5 col-sm-5 padding-left-right-5">
+						<span>Select Nursing Station</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-set1">
+						<select class="dirty" style="width:100%;border-radius: 10px;height: 40px;"  ng-model="departmentNursing" >
+						<option  value="">Select Nursing Station</option>
+							<option value="{{departmentNursing}}" ng-repeat="departmentNursing in departmentNursingStationMapperDtoslist">{{departmentNursing.nursingStationDesc}}</option>
+						</select>
+					</div>
+					
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" class="btn btn-primary width13" id="otpOk" ng-click="selectsetNursingStation();">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- End Nursing Station Popup -->
+<!--**************************  MEWS details modal start ************************** -->
+
+<div id="babyRegistrationPopup" class="modal fade ng-scope in  common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+				</div>
+				<div class="modal-body">
+					
+					<div class="margin-left10 padding-bottom30"><span>Do you want to go for Baby Registration</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="gotoBabyRegistration()">Yes</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="transferToNormalBed()">No</button>
+				</div>
+			</div>
+		</div>
+</div>
+
+<!-- verify kit selection popup -->
+<div id="laborTransferReqPopup" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" id="closeTrasferPopup" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+						<div class="margin-left10">
+						<span>{{transferMessage}}</span>
+					    </div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button"  class="btn btn-primary" id="" ng-click="processLaborTransferRequest();">Yes</button>
+				   <button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ng-if="bedManagementDivFlag">
+	<!-- Page Content -->
+	<div id="page-content-wrapper">
+		<legend class="main-heading-div commonPatientSearch cursor-pointer">
+			<div class="row" id="storeSelection">
+				<div class="col-lg-10 col-md-9 col-sm-6"></div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set1 pull-right">
+					<span class="heading-name-font">{{nursingStationCookieShow}} </span>
+					<span class="heading-name-font pull-right" title="Change Nursing Station" data-toggle="modal"
+						  ng-click="isWardChanged()">
+							<i class="fa fa-stack-exchange" aria-hidden="true"></i>
+						</span>
+				</div>
+			</div>
+		</legend>
+		<div class="container-fluid his-style">
+			<!-- <div class="row margin-top10">
+                <div class="col-md-8"></div>
+                <div class="col-md-3">
+                    <div>
+                        <input type="text" autocomplete="off" class="text-search-box" placeholder="Search">
+                        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="col-md-1 padding-left0px-right6px">
+                    <div class="width-div-for-patient-reg ">
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save"><i class="fa fa-floppy-o" style="font-size:21px" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div> -->
+			<div class="row"  ng-hide="patientSearchDiv">
+				<div class="col-md-7"></div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="select-float">
+								<select class="text-input floating-label" ng-model="bedsearch.erBedTypeAllocation">
+									<option></option>
+									<option value="1">ER</option>
+									<option value="2">Obervation</option>
+									<option value="3">Resuctination</option>
+								</select> <label for="code">Allocation Type</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off"  tabindex="3" name="groupName" placeholder="Search" ng-model="groupName"  uib-typeahead="group.firstName+' '+group.lastName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+									   typeahead-editable="false" typeahead-on-select="selectPatientIdOnSearch($item, $model, $label);"   id="" class="text-input floating-label" required>
+								<label for="description" class="LISDynamicLabel">Patient Search</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-2 col-sm-2 padding-left0px-right6px margin-top10">
+					<div class="common-save-button">
+						<a href=""  class="btn btn-primary btn-save-box-shadow" style="width: 36%;margin-top: 6px;" id="searchBtn" ng-click="patientSearchByMultipleCriteria()">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row " ng-show="patientSearchDiv">
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-building" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group select-float">
+								<select class="text-input floating-label" name="code" ng-model="bedsearch.floorId" ng-change="getAdmittedPatientByIds('floor')">
+									<option></option>
+									<option ng-repeat="info in activeFloorList" value="{{info.floorId}}">{{info.floorName}}</option>
+								</select>
+								<label for="code">Select Floor</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group select-float">
+								<select class="text-input floating-label" name="code" ng-model="bedsearch.wardId" ng-change="getAdmittedPatientByIds('ward')">
+									<option ng-repeat="info in wardList" value="{{info.wardId}}">{{info.wardName}}</option>
+								</select>
+								<label for="code">Select Ward</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-hospital-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group">
+								<select class="text-input floating-label" name="code" ng-model="bedsearch.nursingStationId">
+									<option ng-repeat="info in nursingStationList" value="{{info.nursingStationId}}">{{info.nursingStationDesc}}</option>
+								</select>
+								<label for="code">Select Nursing Station</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-bed" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group">
+								<select class="text-input floating-label" name="code" ng-model="bedsearch.bedCategoryId">
+									<option ng-repeat="info in bedCategoryList" value="{{info.bedCategoryId}}">{{info.bedCategoryDesc}}</option>
+								</select>
+								<label for="code">Select Bed Category</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-bed" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group">
+								<!-- <input type="text" autocomplete="off"  tabindex="3" name="groupName" placeholder="Search" ng-model="groupName"  uib-typeahead="group.firstName+' '+group.lastName+'|'+group.uhidNumber for group in searchGroupList($viewValue)"
+                                typeahead-editable="false" typeahead-on-select="selectPatientIdOnSearch($item, $model, $label);"   id="" class="text-input floating-label" required> -->
+								<input type="text" autocomplete="off"  tabindex="3" name="serachPatient" placeholder="Search" ng-model="serachPatient"  id="" class="text-input floating-label" required>
+								<label for="description" class="LISDynamicLabel">Patient Search</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left0px-right4px margin-top10">
+					<div class="">
+						<a href="" class="btn btn-primary btn-save-box-shadow" style="width: 40%;margin-top: 5px;" id="searchBtn" ng-click="patientSearchByMultipleCriteria()">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10 pull-left">
+					<div class="">
+						<a>
+							<input type="button" value="Bed Status" id="updateBtn" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#bedStatusModal" ng-click="getbedStatus()">
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 bed-management">
+				<fieldset   class="main-fieldset" ng-repeat="info in patientBedList">
+					<legend id="hideshowWard_{{info.wardId}}" ng-click="hidetabDetails(info)"  ng-if="isShowPatientByBed=='N'" class="heading-div">{{info.wardName}}</legend>
+					<div class="row patient-row margin-top10 margin-bottom10 map-of-bed" id="bedlistshow_{{info.wardId}}">
+
+						<div class="col-md-2 col-sm-4 col-xs-4" ng-repeat="mapList in info.bedList | filter:serachPatient " ng-if="isShowPatientByBed=='N' || (mapList.bedId == info.bedId && isShowPatientByBed=='Y') ">
+							<div ng-class="{'blink' : (mapList.otStatus == 1 )}"><!--Sneha  -->
+								<div class="card">
+									<div class="row">
+										<div class="col-md-12 col-sm-10 col-xs-10">
+											<div class="patient-details" ng-if="mapList.admissionId > 0">
+												<div ng-show="{{mapList.patientId > 0}}" ng-init='age=getAge(mapList.dob)' class="long-text-overflow" title="{{mapList.pFirstName+' '+age+'/'+mapList.genderCode}}">
+													<img ng-if="mapList.genderCode != 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='N' " src="resources/assets/images/icon/bed/Expert Doctor Icons/male.png" alt="Avatar" style="margin-left: -3px;width: 35px;float: inline-start;margin-top: -2px;">
+													<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.isLaborWard == 'N' && mapList.ishemodialysisward=='N' "  src="resources/assets/images/icon/bed/Expert Doctor Icons/female.png"  alt="Avatar" style="margin-left: -3px;width: 35px;float: inline-start;margin-top: -2px;">
+													<b title="{{mapList.pFirstName || ''}}">
+														{{ (mapList.pFirstName || '').substring(0,25) }}
+														<span ng-if="mapList.pFirstName && mapList.pFirstName.length > 25">
+													...
+												  </span>
+													</b>
+													<img  src="resources/assets/images/icon/bed/Expert Doctor Icons/MD Medicine.png" alt="Avatar" style="width: 42px;float: inline-end;margin-top: -6px;">
+													<br>
+													<b>{{mapList.ageStr +'/'+mapList.genderCode}}</b>
+												</div>
+												<div ng-show="{{mapList.tPatientId > 0}}">
+													<b>{{mapList.pFirstName}}</b><br>
+													<b>{{mapList.dob+'/'+mapList.genderCode}}</b>
+												</div>
+
+												<div id="div1">
+													<div class="divFirst" ng-show="!mapList.showDetails">
+														<div id="btnDivAlign">
+															<button type="button"
+
+																	ng-click="mapList.showDetails = !mapList.showDetails"
+																	ng-class="{
+														'female-btn': mapList.genderCode == 'F' &&
+																	  mapList.admissionId > 0 &&
+																	  mapList.isLaborWard == 'N' &&
+																	  mapList.ishemodialysisward == 'N',
+
+														'male-btn': mapList.genderCode != 'F' &&
+																	mapList.admissionId > 0 &&
+																	mapList.ishemodialysisward == 'N'
+													}">
+																<i class="fa"
+																   ng-class="{
+														   'fa-arrow-down': !mapList.showDetails,
+														   'fa-arrow-up': mapList.showDetails
+													   }"
+																   style="color: #fff;font-size: 13px !important;">
+																</i>
+															</button>
+														</div>
+														<div class="col-md-7">
+															<div><b class="padding-right5 ">UHID</b>{{mapList.uhidnumber}}</div>
+															<div><b class="padding-right5 ">ADM NO.</b>{{mapList.admissionNumber}}</div>
+															<div><b class="padding-right10 ">DOA</b>{{mapList.doa}}</div>
+															<div><b class="padding-right10 ">PDD</b>{{mapList.pdd}}</div>
+															<div>Dr. {{mapList.dFirstName}}</div>
+															<div title = {{mapList.associateCompanyDesc}}><b class="">{{mapList.paymentEntitlementDesc}}</b></div>
+															<div class="marginLeft marginTop" style="margin-top: -15px !important;float: inline-end;margin-right: -10px;">
+																<i class="fa fa-info-circle" aria-hidden="true" title="Info"  style="color:#2A83F2!important;" ng-click="mapBedDetails(mapList.admissionId)"></i>
+															</div>
+														</div>
+														<div class="col-md-5">
+
+															<div  ng-if="mapList.admissionId > 0 && hideIcons==true ">
+																<div class="row">
+																	<div class="bed-mang-box-icon col-md-4" ng-if="mapList.allergy > 0"><a  ng-click="allergy(mapList);"><img src="resources/assets/images/icon/bed/Transactional Icons/allergy.png" title="Allergy" alt="Allergy" style="width:25px"></a></div>
+																	<div class="bed-mang-box-icon col-md-4" ><a ng-click="generateSampleCollection(mapList);"><img src="resources/assets/images/icon/bed/new/PatientDiagnosticsNew.png" title="Patient Diagnostics" alt="Patient Diagnostics" style="width:25px"></a></div>
+																	<!-- <div class="bed-mang-box-icon" ng-if="mapList.drugAdministration>0"><a ng-click="drugAdminstrator(mapList)" href=""><img src="resources/assets/images/icon/bed/new/drug_administration.png" title="Drug Administration" alt="Drug Administration" style="width:25px"></a></div> -->
+																	<div class="bed-mang-box-icon col-md-4" ><a ng-click="drugAdminstrator(mapList)" href=""><img src="resources/assets/images/icon/bed/new/DrugAdministrationNew.png" title="Drug Administration" alt="Drug Administration" style="width:25px"></a></div>
+																	<!-- <div class="bed-mang-box-icon" ng-if="mapList.imaging>0"><a ng-click="generateSampleCollection(mapList);" href=""><img src="resources/assets/images/icon/bed/new/imaging.png" title="Imaging" alt="Imaging" style="width:25px"></a></div> -->
+																	<!-- <div class="bed-mang-box-icon" ng-if="mapList.nbm > 0"><img src="resources/assets/images/icon/bed/new/NBM.png" title="NBM" alt="NBM" style="width:25px" data-toggle="modal" data-target="#NBMdetailsModal" ></div> -->
+																	<div class="bed-mang-box-icon col-md-4" ng-if="mapList.procedureOrder > 0"><a  ng-click="getOrderedProcedureList(mapList);"><img src="resources/assets/images/icon/bed/new/ProcedureOrderNew.png" title="Procedure Order" alt="Procedure Order" style="width:25px" data-toggle="modal" data-target="#procedureOrderdetailsModal"></a></div>
+																	<div class="blink col-md-4" ng-if="mapList.otStatus == 1"><a ng-click="goToPreOperative(mapList);"><img src="resources/assets/images/icon/bed/new/procedure_order.png" title="Go To Nursing Check-list" alt="Procedure Order" style="width:25px"></a></div>
+																	<div class="bed-mang-box-icon col-md-4" ><a href="https://meet.jit.si/EmedsecRoom" target="blank"><img src="resources/assets/images/icon/bed/new/MeetingNew.png" title="Meeting" alt="Meeting" style="width:25px"></a></div>
+																	<div class="bed-mang-box-icon col-md-4" ><a ng-click="getICUMonitorData(mapList);"><img src="resources/assets/images/icon/bed/new/POC Worklist.png" title="ICU Monitor" alt="ICU Monitor" style="width:25px"></a></div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="divSecond" ng-show="!mapList.showDetails">
+														<div class="patient-details emptyDetails" ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) &&  (mapList.bedStatusId != 5 && mapList.bedStatusId != 4)">
+
+														</div>
+														<div class="patient-details" ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) &&  (mapList.bedStatusId == 5 || mapList.bedStatusId == 4)">
+															<div
+																	class="long-text-overflow emptyBed text-center"
+																	title="Reserved" style="">
+																<img  src="resources/assets/images/icon/bed/Reserved icon.png" alt="Avatar">
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12" style="margin-left: -7px;margin-top: -2px;">
+																<div class="card" style="border: none;">
+																	<div class="col-md-6">
+																		<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.isLaborWard == 'N' && mapList.ishemodialysisward=='N' " src="resources/assets/images/icon/bed/Bed Images/Female Bed.png" style="width: 256px;margin-left: -24px;" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																		<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.isLaborWard == 'Y' " src="resources/assets/images/icon/bed/femaleBirthingBed.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																		<img ng-if="mapList.genderCode == 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='Y' " src="resources/assets/images/icon/bed/DialysisChairInpatient.png" style="width: 33px;" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																		<img ng-if="mapList.genderCode != 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='N' " src="resources/assets/images/icon/bed/Bed Images/Male Bed.png" style="width: 256px;margin-left: -24px;" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																		<img ng-if="mapList.genderCode != 'F' && mapList.admissionId > 0 && mapList.ishemodialysisward=='Y' " src="resources/assets/images/icon/bed/DialysisChairInpatient.png"  style="width: 33px;" alt="Avatar" title="{{mapList.bedCategoryDesc}}" ng-click="gotoCoversheet(mapList)">
+																		<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 3" src="resources/assets/images/icon/bed/green.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}">
+																		<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 2" src="resources/assets/images/icon/bed/canstockphoto30970775.jpg" alt="Avatar" title="{{mapList.bedCategoryDesc +' '+ mapList.housekeepingStatusDesc}} ">
+																		<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 6" src="resources/assets/images/icon/bed/canstockphoto30970775.jpg" alt="Avatar" title="{{mapList.bedCategoryDesc +' '+ mapList.housekeepingStatusDesc}}">
+																		<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 5" src="resources/assets/images/icon/bed/orange.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}">
+																		<img ng-if="(mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0) && mapList.bedStatusId == 4" src="resources/assets/images/icon/bed/orange.png" alt="Avatar" title="{{mapList.bedCategoryDesc}}">
+																	</div>
+																	<div class="col-md-6">
+																		<div class="margin-top10" ng-style="set_color(mapList.totalScore)" ng-if="mapList.admissionId" style="margin-left: 26px;border: 1px solid #F0793A;padding: 4px;border-radius: 10px;background-color: #FFF0EC !important;width: 112%;">
+																			<!--								  			<a ng-href="#/bedManagement/MEWShistory" class=" font-white" ng-click="addCollection1(mapList)">-->
+																			<!--								  			<span data-toggle="modal" data-target="#MEWSdetailsModal">MEWS</span>-->
+																			<span data-toggle="modal" style="color:#F0793A;">MEWS</span>
+																			<span style="font-weight: 700;color: #F0793A;" ng-model="mapList.totalScore" id="totalScore" >{{mapList.totalScore}}</span>
+																			</a>
+																		</div>
+																		<div class="row bed-number margin-top0">
+																			<div class="col-lg-8 col-md-8 col-sm-8 bed-no-span long-text-overflow MEWS-Nursing-Div bg-blue margin-top4 ng-scope" style="margin-left: 26px;border-radius: 10px;background-color: #670099 !important;width: 112%;">
+																				<a  class="font-white" ng-click="addCollection2(mapList)" >
+																					<span style="margin-left: 5px;">Nursing Scale</span>
+																				</a>
+																				<!--												<a ng-href="" class="font-white" href="">-->
+																				<!--												<span ng-click="nursing()">Nursing Scale </span>-->
+																				<!--												</a>-->
+																			</div>
+																			<div class="col-md-2 col-sm-2 ng-scope padding-top4" ng-if="mapList.genderId==2 && mapList.obgynSpecialityId!=null && hideIcons==true "><!-- obgynSpecialityId!=null -->
+																				<span class="font-size12 bed-notify-icon">
+													<img src="resources/assets/images/icon/bed/labor-transfer.png" alt="Avatar" title="{{mapList.isLaborWard == 'Y' ? 'Transfer to Previous Ward' :'Transfer to Labor Ward' }}" style="width:20px" ng-click="showLaborTransferPopup(mapList);">
+												</span>
+																			</div>
+																			<div class="col-md-2 col-sm-2 ng-scope padding-top4" ng-if="mapList.ishemodialysisward=='Y' && hideIcons==true"><!-- obgynSpecialityId!=null -->
+																				<span class="font-size12 bed-notify-icon">
+													<img src="resources/assets/images/icon/bed/labor-transfer.png" alt="Avatar" style="width:20px" ng-click="hemodialysisTransferRequest(mapList);">
+												</span>
+																			</div>
+																		</div>
+																		<div class="MEWS-Nursing-Div bg-red margin-top10 visibilityHidden"  ng-style="set_color(mapList.totalScore)" ng-if="mapList.admissionId == null || mapList.admissionId == '' || mapList.admissionId == 0" >
+																			<a ng-href="#/bedManagement/MEWShistory" class=" font-white" ng-disabled="hideIcons==false" ng-click="addCollection(mapList)">
+																				<span data-toggle="modal" data-target="#MEWSdetailsModal">MEWS</span>
+																				<span style="font-weight: 700" ng-model="mapList.totalScore" id="totalScore" >{{mapList.totalScore}}</span>
+																			</a>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-lg-12 col-md-12 col-sm-12 bed-no-span long-text-overflow" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;width: 112%;color:#00003b">
+								  		  	<span class="font-size12 cursor-pointer" title="{{mapList.bedNumber}}" style="font-size: 13px !important;padding: 10px;">
+									  			{{mapList.bedNumber}}
+									  		</span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												</div>
+												<div class="div2" id="div2" ng-show="mapList.showDetails">
+													<div class="col-lg-12 col-md-8 col-sm-8 bed-no-span long-text-overflow margin-top4 text-center"
+														 style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b">
+												<span style="font-size: 13px !important;padding: 10px;">
+													Bed Details
+												</span>
+													</div>
+													<div class="row">
+														<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;">
+															<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Patient on Infusion Pump.png" title="Patient on Infusion Pump" alt="Avatar" style="width: 64px;margin-left: -15px;cursor: pointer">
+															<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+														</div>
+
+														<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;">
+															<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Bed on  Hold.png" title="Bed on  Hold" alt="Avatar" style="width: 64px;margin-left: -15px;cursor: pointer">
+															<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+														</div>
+														<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;">
+															<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Patient on Infusion Pump.png" title="Patient on Infusion Pump" alt="Avatar" style="margin-left: -15px;width: 64px;cursor: pointer">
+															<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;margin-top: -3px !important;">
+															<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Patient  Absconding.png" title="Patient  Absconding" alt="Avatar" style="width: 64px;margin-left: -15px;cursor: pointer">
+															<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+														</div>
+
+														<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;margin-top: -3px !important;">
+															<img  src="resources/assets/images/icon/bed/Bed Detail Icons/ECG  Ordered.png" title="ECG  Ordered" alt="Avatar" style="width: 64px;margin-left: -15px;cursor: pointer">
+															<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+														</div>
+														<div class="col-md-4" style="background-color:#EBF4FF;border-radius: 10px;margin-left: -6px;color:#00003b;width: 24%;margin: 8px;margin-top: -3px !important;">
+															<img  src="resources/assets/images/icon/bed/Bed Detail Icons/Bed on  Hold.png" title="Bed on  Hold" alt="Avatar" style="margin-left: -15px;width: 64px;cursor: pointer">
+															<span style="font-weight: bold;font-size: 7px !important;">
+												       </span>
+														</div>
+													</div>
+
+													<div id="btnDivAlign">
+														<button type="button"
+
+																ng-click="mapList.showDetails = !mapList.showDetails"
+																ng-class="{
+														'female-btn': mapList.genderCode == 'F' &&
+																	  mapList.admissionId > 0 &&
+																	  mapList.isLaborWard == 'N' &&
+																	  mapList.ishemodialysisward == 'N',
+
+														'male-btn': mapList.genderCode != 'F' &&
+																	mapList.admissionId > 0 &&
+																	mapList.ishemodialysisward == 'N'
+													}">
+															<i class="fa"
+															   ng-class="{
+														   'fa-arrow-down': !mapList.showDetails,
+														   'fa-arrow-up': mapList.showDetails
+													   }"
+															   style="color: #fff;font-size: 13px !important;">
+															</i>
+														</button>
+													</div>
+
+												</div>
+
+											</div>
+
+
+
+
+
+
+
+											<div class="row bed-number margin-top4">
+
+												<!--   <div class=" col-md-2 col-sm-2" ng-if="mapList.admissionId > 0 && hideIcons==true ">
+                                                          <span class="font-size12 bed-notify-icon">
+                                                           <img src="resources/assets/images/icon/bed/money orenge.png" alt="Avatar" style="width:20px">
+                                                       </span>
+                                                     </div>   -->
+												<!-- <div class=" col-md-2 col-sm-2" ng-if="mapList.admissionId > 0 && hideIcons==true ">
+                                                    <span data-toggle="modal" data-target="#patientServices" ng-click="popupData(mapList)"><span class="ellipsis-div"><i class="fa fa-ellipsis-v" aria-hidden="true"  ></i></span></span>
+                                                </div> -->
+											</div>
+										</div>
+
+									</div>
+								</div>
+								<div ng-if = "mapList.isShortLeave == 'Y'" class="overlay">
+									<i class="icon fa fa-eye" data-toggle="modal" data-target="#shortLeave"></i>
+									<span>Short Leave</span>
+								</div>
+
+								<div ng-if = "mapList.otTransfer != null" class="overlay">
+									<!-- <i class="icon fa fa-heartbeat color-red"></i> -->
+									<span class="name-label"><h3>OT</h3></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade common-large-popup" id="patientServices" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Patient Services
+						<button type="button" class="close" data-dismiss="modal">X</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="" ng-include="'./views/common/patient-demography.html'"></div>
+						</div>
+					</div>
+					<div class="row margin-top10 margin-left10 his-style">
+					</div>
+					<div class="row margin-top10 margin-left10 margin-bottom10">
+						<div class="col-md-12" ng-hide="patientSearchDiv">
+							<a id="anchorTag" href="#/drugAdministrator"></a><div id="anchorTagID"><a>Drug Administration</a></div>
+							<a id="anchorTag1" href="#/sampleCollection"></a><div id="anchorTagID1"><a>Sample Collection</a></div>
+							<a id="anchorTag2" href="#/pendingNursingOrder"></a><div id="anchorTagID2"><a>Nursing Order</a></div>
+							<a id="anchorTag3" ng-click="callAdmissionNote()" ng-if="patientSearchDiv == false" ><div id="anchorTagID3"  ng-if="patientSearchDiv == false">Admission Note</div></a>
+						</div>
+						<div class="col-md-12">
+							<div id="example">
+								<div class="demo-section k-content">
+									<div class="box-col">
+										<div kendo-tree-view="tree"
+											 k-data-source="treeData"
+											 k-on-change="selectedItem = dataItem">
+									                <span k-template>
+									                     <a ng-click="closePopUpWithRedirect(dataItem.link)">{{dataItem.text}}</a> <!-- <button class='k-button' ng-click='click(dataItem)'>Select</button> -->
+									                 </span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ************************** START SHORT LEAVE POPUP ********************************-->
+	<div id="shortLeave" class="modal fade ng-scope in common-small-popup" role="dialog">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Short Leave Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"  class="text-input floating-label dirty" name="datepicker" id="datepicker"
+											   uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+											   ng-model="datepicker"  model-view-value="true"
+											   is-open="datepicker.opened" datepicker-options="dateOptions" show-button-bar="false" ng-click="openDatePicker()">
+										<label for="code">Date</label>
+									</div>
+								</div>
+							</div>
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="clockpicker">
+										<input type="text" autocomplete="off" class="text-input floating-label" name="PDD">
+										<label for="PDD">Time</label>
+									</div>
+								</div>
+							</div>
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+												<textarea name="code" rows="4" id=""
+														  class="text-input floating-label"></textarea>
+										<label for="code">Note</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ************************** START SHORT LEAVE POPUP ********************************-->
+	<!--**************************  NBM details modal start ************************** -->
+	<div id="NBMdetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Nill By Mouth
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row common-popup-height-350-overflow-x">
+						<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set0">
+							<table class="table table-bordered">
+								<tbody>
+								<tr>
+									<th class="width1 text-center">
+										<input type="checkbox"/>
+									</th>
+									<th class="width10">
+										<span class="">From Date</span>
+									</th>
+									<th class="width10">
+										<span class="">To Date</span>
+									</th>
+									<th class="width10">
+										Adviced By
+									</th>
+									<th class="width3 text-center">
+										Add
+									</th>
+								</tr>
+								<tr>
+									<td class="text-center media-middle">
+										<input type="checkbox"/>
+									</td>
+									<td>
+										<!-- 	<input type="text" autocomplete="off" ng-model="c1" class="select-box" id="formDatepicker" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" /> -->
+										<input type="text" autocomplete="off"  class="datepicker-width text-input floating-label dirty" name="datepicker" id="datepicker"
+											   uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+											   ng-model="datepicker"  model-view-value="true"
+											   is-open="datepicker.opened" datepicker-options="dateOptions" show-button-bar="false" ng-click="openDatePicker()"> <label for="code" class="">
+									</td>
+									<td>
+										<!-- <input type="text" autocomplete="off" ng-model="c2" class="select-box" id="toDatepicker" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" /> -->
+										<input type="text" autocomplete="off" class="datepicker-width text-input floating-label dirty"
+											   name="datepickerPdd" id="datepicker"
+											   uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											   placeholder="DD/MM/YYYY" ng-model="datepickerPdd"
+											   model-view-value="true" is-open="datepickerPdd.opened"
+											   datepicker-options="dateOptions" show-button-bar="false"
+											   ng-click="openDatePickerPdd()" required>
+									</td>
+									<td>
+										<label>Varun Sharma</label>
+									</td>
+									<td class="media-middle">
+										<input type="button" value="+" class=" btn btn-info add-dynamic-row" style="width:36px">
+										<!-- <input type="button" value="-" class="btn btn-info" style="padding: 0 4px;"> -->
+									</td>
+								</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<div class="row">
+						<div class="col-md-8"></div>
+						<div class="col-md-2 padding-left-right-10">
+							<button type="button" data-dismiss="modal" class="btn btn-primary width100">Stop</button>
+						</div>
+						<div class="col-md-2 ">
+							<button type="button" data-dismiss="modal" class="btn btn-primary width100">Extend</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--**************************  NBM details modal end ************************** -->
+	<!--**************************  Flag details modal start ************************** -->
+	<div id="flagDetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Flag Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row ">
+						<div class="row">
+							<div class="row">
+								<div class="col-lg-4 col-md-6 col-sm-6 padding-left-right-set4 margin-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-search" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="form-group select-float">
+												<input type="text" autocomplete="off" name="code" class="text-input floating-label">
+												<label for="">Dieases</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-6 col-sm-6 padding-left-right-set4 margin-top10 text-width-auto">
+									<div class="row input-container border-set-type">
+										<label for="" class="font-weight700">Alert :</label>
+										<input type="radio" name="FixedAssestRadioB" id ="">
+										<label for="FixedAssestRadioB" class="checkbox-margin-left-right">Yes</label>
+										<input type="radio" name="FixedAssestRadioB" id="FixedAssestRadioB2" >
+										<label for="FixedAssestRadioB2" class="checkbox-margin-left-right">No</label>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-2 col-sm-2 padding-left0px-right6px margin-top10">
+									<div class="">
+										<a href=""  class="btn btn-primary btn-save-box-shadow ">
+											<i class="fa fa-floppy-o" aria-hidden="true"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="row "><!--  -->
+								<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set0 common-popup-height-350">
+									<table class="table table-bordered">
+										<tbody>
+										<tr>
+											<th class="width57">
+												<span class="">Flag Name</span>
+											</th>
+											<th class="width10">
+												Alert
+											</th>
+											<th class="width10">
+												Active/Inactive
+											</th>
+											<th class="width10">
+												Action
+											</th>
+										</tr>
+										<!-- <tr>
+											<td colspan="4"> -->
+										</tbody>
+									</table>
+									<div class="col-lg-12 col-md-12 padding-left-right-set0 ">
+										<table class="table table-bordered table-striped">
+											<tbody>
+											<tr>
+												<td colspan="4">
+													<b>Active</b>
+												</td>
+											</tr>
+											<tr>
+												<td class="width30 media-middle">
+													<div>Flag 1</div>
+												</td>
+												<td class="width5">
+													<label class="switch">
+														<input type="checkbox">
+														<div class="slider round"></div>
+													</label>
+												</td>
+												<td class="width5">
+													<label class="switch">
+														<input type="checkbox">
+														<div class="slider round"></div>
+													</label>
+												</td>
+												<td class="width5 text-center media-middle">
+													<div>
+														<i class="fa fa-exclamation-triangle txt_gray"></i>
+													</div>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+									<!-- </td>
+                                </tr> -->
+									<div class="col-lg-12 col-md-12 padding-left-right-set0 ">
+										<!-- <table>
+											<tbody>
+												<tr>
+													<td colspan="4"> -->
+										<table class="table table-bordered table-striped">
+											<tbody>
+											<tr>
+												<td colspan="4">
+													<b>Entered in error</b>
+												</td>
+											</tr>
+											<tr>
+												<td class="width28">
+													<div>Flag 2</div>
+												</td>
+												<td class="width5">
+													<div>Active</div>
+												</td>
+												<td class="width5">
+													<div></div>
+												</td>
+												<td class="width5 text-center">
+													<div>
+														<i class="fa fa-exclamation-triangle color-red"></i>
+													</div>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+										<!-- </td>
+                                    </tr>
+                            </tbody>
+                        </table> -->
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--**************************  Flag details modal end ************************** -->
+	<!--**************************  Procedure details modal start ************************** -->
+	<div id="procedureOrderdetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static" >
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Procedure Order Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body common-popup-height-350">
+					<div class="row ">
+						<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set0">
+							<table class="table table-bordered">
+								<tbody>
+								<tr>
+									<th class="width8">
+										<span class="">Date Of Procedure</span>
+									</th>
+									<th class="width10">
+										<span class="">Procedure Name</span>
+									</th>
+									<th class="width10">
+										Surgeon
+									</th>
+									<th class="width10">
+										Consent Status
+									</th>
+									<th class="width10">
+										Destination Post Procedure
+									</th>
+									<!-- <th class="width5">
+										Action
+									</th> -->
+								</tr>
+								<tr ng-repeat="procedreOrderObj in orderedProcedureList">
+									<td>
+										<!-- <input type="text" autocomplete="off"  ng-model="cal" class="select-box" id="formDatepicker" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" /> -->
+										<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty"
+										name="datepicker" id="datepicker"
+										uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+										placeholder="DD/MM/YYYY" ng-model="datepicker"
+										model-view-value="true" is-open="datepicker.opened"
+										datepicker-options="dateOptions" show-button-bar="false"
+										ng-click="openDatePicker()" required> <label for="code" class=""> -->
+										{{procedreOrderObj.preferedDateTime}}
+									</td>
+									<td>
+										{{procedreOrderObj.procedureName}}
+									</td>
+									<td>
+										{{procedreOrderObj.doctorName}}
+									</td>
+									<td>
+										{{(procedreOrderObj.urgency==0)?"Normal":"Urgent"}}
+									</td>
+									<td>
+										-
+									</td>
+									<!-- <td class="text-center">
+										<div class="col-md-4 ">
+											<a title="Edit" class="padding-left-right-5"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+										</div>
+										<div class="col-md-4 ">
+											<a title="Save" class="padding-left-right-5"><i class="fa fa-floppy-o" aria-hidden="true" ></i></a>
+										</div>
+										<div class="col-md-4 ">
+											<a title="Cancel" class="padding-left-right-5"><i class="fa fa-times-circle-o" aria-hidden="true" data-toggle="modal" data-target="#confirmCancel"></i></a>
+										</div>
+									</td>	 -->
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--**************************  Procedure details modal start ************************** -->
+	<!--**************************  MEWS details modal start ************************** -->
+	<div id="MEWSdetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Modified Early Warning Score For Clinical Deterioration
+						<button type="button" class="close" data-dismiss="modal" ng-click="statego()">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="" ng-include="'./views/common/patient-demography.html'"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="row margin-top4">
+							<!-- <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+                                <div class="tab-btn-primary">
+                                    <a class="btn btn-primary btn-save-box-shadow" ng-href="#/bedManagement/MEWShistory">History</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+                                <div class="tab-btn-primary">
+                                    <a class="btn btn-primary  btn-save-box-shadow" ng-href="#/bedManagement/MEWSnew" >Add</a>
+                                </div>
+                            </div> -->
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 custom-sub-tab">
+								<ul class="tabs nav nav-tabs">
+									<li ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="width10 active" style="">
+										<a href="" ng-click="setFirstTabLevel(1)">History</a>
+									</li>
+									<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+										<a href="" ng-click="setFirstTabLevel(2)" class="">Add</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="row padding-left-right-set4">
+							<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div ">
+								<div class="row fix-height-scroll500" >
+									<div ng-include="'./views/bedManagement/MEWS-history.html'"  class="ng-scope"></div>
+								</div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div">
+								<div class="row fix-height-scroll500"  >
+									<div ng-include="'./views/bedManagement/MEWS-new.html'"  class="ng-scope"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- For Nursing Station Popup -->
+	<div id="nursingStationModal"  class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Select Nursing Station
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-top10 padding-bottom10">
+						<div class="col-md-5 col-lg-5 col-sm-5 padding-left-right-5">
+							<span>Select Nursing Station</span>
+						</div>
+						<div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-set1">
+							<select class="dirty" style="width:100%;border-radius: 10px;height: 40px;"  ng-model="departmentNursing" >
+								<option  value="">Select Nursing Station</option>
+								<option value="{{departmentNursing}}" ng-repeat="departmentNursing in departmentNursingStationMapperDtoslist">{{departmentNursing.nursingStationDesc}}</option>
+							</select>
+						</div>
+
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button"  class="btn btn-primary width13" id="otpOk" ng-click="selectsetNursingStation();">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- End Nursing Station Popup -->
+	<!--**************************  MEWS details modal start ************************** -->
+
+	<div id="babyRegistrationPopup" class="modal fade ng-scope in  common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+				</div>
+				<div class="modal-body">
+
+					<div class="margin-left10 padding-bottom30"><span>Do you want to go for Baby Registration</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="gotoBabyRegistration()">Yes</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="transferToNormalBed()">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- verify kit selection popup -->
+	<div id="laborTransferReqPopup" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" id="closeTrasferPopup" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>{{transferMessage}}</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button"  class="btn btn-primary" id="" ng-click="processLaborTransferRequest();">Yes</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- bedStatusModal START -->
+	<div id="bedStatusModal" class="modal fade ng-scope in" role="dialog">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero" style="padding:0px;">
+					<div class="modal-title patient-details-row">
+						Bed Status
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width10">Ward</th>
+											<th class="width10">Vacant</th>
+											<th class="width10">Reserved</th>
+											<th class="width10">Occupied</th>
+											<th class="width10">Housekeeping</th>
+										</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+										<tr ng-repeat="info in bedStatusList" ng-if="info.vacant>0 || info.reserved>0 || info.occupied>0">
+											<td class="width10">{{info.wardDesc}}</td>
+											<td class="width10">{{info.vacant}}</td>
+											<td class="width10">{{info.reserved}}</td>
+											<td class="width10">{{info.occupied}}</td>
+											<td class="width10">{{info.housekeeping}}</td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- counterDetailsModal START -->
+	<div id="counterDetailsModal" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Counter Details
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10 row padding-top10">
+						<div class="col-md-3 col-lg-3 col-sm-3">
+							<span>Select Counter</span>
+						</div>
+						<div class="col-md-6 col-lg-6 col-sm-6">
+							<select class="dirty" style="width:100%" ng-change="selectCounter(counterMstObj);" ng-model="counterMstObj" >
+								<option selected value>Select Counter</option>
+								<option value="{{counter}}" ng-repeat="counter in counterList">{{counter.name}}</option>
+							</select>
+						</div>
+
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" class="btn btn-primary width13" id="otpOk" ng-click="confirmCounter();">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="Details" class="modal fade ng-scope in common-small-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Details
+						<button type="button" class="close" data-dismiss="modal">X</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+							<div ng-repeat="info in payeeDetailsList">
+								<p>{{info.associateCompanyDesc}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--ICU monitor Data Modal-->
+	<div id="icuMonitorDataModal" class="modal fade ng-scope in" role="dialog">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero" style="padding:0px;">
+					<div class="modal-title patient-details-row">
+						Monitor Data
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width10">Result Id</th>
+											<th class="width10">Parameter Name</th>
+											<th class="width10">Parameter Value</th>
+											<th class="width10">Parameter Unit</th>
+											<th class="width10">Result Date/Time</th>
+											<th class="width10">Machine Name</th>
+										</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+										<tr ng-repeat="info in monitorDataList">
+											<td class="width10">{{info.resultId}}</td>
+											<td class="width10">{{info.parameterName}}</td>
+											<td class="width10">{{info.parameterValue}}</td>
+											<td class="width10">{{info.paramUnit}}</td>
+											<td class="width10">{{info.resultDateTime}}</td>
+											<td class="width10">{{info.sendingMachineName}}</td>
+										</tr>
+										</tbody>
+									</table>
+									<table class="table table-bordered">
+										<tr ng-if="monitorDataList.length==0">
+											<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+		<script type="text/javascript">
+		$(document).ready(function(){
+			
+			$('.clockpicker').clockpicker();
+			var documentHeight= $(window).height();
+		    var sideBarHeight = documentHeight - 55;
+		 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );  
+		 	
+			$(".selectedPageName").text("Map of Bed");
+			$(".sidebar-nav li").each(function() {
+				$(this).find("a").parents("li").removeClass("active");
+			});
+			$('a[href$="bedManagement"]').parents("li").addClass("active");
+			
+			
+			
+				
+		    
+			
+		});
+    	$('#anchorTagID').click(function() {
+		     $('#patientServices').modal('hide');
+		     setTimeout( function(){ 
+		         // Do something after 1 second 
+		       $('#anchorTag').trigger('click');
+		       }  , 1000 );
+		 });
+    	$('#anchorTagID1').click(function() {
+		     $('#patientServices').modal('hide');
+		     setTimeout( function(){ 
+		         // Do something after 1 second 
+		       $('#anchorTag1').trigger('click');
+		       }  , 1000 );
+		    
+		 });
+    	$('#anchorTagID2').click(function() {
+		     $('#patientServices').modal('hide');
+		     setTimeout( function(){ 
+		         // Do something after 1 second 
+		       $('#anchorTag2').trigger('click');
+		       }  , 1000 );
+	
+		     
+		 });
+		</script>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+
+        $('.clockpicker').clockpicker();
+        var documentHeight= $(window).height();
+        var sideBarHeight = documentHeight - 55;
+         $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+
+        $(".selectedPageName").text("Map of   Bed");
+        $(".sidebar-nav li").each(function() {
+            $(this).find("a").parents("li").removeClass("active");
+        });
+        $('a[href$="bedManagement"]').parents("li").addClass("active");
+
+
+
+
+
+
+    });
+    $('#anchorTagID').click(function() {
+         $('#patientServices').modal('hide');
+         setTimeout( function(){
+             // Do something after 1 second
+           $('#anchorTag').trigger('click');
+           }  , 1000 );
+     });
+    $('#anchorTagID1').click(function() {
+         $('#patientServices').modal('hide');
+         setTimeout( function(){
+             // Do something after 1 second
+           $('#anchorTag1').trigger('click');
+           }  , 1000 );
+
+     });
+    $('#anchorTagID2').click(function() {
+         $('#patientServices').modal('hide');
+         setTimeout( function(){
+             // Do something after 1 second
+           $('#anchorTag2').trigger('click');
+           }  , 1000 );
+
+
+     });
+</script>
+
+
+
+
+

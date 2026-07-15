@@ -1,0 +1,797 @@
+
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		
+		<fieldset>
+			
+			<div class="row padding-top10">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-bullseye" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datepickerFromDate"
+									model-view-value="true" is-open="datepickerFromDate.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerFromDate()" > 
+									<label for="code">Date</label>
+								</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-building" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group">
+											<select class="text-input floating-label" ng-model="selectedUnitId" ng-change="getTallyInterfaceCommunicationKeys()" required>
+												<option value="">Select Unit</option>
+												<option ng-repeat="info in unitMasterList" value="{{info.unitId}}">{{info.unitName}}</option> 
+											</select> <label for="code">Clinical Unit<span class="star">*</span></label>
+									<!--   <span ng-show="page-content-wrapper.unitId.$error.required" class="alert-danger">Unit is Required.</span> -->
+										</div>
+
+										
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+					<div class="width-div-for-patient-reg ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="getAllTallyData()">
+						<i class="fa fa-search" style="font-size: 21px" aria-hidden="true" ></i></a>
+					</div>
+				</div>
+				
+			 <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+					<div class="width-div-for-patient-reg ">
+						<input type="button" value="Tally Ledger" id="updateBtn"  data-toggle="modal" data-target="#tallyledger" class="btn btn-primary" style="width:95px;">
+					</div> 
+				</div> 
+				
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto" style="margin-left: 52px;">
+					<div class="width-div-for-patient-reg ">
+						<input type="button" value="Export" id="updateBtn"   class="btn btn-primary" style="width:95px;" ng-click = "exportTallyToXml()">
+					</div>
+				</div>
+				
+				
+			
+				</div>
+			<div class="row padding-left-right-set4 margin-top8 custom-sub-tab">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetSecondTabLevel(1) }" class="active width18 margin-left-right-set0" style="border-right: 1px solid #2E6EA2;" >
+						<a href="" ng-click="setSecondTabLevel(1);">OPD</a>
+					</li>
+					<li ng-class="{ active : isSetSecondTabLevel(2) }" class="width18 margin-left-right-set0" style="border-right: 1px solid #2E6EA2;">
+						<a href="" ng-click="setSecondTabLevel(2);">IPD</a>
+					</li>
+					<li ng-class="{ active : isSetSecondTabLevel(3) }" class="width18 margin-left-right-set0" style="border-right: 1px solid #2E6EA2;">
+						<a href="" ng-click="setSecondTabLevel(3);" >Inventory</a>
+					</li>
+					<li ng-class="{ active : isSetSecondTabLevel(4) }" class="width18 margin-left-right-set0" style="border-right: 1px solid #2E6EA2;">
+						<a href="" ng-click="setSecondTabLevel(4);">Doctor's Share</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+			
+				<!-- ************* Blocking content row start *********************** -->
+				<div ng-show="isSetSecondTabLevel(1)" class="second-level-tab-display-div" style="">
+					<div class="row	">
+						<div class="row margin-top8">
+							<div class="col-md-12 col-lg-12  table-responsive padding-left-right-set4 common-popup-height-370">
+								<table class="table table-bordered  common-tbody-scroll">
+									<thead>
+										<tr>
+											<th class="width4">
+												Ledger
+											</th>
+											<th class="width4">
+												Debit
+											</th>
+											<th class="width4">
+												Credit
+											</th>
+											<th class="width4">
+												Narration
+											</th>
+											<th class="width4">
+												Reference
+											</th>
+											<th class="width4">
+												VoucherType
+											</th>
+											<th class="width4">
+												Bill Amount
+											</th>
+											<!-- <th class="width4">
+												PaymentId
+											</th> -->
+											<th class="width4">
+												Instrument No.
+											</th>
+											<th class="width4">
+												Instrument Date
+											</th>
+											<th class="width4">
+												Bank Name
+											</th>
+											<!-- <th class="width4">
+												New Ref
+											</th> -->
+											<th class="width4">
+												Ref No
+											</th>
+										</tr>
+									</thead>
+									<tbody class="scrollable">
+										
+										<tr ng-repeat="documentObj in opTallyDataList|orderBy:column:reverse" style="text-align: center;">
+												<td class="width4">
+													<div>
+														{{documentObj.ledger}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObj.debit}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObj.credit}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObj.voucherNarration}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObj.reference}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObj.voucherType}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObj.billAmount}}
+													</div>
+												</td>
+												<!-- <td class="width4">
+													<div>
+														-
+													</div>
+												</td> -->
+												<td class="width4">
+													<div>
+														{{documentObj.instrumentNo}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObj.instrumentDate}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObj.bankName}}
+													</div>
+												</td>
+												<!-- <td class="width4">
+													<div>
+														-
+													</div>
+												</td> -->
+												<td class="width4">
+													<div>
+														{{documentObj.refNo}}
+													</div>
+												</td>
+											</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+							
+						</footer>
+					</div>
+					
+				</div>
+				<!-- ************* Blocking content row start *********************** -->
+				<!-- ************* Unblocking content row start *********************** -->
+				<div ng-show="isSetSecondTabLevel(2)" class="second-level-tab-display-div" style="">
+					<div class="row	">
+						<div class="row margin-top8">
+							<div class="col-md-12 col-lg-12  table-responsive padding-left-right-set4 common-popup-height-370">
+								<table class="table table-bordered  common-tbody-scroll">
+									<thead>
+										<tr>
+											<th class="width4">
+												Ledger
+											</th>
+											<th class="width4">
+												Debit
+											</th>
+											<th class="width4">
+												Credit
+											</th>
+											<th class="width4">
+												Narration
+											</th>
+											<th class="width4">
+												Reference
+											</th>
+											<th class="width4">
+												VoucherType
+											</th>
+											<th class="width4">
+												Bill Amount
+											</th> 
+										<!-- 	<th class="width4">
+												PaymentId
+											</th> -->
+											<th class="width4">
+												Instrument No.
+											</th>
+											<th class="width4">
+												Instrument Date
+											</th>
+											<th class="width4">
+												Bank Name
+											</th>
+											<!-- <th class="width4">
+												New Ref
+											</th> -->
+											<th class="width4">
+												Ref No
+											</th>
+										</tr>
+									</thead>
+									<tbody class="scrollable">
+										
+										<tr ng-repeat="documentObjIp in tallyDataList|orderBy:column:reverse" style="text-align: center;">
+												<td class="width4">
+													<div>
+														{{documentObjIp.ledger}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjIp.debit}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjIp.credit}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjIp.voucherNarration}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjIp.reference}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjIp.voucherType}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjIp.billAmount}}
+													</div>
+												</td>
+												<!-- <td class="width4">
+													<div>
+														-
+													</div>
+												</td> -->
+												<td class="width4">
+													<div>
+														{{documentObjIp.instrumentNo}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjIp.instrumentDate}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjIp.bankName}}
+													</div>
+												</td>
+												<!-- <td class="width4">
+													<div>
+														-
+													</div>
+												</td> -->
+												<td class="width4">
+													<div>
+														{{documentObjIp.refNo}}
+													</div>
+												</td>
+											</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+							
+						</footer>
+					</div>
+					
+				</div>
+				<div ng-show="isSetSecondTabLevel(3)" class="second-level-tab-display-div" style="">
+					<div class="row	">
+						<div class="row margin-top8">
+							<div class="col-md-12 col-lg-12  table-responsive padding-left-right-set4 common-popup-height-370">
+								<table class="table table-bordered  common-tbody-scroll">
+									<thead>
+										<tr>
+											<th class="width4">
+												Ledger
+											</th>
+											<th class="width4">
+												Debit
+											</th>
+											<th class="width4">
+												Credit
+											</th>
+											<th class="width4">
+												Narration
+											</th>
+											<th class="width4">
+												Reference
+											</th>
+											<th class="width4">
+												VoucherType
+											</th>
+											<th class="width4">
+												Bill Amount
+											</th>
+											<!-- <th class="width4">
+												PaymentId
+											</th> -->
+											<th class="width4">
+												Instrument No.
+											</th>
+											<th class="width4">
+												Instrument Date
+											</th>
+											<th class="width4">
+												Bank Name
+											</th>
+											<!-- <th class="width4">
+												New Ref
+											</th> -->
+											<th class="width4">
+												Ref No
+											</th>
+										</tr>
+									</thead>
+									<tbody class="scrollable">
+									
+												<tr ng-repeat="documentObjInv in invTallyDataList|orderBy:column:reverse" style="text-align: center;">
+												<td class="width4">
+													<div>
+														{{documentObjInv.ledger}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjInv.debit}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjInv.credit}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjInv.narration}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjInv.reference}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjInv.voucherType}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjInv.billAmount}}
+													</div>
+												</td>
+												<!-- <td class="width4">
+													<div>
+														-
+													</div>
+												</td> -->
+												<td class="width4">
+													<div>
+														{{documentObjInv.instrumentNo}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjInv.instrumentDate}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjInv.bankName}}
+													</div>
+												</td>
+												<!-- <td class="width4">
+													<div>
+														-
+													</div>
+												</td> -->
+												<td class="width4">
+													<div>
+														{{documentObjInv.refNo}}
+													</div>
+												</td>
+											</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+							
+						</footer>
+					</div>
+					
+				</div>
+				<div ng-show="isSetSecondTabLevel(4)" class="second-level-tab-display-div" style="">
+					<div class="row	">
+						<div class="row margin-top8">
+							<div class="col-md-12 col-lg-12  table-responsive padding-left-right-set4 common-popup-height-370">
+								<table class="table table-bordered  common-tbody-scroll">
+									<thead>
+										<tr>
+											<th class="width4">
+												Ledger
+											</th>
+											<th class="width4">
+												Debit
+											</th>
+											<th class="width4">
+												Credit
+											</th>
+											<th class="width4">
+												Narration
+											</th>
+											<th class="width4">
+												Reference
+											</th>
+											<th class="width4">
+												VoucherType
+											</th>
+											<th class="width4">
+												Bill Amount
+											</th>
+											<!-- <th class="width4">
+												PaymentId
+											</th> -->
+											<th class="width4">
+												Instrument No.
+											</th>
+											<th class="width4">
+												Instrument Date
+											</th>
+											<th class="width4">
+												Bank Name
+											</th>
+											<!-- <th class="width4">
+												New Ref
+											</th> -->
+											<th class="width4">
+												Ref No
+											</th>
+										</tr>
+									</thead>
+									<tbody class="scrollable">
+										
+										<tr ng-repeat="documentObjDS in docShareTallyDataList|orderBy:column:reverse" style="text-align: center;">
+												<td class="width4">
+													<div>
+														{{documentObjDS.ledger}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjDS.debit}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjDS.credit}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjDS.narration}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjDS.reference}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjDS.voucherType}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjDS.billAmount}}
+													</div>
+												</td>
+												<!-- <td class="width4">
+													<div>
+														-
+													</div>
+												</td> -->
+												<td class="width4">
+													<div>
+														{{documentObjDS.instrumentNo}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjDS.instrumentDate}}
+													</div>
+												</td>
+												<td class="width4">
+													<div>
+														{{documentObjDS.bankName}}
+													</div>
+												</td>
+											<!-- 	<td class="width4">
+													<div>
+														-
+													</div>
+												</td> -->
+												<td class="width4">
+													<div>
+														{{documentObjDS.refNo}}
+													</div>
+												</td>
+											</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+						</footer>
+					</div>
+					
+				</div>
+				
+					
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto" style="    margin-left: 635px;">
+					<div class="width-div-for-patient-reg ">
+						<input type="button" value="Transfer" id="saveBtn" class="btn btn-primary" style="width:95px;" ng-click="getAllLedgerNamesFromHisForTallyTxn()">
+					</div>
+				</div>
+				<!-- ************* Unblocking content row start *********************** -->
+			</div>
+		</fieldset>
+	</div>
+</div>
+
+
+<div id="tallyledger" class="modal fade ng-scope in common-medium-popup" role="dialog" style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Tally Ledger
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-3 col-sm-3 col-md-3 ">
+									<div class="">
+										<select class="text-input floating-label" id="tallyLedger" name="code" ng-model="selectedTallyLedgerName" >
+											<option value="">Select Ledger</option>
+											<option ng-repeat="info in ledgerNamesFromTallyList" value="">{{info}}</option> 
+										</select>
+										<label for="code">Tally Ledger</label>
+									</div>
+								</div>
+								<div class="col-lg-2 col-sm-2 col-md-2 ">
+									<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Refresh" ng-click = "sendRefreshLedgerNameRequest()">
+						Refresh</button>
+					</div>
+								</div>
+								<div class="col-lg-3 col-sm-3 col-md-3 ">
+									<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Create" data-toggle="modal" data-target="#createLedgerTally" data-dismiss="modal">
+						Create</button>
+					</div>
+								</div>
+							</div>
+						</div>
+						
+						
+								
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+				<div clss="row" style="height:200px;"></div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+			<!-- 	<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="removeDiscount()">Save</button> -->
+				<div class="row">
+						<!-- <div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="No"  data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div> -->
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Close"    data-dismiss="modal">
+						Close </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="confirmLedgerCreate" data-backdrop="static"  class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal" ></button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10" style="padding:12px;"><span>Ledger "{{createThisLedger}}" is not available in Tally.</span><br>
+				<span>Do you want to Create it ?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<!-- <button type="button" class="btn btn-primary"  ng-click="cancelPatientClassPopup()">Yes</button><button type="button"  class="btn btn-primary" ng-click="cancelPatientClassClosePopup()" >No</button> -->
+				 <div class="row">
+				 <div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Yes" data-toggle="modal" data-target="#createLedgerTally" data-dismiss="modal">
+						Yes </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="No" data-dismiss="modal">
+						No </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="createLedgerTally" class="modal fade ng-scope in common-medium-popup" role="dialog" style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Create Ledger in Tally
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+			<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-3 col-sm-3 col-md-3 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id=""   class="text-input floating-label dirty" ng-model="createThisLedger" value="{{createThisLedger}}">
+										 <label for="description" class="LISDynamicLabel">Ledger Name</label>
+									</div>
+								</div>
+								</div>
+						</div>
+								
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-3 col-sm-3 col-md-3 ">
+									<div class="">
+										<select class="text-input floating-label" id="tallyLedger" name="code" ng-model ="selectedUnderGroup" >
+											<option value="">Select </option>
+											<option ng-repeat="info in underGroupList" value="{{info}}">{{info}}</option> 
+										</select>
+										<label for="code">Under Group</label>
+									</div>
+								</div>
+								</div>
+						</div>
+								
+					</div>
+				</div>
+				
+				
+			</div>
+			<div class="modal-footer" style="border: none;">
+			<!-- 	<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="removeDiscount()">Save</button> -->
+				<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok"   ng-click="createLedgerInTally()" data-dismiss="modal" >
+							Create </button>
+						</div> 
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Close"    data-dismiss="modal">
+						Close </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--************************** Blocking - details POPUP start **************************-->
+
+
+<!--************************** Blocking - details POPUP start **************************-->
+
+<script type="text/javascript">
+$( document ).ready(function() {
+	$(".selectedPageName").text("Tally Interface"");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	
+});
+</script>
+<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/5ed507ef8aa53d8ecfea96d96bc7214cd2476fd2/FileSaver.min.js"></script>

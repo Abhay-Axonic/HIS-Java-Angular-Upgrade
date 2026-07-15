@@ -1,0 +1,62 @@
+<!-- Page Content -->
+
+
+<style>
+.schedulerTabs {
+    background: #5ab7c8;
+    box-shadow: 0px 1px 1px 0px #304771;
+}
+.padding-top-bottom-set{
+	padding:5px 0px 6px 0px !important
+}
+</style>
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style padding-left-right-set4 ">
+	        <!-- <div class="row margin-top8 schedulerTabs">
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+					<div class="tab-btn-primary" ng-class="{ active : isSetFirstTabLevel(1) }">
+						<a class="btn btn-primary btn-save-box-shadow" ng-click="setFirstTabLevel(1)" >New Admissions</a>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+					<div class="tab-btn-primary" ng-class="{ active : isSetFirstTabLevel(2) }">
+						<a class="btn btn-primary  btn-save-box-shadow" ng-click="setFirstTabLevel(2)" >Admitted Patient List</a>
+					</div>
+				</div>
+			</div> -->
+			
+			<div class="row margin-top8 schedulerTabs_box" style="background-color:white;border-color:white; box-shadow:none;">
+				<ul class="tabs nav nav-tabs">
+					<li id="" class="padding-top-bottom-set width11" ng-class="{ active :isSetFirstTabLevel == 1 }">
+						<a href ng-click="setFirstTabLevel(1)">New Admissions</a>
+					</li>
+					<li id="" class="padding-top-bottom-set width15" ng-class="{ active :isSetFirstTabLevel == 2 }">
+						<a href ng-click="setFirstTabLevel(2)">Admitted Patient List</a>
+					</li>
+				</ul>
+		    </div>
+			 <div class="row second-level-tab-display-div-dayCarepage">
+				<div class="" ui-view>
+					
+				</div>
+			</div> 
+	</div>
+</div>
+
+
+
+	<script type="text/javascript">
+	$(document).ready(function(){
+		var documentHeight= $(window).height();
+	    var sideBarHeight = documentHeight - 55;
+	 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+		
+	$('.clockpicker').clockpicker();
+	
+	$(".selectedPageName").text("Patient Acceptance");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="patientAcceptance"]').parents("li").addClass("active");
+	});
+</script>

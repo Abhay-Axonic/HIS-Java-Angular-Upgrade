@@ -1,0 +1,91 @@
+
+<link rel="stylesheet" type="text/css" href="resources/assets/css/his.common.master.css" />
+
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <div class="row rectangle-box ">
+        	 <!-- **** block 1 start **** --> 
+        	<div class="col-lg-4 col-md-4 col-sm-12">
+        		<div class="row">
+        			<div class="col-lg-2 col-md-2 col-sm-4 bhoechie-tab-menu" ng-init="tab=1">
+        				<ul>
+							<li class="list-group" ng-class="{active:tab==1}">
+								<a href ng-click="tab = 1"><!-- Tab 1 -->
+									<img class="ht-wd-20" src=" ">
+									<label class="lblname">Expand /</br>Collapse</label>
+								</a>
+							</li>
+						    <li class="list-group" ng-class="{active:tab==2}">
+								<a href ng-click="tab = 2"><!-- Tab 2 -->
+									<img class="ht-wd-20" src=" ">
+									<label class="lblname">Previous CaseSheet</label>
+								</a>
+							</li>
+						    <li class="list-group" ng-class="{active:tab==3}">
+								<a href ng-click="tab = 3"><!-- Tab 3 -->
+									<img class="ht-wd-20" src=" ">
+									<label class="lblname">Vital</br>Trends</label>
+								</a>
+							</li>
+							 <li class="list-group" ng-class="{active:tab==4}">
+								<a href ng-click="tab = 4"><!-- Tab 4 -->
+									<img class="ht-wd-20" src=" ">
+									<label class="lblname">App Vitals</label>
+								</a>
+							</li>
+							<li class="list-group" ng-class="{active:tab==5}">
+								<a href ng-click="tab = 5"><!-- Tab 5 -->
+									<img class="ht-wd-20" ng-src="resources/assets/images/tempImages/m.jpg">
+									<label class="lblname">Letter to</br> Referrer</label>
+								</a>
+							</li>
+						</ul>
+        			</div>
+        			<div class="col-lg-10 col-md-10 col-sm-8 bhoechie-tab">
+        				<div class="row" ng-show="tab==1">
+        					tab 1
+        				</div>
+						<div class="row" ng-show="tab==2">
+        					tab 2
+        				</div>
+						<div class="row" ng-show="tab==3">
+        					tab 3
+        				</div>
+        				<div class="row" ng-show="tab==4">
+        					tab 4
+        				</div>
+        				<div class="row" ng-show="tab==5">
+        					tab 5
+        				</div>
+        			</div>
+        		</div>
+        	</div><!-- **** block 1 end **** --> 
+        	<!-- **** block 2 start **** -->
+        	<div class="col-lg-4 col-md-4 col-sm-12">
+        		<div class="row">
+        		
+        		</div>
+        	</div><!-- **** block 2 end **** -->
+        	<!-- **** block 3 start ****  -->	
+        	<div class="col-lg-4 col-md-4 col-sm-12">
+        		<div class="row">
+        		
+        		</div>	
+        	</div>	<!-- **** block 3 end ****  -->
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var documentHeight = $(window).height();
+        var sideBarHeight = documentHeight - 55;
+        $("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+        $(".selectedPageName").text("OPD Coversheet");
+        $(".sidebar-nav li").each(function() {
+            $(this).find("a").parents("li").removeClass("active");
+        });
+        $('a[href$="accessControl"]').parents("li").addClass("active");
+    });
+</script>

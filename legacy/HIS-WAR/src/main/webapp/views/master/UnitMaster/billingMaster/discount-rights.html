@@ -1,0 +1,602 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	<form name="discountRightForm" novalidate>
+		<div class="row padding-top8">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top5">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors>
+<!-- 							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"  -->
+<!-- 							press-enter="searchPatient(patientSearchObj)">  -->
+								<select  class="text-input floating-label dirty" convert-to-number ng-change="usrDetails(common.roleId)" ng-model="common.roleId"  ng-disabled="dropDownStatus"  name="roleId" required>
+											<option value="" ng-selected="true">Select Role</option>
+											<option ng-repeat="info in getActiveList" ng-selected="false" value="{{info.id}}">{{info.label}}</option>
+										</select><label for="description" class="LISDynamicLabel">User Role</label>
+										<p class="help-block" ng-if="discountRightForm.roleId.$error.required">User Role is required</p>
+						</div>
+					</div>
+					<!-- <div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" 
+							press-enter="searchPatient(patientSearchObj)"> 
+								<select  class="text-input floating-label dirty" ng-change="usrDetails(common.userId)" ng-model="common.userId"   name="userId" required>
+											<option value="" ng-selected="true">Select User</option>
+											<option ng-repeat="info in usersList" ng-selected="false" value="{{info.employeeId}}">{{info.employeeName}}</option>
+										</select>
+
+							<label for="description" class="LISDynamicLabel">User</label>
+						</div>
+					</div> -->
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top6">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" press-enter="searchPatient(patientSearchObj)" ng-model="common.employeeCode" readonly> 
+							<label for="description" class="LISDynamicLabel">Employee Code</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top5">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 " ng-hide="dropDownStatus==true">
+						<div class="form-group" show-errors>
+<!-- 							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" press-enter="searchPatient(patientSearchObj)" ng-model="common.employeeName">  -->
+								<select  class="text-input floating-label dirty" ng-model="common.userId" ng-change="usrDetailsByUserId(common.userId)"  name="userId" required>
+											<option value="" ng-selected="true">Select Employee Name</option>
+											<option ng-repeat="info in usersList" ng-selected="false" value="{{info.userId}}">{{info.employeeName}}</option>
+										</select><label for="description" class="LISDynamicLabel">Employee Name<span class="star">*</span></label>
+										<p class="help-block" ng-if="discountRightForm.userId.$error.required">User is required</p>
+						</div>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11" ng-hide="!(dropDownStatus==true)">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-disabled="dropDownStatus" ng-model="common.employeeName">  
+								
+							<label for="description" class="LISDynamicLabel">Employee Name</label> 
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+			<hr style="border: 0;border-top: 1px solid #eee; margin-top: 2px;  margin-bottom: 2px;">
+			<div class="row">
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15">
+				<div class="row input-container">
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="checkbox" name="description" id="" class="" ng-true-value="'Y'" ng-false-value="'N'"  ng-model="common.isDiscountRights">
+							<label for="description" class="LISDynamicLabel">Is Discount Rights</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4"  style="padding-top:6px;" ng-show="common.isDiscountRights == 'Y'">
+				<div class="row input-container">
+				    <label class="radio-inline"><input type="radio"  ng-model="discountRadio" value="2" ng-click="changesRadio('1')">Amount Wise</label>
+					<label class="radio-inline"><input type="radio"  ng-model="discountRadio" value="1" ng-click="changesRadio('1')">Percentage Wise</label>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"  style="padding-top:6px;"  ng-if="common.isDiscountRights == 'Y'">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					     <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off" allow-decimal-numbers  name="discountFrom" id=""
+									class="text-input floating-label dirty" ng-model="common.fromDiscountAmount" required> <label for="code">Discount From
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.discountFrom.$error.required">Discount From is required</p>
+							<P class="help-block" ng-show="!discountRightForm.discountFrom.$error.required && discountRightForm.discountFrom.$dirty && discountRightForm.discountFrom.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"  ng-model="common.fromDiscountAmount" ng-change="getAmountDetails(common.fromDiscountAmount,1);"> 
+							<label for="description" class="LISDynamicLabel">Discount From</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" style="padding-top:6px;"  ng-if="common.isDiscountRights == 'Y'">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					        <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off"   allow-decimal-numbers   name="discountTo" id=""
+									class="text-input floating-label dirty" ng-model="common.toDiscountAmount" required> <label for="code">Discount To
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.discountTo.$error.required">Discount To is required</p>
+							<P class="help-block" ng-show="!discountRightForm.discountTo.$error.required && discountRightForm.discountTo.$dirty && discountRightForm.discountTo.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input numbers-only  type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="common.toDiscountAmount" ng-change="getAmountDetails(common.toDiscountAmount,2);"> 
+							<label for="description" class="LISDynamicLabel">Discount To</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+		
+			
+			<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top5">
+				<div class="width-div-for-patient-reg ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save">
+					<i class="fa fa-search" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div> -->
+			
+		</div>
+		<hr style="border: 0;border-top: 1px solid #eee; margin-top: 2px;  margin-bottom: 2px;">
+		<div class="row">
+		
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15">
+				<div class="row input-container">
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="checkbox" name="description" id="" class="" ng-true-value="'Y'" ng-false-value="'N'"  ng-model="common.isFinancialClearance"> 
+							<label for="description" class="LISDynamicLabel">Is Financial Clearance</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top5" ng-show="common.isFinancialClearance == 'Y'">
+				<div class="row input-container">
+				    <label class="radio-inline"><input type="radio"  ng-model="financialClearanceRadio" value="2" 	ng-click="changesRadio('2')">Amount Wise</label>
+					<!-- <label class="radio-inline"><input type="radio"  ng-model="financialClearanceRadio" value="1" ng-click="changesRadio('2')" disabled>Percentage Wise</label> -->
+				</div>
+			</div>
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isFinancialClearance == 'Y'"> 
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					     <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off" allow-decimal-numbers  name="financialClearFrom" id=""
+									class="text-input floating-label dirty " ng-model="common.fromFinancialClearanceAmount" required> <label for="code">Financial Clearance From
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.financialClearFrom.$error.required">Financial Clearance From is required</p>
+							<P class="help-block" ng-show="!discountRightForm.financialClearFrom.$error.required && discountRightForm.financialClearFrom.$dirty && discountRightForm.financialClearFrom.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"  ng-model="common.fromDiscountAmount" ng-change="getAmountDetails(common.fromDiscountAmount,1);"> 
+							<label for="description" class="LISDynamicLabel">Discount From</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isFinancialClearance == 'Y'"> 
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					        <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off"   allow-decimal-numbers   name="financialClearTo" id=""
+									class="text-input floating-label dirty " ng-model="common.toFinancialClearanceAmount" required> <label for="code">Financial Clear To
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.financialClearTo.$error.required">Financial Clearance To is required</p>
+							<P class="help-block" ng-show="!discountRightForm.financialClearTo.$error.required && discountRightForm.financialClearTo.$dirty && discountRightForm.financialClearTo.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input numbers-only  type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="common.toDiscountAmount" ng-change="getAmountDetails(common.toDiscountAmount,2);"> 
+							<label for="description" class="LISDynamicLabel">Discount To</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			</div>
+			<hr style="border: 0;border-top: 1px solid #eee; margin-top: 2px;  margin-bottom: 2px;">
+			<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15">
+				<div class="row input-container">
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="checkbox" name="description" id="" class="" ng-true-value="'Y'" ng-false-value="'N'"  ng-model="common.isCreditNoteApproval"> 
+							<label for="description" class="LISDynamicLabel">Is Credit Note Approval</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top5" ng-show="common.isCreditNoteApproval == 'Y'">
+				<div class="row input-container">
+				    <!--<label class="radio-inline"><input type="radio"  ng-model="creditNoteRadio" value="2" ng-click="changesRadio('3')" checked>Amount</label>
+					<label class="radio-inline"><input type="radio"  ng-model="creditNoteRadio" value="1" ng-click="changesRadio('3')">Percentage Wise</label>-->
+				</div>
+			</div>
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isCreditNoteApproval == 'Y'">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					     <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off" allow-decimal-numbers  name="creditNoteFrom" id=""
+									class="text-input floating-label dirty " ng-model="common.fromCreditNoteAmount" required> <label for="code">Credit Note From Amount
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.creditNoteFrom.$error.required">Credit Note From is required</p>
+							<P class="help-block" ng-show="!discountRightForm.creditNoteFrom.$error.required && discountRightForm.creditNoteFrom.$dirty && discountRightForm.creditNoteFrom.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"  ng-model="common.fromDiscountAmount" ng-change="getAmountDetails(common.fromDiscountAmount,1);"> 
+							<label for="description" class="LISDynamicLabel">Discount From</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isCreditNoteApproval == 'Y'">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					        <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off"   allow-decimal-numbers   name="creditNoteTo" id=""
+									class="text-input floating-label dirty " ng-model="common.toCreditNoteAmount" required> <label for="code">Credit Note To Amount
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.creditNoteTo.$error.required">Credit Note To is required</p>
+							<P class="help-block" ng-show="!discountRightForm.creditNoteTo.$error.required && discountRightForm.creditNoteTo.$dirty && discountRightForm.creditNoteTo.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input numbers-only  type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="common.toDiscountAmount" ng-change="getAmountDetails(common.toDiscountAmount,2);"> 
+							<label for="description" class="LISDynamicLabel">Discount To</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+
+			</div>
+			<hr style="border: 0;border-top: 1px solid #eee; margin-top: 2px;  margin-bottom: 2px;">
+			<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15">
+				<div class="row input-container">
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="checkbox" name="description" id="" class="" ng-true-value="'Y'" ng-false-value="'N'"  ng-model="common.isExpenseApproval"> 
+							<label for="description" class="LISDynamicLabel">Is Expense Approval</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top5" ng-show="common.isExpenseApproval == 'Y'">
+				<div class="row input-container">
+				    <label class="radio-inline"><input type="radio"  ng-model="expenseApprovalRadio" value="2" ng-click="changesRadio('4')">Amount Wise</label>
+					<label class="radio-inline"><input type="radio"  ng-model="expenseApprovalRadio" value="1" ng-click="changesRadio('4')">Percentage Wise</label>
+				</div>
+			</div>
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isExpenseApproval == 'Y'"> 
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					     <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off" allow-decimal-numbers  name="refundApprovalFrom" id=""
+									class="text-input floating-label dirty " ng-model="common.fromExpenseApprovalAmount" required> <label for="code">Expense Approval From
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.refundApprovalFrom.$error.required">Expense Approval From is required</p>
+							<P class="help-block" ng-show="!discountRightForm.refundApprovalFrom.$error.required && discountRightForm.refundApprovalFrom.$dirty && discountRightForm.refundApprovalFrom.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"  ng-model="common.fromDiscountAmount" ng-change="getAmountDetails(common.fromDiscountAmount,1);"> 
+							<label for="description" class="LISDynamicLabel">Discount From</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isExpenseApproval == 'Y'"> 
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					        <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off"   allow-decimal-numbers   name="refundApprovalTo" id=""
+									class="text-input floating-label dirty " ng-model="common.toExpenseApprovalAmount" required> <label for="code">Expense Approval To
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.refundApprovalTo.$error.required">Expense Approval To is required</p>
+							<P class="help-block" ng-show="!discountRightForm.refundApprovalTo.$error.required && discountRightForm.refundApprovalTo.$dirty && discountRightForm.refundApprovalTo.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input numbers-only  type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="common.toDiscountAmount" ng-change="getAmountDetails(common.toDiscountAmount,2);"> 
+							<label for="description" class="LISDynamicLabel">Discount To</label>
+						</div> -->
+					</div>
+				</div>
+			</div> 
+			</div>
+			<hr style="border: 0;border-top: 1px solid #eee; margin-top: 2px;  margin-bottom: 2px;">
+			<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15">
+				<div class="row input-container">
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="checkbox" name="description" id="" class="" ng-true-value="'Y'" ng-false-value="'N'"  ng-model="common.isBadDebit"> 
+							<label for="description" class="LISDynamicLabel">Is Bad Debt</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top5" ng-show="common.isBadDebit == 'Y'">
+				<div class="row input-container">
+				    <label class="radio-inline"><input type="radio"  ng-model="badDebitRadio" value="2" ng-click="changesRadio('5')">Amount Wise</label>
+					<label class="radio-inline"><input type="radio"  ng-model="badDebitRadio" value="1" ng-click="changesRadio('5')">Percentage Wise</label>
+				</div>
+			</div>
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isBadDebit == 'Y'"> 
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					     <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off" allow-decimal-numbers  name="badDebitFrom" id=""
+									class="text-input floating-label dirty " ng-model="common.fromBadDebitAmount" required> <label for="code">Bad Debts From
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.badDebitFrom.$error.required">Bad Debts From is required</p>
+							<P class="help-block" ng-show="!discountRightForm.badDebitFrom.$error.required && discountRightForm.badDebitFrom.$dirty && discountRightForm.badDebitFrom.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"  ng-model="common.fromDiscountAmount" ng-change="getAmountDetails(common.fromDiscountAmount,1);"> 
+							<label for="description" class="LISDynamicLabel">Discount From</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isBadDebit == 'Y'"> 
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+					        <div class="form-group"   show-errors>
+								<input type="text" autocomplete="off"   allow-decimal-numbers   name="badDebitTo" id=""
+									class="text-input floating-label dirty " ng-model="common.toBadDebitAmount" required> <label for="code">Bad Debts To
+									<span class="star">*</span></label>
+									<p class="help-block" ng-if="discountRightForm.badDebitTo.$error.required">Bad Debts To is required</p>
+							<P class="help-block" ng-show="!discountRightForm.badDebitTo.$error.required && discountRightForm.badDebitFrom.$dirty && discountRightForm.badDebitFrom.$invalid" class="ng-hide">   
+                                             Please Enter only Number  </p>  
+							</div>
+						<!-- <div class="">
+							<input numbers-only  type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="common.toDiscountAmount" ng-change="getAmountDetails(common.toDiscountAmount,2);"> 
+							<label for="description" class="LISDynamicLabel">Discount To</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<!--Refund Approval-->
+		<hr style="border: 0;border-top: 1px solid #eee; margin-top: 2px;  margin-bottom: 2px;">
+		<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15">
+				<div class="row input-container">
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="checkbox" name="description" id="" class="" ng-true-value="'Y'" ng-false-value="'N'"  ng-model="common.isRefundApproval">
+							<label for="description" class="LISDynamicLabel">Is Refund Approval</label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top5" ng-show="common.isRefundApproval == 'Y'">
+				<div class="row input-container">
+					<label class="radio-inline"><input type="radio"  ng-model="isRefundApprovalRadio" value="2" ng-click="changesRadio('7')">Amount Wise</label>
+					<label class="radio-inline"><input type="radio"  ng-model="isRefundApprovalRadio" value="1" ng-click="changesRadio('7')">Percentage Wise</label>
+				</div>
+			</div>
+
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isRefundApproval == 'Y'">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group"   show-errors>
+							<input type="text" autocomplete="off" allow-decimal-numbers  name="fromRefundAmount" id=""
+								   class="text-input floating-label dirty " ng-model="common.fromRefundAmount" required> <label for="code">Refund From
+							<span class="star">*</span></label>
+							<p class="help-block" ng-if="discountRightForm.fromRefundAmount.$error.required">Refund From is required</p>
+							<P class="help-block" ng-show="!discountRightForm.fromRefundAmount.$error.required && discountRightForm.fromRefundAmount.$dirty && discountRightForm.fromRefundAmount.$invalid" class="ng-hide">
+								Please Enter only Number  </p>
+						</div>
+						<!-- <div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"  ng-model="common.fromDiscountAmount" ng-change="getAmountDetails(common.fromDiscountAmount,1);">
+							<label for="description" class="LISDynamicLabel">Discount From</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15" ng-if="common.isRefundApproval == 'Y'">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group"   show-errors>
+							<input type="text" autocomplete="off"   allow-decimal-numbers   name="toRefundAmount" id=""
+								   class="text-input floating-label dirty " ng-model="common.toRefundAmount" required> <label for="code">Refund To
+							<span class="star">*</span></label>
+							<p class="help-block" ng-if="discountRightForm.toRefundAmount.$error.required">Refund to is required</p>
+							<P class="help-block" ng-show="!discountRightForm.toRefundAmount.$error.required && discountRightForm.toRefundAmount.$dirty && discountRightForm.toRefundAmount.$invalid" class="ng-hide">
+								Please Enter only Number  </p>
+						</div>
+						<!-- <div class="">
+							<input numbers-only  type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="common.toDiscountAmount" ng-change="getAmountDetails(common.toDiscountAmount,2);">
+							<label for="description" class="LISDynamicLabel">Discount To</label>
+						</div> -->
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+
+		<!--For isUHIDApproval-->
+		
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15">
+				<div class="row input-container">
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="checkbox" name="description" id="" class="" ng-true-value="'Y'" ng-false-value="'N'"  ng-model="common.isUHIDMergeApproval"> 
+							<label for="description" class="LISDynamicLabel">Is UHID Approval</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		
+		<hr style="border: 0;border-top: 1px solid #eee; margin-top: 2px;  margin-bottom: 2px;">
+		</form>
+		<div class="row padding-top8">
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+										ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+										
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="update()"
+										ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set1 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword">
+				 <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 table-container padding-top5">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr>
+								<th class="width10" title="User Role">User Role</th>
+								<!-- <th class="width10">Employee Code</th> -->
+								<th class="width10" title="Employee Name">Employee Name</th>
+								<th class="width5" title="Discount From">Discount From</th>
+								<th class="width10" title="Discount To">Discount To</th>
+								<!-- <th class="width8">Financial Clearance</th>
+								<th class="width8">Credit Note Approval</th>
+								<th class="width8">Expense Approval</th> -->
+								
+								<th class="width8" title="Financial Clearance From">Financial Clearance From</th>
+								<th class="width8" title="Financial Clearance To">Financial Clearance To</th>
+								<th class="width8" title="Credit Note From">Credit Note From</th>
+								<th class="width8" title="Credit Note To">Credit Note To</th>
+								<th class="width8" title="Expense Approval From">Expense Approval From</th>
+								<th class="width8" title="Expense Approval To">Expense Approval To</th> 
+								<!-- <th class="width8">Bad Debit Approval</th> -->
+								<th class="width8" title="Bad Debts From">Bad Debts From</th>
+								<th class="width8" title="Bad Debts To">Bad Debts To</th>
+								<th class="width8" title="Refund From">Refund From</th>
+								<th class="width8" title="Refund To">Refund To</th>
+								<th class="width8" title="UHID">UHID</th>
+								<th class="width10" title="Status">Status(n)</th>
+								<th class="width5 text-center" title="Action">Action taken</th>
+								
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="table-container-body fix-height-scroll450" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr ng-repeat="info in commonList|orderBy:column:reverse|filter:searchKeyword">
+								<td class="width10" title="{{info.roleName}}">{{info.roleName}}</td>
+								<!-- <td class="width10">{{info.employeeCode}}</td> -->
+								<td class="width10" title="{{info.employeeName}}">{{info.employeeName}}</td>
+								<td class="width5">{{info.fromDiscountAmount}}</td>
+								<td class="width10">{{info.toDiscountAmount}}</td>
+								<!-- <td class="width8"> {{info.isFinancialClearance}}</td>
+								<td class="width8"> {{info.isCreditNoteApproval}}</td>
+								<td class="width8"> {{info.isExpenseApproval}}</td> -->
+								<!-- <td class="width8"> {{info.isBadDebit}}</td> -->
+								<td class="width8"> {{info.fromFinancialClearanceAmount}}</td>
+								<td class="width8"> {{info.toFinancialClearanceAmount}}</td>
+								<td class="width8"> {{info.fromCreditNoteAmount}}</td>
+								<td class="width8"> {{info.toCreditNoteAmount}}</td>
+								<td class="width8"> {{info.fromExpenseApprovalAmount}}</td>
+								<td class="width8"> {{info.toExpenseApprovalAmount}}</td>
+								<td class="width8"> {{info.fromBadDebitAmount}}</td>
+								<td class="width8"> {{info.toBadDebitAmount}}</td>
+								<td class="width8"> {{info.fromRefundAmount}}</td>
+								<td class="width8"> {{info.toRefundAmount}}</td>
+								<td class="width8"> {{info.isUHIDMergeApproval}}</td>
+								<td class="width10">
+									<label class="switch">
+										<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"  ng-change="updateStatus(info.discountRightId,info.status)">
+										<div class="slider round"></div>
+								</label>
+							</td>
+								<td class="width5 text-center"><a>
+								<i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.discountRightId)"></i>
+							</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- <div class="table-container-footer">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tfoot>
+							<tr>
+								<td></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div> -->
+			</div>
+		</div>
+		
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("Financial Rights");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="discountRights"]').parents("li").addClass("active");
+});
+
+
+</script>

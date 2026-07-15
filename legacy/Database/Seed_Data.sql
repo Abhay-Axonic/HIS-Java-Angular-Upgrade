@@ -1,0 +1,3 @@
+--hf-3.08.1.2 started
+-- INSERT INTO t_aws_credentials (access_key, secret_key, status, created_by, created_date, updated_by, updated_date)
+-- values('AKIAZK2N6OMGPAPSORNZ', 'IZfTZxz3p40Mk28uqVsVL5dTcm17sLlZLDGD8Mw1', 'A', 1, now(), 1, now());

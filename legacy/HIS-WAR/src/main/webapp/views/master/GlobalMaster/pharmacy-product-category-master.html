@@ -1,0 +1,309 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Product Category Master</legend> -->
+			<!-- /*old name product cat master*/ -->
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div>
+								<input type="hidden" ng-model="vm.mode.assetType" value="0" />
+								<select class="text-input floating-label" ng-class="{dirty: vm.model.assetType}" ng-change="vm.model.PopulateAssetCategoryDropdown(vm.model.assetType); vm.model.isAssetTypeIdValid = false"
+								 ng-model="vm.model.assetType" ng-options="assetType.type for assetType in vm.model.PopulateAssetTypeDropdown"></select>
+								<label for="assetType">Asset Type<span class="star">*</span></label>
+								<p ng-if="vm.model.isAssetTypeIdValid" class="errorMsg">Asset Type is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-outdent" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label" ng-class="{dirty: vm.model.assetCategory}" ng-model="vm.model.assetCategory" ng-options="assetCategory.category for assetCategory in vm.model.assetCategoryDropdown"
+								 ng-change="vm.model.isAssetCategoryIdValid = false"></select>
+								<label for="assetCategory">Asset Category<span class="star">*</span></label>
+								<p ng-if="vm.model.isAssetCategoryIdValid" class="errorMsg">Asset Category is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" class="text-input floating-label" ng-class="{dirty: vm.model.productCategoryCode}"
+								 ng-model="vm.model.productCategoryCode" ng-change="vm.model.isProductCategoryCodeValid = false" maxlength="10" />
+								<label for="productCategoryCode">Product Category Code<span class="star">*</span></label>
+								<p ng-if="vm.model.isProductCategoryCodeValid" class="errorMsg">Product Category Code is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-class="{dirty: vm.model.productCategoryName}"
+								 ng-model="vm.model.productCategoryName" ng-change="vm.model.isProductCategoryNameValid = false" maxlength="100">
+								<label for="productCategoryName">Product Category<span class="star">*</span></label>
+								<p ng-if="vm.model.isProductCategoryNameValid" class="errorMsg">Product Category is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input  type="text" autocomplete="off" name="description" id="searchServiceId" class="text-input floating-label" ng-model="search" typeahead-min-length="2" uib-typeahead = "serviceMaster.serviceStandardName + '|' +serviceMaster.serviceStandardCode for serviceMaster in searchServices($viewValue)" typeahead-on-select="selectService($item, $model, $label);" > 
+												<label for="description" class="LISDynamicLabel">Billing Service</label>
+											</div>
+										</div>
+					</div>
+			   </div>
+			   <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input placeholder="search"  type="text" autocomplete="off"  
+										name="generalLedgerName" class="text-input floating-label"
+										ng-model="vm.model.generalLedgerName" ng-blur="clearText()"
+										uib-typeahead="group.generalLedgerName for group in ledgerNameSearch($viewValue)"
+										typeahead-on-select="SelectLedgerName($item)"
+										><label for="description" class="">General Ledger Code</label>
+											</div>
+										</div>
+					</div>
+			   </div>
+			</div>
+		</fieldset>
+		<div class="row margin-top10">
+			<div class="col-md-7">
+				<div class="search">
+					<label class="show-entries">Show 
+					<select ng-init="vm.model.pagination.pageSize='10'" 
+						ng-model="vm.model.pagination.pageSize" 
+						ng-change="vm.model.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+							<option value="10">10</option>
+							<option value="25">25</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+					</select> (records)
+					</label>
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-5">
+				<div class="col-lg-9 col-md-9 col-sm-9">
+					<input type="text" autocomplete="off" class="text-search-box" ng-model="vm.model.pagination.search" ng-change="vm.model.searchProduct(vm.model.productCategoryList, vm.model.pagination)" placeholder="Search">
+					<i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+				</div>
+				<div class="col-md-2 col-sm-3  padding-leftright15" style="margin-top: 5px;">
+					<input type="button" value="Clear" class="btn btn-primary btn-save-box-shadow" ng-click="vm.model.ClearFields(); vm.model.clearSearch();" id="clearBtn">
+				</div>
+				<div class="col-md-1 col-sm-2 padding-leftright15 float_right">
+					<div class="width-div-for-patient-reg padding-top4">
+						<a href class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="vm.model.SavePopup()" ng-class="{disabled: !vm.model.assetType || !vm.model.assetCategory || !vm.model.productCategoryCode || !vm.model.productCategoryName}">
+							<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row table-container padding-left-right-set4 padding-top5">
+			<div class="col-md-12 col-lg-12 col-sm-8 table-container-header">
+				<table class="table table-striped table-hover table-condensed table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width10" title="Asset Type">Asset Type
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'type', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width10" title="Asset Category">Asset Category
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'assetCategory', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width12" title="Product Category Code">Product Category Code
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'code', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width15" title="Product Category">Product Category
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'category', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width15" title="Product Category">Billing Service
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'category', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width15" title="Product Category">GL Code
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'generalLedgerName', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5 text-center" title="Status">Status(n)
+							</th>
+							<th class="width5 text-center" title="Action">Action taken
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div class="table-container-body" style="height: 365px; overflow-y: scroll;">
+				<table class="table table-striped table-hover table-condensed table-bordered">
+					<tbody>
+						<tr ng-repeat="productCategory in vm.model.pagination.data">
+							<td class="width10" title="{{::productCategory.assetType}}">
+								{{::productCategory.assetType}}
+							</td>
+							<td class="width10" title="{{::productCategory.assetCategory}}">
+								{{::productCategory.assetCategory}}
+							</td>
+							<td class="width12" title="{{::productCategory.code}}">
+								{{::productCategory.code}}
+							</td>
+							<td class="width15" title="{{::productCategory.category}}">
+								{{::productCategory.category}}
+							</td>
+							<td class="width15" title="{{::productCategory.serviceName}}">
+								{{productCategory.serviceName}}
+							</td>
+							<td class="width15" title="{{::productCategory.generalLedgerName}}">
+								{{productCategory.generalLedgerName}}
+							</td>
+							<td class="width5 text-center">
+								<label class="switch switch-small" title="{{productCategory.status == true  ? 'Active'  : 'Inactive'}}">
+									<input type="checkbox" class="switchInput" ng-model="productCategory.status" ng-change="vm.model.ToggleStatus(productCategory)">
+									<div class="slider round slider-small"></div>
+								</label>
+							</td>
+							<td class="text-center" style="width:4.8% !important">
+								<a ng-click="vm.model.GetProductCategory(productCategory.id)" ng-class="{disabled: !productCategory.status}" title="Edit">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+								</a>
+							</td>
+						</tr>
+						<tr ng-if="!vm.model.pagination.data || vm.model.pagination.data == false">
+							<td colspan="4" class="text-center">
+								<p>No Record Found</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="row margin-bottom45 center-block">
+				<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+					style="font-size: 14px; cursor: pointer;">
+					<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+						ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+					</li>
+					<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+						ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+					</li>
+					<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+						ng-class="{active:vm.model.pagination.currentPage === page}"><a
+						ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+					</li>
+					<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+						<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+					</li>
+					<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+						<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--  confirmSave modal start -->
+
+<div id="confirmSave" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to Save?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="vm.model.SaveProductCategory()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--  confirmSave modal end -->
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+		$(".selectedPageName").text("Product Category Master");/*old name product cat master*/
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="pharmacyproductCategoryMaster"]').parents("li").addClass("active");
+	});
+</script>

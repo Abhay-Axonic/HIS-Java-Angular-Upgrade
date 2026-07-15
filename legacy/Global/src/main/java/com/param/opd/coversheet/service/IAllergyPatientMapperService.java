@@ -1,0 +1,58 @@
+package com.param.opd.coversheet.service;
+
+import in.param.exception.ApplicationException;
+
+import org.springframework.transaction.annotation.Transactional;
+
+import com.param.global.common.Response;
+import com.param.global.unit.dto.AllergyPatientMapperDto;
+import com.param.global.unit.dto.ClinicalHeaderTabDto;
+import com.param.opd.coversheet.dto.PatientHabitDetailsDto;
+import com.param.opd.coversheet.model.AllergyPatientMapper;
+import com.param.opd.coversheet.model.PatientHabitDetails;
+@Transactional
+@SuppressWarnings("rawtypes")
+public interface IAllergyPatientMapperService {
+
+	public Response saveAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getListOfAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+	
+	public Response cancelAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+	
+	public Response getOldAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+	
+	public Response getCurrentAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+	
+	public Response updateAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+	
+	public Response updateSaveNurseReviewedFlag(AllergyPatientMapper allergyPatientMapper)throws ApplicationException;
+	
+	public Response updateStatusEnterInError(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getGenericAutoFillSearch(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getCurrentAllergyPatientMapperForCoversheet(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getPatientAllergyListForIcon(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getAllergyPatientMapperForBookView(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response saveResolvedAllergyDate(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getResolvedAllergyPatientMapperForCoversheet(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getPatientAllergies(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getActiveClinicalHeaderTabList(ClinicalHeaderTabDto clinicalHeaderTabDto)throws ApplicationException;
+
+	public Response getMappedCoversheetDataForUser(ClinicalHeaderTabDto clinicalHeaderTabDto)throws ApplicationException;
+
+	public Response getFrequentlyUsedAllergies(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response searchAllergenList(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+    Response getAllergyForIPDCoversheetByDate(AllergyPatientMapperDto dto) throws ApplicationException;
+
+	Response getUniqueDateForIPDCoversheet(AllergyPatientMapperDto dto) throws ApplicationException;
+}

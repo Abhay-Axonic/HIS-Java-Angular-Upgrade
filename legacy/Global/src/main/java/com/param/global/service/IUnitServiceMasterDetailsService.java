@@ -1,0 +1,28 @@
+package com.param.global.service;
+
+import com.param.global.common.Response;
+import com.param.global.dto.UnitServiceMasterDetailsDto;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+public interface IUnitServiceMasterDetailsService {
+	public Response saveUnitServiceMasterDetails(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getPaginatedUnitServiceMasterDetailsList(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getUnitServiceMasterDetailsCount(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getUnitServiceMasterDetailsById(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response updateUnitServiceMasterDetails(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getAllActiveTax(Integer organizationId) throws ApplicationException;
+	public Response searchPeriodicityServices(int orgId, int unitId, String serviceName)throws ApplicationException;
+	public Response searchProcedureServices(int orgId, int unitId, String serviceName, int specialityId)throws ApplicationException;
+	public Response getProcedureTypeList()throws ApplicationException;
+	public Response getProcedureListByProcedureType(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto);
+	public Response getPaginatedUnitServiceMasterDetailsListSearch(
+			UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getUnitServiceMasterDetailsListForCyclic(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getUnitServiceMasterQtyDetailsByServiceId(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getUnitServiceMasterDetailsByServiceId(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response UnitServiceMasterDetailsForSchedulingWorking(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response unitServiceMasterDetailsForSchedulingWorkingDetails(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+
+    public Response getAdminServicesForConfiguration(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto) throws ApplicationException;
+}

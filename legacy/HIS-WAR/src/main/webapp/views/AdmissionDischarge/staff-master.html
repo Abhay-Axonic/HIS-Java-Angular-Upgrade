@@ -1,0 +1,2247 @@
+<!-- Page Content -->
+<style>
+
+
+
+
+</style>
+<div id="page-content-wrapper" ng-show="staffRegistrationFlag == false">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Reason Type Master</legend> -->
+			<div class="row margin-top10">
+				
+					<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off"  name="code" id="" ng-model="employeeSearchObj.employeeName"
+										class="text-input floating-label"> <label for="code"
+										class="LISDynamicLabelOne">Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-2 col-sm-3 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="" >
+									<select class="text-input floating-label" name="specialityId" ng-model="employeeSearchObj.specialityId" >
+											<option ng-repeat="info in specialityList" value="{{info.specialityId}}">{{info.specialityName}}</option>
+										</select>  <label for="code">Department </label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-2 col-sm-3 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="" >
+									<select class="text-input floating-label" name="employeeDesignationId" ng-model="employeeSearchObj.empDesignationId">
+											<option ng-repeat="info in employeeDesignationList" value="{{info.employeeDesignationId}}">{{info.employeeDesignationDescription}}</option>
+									</select>
+									<label for="code">Designation</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-8 col-sm-8 col-md-8">
+								<div>
+									<select class="text-input floating-label" name="employeeCategoryId" ng-model="employeeSearchObj.empCategoryId"> <!-- add filter condation by minesh -->
+											<option ng-repeat="info in employeeCategoryList |  filter : {status: 'A'}: true" value="{{info.employeeCategoryId}}">{{info.employeeCategoryDescription}}</option>
+										</select>
+									<label for="code">Employee Category  </label>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-10">
+								<div class="common-save-button">
+									<a href="" class="btn btn-primary btn-save-box-shadow" ng-click="searchEmployee()" style="width: auto;" id="searchBtn"> <i class="fa fa-search" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right text-width-auto padding-top10">
+					<div class="padding-top5">
+						 <a  ng-click="showStaffRegistrationDiv()">
+						
+							<input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+					
+				
+			</div>
+			<!-- <div class="row margin-top10 padding-left-right-set4">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+					<input type="text" autocomplete="off"  class="text-search-box" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div> -->
+				<div class="row margin-top10 padding-left-right-set4">
+				<div class="col-md-8 col-sm-8">
+					<div>
+						<div class="row">
+							<div class="col-lg-3 col-md-6 col-sm-6"
+								style="padding-left: 10px;">
+								<div class="search">
+									<label class="show-entries">Show <select
+										name="DataTables_Table_0_length"
+										aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage='10'"
+										ng-model="noOfRecordsPerPage" ng-change="setNoOfRecords();"
+										class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+					<input type="text" autocomplete="off"  class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword" ng-keyup="universalSearchForEmployee(searchKeyword);"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div>
+			<div class="row padding-left-right-set4 padding-top10">
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+						<thead class="mainServiceTableCommon">
+							
+							<tr>
+								<th class="width8">
+									Employee Code
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width8">
+									Employee Name
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width8">
+									Department
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width8">
+									Sub Department
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width8">
+									Employee Category
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width8">
+									Employee Designation
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width8">
+									Status(n)
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width5 text-center">
+									Action taken
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="info in searchEmployeeList |filter:searchKeyword">
+								<td>{{info.empCode}}</td>
+								<td>{{info.firstName+' '+info.lastName}}</td>
+								<td>{{info.specialityName}}</td>
+								<td>{{info.subSpecialityName}}</td>
+								<td>{{info.employeeCategoryDescription}}</td>
+								<td>{{info.employeeDesignationDescription}}</td>
+								<td>
+									<label class="switch"> <input type="checkbox"
+										ng-model="info.status" ng-true-value="'A'"
+										ng-false-value="'I'"
+										ng-change="updateStatus(info.employeeId,info.status,info.userId)">
+										<div class="slider round"></div>
+								</label>
+								</td>
+								<td class="text-center">
+									<span><a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info,'U')"></i></a></span>
+									<span><a title="View "><i class="fa fa-eye" aria-hidden="true" ng-click="showUpdateBtn(info,'V')"></i></a></span>
+								</td>
+							</tr>
+							<tr ng-if="searchEmployeeList.length==0"><td colspan="8" class="text-center">{{loadingMsg}}</td></tr>
+						</tbody>
+					</table>
+					<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list" style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}">
+							<a ng-click="setPage(1,'true')">First</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === 1}">
+							<a ng-click="setPage(pager.currentPage - 1,'true')">Previous</a>
+						</li>
+						<li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+							<a ng-click="setPage(page,'true')">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+</div>
+
+<!-- Page Content for add new staff start-->
+<div id="page-content-wrapper" ng-show="staffRegistrationFlag == true">
+	<div class="container-fluid his-style">
+		
+		<div class="row">
+			<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4">
+				<div class="custom-sub-tab padding-left-right-set4 ">
+					<ul class="tabs nav nav-tabs">
+						<li ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="width10 active" style="">
+							<a href="" ng-click="setFirstTabLevel(1)">Personal</a>
+						</li>
+						
+						<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+							<a href="" ng-click="setFirstTabLevel(2)" class="">Contact</a>
+						</li>
+						<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width10" style="">
+							<a href="" ng-click="setFirstTabLevel(3)" class="">Professional</a>
+						</li>
+						<li ng-class="{ active : isSetFirstTabLevel(4) }" class="width10" style="">
+							<a href="" ng-click="setFirstTabLevel(4)" class="">Employment</a>
+						</li>
+						<li ng-class="{ active : isSetFirstTabLevel(5) }" class="width10" style="">
+							<a href="" ng-click="setFirstTabLevel(5)" class="">Dependent</a>
+						</li>
+						 <li ng-show="employeeObj.isUser=='Y'" ng-class="{ active : isSetFirstTabLevel(7) }" class="width10" style="">
+							<a href="" ng-click="setFirstTabLevel(7)" class="">Unit Mapper</a>
+						</li>
+						<li ng-show="employeeObj.isUser=='Y'" ng-class="{ active : isSetFirstTabLevel(6) }" class="width15" style="">
+							<a href="" ng-click="setFirstTabLevel(6)" class="">Role Management</a>
+						</li>
+						<li ng-show="employeeObj.isUser=='Y'" ng-class="{ active : isSetFirstTabLevel(8) }" id="" class="width10 " style="" >
+ 				            <a  ng-click="setFirstTabLevel(8)">Specialty</a> 
+ 				       </li>
+						
+					</ul>
+				</div>
+			</div>
+			<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right">
+
+		<div class="row padding-left-right-set4 margin-top4 custom-sub-tab">
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary btn-save-box-shadow" ng-click="tab=1">Personal</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=2">Contact</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=3">Professional</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=4">Employment</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=5">Dependent</a>
+				</div>
+			</div>
+			<div ng-show="employeeObj.isUser=='Y'" class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=6">Role Management</a>
+				</div>
+			</div>
+			<!-- <div  class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=7">Unit Mapper</a>
+				</div>
+			</div> -->
+			<!-- <ul class="tabs nav nav-tabs">
+				<li class="active width18" style=""><a href=""
+					ng-click="tab=1">Personal</a></li>
+				<li ng-class="{ active : isSetSecondTabLevel(2) }" class="width18"
+					style=""><a href="" ng-click="setSecondTabLevel(2)">Contact</a>
+				</li>
+				<li ng-class="{ active : isSetSecondTabLevel(3) }" class="width18"
+					style=""><a href="" ng-click="setSecondTabLevel(3)">Professional</a>
+				</li>
+				<li ng-class="{ active : isSetSecondTabLevel(4) }" class="width18"
+					style=""><a href="" ng-click="setSecondTabLevel(4)">Employment</a>
+				</li>
+				<li ng-class="{ active : isSetSecondTabLevel(5) }" class="width18"
+					style=""><a href="" ng-click="setSecondTabLevel(5)">Dependent
+						Details</a></li>
+			</ul> -->
+			<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right">
+				<div class="width-div-for-patient-reg ">
+					<a href="" ng-click="saveEmployeeRegistration();" ng-if="fieldsDisable == false"
+						class="btn btn-primary btn-save-box-shadow" title="Save"><i
+						class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>  -->
+			</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					<form name="employeeRegistrationform" class="fix-height-scroll460" novalidate><!-- ng-show="tab=='1'" -->
+			
+					<div class="row">
+						<fieldset class="margin-top4">
+								<legend class="heading-div">Personal Details</legend>
+								<div class="row">
+										<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="form-group"   show-errors>
+														<select class="text-input floating-label dirty" name="prefixId" ng-model="employeeObj.prefixId" ng-disabled="fieldsDisable" ng-change="selectGender(employeeObj.prefixId)" required>
+															<option>Select Prefix</option>
+															<option ng-repeat="info in prefixList" value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+														</select> <label for="code">Prefix<span class="star">*</span></label>
+														<p class="help-block" ng-if="employeeRegistrationform.prefixId.$error.required">Prefix is required</p>
+													</div>
+												</div>
+											</div>
+										</div>
+										
+										<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div  class="form-group"   show-errors> 
+														<input  type="text" autocomplete="off"  	name="firstName" ng-model="employeeObj.firstName" class="text-input floating-label dirty" ng-disabled="fieldsDisable" style="text-transform: capitalize" required> 
+														<label for="description" class="">First Name<span class="star">*</span></label>
+														<p class="help-block" ng-if="employeeRegistrationform.firstName.$error.required">First Name is required</p>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class=""  >
+														<input  type="text" autocomplete="off"  id="" class="text-input floating-label dirty"  name="middleName" ng-model="employeeObj.middleName" ng-disabled="fieldsDisable" style="text-transform: capitalize" >
+														 <label for="description" class="">Middle Name</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="form-group"   show-errors>
+														<input  type="text" autocomplete="off"  name="lastName" class="text-input floating-label dirty"  ng-model="employeeObj.lastName" value="Smith" ng-disabled="fieldsDisable" style="text-transform: capitalize" required> 
+														<label for="description" class="">Last Name<span class="star">*</span></label>
+														<p class="help-block" ng-if="employeeRegistrationform.lastName.$error.required">Last Name is required</p>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="form-group"   show-errors>
+														<input type="text" autocomplete="off"   class="text-input floating-label dirty"
+														name="datepicker" id="datepicker"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" ng-model="datepicker"
+														model-view-value="true" is-open="datepicker1.opened"
+														datepicker-options="dateOptionsDob" show-button-bar="false"
+														ng-click="openDatePicker()" ng-blur="calculateAge()" ng-disabled="fieldsDisable" required> <label for="description" class="">Birth Date<span class="star">*</span></label>
+														<p class="help-block" ng-if="employeeRegistrationform.datepicker.$error.required">Date Of Birth is required</p>
+													</div>
+												</div>
+											</div>
+										</div>
+										
+										<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class=""><!-- ng-blur="myFunct(age)" -->
+														<input numbers-only type="text" autocomplete="off"   id="age" class="text-input floating-label dirty" ng-model="age" ng-disabled="fieldsDisable" ng-blur="myFunct(age)"  value=""> <label for="description" class="">Age</label>
+													</div>
+												</div>
+											</div>
+										</div> 
+									</div>
+								<div class="row">
+									<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="form-group"   show-errors>
+													<select class="text-input floating-label dirty" name="genderId" ng-model="employeeObj.genderId" ng-disabled="fieldsDisable" required>
+														<option></option>
+														<option ng-repeat="sex in genderList" value="{{sex.id}}">{{sex.desc}}</option>
+													</select> <label for="code">Gender<span class="star">*</span></label>
+													<p class="help-block" ng-if="employeeRegistrationform.genderId.$error.required">Gender is required</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-3 col-sm-3 col-md-3 ">
+												<div class="form-group"   show-errors>
+													<input type="text" autocomplete="off"   name="countryCallingCode" id=""  ng-model="employeeObj.countryCallingCode" class="text-input floating-label dirty" ng-disabled="fieldsDisable" required> <label for="description" class="">Code<span class="star">*</span></label>
+													<p class="help-block" ng-if="employeeRegistrationform.countryCallingCode.$error.required">Calling Code is required</p>
+												</div>
+											</div>
+											<div class="col-lg-8 col-sm-8 col-md-8 padding-left-right-set4">
+												<div class="form-group"   show-errors> 
+													<input numbers-only type="text" autocomplete="off"  name="mobileNo" id="" class="text-input floating-label dirty" ng-model="employeeObj.mobileNumber" ng-disabled="fieldsDisable"   maxlength="{{registrationFieldObj.mobileDigit}}"  required> <label for="description" class="">Mobile No<span class="star">*</span></label>
+												<p class="help-block" ng-if="employeeRegistrationform.mobileNo.$error.required">Mobile Number is required</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 otpSendButton">
+										<a href="" data-toggle="modal" data-target="#oneTimePassword" title="Send"><img src="resources/assets/images/icon/smartphone.png" style="width:37px"></a>
+									</div> -->
+									<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="form-group" show-errors>
+												
+													<input type="text" autocomplete="off"   id="email" class="text-input floating-label dirty" name="email" ng-model="employeeObj.email"  value="andew1993@gmail.com" ng-disabled="fieldsDisable" required> 
+													<label for="description" class="">Email Id<span class="star">*</span></label>
+													<p class="help-block" ng-if="employeeRegistrationform.email.$error.required">Email Id is required</p>
+													
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="form-group"   show-errors>
+													<select class="text-input floating-label dirty" name="nationalityId" ng-model="employeeObj.nationalityId" ng-disabled="fieldsDisable" required >
+														<option ></option>
+														<option ng-repeat="nationality in nationalityList" value="{{nationality.nationalityId}}">{{nationality.nationalityName}}</option>
+													</select> <label for="code">Nationality<span class="star">*</span></label>
+													<p class="help-block" ng-if="employeeRegistrationform.nationalityId.$error.required">Nationality is required</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-2 col-lg-2 margin-top10 padding-left-right-set4">
+										<label class="margin-left5 checkbox-inline"><input type="checkbox" ng-model="employeeObj.isVip" ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="fieldsDisable" ng-click="hideShowAlise(employeeObj.isVip);"><span></span>VIP</label>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials" ng-if="employeeObj.isVip == 'Y'">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off"   id="aliseName" ng-model="employeeObj.aliseName" class="text-input floating-label dirty" ng-disabled="fieldsDisable"  > <label for="description" class="">Alias Name</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials" ng-if="employeeObj.isVip == 'Y'">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div> 
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off"   id="aliseName" ng-model="employeeObj.aliseName" class="text-input floating-label dirty" ng-disabled="fieldsDisable"  > <label for="description" class="">Alias Name</label>
+												</div>
+											</div>
+										</div>
+									</div> -->
+									<!-- password expiry -->
+									<!-- <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="form-group"   show-errors>
+														<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+														name="pwdExpiry" id="pwdExpiry"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" ng-model="pwdExpiry"
+														model-view-value="true" is-open="pwdExpiry.opened"
+														datepicker-options="dateOptions" show-button-bar="false"
+														ng-click="openDatePicker1()" ng-blur="calculateAge()" ng-disabled="fieldsDisable" required> <label for="description" class="">Password Expiry Date<span class="star">*</span></label>
+														<p class="help-block" ng-if="employeeRegistrationform.pwdExpiry.$error.required">Expiry Date is required</p>
+													</div>
+												</div>
+											</div>
+										</div> -->
+								</div>
+								<div class="row">
+
+
+									<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+	
+	
+												<div class="form-group" >
+													<select class="text-input floating-label dirty" name="raceId" ng-model="employeeObj.raceId" ng-disabled="fieldsDisable"  convert-to-number>
+	
+	
+														<option></option>
+														<option ng-repeat="info in raceList" value="{{info.raceId}}">{{info.raceName}}</option>
+													</select> <label for="code">Race</label>
+													
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+	
+	
+												<div class="form-group"   >
+													<select class="text-input floating-label dirty"  name="maritalStatusId" ng-model="employeeObj.maritalStatusId" ng-disabled="fieldsDisable" convert-to-number >
+	
+	
+														<option ></option>
+														<option ng-repeat="info in maritalStatusList" value="{{info.id}}">{{info.desc}}</option>
+													</select> <label for="code">Marital Status</label>
+													<p class="help-block" ng-if="employeeRegistrationform.maritalStatusId.$error.required">Marital Status is required</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+	
+	
+												<div class="form-group"  >
+													<select class="text-input floating-label" ng-model="employeeObj.occupationId" name="occupationId" ng-disabled="fieldsDisable"  convert-to-number>
+														<option ></option>
+														<option ng-repeat="info in occupationList" value="{{info.id}}">{{info.desc}}</option>
+													</select> <label for="code">Occupation</label>
+	
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-2 col-lg-2 margin-top10 padding-left-right-set4">
+										<label class="checkbox-inline"><input type="checkbox" ng-model="employeeObj.isUser" ng-true-value="'Y'" ng-false-value="'N'" ng-checked="employeeObj.isUser=='Y'||employeeObj.userId>0" ng-disabled="fieldsDisable" ><span></span>Is User</label>
+									</div>
+								</div>
+
+							<div class="row">
+								<div class="col-lg-8 col-md-8">
+									<div class="doc-height" style="height: 425px;overflow-y: scroll;" >
+										<div class="row">
+
+											<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10" ng-if="employeeObj.isUser=='Y'||employeeObj.userId>0">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 ">
+														<div class="form-group" show-errors>
+															<input type="text" autocomplete="off"  name="labPin" id="labPin" class="text-input floating-label dirty" ng-model="employeeObj.labPin" style="margin-left: 10px !important;"  ng-disabled="fieldsDisable" ng-blur="checkPingExist();" ng-maxlength="4" ng-minlength="4" numbers-only required>
+															<label for="description" class="">Pin<span class="star">*</span></label>
+															<p class="help-block" ng-if="employeeRegistrationform.labPin.$error.required">Pin is required</p>
+															<p class="help-block" ng-if="employeeRegistrationform.labPin.$error.maxlength||employeeRegistrationform.labPin.$error.minlength">4 Digit Pin is Required.</p>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row" ng-repeat="employeeObj in idList" >
+											<div class="col-lg-3 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 ">
+														<div  class="form-group"   >
+															<select class="text-input floating-label dirty" name="identificationId"   ng-model="employeeObj.identificationTypeId" ng-disabled="fieldsDisable" ng-change="disableEnableExpiry(employeeObj,true)"  >
+																<option value="">Select Identification</option>
+																<option ng-repeat="info in identificationList" value="{{info.identificationId+'_'+info.isExpiryRequired}}">{{info.identificationName}}</option>
+															</select>
+															</select> <label for="code">Identification doc</label>
+
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="col-lg-3 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 ">
+														<div class="form-group"   >
+															<input type="text" autocomplete="off"  maxLength="{{docLength}}"  name="identificationNo" id=""  ng-model="employeeObj.identificationNumber"  class="text-input floating-label dirty" value="A20-3C-4B" ng-disabled="fieldsDisable" > <label for="description" class="">Identification number</label>
+
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="col-lg-3 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 " ng-if="employeeObj.expiryDateRequired == true">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 ">
+<!--													<input type="text" autocomplete="off"  class="text-input floating-label dirty" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-valid-date ng-not-empty ng-valid ng-valid-required ng-touched"-->
+<!--														 name="datepicker" id="datepicker" ui-mask="99/99/9999" placeholder="DD/MM/YYYY"-->
+<!--														 ng-model="employeeObj.identificationExpiryDate" model-view-value="true" is-open="datepicker1.opened" datepicker-options="dateOptionsDob" show-button-bar="false"-->
+<!--														 ng-click="openDatePicker()" >-->
+<!--														<div class="" >-->
+<!--															-->
+<!--														</div>-->
+														<div class="form-group" >
+															<input type="text" autocomplete="off" ng-model="employeeObj.identificationExpiryDate" class="text-input floating-label dirty" id="datepickerExpiry"
+																  name="datepickerExpiry" uib-datepicker-popup="dd/MM/yyyy"
+																   placeholder="DD/MM/YYYY" ui-mask="99/99/9999"
+																   model-view-value="true" is-open="datepickerExpiry1.opened[$index]"
+																   datepicker-options="dateOptions" show-button-bar="false"
+																   ng-click="openDatePickerExpiry($index)" ng-disabled="fieldsDisable" > <label for="description" class="">Document Expiry Date</label>
+															<!--     <p class="help-block" ng-if="employeeRegistrationform.identificationNo.$error.required">Document Expiry Date</p> -->
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 remainingPersonalDetials" style="width: auto;" >
+												<div class="row input-container" >
+<!--													<p ng-click="openImageInNewTab()" >{{employeeObj.fileName}}</p>-->
+													<a ng-if="employeeObj.doctorIndetificationFile && !employeeObj.removeClicked" ng-click="openImageInNewTab($index)" >View</a>
+													<a ng-if="employeeObj.doctorIndetificationFile && !employeeObj.removeClicked" ng-click="removeDoc(employeeObj)" ng-show="!shouldHideRemoveButton">Remove</a>
+													<input type="file"  file-model="employeeObj.fileName"  fileinput="file" filepreview="filepreview" accept="image/gif,image/png,image/jpeg,application/pdf"  id="attachment" class="" ng-disabled="fieldsDisable" ng-hide="shouldHideDiv" validfile>
+													<p ng-show="fileError" style="color:red;">{{fileError}}</p>
+											</div>
+											</div>
+
+											<div style="float: right;">
+												<div class="col-lg-6 col-md-2 col-sm-2">
+													<input style="width: 20px;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color: #2A83F2 !important;" type="button" name="" id="addr" ng-click="addIdentification($index)" value="+" class="btn btn-info" ng-disabled="fieldsDisable" >&nbsp;
+												</div>
+												<div class="col-lg-6 col-md-2 col-sm-2">
+													<input style="width: 17px;margin-left: 1px !important;" type="button" name="" id="minis" ng-click="cancelStaffUploadIdentification(employeeObj.userIndetificationDetailsId,$index+1);" value="-" class="btn btn-info" ng-disabled="fieldsDisable">&nbsp;
+												</div>
+												<!-- <div class="col-lg-6 col-md-2 col-sm-2" ng-if="userIndetificationDetailsId == 'id'">
+                                                    <input style="width: 100%;margin-left: 3px !important;" type="button" name="" id="minis" ng-click="cancelDoctorUploadIdentification(employeeObj1.userIndetificationDetailsId,id)" value="*" class="btn btn-info">&nbsp;
+                                                </div> -->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4" style="margin-top: -34px !important;">
+									<div class="col-md-6 col-lg-6">
+										<div class="col-md-6 col-lg-6 margin-top10 margin-left5 padding-left-right-set4">
+											<label for="code">Upload Photo</label>
+											<div class="image-display-block">
+												<img ng-src="{{filepreview}}" class="img-responsive" ng-show="filepreview" style="width: 100%;height: 100%;"/>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-6 margin-left5 padding-left-right-set4" style=" margin-top: 29px;">
+											<input type="file" file-model="staffImage"  fileinput="file" filepreview="filepreview">
+										</div>
+									</div>
+									<div class="col-md-6 col-lg-6">
+										<div class="col-md-12 col-lg-12  margin-top10 ">
+											<label for="code">Capture Thumb Impression</label>
+										</div>
+										<div class="col-lg-6 col-md-6 col-sm-6 margin-left5 padding-left-right-set4">
+											<div class="image-display-block">
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+								<div class="row remainingPersonalDetials">
+
+									
+								</div>
+							</fieldset>
+					</div>
+			
+			</form>
+				</div>
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					 <form name="employeeRegistrationform2" novalidate  class="fix-height-scroll460"><!-- ng-show="tab=='2'" -->
+			<div class="" style="">
+				<fieldset class="margin-top4">
+					<legend class="heading-div">Local Address</legend>
+					<div class="row">
+
+						<div
+							class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10"
+							style="margin-left: -17px;">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="form-group" show-errors >
+										<input type="text" autocomplete="off"  name="address" id=""
+											class="text-input floating-label"
+											ng-model="employeeObj.address" ng-disabled="fieldsDisable" required> <label
+											for="description" class="">Address<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.address.$error.required">Address
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label" name="countryId"
+											ng-model="employeeObj.countryId"
+											ng-change="getStateByCountry(employeeObj.countryId,'P')" ng-disabled="fieldsDisable"
+											required>
+											<option></option>
+											<option ng-repeat="info in countryList"
+												value="{{info.countryId}}">{{info.countryName}}</option>
+										</select> <label for="code">Country<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.countryId.$error.required">Country
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label" name="stateId"
+											ng-model="employeeObj.stateId"
+											ng-change="getDistrictByState(employeeObj.stateId,'P')" ng-disabled="fieldsDisable"
+											required>
+											<option></option>
+											<option ng-repeat="info in stateList"
+												value="{{info.stateId}}">{{info.stateName}}</option>
+										</select> <label for="code">State<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.stateId.$error.required">State
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-university" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label" name="districtId"
+											ng-model="employeeObj.districtId"
+											ng-change="getCityByDistrict(employeeObj.districtId,'P')" ng-disabled="fieldsDisable"
+											required>
+											<option></option>
+											<option ng-repeat="info in districtList"
+												value="{{info.districtId}}">{{info.districtName}}</option>
+										</select> <label for="code">District<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.districtId.$error.required">District
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label" name="cityId"
+											ng-model="employeeObj.cityId"
+											ng-change="getAreaByCity(employeeObj.cityId,'P')" ng-disabled="fieldsDisable" required>
+											<option></option>
+											<option ng-repeat="info in cityList" value="{{info.cityId}}">{{info.cityName}}</option>
+										</select> <label for="code">City<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.cityId.$error.required">City
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 ">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" style="margin-top: 14px !important;" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<!-- <div class="form-group" show-errors>
+										<select class="text-input floating-label" name="areaId"
+											ng-model="employeeObj.areaId" ng-disabled="fieldsDisable" ng-change="setPostCode(employeeObj.areaId,0)" required>
+											<option></option>
+											<option ng-repeat="info in areaList" value="{{info.areaId}}">{{info.areaName}}</option>
+										</select> <label for="code">Area<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.areaId.$error.required">Area
+											is required</p>
+									</div> -->
+<!-- 									<div  class="form-group"  style="width: -webkit-fill-available; border: none;border-bottom: 1px solid;" show-errors> -->
+<!-- 									<label for="code" style="color: #3f51b5;">Area<span class="star">*</span></label> -->
+<!-- 									 <input type="text" ng-show="flgHideShow == true" class="form-control" id="" -->
+<!-- 										placeholder="Search term" data-ng-model="searchTerm"> -->
+										
+<!-- 									<input type="text" ng-show="flgArea == true" class="form-control" id="permanentArea" -->
+<!-- 										placeholder="" ng-model="areaNew"> -->
+										
+<!-- 									<select   size="" class="table table-striped" when-scrolled="loadMore()" name="areaId"  id="selRegs" ng-disabled="fieldsDisable" -->
+<!-- 									ng-model="employeeObj.areaId"  ng-change="setPostCode(employeeObj.areaId,0);setFlag(false);" ng-click="onClickDropdownmyFun();" style="width: -webkit-fill-available;border: none;"  required> -->
+<!-- 										<option ng-repeat="info in areaList =(logEvents| filter:searchTerm | limitTo:numberToDisplay) track by $index " ng-value="{{info.areaId}}"  value="{{info.areaId}}">{{info.areaName}}</option> -->
+<!-- 									</select> -->
+<!-- 									<p class="help-block" ng-if="employeeRegistrationform2.areaId.$error.required">Area is required</p> -->
+<!-- 							    </div> -->
+							    
+						  <div  class=""  style="width: -webkit-fill-available; border: none;">
+<!--                                     <label for="code" style="color: #3f51b5;">Area<span class="star">*</span></label> -->
+                                    <input type="text" autocomplete="off" name="description" 
+                                            id="searchServiceId" class="text-input floating-label" style="margin-top: 8px !important;"
+                                            ng-model="employeeObj.areaName"  placeholder="Search Area"
+                                            typeahead-min-length="2" uib-typeahead="areaMaster.areaName  for areaMaster in searchAreaByCityId($viewValue)"
+                                            typeahead-on-select="addAreaById($item, $model, $label)">
+                                </div>				    
+
+							    
+								</div>
+							</div>
+						</div>
+						</div>
+						<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<!-- 		<div class="form-group" show-errors>
+										<input numbers-only type="text" autocomplete="off"  id="" class="text-input floating-label"
+											ng-model="employeeObj.zipCode" name="zipCode" ng-disabled="fieldsDisable" required maxlength="6"> <label
+											for="description" class="">Zip Code<span class="star">*</span></label>
+											<p class="help-block"
+											ng-if="employeeRegistrationform2.zipCode.$error.required">Zip Code
+											is required</p>
+									</div> -->
+											<div class="form-group">
+										<input  type="text" autocomplete="off"  id="" class="text-input floating-label"
+											ng-model="employeeObj.zipCode" name="zipCode" ng-disabled="fieldsDisable" ng-blur="getDataByPinCode();getNewAreaInput();"> <label
+											for="description" class="">Zip Code</label>											
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-3 col-sm-2 col-md-2 ">
+									<div class="form-group" show-errors>
+										<input type="text" autocomplete="off"  id="" name="phoneCode" class="text-input floating-label"
+											ng-model="employeeObj.phoneCode" ng-disabled="fieldsDisable" required> <label
+											for="description" class="">Code<span class="star">*</span></label>
+											<p class="help-block"
+											ng-if="employeeRegistrationform2.phoneCode.$error.required">Calling Code
+											is required</p>
+									</div>
+								</div>
+								<div class="col-lg-8 col-sm-9 col-md-9 padding-left-right-set4">
+										<div class="form-group" show-errors>
+										<input numbers-only type="text" autocomplete="off"  id="phoneNumber"
+											class="text-input floating-label"
+											ng-model="employeeObj.phoneNumber" name="phoneNumber" ng-disabled="fieldsDisable" maxlength="{{registrationFieldObj.mobileDigit}}" required> <label
+											for="description" class="">Contact Number<span class="star">*</span></label>
+											<p class="help-block" ng-if="employeeRegistrationform2.phoneNumber.$error.required">Contact Number is required</p>
+<!-- 											<p class="help-block" ng-if="employeeRegistrationform2.phoneNumber.$error.pattern">Please enter a 10 digit number</p> -->
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</fieldset>
+				<fieldset class="margin-top4">
+					<legend class="heading-div">Permanent Address</legend>
+					<div class="row">
+
+						<div
+							class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10"
+							style="margin-left: -17px;">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="form-group" show-errors >
+										<input type="text" autocomplete="off"  name="permanentAddress" id=""
+											class="text-input floating-label"
+											ng-model="employeeObj.permanentAddress" ng-disabled="fieldsDisable || addressFlag" required> <label
+											for="description" class="">Address<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.permanentAddress.$error.required">Address
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label"
+											name="permanentCountryId"
+											ng-model="employeeObj.permanentCountryId"
+											ng-change="getStateByCountry(employeeObj.permanentCountryId,'PA')" ng-disabled="fieldsDisable || addressFlag"
+											required>
+											<option></option>
+											<option ng-repeat="info in countryList"
+												value="{{info.countryId}}">{{info.countryName}}</option>
+										</select> <label for="code">Country<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.permanentCountryId.$error.required">Country
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label"
+											name="permanentStateId"
+											ng-model="employeeObj.permanentStateId"
+											ng-change="getDistrictByState(employeeObj.permanentStateId,'PA')" ng-disabled="fieldsDisable || addressFlag"
+											required>
+											<option></option>
+											<option ng-repeat="info in permanentStateList"
+												value="{{info.stateId}}">{{info.stateName}}</option>
+										</select> <label for="code">State<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.permanentStateId.$error.required">State
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-university" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label"
+											name="permanentDistrictId"
+											ng-model="employeeObj.permanentDistrictId"
+											ng-change="getCityByDistrict(employeeObj.permanentDistrictId,'PA')" ng-disabled="fieldsDisable || addressFlag"
+											required>
+											<option>Select District</option>
+											<option ng-repeat="info in permanentDistrictList"
+												value="{{info.districtId}}">{{info.districtName}}</option>
+										</select> <label for="code">District<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.permanentDistrictId.$error.required">District
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label"
+											name="permanentCityId" ng-model="employeeObj.permanentCityId"
+											ng-change="getAreaByCity(employeeObj.permanentCityId,'PA')"ng-disabled="fieldsDisable || addressFlag"
+											required>
+											<option></option>
+											<option ng-repeat="info in permanentCityList"
+												value="{{info.cityId}}">{{info.cityName}}</option>
+										</select> <label for="code">City<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.permanentCityId.$error.required">City
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" style="    margin-top: 14px;" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<!-- <div class="form-group" show-errors>
+										<select class="text-input floating-label"
+											name="permanentAreaId" ng-model="employeeObj.permanentAreaId" ng-disabled="fieldsDisable || addressFlag"
+											ng-change="setPostCode(employeeObj.permanentAreaId,1)" required>
+											<option></option>
+											<option ng-repeat="info in permanentAreaList"
+												value="{{info.areaId}}">{{info.areaName}}</option>
+										</select> <label for="code">Area<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="employeeRegistrationform2.permanentAreaId.$error.required">Area
+											is required</p>
+									</div> -->
+									
+<!-- 									 <div  class="form-group"  style="width: -webkit-fill-available; border: none;border-bottom: 1px solid;" show-errors> -->
+<!-- 										<label for="code" style="color: #3f51b5;">Area<span class="star">*</span></label> -->
+<!-- 										 <input type="text" ng-show="flgHide == true" class="form-control" id="" -->
+<!-- 												placeholder="Search term" data-ng-model="searchTerm1"> -->
+												
+<!-- 										<input type="text" ng-show="flgArea1 == true" class="form-control" id="pArea" -->
+<!-- 												placeholder="" ng-model="areaNew1"> -->
+																									
+<!-- 										<select  class="floating-label" when-scrolled="loadMore1()" name="permanentAreaId"  id="selRegsPer" ng-disabled="fieldsDisable || addressFlag" -->
+<!-- 										ng-model="employeeObj.permanentAreaId"  ng-change="setPostCode(employeeObj.permanentAreaId,1);setFlagFalse(false);"   ng-click="applySize();onClickDropdownmy();"style="width: -webkit-fill-available;border: none;"  required> -->
+<!-- 											<option ng-repeat="info in permanentAreaList =(logEventsPer| filter:searchTerm1| limitTo:numberToDisplayPer) track by $index " ng-value="{{info.areaId}}"  value="{{info.areaId}}">{{info.areaName}}</option> -->
+<!-- 										</select> -->
+<!-- 										<p class="help-block" ng-if="employeeRegistrationform2.permanentAreaId.$error.required">Area is required</p> -->
+<!-- 								    </div>   -->
+								    
+								    
+							  <div  class=""  style="width: -webkit-fill-available; border: none;">
+
+                                      <input type="text" autocomplete="off" name="description" 
+                                            id="searchServiceId" class="text-input floating-label" style="margin-top: 11px !important;"
+                                            ng-model="employeeObj.permanentAreaName" placeholder="Search Area"
+                                            typeahead-min-length="2" uib-typeahead="permanentAreaList.areaName  for permanentAreaList in searchAreaByCityIdPermanent($viewValue)"
+                                            typeahead-on-select="addAreaByIdPermanant($item, $model, $label)">
+                                        <!-- <select   size="1" class="floating-label" when-scrolled="loadMore1()" name="permanentAreaId"  id="selRegsPer" ng-disabled="fieldsDisable || addressFlag"
+                                        ng-model="employeeObj.permanentAreaId"  ng-change="setPostCode(employeeObj.permanentAreaId,1)"   ng-click="applySize()"style="width: -webkit-fill-available;border: none;">
+                                            <option ng-repeat="info in permanentAreaList =(logEventsPer| limitTo:numberToDisplayPer) track by $index " ng-value="{{info.areaId}}"  value="{{info.areaId}}">{{info.areaName}}</option>
+                                        </select> -->
+                                    </div>                                 
+
+								    
+								    
+								</div>
+							</div>
+						</div>
+<!-- 						</div> -->
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<!-- <div class="form-group" show-errors>
+										<input numbers-only type="text" autocomplete="off"  id="" class="text-input floating-label"
+											ng-model="employeeObj.permanentZipCode" name="permanentZipCode" ng-disabled="fieldsDisable" required maxlength="6"> <label
+											for="description" class="">Zip Code<span class="star">*</span></label>
+											<p class="help-block" ng-if="employeeRegistrationform2.permanentZipCode.$error.required">Zip Code is required</p>
+									</div> -->
+									<div class="form-group">
+										<input type="text" autocomplete="off"  id="" class="text-input floating-label"
+											ng-model="employeeObj.permanentZipCode" name="permanentZipCode" ng-disabled="fieldsDisable || addressFlag" ng-blur="getDataByPinCodePermanent();getNewAreaInput1();"> <label
+											for="description" class="">Zip Code</label>											
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-3 col-sm-2 col-md-2 ">
+									<div class="form-group" show-errors>
+										<input type="text" autocomplete="off"  id="" class="text-input floating-label" name="permanentPhoneCode"
+											ng-model="employeeObj.permanentPhoneCode" ng-disabled="fieldsDisable || addressFlag" required> <label
+											for="description" class="">Code<span class="star">*</span></label>
+											<p class="help-block" ng-if="employeeRegistrationform2.permanentPhoneCode.$error.required">Calling Code is required</p>
+											
+									</div>
+								</div>
+								<div class="col-lg-8 col-sm-9 col-md-9 padding-left-right-set4">
+									<div class="form-group" show-errors>
+										<input numbers-only type="text" autocomplete="off"  id="phoneNumber"
+											class="text-input floating-label"
+											ng-model="employeeObj.permanentPhoneNumber" name="permanentPhoneNumber" ng-disabled="fieldsDisable || addressFlag"  maxlength="{{registrationFieldObj.mobileDigit}}" required> <label
+											for="description" class="">Contact Number<span class="star">*</span></label>
+											<p class="help-block" ng-if="employeeRegistrationform2.permanentPhoneNumber.$error.required">Contact Number is required</p>
+<!-- 											<p class="help-block" ng-if="employeeRegistrationform2.permanentPhoneNumber.$error.pattern">Please enter a 10 digit number</p> -->
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="row">
+						<div
+							class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+							<label class="checkbox-inline">
+								<input type="checkbox" ng-model="sameAsLocal" ng-disabled="fieldsDisable" ng-true-value="'Y'" ng-false-value="'N'" ng-click="sameAsLocalCopy(sameAsLocal)" style=""><span></span>Same As Local Address
+						   </label>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			</form>
+				</div>
+				<div ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div" style="">
+					<form name="employeeRegistrationform3" class="fix-height-scroll460"><!-- ng-show="tab=='3'" -->
+					<div class="" style="">
+							
+				<fieldset>
+				<legend class="heading-div">Professional Details</legend>
+					<fieldset>
+						<legend class="heading-div">Education Details</legend>
+						<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+			
+											<div class="form-group" show-errors>
+												<input type="text" autocomplete="off"  id="" class="text-input floating-label" name="registrationNumber" ng-model="employeeObj.registrationNumber" ng-disabled="fieldsDisable" required>
+												 <label for="description" class="">Registration Number<span class="star">*</span></label>
+													<p class="help-block" ng-if="employeeRegistrationform3.registrationNumber.$error.required">Registration Number is required</p>
+			
+											</div>
+										</div>
+									</div>
+								</div>
+						</div>
+					   <table class="table table-striped table-bordered margin-top10">
+				            <thead>
+				                <tr>
+				                	<th class="width15">Qualification</th>
+				                    <th class="width15">Degree Name</th>
+				                    <th class="width15">Document Upload</th>
+				                    <th>Document Image</th>
+				                    <th class="width3">Action</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				                <tr ng-repeat="educationDetails in educationDetails">
+				                	<td>
+				                        <select class="form-control" ng-model="educationDetails.qualification" required>
+				                        	<option>Bachelor</option>
+				                        	<option>Post Graduate</option>
+				                        </select>
+				                    </td>
+				                	<td>
+				                        <input type="text" autocomplete="off"  class="form-control" ng-model="educationDetails.degreeName" required/></td>
+				                    <td>
+				                        <input type="file" class="form-control" ng-model="educationDetails.documentUpload" required/></td>
+				                    <td>
+				                        <input type="text" autocomplete="off"  class="form-control" ng-model="educationDetails.documentImage" required/></td>
+				                       <td>
+				                       <input type="button" ng-click="addNew()" value="+">
+				                       </td>
+				                </tr>
+				            </tbody>
+				        </table>
+				    </fieldset>
+				    <fieldset>
+						<legend class="heading-div"> Experience Details</legend>
+					   <table class="table table-striped table-bordered">
+				            <thead>
+				                <tr>
+				                    <th class="width15">Company Name</th>
+				                    <th class="width15">From Date</th>
+				                    <th class="width15">To Date</th>
+				                    <th>Remark</th>
+				                    <th class="width3">Action</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				                <tr ng-repeat="experienceDetails in experienceDetails">
+				                	<td>
+				                        <input type="text" autocomplete="off"  class="form-control" ng-model="experienceDetails.hospitalName" required/>
+				                    </td>
+				                     <td>
+				                        <input type="text" autocomplete="off"  class="form-control" ng-model="experienceDetails.fromDate" required/>
+				                     </td>
+				                      <td>
+				                        <input type="text" autocomplete="off"  class="form-control" ng-model="experienceDetails.toDate" required/>
+				                     </td>
+				                    <td>
+				                        <input type="text" autocomplete="off"  class="form-control" ng-model="experienceDetails.remark" required/>
+				                     </td>
+				                       <td>
+				                       <input type="button" ng-click="addNewExperienceRow()" value="+">
+				                       </td>
+				                </tr>
+				            </tbody>
+				        </table>
+				       </fieldset>
+				       
+				       <fieldset>
+						<legend class="heading-div"> CME Details</legend>
+					   <table class="table table-striped table-bordered">
+				            <thead>
+				                <tr>
+				                    <th class="width15">CME Details</th>
+				                    <th class="width15"> CEM Points</th>
+				                    <th class="width15">Visit Type</th>
+				                    <th class="width3">Action</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				                <tr ng-repeat="CMEDetails in CMEDetails">
+				                	<td>
+				                        <input type="text" autocomplete="off"  class="form-control" ng-model="CMEDetails.cmeDetails" required/>
+				                    </td>
+				                     <td>
+				                        <input type="text" autocomplete="off"  class="form-control" ng-model="CMEDetails.cemPoints" required/>
+				                     </td>
+				                      <td>
+				                        <input type="text" autocomplete="off"  class="form-control" ng-model="CMEDetails.visitType" required/>
+				                     </td>
+				                       <td>
+				                       <input type="button" ng-click="addNewCME()" value="+">
+				                       </td>
+				                </tr>
+				            </tbody>
+				        </table>
+				       </fieldset>
+			</fieldset>
+						</div>
+						</form>
+				</div>
+				<div ng-show="isSetFirstTabLevel(4)" class="second-level-tab-display-div" style="">
+					 <form name="employeeRegistrationform4" novalidate class="fix-height-scroll460"><!-- ng-show="tab=='4'" -->
+				<div class="" style="">
+				<fieldset>
+					<legend class="heading-div">Employment Details</legend>
+					<div class="row">
+
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="form-group"   show-errors>
+										<select class="text-input floating-label" name="specialityId" ng-model="employeeObj.specialityId" ng-change="getSubSpecialityBySpeciality(employeeObj.specialityId)" ng-disabled="fieldsDisable" required>
+											<option ng-repeat="info in specialityList" value="{{info.specialityId}}">{{info.specialityName}}</option>
+										</select> 
+										<label for="code">Department<span class="star">*</span></label>
+										<p class="help-block" ng-if="employeeRegistrationform4.specialityId.$error.required">Department is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group"   show-errors>
+										<select class="text-input floating-label"  name="subSpecialityId" ng-model="employeeObj.subSpecialityId" ng-disabled="fieldsDisable" required>
+											<option ng-repeat="info in subSpecialityList" value="{{info.subSpecialityMasterId}}">{{info.subSpecialityMasterName}}</option>
+										</select> <label for="code">Sub Department<span class="star">*</span></label>
+										<p class="help-block" ng-if="employeeRegistrationform4.subSpecialityId.$error.required">Sub Department is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"   show-errors>
+										<select class="text-input floating-label" name="empCategoryId" ng-model="employeeObj.empCategoryId" ng-disabled="fieldsDisable" required>
+											<option ng-repeat="info in employeeCategoryList" value="{{info.employeeCategoryId}}">{{info.employeeCategoryDescription}}</option>
+										</select>
+										 <label for="code">Employee Category<span class="star">*</span></label>
+										<p class="help-block" ng-if="employeeRegistrationform4.empCategoryId.$error.required">Employee Category is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"   show-errors>
+										<select class="text-input floating-label" name="empDesignationId" ng-model="employeeObj.empDesignationId" ng-disabled="fieldsDisable" required>
+											<option ng-repeat="info in employeeDesignationList" value="{{info.employeeDesignationId}}">{{info.employeeDesignationDescription}}</option>
+										</select>
+										<label for="code">Employee Designation<span class="star">*</span></label> 
+									
+										<p class="help-block" ng-if="employeeRegistrationform4.empDesignationId.$error.required">Employee Designation is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"   show-errors>
+										<input type="text" autocomplete="off"  name="empCode" id=""  ng-blur="validateEmpCode(employeeObj.empCode,employeeObj.employeeId)" ng-model="employeeObj.empCode"
+											class="text-input floating-label" ng-disabled="fieldsDisable" required> <label
+											for="description" class="">Employee Code<span class="star">*</span></label>
+											<p class="help-block" ng-if="employeeRegistrationform4.empCode.$error.required">Employee Code is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"   show-errors>
+											<input type="text" autocomplete="off"  onkeydown="event.preventDefault()" class="text-input floating-label dirty"
+												name="datepickerDOJ" id="datepicker"
+												uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+												placeholder="DD/MM/YYYY" ng-model="datepickerDOJ"
+												model-view-value="true" is-open="datepickerDOJ1.opened"
+												datepicker-options="dateOptionsDob" show-button-bar="false"
+												ng-click="openDatePickerDOJ()" ng-disabled="fieldsDisable" required>
+											<label
+											for="description" class="">Date Of Joining<span class="star">*</span></label>
+											<p class="help-block"
+												ng-if="employeeRegistrationform4.datepickerDOJ.$error.required">Date
+												Of Joining is required</p>
+											
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="row">
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"   show-errors>
+										<input type="text" autocomplete="off"  name="accessCardNumber" id="" ng-model="employeeObj.accessCardNumber"
+											class="text-input floating-label" ng-disabled="fieldsDisable" required> <label
+											for="description" class="">Access Card Number<span class="star">*</span></label>
+											<p class="help-block" ng-if="employeeRegistrationform4.accessCardNumber.$error.required">Access Card Number is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<fieldset>
+						<legend class="heading-div">Bank Details</legend>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="form-group"  >
+										<input type="text" autocomplete="off"  id="" ng-model="employeeObj.bankName"
+											class="text-input floating-label" name="bankName" ng-disabled="fieldsDisable" > <label
+											for="description" class="">Bank Name</label>
+											
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"  >
+										<input type="text" autocomplete="off"  name="accountNumber" id="" ng-model="employeeObj.accountNumber"
+											class="text-input floating-label" ng-disabled="fieldsDisable" > <label
+											for="description" class="">Account Number</label>
+											
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"   >
+										<input type="text" autocomplete="off"  name="bankBranchName" id="" ng-model="employeeObj.bankBranchName"
+											class="text-input floating-label" ng-disabled="fieldsDisable" > <label
+											for="description" class="">Bank Branch Name</label>
+											
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"  >
+										<input type="text" autocomplete="off"  name="ifscCode" id="" ng-model="employeeObj.ifscCode"
+											class="text-input floating-label" ng-disabled="fieldsDisable" > <label
+											for="description" class="">IFSC No.</label>
+											
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				</fieldset>
+			</div>
+			</form>
+				</div>
+				<div ng-show="isSetFirstTabLevel(5)" class="second-level-tab-display-div" style="">
+					 <form name="employeeRegistrationform5" class=""><!-- ng-show="tab=='5'" -->
+				<div class="" style="">
+				<fieldset
+					class="normalRegistration sub-fieldset padding-left-right-set1">
+					<legend class="heading-div">Dependent Details</legend>
+
+					<div class="row">
+						<div class="col-md-12 col-lg-12 fix-height-scroll430">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="width5">Prefix<span class="star">*</span></th>
+										<th class="width6">First Name<span class="star">*</span></th>
+										<th class="width6">Middle Name</th>
+										<th class="width6">Last Name<span class="star">*</span></th>
+										<th class="width6">Gender<span class="star">*</span></th>
+										<th class="width8">Mobile No.<span class="star">*</span></th>
+										<th class="width5">DOB<span class="star">*</span></th>
+										<th class="width3">Identification Type<span class="star">*</span></th>
+										<th class="width3">Identification Number<span class="star">*</span></th>
+										<th class="width5">Occupation<span class="star">*</span></th>
+										<th class="width5">Relation<span class="star">*</span></th>
+										<th class="width5 text-center">Is NOK</th>
+										<th class="width1 text-center">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="data in dataList">
+										<td>
+										   	<div class="form-group">
+												<select class="form-control dirty" name="prefixId" ng-model="data.prefixId" ng-disabled="fieldsDisable" ng-change="selectDependentGender(data.prefixId,$index)">
+													<option ng-repeat="info in prefixList" value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+												</select>
+												<p class="help-block" ng-if="employeeRegistrationform5.prefixId.$error.required">Prefix is required</p>
+											</div>
+										</td>
+										<td>
+											<div  class="form-group"   > 
+												<input only-letters-input type="text" autocomplete="off"  name="firstName" class="form-control" ng-model="data.firstName" ng-disabled="fieldsDisable" >
+												<p class="help-block" ng-if="employeeRegistrationform5.firstName.$error.required">First Name is required</p>
+											</div>
+										</td>
+										
+										<td>
+											<div  class="form-group" > 
+												<input only-letters-input type="text" autocomplete="off"  class="form-control" name="middleName" ng-model="data.middleName" ng-disabled="fieldsDisable">
+												<p class="help-block" ng-if="employeeRegistrationform5.middleName.$error.required">Middle Name is required</p>
+											</div>
+										</td>
+										
+										<td>
+											<div  class="form-group"> 
+												<input only-letters-input type="text" autocomplete="off"  class="form-control" name="lastName" ng-model="data.lastName" ng-disabled="fieldsDisable">
+												<p class="help-block" ng-if="employeeRegistrationform5.lastName.$error.required">Last Name is required</p>
+											</div>
+										</td>
+										<td>
+											<div class="form-group">
+												<select class="form-control dirty" style="" name="genderId" ng-model="data.genderId" ng-disabled="fieldsDisable">
+													<option ng-repeat="sex in genderList" value="{{sex.id}}">{{sex.desc}}</option>
+												</select>
+												<p class="help-block" ng-if="employeeRegistrationform5.genderId.$error.required">Gender is required</p>
+											</div>	
+										</td>
+										<td>
+											<div class="form-group">
+												<input numbers-only type="text" autocomplete="off"  class="form-control" name="mobileNo" ng-model="data.mobileNo" ng-disabled="fieldsDisable" maxlength="{{registrationFieldObj.mobileDigit}}">
+												<p class="help-block" ng-if="employeeRegistrationform5.mobileNo.$error.required">Mobile No. is required</p>
+											</div>
+										</td>
+										<td><div class="form-group"   show-errors>
+											<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+												name="datepicker" id="datepicker"
+												uib-datepicker-popup="dd/MM/yyyy"  ui-mask="99/99/9999"
+												placeholder="DD/MM/YYYY" ng-model="data.dobKin"
+												model-view-value="true" is-open="dobKin.opened[$index]"
+												datepicker-options="dateOptionsDob" show-button-bar="false"
+												ng-click="openDatePickerDob($index)" ng-blur="checkDependentDob($index)" ng-disabled="fieldsDisable">
+												
+												<p class="help-block"
+														ng-if="employeeRegistrationform5.datepicker.$error.required">Date
+														Of Birth is required</p>
+											</div>
+										</td>
+										<td>
+											<div class="form-group">
+												<select class="form-control dirty" name="identificationTypeId"   ng-model="data.identificationTypeId"  name="identificationTypeId" ng-disabled="fieldsDisable">
+															<option>Select Identification</option>
+														<option ng-repeat="info in identificationList" value="{{info.identificationId}}">{{info.identificationName}}</option>
+												</select>
+												<p class="help-block" ng-if="employeeRegistrationform5.identificationTypeId.$error.required">Identification Type is required</p>
+											</div></td>
+										<td>
+											<div class="form-group">
+												<input type="text" autocomplete="off"  class="form-control" name="identificationNumber" ng-model="data.identificationNumber" ng-disabled="fieldsDisable">
+												<p class="help-block" ng-if="employeeRegistrationform5.identificationNumber.$error.required">Identification Number is required</p>
+											</div>
+										</td>
+										<td>
+											<div class="form-group">
+												<select class="form-control dirty" style="" name="occupationId" ng-model="data.occupationId" ng-disabled="fieldsDisable">
+													<option ng-repeat="info in occupationList" value="{{info.id}}">{{info.desc}}</option>
+												</select>
+												<p class="help-block" ng-if="employeeRegistrationform5.identificationNumber.$error.required">Identification Number is required</p>
+											</div>
+										</td>
+										<td class="text-center">
+											<div class="form-group">
+												<select class="form-control dirty" style="" ng-model="data.relationId" name="relationId" ng-disabled="fieldsDisable">
+													<option ng-repeat="info in relationList" value="{{info.id}}">{{info.desc}}</option>
+												</select>
+												<p class="help-block" ng-if="employeeRegistrationform5.relationId.$error.required">Relation is required</p>
+											</div>
+										</td>
+										<td class="text-center">
+												<label class="switch">
+													<input type="checkbox" ng-model="data.isNok" ng-true-value="'Y'" ng-false-value="'N'"  class="ng-pristine ng-untouched ng-valid ng-empty" ng-disabled="fieldsDisable">
+													<div class="slider round"></div>
+												</label>
+										</td>
+											<td class="vertical-middle text-center">
+													<input type="button" ng-disabled="fieldsDisable" ng-click="add()" value="+"><input type="button" ng-disabled="fieldsDisable" name="" ng-click="remove($index)" value="-">
+											</td>
+										</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="normalRegistration sub-fieldset "
+					ng-repeat="kinDetails in kinDetailsList">
+					<legend class="sub-legend"> Next of kin details</legend>
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-object-group" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="code"
+											ng-model="kinDetails.prefixId" convert-to-number>
+											<!--<option value="">Select Prefix</option> -->
+											<option ng-repeat="info in prefixList"
+												value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+
+										</select> <label for="code">Select Prefix</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-user-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"  name="code" id="requiredOn"
+											ng-model="kinDetails.kinName"
+											class="text-input floating-label"> <label for="code">Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-user-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="code"
+											ng-model="kinDetails.relationId" convert-to-number>
+											<!--<option value="">Select Relationship With Patient</option> -->
+											<option ng-repeat="info in relationList" value="{{info.id}}">{{info.desc}}</option>
+
+										</select> <label for="code">Relationship With Patient</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row margin-top10">
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-mobile" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"  name="code" id="requiredOn"
+											ng-model="kinDetails.mobileNo"
+											class="text-input floating-label"> <label for="code">Mobile
+											No</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-mobile" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"  name="code" id="requiredOn"
+											ng-model="kinDetails.phoneNo"
+											class="text-input floating-label"> <label for="code">Phone
+											No</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-id-card-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="code"
+											ng-model="kinDetails.identificationId" convert-to-number>
+											<!--<option value="">Select Identification</option>-->
+											<option ng-repeat="info in identificationList"
+												value="{{info.identificationId}}">{{info.identificationName}}</option>
+
+										</select> <label for="code">Identification</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row margin-top10">
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-id-card-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"  name="code" id="requiredOn"
+											ng-model="kinDetails.identificationNo"
+											class="text-input floating-label"> <label for="code">Identification
+											No.</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+											name="datepicker" id="datepicker"
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="kinDetails.expiry" model-view-value="true"
+											is-open="expiry.opened[$index]"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openDatePicker($index)"> <label for="code"
+											class=""> Expiry Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<input type="checkbox" ng-model="kinDetails.isGuarantor"
+									ng-true-value="'Y'" ng-false-value="'N'">Guarantor
+							</div>
+						</div>
+					</div>
+					<div class="row margin-top10">
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4"
+							style="margin-left: 10px">
+							<div class="row input-container margin-left5">
+								<input type="checkbox">Same as Patient Address
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div
+							class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-flag" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<!-- <input type="hidden" ng-model="area.areaId"> -->
+
+										<select class="text-input floating-label" name="countryId"
+											ng-model="kinDetails.countryId"
+											ng-change="getStateByCountry(kinDetails.countryId)"
+											convert-to-number>
+											<!--<option value="">Select Country</option> -->
+											<option ng-repeat="info in countryList"
+												value="{{info.countryId}}">{{info.countryName}}</option>
+										</select> <label for="code">Country</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-university" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="stateId"
+											ng-model="kinDetails.stateId"
+											ng-change="getDistrictByState(kinDetails.stateId)"
+											convert-to-number>
+											<!--<option>Select State</option> -->
+											<option ng-repeat="info in stateList"
+												value="{{info.stateId}}">{{info.stateName}}</option>
+										</select> <label for="code">State</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-university" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="districtId"
+											ng-model="kinDetails.districtId"
+											ng-change="getCityByDistrict(kinDetails.districtId)"
+											convert-to-number>
+											<!-- <option>Select District</option> -->
+											<option ng-repeat="info in districtList"
+												value="{{info.districtId}}">{{info.districtName}}</option>
+										</select> <label for="code">District</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row margin-top10">
+						<div
+							class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-building-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="cityId"
+											ng-model="kinDetails.cityId"
+											ng-change="getAreaByCity(kinDetails.cityId)"
+											convert-to-number>
+											<!-- <option>Select City</option> -->
+											<option ng-repeat="info in cityList" value="{{info.cityId}}">{{info.cityName}}</option>
+										</select> <label for="code">City</label>
+
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-building-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="areaId"
+											ng-model="kinDetails.areaId" convert-to-number>
+											<!-- <option>Select Area</option> -->
+											<option ng-repeat="info in areaList" value="{{info.areaId}}">{{info.areaName}}</option>
+										</select> <label for="code">Area</label>
+
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-university" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"  name="postCode" id=""
+											class="text-input floating-label"
+											ng-model="kinDetails.postCode" required> <label
+											for="code">Post Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row margin-top10">
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-map-marker" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"  name="code" id="requiredOn"
+											ng-model="kinDetails.address"
+											class="text-input floating-label"> <label for="code">Address</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+							<div class="">
+								<button ng-click="addNewKinDetails()" id="addBtn" class="btn btn-info"
+									style="width: 36px">
+									<b>+</b>
+								</button>
+
+								<button ng-if="$index > 0" ng-click="removeKinDetails($index)" id="cancelBtn"
+									class="btn btn-info">
+									<b>-</b>
+								</button>
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+			</div>
+			</form>
+				</div>
+				<div ng-show="isSetFirstTabLevel(7)" class="second-level-tab-display-div" style="">
+					 <form name="employeeRegistrationform7"><!-- ng-show="tab=='7'" -->
+						<div class="" style="">
+							<!-- <fieldset
+								class="normalRegistration sub-fieldset padding-left-right-set1">
+								<legend class="heading-div">Role Management Details</legend>
+								</fieldset> -->
+								<div class="row padding-top10">
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4"></div>
+									<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+										<div class="row col-md-5set" id="">
+											<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+												<div class="">
+													<label class="common-lable-color-set"> Unit Mapping</label>
+													<div class="masterborderScroll">
+														<div class="checkbox ng-scope" ng-repeat="unit in finalUnitList">
+															<label class="checkbox-inline">
+															<input type="checkbox" value="" class="" ng-model="unit.isUnitSelected" 
+																   ng-true-value=" 'Y' " ng-false-value=" 'N' " ng-click="addUnitsRole(unit,$index)"><span></span>{{unit.unitName}}</label>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+						</div>
+					</form>
+				</div>
+				<div ng-show="isSetFirstTabLevel(6)" class="second-level-tab-display-div" style="">
+					 <form name="employeeRegistrationform6"><!-- ng-show="tab=='6' " -->
+				<div class="" style="">
+					<!-- <fieldset
+						class="normalRegistration sub-fieldset padding-left-right-set1">
+						<legend class="heading-div">Role Management Details</legend>
+						</fieldset> -->
+						<div class="row padding-top10">
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"></div>
+							<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+								<div class="row col-md-5set" id="">
+									<!-- <div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+										<div class="">
+											<label class="common-lable-color-set"> HIS Role</label>
+											<div class="masterborderScroll fix-height-scroll400" style="max-height: -webkit-fill-available;">
+												<div class="masterborderScroll">
+												<div class="checkbox ng-scope" ng-repeat="hisRole in roleFinalList">
+													<label class="common-lable-color-set">
+													<input type="checkbox" value="" class="" ng-model="hisRole.roleIsSelected" 
+													 ng-true-value=" 'Y' " ng-false-value=" 'N' ">{{hisRole.roleName}}</label>
+												</div>
+				
+											</div>
+										</div>
+									</div> -->
+									<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4" ng-repeat="list in finalListOfRole">
+								<div class="row" id="">
+									<div class="">
+										<div class="">
+											<label class="common-lable-color-set"> HIS Role Of {{list.unitName}}</label>
+											<!-- <div class="masterborderScroll fix-height-scroll400" style="max-height: -webkit-fill-available;"> -->
+												<div class="masterborderScroll">
+												<div class="checkbox ng-scope" ng-repeat="hisRole in list.roleList">
+													<label class="checkbox-inline">
+													<input type="checkbox" value="" class="" ng-model="hisRole.roleIsSelected" ng-true-value=" 'Y' " ng-false-value=" 'N' "><span></span>{{hisRole.roleName}}</label>
+												</div>
+				
+											</div>
+										</div>
+									</div>
+									
+									
+								</div>
+							</div>
+									<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+										
+									</div> -->
+									<!-- <div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+										<div class="">
+											<label class="common-lable-color-set">OTIMS Role</label>
+											<div class="masterborderScroll fix-height-scroll400" style="max-height: -webkit-fill-available;">
+											<div class="masterborderScroll">
+												<div class="checkbox ng-scope" ng-repeat="otimsRole in OtimsRoleFinalList">
+													<label class="common-lable-color-set">
+													<input type="checkbox" value="" class="" ng-model="otimsRole.roleIsSelected" 
+													  ng-true-value=" 'Y' " ng-false-value=" 'N' " ng-click="validateOtimsRoleSelection(otimsRole);">{{otimsRole.roleName}}</label>
+												</div>
+				
+											</div>
+										</div>
+									</div> -->
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"></div>
+						</div>
+				</div>
+			</form>
+				</div>
+				<div ng-show="isSetFirstTabLevel(8)" class="second-level-tab-display-div" style="">
+					<!-- Specialty tab START -->
+					<form  name="employeeRegistrationform8" class="second-level-tab-display-div">
+						<div class="" style="">
+							<!-- <fieldset
+								class="normalRegistration sub-fieldset padding-left-right-set1">
+								<legend class="heading-div">Specialty Details</legend>
+								</fieldset> -->
+								<div class="row padding-top10">
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"></div>
+									<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+										<div class="row col-md-5set" id="">
+											<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+												<div class="">
+													<label class="common-lable-color-set"> Speciality </label>
+													<!-- <div class="masterborderScroll fix-height-scroll400" style="max-height: -webkit-fill-available;"> -->
+														<div class="masterborderScroll">
+														<div class="checkbox ng-scope" ng-repeat="info in specialityList">
+															<label class="checkbox-inline">
+															<input type="checkbox" value="" class="" ng-model="info.selectedDepts" 
+															 ng-true-value=" 'Y' " ng-false-value=" 'N' " ng-change="getSubSpecialityListCheckBox(info)"><span></span>{{info.specialityName}}</label>
+														</div>
+						
+													</div>
+												</div>
+											</div>
+											 <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+												<!-- <div class="text-center margintop120">
+													<button type="button" class="btn btn-primary text-width-auto btn-sm" ng-click="selectNursingStation()"> << >> </button>
+													<button type="button" class="btn btn-primary text-width-auto btn-sm" ng-click="selectNursingStation()"> << >> </button>
+												</div> -->
+											</div> 
+											<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+												<div class="">
+													<label class="common-lable-color-set">Sub Speciality </label>
+													<!-- <div class="masterborderScroll fix-height-scroll400" style="max-height: -webkit-fill-available;"> -->
+													<div class="masterborderScroll">
+														<div class="checkbox ng-scope" ng-repeat="info in subSpecialityListCheck">
+															<label class="checkbox-inline">
+															<input type="checkbox" value=""  class="" ng-model="info.selectedSubDepts" 
+															 ng-true-value=" 'Y' " ng-false-value=" 'N' " ng-change="getCheckSubSpecialityList(info)"><span></span>{{info.subSpecialityMasterName}}</label>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"></div>
+								</div>
+						</div>
+					</form>
+			<!-- Specialty tab END -->
+				</div>
+		   </div>
+		
+		<!-- <div class="row padding-left-right-set4 margin-top4 custom-sub-tab">
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary btn-save-box-shadow" ng-click="tab=1">Personal</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=2">Contact</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=3">Professional</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=4">Employment</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=5">Dependent</a>
+				</div>
+			</div>
+			<div ng-show="employeeObj.isUser=='Y'" class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=6">Role Management</a>
+				</div>
+			</div>
+			<div  class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="tab-btn-primary">
+					<a class="btn btn-primary  btn-save-box-shadow" ng-click="tab=7">Unit Mapper</a>
+				</div>
+			</div>
+			<div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right">
+				<div class="width-div-for-patient-reg ">
+					<a href="" ng-click="saveEmployeeRegistration();" ng-if="fieldsDisable == false"
+						class="btn btn-primary btn-save-box-shadow" title="Save"><i
+						class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+		</div> -->
+		<div class="row padding-left-right-set4">
+			<!-- PersonalTab START -->
+			
+			<!-- PersonalTab END -->
+
+			<!-- ContactTab START -->
+			
+			<!-- ContactTab END -->
+
+			<!-- ProfessionalTab START -->
+			
+			<!-- ProfessionalTab END -->
+
+			<!-- EmploymentTab START -->
+			
+			<!-- EmploymentTab END -->
+
+			<!-- DependentDetailsTab START -->
+			
+			<!-- DependentDetailsTab END -->
+			
+			<!-- Role ManagementTab Start -->
+			
+			<!-- Role ManagementTab END -->
+			<!-- Unit ManagementTab Start -->
+			
+			<!-- Unit ManagementTab END -->
+		</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right15">
+				<div class="row padding-left-right15">
+					<div class="col-lg-9 col-md-9 col-sm-9"></div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+							<div class=" ">
+								<a  ng-click="showStaffRegistrationSearch()" class="btn btn-primary btn-save-box-shadow" title="Back">Back</a>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+							<div class=" ">
+								<a ng-click="saveEmployeeRegistration();" ng-if="fieldsDisable == false" class="btn btn-primary btn-save-box-shadow" title="Save">Save</a>
+							</div>
+						</div>
+					</div>
+			</footer>
+	</div>
+</div>
+
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+<script src="resources/assets/js/config/app.js"></script>
+<script type="text/javascript">
+		$(document).ready(function() {
+			
+			 $('#selRegs').focus(function () {
+			        $('#selRegs').attr("size", "4");
+			    });
+			    
+			    $('#selRegs').change(function () {
+			        $('#selRegs').attr("size", "1");
+			        $("#selRegs").blur();
+			    });
+
+			$(".selectedPageName").text("Staff Registration");
+			$(".sidebar-nav li").each(function() {
+				$(this).find("a").parents("li").removeClass("active");
+			});
+			$('a[href$="staffRegistration"]').parents("li").addClass("active");
+		});
+</script>

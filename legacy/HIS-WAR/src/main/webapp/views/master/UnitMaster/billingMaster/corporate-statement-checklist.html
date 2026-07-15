@@ -1,0 +1,236 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Billing Bed Category Master</legend> -->
+			<form action="" name="billingForm" novalidate="novalidate">
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group"   show-errors>
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="corporateMasterObj.checkListCode" required="required">
+								 <label for="code"> Code<span class="star">*</span></label>
+								 <p class="help-block" ng-if="billingForm.code.$error.required">Code is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group"   show-errors>
+								<input type="text" autocomplete="off" name="desc" id="" class="text-input floating-label dirty" ng-model="corporateMasterObj.checkListDesc" required="required"> 
+								<label for="code"> Description <span class="star">*</span></label>
+								<p class="help-block" ng-if="billingForm.desc.$error.required">Description is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<label for="" class="LISDynamicLabel">Visit Type</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="visitTypeList" selected-model="selectedVisitType">
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+				
+				
+				
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"></div> -->
+			</div>
+			</form>
+		</fieldset>
+		<div class="row padding-left-right-10 margin-top10">
+			<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+							<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save"
+						data-toggle="modal" ng-click="saveCorporateStatCheck()"
+						ng-if="saveBtnFlag"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a> <a href=""
+						class="btn btn-primary btn-save-box-shadow" title="Update"
+						data-toggle="modal" ng-click="updateCorporStatementChecklist()"
+						ng-if="updateBtnFlag"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword">
+				 <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-10 margin-top8">
+		
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<tr class="">
+						<th class="width10">
+							Code
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th>
+						<th class="width10">
+							Description
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th>
+						<th class="width2 text-center">Visit Type</th>
+						<th class="width2 text-center">
+							Status(n)
+						</th>
+						<th class="width2 text-center">
+							Action taken
+						</th>
+					</tr>
+					<tr ng-repeat=" info in corporateStatementChecklistMasterList|filter:searchKeyword">
+						<td>{{info.checkListCode}}</td>
+						<td>{{info.checkListDesc}}</td>
+						<td class="text-center">
+							<a class="cursor-pointer" data-toggle="modal" ng-click="visitDetails(info)" data-target="#VisitTypeDetailsModal"><i class="fa fa-info-circle"></i></a>
+						</td>
+						<td class="text-center">
+							<label class="switch">
+								<input type="checkbox"
+								ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"
+								ng-change="updateStatus(info.corporateStatementChecklistId,info.status)">
+								<div class="slider round"></div>
+							</label>
+						</td>
+						<td class="padding-edit-button-table text-center">
+							<a>
+								<i class="fa fa-pencil" aria-hidden="true" title="Edit" ng-click="showUpdateBtn(info)"></i>
+							</a>
+						</td>
+					</tr>
+				</table>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- VisitTypeDetailsModal START -->
+<div id="VisitTypeDetailsModal" class="modal fade ng-scope in common-small-popup"
+	role="dialog his-style"
+	style="background: rgba(0, 0, 0, 0.33);"
+	visible="showModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="row padding-top8 padding-left-right-set4 padding-top4">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll230">
+							<table class="table table-bordered first-checkBox-padding">
+								<!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th>
+											Visit type
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="info in addedvisitList">
+										<td>
+										    <div ng-if="info.id == '1'">
+											OP
+											</div>
+											<div ng-if="info.id == '2'">
+											IP
+											</div>
+											<div ng-if="info.id == '3'">
+											Day Care
+											</div>
+											<div ng-if="info.id == '4'">
+											ER
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" style="width: auto;"
+					data-dismiss="modal" class="btn btn-primary width15" id="okBtn">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- VisitTypeDetailsModal END -->
+<modal visible="showModal"></modal> 
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Corporate Statement Checklist");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="corporateStatementChecklist"]').parents("li").addClass("active");
+});
+</script>

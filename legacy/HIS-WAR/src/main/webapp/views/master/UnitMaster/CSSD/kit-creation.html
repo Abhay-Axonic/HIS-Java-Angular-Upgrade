@@ -1,0 +1,956 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+			<!-- <div class="row main-heading-div">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div> -->
+	<div class="row">
+	<div class="second-level-tab-display-div" style="">
+					<div class="main-heading-div">
+				<!-- <div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div> -->
+			</div>
+	
+	
+	<modal visible="showModal"></modal> 
+			
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 margin-top10 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveKit()"
+					ng-if="saveBtnFlag"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					  <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateKit()" ng-if="updateBtnFlag">
+		        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+	<form name="kitForm" novalidate>
+		<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="kitMasterObj.code" required>
+							<label for="code">Kit Code</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="kitMasterObj.name" required>
+							<label for="code">Kit Name</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" name="code" 
+							ng-model="kitMasterObj.surgeon"
+							ng-options="data.doctorId as data.doctorName for data in surgeonList" required>
+							</select> <label for="code">Surgeon</label>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			
+			
+		</div>
+		<div class="row">
+			<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+					<div class="row col-md-5set" id="">
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Add Instruments</label>
+								<div class="masterborder">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0 float_right padding-bottom10">
+											<input type="text" autocomplete="off" class="text-search-box dirty" ng-model="searchText" ng-change="searchInstrumentList()" placeholder="Search" style="margin-top: 0px;"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+										</div>
+									</div>
+									<div class="height100">
+									
+										<div class="row padding-top4" ng-repeat="instrument in instrumentList | filter:searchText">
+											
+											<div class="checkbox">
+												<label class="common-lable-color-set checkbox-inline">
+													<input type="checkbox" name="selectedInstrument[]" ng-model="selectedInstrument" value="{{instrument}}" ng-click="instrumentSelection(instrument)" ng-checked="selection.indexOf(instrument) != -1">
+													<span></span>{{instrument.instrumentName}}
+												</label>
+												<span class=""><input type="number" ng-click=""  class="pull-right width15" ng-model="instrument.quantity" placeholder="Qty"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+							<div class="text-center margintop120">
+								<button type="button" class="btn btn-primary width40 btn-sm" ng-disabled="isRemovalEmpty()" ng-click="showSelected()" style="border-radius: 10px;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;">&gt;&gt;</button>
+								<div class="padding-top10"><button type="button" ng-model="lessThan" value="" ng-disabled="isSelectionEmpty()" ng-click="showRemoved()" class="btn btn-primary width40 btn-sm" style="border-radius: 10px;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;">&lt;&lt;</button></div>
+							</div>
+						</div>
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Added Instruments </label>
+								<div class="masterborder overflow-y-auto">
+										<div class="row padding-top4" ng-repeat="equipment in selectedEquipments">
+											<div class="checkbox list-border">
+												<label class="common-lable-color-set checkbox-inline">
+													<input type="checkbox" name="selectedEquipment[]" ng-model="selectedEquipment" value="{{equipment}}" ng-click="instrumentRemoval(equipment)" ng-checked="removal.indexOf(equipment) != -1">
+													<span></span>{{equipment.instrumentName}}
+												</label>
+												<span class=""><label type="number" class="pull-right width15">{{equipment.quantity}}</label>
+											</div>
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</form>
+	
+		<div class="row margin-top10 padding-left-right-set4">
+			
+			<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+							<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" ng-model="searchKeyword" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width10">
+								Kit Code
+							</th>
+							<th class="width10">
+								Kit Name
+							</th>
+							<!-- <th class="width10">
+								Surgeon
+							</th> -->
+							<th class="width2 text-center">
+								Instrument
+							</th>
+							<th class="width2 text-center">
+								Status(n)
+							</th>
+							<th class="width2 text-center">
+								Action taken
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="info in kitList | orderBy : 'name' | filter:searchKeyword">
+						<td>{{info.code}}</td>
+						<td>{{info.name}}</td>
+						<!-- <td>{{info.surgeonName}}</td> -->
+						<td class="text-center">
+							<a><i class="fa fa-info-circle" aria-hidden="true" title="Added Equipment" ng-click="getEquipmentList(info)" data-toggle="modal" data-target="#equipmentDetailsModal"></i></a>
+						</td>
+												
+						<td>
+								<label class="switch"> 
+									<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info)">
+									<div class="slider round"></div>
+								</label>
+						</td>
+						
+						<td class="padding-edit-button-table text-center">
+							<a>
+								<i class="fa fa-pencil" aria-hidden="true" ng-click="editKit(info)" title="Edit"></i>
+							</a>
+						</td>
+					</tr>
+										
+				</tbody>
+				</table>
+				
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+		</div>
+				</div>
+	</div>
+		<!-- <div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width10 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Medication Kit</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+						<a href="" ng-click="setFirstTabLevel(2)" class="employeeRegRadioParent">Implant Kit</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width10" style="">
+						<a href="" ng-click="setFirstTabLevel(3)" class="employeeRegRadioParent">Instrument Kit</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					<modal visible="showModal"></modal> 
+			
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 margin-top10 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveKit()"
+					ng-if="saveBtnFlag"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					  <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateKit()" ng-if="updateBtnFlag">
+		        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+	<form name="kitForm" novalidate>
+		<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="kitMasterObj.name" required>
+							<label for="code">Kit Name</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="kitMasterObj.code" required>
+							<label for="code">Kit Code</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" name="code" 
+							ng-model="kitMasterObj.surgeon"
+							ng-options="data.doctorId as data.doctorName for data in surgeonList" required>
+							</select> <label for="code">Procedure</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+		<div class="row">
+			<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+					<div class="row col-md-5set" id="">
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Add Medication</label>
+								<div class="masterborder">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0 float_right padding-bottom10">
+											<input type="text" autocomplete="off" class="text-search-box dirty" ng-model="searchText" ng-change="searchInstrumentList()" placeholder="Search" style="margin-top: 0px;"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+										</div>
+									</div>
+									<div class="height100">
+									
+										<div class="row padding-top4" ng-repeat="instrument in instrumentList | filter:searchText">
+											
+											<div class="checkbox">
+												<label class="common-lable-color-set"><input type="checkbox" name="selectedInstrument[]" ng-model="selectedInstrument" value="{{instrument}}" ng-click="instrumentSelection(instrument)" ng-checked="selection.indexOf(instrument) != -1">{{instrument.instrumentName}}</label>
+												<span class=""><input type="number" ng-click=""  class="pull-right width15" ng-model="instrument.quantity" placeholder="Qty"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+							<div class="text-center margintop120">
+								<button type="button" class="btn btn-primary width40 btn-sm" ng-disabled="isRemovalEmpty()" ng-click="showSelected()">&gt;&gt;</button>
+								<div class="padding-top10"><button type="button" ng-model="lessThan" value="" ng-disabled="isSelectionEmpty()" ng-click="showRemoved()" class="btn btn-primary width40 btn-sm">&lt;&lt;</button></div>
+							</div>
+						</div>
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Added Medication </label>
+								<div class="masterborder overflow-y-auto">
+										<div class="row padding-top4" ng-repeat="equipment in selectedEquipments">
+											<div class="checkbox list-border">
+												<label class="common-lable-color-set"><input type="checkbox" name="selectedEquipment[]" ng-model="selectedEquipment" value="{{equipment}}" ng-click="instrumentRemoval(equipment)" ng-checked="removal.indexOf(equipment) != -1">{{equipment.instrumentName}}</label>
+												<span class=""><label type="number" class="pull-right width15">{{equipment.quantity}}</label>
+											</div>
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</form>
+	
+		<div class="row margin-top10 padding-left-right-set4">
+			
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" ng-model="searchText" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width10">
+								Kit Name
+							</th>
+							<th class="width10">
+								Kit Code
+							</th>
+							<th class="width10">
+								Procedure
+							</th>
+							<th class="width2 text-center">
+								Medication
+							</th>
+							<th class="width2 text-center">
+								Status
+							</th>
+							<th class="width2 text-center">
+								Action
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="info in kitList | orderBy : 'name' | filter:searchText">
+						<td>{{info.name}}</td>
+						<td>{{info.code}}</td>
+						<td>{{info.surgeonName}}</td>
+						<td class="text-center">
+							<a><i class="fa fa-info-circle" aria-hidden="true" title="Added Equipment" ng-click="getEquipmentList(info)" data-toggle="modal" data-target="#medicationtKitDetails"></i></a>
+						</td>
+												
+						<td>
+								<label class="switch"> 
+									<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info)">
+									<div class="slider round"></div>
+								</label>
+						</td>
+						
+						<td class="padding-edit-button-table text-center">
+							<a>
+								<i class="fa fa-pencil" aria-hidden="true" ng-click="editKit(info)" title="Edit"></i>
+							</a>
+						</td>
+					</tr>
+										
+				</tbody></table>
+			</div>
+		</div>
+				</div>
+	</div>	
+	medicationtKitDetails Modal START
+<div id="medicationtKitDetails" class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog"> width: 25% !important;margin: 200px 0 0 510px !important;
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Medication Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 padding-top4 padding-bottom10">
+					<div class="col-lg-12 col-md-12 fix-height-scroll230">
+						<table class="table table-bordered">
+							<thead>
+								<tr class="">
+									<th class="width12">
+										Medication
+									</th>
+									<th class="width2">
+										Qty
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="data in equipmentList">
+									<td>{{data.instrumentName}}</td>
+									<td>{{data.quantity}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-lg-11 col-sm-10 col-md-11"></div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1 float_right text-width-auto">
+						<div class=" ">
+							<a href="">
+								<input type="button" value="OK"  class="btn btn-primary btn-save-box-shadow" data-dismiss="modal">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+medicationtKitDetails Modal END
+<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					<modal visible="showModal"></modal> 
+			
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 margin-top10 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveKit()"
+					ng-if="saveBtnFlag"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					  <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateKit()" ng-if="updateBtnFlag">
+		        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+	<form name="kitForm" novalidate>
+		<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="kitMasterObj.name" required>
+							<label for="code">Kit Name</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="kitMasterObj.code" required>
+							<label for="code">Kit Code</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" name="code" 
+							ng-model="kitMasterObj.surgeon"
+							ng-options="data.doctorId as data.doctorName for data in surgeonList" required>
+							</select> <label for="code">Procedure</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+		<div class="row">
+			<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+					<div class="row col-md-5set" id="">
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Add Implant</label>
+								<div class="masterborder">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0 float_right padding-bottom10">
+											<input type="text" autocomplete="off" class="text-search-box dirty" ng-model="searchText" ng-change="searchInstrumentList()" placeholder="Search" style="margin-top: 0px;"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+										</div>
+									</div>
+									<div class="height100">
+									
+										<div class="row padding-top4" ng-repeat="instrument in instrumentList | filter:searchText">
+											
+											<div class="checkbox">
+												<label class="common-lable-color-set"><input type="checkbox" name="selectedInstrument[]" ng-model="selectedInstrument" value="{{instrument}}" ng-click="instrumentSelection(instrument)" ng-checked="selection.indexOf(instrument) != -1">{{instrument.instrumentName}}</label>
+												<span class=""><input type="number" ng-click=""  class="pull-right width15" ng-model="instrument.quantity" placeholder="Qty"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+							<div class="text-center margintop120">
+								<button type="button" class="btn btn-primary width40 btn-sm" ng-disabled="isRemovalEmpty()" ng-click="showSelected()">&gt;&gt;</button>
+								<div class="padding-top10"><button type="button" ng-model="lessThan" value="" ng-disabled="isSelectionEmpty()" ng-click="showRemoved()" class="btn btn-primary width40 btn-sm">&lt;&lt;</button></div>
+							</div>
+						</div>
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Added Implant </label>
+								<div class="masterborder overflow-y-auto">
+										<div class="row padding-top4" ng-repeat="equipment in selectedEquipments">
+											<div class="checkbox list-border">
+												<label class="common-lable-color-set"><input type="checkbox" name="selectedEquipment[]" ng-model="selectedEquipment" value="{{equipment}}" ng-click="instrumentRemoval(equipment)" ng-checked="removal.indexOf(equipment) != -1">{{equipment.instrumentName}}</label>
+												<span class=""><label type="number" class="pull-right width15">{{equipment.quantity}}</label>
+											</div>
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</form>
+	
+		<div class="row margin-top10 padding-left-right-set4">
+			
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" ng-model="searchText" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width10">
+								Kit Name
+							</th>
+							<th class="width10">
+								Kit Code
+							</th>
+							<th class="width10">
+								Procedure
+							</th>
+							<th class="width2 text-center">
+								Implant
+							</th>
+							<th class="width2 text-center">
+								Status
+							</th>
+							<th class="width2 text-center">
+								Action
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="info in kitList | orderBy : 'name' | filter:searchText">
+						<td>{{info.name}}</td>
+						<td>{{info.code}}</td>
+						<td>{{info.surgeonName}}</td>
+						<td class="text-center">
+							<a><i class="fa fa-info-circle" aria-hidden="true" title="Added Equipment" ng-click="getEquipmentList(info)" data-toggle="modal" data-target="#implantDetailsModal"></i></a>
+						</td>
+												
+						<td>
+								<label class="switch"> 
+									<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info)">
+									<div class="slider round"></div>
+								</label>
+						</td>
+						
+						<td class="padding-edit-button-table text-center">
+							<a>
+								<i class="fa fa-pencil" aria-hidden="true" ng-click="editKit(info)" title="Edit"></i>
+							</a>
+						</td>
+					</tr>
+										
+				</tbody></table>
+			</div>
+		</div>
+				</div>
+				implantDetailsModal Modal START
+<div id="implantDetailsModal" class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog"> width: 25% !important;margin: 200px 0 0 510px !important;
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Implant Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 padding-top4 padding-bottom10">
+					<div class="col-lg-12 col-md-12 fix-height-scroll230">
+						<table class="table table-bordered">
+							<thead>
+								<tr class="">
+									<th class="width12">
+										Implant
+									</th>
+									<th class="width2">
+										Qty
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="data in equipmentList">
+									<td>{{data.instrumentName}}</td>
+									<td>{{data.quantity}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-lg-11 col-sm-10 col-md-11"></div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1 float_right text-width-auto">
+						<div class=" ">
+							<a href="">
+								<input type="button" value="OK"  class="btn btn-primary btn-save-box-shadow" data-dismiss="modal">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+ImplantDetails Modal END
+				
+				<div ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div" style="">
+					<div class="main-heading-div">
+				<div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div>
+			</div>
+	
+	
+	<modal visible="showModal"></modal> 
+			
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 margin-top10 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveKit()"
+					ng-if="saveBtnFlag"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					  <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateKit()" ng-if="updateBtnFlag">
+		        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+	<form name="kitForm" novalidate>
+		<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="kitMasterObj.name" required>
+							<label for="code">Kit Name</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="kitMasterObj.code" required>
+							<label for="code">Kit Code</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" name="code" 
+							ng-model="kitMasterObj.surgeon"
+							ng-options="data.doctorId as data.doctorName for data in surgeonList" required>
+							</select> <label for="code">Surgeon</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+		<div class="row">
+			<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+					<div class="row col-md-5set" id="">
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Add Instruments</label>
+								<div class="masterborder">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0 float_right padding-bottom10">
+											<input type="text" autocomplete="off" class="text-search-box dirty" ng-model="searchText" ng-change="searchInstrumentList()" placeholder="Search" style="margin-top: 0px;"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+										</div>
+									</div>
+									<div class="height100">
+									
+										<div class="row padding-top4" ng-repeat="instrument in instrumentList | filter:searchText">
+											
+											<div class="checkbox">
+												<label class="common-lable-color-set"><input type="checkbox" name="selectedInstrument[]" ng-model="selectedInstrument" value="{{instrument}}" ng-click="instrumentSelection(instrument)" ng-checked="selection.indexOf(instrument) != -1">{{instrument.instrumentName}}</label>
+												<span class=""><input type="number" ng-click=""  class="pull-right width15" ng-model="instrument.quantity" placeholder="Qty"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+							<div class="text-center margintop120">
+								<button type="button" class="btn btn-primary width40 btn-sm" ng-disabled="isRemovalEmpty()" ng-click="showSelected()">&gt;&gt;</button>
+								<div class="padding-top10"><button type="button" ng-model="lessThan" value="" ng-disabled="isSelectionEmpty()" ng-click="showRemoved()" class="btn btn-primary width40 btn-sm">&lt;&lt;</button></div>
+							</div>
+						</div>
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Added Instruments </label>
+								<div class="masterborder overflow-y-auto">
+										<div class="row padding-top4" ng-repeat="equipment in selectedEquipments">
+											<div class="checkbox list-border">
+												<label class="common-lable-color-set"><input type="checkbox" name="selectedEquipment[]" ng-model="selectedEquipment" value="{{equipment}}" ng-click="instrumentRemoval(equipment)" ng-checked="removal.indexOf(equipment) != -1">{{equipment.instrumentName}}</label>
+												<span class=""><label type="number" class="pull-right width15">{{equipment.quantity}}</label>
+											</div>
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</form>
+	
+		<div class="row margin-top10 padding-left-right-set4">
+			
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" ng-model="searchText" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width10">
+								Kit Name
+							</th>
+							<th class="width10">
+								Kit Code
+							</th>
+							<th class="width10">
+								Surgeon
+							</th>
+							<th class="width2 text-center">
+								Instrument
+							</th>
+							<th class="width2 text-center">
+								Status
+							</th>
+							<th class="width2 text-center">
+								Action
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="info in kitList | orderBy : 'name' | filter:searchText">
+						<td>{{info.name}}</td>
+						<td>{{info.code}}</td>
+						<td>{{info.surgeonName}}</td>
+						<td class="text-center">
+							<a><i class="fa fa-info-circle" aria-hidden="true" title="Added Equipment" ng-click="getEquipmentList(info)" data-toggle="modal" data-target="#equipmentDetailsModal"></i></a>
+						</td>
+												
+						<td>
+								<label class="switch"> 
+									<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info)">
+									<div class="slider round"></div>
+								</label>
+						</td>
+						
+						<td class="padding-edit-button-table text-center">
+							<a>
+								<i class="fa fa-pencil" aria-hidden="true" ng-click="editKit(info)" title="Edit"></i>
+							</a>
+						</td>
+					</tr>
+										
+				</tbody></table>
+			</div>
+		</div>
+				</div>
+				equipmentDetails Modal START
+<div id="equipmentDetailsModal" class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog"> width: 25% !important;margin: 200px 0 0 510px !important;
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Instrument Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 padding-top4 padding-bottom10">
+					<div class="col-lg-12 col-md-12 fix-height-scroll230">
+						<table class="table table-bordered">
+							<thead>
+								<tr class="">
+									<th class="width12">
+										Instrument
+									</th>
+									<th class="width2">
+										Qty
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="data in equipmentList">
+									<td>{{data.instrumentName}}</td>
+									<td>{{data.quantity}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-lg-11 col-sm-10 col-md-11"></div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1 float_right text-width-auto">
+						<div class=" ">
+							<a href="">
+								<input type="button" value="OK"  class="btn btn-primary btn-save-box-shadow" data-dismiss="modal">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+equipmentDetails Modal END
+			</div>
+		</div> -->
+	</div>
+</div>
+				<!-- equipmentDetails Modal START -->
+<div id="equipmentDetailsModal" class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog"> 
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Instrument Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 padding-top4 padding-bottom10">
+					<div class="col-lg-12 col-md-12 fix-height-scroll230">
+						<table class="table table-bordered">
+							<thead>
+								<tr class="">
+									<th class="width12">
+										Instrument
+									</th>
+									<th class="width2">
+										Qty
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="data in equipmentList">
+									<td>{{data.instrumentName}}</td>
+									<td>{{data.quantity}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-lg-11 col-sm-10 col-md-11"></div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1 float_right text-width-auto">
+						<div class=" ">
+							<a href="">
+								<input type="button" value="OK"  class="btn btn-primary btn-save-box-shadow" data-dismiss="modal" id="okBtn">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- equipmentDetails Modal END -->
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+  
+  $(".selectedPageName").text("kit Creation");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="kitCreation"]').parents("li").addClass("active");
+
+</script>

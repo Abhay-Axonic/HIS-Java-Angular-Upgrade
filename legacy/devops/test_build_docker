@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+printf "[\e[0;34mNOTICE\e[0m] Setting up SSH access to servesr.\n"
+rm -fr ~/.ssh
+mkdir ~/.ssh
+ssh-keyscan -t rsa git-codecommit.ap-south-1.amazonaws.com >> ~/.ssh/known_hosts
+cat <<EOF > ~/.ssh/config
+Host git-codecommit.*.amazonaws.com
+  User APKAZK2N6OMGH7M35SON
+  IdentityFile ~/.ssh/id_rsa
+EOF
+echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+chmod 600 ~/.ssh/config
+chmod 600 ~/.ssh/id_rsa
+git clone ssh://git-codecommit.ap-south-1.amazonaws.com/v1/repos/his-mvn-jars ~/.m2/repository
+pwd
+cd ~/.m2/repository
+ls -la

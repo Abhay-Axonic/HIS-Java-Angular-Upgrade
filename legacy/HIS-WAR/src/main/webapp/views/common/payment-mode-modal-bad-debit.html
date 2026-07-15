@@ -1,0 +1,111 @@
+<!-- *****************  PAYMENT Mode POPUP  *****************-->
+
+				<div class="row">
+					<fieldset class="normalRegistration sub-fieldset padding-left-right-set4">
+						
+						<div class="row margin-top4">
+							<div class="col-lg-10 col-md-10 col-sm-10 schedulerTabs">
+								<ul class="tabs nav nav-tabs">
+									<li ng-class="{ active : isSetFirstTabLevel(1) }" ng-hide="companySettlement">
+										<a href ng-click="setFirstTabLevel(1);setPaymentModeId(1)">Bad Debit</a>
+									</li>
+								</ul>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 float-right">
+								<div class="width-div-for-patient-reg ">
+									<a href="" style="width:40px" class="btn btn-primary btn-save-box-shadow" ng-click="addPaymentDetails()" ng-if="  payeeDueAmtFinal > 0"  title="Save" ng-hide="addBtnId">+</a>	<!-- ng-click="addPaymentDetails()" -->
+									
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							
+							<!-- CONTENT FOR FIRST TAB start-->
+							<div ng-show="isSetFirstTabLevel(1)">
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description"  class="text-input floating-label" ng-model="paymentDetails.cashAmount" allow-decimal-numbers  ng-decimal="200" ><!--  ng-change="checkValueGreater()" ng-model="paymentDetailsObj.amount" ng-keyup="checkAmount(paymentDetails.cashAmount)"-->
+														 <label for="description" class="">Amount</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									<!-- 
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" ng-if="showUserListFlag =='Y'">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<select class="text-input floating-label ng-valid dirty ng-touched ng-not-empty ng-dirty ng-valid-parse" ng-model="requestUserId" id="requestUserId" style="">
+															<option value="">Select User</option>
+																<option ng-repeat="info in userDiscountList" value="{{info.userId}}">{{info.employeeName}} </option>
+															</select> <label for="code">Select User</label>
+													</div>
+												</div>
+											</div>
+									</div> -->
+									
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<!-- <textarea name="description" class="text-input floating-label" ng-model="remark" ></textarea> -->
+														<input type="text" autocomplete="off" name="description"  class="text-input floating-label" ng-model="remarkObj.remark" id=remark" >
+														 <label for="description" class="">Remark</label>
+													</div>
+												</div>
+											</div>
+									</div>
+								</div>
+							</div>
+							<!-- CONTENT FOR FIRST TAB end-->
+							
+							<!-- Common table -->
+							<div class="row padding-left-right-set4">
+								<div class="col-md-12 col-lg-12 headerHeight fix-height-scroll230">
+									<table class="table table-bordered  margin-top8">
+										<tr>
+											<th class="width15 vertical-top">
+												<span class="">Payment Mode</span>
+											</th>
+											
+											<th class="width15 vertical-top">
+												Total Amount
+											</th>
+											<th class="width5 vertical-top">
+												Action
+											</th>
+										</tr>
+										<tr ng-repeat="payment in listPaymentDetails">
+											<!-- <td>{{payment.paymentModeId == 1 ? 'Cash' : payment.paymentModeId == 2 ? 'Cheque' :  payment.paymentModeId == 3 ? 'Credit Card' : payment.paymentModeId == 4 ? 'Debit Card' : payment.paymentModeId == 5 ? 'E-Transfer' : payment.paymentModeId == 6 ? 'Loyalty Card':'-'}}</td> -->
+											<td>Bad Debit</td>
+											<td class="text-right">{{payment.amount}}</td>
+											<td>
+												<i class="fa fa-times" aria-hidden="true" ng-click="removePaymentDetails($index)"></i>
+											</td>
+										</tr> 
+									</table>
+								</div>
+							</div>
+							
+							
+							
+						</div>
+					</fieldset>
+					
+				</div>
+
+
+

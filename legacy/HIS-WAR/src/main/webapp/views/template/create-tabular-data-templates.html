@@ -1,0 +1,160 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row margin-top10">
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+					<div class="row input-container">
+					
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group" >
+								<select  class="text-input floating-label"  ng-model="comObj.tabularTemplateId" ng-change="getTemplateList(comObj.tabularTemplateId)" >
+									<option></option>
+									<option ng-repeat="com in componentList"value="{{com.tabularTemplateId}}">{{com.tabularTemplateDesc}}</option>
+								</select>
+								<label for="code">Template<span class="star">*</span></label>
+							</div>
+							
+						</div>
+						
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+					<div class="row input-container">
+					
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group" >
+								<input type="text" autocomplete="off" name="cabinCode" class="text-input floating-label" ng-model="comObj.numberOfRow" ng-change="addRow()">
+								<label for="code">Number Of Rows<span class="star">*</span></label>
+							</div>
+							
+						</div>
+						
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+					<div class="row input-container">
+					
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group" >
+								<input type="text" autocomplete="off" name="cabinCode" class="text-input floating-label" ng-model="comObj.numberOfCoulmn" ng-change="addColumn()">
+								<label for="code">Number Of Column<span class="star">*</span></label>
+							</div>
+							
+						</div>
+						
+					</div>
+				 </div>
+			</div>
+			<br><br>
+			<br>
+			<div class="row margin-top10">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top8 ">
+					<!-- <table class="table table-bordered">
+						<thead>
+							<tr class="">
+								<th class="" style="width:0% !important;">
+								   <input type="text" name="selectedForSave" ng-model="tableName">
+								</th>
+								<th class="width8" ng-repeat="info in columnHeaderList track by $index" >
+								  {{info.coulmnId}}
+								   <input type="text" name="selectedForSave"ng-model="info.columnName" ng-change="pushColumnName(info.coulmnId ,info.columnName)">
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="" ng-repeat="info1 in rowList track by $index"  value="bloodGroupId">
+								<th class="" style="width:0% !important;">
+								   {{info1.rowId}}
+								   <input type="text" name="selectedForSave" ng-model="info1.rowName" ng-change="pushRowName(info1.rowId ,info1.rowName)">
+								</th>
+								<td class="text-center" ng-repeat="item in columnList track by $index" >
+									<div ng-repeat="test in savedList" ng-if ="test.tabularTemplateDataMapperId != undefined && test.tabularTemplateDataMapperId != null ">
+										<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+										   {{test.coulmnId}}/
+											{{test.columnName}}/
+											{{test.rowId}}/
+											{{test.rowName}}/
+										  <input type="text" name="selectedForSave" ng-model="test.inputValue"> 
+										</div>
+									</div>
+									<div ng-if="(savedEditedList.length == undefined)|| (savedEditedList.length == 0)">
+											 {{item.coulmnId}}/
+											{{item.columnName}}/
+											{{info1.rowId}}/
+											{{info1.rowName}}
+									       <input type="text" name="selectedForSave" ng-model="inputValue" 
+									       ng-blur="getCurrentStatus(inputValue,item.coulmnId,item.columnName,info1.rowId,info1.rowName);"> 
+							       </div>	
+								</td>
+							</tr>
+						</tbody>
+					</table> -->
+					
+					<table class="table table-bordered">
+						<thead>
+							<tr class="">
+								<th class="" style="width:2% !important;" ng-click="openInputBoxForTableName()" >
+								<span ng-show = "ForTableName == false">{{tableName}}</span>
+								<span ng-show = "ForTableName == true"> <input type="text" name="selectedForSave" ng-model="tableName" ng-blur="closeTableName()"></span>
+								  
+								</th>
+								<th class="width8" ng-repeat="info in columnHeaderList track by $index"  ng-click="openInputBox(info)" >
+								 <span ng-if="info.inputbox == false"> {{info.columnName}}</span>
+								 <span  ng-if="info.inputbox == true"><input type="text" name="selectedForSave"ng-model="info.columnName" ng-change="pushColumnName(info.coulmnId ,info.columnName)" ng-blur="closeRowAndColumn()"></span>
+							     
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="" ng-repeat="info1 in rowList track by $index"  value="bloodGroupId">
+								<th class="" style="width:2% !important" ng-click="openInputBoxForRow(info1)" >
+									<span ng-show = "info1.inputbox == false">{{info1.rowName}}</span>
+									<span ng-show = "info1.inputbox == true">  <input type="text" name="selectedForSave" ng-model="info1.rowName" ng-change="pushRowName(info1.rowId ,info1.rowName)" ng-blur="closeRowAndColumn()"></span>
+								</th>
+								<td class="text-center" ng-repeat="item in columnList track by $index" >
+									<div ng-repeat="test in savedList" ng-if ="test.tabularTemplateDataMapperId != undefined && test.tabularTemplateDataMapperId != null ">
+										<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+										  <textarea type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+									       style="border-radius:0px !important;padding: 0 !important;" 
+									       name="selectedForSave" ng-model="test.inputValue"></textarea>
+										</div>
+									</div>
+									<div ng-if="(savedEditedList.length == undefined)|| (savedEditedList.length == 0)">                                       
+									       <textarea type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+									       style="border-radius:0px !important;padding: 0 !important;" name="selectedForSave" ng-model="inputValue" 
+									       ng-blur="getCurrentStatus(inputValue,item.coulmnId,item.columnName,info1.rowId,info1.rowName);"></textarea>
+							       </div>	
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</fieldset>
+		<div class="row margin-top10 padding-left-right-10">
+			<div class="col-lg-11 col-md-11 col-sm-10 padding-left-right-set4">
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true" ng-click="saveTabularDataOfTemplate();"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+<script>
+	$(".selectedPageName").text("Create Tabular Data Templates");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="createTabularDataTemplates"]').parents("li").addClass("active");
+</script>

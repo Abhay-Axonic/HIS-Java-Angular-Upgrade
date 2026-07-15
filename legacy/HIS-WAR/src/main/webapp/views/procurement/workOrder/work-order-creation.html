@@ -1,0 +1,366 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-top10">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									ng-disabled="Readonlybtn==true" name="" id=""
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY"
+									ng-model="StoreWorkOrderListObj.fromDate"
+									model-view-value="true" is-open="datepicker2.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePicker2()" required><label
+									for="description" class="">Date (From)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									ng-disabled="Readonlybtn==true" name="" id=""
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY"
+									ng-model="StoreWorkOrderListObj.toDate" model-view-value="true"
+									is-open="datepicker3.opened" datepicker-options="dateOptions1"
+									show-button-bar="false" ng-click="openDatePicker3()" required>
+								<label for="description" class="">Date-Till</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+					<div class="row input-container padding-top2">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<div class="form-group">
+									<select class="text-input floating-label" name="trustId"
+										ng-model="StoreWorkOrderListObj.storeId" 
+										required>
+										<option ng-repeat="info in getStoreList" value="{{info.id}}" ng-value="info.id">{{info.store}}</option>
+									</select><label for="code">Store</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" name="description" id=""
+									ng-model="StoreWorkOrderListObj.workorderRequestNumber"
+									class="text-input floating-label" > <label
+									for="description" class="">Work Order No.</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="row input-container padding-top2">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label"
+									ng-model="StoreWorkOrderListObj.billTypeId" convert-to-number>
+									<option value=""></option>
+									<option value="1">Credit</option>
+									<option value="2">Cash</option>
+								</select> <label for="code">Bill Type</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label"
+									ng-disabled="Readonlybtn==true" tabindex="1"
+									ng-model="StoreWorkOrderListObj.vendorName"
+									placeholder="Search"
+									uib-typeahead="group.detail   for group in SearchVendorNames($viewValue)"
+									typeahead-editable="false"
+									typeahead-on-select="selectVendorTemp($item, $model, $label);"
+									name="vendorName"  aria-autocomplete="list"
+									aria-expanded="false" aria-owns="typeahead-86-2495"
+									typeahead-min-length="1">
+								</ul>
+								<label for="vendorName">Vendor</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label"
+								ng-model="StoreWorkOrderListObj.workorderRequestStatusId"
+								convert-to-number>
+								<option>All</option>
+								<option value="0">New</option>
+								<option value="1">Pending</option>
+								<option value="2">Cancelled</option>
+								<option value="3">Rejected</option>
+								<option value="4">Completed</option>
+							</select> <label for="code">Status(n)</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div
+				class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto pull-right">
+				<div class="">
+					<a href="" title="Clear"
+						class="btn btn-primary btn-save-box-shadow width-100"
+						ng-click="clearWorkorderListObj()"
+						ng-class="{disabled: Readonlybtn==true}"> <i
+						class="fa fa-eraser" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+             <div
+				class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto pull-right">
+				<div class="common-save-button" style="padding-top: 0px;">
+					<a href="" ng-click="getListNewWOList()" id="searchBtn"
+						class="btn btn-primary btn-save-box-shadow" style="width: auto;">
+						<i class="fa fa-search" aria-hidden="true"></i>
+					</a>
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+		<div class="row margin-top4 his-style">
+         	<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="search ">
+							 <label class="show-entries">Show 
+							 <select ng-init="vm.model.pagination.pageSize='10'" 
+									ng-model="vm.model.pagination.pageSize" 
+									ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+										 <option value="10">10</option>
+										 <option value="25">25</option>
+										 <option value="50">50</option>
+										 <option value="100">100</option>
+							 </select> (records) 
+							 </label>
+						</div>
+			</div>
+         <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+			<div class=" ">
+				<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="changestatuToPending()">
+				<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a> 
+			</div>
+		</div>
+         <div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float_right">
+               <a href="#/addNewWorkOrderCreation">
+               <input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow">
+               </a>
+         </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right">
+			<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" ng-model="searchKeyword" style="margin-top:0px">
+			<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+		</div>
+      </div>
+      <div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll450">
+			  <table id="main-table" class="main-table width120">
+			    <thead>
+			      <tr>
+			        <th class="fixed width1"></th>
+			        <th class="width3">WO Date</th>
+					<th class="width3">Delivery Date</th>
+			        <th class="width3">WO No.</th>
+			        <th class="width3">Contract Type</th>
+			        <th class="width3">Bill Type</th>
+			        <th class="width3">Store</th>
+			        <th class="width4">Vendor</th>
+			        <th class="width4">Order By</th>
+			        <th class="width4"> Request Status</th>
+			        <th class="width4"> Approval Status</th>
+			        <th class="last-col-fixed width3">Action taken</th>
+			      </tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-repeat="info in searchNewWOItemList  | filter:searchKeyword">
+			        <td class="fixed text-center vertical-middle">
+						<input type="checkbox" ng-model="info.selectedToPendingstatus" 
+						ng-disabled="info.status == 'Closed' || info.status == 'Pending' || info.status == 'Cancelled'">
+					</td>
+			        <td>{{info.workorderRequestDate}}</td>
+					<td>{{info.deliveryDate}}</td>
+			        <td>{{info.workorderRequestNumber}}</td>
+			        <td>{{info.contractType}}
+			        	<span ng-show="info.contractTypeId==3" data-toggle="modal" data-target="#detailsPopup" ng-click="getPatientDetailsPopUp(info)">
+						<i class="fa fa-info-circle" aria-hidden="true">&nbsp;</i>
+						</span>
+			        </td>
+			        <td ng-if="info.billTypeId==1" >Credit</td><td ng-if="info.billTypeId==2" >Cash</td>
+			        <td>{{info.storeName}}</td>
+			        <td>{{info.vendorName}}</td>
+			        <td>{{info.userName}}</td>
+					<td>{{info.status}}</td>
+			        <td>{{info.approvalStatus}}</td>
+			        <td class="last-col-fixed">
+                       	<div class="col-lg-2 col-md-4 padding-left-right-set4 " ng-class="{disabled: info.workorderRequestStatusId!=1}" >
+                         	<a title="Edit" ng-click="getNewWOElementForEdit(info.workorderRequestId)" ng-class="{disabled: info.workorderRequestStatusId!=1}" ><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                       	</div>
+                       	<div class="col-lg-2 col-md-4 padding-left-right-set4 " >
+                        	<a title="Print" ng-click="printWorkOrderCreationReport(info)"><i class="fa fa-print" aria-hidden="true" ></i></a>
+                       	</div>
+                       	<!-- <div class="col-lg-2 col-md-4 padding-left-right-set4 " 
+							ng-class="{disabled: info.workorderRequestStatusId!=1}">
+                         	<a title="Cancel" ng-class="" ng-click="cancelWOElement(info.workorderRequestId)" 
+							 ng-disabled="info.workorderRequestStatusId!=1" 
+							 ng-class="{disabled: info.workorderRequestStatusId!=1}" >
+							 <i class="fa fa-ban" aria-hidden="true"></i></a>
+                       	</div> -->
+						<div class="col-lg-2 col-md-4 padding-left-right-set4" ng-class="{disabled: info.workorderRequestStatusId!=1}">
+							<a title="Cancel" ng-class="{disabled: info.workorderRequestStatusId!=1}" 
+								ng-click="OpenPopup('Cancel', 'cancelWorkOrder', info)">
+								<i class="fa fa-ban" aria-hidden="true"></i>
+							</a>
+						</div>
+                       	<div class="col-lg-6 col-md-6 padding-left-right-set4 text-right"  >
+                       		<a class="cursor-pointer" ng-click="getNewWOElementForReadonly(info.workorderRequestId)"  >Details</a>
+                       	</div>
+					</td>
+			      </tr>
+				  <tr ng-if="searchNewWOItemList.length == 0">
+					<td class="text-center" colspan="12">
+						<p>No Record Found</p>
+					</td>
+				  </tr>
+			    </tbody>
+			  </table>
+			</div>
+		</div>
+      
+	</div>
+</div>
+
+<div id="cancelWorkOrder" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static" 
+ style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+            Cancellation
+            <button type="button" class="close" ng-click="ModalDismiss('cancelWorkOrder')">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 padding-left-right-set">
+              <div class="row input-container margin-top10">
+                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+                    <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-lg-11 col-sm-11 col-md-11 ">
+                     <select ng-model="cancelReason" ng-change="isReasonValid = false" class="text-input floating-label">
+                        <option ng-repeat="reason in reasons" value="{{reason.id}}">{{reason.reason}}</option>
+                     </select>
+                     <label for="cancelReason">Select Reasons</label>
+                     <p ng-if="isReasonValid" class="errorMsg">Select Reason</p>
+                  </div>
+                </div>
+              <div class="row input-container margin-top10">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                  <i class="fa fa-sticky-note" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11">
+                  <textarea ng-model="rejectNote" maxlength="100" rows="4" class="text-input floating-label"></textarea>
+                  <label for="rejectNote">Note</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border:none;">
+          <button type="button" class="btn btn-primary" ng-click="cancelWOElement()">Save</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="detailsPopup" class="modal fade ng-scope in padding-left0" role="dialog">
+	<div class="modal-dialog"> 
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Patient Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="row row padding-left-right-10 padding-top10 padding-bottom10">
+						<div class="col-lg-10 col-md-10 col-sm-10">
+							<p><label id="patMobileNumber">Patient Details : </label>{{patientDetails}}</p>
+							<p class="padding-top5"><label id="patEmailId">UHID : </label>{{uhidNumber}}</p>
+							<p class="padding-top5"><label id="patEmailId">Visit Details : </label>{{visitDetails}}</p>
+							<p class="padding-top5"><label id="patEmailId">Bill Details : </label>{{billDetails!=null ? billDetails : "-"}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="row padding-bottom10 padding-right10">
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok"  data-dismiss="modal">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="workOrderCreation"]').parents("li").addClass("active");
+});
+</script>

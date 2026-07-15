@@ -1,0 +1,200 @@
+    	<!--  <div class="row">
+            		<div class="col-md-8"></div>
+					<div class="col-md-3">
+						<div>
+							  <input type="text" autocomplete="off" class="text-search-box" tabindex="3" ng-model="groupName" placeholder="Search"
+                       uib-typeahead="group.patientName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                       typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  required/>
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+					
+				</div> -->
+				 <div class="row margin-top10 his-style padding-left-right-set1 ng-scope">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+						<input type="text" autocomplete="off" class="text-search-box" ng-model="transferReqSearch" placeholder="Search"name="groupName"  required style="margin-top: 0px" />
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-9">
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3" style="padding-right: 0px;  padding-top:20px">
+							<div class="search">
+							<label class="show-entries">Show 
+							<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecordsTransfer();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries 
+							</label>
+						</div>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10 padding-left-right-set4">
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll485">
+					  <table id="main-table" class="main-table width100">
+					    <thead>
+					      <tr class="">
+							<th class="width15">Patient Details</th>
+							<th class="width8">Clinical Service Name</th>
+							<th class="width8">Clinical Service Date & Time</th>
+							<th class="width8">Transfer/Move (Time)</th>
+							<th class="width12">Operation Theatre</th>
+							<th class="width12">Ward Bed to be Retained</th>
+							<th class="width8">Transfer/Move Status</th>
+							</tr>
+					    </thead>
+					    <tbody>
+					      <tr ng-repeat="info in patientSurgeryTransferList | filter:transferReqSearch">
+								<!-- <td>{{info.uhidNumber}} | {{info.patientName}} | {{info.age}}</td> -->
+								<td>
+									<div class="row patient-details" id="45#1247#2_new">
+										<div class="col-lg-3 col-sm-12 col-md-3">
+											<div class="">
+												<img
+												ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}"
+												class="img-circle" width="60" height="60">
+
+											</div>
+										</div>
+										<div class="col-lg-8 col-sm-12 col-md-8">
+											<div class="patient-name">{{info.patientName}}</div>
+											<div class="patient-details">
+												<span class="patient-details patient">{{info.age}} / </span>
+												<span class="patient-details patient">{{info.genderCode}}</span>
+											</div>
+											<div class="patient">{{info.uhidNumber}}</div>
+										</div>
+									</div>
+								</td>
+								<td>{{info.procedureName}}</td>
+								<td>
+									{{info.preferedDateTime}} {{info.preferTime}}
+								</td>
+								<td>
+									{{info.transferTime}}
+								</td>
+								<td>{{info.theatreName}}</td>
+								<td>{{info.wardName}}</td>
+								<td>
+										<!-- <input type="radio" name="radioBtnForTransferRqust" class="radioAccepted" ng-value="6" ng-model="info.acceptRejectStatus" ng-click="acceptOrRejectRequest(info,$index)"><span>Accept</span> -->
+										<input type="radio" name="radioBtnForTransferRqust" class="radioRejected" ng-value="8" ng-model="info.acceptRejectStatus" ng-click="acceptOrRejectRequest(info,$index)"><span>Accept</span>
+								</td>
+							</tr>
+					    </tbody>
+					  </table>
+					</div>
+				</div>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPageTransfer(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPageTransfer(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPageTransfer(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPageTransfer(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPageTransfer(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				 <!-- ************** confirmation modal start **************** -->
+<div id="rejectOtTransfer" class="modal fade ng-scope in common-small-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+					<div class="modal-title patient-details-row">
+						OT Request Acceptance<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-12 col-sm-12 col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label dirty" ng-model="patientSurgeryTransferList[currentIndex].reasonId">
+												<option value="">Select Reason</option>
+												<option ng-repeat="info in reasonList" value="{{info.reasonMasterId}}">{{info.reasonDesc}}</option>
+											</select>		
+											<label for="code">Select Reasons</label>
+										</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<textarea name="code" rows="4" class="text-input floating-label" ng-model="patientSurgeryTransferList[currentIndex].reasonNote"></textarea>
+										<label for="code">Reason</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width10" id="" ng-click="updateTrasferRequestStatus()">Save</button> -->
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" data-dismiss="modal" ng-click="updateTrasferRequestStatus()">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- ************* confirmation modal end ************ -->
+
+
+<!-- Comform Save Dashboard START -->
+<div id="confirmSave"class="modal fade ng-scope in common-small-popup " role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog"><!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top4">
+					<label for="description" class="LISDynamicLabel"> Are you sure you want to Transfer?</label>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width12"id="" ng-click="updateTrasferRequestStatus()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary width12"id="">Cancel</button> -->
+				 <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="No" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Yes" data-dismiss="modal" ng-click="updateTrasferRequestStatus()">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Comform Save Dashboard END -->
+				<script type="text/javascript">
+					$(".btn-hide").hide();
+				</script>				

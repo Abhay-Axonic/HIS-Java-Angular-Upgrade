@@ -1,0 +1,1291 @@
+<style>
+    .tableError {
+      border: 2px solid red !important;
+    }
+  
+    .tableError select.w-100.ng-pristine.ng-empty,
+    .tableError input.w-100.ng-valid.ng-empty,
+    .borderRed {
+      border: 2px solid red;
+    }
+  
+    .font-W600 td {
+      font-weight: 600 !important;
+    }
+
+   button.btn-primary:contains("Ok") {
+    color: #03A096 !important;
+    background-color: #E0F3F2 !important;
+    border-color: #03A096 !important;
+}
+
+
+</style>
+
+
+<!-- Page Content -->
+  <div id="page-content-wrapper" class="">
+    <div class="container-fluid his-style">
+        <div class="row margin-top10 padding-left-right-set4">
+          <div class="col-lg-3 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+            <div class="row input-container">
+              <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                <i class="fa fa-tasks" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-10 col-sm-10 col-md-10">
+                <div class="">
+                  <select name="store" id="store" class="text-input floating-label dirty" ng-disabled="!!vm.model.opbId"
+                    ng-focus="vm.model.SetOldValueStore(vm.model.store)" ng-change="vm.model.ChangeFromStore(vm.model.store);"
+                    data-ng-options="store.store for store in vm.model.stores" ng-model="vm.model.store">
+                  </select>
+  
+                  <label for="code">Store</label>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set padding-top10 text-center">
+            <div class="row input-container margin-top10">
+              <button type="button" ng-disabled="!vm.model.store.id" data-dismiss="modal" class="btn btn-primary" id="addBtn" style="margin-top: -9px; width: 50% !important;"
+                id="updateBtn" ng-click="vm.model.GetItemList()">Add Item</button>
+            </div>
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+            <a class="btn btn-primary btn-save-box-shadow ng-scope btn-sm" ng-disabled="!vm.model.store.id" ng-if="!vm.model.store.id"
+                title="Upload" id="submitbutton"
+                data-toggle="modal"> 
+                <i class="fa fa-upload" style="font-size: 16px !important;" aria-hidden="true"></i>
+            </a>
+            <a class="btn btn-primary btn-save-box-shadow ng-scope btn-sm" ng-if="vm.model.store.id"
+                title="Upload" id="submitbutton" ng-click="vm.model.uploadDoccument()"
+                data-toggle="modal"> 
+                <i class="fa fa-upload" style="font-size: 16px !important;" aria-hidden="true"></i>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 pull-right">
+            <div class="row input-container">
+              <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-11 col-sm-11 col-md-11">
+                <div class="">
+                  <input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="searchnew.itemName">
+                  <label for="code">Search </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="container-fluid his-style">
+            <div class="row padding-top10 padding-left-right-set4">
+              <div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll550">
+                <table class="table table-striped table-hover table-condensed table-bordered">
+                  <thead>
+                    <tr>
+                      <th colspan="22" class="font-weight700">Item Details</th>
+                    </tr>
+                    <tr>
+                      <th class="width4" title="Item Code">Item Code</th>
+                      <th class="width8" title="Item Name">Item Name</th>
+                      <th class="width4" title="UOM">UOM</th>
+                      <th class="width5" title="UOM Unit">UOM Unit</th>
+                      <th class="width5" title="Batch No">Batch No.</th>
+                      <th class="width3" title="Expiry Date">Expiry Date</th>
+                      <th class="width3" title="Available Qty">Available Qty</th>
+                      <th class="width3" title="Pending Qty">Pending Qty</th>
+                      <th class="width2" title="Quantity">Qty</th>
+                      <th class="width3" title="COP Amount">COP {{vm.model.Currency}} </th>
+                      <th class="width3" title="MRP">MRP {{vm.model.Currency}} </th>
+                      <th class="width4" title="MRP UOM">MRP UOM</th>
+                      <th class="width5" title="UOM Unit">MRP UOM Unit</th>
+                      <th class="width4" title="Amount at COP">{{vm.model.Currency}} At COP </th>
+                      <th class="width4" title="Markup">Markup %</th>
+                      <th class="width4" title="Tax">Tax</th>
+                      <th class="width3" title="Tax Percent">Tax %</th>
+                      <th class="width4" title="Tax Amount">Tax {{vm.model.Currency}} </th>
+                      <th class="width6" title="LCOP Amount">LCOP {{vm.model.Currency}}</th>
+                      <th class="width3" title="Location">Location</th>
+                      <th class="width8" title="Remark">Remark</th>
+                      <th class="width2" title="Action">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="item in vm.model.ItemDetailList |  filter : searchnew" class="{{'tr' + item.itemId}}">
+  
+                      <td class="width5" title="{{item.itemCode}}">{{item.itemCode}}</td>
+                      <td class="width8" title="{{item.itemName}}">{{item.itemName}}</td>
+                      <td class="vertical-middle width8" title="{{item.selectedUom.uomType}}">
+  
+                        <select ng-model="item.selectedUom" class="w-100" data-ng-class="{tableError: item.isUomValid}"
+                          data-ng-options="uom as uom.uomDetails for uom in item.uom track by uom.uomTypeId" 
+                          ng-change="item.uomUnit = item.selectedUom.uomUnit; vm.model.onUomChange(item); vm.model.CalculateCOP(item); item.isUomValid = false;"
+                          ng-init="vm.model.uomSelectEvent(item)" ng-blur="vm.model.ValidateUom(item);">
+                          <option value="">Select UOM</option>
+                        </select>
+                      </td>
+                      <td class="vertical-middle width6">
+                        <span ng-if="item.receivedQtyCon!=''">({{item.receivedQtyCon}}) = </span>
+                        <span> {{item.receivedQtyCalculation}} {{item.uomUnitData}}</span>
+                        <span class="pull-right text-right">
+                          <a data-target="#selectUOM_modal" data-toggle="modal" ng-click="vm.model.uomInfoOnClick(item, $index)">
+                            <i class="fa fa-info-circle"></i>
+                          </a>
+                        </span>
+                      </td>
+                      <td title="{{item.batchNo}}" class="width6">
+                        <input type="text" autocomplete="off" placeholder="" class="w-100" ng-model="item.batchNo" 
+                        data-ng-class="{tableError: item.isBatchNoValid}" ng-change="item.isBatchNoValid = false;"
+                        ng-blur="validateBatchNo(item, $index)" maxlength="20">
+                      </td>
+                      <td title="{{item.expiryDate | date : 'MMM-yyyy'}}" class="width4">
+                        <input type="text" autocomplete="off" class="w-100 text-center" name="item.expiryDate" id="item.expiryDate"
+                          uib-datepicker-popup="MMM-yyyy" ng-model="item.expiryDate" model-view-value="true" ng-change="vm.model.setSelectedDate(item); item.isExpiryDateValid = false;"
+                          is-open="vm.model.dateOpen[$index]" datepicker-options="vm.model.expiryDateOptions"
+                          show-button-bar="false" ng-click="vm.model.OpenExpiryDate($index)" data-ng-class="{tableError: item.isExpiryDateValid}"
+                          class="w-100 text-right" ng-keypress="expiryDateVal($event , item)">
+                          <!-- ng-blur="validateExpiryDate(item, $index)" -->
+                      </td>
+                      <td class="width3" title="{{item.newstockAvailable}}">{{item.newstockAvailable}}</td>
+                      <td class="width3" title="{{item.newmaxOrderQuantity}}">{{item.newmaxOrderQuantity}}</td>
+                      <td title="{{item.quantity}}" class="width4">
+                        <input type="text" autocomplete="off" placeholder="" class="w-100" maxlength="5" ng-model="item.quantity" 
+                          ng-blur="calculateReceivedQty(item);vm.model.CalculateCOP(item);"
+                          ng-class="{tableError: item.isQuantityValid}" ng-change="item.isQuantityValid = false;"
+                          numbers-only>
+                      </td>
+                      <td title="{{vm.model.Currency}} {{item.cop | number:2}}" class="width7">
+                        <input type="text" autocomplete="off" placeholder="" class="w-100" ng-model="item.cop" ng-blur="vm.model.CalculateCOP(item);"
+                          ng-class="{tableError: item.isCopValid}" ng-change="item.isCopValid = false;"
+                          allow-decimal-numbers>
+                      </td>
+                      <td title="{{vm.model.Currency}} {{item.mrp | number:2}}" class="width7">
+                        <input type="text" autocomplete="off" placeholder="" class="w-100" ng-model="item.mrp"
+                          ng-class="{tableError: item.isMrpValid}" ng-change="item.isMrpValid = false;" 
+                          ng-blur="validaterate(item);"
+                          allow-decimal-numbers>
+                          <!-- validateMRP(item, $index) -->
+                      </td>
+                      <td class="width3">  
+                        <select name="mrpUom" id="mrpUom" class="w-100"   data-ng-class="{tableError: item.isMrpUomValid}"
+                        data-ng-options="mrpUOM.uomDetails for mrpUOM in item.mrpUOM" ng-model="item.selectedMrpUom"
+                         ng-change="vm.model.ValidateMrpUom(item); item.isMrpUomValid = false;">
+                        <option value="">Select MRP UOM</option>
+                      </select></td>
+                      <td class="vertical-middle width6">
+                        <span class="" title="{{item.MrpuomUnit}}">{{item.MrpuomUnit}}</span>
+                        <span class="pull-right text-right">
+                          <a data-target="#selectUOM_modal" data-toggle="modal" ng-click="vm.model.uomInfoOnClick(item, $index)">
+                            <i class="fa fa-info-circle"></i>
+                          </a>
+                        </span>
+                      </td>
+                      <td title="{{vm.model.Currency}} {{item.copAmount | number:2}}" class="width8">{{vm.model.Currency}}
+                        {{(item.copAmount ? item.copAmount : 0) | number:2 }}
+                      </td>
+                      <td title="{{item.markup | number:2}} %" ng-init="item.markup = item.markup ? item.markup : '0.00'" class="width8">
+                        <input type="text" autocomplete="off" placeholder="" class="w-100" ng-model="item.markup"
+                          ng-class="{tableError: item.isMarkupValid}" ng-change="item.isMarkupValid = false;"
+                          allow-decimal-numbers>
+                      </td>
+                      <td title="{{item.selectedTax.taxName}}" class="width8">
+                        <select ng-model="item.selectedTax" class="w-100" ng-options="obj.taxName for obj in item.taxList"
+                         ng-change="vm.model.SelectTax(item.selectedTax, item); vm.model.taxCodeValid[$index] = false;"></select>
+                      </td>
+                      <td title="{{item.selectedTax.taxPercent | number:2}} %" class="width7">{{item.selectedTax.taxPercent | number:2}} %</td>
+                      <td title="{{vm.model.Currency}} {{item.taxAmount | number:2}}" class="width8">{{vm.model.Currency}}
+                        {{item.taxAmount= (((item.copAmount ||
+                        0)*(item.selectedTax.taxPercent ||0))/100) | number:2}} 
+                      </td>
+                      <td class="width3" title="{{vm.model.Currency}} {{item.lcop | number:2}}">
+                        <input type="text" autocomplete="off" ng-model="item.lcop" class="w-100" allow-decimal-numbers>{{item.uomUnitData}}
+                      </td>
+                      <td class="width2">
+                        <a href="" data-toggle="modal" ng-click="vm.model.DetailsClick(item, $index);" data-target="#storageDetails">Details</a>
+                      </td>
+                      <td title="{{item.remark}}" class="width10">
+                        <input type="text" autocomplete="off" placeholder="" maxlength="100" class="w-100" ng-model="item.remark">
+                      </td>
+                      <td class="width10">
+                        <input type="button" name="" id="" value="+" ng-click="vm.model.AddDuplicateRow(item);" class="btn btn-info add-dynamic-row addbtn">
+                        <input type="button" name="" id="" value="-" ng-click="vm.model.ConfirmRemove(item)" class="btn btn-info addbtn">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    </fieldset>
+  
+    <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+      <div class="row his-style margin-top10">
+        <div class="col-lg-10 col-md-10 col-sm-10"></div>
+        <div class="col-md-1 padding-left0px-right6px">
+          <div class="common-save-button">
+            <input type="button" value="Save" data-ng-class="{disabled:saveBtnDisabled==true}"  ng-click="vm.model.SaveOpeningBalance()" ng-disabled="!!vm.model.ItemDetailList && vm.model.ItemDetailList.length <= 0"
+              class="btn btn-primary btn-save-box-shadow">
+          </div>
+        </div>
+        <div class="col-md-1 padding-left0px-right6px">
+          <div class="common-save-button">
+            <a href="#/openingBalance">
+              <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+  </div>
+  <div id="storeChange" class="modal fade ng-scope in" data-backdrop="static" data-keyboard="false" role="dialog" style="padding-left: 17px;">
+    <div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+      <!-- style="width: 25% !important;margin: 200px 0 0 510px !important;" -->
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 0px!important;">
+          <div class="modal-title patient-details-row">
+            Confirm
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="margin-left10">
+            <span>Are you sure you want to Clear the list ?</span>
+          </div>
+        </div>
+        <div class="modal-footer" style="border:none;">
+          <button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="vm.model.ConfirmStorePopup();">Ok</button>
+          <button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="itemRemovePopup" class="modal fade ng-scope in" data-backdrop="static" data-keyboard="false" role="dialog" style="padding-left: 17px;">
+    <div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+      <!-- style="width: 25% !important;margin: 200px 0 0 510px !important;" -->
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 0px!important;">
+          <div class="modal-title patient-details-row">
+            Confirm
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="margin-left10">
+            <span>Are you sure you want to remove the current item from the list ?</span>
+          </div>
+        </div>
+        <div class="modal-footer" style="border:none;">
+          <button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="vm.model.removeRowData();">Ok</button>
+          <button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ****************** select UOM Modal start**************1234567890********** -->
+  <div id="selectUOM_modal" class="modal fade ng-scope in common-small-popup" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+            Select UOM
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4" id="">
+              <!-- pharmacologyDetailsTableId id for the table td fix height -->
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th class="width3">
+                      UOM
+                    </th>
+                    <th class="width6">
+                      UOM Unit
+                    </th>
+                    <th class="width6">
+                      Conversion Factor
+                    </th>
+  
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="item in vm.model.selectedUOMList">
+                    <td>{{item.uomType}}</td>
+                    <td>
+                     <select ng-model="item.selectedUOM" class="w-100" ng-options="uom as uom.unit for uom in vm.model.uomUnits track by uom.id"
+                        ng-change="item.uomUnitId = item.selectedUOM.id; item.uomUnit = item.selectedUOM.unit" ng-init="vm.model.modalUOMSelectEvent(item)"></select> </td>
+                    <td>
+                    <input type="text" autocomplete="off" numbers-only ng-disabled="item.uomTypeId == 3" maxlength="5" ng-model="item.conversion"
+                        class="select-box ">
+  
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="row his-style">
+            <div class="col-md-10"></div>
+            <div class="col-md-2 padding-left0px-right6px">
+              <div class="common-save-button">
+                <input type="button" value="Save" ng-click="vm.model.uomModalOnClick()" class="btn btn-primary btn-save-box-shadow">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ***************select UOM modal end *************************** -->
+  
+  
+  <!--  add new item list modal start -->
+  <div id="addNewItemPurchaseRequest" class="modal fade ng-scope in" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+            Add Item List
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body height-table-with-scroll ">
+          <fieldset>
+            <div class="row">
+              <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                    <i class="fa fa-tasks" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-lg-11 col-sm-11 col-md-11">
+                    <div class="">
+                      <!-- <select name="assetCategory" id="assetCategory" class="text-input floating-label dirty" data-ng-options="category.category for category in vm.model.assetCategories"
+                        ng-model="vm.model.assetCategory" ng-change="vm.model.GetProductCategoryList(vm.model.assetCategory.id)">
+                      </select> -->
+  
+  
+                      <select name="assetCategory" id="assetCategory" class="text-input floating-label dirty"
+                        data-ng-options="category.category for category in vm.model.assetCategories" ng-model="vm.model.assetCategory"
+                        ng-change="vm.model.GetProductCategoryList(vm.model.assetCategory.id)">
+                      </select>
+  
+  
+  
+                      <label for="code">Asset Category</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                    <i class="fa fa-tasks" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-lg-11 col-sm-11 col-md-11">
+                    <div class="">
+                      <!-- <select name="productCategory" id="productCategory" class="text-input floating-label dirty" data-ng-options="category.category for category in vm.model.productCategories"
+                        ng-model="vm.model.productCategory">
+                      </select> -->
+  
+                      <select name="productCategory" id="productCategory" class="text-input floating-label dirty"
+                        data-ng-options="category.category for category in vm.model.productCategories" ng-model="vm.model.productCategory">
+                      </select>
+                      <label for="code">Product Category</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-lg-11 col-sm-11 col-md-11 ">
+                    <div class="">
+                      <input type="text" autocomplete="off" name="description" id="" class="text-input floating-label">
+                      <label for="description" class="LISDynamicLabel">Item Code</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-lg-11 col-sm-11 col-md-11 ">
+                    <div class="">
+                      <input type="text" autocomplete="off" name="description" id="" class="text-input floating-label">
+                      <label for="description" class="LISDynamicLabel">Item Name</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style">
+                <input type="button" value="Search" class="btn btn-primary btn-save-box-shadow">
+              </div>
+            </div>
+            <div class="row common-popup-height-350">
+              <div class="col-lg-12 col-md-12 padding-top10">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th class="width1 text-center media-middle ">
+                        <input type="checkbox" />
+                      </th>
+                      <th class="width15">Item
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width10">Item Code
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width8">PUOM
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width8">SUOM
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width8">DUOM
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width8">UOM Unit
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width8">Batch No
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width5">Expiry Date
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width5">Qty
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width5">COP
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width5">MRP
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width8">Amount At COP
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width8">GST Tax %
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width8">GST Tax Amount
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width5">Net Amount
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                      <th class="width8">Remarks
+                        <div class="float_right">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- <tr? -->
+                    <!-- <tr ng-repeat="item in vm.model.ItemDetailList | filter: searchStoreIndent "> -->
+                    <!-- </tr> -->
+  
+                    <!-- <tr>
+                        <td class="text-center">
+                          <input type="checkbox" />
+                        </td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>
+                          <select class="w-100  ">
+                            <option></option>
+                            <option>1</option>
+                            <option>2</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select class="w-100  ">
+                            <option></option>
+                            <option>1</option>
+                            <option>2</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select class="w-100  ">
+                            <option></option>
+                            <option>1</option>
+                            <option>2</option>
+                          </select>
+                        </td>
+                        <td>-</td>
+                        <td>
+                          <input type="text" autocomplete="off" class="w-100" placeholder="Batch No." />
+                        </td>
+                        <td>
+                          <input type="text" autocomplete="off" class="w-100" placeholder="Expiry Date">
+                        </td>
+                        <td>
+                          <input type="text" autocomplete="off" class="w-100  " placeholder="Qty" />
+                        </td>
+                        <td>
+                          <input type="text" autocomplete="off" class="w-100  " placeholder="COP" />
+                        </td>
+                        <td>
+                          <input type="text" autocomplete="off" class="w-100  " placeholder="MRP" />
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <input type="text" autocomplete="off" class="w-100" placeholder="Enter Text" />
+                        </td>
+                      </tr> -->
+  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          <div class="row his-style">
+            <div class="col-md-5"></div>
+            <div class="col-md-2 col-sm-2 padding-left-right15 text-right remark-label">
+              <label>Remark</label>
+            </div>
+            <div class="col-md-4 col-sm-4 padding-left-right15">
+              <textarea class="form-control" row="2"></textarea>
+            </div>
+            <div class="col-md-1 padding-left0px-right6px">
+              <div class="common-save-button">
+                <input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" data-dismiss="modal">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- <div ng-include="'./views/PharmacyInventory/stock/add-item-list.html'"></div> -->
+  
+  
+  <div id="addNewItemWasteStore" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+            Add Item List
+            <button type="button" ng-click="" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body height-table-with-scroll	">
+          <fieldset>
+            <div class="row">
+              <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                    <i class="fa fa-tasks" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-lg-11 col-sm-11 col-md-11">
+                    <div class="">
+                      <select name="assetCategory" id="assetCategory" class="text-input floating-label dirty"
+                        data-ng-options="category.category for category in vm.model.assetCategories" ng-model="vm.model.assetCategory"
+                        ng-change="vm.model.GetProductCategoryList(vm.model.assetCategory.id)">
+                      </select>
+  
+                      <label for="code">Asset Category</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                    <i class="fa fa-tasks" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-lg-11 col-sm-11 col-md-11">
+                    <div class="">
+                      <select name="productCategory" id="productCategory" class="text-input floating-label dirty"
+                        data-ng-options="category.category for category in vm.model.productCategories" ng-model="vm.model.productCategory">
+                      </select>
+  
+                      <label for="code">Product Category</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-lg-11 col-sm-11 col-md-11 ">
+                    <div class="">
+                      <input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="vm.model.itemCode"
+                      ng-change="vm.model.searchNewItem()">
+                      <label for="description" class="LISDynamicLabel">Item Code</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-lg-11 col-sm-11 col-md-11 ">
+                    <div class="">
+                      <input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="vm.model.itemName"
+                      ng-change="vm.model.searchNewItem()" ng-trim="false">
+                      <label for="description" class="LISDynamicLabel">Item Name</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style" style="margin-top: 11px;">
+                <div class="common-save-button">
+                  <a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" style="width: auto;" ng-click="vm.model.searchNewItem()">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="row padding-top5">
+              <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 ">
+                  <div class="search">
+                    <label class="show-entries">Show 
+                    <select ng-init="vm.model.pagination.pageSize='10'" 
+                      ng-model="vm.model.pagination.pageSize" 
+                      ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select> records 
+                    </label>
+                  </div>
+              </div>
+          </div>
+            <div class="row">
+              <div class="container-fluid his-style">
+                <div class="table-container padding-left-right-set4 padding-top5">
+                  <div class="table-container-header">
+                    <table class="table table-striped table-hover table-condensed table-bordered">
+                      <thead class="mainServiceTableCommon">
+                        <thead>
+                          <tr>
+                            <th class="width2 text-center media-middle ">
+                              <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="vm.model.selectAllRows" ng-disabled="!vm.model.searchNewItemList.length"
+                                       ng-click="vm.model.SelectAllItems()" />
+                                   <span></span>
+                              </label>
+                            </th>
+                            <th class="width10" title="Asset Category">Asset Category
+                              <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'assetCategory', sortReverse = !sortReverse)">
+                                <div>
+                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                </div>
+                                <div class="margin-top-8">
+                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </div>
+                              </div>
+                            </th>
+                            <th class="width10" title="Product Category">Product Category
+                              <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'productCategory', sortReverse = !sortReverse)">
+                                <div>
+                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                </div>
+                                <div class="margin-top-8">
+                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </div>
+                              </div>
+                            </th>
+                            <th class="width10" title="Itme Code">Item Code
+                              <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemCode', sortReverse = !sortReverse)">
+                                <div>
+                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                </div>
+                                <div class="margin-top-8">
+                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </div>
+                              </div>
+                            </th>
+                            <th class="width10" title="Item Name">Item Name
+                              <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemName', sortReverse = !sortReverse)">
+                                <div>
+                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                </div>
+                                <div class="margin-top-8">
+                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </div>
+                              </div>
+                            </th>
+                          </tr>
+                    </table>
+                  </div>
+                  <div class="table-container-body" style="height:350px; overflow-y: scroll;">
+                    <table class="table table-striped table-hover table-condensed table-bordered">
+                      <tbody>
+                        <tr ng-repeat="item in vm.model.pagination.data">
+                          <td class="text-center width2">
+                            <label class="checkbox-inline">
+                              <input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItem(item)" />
+                              <span></span>
+                            </label>
+                          </td>
+                          <!-- ng-change="vm.model.CheckBoxVal(result)" ng-true-value="1" ng-false-value="0" -->
+                          <td class="width10" title="{{item.assetCategory}}">{{item.assetCategory}}</td>
+                          <td class="width10" title="{{item.productCategory}}">{{item.productCategory}}</td>
+                          <td class="width10" title="{{item.itemCode}}">{{item.itemCode}}</td>
+                          <td style="width: 9.83%!important;" title="{{item.itemName}}">{{item.itemName}}</td>
+                        </tr>
+  
+                        <tr ng-if="!vm.model.pagination.data || vm.model.pagination.data == false  && vm.model.pagination.data != 'undefined'">
+                          <td class="text-center">
+                            <p>No Record Found</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="row margin-bottom45 center-block">
+                  <ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+                    style="font-size: 14px; cursor: pointer;">
+                    <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+                      ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+                    </li>
+                    <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+                      ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+                    </li>
+                    <li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+                      ng-class="{active:vm.model.pagination.currentPage === page}"><a
+                      ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+                    </li>
+                    <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+                      <a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+                    </li>
+                    <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+                      <a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          <div class="row his-style">
+            <div class="col-md-11"></div>
+            <div class="col-md-1 padding-left0px-right6px">
+              <div class="common-save-button">
+                <input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-disabled="!vm.model.isItemChecked"
+                  ng-click="vm.model.AddItems()" data-dismiss="modal">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  Get request modal start -->
+  
+  
+  <!-- item remove  -->
+  <div id="confirmRemove" class="modal fade ng-scope in" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 0px!important;">
+          <div class="modal-title patient-details-row">
+            Confirm
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="margin-left10"><span>Are you sure you want to remove item?</span></div>
+        </div>
+        <div class="modal-footer" style="border:none;">
+          <button type="button" class="btn btn-primary" id="okBtn" ng-click="vm.model.RemoveItem(vm.model.itemForRemove)">Ok</button>
+          <button type="button" data-dismiss="modal" id="cancelBtn" class="btn btn-primary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- ****************** Storage Details modal start************************ -->  
+<div id="storageDetails" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+            Storage Details 
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th class="width6">
+                       Rack
+                    </th>
+                    <th class="width6">
+                      Shelf
+                    </th>
+                    <th class="width15">
+                       Remark
+                    </th>
+                    <th class="width2">
+                       Action
+                    </th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="rack in vm.model.storageDetailsList">
+                    <td>
+                      <select ng-model="rack.rackName" class="w-100" ng-options="rack.rack for rack in vm.model.rackList track by rack.rackId" ng-change="vm.model.ChangeRack(rack.rackName)">
+                        <option value="">Select Rack</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select ng-model="rack.selfName" class="w-100" ng-options="shelf.shelf for shelf in rack.rackName.shelfs track by shelf.id" ng-change="vm.model.ChangeSelf(rack, rack.selfName)">
+                          <option value="">Select Shelf</option>
+  
+                      </select>
+                    </td>
+                    <td>
+                      <textarea ng-model="rack.remark" row="2"></textarea>
+                    </td>
+                    <td>
+                      <a href="" ng-click="vm.model.OpenPopup('open', 'viewStorageDetails', {});vm.model.ViewStorageDetails(rack, rack.selfName)" ng-class="{disabled: !rack.rackName || !rack.selfName}" class="view-btn">View</a>
+                    </td>
+                    <td class="width6">
+                      <div>
+                        <input type="button" ng-click="vm.model.AddRack($index)" value="+" class="btn btn-primary btn-save-box-shadow width35">
+  
+                        <input type="button" ng-click="vm.model.lessRack($index)" value="-" class="btn btn-primary btn-save-box-shadow width35" ng-if="$index !== 0">
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="row his-style">
+            <div class="col-md-10"></div>
+            <div class="col-md-2 padding-left0px-right6px">
+              <div class="common-save-button">
+                <input type="button" ng-click="vm.model.SaveStorageDetails();" data-dismiss="modal" value="Save" class="btn btn-primary btn-save-box-shadow">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ***************  Storage Details modal end *************************** -->
+
+  <!-- ****************** view Storage Details modal start************************ -->  
+<div id="viewStorageDetails" class="modal fade ng-scope in common-larger-popup" data-backdrop="static" data-keyboard="false" role="dialog" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+                View
+            <button type="button" class="close view-close-btn" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 height-table-with-scroll padding-top10 padding-left-right-set4">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th class="width6">
+                      Rack No
+                    <div class="float_right" ng-click="sortType = 'itemRackName'; sortReverse = !sortReverse">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width6">
+                      Shelf No
+                    <div class="float_right" ng-click="sortType = 'itemselfName'; sortReverse = !sortReverse">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width6">
+                      Batch No
+                    <div class="float_right" ng-click="sortType = 'batchNo'; sortReverse = !sortReverse">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width10">
+                       Item Code
+                    <div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width10">
+                       Item Name
+                    <div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="shelf in vm.model.itemStorageDetails | orderBy:sortType:sortReverse">
+                    <td>{{vm.model.itemRackName}}</td>
+                    <td>{{vm.model.itemselfName}}</td>
+                    <td>{{shelf.batchNo}}</td>
+                    <td>{{shelf.itemCode}}</td>
+                    <td>{{shelf.itemName}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- *************** view Storage Details modal end *************************** -->
+
+  <div id="uploadDetails" class="modal common-medium-popup fade ng-scope in"  data-backdrop="static" role="dialog">
+    <div class="modal-dialog"> 
+      <div class="modal-content">
+        <div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+          <div class="modal-title patient-details-row">
+            Document Upload Details
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row padding-bottom10 padding-top10">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="fix-height-scroll230 padding-top10" style="overflow:overlay !important;">
+              <table class="table table-striped table-bordered" id="documentUpload">
+                <thead>
+                  <tr>
+                      <th class="width8"> Date</th>
+                    <th class="UHID-width"> Document Type</th>
+                    <th class="UHID-width"> Document Upload (Allowed uploads *.txt, *.pdf, *.docx, *.doc)</th>
+                    <th class="status">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="docObj in encounterDetailsList track by $index">
+                    <td>
+                      <input type="text" autocomplete="off"
+                        class="text-input floating-label dirty"
+                        name="datepickervaccine" id="datepickervaccine"
+                        uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                        placeholder="" ng-model="docObj.uploadDoccumentDate"
+                        model-view-value="true"
+                        is-open="datepickerUpload.opened[$index]"
+                        datepicker-options="dateOptionsUpload"
+                        show-button-bar="false"
+                        ng-click="datepickerUploadK($index);"
+                        style="background: transparent !important;" required>
+                    </td>
+                    <td>
+                      <div>
+                        <select class="text-input floating-label dirty" ng-model="docObj.documentTypeId">
+                          <option selected value>Select Document Type</option>
+                          <option ng-repeat="docType in documentTypeList" value="{{docType.documentTypeId}}">{{docType.documentTypeName}}</option>
+                        </select> 
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <input type="file" name="file{{$index}}" file-model="docObj.file" id="fileId" accept="application/msword,text/plain, application/pdf" validfile>
+                        <p ng-show="fileError" style="color:red;">{{fileError}}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="">
+                        <button class="btn btn-info" style="width:36px" value="+" ng-click="addImageDetails();"><b>+</b></button>
+                        <button class="btn btn-info" style="width:36px" value="-" ng-click="removeImageDetails($index);" ng-if="$index!=0"><b>-</b></button>
+                                            <!-- ngIf: $index > 0 --> &nbsp;&nbsp;
+                      </div>
+                    </td>
+                  </tr><!-- end ngRepeat: data in dataList -->
+                </tbody>
+              </table>
+              
+              </div>
+            </div>
+          </div>
+          <div class="table-container" >
+            <div class="table-container-header">
+              <table class="table table-striped table-hover table-condensed table-bordered">
+                <thead>
+                  <tr>
+                    <th class="width10">Document Type</th>
+                     <th class="width10">File Name</th> 
+                    <th class="width10">Document Uploaded Date</th>
+                    <th class="width5">View</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+            <div class="table-container-body fix-height-scroll150" style="overflow: overlay; ">
+              <table  class="table table-striped table-hover table-condensed table-bordered">
+                <tbody>
+                  <tr ng-repeat = "documentObj in patientDocumentList|orderBy:column:reverse track by $index">
+                     <td class="width10">
+                      <div>
+                        {{documentObj.documentName}}
+                      </div>
+                    </td>
+                     <td class="width10">
+                      <div>
+                        {{documentObj.fileName}}
+                      </div>
+                    </td> 
+                    <td class="width10">
+                      <div>
+                        {{documentObj.uploadDoccumentDate}}
+                      </div>
+                    </td>
+                    <td class="width5">
+                      <div>
+                      <a fancybox target ="_blank" href="{{documentObj.documentPath}}">View</a> 
+                      </div>
+                    </td>
+              </tr>
+                </tbody>
+              </table>
+              <table class="table table-bordered">
+                <tr ng-if="(patientDocumentList)=='' || (patientDocumentList)==null ">
+                  <td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;"><b>No Records Found</b></p></td>
+                </tr>
+                </table>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer" style="border:none;">
+          <!-- <button ng-if="forView == false" type="button"  class="btn btn-primary width11" id=""ng-click="uploadPatientImage();">Save</button> -->
+          <button ng-if="forView == false" type="button" data-dismiss="modal" class="btn btn-primary width11"  ng-click="validateDocType()">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $(".selectedPageName").text("Opening Balance");
+      // $(".selectedServicesList").hide();
+      $(".addNewItemRadioBtnClass").change(function () {
+        if ($(this).is(":checked")) {
+          $("#addNewItemPurchaseRequest").modal();
+        }
+      });
+      $(".getRequestListBtnClass").change(function () {
+        if ($(this).is(":checked")) {
+          $("#getRequestWasteStore").modal();
+        }
+      });
+    });
+    $(document).on("click", ".table-th-bg", function () {
+      // $(this).next().find(".selectedServicesList").toggle();
+      $(".selectedServicesList").toggle();
+    });
+  
+    // $('a[name="getItem"]').on('click', function (e) {
+    //   if (e.target.click) {
+    //     $('#addNewItemWasteStore').modal();
+    //   }
+    // });
+  
+    function addDetailsRow() {
+      //alert();
+      var n = document.getElementById("DetailsTable").rows.length;
+      var id = Number(n);
+      //alert(id);
+      var test =
+  
+        '<tr>' +
+        '<td></td>' +
+        '<td></td>' +
+        '<td><select class="border-dropdown"> <option value=" "> </option> <option value="">PUOM</option> <option value="">SUOM</option> <option value="">DUOM</option> </select></td>' +
+        '<td></td>' +
+        '<td><input type="text" autocomplete="off" placeholder="" class="w-100"></td>' +
+        '<td><input type="text" autocomplete="off" placeholder="__/__/____" class="w-100 text-center ng-pristine ng-untouched ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date" name="datepicker" id="datepicker" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" ng-model="datepicker" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptions" show-button-bar="false" ng-click="openDatePicker()"></td>' +
+        '<td><input type="text" autocomplete="off" placeholder="" class="w-100"></td>' +
+        '<td><input type="text" autocomplete="off" placeholder="" class="w-100"></td>' +
+        '<td><input type="text" autocomplete="off" placeholder="" class="w-100"></td>' +
+        '<td></td>' +
+        '<td></td>' +
+        '<td></td>' +
+        '<td></td>' +
+        '<td><input type="text" autocomplete="off" placeholder="" class="w-100"></td>' +
+        '<td class="width15">' +
+        '<input type="button" name="" id="addr" value="+" onclick="addDetailsRow()" class="btn btn-info add-dynamic-row addbtn" style="padding: 0 2px;">&nbsp;' +
+        '<input type="button" name="" id="delrow" value="-" onclick="delRow(this)" class="btn btn-info addbtn" style="padding: 0 4px;">' +
+        '</td>' +
+        '</tr>';
+  
+      $("#DetailsTable").append(test);
+  
+    }
+  
+    function delRow(r) {
+      var i = r.parentNode.parentNode.rowIndex;
+      document.getElementById("DetailsTable").deleteRow(i);
+    }
+  </script>
+

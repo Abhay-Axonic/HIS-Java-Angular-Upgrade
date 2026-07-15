@@ -1,0 +1,144 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Store (Requestor):</b>
+					<label class="ng-binding">{{viewSterRequestObj.requestingStore}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Store (Issuer):
+					</b>
+					<label class="ng-binding">{{viewSterRequestObj.issueingStore}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Request Date:</b>
+					<label class="ng-binding">{{viewSterRequestObj.createdDate}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Request No.:</b>
+					<label class="ng-binding">{{viewSterRequestObj.requestNo}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row" id="">
+				<div class="col-lg-12 col-md-12 height420-table-with-scroll padding-top10 padding-left-right-set4">
+					<!-- table-x-scroll -->
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								
+								<th class="width4 vertical-middle">Kit Code</th>
+								<th class="width5 vertical-middle">Kit Name</th>
+								<th class="width5 vertical-middle">Batch No.</th>
+								<th class="width2 vertical-middle text-center"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="kitInfo in viewSterRequestObj.kitList">
+								<td>{{kitInfo.kitCode}}</td>
+								<td>{{kitInfo.kitName}}</td>
+								<td>{{kitInfo.batchNumber}}</td>
+								<td class="text-center"><a data-toggle="modal" data-target="#instrumentInfoDetails" ng-click="getInstrumentInfo(kitInfo)"><i class="fa fa-info-circle"></i></a></td>
+							</tr>
+							
+							
+						</tbody>
+					</table>
+					</div>
+				</div>
+				
+				<!-- <footer class="col-lg-12 col-md-12 padding-left-right-set4 padding-right20">
+					<div class="row padding-top5 margin-top10 padding-right20">
+						<div class="col-lg-10 col-md-8 padding-left"></div>
+						
+						<div class="col-lg-1 col-md-2 padding-left-set4">
+							<a href="#/sterilizationRequest">
+								<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+							</a>
+						</div>
+					</div>
+				</footer> -->
+				
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-top5 margin-top10 padding-right20">
+				<div class="col-lg-11 col-sm-11"></div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a href="#/sterilizationRequest">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+				
+	</div>
+</div>
+
+
+
+<!--  instrumentDetails START -->
+<div id="instrumentInfoDetails" class="modal fade ng-scope in common-medium-popup" role="dialog" style="z-index: 9999; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					  Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 padding-top4">
+						<div class="col-md-12 common-table-height-250">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+										<th class="width15">
+											Instrument Code
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width15">
+											Instrument Name
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width5">
+											Quantity
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										
+									</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="instrumentInfo in kitInstrumentInfo.kitInstrumentList">
+										<td>{{instrumentInfo.instrumentCode}}</td>
+										<td>{{instrumentInfo.instrumentName}}</td>
+										<td>{{instrumentInfo.quantity}}</td>
+										
+									</tr>
+									</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+				</div>
+		</div>
+	</div>
+</div>
+<!-- instrumentDetails END -->
+

@@ -1,0 +1,244 @@
+<div ng-include="'./views/common-counter-with-patientsearch.html'" class="margin-top5"></div>
+<fieldset class="normalRegistration sub-fieldset main-fieldset">
+					<!-- <legend class="main-heading-div commonPatientSearch cursor-pointer">
+					Patient Search
+					<span class="billing-counter-no">Counter No.</span>	
+					</legend> -->
+						<div class="row patienttSearchResult">
+							<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+											<i class="fa fa-bullseye" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<input type="text" autocomplete="off" name="registrationNumber" ng-model="patientSearchObj.uhIdNumber" id="" class="text-input floating-label dirty" press-enter="searchPatient(patientSearchObj)" >
+												<label for="description" class="LISDynamicLabel">UHID</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-user" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" ng-model="patientSearchObj.patientName" class="text-input floating-label dirty" press-enter="searchPatient(patientSearchObj)" > 
+												<label for="description" class="LISDynamicLabel">Patient Name</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container margin-top0">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-venus-mars " aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<select class="text-input floating-label" ng-model="patientSearchObj.genderId" press-enter="searchPatient(patientSearchObj)">
+													<option></option>
+													<option ng-repeat="sex in sexMasterList" value="{{sex.id}}">{{sex.desc}}</option>
+												</select> <label for="code">Gender</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-mobile" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input type="text" autocomplete="off" numbers-only name="description" id="" class="text-input floating-label dirty" ng-model="patientSearchObj.mobileNo" press-enter="searchPatient(patientSearchObj)" > <label for="description" class="multi-select-label">Mobile No.</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-calendar " aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="birthDate" id="birthDate" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" onkeydown="event.preventDefault()"
+												placeholder="DD/MM/YYYY" ng-model="patientSearchObj.birthDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptions" 
+												show-button-bar="false"	ng-click="openDatePicker()" required>
+												<!-- <input type="text" autocomplete="off" ng-model="patientSearchObj.birthDate"  name="description" id="" class="text-input floating-label" press-enter="searchPatient(patientSearchObj)">--> <label for="birthDate" class="">Birth Date</label> 
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container margin-top0">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-address-card-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<select class="text-input floating-label dirty" ng-model="patientSearchObj.identificationTypeId" >
+													<option></option>
+													<option ng-repeat="id in identificationTypeList" value="{{id.identificationId}}">{{id.identificationName}}</option>
+												</select> <label for="code" class="multi-select-label">Identification Type</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-bullseye" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" ng-model="patientSearchObj.identificationNo" class="text-input floating-label dirty" press-enter="searchPatient(patientSearchObj)" > <label for="description" class="">Identification No.</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10">
+									<div class="width-div-for-patient-reg ">
+										<a href="" id="searchBtn" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="searchPatient(patientSearchObj)">
+										<i class="fa fa-search" style="font-size: 16px !important;" aria-hidden="true"></i></a>
+									</div>
+									<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top0 text-width-auto">
+									<div class="width-div-for-patient-reg ">
+										<a href="" class="btn btn-primary btn-save-box-shadow" title="Fingerprint" ng-click="thumbSearch();">
+										<i class="fa fa-podcast" style="font-size: 17px" aria-hidden="true"></i></a>
+									</div>
+								</div>
+								</div>
+							</div>
+							<fieldset class="normalRegistration sub-fieldset border-none padding-top10">
+							<!-- <legend class="main-heading-div border-bottom-none">List</legend> -->
+								<div class="row serachedPatientList table-container padding-left-right-set4">
+									<div class="table-container">
+										<div class="table-container-header">
+											<table class="table table-striped table-hover table-condensed table-bordered">
+												<thead>
+													<tr>
+														<th class="width2"></th>
+														<th class="width10"><span class="">UHID</span></th>
+														<th class="width15"><span class="">Patient's Name</span></th>
+														<th class="width5">Gender</th>
+														<th class="width15">Mobile No.</th>
+														<th class="width7">Birth Date</th>
+														<th class="width15">Identification Type</th>
+														<th class="width15">Identification No.</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="table-container-body fix-height-scroll94" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+											<table class="table table-striped table-hover table-condensed table-bordered">
+												<tbody>
+													<tr ng-repeat="patient in patientList" ng-if="patient.registrationTypeId!=5 " class="cursor-pointer">
+														<td class="width2">
+															<input type="radio" name="patient-list-radio" ng-click="getPatientDetailsByIndex($index)" id="patientSelectRadio_{{$index}}">
+														</td>
+														<td class="width10" ng-click="getPatientDetailsByIndex($index)">
+															{{patient.uhIdNumber}}
+														</td>
+														<td class="width15" ng-click="getPatientDetailsByIndex($index)">
+															{{patient.patientName}}
+														</td>
+														<td class="width5" ng-click="getPatientDetailsByIndex($index)">
+															{{patient.genderName}}
+														</td>
+														<td class="width15" ng-click="getPatientDetailsByIndex($index)">
+															{{patient.mobileNo}}
+														</td>
+														<td class="width7" ng-click="getPatientDetailsByIndex($index)">
+														{{getDateByFormat(patient.birthDate,false)}}
+															
+														</td><!-- {{patient.birthDateNew | date : dateFormat }} -->
+														<td class="width15 cursor-pointer" title="{{patient.identificationName}}" ng-click="getPatientDetailsByIndex($index)">
+															{{patient.identificationName}}
+														</td>
+														<td class="width15" ng-click="getPatientDetailsByIndex($index)">
+															{{patient.identificationNo}}
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<!-- <div class="row serachedPatientList">
+									<div class="col-md-12 col-lg-12 headerHeight padding-left-right-set4">
+										<table class="table table-bordered">
+											<tr>
+												<th class="width1">
+												</th>
+												<th class="width15">
+													<span class="">Registration Number</span>
+												</th>
+												<th class="width15">
+													 <span class="">Patient's Name</span>
+												</th>
+												<th class="width5">
+													Gender
+												</th>
+												<th class="width15">
+													Mobile Number
+												</th>
+												<th class="date-column">
+													Birth Date
+												</th>
+												<th class="width15">
+													Identification Type
+												</th>
+												<th class="width15">
+													Identification No..
+												</th>
+											</tr>
+											<tr ng-repeat="patient in patientList">
+												<td>
+													<input type="radio" name="patient-list-radio" ng-click="getPatientDetailsByIndex($index)">
+												</td>
+												<td>
+													{{patient.uhIdNumber}}
+												</td>
+												<td>
+													{{patient.patientName}}
+												</td>
+												<td>
+													{{patient.genderName}}
+												</td>
+												<td>
+													{{patient.mobileNo}}
+												</td>
+												<td>
+													{{patient.birthDate | date :  "dd-MM-y" }}
+												</td>
+												<td>
+													{{patient.identificationName}}
+												</td>
+												<td>
+													{{patient.identificationNo}}
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div> -->
+						</fieldset>
+						
+						
+				</div>
+			</fieldset>
+<script>
+$(document).ready(function() {
+	$(".patienttSearchResult").show();
+});
+
+$(document).on('click', '.commonPatientSearch', function(){
+	//alert()
+	$(this).closest(".patienttSearchResult").toggle();
+});
+
+</script>

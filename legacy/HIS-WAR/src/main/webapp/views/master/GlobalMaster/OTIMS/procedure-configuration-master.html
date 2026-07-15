@@ -1,0 +1,175 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="row padding-top8">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select ng-model="vm.model.procConf.specialityId" class="text-input floating-label dirty">
+								<option value="" selected>Select Speciality</option>
+								<option value="{{spec.specialityId}}" ng-value="spec.specialityId" ng-repeat="spec in vm.model.specialityList">{{spec.specialityName}}</option>
+								</select>
+							<label for="code">Specialty</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" ng-model="vm.model.procConf.cptCode" class="text-input floating-label dirty"> 
+							<label for="description" class="LISDynamicLabel">CPT Code</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" class="text-input floating-label dirty" ng-model="vm.model.procConf.service" uib-typeahead = "psrv.serviceName + '|' +psrv.serviceCode for psrv in vm.model.searchProcServices($viewValue)" typeahead-on-select="vm.model.selectProcService($item, $model, $label)" />
+							<label for="description" class="LISDynamicLabel">Procedure</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select ng-model="vm.model.procConf.procedureTypeId" class="text-input floating-label dirty">
+								<option value="" selected>Select Procedure Type</option>
+								<option value="{{prcType.procedureTypeId}}" ng-value="prcType.procedureTypeId" ng-repeat="prcType in vm.model.procedureTypes">{{prcType.procedureTypeName}}</option>
+							</select>
+							<label for="code">Procedure Type</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" ng-model="vm.model.procConf.cptDescription" class="text-input floating-label dirty"> 
+							<label for="description" class="LISDynamicLabel">CPT Description</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" ng-model="vm.model.procConf.duration" numbers-only class="text-input floating-label dirty"> 
+							<label for="description" class="LISDynamicLabel">Approx. Duration (in minutes)</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select name="" id="" ng-model="vm.model.procConf.anesthesiaTypeId" class="text-input floating-label dirty">
+								<option value="" selected>Select Anesthesia Type</option>
+								<option value="{{ans.anesthesiaTypeId}}" ng-value="ans.anesthesiaTypeId" ng-repeat="ans in vm.model.anesthesiaTypes">{{ans.anesthesiaTypeName}}</option>
+							</select>
+
+							<label for="code">Recommended Anesthesia Type</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row margin-top5 padding-left-right-set1">
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" padding-top4">
+					 <a href="" class="btn btn-primary btn-save-box-shadow text-width-auto" ng-click="vm.model.savePeriodicityServConf()" title="Save">
+	        			<i class="fa fa-floppy-o" style="font-size: 21px;width: 100%;" aria-hidden="true"></i>
+  						</a>
+	      		</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box oneeeee dirty" placeholder="Search">
+				 <i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+						<thead>
+							<tr class="">
+								<th class="width8">Specialty</th>
+								<th class="width8">Code</th>
+								<th class="width8">Procedure</th>
+								<th class="width8">Procedure Type</th>
+								<th class="width8">Description</th>
+								<th class="width8">Duration(min)</th>
+								<th class="width8">Recommended Anaesthesia Type</th>
+								<th class="width1 text-center">Status</th>
+								<th class="width1 text-center">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="proc in vm.model.procedureConfigs">
+								<td>{{proc.speciality}}</td>
+								<td>{{proc.cptCode}}</td>
+								<td>{{proc.service}}</td>
+								<td>{{proc.procedureType}}</td>
+								<td>{{proc.cptDescription}}</td>
+								<td>{{proc.duration}}</td>
+								<td>{{proc.anesthesiaType}}</td>
+								<td>
+								<label class="switch"> 
+								<input type="checkbox" ng-true-value="'A'" ng-false-value="'I'" ng-change="vm.model.changeStatus(proc.procedureConfigId,proc.status)" ng-model="proc.status">
+										<div class="slider round"></div>
+								</label></td>
+								<td class="text-center"><a ng-click="vm.model.editProcConf(proc)">
+								<i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+							</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script>
+	$(document).ready(
+			function() {
+				// $(".patienttSearchResult").hide();
+				$(".selectedPageName").text("Procedure Configuration");
+				$(".sidebar-nav li").each(function() {
+					$(this).find("a").parents("li").removeClass("active");
+				});
+				$('a[href$="procedureConfiguration"]').parents("li").addClass(
+						"active");
+			});
+</script>

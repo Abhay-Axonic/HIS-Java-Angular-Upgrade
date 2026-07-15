@@ -1,0 +1,75 @@
+package com.param.opd.coversheet.service;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import com.param.global.common.Response;
+import com.param.opd.coversheet.dto.DiagnosisPatientAppointmentMapperDto;
+import com.param.opd.coversheet.dto.PatientDiagnosisServiceMapperDto;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface IPatientDiagnosisService {	
+	
+	@Transactional
+	public Response savePatientDiagnosis(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto) throws ApplicationException;
+
+	@Transactional
+	public Response getPatientDiagnosisByPatientId(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto) throws ApplicationException;
+	
+	public Response getPatientDiagnosisForCaseSheet(int patientId,int visitId,int visitTypeId) throws ApplicationException;
+
+	public Response getPatientDiagnosisByPatientIdForMedicalHistory( DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response savePatientCancelledDiagnosis(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+	
+	@Transactional
+	public Response getListPatientCancelledDiagnosis(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response getPatientDiagnosisByPatientIdForIcon(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response getPatientDiagnosisByPatientIdForBookView(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response updatePatientDiagnosisType(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+	
+	@Transactional
+	public Response checkPrimaryDaignosisAvailabel(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+	
+	@Transactional
+	public Response updateDiagnosisTypeAsSecondary(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response saveResolvedDiagnosisDate(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response getPatientDiagnosisByEncounterId(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response getPatientDiagnosisByAdmissionId(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response getFrequentlyUsedDiagnosisList(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto);
+
+	@Transactional
+	public Response updatePatientDiagnosisTypeOPD( DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response saveFreeTexPatientDiagnosis(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto)throws ApplicationException;
+
+	@Transactional
+	public Response serchFreeTexPatientDiagnosis(DiagnosisPatientAppointmentMapperDto diagnosisPatientAppointmentMapperDto);
+
+	@Transactional
+	public Response savePatientDaignosisServiceMapper(List<PatientDiagnosisServiceMapperDto> list)throws ApplicationException;
+
+	@Transactional
+	public Response getPatientDaignosisServiceMapper(PatientDiagnosisServiceMapperDto dto)throws ApplicationException;
+
+}
+					

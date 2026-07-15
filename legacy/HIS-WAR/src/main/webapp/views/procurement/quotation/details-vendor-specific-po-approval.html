@@ -1,0 +1,335 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	          <span class="margin-left10 ng-binding">
+	            <b class="padding-right10 ">Purchase No. :</b> - </span>
+	        </div>
+	        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	          <span class="margin-left10 ng-binding">
+	            <b class="padding-right10 ">Purchase Date :</b> - </span>
+	        </div>
+	        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	          <span class="margin-left10 ng-binding">
+	            <b class="padding-right10 ">Purchase Type :</b> - </span>
+	        </div>
+	        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	          <span class="margin-left10 ng-binding">
+	            <b class="padding-right10 ">Vendor Name :</b> - </span>
+	        </div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	          <span class="margin-left10 ng-binding">
+	            <b class="padding-right10 ">Store :</b> - </span>
+	        </div>
+	        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	          <span class="margin-left10 ng-binding">
+	            <b class="padding-right10 ">Against :</b> - </span>
+	        </div>
+	        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	          <span class="margin-left10 ng-binding">
+	            <b class="padding-right10 ">Added By :</b> - </span>
+	        </div>
+	   </div>
+	   <div id="consumbleRowId" class="table-scroll row margin-top10 padding-left-right-set4" style="margin-top: 10px !important">
+      <div class="table-wrap" style="overflow: auto;">
+        <table class="table table-bordered main-table" style="max-width:300%;min-width:300%;">
+          <thead>
+            <tr>
+              <th colspan="3" class="fixed-side" scope="col">Item Details</th>
+              <th colspan="1" class="font-weight700" scope="col">PR Qty Details</th>
+              <th colspan="7" class="font-weight700" scope="col">PO Qty Details</th>
+              <th colspan="4" class="font-weight700" scope="col">Bonus Qty Details</th>
+              <th colspan="5" class="font-weight700" scope="col">PO Amount Details</th>
+              <th colspan="5" class="font-weight700" scope="col">PO Amount Total Details</th>
+              <th colspan="10" class="font-weight700" scope="col">Other Details</th>
+            </tr>
+            <tr>
+              <th class="fixed-side width1 text-center" scope="col">
+                <input type="checkbox">
+              </th>
+              <th class="fixed-side width1" scope="col">Code</th>
+              <th class="fixed-side width1" scope="col">Name</th>
+              <th class="width1">PR Quantity</th>
+              <th class="width2">Pending Quantity</th>
+              <th class="width2">Quantity</th>
+              <th class="width2 vertical-middle">Reject Quantity</th>
+              <th class="width2 vertical-middle">Approved Quantity</th>
+              <th class="width1 vertical-middle text-center">Reject</th>
+              <th class="width2 vertical-middle">UOM</th>
+              <th class="width1">UOM Unit</th>
+              <th class="width1">Qty</th>
+              <th class="width2 vertical-middle">Approved Bonus Quantity</th>
+              <th class="width2">UOM</th>
+              <th class="width1">UOM Unit</th>
+              <th class="width2">COP {{vm.model.Currency}}</th>
+              <th class="width2">MRP {{vm.model.Currency}}</th>
+              <th class="width1">Tax Code</th>
+              <th class="width1">
+                Tax %
+              </th>
+              <th class="width1">
+                Disc %
+              </th>
+              <th class="width3">
+                Amount 
+              </th>
+              <th class="width2">
+                Disc Amount 
+              </th>
+              <th class="width2">
+                Tax Amount 
+              </th>
+              <th class="width2">
+                Other Charges 
+              </th>
+              <th class="width3">
+                Net Amount
+              </th>
+              <th class="width1 vertical-middle">PR No.</th>
+              <th class="width3 vertical-middle">Manufacture</th>
+              <th class="width4 vertical-middle">Specification</th>
+              <th class="width4 vertical-middle">Remark</th>
+              <th class="width1 vertical-middle text-center">Upload</th>
+              <!-- <th class="width1 vertical-middle text-center">Action</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="fixed-side text-center">
+                <input type="checkbox" />
+              </td>
+              <td class="fixed-side" title=""></td>
+              <td class="fixed-side" title=""></td>
+              <td class="vertical-middle" title="">
+              </td>
+              <td class="width2" title=""></td>
+              <td class="vertical-middle" title="">
+                <div class="col-md-10 padding-left-right-set4">
+                  
+                </div>
+                <div class="col-md-2 text-left vertical-middle">
+                  <a data-target="#AddQtyModal_ETOitemConfig" data-toggle="modal" title="View Qty">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </div>
+              </td>
+              <td class="vertical-middle" title=""></td>
+              <td title="" class="vertical-middle">
+               <!--  <div class="row" ng-if="vm.model.poTypeId == 1">
+                  <input type="text" autocomplete="off" class="w-100" ng-model="item.approvedQuantity" ng-blur="vm.model.SaveApproval(item)" ng-if="!item.isDisabled" maxlength="3" numbers-only>
+                  <div ng-if="item.isDisabled">{{!!item.approvedQuantity ? item.approvedQuantity : 0 }}</div>
+                </div> -->
+                <!-- <div ng-if="vm.model.poTypeId == 3"> -->
+                  <div class="col-md-10 padding-left-right-set4"></div>
+                  <div class="col-md-2 text-left vertical-middle">
+                    <a data-target="#ApprovedStagedQuantity" data-toggle="modal" title="View Qty">
+                      <i class="fa fa-info-circle"></i>
+                    </a>
+                  </div>
+                <!-- </div> -->
+              </td>
+              <td class="vertical-middle text-center" title="Reject">
+                <div class="checkbox">
+                  <label class="switch switch-small">
+                    <input type="checkbox" class="switchInput">
+                    <div class="slider round slider-small"></div>
+                  </label>
+                </div>
+              </td>
+              <td title="">
+              </td>
+              <td class="vertical-middle" title="">
+                <span></span>
+                <span class="pull-right text-right">
+                  <a data-target="#selectUOM_modal" data-toggle="modal">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </span>
+              </td>
+              <td title="">
+              </td>
+              <td title="">
+                <div class="row">
+                  <input type="text" autocomplete="off" class="w-100">
+                </div>
+              </td>
+              <td title="">
+              </td>
+              <td class="vertical-middle" title="">
+                <span></span>
+                <span class="pull-right text-right">
+                  <a data-target="#bouns_selectUOM_modal" data-toggle="modal">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </span>
+              </td>
+              <td title="">  
+              </td>
+              <td title="">
+              </td>
+              <td title="">
+              </td>
+              <td title="">
+              </td>
+              <td title="">
+              </td>
+              <td title="">
+              </td>
+              <td title=""> 
+              </td>
+              <td name="taxAmount" title="">
+              </td>
+              <td title="">
+                <div class="col-md-10 text-left vertical-middle padding-top5">
+                </div>
+                <div class="col-md-2 text-left vertical-middle padding-top5">
+                  <a data-target="#otherCharges_Modal" data-toggle="modal" title="Other Charges">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </div>
+              </td>
+              <td title=""> 
+              </td>
+              <td class="vertical-middle text-center">
+                <a>
+                  <i class="fa fa-info-circle" aria-hidden="true" title="Purchase Request Details" data-toggle="modal" data-target="#purchaseRequestDetails"></i>
+                </a>
+              </td>
+              <td title="">
+              </td>
+              <td title="">
+              </td>
+              <td title="">
+                <input type="text" autocomplete="off" class="select-box" maxlength="100"></textarea>
+              </td>
+              <td class="vertical-middle text-center">
+                <a>
+                  <i class="fa fa-upload" title="Upload"></i>
+                </a>
+              </td>
+              <!-- <td class="vertical-middle text-center">
+                <a>
+                  <i class="fa fa-info-circle" aria-hidden="true" title="" data-toggle="modal" data-target="#lastPurchaseDetails"></i>
+                </a>
+              </td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- table two end -->
+    </div>
+    
+    
+    <footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+      <fieldset>
+        <div class="row padding-left-right-set4">
+          <div class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+            <table class=" table table-bordered">
+              <tbody>
+                <tr>
+                  <th class="width5" rowspan="2">
+                    <label>Payment Terms</label>
+                  </th>
+                  <td class="width13" rowspan="2">
+                    <textarea rows="2" class="dirty" style=""></textarea>
+                  </td>
+                  <th class="width7">
+                    <label>Total Amount</label>
+                  </th>
+                  <td class="width8 ng-binding">$ 
+                  0.00
+                  </td>
+                  <th class="width7">
+                    <label>Total Discount</label>
+                  </th>
+                  <td class="width8 ng-binding">$ 
+                    0.00
+                  </td>
+                  <th class="width8">
+                    <label>Total Tax Amount</label>
+                  </th>
+                  <td class="width8 ng-binding">$ 
+                  0.00
+                  </td>
+                </tr>
+                <tr>
+                  
+                  <th class="width10">
+                    <label>Total Other Charges</label>
+                  </th>
+                  <td class="width8 ng-binding">$ 
+                  0.00
+                  </td>
+                  <th class="width7">
+                    <label>Round Off</label>
+                  </th>
+                  <td class="width8 ng-binding">$ 
+                    0.00
+                  </td>
+                  <th class="width8">
+                    <label>Net Amount</label>
+                  </th>
+                  <td class="width8 ng-binding">$ 
+                  0.00
+                  </td>
+                </tr>
+                <tr>
+                  <th colspan="3">
+                    <div class="row">
+                      <div class="col-lg-3 col-md-3 col-sm-3 padding-top5" style="color:#716d6d;">
+                        <label>Discount</label>&nbsp;
+                      </div>
+                      <!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-top5" ng-if="vm.model.purchaseOrders.discountTypeId == 1">
+                        <label style="color:#716d6d;">
+                          Percentage :
+                        </label>
+                      </div> -->
+                      <!-- ngIf: vm.model.purchaseOrders.discountTypeId == 1 -->
+                      <!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10 text-width-auto" style="padding-top: 6px" ng-if="vm.model.purchaseOrders.discountTypeId == 2">
+                        <label>
+                          Amount :
+                        </label>
+                      </div> -->
+                    </div>
+                  </th>
+                  <th class="width8 padding-top10">
+                    <label>Remark:</label>
+                  </th>
+                  <td class="width8" colspan="5">
+                    <textarea rows="2" class="dirty" style=""></textarea>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </fieldset>
+      <div class="row padding-right20 margin-top4">
+        <div class="col-lg-10 col-md-10 col-sm-8 text-right"></div>
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+          <div>
+            <a href="">
+              <input type="button" value="Approve" class="btn btn-primary btn-save-box-shadow">
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+          <div>
+            <a href="#/vendorSpecificPOApproval">
+              <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+//requires jquery library
+jQuery(document).ready(function() {
+   jQuery(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
+ });
+</script>

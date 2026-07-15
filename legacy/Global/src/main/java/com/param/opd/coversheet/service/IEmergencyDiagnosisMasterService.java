@@ -1,0 +1,31 @@
+package com.param.opd.coversheet.service;
+
+import javax.transaction.Transactional;
+
+import com.param.global.common.Response;
+import com.param.opd.coversheet.dto.EmergencyDiagnosisMasterDto;
+
+import in.param.exception.ApplicationException;
+@Transactional
+@SuppressWarnings({ "rawtypes"})
+public interface IEmergencyDiagnosisMasterService {
+
+	 Response saveEmergencyDiagnosisMaster(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	Response getListOfEmergencyDiagnosisMaster(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	Response updateEmergencyDiagnosisMasterStatus(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	Response getEmergencyDiagnosisMasterById(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	Response updateEmergencyDiagnosisMaster(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	Response getEmergencyDiagnosisMasterCount(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	Response checkEmergencyDiagnosisMasterAvailable(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto) throws ApplicationException;
+
+	Response getActiveEmergencyDiagnosis(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	Response getDataForDoorToNiddle(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+}

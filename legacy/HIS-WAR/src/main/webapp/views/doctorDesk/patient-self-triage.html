@@ -1,0 +1,220 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<!-- <div ng-include="'./views/common/common-patient-search-opd-without-counter.html'" class="ng-scope" style=""></div>
+		<div class="ng-scope" ng-include="'./views/common/patient-demography-opd.html'"></div> -->
+		<div ng-include="'./views/common/patient-search-billing.html'" style="margin-top:-5px;"></div>
+		<div ng-include="'./views/common/patient-demography.html'"></div> 
+		<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width15 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Vital Observations</a>
+					</li>
+					<!-- <li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+						<a href="" ng-click="setFirstTabLevel(2)" class="employeeRegRadioParent">Allergy</a>
+					</li> -->
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4 padding top-10">
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+				<div class="row">
+					<div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="fromDatepicker" id="fromDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="fromDate"
+											model-view-value="true" is-open="fromDatepicker.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openFromDatePicker()"  required>
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty" > 
+										<label for="description" class="LISDynamicLabel">Date (From)<span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+								
+									<div class="">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="toDatepicker" id="toDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="toDate"
+											model-view-value="true" is-open="toDatepicker.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openToDatePicker()"  required >
+											<label for="description" class="">Date-Till<span class="star">*</span></label> 
+											<!-- <label for="description" class=""> From Date<span class="star">*</span></label> 
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty" >  -->
+										<!-- <label for="description" class="LISDynamicLabel">To Date</label> -->
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+									<div class="width-div-for-patient-reg ">
+										<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="searchVitalList()">
+										<i class="fa fa-search" style="font-size: 16px !important;" aria-hidden="true"></i></a>
+									</div>
+						</div>
+					</div>
+					<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetSecondTabLevel(1) }" id="nor" class="width10 active" style="">
+						<a href="" ng-click="setSecondTabLevel(1);hideChartEnable();">Table</a>
+					</li>
+					<li ng-class="{ active : isSetSecondTabLevel(2) }" class="width10" style="">
+						<a href="" ng-click="setSecondTabLevel(2);showChartEnable();" class="employeeRegRadioParent">Graphical</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetSecondTabLevel(1)" class="second-level-tab-display-div" style="">
+				  <div class="row padding-top3">
+						<div id="table-scroll" class="table-scroll">
+						  <div class="table-wrap fix-height-scroll260">
+						    <table class="main-table">
+						      <thead>
+						        <tr>
+						         <!--  <th class="fixed-side width5 th-bg" scope="col">222222222222</th>
+						          <th class="fixed-side width10 th-bg" scope="col">1111111</th> -->
+						          <th scope="col" class="th-bg">Date</th>
+						          <th scope="col" class="th-bg">Vital Observations Name</th>
+						          <th scope="col" class="th-bg">Vital Observations Value</th>
+						          
+						          <!-- <th class="fixed-side width5 th-bg" scope="col">222222222222</th> -->
+						        </tr>
+						      </thead>
+						      <tbody>
+						        <tr ng-repeat="info in patientVitalList">
+						        <!--   <td class="fixed-side td-bg">232</td>
+						          <td class="fixed-side td-bg">123</td> -->
+						          <td class="td-bg">{{info.createdDate}}</td>
+						          <td class="td-bg">{{info.vitalName}}</td>
+						          <td class="td-bg">{{info.value}}</td>
+						          
+						         <!-- <td class="fixed-side td-bg">232</td> -->
+						          
+						        </tr>
+						      </tbody>
+						    </table>
+						  </div>
+						</div>
+					</div>
+				</div>
+				<div ng-show="isSetSecondTabLevel(2) && enableChart=='Y'" class="second-level-tab-display-div" style="">
+					<canvas id="line" class="chart chart-line" chart-data="data" 
+					style="display: line; width: 500px; height: 100px;"
+					chart-labels="labels" chart-series="series"
+		           chart-options="options"
+		         chart-dataset-override="datasetOverride"
+		         chart-click="onClick()">
+				</div>
+			</div>
+		</div>	
+				</div>
+				
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+				  <div class="row">
+					<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty" > 
+										<label for="description" class="LISDynamicLabel">From Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty" > 
+										<label for="description" class="LISDynamicLabel">To Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+									<div class="width-div-for-patient-reg ">
+										<a href="" class="btn btn-primary btn-save-box-shadow" title="Search">
+										<i class="fa fa-search" style="font-size: 16px !important;" aria-hidden="true"></i></a>
+									</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 table-container padding-top5">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr>
+							       <th class="width2">
+							        Date
+							       </th>
+							       <th class="width15">
+							        Description
+							       </th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="table-container-body fix-height-scroll320" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr>
+					               <td class="width2">
+							        -
+							       </td>
+							       <td class="width15">
+							        -
+							       </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div> 
+				</div>
+			</div>
+		</div>
+		
+		
+     </div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("Patient Self-Monitoring");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="patientSelfTriage"]').parents("li").addClass("active");
+});
+
+//requires jquery library
+jQuery(document).ready(function() {
+   jQuery(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
+ });
+</script>	

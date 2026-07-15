@@ -1,0 +1,361 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="dirty text-input floating-label">
+								<option>Select Visit Type</option>
+							</select> <label for="visitType">Visit Type</label>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-user" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="" id=""
+								class="text-input floating-label dirty">
+							<label for="patientName">Patient Name</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="uhid" id=""
+								class="dirty text-input floating-label"> <label
+								for="code">UHID</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="uhid" id=""
+								class="dirty text-input floating-label"> <label
+								for="code">Visit No.</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+				<div class="row input-container padding-top8">
+					<div class="col-lg-2 col-sm-3 col-md-2">
+						<b class="">Store :</b>
+					</div>
+					<div class="col-lg-8 col-sm-9 col-md-10">
+						<label class="ng-binding"></label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4">
+			<div
+				class=" col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 text-centegr">
+				<div id="mediaType" class="row uk-input-group customRadioBtn ">
+					<span> <input id="againstIssue" name="AgainstIssue"
+						type="radio" value="1" checked="checked"
+						class="otherRegistrationType" style=""> <label
+						for="againstIssue">Against Issue</label>
+					</span> <span> <input id="againstItem" name="AgainstIssue"
+						type="radio" value="2" class="dependentRedRadio" style="">
+						<label for="againstItem">Against Item</label>
+					</span>
+
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-2 padding-left-right-set1 text-width-auto padding-top10">
+				<div class="">
+					<a  data-toggle="modal" data-target="#consumableGetIssueModal">
+						<input type="button" value="Add Item" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+			<!-- <div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="checkbox padding-top8">
+					<label class="common-lable-color-set" ><input
+						type="checkbox" value="" data-toggle="modal" data-target="#consumableGetIssueModal">Get Issue</label>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="checkbox padding-top8">
+					<label class="common-lable-color-set"><input
+						type="checkbox" value="" data-toggle="modal" data-target="#medicationGetItemModal">Get Item</label>
+				</div>
+			</div> -->
+			<div
+				class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 pull-right text-width-auto margin-top4">
+				<div class="">
+					<a href="" class="btn btn-primary btn-save-box-shadow"> <i
+						class="fa fa-search" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right margin-top5">
+				<input type="text" autocomplete="off"
+					class="text-search-box dirty ng-pristine ng-untouched ng-valid ng-empty"
+					placeholder="Search" ng-model="search" style="margin-top: 0px">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row">
+			<div class="table-container padding-left-right-set4 padding-top5">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr class="">
+								<th class="width4" title="Issue No.">Issue No.</th>
+								<th class="width4" title="Issue Date">Issue Date</th>
+								<th class="width4" title="Item Name">Item Name</th>
+								<th class="width4" title="Item Code">Item Code</th>
+								<th class="width4" title="Generic Name">Generic Name</th>
+								<th class="width4" title="Batch No.">Batch No.</th>
+								<th class="width4" title="Expiry Date">Expiry Date</th>
+								<th class="width3" title="UOM">UOM</th>
+								<th class="width3" title="UOM Unit">UOM Unit</th>
+								<th class="width4" title="Qty Issued">Qty Issued</th>
+								<th class="width3" title="Return Qty">Return Qty</th>
+								<th class="width5" title="Reason for Return">Reason for
+									Return</th>
+								<th class="width4 text-center vertical-middle" title="Action">Action</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="table-container-body fix-height-scroll380">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr>
+								<td class="width4"></td>
+								<td class="width4"></td>
+								<td class="width4"></td>
+								<td class="width4"></td>
+								<td class="width4"></td>
+								<td class="width4"></td>
+								<td class="width4"></td>
+								<td class="width3"></td>
+								<td class="width3"></td>
+								<td class="width4"></td>
+								<td class="width3"></td>
+								<td class="width5"></td>
+								<td class="width4"></td>
+							</tr>	
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<footer
+			class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-top5 padding-right10">
+				<div class="col-lg-10 col-md-10 col-sm-10"></div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left0px-right6px">
+					<a> <input type="button" value="Save"
+						class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left10">
+					<a href="#/implantReturn"> <input type="button" value="Back"
+						class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<!-- consumableGetIssueModal START -->
+<div id="consumableGetIssueModal" class="modal fade ng-scope in" role="dialog">
+	<!--  common-medium-popup -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Get Issue
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off"
+										class="text-input floating-label dirty ng-valid ng-isolate-scope ng-not-empty ng-valid-date ng-touched ng-dirty"
+										name="fromDate" id="fromDate">
+									<label for="fromDate" class="">From Date</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off"
+										class="text-input floating-label dirty"
+										name="toDate" id="toDate">
+									<label for="toDate" class="">To Date</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<select
+										class="dirty text-input floating-label"
+										style=""><option label="Select Store"
+											value="object:3398" selected="selected">Select Store</option>
+										<option label="Main Store" value="">Main
+											Store</option>
+										<option label="Pharmacy Store" value="">Pharmacy
+											Store</option>
+										<option label="OP pharmacy " value="">OP
+											pharmacy</option>
+										<option label="IP Pharmacy" value="">IP
+											Pharmacy</option>
+										<option label="General Store" value="">General
+											Store</option>
+										<option label="Consumable Store" value="">Consumable
+											Store</option>
+										<option label="Store7" value="">Store7</option>
+										<option label="Store8" value="">Store8</option>
+										<option label="Store9" value="">Store9</option>
+										<option label="Store10" value="">Store10</option>
+										<option label="store1" value="">store1</option></select> <label
+										for="code">Store</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label dirty">
+									<label for="code">Issue No.</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label dirty"
+										style=""> <label for="code">Search</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto">
+						<div class="common-save-button">
+							<a href="" class="btn btn-primary btn-save-box-shadow"
+								style="width: auto;"> <i class="fa fa-search"
+								aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="table-container padding-left-right-set4 padding-top5">
+					<div class="table-container-header">
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr class="">
+									<th class="width2 text-center media-middle"><input type="checkbox" class=""></th>
+									<th class="width6" title="Issue No.">Issue No.</th>
+									<th class="width6" title="Issue Date">Issue Date</th>
+									<th class="width6" title="Patient Name">Patient Name</th>
+									<th class="width6" title="UHID">UHID</th>
+									<th class="width6" title="Visit Date">Visit Date</th>
+									<th class="width6" title="Visit No.">Visit No.</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body fix-height-scroll280">
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr>
+									<td class="width2"></td>
+									<td class="width6"></td>
+									<td class="width6"></td>
+									<td class="width6"></td>
+									<td class="width6"></td>
+									<td class="width6"></td>
+									<td class="width6"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-lg-11 col-sm-11 col-md-11"></div>
+					<div class="col-lg-1 col-sm-1 col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Add"
+								class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--  consumableGetIssueModal END -->

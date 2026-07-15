@@ -1,0 +1,924 @@
+		<!-- Page Content -->
+		<div id="page-content-wrapper">
+			<div class="container-fluid his-style">
+
+				<div class="row padding-top10 padding-leftright15">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-building" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label dirty" name="code" ng-model="bedsearch.floorId" ng-change="getBedById('floor')">
+										<option>Select Floor</option>
+										<option ng-repeat="info in activeFloorList" value="{{info.floorId}}">{{info.floorName}}</option>
+										</select>		
+										<label for="code"> Floor</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-hospital-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label dirty" name="code" ng-model="bedsearch.wardId" ng-change="getBedById('ward')">
+										<option>Select Ward</option>
+										<option ng-repeat="info in wardList" value="{{info.wardId}}">{{info.wardName}}</option>
+										</select>		
+										<label for="code"> Ward</label>
+									</div>
+								</div>
+							</div>
+						</div>
+            		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-hospital-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label dirty" name="code" ng-model="bedsearch.nursingStationId" >
+										<option>Select Nursing Station</option>
+										<option ng-repeat="info in nursingStationList" value="{{info.nursingStationId}}">{{info.nursingStationDesc}}</option>
+										</select>		
+										<label for="code"> Nursing Station</label>
+									</div>
+								</div>
+							</div>
+						</div>
+            		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-bed" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label dirty" name="code" ng-model="bedsearch.bedCategoryId" >
+										<option>Select Bed Category</option>
+										<option ng-repeat="info in bedCategoryList" value="{{info.bedCategoryId}}">{{info.bedCategoryDesc}}</option>
+										</select>		
+										<label for="code"> Bed Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-bed" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label dirty" name="code" ng-model="bedsearch.bedStatusId" >
+										<option>Select Bed Status</option>
+										<option ng-repeat="info in bedStatusList" value="{{info.bedStatusId}}">{{info.bedStatusDesc}}</option>
+										</select>		
+										<label for="code"> Bed Status</label>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-7 col-sm-7 col-md-10">
+									<div class="checkbox">
+ 										 <label><input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="bedsearch.isVirtual" >Virtual Bed</label>
+ 										 <!-- ng-model="bedsearch.isVirtual" -->
+									</div>
+								</div>
+								<div class="col-lg-5 col-sm-5 col-md-2">
+									<!-- <input type="button" value="Search" ng-click="bedSearchByMultipleCriteria()" class="btn btn-primary btn-save-box-shadow text-width-auto"> -->
+									<div class="common-save-button" style="padding-top:  0px;"> 
+										 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" ng-click="bedSearchByMultipleCriteria()"> 
+										 	<i class="fa fa-search" aria-hidden="true"></i> 
+										 </a> 
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+									<input type="button" value="Search" ng-click="searchBed()" class="btn btn-primary btn-save-box-shadow">
+									</div>
+								</div>
+							</div>
+						</div> -->
+				</div>
+				
+					<div class="row padding-bottom10" >
+					<div ng-repeat="info in activeBedList">
+					<div class="col-md-2 col-sm-2 col-xs-2 padding-leftright15 padding-top10" ng-repeat="info1 in info.genderIdList" ng-if="info1.id == admissionNoteData.genderId" >
+			    			<div class="card text-center cursor-pointer"  ng-click="bedAllocationPopUp(info)" data-toggle="modal" data-target="#patientAdmission">
+			    				<div>
+			    					<label style="color: #04bcd4;" class="cursor-pointer" >{{info.bedNumber}}</label>
+			    				</div>
+			    				<div class="text-center bed-management">
+								  	<img src="resources/assets/images/icon/bed/Empty bed.png" alt="Avatar" >
+								 </div>
+							</div>
+			    		</div>
+			    		</div>
+				</div>
+			</div>
+		</div>
+		
+<!-- *********************************************** PATIENT ADMISSION ******************************************* -->
+<div id="patientAdmission" class="modal fade ng-scope in common-popup-header-content" role="dialog">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Patient Admission
+					<button type="button" class="close" data-dismiss="modal">x</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row patient-details-row">
+					<div class="col-md-11 col-sm-11 col-xs-11 ">
+						<span class="profile_pic margin-left10"> 
+							<img alt="" src="resources/assets/images/tempImages/m.jpg" class="img-circle" style="width:30px">
+						</span> 
+						<span class="margin-left10" ng-init='age=getAge(admissionNoteData.dob)'><!-- John Deo 26/M --> {{admissionNoteData.patientFullName+' '+age+'/'+admissionNoteData.genderCode}} </span>
+						<span class="margin-left10"><b class="padding-right5 ">UHID	:</b> <!-- Pune-769 -->{{admissionNoteData.uhidnumber}}</span>
+						<span class="margin-left10"><b class="padding-right10 ">Priority :</b> Normal</span>
+						<span class="margin-left10"><!-- Dr. Suresh Pathak  -->Dr. {{admissionNoteData.doctorFullName+', '+admissionNoteData.specialityName}}</span>
+						<input type="hidden" value="{{bedId}}" ng-model="bedId"/>
+						
+					</div>
+				</div>
+				<div class="row margin-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-bed" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+								<input type="hidden" ng-model="admissionNoteData.wardId" />
+								<input type="hidden" ng-model="admissionNoteData.floorId" />
+								<input type="hidden" ng-model="admissionNoteData.bedCategoryId" />
+								<input type="hidden" ng-model="admissionNoteData.roomId" />
+								<input type="hidden" ng-model="admissionNoteData.bedId" />
+								
+									<input type="text" autocomplete="off" name="code" id="requiredOn" class="text-input floating-label dirty" ng-model="admissionNoteData.floorName" readonly="readonly">
+									<label for="code">Floor</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-bed" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" class="text-input floating-label dirty" ng-model="admissionNoteData.wardName" readonly="readonly">
+									<label for="code">Ward</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-bed" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" class="text-input floating-label dirty" ng-model="admissionNoteData.bedCategoryDesc" readonly="readonly">
+									<label for="code">Bed Category</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row margin-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" class="text-input floating-label dirty" ng-model="admissionNoteData.billingBedDesc" readonly="readonly">
+									<label for="code">Billing Bed Category </label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" class="text-input floating-label dirty" ng-model="admissionNoteData.datepickerPdd" readonly="readonly">
+									<label for="code">PDD</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label dirty" name="code" ng-model="admissionNoteData.paymentEntitlementId">
+										<option>Select Payment Entitlement</option>
+										<option ng-repeat="info in paymentEntitlementList" value="{{info.paymentEntitlementId}}">{{info.paymentEntitlementDesc}}</option>
+									</select>
+									<label for="code">Payment Entitlement</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row margin-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" name="code" ng-model="admissionNoteData.mealPreferenceId">
+										<option>Select Patient Meal Preference</option>
+										<option ng-repeat="info in mealPreferenceList" value="{{info.mealPreferenceId}}">{{info.mealPreferenceDesc}}</option>
+										
+									</select>
+									<label for="code">Select Patient Meal Preference</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" name="code" ng-model="admissionNoteData.attendantMealPreferenceId">
+										<option>Select Patient Meal Preference</option>
+										<option ng-repeat="info in mealPreferenceList" value="{{info.mealPreferenceId}}">{{info.mealPreferenceDesc}}</option>
+										
+									</select>
+									<label for="code">Attendant Meal Preference</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<!-- <fieldset class="normalRegistration sub-fieldset margin-top4 padding-left-right-set4">
+			<legend class="sub-legend">Payment Entitlement</legend>
+				<div class="row">
+					<div class="col-lg-2 col-md-3 col-sm-3 margin-left5">
+						<label class="radio-inline"><input type="radio" ng-model="appointmentMasterObj.paymentEntitlementTypeId" name="registrationType" class="otherRegistrationType paymentEntitSelf" value="1" checked="checked" ng-click="getDetailsEntitlement('1')">Self</label>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3">
+						<label class="radio-inline"><input type="radio" ng-model="appointmentMasterObj.paymentEntitlementTypeId" name="registrationType" class="otherRegistrationType paymentEntitInsurance" value="2" ng-click="getDetailsEntitlement('2')">Insurance</label>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3">
+						<label class="radio-inline"><input type="radio" ng-model="appointmentMasterObj.paymentEntitlementTypeId" name="registrationType" class="otherRegistrationType paymentEntitCorporate" value="3" ng-click="getDetailsEntitlement('3')">Corporate</label>
+					</div>
+				</div>
+				
+				For Corporate
+				<div class="paymentEntitInsuranceDiv" ng-if="appointmentMasterObj.paymentEntitlementTypeId == 3" >
+				
+				<div class="row padding-left-right-set4" ng-repeat="data in paymentEntitleMentCorporate">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label" ng-model="data.companyId" ng-change="getContractByCompanyId(data.companyId)">
+											<option></option>
+											<option ng-repeat="company in companyMasterList" value="{{company.id}}">{{company.name}}</option>
+										</select> <label for="code">Select Company Name</label>
+									</div>
+								</div>
+							</div>
+						</div>	
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" ng-model="data.contractId" ng-change="getContractDetails(data.contractId,$index)">
+											<option></option>
+											<option ng-repeat="assoCompany in contractList" value={{assoCompany.contractId}}>{{assoCompany.contractName}}</option>
+										</select> <label for="code">Select Contract </label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="data.statrDate" readonly="true"> <label for="description" class="">Validity Start Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="data.endDate" readonly="true"> <label for="description" class="">Validity End Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10"> 
+							<div class="width-div-for-patient-reg"> 
+								<a href="" data-toggle="modal" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="addContracts()">+ </a> 
+							</div> 
+						</div>
+					</div>
+				
+				
+			</div>
+				
+				<div class="paymentEntitInsuranceDiv"  ng-if="appointmentMasterObj.paymentEntitlementTypeId == 2">
+				
+				<div class="row padding-left-right-set4" ng-repeat="dataInsurance in paymentEntitleMentInsurance">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label dirty" ng-model="dataInsurance.companyId" ng-change="getAssociatedCompanyMasterListByCompanyId(dataInsurance.companyId)">
+											<option></option>
+											<option ng-repeat="company in companyMasterInsuranceList" value="{{company.id}}">{{company.name}}</option>
+										</select> <label for="code">Select Company Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 associateCompanyName">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label dirty" ng-model="dataInsurance.associateCompanyId" ng-click="getInsuranceContract(dataInsurance)">
+											<option></option>
+											<option ng-repeat="assoCompany in associateCompanyMasterList" value={{assoCompany.id}}>{{assoCompany.name}}</option>
+										</select> <label for="code">Associate Company Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label dirty" ng-model="dataInsurance.contractId">
+											<option></option>
+											<option ng-repeat="assoCompany in associatedCompanyList" value={{assoCompany.associatedCompanyMasterId}}>{{assoCompany.associatedCompanyName}}</option>
+										</select> <label for="code">Select Contract </label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 insuranceNumber">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label dirty" ng-model="dataInsurance.insuranceNumber">
+											<option></option>
+											<option>-</option>
+										</select> <label for="code">Insurance Number</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="dataInsurance.startDate" readonly="true"> <label for="description" class="">Validity Start Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="dataInsurance.endDate" readonly="true"> <label for="description" class="">Validity End Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10"> 
+							<div class="width-div-for-patient-reg"> 
+								<a href="" data-toggle="modal" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="addInsurances()">+ </a> 
+							</div> 
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-10 padding-top10 insuredAmount">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="dataInsurance.insuredAmt" readonly="true"> <label for="description" class="">Insured Amount</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+				
+			</div>
+			
+			<div class="row">
+						<table class="table table-bordered">
+								<thead>
+								<tr>
+									<th class="width8">
+										<div>Payment Entitlement</div>
+									</th>
+									<th class="width8">
+										<div>Company Name</div>
+									</th>
+									<th class="width6">
+										<div>Tariff</div>
+									</th>
+									<th class="width8">
+										<div>Contract</div>
+									</th>
+									<th class="width10">
+										<div>Insurance Company</div>
+									</th>
+									<th class="width8">
+										<div>Insurance Number</div>
+									</th>
+									<th class="width5">
+										<div>Start Date</div>
+									</th>
+									<th class="width5">
+										<div>End Date</div>
+									</th>
+									<th class="width3">
+										<div>Priority</div>
+									</th>
+									<th class="width3 text-center">
+										<div>Upload</div>
+									</th>
+									<th class="width3 text-center">
+										<div>Action</div>
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="info in paymentEntitleMentList">
+									<td>
+										<div>{{info.paymentEntitlementName}}</div>
+									</td>
+									<td>
+										<div>{{info.companyName}}</div>
+									</td>
+									<td>
+										<div>{{info.tariffName}}</div>
+									</td>
+									<td>
+										<div>{{info.contractName}}</div>
+									</td>
+									<td>
+										<div>{{info.insuranceName}}</div>
+									</td>
+									<td>
+										<div>{{info.insuranceNumber}}</div>
+									</td>
+									<td>
+										<div>{{info.startDate}}</div>
+									</td>
+									<td>
+										<div>{{info.endDate}}</div>
+									</td>
+									<td>
+										<div>{{info.priority}}</div>
+									</td>
+									
+									<td class="text-center">
+										<div>
+											<span><a data-toggle="modal" data-target="#documentUploadModal"><i class="fa fa-upload"></i></a></span>
+											<span><a data-toggle="modal" data-target="#documentUploadModal"><i class="fa fa-eye"></i></a></span>
+										</div>
+									</td>
+									<td>
+										<span><a><i class="fa fa-pencil" aria-hidden="true"></i></a></span>
+										<span class="margin-left10" ng-if="info.paymentEntitlementId != '1'"><a><i class="fa fa-times" aria-hidden="true" ng-click="removeContract($index + 1)"></i></a></span>
+									</td>
+									
+								</tr>
+							</tbody></table>
+					</div>
+			
+	</fieldset> -->
+				
+				<div class="row searched-patient-details-row margin-top10">
+					<div class="col-md-11 col-sm-11 col-xs-11 ">
+						Kin Details
+					</div>
+				</div>
+				<div ng-repeat="data in dataList">
+				<div class="row margin-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-object-group" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" name="code" ng-model="data.prefixId">
+										<option>Select Prefix</option>
+										<option ng-repeat="info in prefixList" value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+										
+									</select>
+									<label for="code">Select Prefix</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-user-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" ng-model="data.kinName" class="text-input floating-label">
+									<label for="code">Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-user-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" name="code" ng-model="data.relationId">
+										<option>Select Relationship With Patient</option>
+										<option ng-repeat="info in relationList" value="{{info.id}}">{{info.desc}}</option>
+										
+									</select>
+									<label for="code">Relationship With Patient</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row margin-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-mobile" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" ng-model="data.mobileNo" class="text-input floating-label">
+									<label for="code">Mobile No</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-mobile" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" ng-model="data.phoneNo" class="text-input floating-label">
+									<label for="code">Phone No</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-id-card-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" name="code" ng-model="data.identificationId">
+										<option>Select Identification</option>
+										<option ng-repeat="info in identificationList" value="{{info.identificationId}}">{{info.identificationName}}</option>
+									
+									</select>
+									<label for="code">Identification</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<div class="row margin-top10">
+					
+					
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-id-card-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" ng-model="data.identificationNo" class="text-input floating-label">
+									<label for="code">Identification No..</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class=""  >
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="data.expiry"
+									model-view-value="true" is-open="expiry.opened[$index]"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePicker($index)"> <label for="code" class="">
+									Expiry Date</label>
+								 <!-- name="datepicker" id="datepicker" -->
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<input type="checkbox" ng-model="data.isGuarantor" ng-true-value="'Y'" ng-false-value="'N'"> Guarantor
+						</div>
+					</div>
+				</div>
+				<div class="row margin-top10">
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-flag" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class=""   >
+							<input type="hidden" ng-model="area.areaId">
+							
+								<select class="text-input floating-label" name="countryId" ng-model="data.countryId" ng-change="getStateByCountry(data.countryId)" >
+									<option>Select Country</option>
+									<option ng-repeat="info in countryList" value="{{info.countryId}}">{{info.countryName}}</option>
+								</select> <label for="code">Country</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-university" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class=""   >
+								<select class="text-input floating-label" name="stateId" ng-model="data.stateId" ng-change="getDistrictByState(data.stateId)" >
+									<option>Select State</option>
+									<option ng-repeat="info in stateList" value="{{info.stateId}}">{{info.stateName}}</option>
+								</select> <label for="code">State</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-university" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class=""   >
+								<select class="text-input floating-label" name="districtId" ng-model="data.districtId" ng-change="getCityByDistrict(data.districtId)" >
+									<option>Select District</option>
+									<option ng-repeat="info in districtList" value="{{info.districtId}}">{{info.districtName}}</option>
+								</select> <label for="code">District</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="row margin-top10">
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class=""   >
+								<select class="text-input floating-label" name="cityId" ng-model="data.cityId" ng-change="getAreaByCity(data.cityId)" >
+									<option>Select City</option>
+									<option ng-repeat="info in cityList" value="{{info.cityId}}">{{info.cityName}}</option>
+								</select> <label for="code">City</label>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class=""   >
+								<select class="text-input floating-label" name="areaId" ng-model="data.areaId" >
+									<option>Select Area</option>
+									<option ng-repeat="info in areaList" value="{{info.areaId}}">{{info.areaName}}</option>
+								</select> <label for="code">Area</label>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-university" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class=""   >
+								<input type="text" autocomplete="off" name="postCode" id=""
+									class="text-input floating-label" ng-model="data.postCode" required>
+									 <label for="code">Post Code</label>
+							</div>
+						</div>
+					</div>
+				</div>
+					
+				</div>
+				<div class="row margin-top10">
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-map-marker" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn"  ng-model="data.address" class="text-input floating-label">
+									<label for="code">Address</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+						<div class="">
+							<!-- <input type="button" name="" id="addr" value="+"  class="btn btn-info" > -->
+							<button ng-click="add()" class="btn btn-info" ><b>+</b></button>
+							 
+                    	    <button ng-if="$index > 0" ng-click="remove()" class="btn btn-info" ><b>-</b></button> 
+                     
+						</div>
+					</div>
+				</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;padding: 0px !important">
+				<div class="row margin-top10 margin-bottom10 padding-left-right-set">
+					<div class="col-md-10"></div>
+					<div class="col-md-2">
+						<div class="">
+							<input type="button" value="Submit" ng-click="saveBedAllocation()" class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	
+<div id="bedForMantaince" class="modal fade ng-scope in" role="dialog">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Bed For Maintenance 
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label" name="code">
+											<option></option>
+											<option>Reason-1</option>
+											<option>Reason-2</option>
+											<option>Reason-3</option>
+											<option>Reason-4</option>
+											</select>		
+											<label for="code">Select Reason For Maintenance</label>
+										</div>
+									</div>
+								</div>
+								<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" class="text-input floating-label">		
+											<label for="code">Select Expected Completion Date</label>
+										</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-sticky-note" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<textarea name="code" rows="4" id=""
+													class="text-input floating-label"></textarea>
+												<label for="code">Note</label>
+											</div>
+										</div>
+									</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<script type="text/javascript">
+		$(document).ready(function(){
+			var documentHeight= $(window).height();
+		    var sideBarHeight = documentHeight - 55;
+		 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+			
+			$(".selectedPageName").text("Bed Allocation");
+			$(".sidebar-nav li").each(function() {
+				$(this).find("a").parents("li").removeClass("active");
+			});
+			$('a[href$="bedAllocation"]').parents("li").addClass("active");
+		});
+		
+		
+		
+</script>

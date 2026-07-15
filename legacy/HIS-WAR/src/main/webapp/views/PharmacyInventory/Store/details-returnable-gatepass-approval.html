@@ -1,0 +1,621 @@
+<div id="page-content-wrapper" class="ng-scope">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="">
+						<b class="padding-right10 ">Ret GP No. :</b>
+						<label>{{vm.model.returnableGatepassAppprovalDetailData.gatepassNo}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Ret GP Date:</b>
+						<label>{{vm.model.returnableGatepassAppprovalDetailData.gatepassDate| date:'dd/MM/yyyy'}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">
+							Store :</b>
+						<label>{{vm.model.returnableGatepassAppprovalDetailData.store}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">
+							Vendor :</b>
+						<label>{{vm.model.returnableGatepassAppprovalDetailData.vendor}}</label>
+					</span>
+				</div>
+
+			</div>
+			<div class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="">
+						<b class="padding-right10 ">
+							Type :</b>
+						<label>{{vm.model.returnableGatepassAppprovalDetailData.assetType}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Against:</b>
+						<label>{{vm.model.returnableGatepassAppprovalDetailData.requestedType}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Reference No:
+						</b>
+						<label>{{vm.model.returnableGatepassAppprovalDetailData.referenceNo}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Requested By:
+						</b>
+						<label>{{vm.model.returnableGatepassAppprovalDetailData.requestedBy}}</label>
+					</span>
+				</div>
+			</div>
+			<div class="padding-top10">
+				<!-- ************ Item Details table Start ************ -->
+				<div class="row table-scroll" ng-show="vm.model.returnableGatepassAppprovalDetailData.assetTypeId == 1">
+					<div class="col-lg-12 col-md-12 table-wrap fixed-thead-tfoot-scroll fix-height-scroll380">
+						<table class="table table-bordered main-table">
+							<thead>
+
+								<tr>
+									<th class="width1 text-center">
+										<label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" ng-change="vm.model.valueOnChange(returnable, true)"
+                                                   ng-disabled="!vm.model.returnableGatepassAppprovalDetailData || vm.model.returnableGatepassAppprovalDetailData.statusId == 9 || !vm.model.returnableGatepassAppprovalDetailData.statusId == 2 || (vm.model.returnableGatepassAppprovalDetailData.approvalStatusId != 10 && vm.model.returnableGatepassAppprovalDetailData.approvalStatusId != 6)" />
+                                              <span></span>
+                                        </label>
+									</th>
+									<th class="width6">Item Code</th>
+									<th class="width8">Item Name</th>
+									<th class="width5">UOM</th>
+									<th class="width5">UOM Unit</th>
+									<th class="width5">Batch No.</th>
+									<th class="width5">Expiry Date</th>
+									<th class="width5">Lot No.</th>
+									<th class="width5">Vendor</th>
+									<th class="width5">Total GRN Qty</th>
+									<th class="width5">Returned Qty</th>
+									<th class="width5">Available For Return Qty</th>
+									<th class="width6">Current Stock Available</th>
+									<th class="width5">Return Qty</th>
+									<th class="width6">Bonus Return Qty</th>
+									<th class="width6">Bonus Returned Qty</th>
+									<th class="width5">COP</th>
+									<th class="width6">Discount %</th>
+									<th class="width5">Tax Code</th>
+									<th class="width5">Tax %</th>
+									<th class="width5">Total Amount</th>
+									<th class="width5">Total Discount</th>
+									<th class="width5">Tax Amount</th>
+									<th class="width5">Net Amount</th>
+									<!-- <th class="width5">LCOP</th> -->
+									<th class="width8">Approved Return Qty</th>
+									<th class="width5">Reject Qty</th>
+									<th class="width5">Reject</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="returnable in vm.model.returnableGatepassAppprovalDetailData.items | orderBy:sortType:sortReverse">
+									<td class=" text-center">
+										<label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="returnable.isSelected" ng-disabled="vm.model.returnableGatepassAppprovalDetailData.statusId != 2 || returnable.statusId == 6"
+                                                   ng-click="vm.model.SelectItem(returnable)" ng-change="vm.model.valueOnChange(returnable, false)" />
+                                                <span></span>
+                                        </label>
+									</td>
+									<td>{{returnable.itemCode}}</td>
+									<td>{{returnable.itemName}}</td>
+									<td>{{returnable.uomType}}</td>
+									<td>
+										<span ng-if="returnable.receivedQtyCon!=''" title="{{returnable.receivedQtyCon}}">({{returnable.receivedQtyCon}}) = </span><br/>
+										<span> {{returnable.receivedQtyCalculation}} {{returnable.uomList[2].uomUnit}}</span>
+									</td>
+									<td>{{returnable.batchNo}}</td>
+									<td>{{returnable.expiry | date:'MMM-yyyy'}}</td>
+									<td>{{returnable.lotNo}}</td>
+									<td>{{returnable.vendor}}</td>
+									<td class="width5" title="{{returnable.totalGRNQuantity}}">{{returnable.totalGRNQuantity}}</td>
+										<td ng-if="returnable.approvedQuantity==0" class="width5" title="{{returnable.approvedQuantity}}">{{returnable.approvedReturnedQty 
+											}}</td>
+										<td ng-if="returnable.approvedQuantity!=0"class="width5" title="{{returnable.approvedQuantity}}">{{returnable.approvedQuantity 
+											}}</td>
+										<td  ng-if="requestTypeToCheck!='Rejected Against GRN'" title="{{returnable.totalGRNQuantity-returnable.approvedQuantity}}">{{(returnable.totalGRNQuantity>0 ? returnable.totalGRNQuantity-returnable.approvedQuantity :returnable.availableQuantity)}}</td>
+										<td  ng-if="requestTypeToCheck=='Rejected Against GRN'" title="{{returnable.availableQuantity}}">{{(returnable.availableQuantity>0 ? returnable.availableQuantity:0)}}</td>
+											
+													
+				                        <td ng-if="requestTypeToCheck!='Rejected Against GRN'" title="{{returnable.availableQuantity}}">{{returnable.availableQuantity}}</td>
+                                        <td ng-if="requestTypeToCheck=='Rejected Against GRN'" title="{{returnable.availableQuantity}}">{{(returnable.availableQuantity>0 ? returnable.availableQuantity:0)}}</td>
+                                        <!-- <td ng-if="requestTypeToCheck!='Rejected Against GRN' && requestTypeToCheck!='Against GRN'" title="{{returnable.availableQuantity}}">{{returnable.availableQuantity}}</td>
+										 -->
+									<td>{{returnable.returnQuantity}}</td>
+									                                <td>
+									                                <input type="text" autocomplete="off" ng-model="returnable.bonusReturnQuantity" numbers-only class="w-100" 
+											 disabled>
+                                                              <span data-ng-class="{disabled:returnable.returnableBonusBatchExpiry.length == 0 || vm.model.returnableGatepassAppprovalDetailData.requestedType != 'Against GRN'}" class="pull-right text-right">
+                                <a data-target="#bouns_selectBatchExpiry_modal" ng-click="vm.model.bonusBatchExpiryInfoOnClick(returnable, $index)"
+                                data-toggle="modal" title="Bonus Qty Batch And Expiry">
+                                  <i class="fa fa-plus-circle" style="    color: #2a88f4 !important;"></i>
+                                </a>
+                              </span>
+                                </td>
+                                <td>{{returnable.bonusReturnedQuantity}}</td>
+									<td>{{returnable.cop}}</td>
+									<td class="width7" title="{{returnable.discountPercentage | number:2 }}" ng-model="returnable.discountPercentage">{{
+										returnable.discountPercentage=
+										(returnable.totalDiscount || 0) |
+											number:2}} %</td>
+									<td>{{returnable.taxName}}</td>
+									<td>{{returnable.taxPercentage}}</td>
+									<!-- <td>{{returnable.totalAmount | number: 2}}</td> -->
+									<td ng-if="!returnable.approvedQuantity">{{vm.model.Currency}} {{returnable.totalAmount = ((returnable.cop || 0) * (returnable.approvedQuantity || 0))|
+										number:2}}</td>
+									<td ng-if="returnable.approvedQuantity">{{vm.model.Currency}} {{returnable.totalAmount = ((returnable.cop || 0) * (returnable.approvedQuantity || 0))|
+										number:2}}</td>
+										<td class="width5" title=" {{vm.model.Currency}} {{returnable.discountAmount | number:2}}" ng-model="returnable.discountAmount">
+											{{vm.model.Currency}} {{ returnable.discountAmount=(returnable.totalAmount-(returnable.totalAmount-(returnable.actualDiscountPercentage*returnable.totalAmount)/100))| number:2}}
+										</td>
+									<td class="width5" title=" {{vm.model.Currency}} {{returnable.totalTaxAmount | number:2}}" ng-model="returnable.totalTaxAmount">
+											{{vm.model.Currency}} {{returnable.totalTaxAmount = (((returnable.totalAmount || 0)-
+											returnable.discountAmount) * (returnable.taxPercentage ||
+											0)/100)| number:2}}
+										</td>
+									<!-- <td>{{returnable.netAmount | number: 2}}</td> -->
+									<td class="width5" title=" {{vm.model.Currency}} {{returnable.netAmount | number:2}}" ng-model="returnable.netAmount">
+                                            {{vm.model.Currency}} {{returnable.netAmount = (((returnable.totalAmount || 0)-returnable.discountAmount)+ (returnable.totalTaxAmount || 0))| number:2 }}</td>
+								
+									<td class="vertical-middle">
+										<div class="row approved-qty-remark">
+											<input type="text" autocomplete="off" class="w-100" ng-model="returnable.approvedQuantity" ng-blur="vm.model.ApprovedQuantity(returnable);calculateReceivedQty(returnable)"
+											 ng-if="!returnable.isDisabled" numbers-only>
+											 <div ng-if="returnable.isDisabled">{{!!returnable.approvedQuantity ? returnable.approvedQuantity : 0 }}</div>
+											<!-- ng-model="datum.approvedQuantity = (datum.isSelected ? datum.quantity : 0)" -->
+										</div>
+									</td>
+									<td>{{returnable.rejectedQuantity}}</td>
+									<td class=" vertical-middle">
+										<div class="checkbox">
+											<label class="switch switch-small">
+												<input type="checkbox" class="switchInput" ng-disabled="returnable.isDisabled" ng-click="vm.model.RejectionPopup(returnable)"
+												 ng-model="returnable.isReject">
+												<div class="slider round slider-small"></div>
+											</label>
+										</div>
+									</td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- ************ Item Details table Start ************ -->
+				<!-- ************ Asset Details table Start ************ -->
+				<div class="row table-scroll" ng-show="vm.model.returnableGatepassAppprovalDetailData.assetTypeId == 2">
+					<div class="col-lg-12 col-md-12 table-wrap fixed-thead-tfoot-scroll fix-height-scroll380">
+						<table class="table table-bordered main-table">
+							<thead>
+								<tr class="table-th-bg">
+									<th colspan="22" class="font-weight700">Asset Details</th>
+								</tr>
+								<tr>
+									<th class="width1 text-center">
+										<input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" ng-change="vm.model.valueOnChange(returnable, true)"
+										 ng-disabled="!vm.model.returnableGatepassAppprovalDetailData || vm.model.returnableGatepassAppprovalDetailData.statusId == 9 || !vm.model.returnableGatepassAppprovalDetailData.statusId == 2 || vm.model.returnableGatepassAppprovalDetailData.approvalStatusId != 10" />
+									</th>
+									<th class="width6">Asset Code</th>
+									<th class="width6">Asset Details</th>
+									<th class="width6">Serial No.</th>
+									<th class="width6">Lot No.</th>
+									<th class="width6">Vendor Name</th>
+									<th class="width6">Total GRN Qty</th>
+									<th class="width6">Returned Qty</th>
+									<th class="width6">Available For Return Qty</th>
+									<th class="width6">Current Stock Available</th>
+									<th class="width6">Return Qty</th>
+									<th class="width6">Bonus Return Qty</th>
+									<th class="width6">Bonus Returned Qty</th>
+									<th class="width6">Assessories</th>
+									<th class="width6">COP</th>
+									<th class="width6">Discount %</th>
+									<th class="width6">Tax Code</th>
+									<th class="width6">Tax %</th>
+									<th class="width6">Total Amount</th>
+									<th class="width6">Total Discount</th>
+									<th class="width6">Tax Amount</th>
+									<th class="width6">Net Amount</th>
+									<th class="width6">Expected Return Date</th>
+									<th class="width6">Approve Ret Qty</th>
+									<th class="width6">Reject Qty</th>
+									<th class="width6 text-center">Reject</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="returnable in vm.model.returnableGatepassAppprovalDetailData.items | orderBy:sortType:sortReverse">
+									<td class=" text-center">
+										<input type="checkbox" ng-model="returnable.isSelected" ng-disabled="vm.model.returnableGatepassAppprovalDetailData.statusId != 2 "
+										ng-click="vm.model.SelectItem(returnable)" ng-change="vm.model.valueOnChange(returnable, false)" />
+									</td>
+									<td>{{returnable.itemCode}}</td>
+									<td>{{returnable.itemName}}</td>
+									<td>{{returnable.batchNo}}</td>
+									<td>{{returnable.lotNo}}</td>
+									<td>{{returnable.vendor}}</td>
+									<td class="width5" title="{{returnable.totalGRNQuantity}}">{{returnable.totalGRNQuantity}}</td>
+										<td ng-if="returnable.approvedQuantity==0" class="width5" title="{{returnable.approvedQuantity}}">{{returnable.approvedReturnedQty 
+											}}</td>
+										<td ng-if="returnable.approvedQuantity!=0"class="width5" title="{{returnable.approvedQuantity}}">{{returnable.approvedQuantity 
+											}}</td>
+										<td  ng-if="returnable.approvedQuantity==0" title="{{returnable.totalGRNQuantity-returnable.approvedQuantity}}">{{(returnable.totalGRNQuantity>0 ? returnable.totalGRNQuantity-returnable.approvedQuantity :returnable.availableQuantity)}}</td>
+										<td  ng-if="returnable.approvedQuantity!=0" title="{{returnable.availableQuantity}}">{{returnable.availableQuantity}}</td>
+													
+				                        <td ng-if="requestTypeToCheck!='Rejected Against GRN'" title="{{returnable.availableQuantity}}">{{returnable.availableQuantity}}</td>
+                                        <td ng-if="requestTypeToCheck=='Rejected Against GRN'" title="{{returnable.availableQuantity}}">{{(returnable.availableQuantity>0 ? returnable.availableQuantity:0)}}</td>
+														
+									<td>{{returnable.returnQuantity}}</td>
+									                                <td>
+									                                <input type="text" autocomplete="off" ng-model="returnable.bonusReturnQuantity" numbers-only class="w-100" 
+											 disabled>
+                                                              <span class="pull-right text-right">
+                                <a data-target="#bouns_selectBatchExpiry_modal" ng-click="vm.model.bonusBatchExpiryInfoOnClick(returnable, $index)"
+                                data-toggle="modal" title="Bonus Qty Batch And Expiry">
+                                  <i class="fa fa-plus-circle" style="    color: #2a88f4 !important;"></i>
+                                </a>
+                              </span>
+                                </td>
+                                <td>{{returnable.bonusReturnedQuantity}}</td>
+									<td class="text-center">
+										<a class="cursor-pointer" title="Add">Add</a>&nbsp;
+										<a class="cursor-pointer" style="    padding: 8px;" title="View" ng-click="vm.model.accessoryModal(returnable)">View</a>
+									</td>
+									<td>{{returnable.cop}}</td>
+									<td class="width7" title="{{returnable.discountPercentage | number:2 }}">{{
+										returnable.discountPercentage=
+										(returnable.totalDiscount || 0) |
+											number:2}} %</td>
+									<td>{{returnable.taxName}}</td>
+									<td>{{returnable.taxPercentage}}</td>
+									<td class="width5" title=" {{vm.model.Currency}} {{returnable.totalAmount | number:2}}">
+											{{vm.model.Currency}} {{returnable.totalAmount = ((returnable.cop || 0) * (returnable.approvedQuantity || 0)) |
+											number:2}} </td>
+									<td class="width5" title=" {{vm.model.Currency}} {{returnable.discountAmount | number:2}}">
+											{{vm.model.Currency}} {{ returnable.discountAmount = (returnable.totalAmount - (returnable.totalAmount - (((returnable.actualDiscountPercentage || 0) * returnable.totalAmount) / 100)))| number:2}}
+										</td>
+									<td class="width5" title=" {{vm.model.Currency}} {{returnable.totalTaxAmount | number:2}}">
+											{{vm.model.Currency}} {{returnable.totalTaxAmount = (((returnable.totalAmount || 0)-
+											returnable.discountAmount) * (returnable.taxPercentage ||
+											0)/100)| number:2}}
+										</td>
+									<td class="width5" title=" {{vm.model.Currency}} {{returnable.netAmount | number:2}}">
+                                            {{vm.model.Currency}} {{returnable.netAmount = (((returnable.totalAmount || 0)-returnable.discountAmount)+ (returnable.totalTaxAmount || 0))| number:2 }}
+                                            </td>
+								
+									<td></td>
+									<td>
+										<input type="text" ng-model="returnable.approvedQuantity" autocomplete="off" class="w-100" ng-blur="vm.model.ApprovedQuantity(returnable)">
+									</td>
+									<td>{{returnable.rejectedQuantity}}</td>
+									<!-- data-toggle="modal" data-target="#qtyaccepatReject" -->
+									<td class="td-bg text-center">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="" ng-click="vm.model.RejectionPopup(returnable)" 
+												ng-model="returnable.isReject">
+												Reject
+											</label>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- ************ Asset Details table End ************ -->
+			</div>
+		</fieldset>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-left-right-set4">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+					<table class=" table table-bordered">
+						<tbody>
+							<tr>
+								<th class="width7">
+									<label>Total Amount</label>
+								</th>
+								<td class="width8">
+									{{vm.model.Currency}} {{ vm.model.returnableGatepassAppprovalDetailData.totalAmount = (vm.model.returnableGatepassAppprovalDetailData.items | sumByColumn: 'totalAmount') | number:2}}
+									<!-- {{vm.model.returnableGatepassAppprovalDetailData.totalAmount | number: 2}} -->
+								</td>
+								<th class="width7">
+									<label>Total Discount</label>
+								</th>
+								<td class="width8">
+									{{vm.model.Currency}} {{ vm.model.returnableGatepassAppprovalDetailData.discount = (vm.model.returnableGatepassAppprovalDetailData.items | sumByColumn: 'discountAmount') | number:2}}
+									<!-- {{vm.model.returnableGatepassAppprovalDetailData.totalAmount | number: 2}} -->
+								</td>
+								<th class="width7">
+									<label>Tax Amount</label>
+								</th>
+								<td class="width8">
+									{{vm.model.Currency}} {{vm.model.returnableGatepassAppprovalDetailData.totalTaxAmount = (vm.model.returnableGatepassAppprovalDetailData.items | sumByColumn:'totalTaxAmount' ) | number: 2}}
+								</td>
+								<th class="width8">
+									<label>Net Amount</label>
+								</th>
+								<td class="width8">
+									<!-- {{vm.model.returnableGatepassAppprovalDetailData.netAmount | number: 2}} -->
+									{{vm.model.Currency}} {{vm.model.returnableGatepassAppprovalDetailData.netAmount = (vm.model.returnableGatepassAppprovalDetailData.items | sumByColumn: 'netAmount') | number: 2}}
+								</td>
+							</tr>
+							<tr>
+								<th class="width7 vertical-top">
+									<label>Remarks</label>
+								</th>
+								<td class="width8" colspan="5">{{vm.model.returnableGatepassAppprovalDetailData.remark}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="row padding-top5 margin-top10 padding-right20" ng-if="vm.model.returnableGatepassAppprovalDetailData.approvalStatus == 'Pending Approval' || vm.model.returnableGatepassAppprovalDetailData.approvalStatusId ==6 ">
+				<div class="col-md-1 text-right">
+					<b>
+						<label>Remark:</label>
+					</b>
+				</div>
+				<div class="col-lg-9 col-md-9 padding-left-right8">
+					<textarea row="1" class="form-control" ng-model="vm.model.remark"></textarea>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a>
+						<input type="button" value="Save" data-ng-class="{disabled:saveBtnDisabled==true}"  ng-click="vm.model.SaveApproval()" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a href="#/returnaleGatepassApproval">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+
+
+
+			<div class="row padding-top5 margin-top10" ng-if="vm.model.returnableGatepassAppprovalDetailData.approvalStatus != 'Pending Approval'">
+				<div class="col-md-11 text-right">
+
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a href="#/returnaleGatepassApproval">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<div id="bouns_selectBatchExpiry_modal" class="modal fade ng-scope in" role="dialog" data-backdrop="static">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<div class="modal-title patient-details-row">
+          			Bonus Batch & Expiry
+          			<button type="button" ng-click="closeBonusBatchExpiry()" class="close" data-dismiss="modal">&times;</button>
+        		</div>
+      		</div>
+      		<div class="modal-body">
+        		<div class="row">
+          			<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            			<table class="table table-bordered">
+              				<thead>
+                				<tr>
+                  					<th class="width6" ng-if="vm.model.returnableGatepassAppprovalDetailData.assetTypeId != 2">
+                    					Batch No. 
+                  					</th>
+                  					<th class="width6" ng-if="vm.model.returnableGatepassAppprovalDetailData.assetTypeId == 2">
+                    					Serial No. 
+                  					</th>
+                  					<th class="width6" ng-show="vm.model.returnableGatepassAppprovalDetailData.assetTypeId != 2">
+                    					Expiry
+                  					</th>
+									<th class="width6" ng-show="vm.model.returnableGatepassAppprovalDetailData.assetTypeId != 2">
+										Bonus Uom
+									</th>
+                  					<th class="width6">
+                    					Qty
+                  					</th>
+                  					<th class="width6">
+                    					Returned Qty
+                  					</th>
+                  					<th class="width6">
+                    					Return Qty
+                  					</th>
+                				</tr>
+              				</thead>
+              				<tbody>
+                				<tr ng-repeat="bonus in vm.model.bonusBatchExpiryData">
+                  					<td>
+										<input type="text" autocomplete="off" ng-model="bonus.batchNo" ng-class="{borderRed: vm.model.batchNumber[$index]}" ng-change="vm.model.batchNumber[$index] = false"
+                   						class="select-box ng-pristine ng-valid dirty ng-not-empty ng-valid-maxlength ng-touched" id="batch_1" maxlength="12" disabled>
+									</td>
+                  					<td ng-show="vm.model.returnableGatepassAppprovalDetailData.assetTypeId != 2">
+                    					<input type="text" autocomplete="off" class="w-100 text-center ng-pristine ng-valid ng-isolate-scope dirty ng-not-empty ng-valid-date ng-touched" name="item.expiryDate" id="item.expiryDate"
+                     					uib-datepicker-popup="MMM-yyyy" ng-model="bonus.expiryDate" model-view-value="true" ng-change="vm.model.setSelectedDate(item); item.isExpiryDateValid = false;" 
+                     					is-open="vm.model.bonusDateOpen[$index]" datepicker-options="vm.model.expiryDateOptions" show-button-bar="false" ng-click="vm.model.OpenBonusExpiryDate($index, item)"
+                      					data-ng-class="{tableError: item.isExpiryDateValid}" ng-keypress="expiryDateVal($event , item)" ng-blur="batchExpiryMsgShow(item);" style="" disabled>
+                  					</td>
+									<td ng-show="vm.model.returnableGatepassAppprovalDetailData.assetTypeId != 2">
+										{{bonus.bonusUom}}
+									</td>
+									<td>
+                    					<input type="text" autocomplete="off" ng-model="bonus.bonusQuantity" class="select-box" numbers-only disabled>
+                  					</td>
+                  					<td class="width3" style="width: 2.8% !important">
+                  						<input type="text" autocomplete="off" ng-model="bonus.bonusReturnedQuantity" class="select-box" numbers-only disabled>
+                  					</td>
+                  					<td class="width3" style="width: 2.8% !important">
+                  						<input ng-disabled="vm.model.returnableGatepassAppprovalDetailData.approvalStatusId == 5" type="text" autocomplete="off" ng-model="bonus.bonusReturnQuantity"
+										ng-blur="checkBonusReturnQty(bonus)" class="select-box" numbers-only>
+                  					</td>
+                				</tr>
+              				</tbody>
+            			</table>
+          			</div>
+        		</div>
+      		</div>
+      		<div class="modal-footer">
+        		<div class="row his-style">
+          			<div class="col-md-10"></div>
+          			<div class="col-md-2 padding-left0px-right6px">
+            			<div class="common-save-button">
+              				<input type="button" value="Save" ng-disabled="vm.model.returnableGatepassAppprovalDetailData.approvalStatusId == 5"
+							ng-click="vm.model.bonusBatchExpiryModalOnClick()"
+                			class="btn btn-primary btn-save-box-shadow">
+            			</div>
+          			</div>
+        		</div>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
+<div id="qtyaccepatReject" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Rejection
+					<button type="button" ng-click="vm.model.ModalDismissClose('qtyaccepatReject')"  class="close">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-6 col-md-6 col-sm-12">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="rejectQty" name="rejectQty" ng-model="vm.model.rejectQty" class="text-input floating-label dirty"
+										 ng-class="{dirty: vm.model.rejectQty}" numbers-only>
+										<label for="rejectQty">Qty</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select name="rejectReason" id="rejectReason" class="text-input floating-label" 
+											ng-model="vm.model.rejectReason">
+											<option value="">Select Reason</option>
+											<option ng-repeat="datum in vm.model.reasons" value="{{datum.id}}">{{datum.reason}}</option>
+										</select>
+										<label for="rejectReason">Select Reason</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="rejectNote" rows="4" id="rejectNote" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+									 ng-model="vm.model.rejectNote" ng-class="{dirty: vm.model.rejectNote}"></textarea>
+									<label for="rejectNote">Note</label>
+								</div>
+							</div>
+						</div>
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" ng-disabled="!vm.model.rejectQty" id="saveBtn" class="btn btn-primary" ng-click="vm.model.SaveAcceptReject()">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="viewDetailsAccessoriesModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 height-table-with-scroll">
+							<div class="row">
+								<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th class="width10">Accessory Code
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width15">Accessory Description
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+											
+												<th class="width15">Quantity
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="item in vm.model.accessoryList">
+												<td>{{item.itemCode}}</td>
+												<td>{{item.itemName}}</td>
+												<td>{{item.returnQuantity}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="modal-footer" style="border:none;">
+						<button type="button" data-dismiss="modal" class="btn btn-primary">Ok</button>
+					</div> -->
+			</div>
+		</div>
+	</div>

@@ -1,0 +1,346 @@
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Department Master</legend> -->
+			<div class="row margin-top10">
+				<form name="ticketForm" novalidate>
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+
+								<input type="hidden">
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors>
+										<input type="text" autocomplete="off" id=""
+											class="text-input floating-label" name="specialityCode"
+											ng-model="reportedBy" disabled="disabled" required> <label
+											for="code">Reported By</label>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<select class="text-input floating-label dirty"
+										ng-model="priorityType">
+										<option value="">Select Priority</option>
+										<option ng-repeat="info in priorityList "
+											value="{{info.type}}">{{info.type}}</option>
+									</select>
+									<p ng-if="isPriorityValid" class="errorMsg">Priority is
+										required</p>
+									<label for="code">Priority</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div>
+										<input type="text" autocomplete="off" id=""
+											class="text-input floating-label" name="specialityName"
+											ng-model="contactNumber" maxlength="10"> <label
+											for="description" class="">Contact Number</label>
+									</div>
+								</div>
+							</div>
+						</div> 
+
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div>
+											<input type="text" autocomplete="off" id="email" name="email"
+												class="text-input floating-label dirty"
+												ng-model="email" 
+												value="" placeholder="abc35@gmail.com" ng-pattern="filter"
+												  /> <label for="description" class="">Email
+												Id </label>
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4"
+							style="margin-top: 20px">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+
+								<input type="hidden">
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group" show-errors >
+										<input type="text" autocomplete="off" id=""
+											class="text-input floating-label" name="issueDescription"
+											ng-model="issueDescription" required="required">
+										<label for="code">Issuance Description<span class="star">*</span></label>
+										<p class="help-block ng-binding ng-scope"
+											ng-if="ticketForm.issueDescription.$error.required">Issue
+											Description is required</p>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"
+							style="margin-top: 20px">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+
+								<input type="hidden">
+								<div class="form-group ng-scope">
+									<label class="control-label col-sm-3"> Import File </label>
+									 <div class="col-lg-6 col-sm-6 col-12">
+										<input type="file" id="f" multiple=""
+											onchange="angular.element(this).scope().getFileDetails(this);this.value=files.length;">
+									</div> 
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</fieldset>
+
+		<div class="row padding-top10">
+			<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+							<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setPageSize(noOfRecordsPerPage);"
+								class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<a href="" class="btn btn-primary btn-save-box-shadow" title="Save"
+					data-toggle="modal" ng-click="addTicketDetails()" ng-hide="saveBtn">
+					<i class="fa fa-floppy-o" style="font-size: 21px"
+					aria-hidden="true"></i>
+				</a> <a href="" class="btn btn-primary btn-save-box-shadow"
+					title="Update" data-toggle="modal" ng-click="updateTicketSystem()"
+					ng-hide="updateBtn"> <i class="fa fa-floppy-o"
+					style="font-size: 21px" aria-hidden="true"></i></a>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off"
+					class="text-search-box ng-pristine ng-untouched ng-valid ng-empty"
+					placeholder="Search" style="margin-top: 0px"
+					ng-model="searchKeyword"
+					ng-keyup="setSearchKey(searchKeyword)"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+
+		<div id="documentUploadModalTicketSystem"
+			class="modal fade ng-scope in" role="dialog" data-backdrop="static">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header padding-zero">
+						<div class="modal-title patient-details-row" style="margin-left: 17px;">
+							Uploaded Attachment
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="row">
+								<div class="row padding-left-right-set4">
+									<table class="table table-bordered">
+										<tbody>
+											<tr ng-if="attachmentList.length > 0">
+												<td>File Name</td>
+												<td>View</td>
+												<td>Action</td>
+											</tr>
+											<tr
+												ng-repeat="attachment in attachmentList |filter:searchKey track by $index ">
+												<td>
+													<div>{{attachment.fileName}}</div>
+												</td>
+												<td>
+													<div>
+														<a target="_blank" href="{{attachment.fileUrl}}">View</a>
+													</div>
+												</td>
+												<td>
+													<div>
+														<a title="Remove" data-toggle="modal"
+															ng-model="attachmentfileId" value={{attachment.fileId}
+															ng-click="confirmationPopUp(attachment,$index)"><i
+															class="fa fa-times"></i></a>
+
+													</div>
+
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="modal-footer his-style" style="border: none;">
+									<div class="row">
+										<div
+											class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+											<button class="btn btn-primary btn-save-box-shadow  width100"
+												title="Add" data-dismiss="modal">
+												<iaria-hidden="true">
+												</i>Ok</button>
+										</div>
+										<div
+											class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+											<button class="btn btn-primary btn-save-box-shadow  width100"
+												title="Remove" data-dismiss="modal" id="cancelBtn"
+												ng-click="confirmationPopUpForRemoveAll()">
+												Remove All </i>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		
+		<div id="confirmationPopUp" class="modal fade ng-scope in  common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !! 
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10 padding-bottom30"><span>Are you sure you want to Continue?</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal" >
+							 Cancel </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Remove"  data-dismiss="modal"  ng-click="removeAttachment()" ng-hide="removeBtn">
+							Remove </i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Remove"  data-dismiss="modal"  ng-click="removeAllAttachment()" ng-hide="removeAllBtn">
+							Remove All </i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+
+		<div class="row padding-left-right-set4 margin-top4">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="" style="width: 150px;">Reported By</th>
+							<th class="" style="width: 120px;">Contact Number</th>
+							<th class="" style="width: 250px;">Issuance Description</th>
+							<th class="" style="width: 60px;">Ticket Number</th>
+							<th class="" style="width: 60px;">Status(n)</th>
+							<th class="" style="width: 60px;">Action taken</th>
+							<th class="" style="width: 60px;">Attachment</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							ng-repeat="info in ticketList | filter:searchKey track by $index">
+							<td>{{info.ticketReportedBy}}</td>
+							<td>{{info.ticketContactNumber}}</td>
+							<td>{{info.ticketIssueDescription}}</td>
+							<td>{{info.ticketNumber}}</td>
+							<td><label class="switch text-center"> <input
+									type="checkbox" ng-model="info.ticketStatus"
+									ng-true-value="'A'" ng-false-value="'I'"
+									ng-change="updateStatus(info,$index)">
+									<div class="slider round"></div>
+							</label></td>
+							<td class="padding-edit-button-table text-center"><a
+								ng-class="{disabled: info.ticketStatus=='I'}"> <i
+									class="fa fa-pencil" aria-hidden="true"
+									ng-click="updateButtonStatus(info,$index)"></i>
+							</a></td>
+							<td class="text-center padding-edit-button-table"><a
+								ng-class="{disabled: info.ticketStatus=='I'}"><i
+									class="fa fa-info-circle" aria-hidden="true"
+									ng-click="showAllAttachments(info.ticketMasterId)"></i></a></td>
+						</tr>
+
+					</tbody>
+				</table>
+
+				<div class="row margin-bottom45">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	var documentHeight = $(window).height();
+	var sideBarHeight = documentHeight - 55;
+	$("#page-content-wrapper").css("height", sideBarHeight + "px");
+	$(".selectedPageName").text("Department Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

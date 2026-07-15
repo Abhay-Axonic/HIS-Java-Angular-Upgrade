@@ -1,0 +1,505 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-top10">
+			
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datepickerFrom"
+									model-view-value="true" is-open="datepickerFrom.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerFrom()"> 
+									
+							<label for="description" class="">Date (From)</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datepickerTo"
+									model-view-value="true" is-open="datepickerTo.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerTo()">  
+							<label for="description" class="">Date-Till</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label" ng-model="status" convert-to-number >
+								<option value="2">Approved</option>
+								<option value="1">Pending</option>
+								
+							</select>
+							 <label for="code">Status(n)</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 margin-top0 text-width-auto">
+				<div class="">
+					<a href="" class="btn btn-primary btn-save-box-shadow width-100" id="searchBtn" ng-click="searchDoctorCreditShare()">
+						<i class="fa fa-search" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-6 col-sm-6 margin-top10" style="padding-left: 5px;">
+				<div class="search">
+					<label class="show-entries">Show <select
+						name="DataTables_Table_0_length"
+						aria-controls="DataTables_Table_0"
+						ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+						ng-change="setNoOfRecords();" class="search-popUp-ddl">
+							<option value="10">10</option>
+							<option value="25">25</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+					</select> entries
+					</label>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" ng-model="serchDrList" ng-keyup="searchDoctorCreditShareKeyup(serchDrList);" style="margin-top:0px">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll420">
+			  <table id="main-table" class="main-table width100">
+			    <thead>
+			      <tr>
+					<th class="width6">UHID</th>
+					<th class="width12">Patient Details</th>
+					<th class="width8">Bill No.</th>
+					<th class="width6">Bill Date</th>
+					<th class="width8">Bill Amount</th>
+					<!-- <th class="width8">Amt Received</th> -->
+					<th class="width8">Total Outstanding</th>
+					<th class="width8">Patient Payable</th>
+					<th class="width8">Credit</th>
+					<th class="width5 text-center">Info</th>
+					<th class="width5 text-center">Action taken</th>
+				</tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-repeat="info in doctorCreditShareList | filter:serchDrList">
+			        
+			        <td>{{info.uhidNumber}}</td>
+			        <td>{{info.patientName}}</td>
+			        <td>{{info.billNumber}}</td>
+			        <td>{{info.billDate}}</td>
+			        <td class="text-right">{{info.netAmount | number :2}}</td>
+			       <!--  <td>{{info.amountPaid| number :2}}</td> -->
+			        <td class="text-right">{{info.outstanding| number :2}}</td>
+			        <td class="text-right">{{info.totalSelfPayable| number :2}}</td>
+			        <td class="text-right">{{info.totalCredit| number :2}}</td>
+			         <td class="text-center">
+			        <!--	<a ng-if="info.doctorCrId != null && info.doctorCrId > 0" title="Generated Credit Note" data-toggle="modal" data-target="#generatedCreditDocModal"  ng-click="generatedCreditForDoc(info)"><i class="fa fa-info-circle"></i></a>-->
+			               <a ng-if="(info.doctorCrId != null && info.doctorCrId > 0) && info.totalCredit > 0" title="Generated Credit Note" data-toggle="modal" data-target="#generatedCreditDocModal"  ng-click="generatedCreditForDoc(info)"><i class="fa fa-info-circle"></i></a>
+
+			        </td>
+			        <td class="text-center">
+			        	<div ng-if="info.outstanding > 0 && status==1">
+			        		<a title="Generate Credit Note" data-toggle="modal" data-target="#generateCreditNoteModal" ng-click="getDocList(info)"><i class="fa fa-pencil"></i></a>
+			        	</div>
+			        </td>
+			      </tr>
+			    </tbody>
+			    <!-- <tfoot>
+					<tr>
+						<tr>
+							<td></td>
+							<td class="border-right-none"></td>
+							<td class="border-right-none"></td>
+							<td class="border-right-none"></td>
+							<td class=""><input type="text" autocomplete="off" class="w-100 form-control" disabled="disabled"></td>
+							<td class=""><input type="text" autocomplete="off" class="w-100 form-control" disabled="disabled"></td>
+							<td class=""><input type="text" autocomplete="off" class="w-100 form-control" disabled="disabled"></td>
+							<td class=""><input type="text" autocomplete="off" class="w-100 form-control" disabled="disabled"></td>
+							<td class=""><input type="text" autocomplete="off" class="w-100 form-control" disabled="disabled"></td>
+						</tr>
+					</tr>
+				</tfoot> -->
+			  </table>
+			</div>
+		</div>
+		<div class="row margin-bottom45 sss">
+			<ul class="pagination table-list"
+				style="font-size: 14px;"> <!-- ng-if="pager.pages.length" -->
+				<li ng-class="{disabled:pager.currentPage === 1}"><a
+					ng-click="setPage(1,'true')">First</a></li>
+				<li ng-class="{disabled:pager.currentPage === 1}"><a
+					ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+				<li ng-repeat="page in pager.pages"
+					ng-class="{active:pager.currentPage === page}"><a
+					ng-click="setPage(page,'true')">{{page}}</a></li>
+				<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+					<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+				</li>
+				<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+					<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+				</li>
+			</ul>
+		</div>
+		
+	</div>
+</div>
+
+<!--  generateCreditNoteModal START -->
+<div id="generateCreditNoteModal" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Generate Credit Note
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			
+			<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs" style="    margin-bottom: 30px;">
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width10 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Doctor</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+						<a href="" ng-click="setFirstTabLevel(2)" class="">Referral</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					<div class="modal-body">
+				<div class="row padding-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="doctorId">
+									    <option value="">Select Doctor</option>
+									     <option ng-repeat="info in doctorList" value="{{info.doctorId}}">{{info.doctorName}}</option>
+									</select> <label for="code">Doctor</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-10">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" allow-decimal-numbers id="" ng-model="amount" class="text-input floating-label"  > 
+									<label for="description" class="">Amount</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:30%;" type="button" name="" id="updateBtn" ng-click="add()" value="+"  class="btn btn-info">&nbsp;
+					</div>
+								
+				</div>
+				<div class="row padding-top10 padding-bottom10">
+					<div class="col-lg-1 col-sm-1 col-md-1 padding-left-right-set">
+						<label>Remark</label>
+					</div>
+					<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-10">
+						<textarea rows="4" class="" ng-model="remark"></textarea>
+					</div>
+				</div>
+			</div>
+				</div>
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					<div class="modal-body">
+				<div class="row padding-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="referralId">
+									    <option value="">Select Referral</option>
+									     <option ng-repeat="info in referralList" value="{{info.referralId}}">{{info.referralName}}</option>
+									</select> <label for="code">Referral</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-10">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" allow-decimal-numbers id="" ng-model="amount" class="text-input floating-label"  > 
+									<label for="description" class="">Amount</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:30%;" type="button" name="" id="updateBtn" ng-click="add()" value="+"  class="btn btn-info">&nbsp;
+					</div>
+								
+				</div>
+				<div class="row padding-top10 padding-bottom10">
+					<div class="col-lg-1 col-sm-1 col-md-1 padding-left-right-set">
+						<label>Remark</label>
+					</div>
+					<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-10">
+						<textarea rows="4" class="" ng-model="remark"></textarea>
+					</div>
+				</div>
+			</div>
+				</div>
+			</div>
+		</div>
+		
+			<!-- <div class="modal-body">
+				<div class="row padding-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="doctorId">
+									    <option value="">Select Doctor</option>
+									     <option ng-repeat="info in doctorList" value="{{info.doctorId}}">{{info.doctorName}}</option>
+									</select> <label for="code">Doctor</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-10">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" allow-decimal-numbers id="" ng-model="amount" class="text-input floating-label"  > 
+									<label for="description" class="">Amount</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:30%;" type="button" name="" id="addr" ng-click="add()" value="+"  class="btn btn-info">&nbsp;
+					</div>
+								
+				</div>
+				<div class="row padding-top10 padding-bottom10">
+					<div class="col-lg-1 col-sm-1 col-md-1 padding-left-right-set">
+						<label>Remark</label>
+					</div>
+					<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-10">
+						<textarea rows="4" class="" ng-model="remark"></textarea>
+					</div>
+				</div>
+			</div> -->
+			<!-- <div class="modal-body">
+				<div class="row padding-top10">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" ng-model="referralId">
+									    <option value="">Select Referral</option>
+									     <option ng-repeat="info in referralList" value="{{info.referralId}}">{{info.referralName}}</option>
+									</select> <label for="code">Referral</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-10">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" allow-decimal-numbers id="" ng-model="amount" class="text-input floating-label"  > 
+									<label for="description" class="">Amount</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:30%;" type="button" name="" id="addr" ng-click="add()" value="+"  class="btn btn-info">&nbsp;
+					</div>
+								
+				</div>
+				<div class="row padding-top10 padding-bottom10">
+					<div class="col-lg-1 col-sm-1 col-md-1 padding-left-right-set">
+						<label>Remark</label>
+					</div>
+					<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-10">
+						<textarea rows="4" class="" ng-model="remark"></textarea>
+					</div>
+				</div>
+			</div> -->
+			<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll">
+			  <table id="main-table" class="main-table width100">
+			    <thead>
+			      <tr>
+					
+					<th class="width12">Doctor</th>
+					<th class="width12">Amount</th>
+					<th class="width6">Action taken</th>
+				</tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-repeat="info in genreateDoctorCreditList">
+			        <td>{{info.doctorName}}</td>
+			         <td class="text-right">{{info.doctorCredit| number :2}}</td>
+			        <td class="text-center"><i class="fa fa-trash" title="remove " aria-hidden="true" ng-click="removeItem($index)"></i></td>
+			      </tr>
+			    </tbody>
+			  </table>
+			</div>
+		</div>
+		
+			<div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Cancel" data-dismiss="modal">
+						<i class="fa fa-times" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Save" ng-click="saveGenerateCreditNote()">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- generateCreditNoteModal END -->
+
+<!--  generatedCreditDocModal START -->
+<div id="generatedCreditDocModal" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Generated Credit Note
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+			</div>
+			
+			<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll">
+			  <table id="main-table" class="main-table width100">
+			    <thead>
+			      <tr>
+					
+					<th class="width12">Doctor</th>
+					<th class="width12">Amount</th>
+					<th class="width6">Action taken</th>
+				</tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-repeat="info in genreatedDoctorList">
+			        <td>{{info.doctorName}}</td>
+			        <!--  <td><div ng-if="info.requestStatus == 1"><input type="text" autocomplete="off" ng-model="info.doctorCredit"  allow-decimal-numbers ng-blur="getCalculateDocAmt(info,$index)"/></div>
+			         <div ng-if="info.requestStatus != 1">{{info.doctorCredit| number :2}}</div></td> -->
+			         <td class="text-right">{{info.doctorCredit| number :2}}</td>
+			        <td><i ng-if="info.requestStatus == 1 && && status==1" class="fa fa-trash" title="remove" aria-hidden="true" ng-click="removeItemAdded(info,$index)"></i></td>
+			      
+			      </tr>
+			    </tbody>
+			  </table>
+			</div>
+		</div>
+		
+			<div class="modal-footer" style="border:none;">
+			<!--	<button type="button" class="btn btn-primary" id="" ng-click="saveGeneratedDoctorCreditNote()">Save</button> -->
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- generateCreditNoteModal END -->
+
+<!--  Modal START -->
+<div id="confirm" class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);">>
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to Save?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal END -->
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Doctor Credit Note");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="drCreditNote"]').parents("li").addClass("active");
+});
+</script>

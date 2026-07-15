@@ -1,0 +1,40 @@
+package com.param.global.service;
+
+import javax.transaction.Transactional;
+
+import com.param.global.common.Response;
+import com.param.global.dto.IntakeOutputChartMasterDto;
+import com.param.global.dto.OutputChartDetailsDto;
+
+import in.param.exception.ApplicationException;
+@Transactional
+@SuppressWarnings("rawtypes")
+public interface IIntakeOutputChartService {
+
+	public Response saveIntakeOutputChart(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response getIntakeOutputChartListByPatientId(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response getIntakeOutputChartHistoryListByDate(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response getIntakeHistoryList(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response getOutputHistoryList(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response getInputOutputChartHistoryDetailsList(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response getInputOutputChartHistoryByDate(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response updateInputOutputStartStatus(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response updateStatusForStartIOChart(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response getIntakeAndOutputDateByPatientId(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response updateIntakeOutputChart(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response deleteStatusForStartIOChart(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response deleteStatusForOutputChart(OutputChartDetailsDto outputChartDetailsDto)throws ApplicationException;
+
+}

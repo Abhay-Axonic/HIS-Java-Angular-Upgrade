@@ -1,0 +1,311 @@
+<div class="second-level-tab-display-div">
+  <div class="row margin-top5">
+	<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+		<input  class="text-search-box"
+			ng-model="searchServiceFilter" placeholder="Search" title="Search "
+			style="margin-top: 0px"> <i
+			class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+	</div>
+</div>
+
+<div class="row margin-top8 ">
+	<div  id="fixed-thead-tfoot-scroll"  class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4 fixed-thead-tfoot-scroll">
+		<table id="main-table" class="table table-bordered main-table margin-top8">
+			<thead>
+				<tr>
+					<th class="width7">
+						<span class="">Order No.</span>
+					</th>
+					<th class="width10">
+						 <span class="">Service Name</span>
+					</th>
+					<th class="width16">
+						Doctor
+					</th>
+					<th class="width3">
+						Quantity
+					</th>
+					<th class="width5">
+						Unit Price
+					</th>
+					<th class="width5">
+						Total Amount
+					</th>
+					<th class="width5">
+						Concession
+					</th>
+					<th class="width5">
+						Disc %
+					</th>
+					<th class="width11">
+						Disc Amount
+					</th>
+					<th class="width6" ng-if="isGstVisible == 'Y'">
+						GST Type
+					</th>
+					<th class="width5" ng-if="isGstVisible == 'Y'">
+						GST %
+					</th>
+					<th class="width5" ng-if="isGstVisible == 'Y'">
+						GST Amount
+					</th>
+					<th class="width6">
+						Net Payable
+					</th>
+					<th class="width11">
+						Self Payable
+					</th>
+					<th class="width6">
+						Credit Payable
+					</th>
+					<th class="width6">
+						Package Payable
+					</th>
+					<!-- <th class="width6">
+						Ordered By
+					</th> -->
+					<th class="width5">
+						Ordered On
+					</th>
+				</tr>
+			</thead>
+			<tbody ng-repeat="service in billServicesList|filter:searchServiceFilter">
+				<tr ng-if="service.isPackageService=='N'">
+					<td>
+						{{service.orderNo}}
+					</td>
+					<td>
+						{{service.serviceStandardName}}
+					</td>
+					<td>
+						{{service.doctorName}}
+					</td>
+					<td class="text-right">
+						{{service.quantity}}
+					</td>
+					<td class="text-right">
+						{{parseFloatNum(service.unitPrice)}}
+					</td>
+					<td class="text-right">
+						{{parseFloatNum(service.grossAmount)}}
+					</td>
+					<td class="text-right">
+						{{parseFloatNum(service.concession)}}
+					</td>
+					<td class="text-right">
+						{{parseFloatNum(service.discountPercentage)}}%
+					</td>
+					<td class="text-right">
+						{{parseFloatNum(service.discount)}}
+					</td>
+					<td class="text-right" ng-if="isGstVisible == 'Y'">
+						{{service.taxName}}
+					</td>
+					<td class="text-right" ng-if="isGstVisible == 'Y'">
+						{{parseFloatNum(service.taxPercentage)}}%
+					</td>
+					<td class="text-right" ng-if="isGstVisible == 'Y'">
+						{{parseFloatNum(service.taxAmount)}}
+					</td>
+					<td class="text-right">
+						{{parseFloatNum(service.netAmt)}}
+					</td>
+					<td class="text-right">
+						{{parseFloatNum(service.selfPayable)}}
+					</td>
+					<td class="text-right">
+						{{parseFloatNum(service.creditPayable)}}
+					</td>
+					<td class="text-right">
+						{{parseFloatNum(service.packageConsumptionAmt)}}
+					</td>
+					<!-- <td>
+						-
+					</td> -->
+					<td>
+						{{service.orderDateString}}
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="5" class="text-right">
+						<span>Account Summary</span>
+					</td>
+					<td class="text-right">
+						<!-- <input type="text" autocomplete="off" class="width62px" value="60"> -->{{totalAmtQuaBase|setDec:2}}
+					</td>
+					<td class="width5 text-right">
+						<!-- <input type="text" autocomplete="off" class="width100"> -->{{totalAmtConcession|setDec:2}}
+					</td>
+					<td colspan="2" class="text-right">
+						<!-- <input type="text" autocomplete="off" class="width62px"> -->{{rountOffString}} {{totalAmtDiscount|setDec:2}}
+					</td>
+					<td colspan="3" class="text-right" ng-if="isGstVisible == 'Y'">
+						<!-- <input type="text" autocomplete="off" class="width62px"> -->{{totalAmtGst|setDec:2}}
+					</td>
+					<td class="width5 text-right">
+						<!-- <input type="text" autocomplete="off" class="width62px" value="60"> -->{{totalNetPayableAmt|setDec:2}}
+					</td>
+					<td class="text-right">{{totalSelfPayable|setDec:2}}</td>
+					<td class="text-right">{{totalCreditPayable|setDec:2}}</td>
+					<td class="text-right">{{totalPackageConsumptionAmt|setDec:2}}</td>
+					<td></td>
+					<!-- <td></td> -->
+				</tr>
+			</tfoot>
+		</table>
+ </div>
+</div>
+<div class="row margin-top8">
+		<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+				<legend class="sub-legend border-bottom-none" ng-show="selfPayeeExist">Self Payer Summary</legend>
+					<table class="table table-bordered " ng-show="selfPayeeExist">
+						<tr>
+							<!-- <th class=" width15"><b>Payer Code</b></th> -->
+							<th class=" width10"><b>Payer Name</b></th>
+							<th class=" width10"><b>Total Amount</b></th>
+							<th class=" width10"><b>Paid Amount</b></th>
+							<th class=" width10"><b>Cr Net Amount</b></th>
+							<th class=" width10"><b>Balance Amount</b></th>
+							<th class=" width10"><b>Refunded Amount</b></th>
+						</tr>
+						 <tr ng-repeat="payee in payeeList" ng-if="payee.payeeId==selfPayeeIdCookies">
+							<!-- <td >{{payee.companyCode}}</td> -->
+							<td>{{payee.companyDesc}}</td>
+							<td class="text-right">{{parseFloatNum(payee.billAmount)}}</td>
+							<td class="text-right">{{parseFloatNum(payee.paidAmount)}}</td>
+							<td class="text-right">{{parseFloatNum(payee.crNetAmt)}}</td>
+							<td class="text-right">{{parseFloatNum(payee.dueAmount)}}</td>
+							<td class="text-right">{{parseFloatNum(payee.refundedAmount)}}</td>
+						</tr>
+					</table>
+				<fieldset class="normalRegistration sub-fieldset bill-details-summery" >	
+					<legend class="sub-legend border-bottom-none" ng-show="insurancePayeeExist">Credit Payer Summary</legend>
+					<table class="table table-bordered " ng-show="insurancePayeeExist">
+						<tr>
+							<!-- <th class=" width15"><b>Payer Code</b></th> -->
+							<th class=" width15"><b>Payer Name</b></th>
+							<th class=" width15"><b>Assoc. Company</b></th>
+							<th class=" width10"><b>Total Amount</b></th>
+							<th class=" width10"><b>Paid Amount</b></th>
+							<th class=" width10"><b>Cr Net Amount</b></th>
+							<th class=" width10"><b>Balance Amount</b></th>
+							<th class=" width10"><b>Disallowed Amount</b></th>
+							<th class=" width10"><b>Other Deduction</b></th>
+						</tr>
+						 <tr ng-repeat="payee in payeeList" ng-if="payee.payeeId!=selfPayeeIdCookies">
+							<!-- <td >{{payee.companyCode}}</td> -->
+							<td>{{payee.companyDesc}}</td>
+							<td>{{payee.associateCompanyDesc!=null ? payee.associateCompanyDesc : '-'}}</td>
+							<td class="text-right">{{parseFloatNum(payee.billAmount)}}</td>
+							<td class="text-right">{{parseFloatNum(payee.paidAmount)}}</td>
+							<td class="text-right">{{parseFloatNum(payee.crNetAmt)}}</td>
+							<td class="text-right">{{parseFloatNum(payee.dueAmount)}}</td>
+							<td class="text-right">{{parseFloatNum(payee.disallowedAmount)}}</td>
+							<td class="text-right">{{parseFloatNum(payee.otherDeduction)}}</td>
+						</tr>
+					</table>
+				</fieldset>
+		</div>
+		
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 " ng-if="paymentReceiptsDetailsList[0].receiptId != null">
+				<fieldset class="normalRegistration sub-fieldset bill-details-summery" >
+					<legend class="sub-legend border-bottom-none">Receipt Summary</legend>
+					<table class="table table-bordered ">
+						<tbody>
+							<tr>
+								<th class=" width5"><b>Bill No.</b></th>
+								<th class=" width5"><b>Receipt No.</b></th>
+								<th class=" width5"><b>Receipt Date</b></th>
+								<th class=" width5"><b>Total Bill Amount</b></th>
+								<th class=" width5"><b>Receipt Amount</b></th>
+								<th class=" width10"><b>Deposit Consumption No.</b></th>
+								<th class=" width10"><b>Deposit Consumption Amount</b></th>	
+								<th class="width3"><b>Action taken</b></th>
+							</tr>
+							<tr ng-repeat="info in paymentReceiptsDetailsList" ng-if="info.receiptId || info.depositConsumptionId">
+								<td>{{info.billNumber}}</td>
+								<td>{{info.receiptNumber}}</td>
+								<td>{{info.dateOfReciept}}</td>
+								<td class="text-right">{{info.totalBillAmount}}</td>
+								<td class="text-right">{{info.amount}}</td>
+								<td class="text-right">{{info.depositeConsumptionNumber}}</td>
+								<td class="text-right">{{info.consumedAmount.toFixed(2)}}</td>
+								<td class="text-center">
+									<i class="fa fa-print" aria-hidden="true" title="Print " ng-click="rePrintOPDBillReceipt($index,0)"></i>
+									<i class="fa fa-print" aria-hidden="true" ng-if="info.isPrint=='Y'" title="Re-print" ng-click="rePrintOPDBillReceipt($index,1)"></i>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div class="row margin-top8" style="margin-bottom:20px">
+		<!-- <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 ">
+			<input type="radio" name="registrationType"><span class="margin-left5 font-weight600">Summary Bill</span>
+			<input type="radio" name="registrationType" class="margin-left5"><span class="margin-left5 font-weight600">Detail Bill</span>
+			
+		</div> -->
+		<!-- <div id="mediaType" class="col-lg-6 col-md-6 col-sm-6 uk-input-group customRadioBtn">													
+				<span>
+						<input id="summaryRadio" name="bill" type="radio" value="1" val="yes" checked="checked">
+						<label for="summaryRadio">Summary Bill</label>
+				</span>
+				<span>
+						<input id="detailsRadio" name="bill" type="radio" value="2">
+						<label for="detailsRadio">Detail Bill</label>
+				</span>
+		</div> -->
+		
+		
+		 
+			
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right">
+			<input type="button" class="btn btn-primary btn-save-box-shadow" id="updateBtn"  ng-disabled="billDisabled" ng-click="settlementClick()" value="Settlement">
+<!-- 			<a href=""  title="Settlement" > -->
+				
+<!-- 			</a> -->
+			
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right">
+				<input type="button" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#digitalSignaturePopup"  style="width: 143px;" id="updateBtn" value="Digital Signature">
+			
+<!-- 				<a href=""  data-toggle="modal" data-target="#digitalSignaturePopup" class="btn btn-primary btn-save-box-shadow width40" title="Back">Digital Signature</a> -->
+		</div>
+		  <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right" ng-if="isRequiredField">
+				<div class="row input-container">
+					<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<select class="text-input floating-label dirty" ng-model="finanacial.financialRequestSendTo" ng-change="proceedFinancialReq()">
+								<option></option>
+								<option ng-repeat="info in getUsersForFinancialClearanceList" value="{{info.userId}}">{{info.employeeName}}</option>
+							</select>
+							
+							<label for="code">Request to</label>
+						</div>
+					</div>
+				</div>
+			</div> 
+		<!-- isFinancialClearence -->
+		 <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right"  >
+			<input type="checkbox"   id="isFinancialClearance_check"  ng-click="checkFinancialClearance()">
+			<label for="cashSettlementCheckbox" class="checkbox-margin-left-right">Is Financial Clearance</label>
+		</div> 
+		
+<!-- 			print functionality already given for receipt print -->
+		<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right">
+			<a href="" ng-click="rePrintOPDBillReceipt()" class="btn btn-primary btn-save-box-shadow" title="Print">
+				Print
+			</a>
+		</div>	 -->
+	</div>
+	<div ng-include="'./views/master/UnitMaster/billingMaster/common/digitalSignaturePopup.html'" ></div>
+	
+</div>

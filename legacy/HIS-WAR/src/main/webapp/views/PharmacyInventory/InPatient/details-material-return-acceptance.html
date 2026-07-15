@@ -1,0 +1,381 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row margin-top10">
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"> <b class="padding-right10 ">Return
+							No.:</b> <label>{{vm.model.materialReturnDetail.returnNo}}</label>
+					</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"> <b class="padding-right10 ">Return
+							Date:</b> <label>{{vm.model.materialReturnDetail.returnDate |
+							date:'dd/MM/yyyy'}}</label>
+					</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"> <b class="padding-right10 ">Returning
+							Store :</b> <label style="text-transform: capitalize;">{{vm.model.materialReturnDetail.fromStore}}</label>
+					</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"> <b class="padding-right10 ">Accepting
+							Store:</b> <label style="text-transform: capitalize;">{{vm.model.materialReturnDetail.toStore}}</label>
+					</span>
+				</div>
+			</div>
+			<div class="row">
+			<!-- comment to resolved HIS-9510 Hide Is consignment from store screens -->
+				<!-- <div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"> <b class="padding-right10 ">Is
+							Consignment:</b> <label style="text-transform: capitalize;">{{vm.model.materialReturnDetail.isConsignment}}</label>
+					</span>
+				</div> -->
+				<!-- <div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"> <b class="padding-right10 ">Type
+							:</b> <label style="text-transform: capitalize;">{{vm.model.materialReturnDetail.nearByExpiry}}</label>
+					</span>
+				</div> -->
+				<!-- <div
+					class="col-lg-1 col-md-3 col-sm-3 padding-left-right-set4 float_right text-width-auto">
+					<input type="button" value="Clear"
+						class="btn btn-primary btn-save-box-shadow"
+						ng-click="vm.model.ClearBarcode()">
+				</div> -->
+				<!-- <div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-barcode" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div ng-init="alert('init')">
+								<input type="text" autocomplete="off" id="barcode" 
+									name="barcode" class="text-input floating-label"
+									ng-model="vm.model.barcode"
+									ng-keypress="vm.model.BarcodeScan($event)">
+								<label for="barcode">Barcode</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+			</div>
+			<!--  Table start -->
+			<div class="row" id="">
+				<div class="container-fluid his-style">
+					<div class="table-container padding-left-right-set4 padding-top5">
+						<div class="table-container-header">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width2  text-center">
+                                           <label class="checkbox-inline">
+                                               <input type="checkbox"
+                                                      ng-model="vm.model.selectAllRows"
+                                                      ng-click="vm.model.SelectAllItems()"
+                                                      ng-change="vm.model.valueOnChange(mreturn, true)"
+                                                      ng-disabled=" vm.model.materialReturnDetail.approvalStatusId != 10">
+                                                  <span></span>
+                                           </label>
+										</th>
+										<th class="width5" title="Item Code">Item Code
+											<div class="float_right"
+												ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width5" title="Item Name">Item Name
+											<div class="float_right"
+												ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6" title="Generic Name">Generic Name
+											<div class="float_right"
+												ng-click="sortType = 'genericName'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4" title="UOM Type">UOM
+											<div class="float_right"
+												ng-click="sortType = 'uomType'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4" title="UOM Unit">UOM Unit
+											<div class="float_right"
+												ng-click="sortType = 'uomUnit'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4" title="Batch No">Batch No.
+											<div class="float_right"
+												ng-click="sortType = 'batchNo'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width5" title="Expiry Date">Expiry Date
+											<div class="float_right"
+												ng-click="sortType = 'expiry'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width5" title="Return Quantity">Returned Qty
+											<div class="float_right"
+												ng-click="sortType = 'returnQuantity'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10" title="Reason For Return">Reason for
+											Return
+											<div class="float_right"
+												ng-click="sortType = 'returnReason'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4" title="Accept Return Quantity">Accept
+											Return Qty</th>
+										<th class="width4" title="Reject Quantity">Reject Qty
+											<div class="float_right"
+												ng-click="sortType = 'rejectedQuantity'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4" title="Reject">Reject</th>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body"
+							style="height: 350px; overflow-y: scroll;">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr
+										ng-repeat="mreturn in vm.model.materialReturnDetail.items | orderBy:sortType:sortReverse">
+										<td class="width2  text-center">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox"
+                                                       ng-model="mreturn.isSelected"
+                                                       ng-disabled="vm.model.materialReturnDetail.approvalStatusId != 10"
+                                                       ng-click="vm.model.SelectItem(mreturn)"
+                                                       ng-change="vm.model.valueOnChange(mreturn, false)" />
+                                                <span></span>
+                                            </label>
+                                        </td>
+										<td class="width5" title="{{mreturn.itemCode}}">{{mreturn.itemCode}}</td>
+										<td class="width5" title="{{mreturn.itemName}}">{{mreturn.itemName}}</td>
+										<td class="width6" title="{{mreturn.genericName}}">{{mreturn.genericName}}</td>
+										<td class="width4" title="{{mreturn.uomType}}">{{mreturn.uomType}}</td>
+										<td class="width4">
+											<span ng-if="mreturn.receivedQtyCon!=''">({{mreturn.receivedQtyCon}}) = </span><br/>
+											<span> {{mreturn.receivedQtyCalculation}} {{mreturn.uomUnitData}}</span>
+										</td>
+										<td class="width4" title="{{mreturn.batchNo}}">{{mreturn.batchNo}}</td>
+										<td class="width5"
+											title="{{mreturn.expiry | date:'MMM-yyyy'}}">{{mreturn.expiry
+											| date:'MMM-yyyy'}}</td>
+										<td class="width5" title="{{mreturn.returnQuantity}}">{{mreturn.totalReturnedQty}}</td>
+										<td class="width10" title="{{mreturn.returnReason}}">{{mreturn.returnReason}}</td>
+										<td class="width4">
+											<div class="row approved-qty-remark">
+												<input type="text" autocomplete="off" class="w-100"
+													ng-model="mreturn.acceptedQuantity"
+													ng-blur="vm.model.ApprovedQuantity(mreturn);calculateReceivedQty(mreturn)"
+													ng-if="!mreturn.isDisabled" numbers-only>
+												<div ng-if="mreturn.isDisabled">{{!!mreturn.acceptedQuantity
+													? mreturn.acceptedQuantity : 0 }}</div>
+											</div>
+										</td>
+										<td class="width4" title="{{mreturn.rejectedQuantity}}">{{mreturn.rejectedQuantity}}</td>
+										<td style="width: 3.8% !important;">
+											<div class="checkbox">
+												<label class="switch switch-small"> <input
+													type="checkbox" class="switchInput"
+													ng-disabled="mreturn.isDisabled"
+													ng-click="vm.model.RejectionPopup(mreturn)"
+													ng-model="mreturn.isReject">
+													<div class="slider round slider-small"></div>
+												</label>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<footer
+			class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20"
+			ng-if="vm.model.materialReturnDetail.approvalStatus == 'Pending Approval'">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-md-1 text-right">
+					<label>Remark:</label>
+				</div>
+				<div class="col-md-9 padding-left-right8">
+					<textarea ng-model="vm.model.remark" row="1" class="form-control"></textarea>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<input type="button" value="Save" id="saveButton" ng-disabled="!vm.model.SelectedItems.length > 0 || !saveDisabled"
+						ng-click="vm.model.SaveApproval()" data-ng-class="{disabled:saveBtnDisabled==true}"
+						class="btn btn-primary btn-save-box-shadow">
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a href="#/materialReturnAcceptance"> <input type="button"
+						value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+		<footer
+			class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20"
+			ng-if="vm.model.materialReturnDetail.approvalStatus != 'Pending Approval'">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-md-11">
+					<label> <b>Remark:</b>
+					</label> {{vm.model.materialReturnDetail.remark}}
+				</div>
+
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a href="#/materialReturnAcceptance"> <input type="button"
+						value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<div id="qtyaccepatReject"
+	class="modal fade ng-scope in common-small-popup" data-backdrop="static" data-keyboard="false" role="dialog"
+	style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Rejection
+					<button type="button"
+						ng-click="vm.model.ModalDismissClose('qtyaccepatReject')"
+						class="close">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-6 col-md-6 col-sm-12">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="rejectQty" name="rejectQty"
+											ng-model="vm.model.rejectQty"
+											class="text-input floating-label dirty" numbers-only>
+										<label for="rejectQty">Qty</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select name="rejectReason" id="rejectReason"
+											class="text-input floating-label"
+											ng-model="vm.model.rejectReason">
+											<option value="">Select Reason</option>
+											<option ng-repeat="datum in vm.model.reasons"
+												value="{{datum.id}}">{{datum.reason}}</option>
+										</select> <label for="rejectReason">Select Reason</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="rejectNote" rows="4" id="rejectNote"
+										maxlength="100"
+										class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+										ng-model="vm.model.rejectNote"
+										ng-class="{dirty: vm.model.rejectNote}"></textarea>
+									<label for="rejectNote">Note</label>
+								</div>
+							</div>
+						</div>
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" ng-disabled="!vm.model.rejectQty" id="saveBtn"
+					class="btn btn-primary" ng-click="vm.model.SaveAcceptReject()">Save</button>
+			</div>
+		</div>
+	</div>
+</div>

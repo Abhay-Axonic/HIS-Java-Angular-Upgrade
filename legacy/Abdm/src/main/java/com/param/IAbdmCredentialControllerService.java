@@ -1,0 +1,243 @@
+package com.param;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.param.entity.model.master.AbdmCallBackResponse;
+import com.param.global.common.Response;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+@Transactional
+public interface IAbdmCredentialControllerService {
+
+	Response getCredentialDetails(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response registerOrgnaisationInABDM(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response addUpdateServicesInAbdm(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response generateOtpAadhar(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response verifyOTPOtpAadhar(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response resendAadhaarOtp(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+	
+	Response addGetServiceAbdm(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response checkAndGenerateMobileOTP(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response checkHealthCardAlreadyExists(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response getpngCard(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response fetchModesValidation(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response onFetchModes(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response authInit(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response authConfirm(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response getProfileDetailsByAdharNumber(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response QRcodeShare(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response saveAbdmCallBackDetails(AbdmCredentialdDto ab)throws ApplicationException;
+
+	Response updateOnInitCall(AbdmCredentialdDto ab)throws ApplicationException;
+
+	Response updateOnConfirm(AbdmCredentialdDto ab)throws ApplicationException;
+
+	Response savePatientRegistrationFromABDMinHIS(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response savePatientRegistrationAfterConfirmCall(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response saveShareResponse(AbdmCredentialdDto ab)throws ApplicationException;
+
+	Response getShareDetails(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response getTranscationTableDetailsById(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+	
+	Response searchByHealthId(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response authInitMethod(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response confirmWithMobileOtp(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response confirmWithAadhaarOtp(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response saveDiscoverResponse(AbdmCredentialdDto ab)throws ApplicationException;
+
+	Response saveinitDiscoverResponse(AbdmCredentialdDto ab)throws ApplicationException;
+
+	Response verifyMobileOTP(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response createHealthIdWithPreVerified(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response profileDetails(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response suggestion(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response isExist(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response createPhrAddress(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response getPngCardNew(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response saveConfirmDiscoverResponse(AbdmCredentialdDto ab)throws ApplicationException;
+
+	Response addContexts(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response saveOnAddContextsResponse(AbdmCredentialdDto ab)throws ApplicationException;
+
+	Response consentsHipNotify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response saveLinksContextOnNotify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response patientsSmsNotify2(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response savePatientSmsOnNotify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException;
+
+	Response saveConsentsHipNotify(AbdmCredentialdDto  abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response saveHealthInformationHipRequest(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response searchByMobile(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response saveAbdmShareResponse(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response mobileResendOtp(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response generateOtpForAadhaarNumber(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response verifyOtpForAadhaar(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response verifyUserForAbhaLogin(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getPofileDetails(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getAbhaCard(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response requestOtpForAadhaar(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response enrollmentEnrolByAadhaar(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response enrollmentEnrolABhaAddress(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response enrollmentAuthByAbdm(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response enrollmentEnrolSuggestion(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getCard(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response hidBenifitCreateHealthIdDemoAuth(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response enrollmentEnrolbyDocument(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response authInitVersionNew(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response authConfirmWithAadhaarOtp(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getAccountProfile(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v2AuthConfirmWithMobileOTP(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+// V3
+	Response v3PhrWebLoginAbhaSearch(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3PhrWebLoginAbhaRequestOtp(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3PhrWebLoginAbhaVerify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3PhrWebloginProfileAbhaProfile(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3PhrWebloginProfileAbhaPhrCard(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3TokenGenerateToken(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3LinkCarecontext(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3UserInitiatedLinkingPatientCareContextOnDiscover(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3UserInitiatedLinkingLinkCareContextOnInit(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3UserInitiatedLinkingLinkCareContextOnConfirm(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3DataFlowHealthInformationHipOnRequest(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response patientHiuDataNotification(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3DataFlowHealthInformationNotify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+	
+	Response v3BridgeUrl(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3LinkPatientLinksSmsNotify2(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3ConsentRequestHipOnNotify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response saveOnGenerateToken(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response saveOnCarecontext(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response updateShareDetailsByTokenNumber(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getPatientReqDetails(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getEncounterNumberByPatientId(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getAdmissionNumberByPatientId(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3LinkCarecontextNew(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3ConsentRequestInit(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3ConsentRequestStatus(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3ConsentRequestHiuOnNotify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3ConsentFetch(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3DataFlowHealthInformationRequest(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3ConsentRequestOnInit(AbdmCredentialdDto ab)throws ApplicationException, Exception;
+
+	Response v3ConsentRequestNotify(AbdmCredentialdDto ab)throws ApplicationException, Exception;
+
+	Response getConsentRequestDetails(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3HealthInformationNotify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3RequestHiuOnNotify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getCareContextCreatedById(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+	Response v3OnRequestHiu(AbdmCredentialdDto ab)throws ApplicationException, Exception;
+
+	Response getDatapushUrlsDetails(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getHiuDecryptedData(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3HiuConsentRequestOnStatus(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response checkAccessOfABDMOfUnit(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getPatientDataByPatientId(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3UpdateStatus(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+
+	Response truncateFHIRDetails(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3LinkCarecontextNotify(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response saveCarecontextOnNotify(AbdmCredentialdDto ab)throws ApplicationException, Exception;
+
+	Response getGrantedHiTypes(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3ProfileAccountAbhaSearch(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response v3ProfileLoginRequestOtp(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+	Response getLinkedCareContextById(AbdmCredentialdDto abdmCredentialdDto)throws ApplicationException, Exception;
+
+
+
+}

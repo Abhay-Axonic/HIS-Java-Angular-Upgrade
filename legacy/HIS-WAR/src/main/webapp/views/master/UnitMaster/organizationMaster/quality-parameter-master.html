@@ -1,0 +1,259 @@
+<link rel="stylesheet" type="text/css"
+      href="resources/assets/css/template/drag-drop.css"/>
+<style>
+    .card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 10px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
+.card-body{
+margin-left:6px;
+}
+
+
+.custom-drop-down-btn-set-vital button.custom-drop-down-btn:focus{
+    width :auto !important;
+}
+.table-container-nowrapping table td, .table-container-nowrapping table th{
+    white-space: inherit !important;
+    text-overflow: clip !important;
+}
+/***************** overlap class for drag-drop.css file*********************/
+.modal {
+    background-color: transparent !important;
+    margin-left: inherit !important;
+    width: -webkit-fill-available !important;
+    height: inherit !important;
+    margin-top: inherit !important;
+    padding-right: 0 !important;
+}
+/***************** *********************/
+.customRadioBtnS input[type="radio"]+label {
+    cursor: pointer;
+    padding: 4px 10px;
+    border: 1px solid #ccc;
+    background: #efefef;
+    color: #aaa;
+    /* border-radius: 3px; */
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0);
+    margin-right: -4px;
+    margin-top: 5px;
+}
+
+.drop-down-shadow {
+    padding: 10px 0px 10px 30px;
+    box-shadow: 1px 2px 7px 3px rgba(0, 0, 0, 0.4)
+}
+
+.width60 {
+    width: 60%;
+}
+
+.marginTop5 {
+    margin-top: 5px
+}
+
+.customRadioBtnS input[type="radio"] {
+    display: none;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/*  .customRadioBtnS input[type="radio"]:checked + label {
+    background: #f5f5a6;
+    border: 1px solid #afa6a6;
+    color: #171717;
+} */
+.margin-right05 {
+    margin-right: 5px !important;
+}
+
+ul.tabs li {
+    margin-right: 3px !important;
+}
+
+.readOnlyTemp{
+pointer-events: none;
+}
+.height-auto{
+    height: auto !important;
+}
+
+
+table>tbody>tr.td-bg-red > td
+    {
+        color : #ff0000 !important;
+    }
+#page-content-wrapper{
+    height: auto !important;
+    padding-bottom: 0% !important;
+}
+
+    #select
+    {
+     border-radius: 5px;
+    }
+
+    .panel{
+      background-color: #d8c9c9 !important;
+    }
+
+</style>
+
+
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style" style="height: 600px;">
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                    <div class="row input-container">
+                        <label for="description" class="">Unit of Measurement</label>
+                        <select class="form-control" name="selectedUOMId" id="selectedUOMId" required  style="border-radius: 10px;"
+                                ng-model="selectedUOMId">
+                            <option value="">Select Unit of Measurement</option>
+                            <option ng-repeat="uom in UOMListFiltered" ng-value="{{ uom.id }}" value="{{ uom.id }}">{{ uom.desc }}</option>
+                        </select>
+                    </div>
+                </div>
+                <!--                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">-->
+                <!--                                    <select class="text-input floating-label" name="module"  ng-change="getSaveAsDraftLabInspections()" >-->
+                <!--                                        <option ng-repeat="info in moduleList" value="{{info.moduleId}}">{{info.moduleName}}</option>-->
+                <!--                                    </select>-->
+                <!--                    </div>-->
+
+                <div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                        <div class="row input-container">
+                            <label for="description" class="">Department</label>
+                            <select class="form-control" name="reasonHandover" id="select" required style="border-radius: 10px;"
+                                    ng-model="selectModuleId">
+                                <option value="">Select Department</option>
+                                <option ng-repeat="info in moduleList" ng-value="{{info.moduleId}}" value="{{info.moduleId}}">{{info.moduleName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                        <div class="row input-container">
+                            <label for="description" class="">Activity ID </label>
+                            <input class="form-control" type="number" ng-model="activityId" style="border-radius: 10px;" >
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                        <div class="row input-container">
+                            <label for="description" class="">Activity</label>
+                            <input class="form-control" type="text" ng-model="activityName " style="border-radius: 10px;">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                        <div class="row input-container">
+                            <label for="description" class="">Parameter ID </label>
+                            <input class="form-control" type="number" ng-model="parameterId"  style="border-radius: 10px;">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                        <div class="row input-container">
+                            <label for="description" class="">Standard</label>
+                            <input class="form-control" type="text" ng-model="standard" style="border-radius: 10px;">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5" style="margin-bottom: 10px;">
+                        <div class="row input-container">
+                            <label for="description" class="">Target % </label>
+                            <input class="form-control" type="number" ng-change="checkTargetPercentage(targetPercentage)" ng-model="targetPercentage" style="border-radius: 10px;">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                        <div class="row input-container">
+                            <label for="description" class="">Threshold % </label>
+<!--                            <input class="form-control" type="number" min="1" max="100" step="1" ng-change="checkThresholdPercentage(thresholdPercentage)" ng-model="thresholdPercentage">-->
+                            <input class="form-control" type="number" ng-change="checkThresholdPercentage(thresholdPercentage)" ng-model="thresholdPercentage" style="border-radius: 10px;">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 margin-top5 text-right ng-scope text-width-auto pull-right">
+                    <button class="btn btn-primary btn-save-box-shadow " title="Save" ng-click="saveQualityParam()">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+
+                <div class="row padding-top0 padding-left-right-set4 margin-top5">
+                    <div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll430">
+                        <table id="main-table" class="main-table width100">
+                            <thead>
+                            <tr>
+                                <th class=" text-center width10">Department</th>
+                                <th class=" text-center width10">Activity Id</th>
+                                <th class=" text-center width10">Activity</th>
+                                <th class=" text-center width10">Unit of Measurement</th>
+                                <th class=" text-center width10">Parameter ID</th>
+                                <th class=" text-center width10">Standard</th>
+                                <th class=" text-center width5">Threshold %</th>
+                                <th class=" text-center width5">Target%</th>
+                                <th class=" text-center width5">Status(n)</th>
+                                <th class=" text-center width5">Action taken</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="info in qualityParamList">
+                                <td class="text-center">{{info.moduleName}}</td>
+                                <td class="text-center">{{info.activityId}}</td>
+                                <td class="text-center">{{info.activityName}}</td>
+                                <td class="text-center">{{info.uomDesc}}</td>
+                                <td class="text-center">{{info.parameterId}}</td>
+                                <td class="text-center">{{info.standard}}</td>
+                                <td class="text-center">{{info.thresholdPercentage}}</td>
+                                <td class="text-center">{{info.targetPercentage}}</td>
+<!--                                <td>{{info.status}}</td>-->
+                                <td><label class="switch"> <input type="checkbox"
+                                    ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"
+                                    ng-change="updateStatus(info)">
+                                    <div class="slider round"></div>
+                                </label></td>
+                                <td class="padding-edit-button-table text-center"><a> <i
+                                        class="fa fa-pencil" aria-hidden="true"
+                                        ng-click="editQualityParam(info)"></i>
+                                </a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </fieldset>
+    </div>
+
+
+</div>
+
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

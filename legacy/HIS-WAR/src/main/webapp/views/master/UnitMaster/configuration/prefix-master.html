@@ -1,0 +1,531 @@
+<head>
+	<style type="text/css">
+	
+	  .borderRed {
+		border: 2px solid red;
+	  }
+  
+	  .borderRed {
+		border: 2px solid #ff0000;
+	  }
+  
+	  .bottomRed {
+		border-bottom: 2px solid #ff0000;
+	  }
+  
+	</style>
+  </head>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width10 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1);vm.model.setTabAccordingToLevel(1)">Global</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+						<a href="" ng-click="setFirstTabLevel(2);vm.model.setTabAccordingToLevel(2)" class="">Unit</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+			 	<!-- *********tab 1 - Global start ********* -->
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					<div class="row">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select name="screen" id="screen" class="text-input floating-label dirty" ng-model="vm.model.screen" data-ng-options="screen.screen for screen in vm.model.screens" >
+											</select>
+											<label for="code">Prefix For<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3  padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" numbers-only class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"
+											 ng-model="vm.model.startFrom">
+											<label for="code" class="LISDynamicLabelOne">Start From<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select name="reset" id="reset" class="text-input floating-label dirty" ng-model="vm.model.reset" data-ng-options="reset.resetName for reset in vm.model.resets">
+											</select>
+											<label for="code">Reset<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3  padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" maxlength="20" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"
+											 ng-model="vm.model.length">
+											<label for="code" class="LISDynamicLabelOne">Length<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row margin-top10">
+							<form action="" class="ng-pristine ng-valid">
+								<div class="col-lg-12 col-md-12 col-sm-8 padding-left-right-set4">
+									<div class="row col-md-5set" id="">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+											<div class="">
+												<label class="common-lable-color-set">Prefix Format</label>
+												<div class="masterborderScroll">
+													<div class="col-lg-12 col-md-12 col-sm-12">
+														<div class="col-lg-12 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+															<div class="row input-container">
+																<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																	<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																</div>
+																<div class="col-lg-11 col-sm-11 col-md-11">
+																	<div class="">
+																		<select name="format" id="format" ng-class="{bottomRed: vm.model.isPrefixFormatValid}" class="text-input floating-label dirty" ng-model="vm.model.format" data-ng-options="format.formatName for format in vm.model.formats">
+																		</select>
+																		<label for="code">Select Format</label>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-12 col-md-3 col-sm-3  padding-left-right-set4 padding-top10" ng-show="vm.model.format.id == 9">
+															<div class="row input-container padding-top10">
+																<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																	<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																</div>
+																<div class="col-lg-11 col-sm-11 col-md-11 ">
+																	<div class="">
+																		<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="vm.model.formatCode">
+																		<label for="code" class="LISDynamicLabelOne">Enter Code</label>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+				
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+											<div class="text-center margintop120 text-width-auto">
+												<div class="row">
+													<button type="button" class="btn btn-primary text-width-auto btn-sm selectionBtn" ng-disabled="!vm.model.format.id" ng-click="vm.model.addToGeneratedCode();">&gt;&gt;</button>
+												</div>
+				
+											</div>
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-5 padding-left-right-set4">
+											<div class="">
+												<label class="common-lable-color-set">Generated Code</label>
+												<div class="masterborderScroll">
+													<textarea class="form-control dirty" disabled="" style="height: 134px;" align="left">{{vm.model.generatedCode}}</textarea>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+											<div class="">
+												<label class="common-lable-color-set">Preview</label>
+												<div class="masterborderScroll">
+													<textarea class="form-control dirty" style="height: 134px;" disabled="">{{vm.model.example}}									
+													</textarea>
+				
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="row margin-top10 padding-left-right-set4 his-style">
+							<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0 float_right">
+								<button type="button" class="btn btn-primary" id="" ng-click="vm.model.clearFields();">Clear</button>
+							</div> -->
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+								<div class="">
+									<a class="btn btn-primary btn-save-box-shadow" id="clearBtn">
+										<i class="fa fa-eraser" ng-click="vm.model.clearFields();" ></i>
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+								<div class="">
+									<a class="btn btn-primary btn-save-box-shadow" id="saveBtn">
+										<i class="fa fa-floppy-o" style="font-size: 21px" ng-click="vm.model.openPopup()" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+								<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" ng-model="vm.model.search" style="margin-top: 0px">			<i
+								 class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+						</div>
+						<div class="row margin-top8">
+							<div class="col-md-12 col-lg-12 col-sm-12 padding-left-right-set4" id="nonBillableTableHt">
+								<fieldset>
+									<div class="row">
+										<div class="container-fluid his-style">
+											<div class="table-container padding-left-right-set4 padding-top5">
+												<div class="table-container-header">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<thead class="mainServiceTableCommon">
+															<tr>
+																<th class="width8">
+																	Prefix Details
+																</th>
+																<!-- <th class="width8">
+																	Code Format
+																</th> -->
+																<th class="width8">
+																	Generated Code
+																</th>
+																<th class="width8">
+																	Running Number
+																</th>
+																<th class="width8">
+																	Reset
+																</th>
+																<th class="width8">
+																	Length
+																</th>
+																<th class="width8 text-center">
+																	Action taken
+																</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+												<div class="table-container-body" style="height:240px; overflow-y: scroll;">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<tbody>
+															<tr ng-repeat="prefix in vm.model.searchprefixConfiguration | orderBy:sortType:sortReverse | filter: vm.model.search">
+																<td class="width8">{{prefix.screenName}}</td>
+																<!-- <td class="width8">{{prefix.code}}</td> -->
+																<td class="width8">{{prefix.generatedCode}}</td>
+																<td class="width8">{{prefix.runningNumber}}</td>
+																<td class="width8">{{prefix.resetName}}</td>
+																<td class="width8">{{prefix.length}}</td>
+																<td class="text-center vertical-middle" style="width: 8.34%!important;">
+																	<a title="Edit">
+																		<i class="fa fa-pencil" ng-click="vm.model.GetConfiguration(prefix)" aria-hidden="true"></i>
+																	</a>&nbsp;
+																	<!-- <a title="Cancel">
+																<i class="fa fa-times" aria-hidden="true"></i>
+															</a> -->
+															</tr>
+															
+															<tr ng-if="!vm.model.searchprefixConfiguration || vm.model.searchprefixConfiguration == false  && vm.model.searchprefixConfiguration != 'undefined'">
+																	<td class="text-center">
+																	  <p>No Record Found</p>
+																	</td>
+																  </tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</fieldset>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- *********tab 1 - Global end ********* -->
+				<!-- *********tab 2 - Unit start ********* -->
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					<div class="row">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select name="screen" id="screen" class="text-input floating-label dirty" ng-model="vm.model.screen" data-ng-options="screen.screen for screen in vm.model.screens">
+											</select>
+											<label for="code">Prefix For<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3  padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" numbers-only class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"
+											 ng-model="vm.model.startFrom">
+											<label for="code" class="LISDynamicLabelOne">Start From<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select name="reset" id="reset" class="text-input floating-label dirty" ng-model="vm.model.reset" data-ng-options="reset.resetName for reset in vm.model.resets">
+											</select>
+											<label for="code">Reset<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3  padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" maxlength="20" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty"
+											 ng-model="vm.model.length">
+											<label for="code" class="LISDynamicLabelOne">Length<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row margin-top10">
+							<form action="" class="ng-pristine ng-valid">
+								<div class="col-lg-12 col-md-12 col-sm-8 padding-left-right-set4">
+									<div class="row col-md-5set" id="">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+											<div class="">
+												<label class="common-lable-color-set">Prefix Format</label>
+												<div class="masterborderScroll">
+													<div class="col-lg-12 col-md-12 col-sm-12">
+														<div class="col-lg-12 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+															<div class="row input-container">
+																<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																	<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																</div>
+																<div class="col-lg-11 col-sm-11 col-md-11">
+																	<div class="">
+																		<select name="format" id="format" ng-class="{bottomRed: vm.model.isPrefixFormatValid}" class="text-input floating-label dirty" ng-model="vm.model.format" data-ng-options="format.formatName for format in vm.model.formats">
+																		</select>
+																		<label for="code">Select Format</label>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-12 col-md-3 col-sm-3  padding-left-right-set4 padding-top10" ng-show="vm.model.format.id == 9">
+															<div class="row input-container padding-top10">
+																<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																	<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																</div>
+																<div class="col-lg-11 col-sm-11 col-md-11 ">
+																	<div class="">
+																		<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="vm.model.formatCode">
+																		<label for="code" class="LISDynamicLabelOne">Enter Code</label>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+				
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+											<div class="text-center margintop120 text-width-auto">
+												<div class="row">
+													<button type="button" class="btn btn-primary text-width-auto btn-sm selectionBtn" ng-disabled="!vm.model.format.id" ng-click="vm.model.addToGeneratedCode();">&gt;&gt;</button>
+												</div>
+				
+											</div>
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-5 padding-left-right-set4">
+											<div class="">
+												<label class="common-lable-color-set">Generated Code</label>
+												<div class="masterborderScroll">
+													<textarea class="form-control dirty" disabled="" style="height: 134px;" align="left">{{vm.model.generatedCode}}</textarea>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+											<div class="">
+												<label class="common-lable-color-set">Preview</label>
+												<div class="masterborderScroll">
+													<textarea class="form-control dirty" style="height: 134px;" disabled="">{{vm.model.example}}									
+													</textarea>
+				
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="row margin-top10 padding-left-right-set4 his-style">
+							<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0 float_right">
+								<button type="button" class="btn btn-primary" id="" ng-click="vm.model.clearFields();">Clear</button>
+							</div> -->
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+								<div class="">
+									<a class="btn btn-primary btn-save-box-shadow" id="clearBtn">
+										<i class="fa fa-eraser" ng-click="vm.model.clearFields();"></i>
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+								<div class="">
+									<a class="btn btn-primary btn-save-box-shadow" id="saveBtn">
+										<i class="fa fa-floppy-o" style="font-size: 21px" ng-click="vm.model.openPopup()" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+								<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" ng-model="vm.model.search" style="margin-top: 0px">			<i
+								 class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+						</div>
+						<div class="row margin-top8">
+							<div class="col-md-12 col-lg-12 col-sm-12 padding-left-right-set4" id="nonBillableTableHt">
+								<fieldset>
+									<div class="row">
+										<div class="container-fluid his-style">
+											<div class="table-container padding-left-right-set4 padding-top5">
+												<div class="table-container-header">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<thead class="mainServiceTableCommon">
+															<tr>
+																<th class="width8">
+																	Prefix Details
+																</th>
+																<!-- <th class="width8">
+																	Code Format
+																</th> -->
+																<th class="width8">
+																	Generated Code
+																</th>
+																<th class="width8">
+																	Running Number
+																</th>
+																<th class="width8">
+																	Reset
+																</th>
+																<th class="width8">
+																	Length
+																</th>
+																<th class="width8 text-center">
+																	Action taken
+																</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+												<div class="table-container-body" style="height:240px; overflow-y: scroll;">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<tbody>
+															<tr ng-repeat="prefix in vm.model.searchprefixConfiguration | orderBy:sortType:sortReverse | filter: vm.model.search">
+																<td class="width8">{{prefix.screenName}}</td>
+																<!-- <td class="width8">{{prefix.code}}</td> -->
+																<td class="width8">{{prefix.generatedCode}}</td>
+																<td class="width8">{{prefix.runningNumber}}</td>
+																<td class="width8">{{prefix.resetName}}</td>
+																<td class="width8">{{prefix.length}}</td>
+																<td class="text-center vertical-middle" style="width: 8.34%!important;">
+																	<a title="Edit">
+																		<i class="fa fa-pencil" ng-click="vm.model.GetConfiguration(prefix)" aria-hidden="true"></i>
+																	</a>&nbsp;
+																	<!-- <a title="Cancel">
+																<i class="fa fa-times" aria-hidden="true"></i>
+															</a> -->
+															</tr>
+															
+															<tr ng-if="!vm.model.searchprefixConfiguration || vm.model.searchprefixConfiguration == false  && vm.model.searchprefixConfiguration != 'undefined'">
+																	<td class="text-center">
+																	  <p>No Record Found</p>
+																	</td>
+																  </tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</fieldset>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- *********tab 2 - Unit end ********* -->
+			</div>
+		</div>
+	</div>
+</div>
+<div id="confirmSave" class="modal fade ng-scope in" role="dialog" style="padding-left: 17px;">
+	<div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+		<!-- style="width: 25% !important;margin: 200px 0 0 510px !important;" -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to Save?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="vm.model.saveRequest();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				  <div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="No" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right" data-dismiss="modal">
+							<button class="btn btn-primary btn-save-box-shadow  width100"  ng-click="vm.model.saveRequest();" title="Yes">
+							<i class="fa fa-check" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+	$(document).ready(function () {
+		// $(".patienttSearchResult").hide();
+		$(".selectedPageName").text("Prefix Configuration");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="prefixConfiguration"]').parents("li").addClass("active");
+	});
+</script>

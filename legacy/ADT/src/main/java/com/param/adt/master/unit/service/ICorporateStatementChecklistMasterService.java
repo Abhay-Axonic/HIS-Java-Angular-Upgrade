@@ -1,0 +1,31 @@
+package com.param.adt.master.unit.service;
+
+import javax.transaction.Transactional;
+
+import com.param.adt.common.Response;
+import com.param.adt.master.unit.dto.BillingBedCategoryMasterDto;
+import com.param.adt.master.unit.dto.CorporateStatementChecklistMasterDto;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+@Transactional
+public interface ICorporateStatementChecklistMasterService {
+	
+	Response saveCorporateStatementChecklistMaster(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response getCorporateStatementChecklistMasterList( CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response getCorporateStatementChecklistMasterCount(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response getActiveCorporateStatementChecklistMaster(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response getCorporateStatementChecklistMasterById(int corporateStatementChecklistId, int orgId, int unitId)throws ApplicationException;
+
+	Response updateCorporateStatementChecklistMaster(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response updateCorporateStatementChecklistMasterStatus(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response getCorporateStatementChecklistMasterListAll(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	
+}

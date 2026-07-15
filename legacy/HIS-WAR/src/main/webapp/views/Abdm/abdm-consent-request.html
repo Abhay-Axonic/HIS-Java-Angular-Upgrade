@@ -1,0 +1,309 @@
+
+<style>
+.bottom-border {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.navbar-default-colour-for {
+    background-color: #2e6ea2   !important;
+}
+
+.fa-eye {
+     class:fa fa-fw fa-eye field-icon;
+    }
+ 
+.fa-eye-slash {
+     class:fa-eye fa-eye-slash;
+    }
+
+	
+.pb-2{
+		padding-bottom:20px;
+	}
+	
+.pt-4{
+		padding-top:40px;
+	}
+	
+.pb-4{
+		padding-bottom:40px;
+	}
+
+	#createAbhass:hover{
+		border:1px solid orange;
+		transition: box-shadow 30ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+		box-shadow: rgba(38, 38, 38, 0.4) 0px 1px 3px;
+	}
+	
+	@media print {
+      @page {
+        size: A4;
+        margin: 10mm; /* Adjust margins to your preference */
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      
+      #printSection {
+        width: 100%;
+        height: auto;
+        page-break-inside: avoid; /* Prevent page breaks inside this element */
+      }
+    }
+    
+    .bold-label {
+    font-weight: bold;
+}
+
+        .record-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 8px #ddd;
+        }
+        .header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .data-section {
+            margin-bottom: 15px;
+        }
+        .label {
+            font-weight: bold;
+        }
+    
+    
+</style>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Include AngularJS -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+<!-- Include Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- Include Angular UI Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+    
+</head>
+
+
+<!-- Button to trigger modal -->
+<div >
+<div class="card" style="margin-right: 150px;">
+<div class="contaier fix-height-scroll500" >
+<div class="col-lg-11 col-sm-11 col-md-11 d-flex justify-content-center" style="margin-top: 60px;">
+    <input style="width: 250px !important;margin-left: 5px;" type="button" data-toggle="modal" id="saveBtn" data-target="#consentRequestModal" value="New Consent Request" class="btn btn-primary btn-save-box-shadow">
+</div>
+
+<!-- Modal Structure -->
+<div class="modal fade" id="consentRequestModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-title patient-details-row">
+            <div class="modal-header">
+                <h5 class="modal-title bold-label" id="modalLabel">Consent Request Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body fix-height-scroll300">
+                <!-- Form fields go here -->
+                <p>All the fields are mandatory.</p>
+                
+                <div class="form-group" style="padding: 10px 20px;">
+                    <label for="patientIdentifier" class="bold-label" style="padding-bottom: 5px;">Patient Identifier</label>
+                    <input type="text" autocomplete="off" name="description" 
+									id="patientIdentifier" class="text-input floating-label"
+									ng-model="patientIdentifier" 
+									typeahead-min-length="0" uib-typeahead="serviceMaster.healthId for serviceMaster in searchPatient($viewValue)"
+									typeahead-on-select="addSelectedPatient($item, $model, $label)">
+                </div>
+                 <div class="form-group" style="padding: 10px 20px;">
+                    <label for="patientIdentifier" class="bold-label" style="padding-bottom: 5px;">Patient Name</label>
+                  {{selectedPatient.patientName}}
+                </div>
+                
+                <div class="form-group" style="padding: 10px 20px;">
+                    <label for="purposeOfRequest" style="padding-bottom: 5px;">Purpose of Request</label>
+                    <select class="form-control" id="purposeOfRequest" ng-model="purposeOfRequest" style="padding: 8px;">
+                        <option>Care Management</option>
+                         <option>Break the Glass</option>
+                          <option>Public Health</option>
+                          <option>Healthcare Payment</option>
+                           <option>Disease Specific Healthcare Research</option>
+                            <option>Self Requested</option>
+                        <!-- Add more options here -->
+                    </select>
+                </div>
+<!--                 <hr>
+ -->
+                <div class="form-group" style="padding: 10px 20px;">
+                    <label for="healthInfoFrom" class="bold-label" style="padding-bottom: 5px;">Health Info From</label>
+                    <input type="text" autocomplete="off"  class="text-input floating-label dirty"
+					name="datepicker" id="datepicker"
+					uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+					placeholder="DD/MM/YYYY" ng-model="datepickerHealth"
+					model-view-value="true" is-open="datepicker.opened" 
+					datepicker-options="dateOptions" show-button-bar="false"
+					ng-click="openDatePicker()">
+                    
+				</div>
+<!--                 <hr>
+ -->
+                <div class="form-group" style="padding: 10px 20px;">
+                    <label for="healthInfoTo" class="bold-label" style="padding-bottom: 5px;">Health Info To</label>
+                    <input type="text" autocomplete="off"  class="text-input floating-label dirty"
+					name="datepicker" id="datepicker"
+					uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+					placeholder="DD/MM/YYYY" ng-model="datepickerHealthInfo"
+					model-view-value="true" is-open="datepickerHinfo.opened" 
+					datepicker-options="dateOptionsDatepickerHealthInfo" show-button-bar="false"
+					ng-click="openDatepickerHealthInfo()">
+                </div>
+<!--                 <hr>
+ -->
+                <div class="form-group" style="padding: 10px 20px;">
+                    <label class="bold-label" style="padding-bottom: 5px;">Health Info Type</label>
+
+ <div class="row" ng-repeat="consent in hiTypes" >
+										    <input type="checkbox" id="{{ consent.id }}" name="checkbox_group" ng-model="consent.checked" >
+										    <label for="{{ consent.id }}" class="consentForm">{{ consent.label }}</label><br>
+										
+										</div>
+
+
+
+
+                </div>
+<!--                 <hr>
+ -->                
+                <div class="row">
+                <div class="col-sm-3">
+                <div class="form-group" >
+                    <label for="consentExpiry" class="bold-label" style="padding-bottom: 5px;">Consent Expiry</label>
+                 <input type="text" autocomplete="off"  class="text-input floating-label dirty"
+					name="datepicker" id="datepicker"
+					uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+					placeholder="DD/MM/YYYY" ng-model="datepickerConsentExpiryHealth"
+					model-view-value="true" is-open="datepickerConsentExpiry.opened" 
+					datepicker-options="dateOptionsConsentExpiry" show-button-bar="false"
+					ng-click="openDatepickerConsentExpiry()">               
+					
+					 </div>
+                </div>
+                <div class="col-sm-3" style="margin-top: 20px;">
+                {{fromTime}}
+                <div class="clockpicker" style="margin-top: 0px;">
+						<input type="text" autocomplete="off" name="description"  ng-model="fromTime" class="text-input floating-label dirty"
+						 ng-init="initClockPicker()" style=""> 
+						<label for="description" class="">Time<span class="star">*</span></label>
+					</div>
+                </div>
+                </div>
+
+                
+					  <p>Date: <input type="text" uib-datepicker-popup="{{format}}" ng-model="selectedDate" is-open="popup.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" /></p>
+    <button type="button" class="btn btn-default" ng-click="open()">Select Date</button>
+
+    <!-- Time Picker -->
+    <p>Time: <uib-timepicker ng-model="selectedTime" hour-step="1" minute-step="15" show-meridian="true"></uib-timepicker></p>
+					 
+               <!--  <hr> -->
+                
+            </div>
+            <div class="modal-footer text-center" style="padding-left: 20px; padding-right: 20px;">
+                <button type="button" class="btn btn-primary btn-save-box-shadow" style="width: 150px; margin: auto;float: inline-end;" id="saveBtn"  ng-click="requestConsent()">Request Consent</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row padding-top20" style="padding-top:30px !important">
+    <div class="row padding-left-right-set4 table-container padding-top10">
+        <div class="table-container">
+            <div class="table" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+                <table class="table table-bordered">
+                    <!-- Table heading -->
+                    <caption style="caption-side:top; font-weight:bold; text-align:center;">CONSENT LIST</caption>
+                    
+                    <!-- Table columns -->
+                    <tr>
+                        <th class="width20"><span class="">Name</span></th>
+                        <th class="width20"><span class="">Jataayu ID</span></th>
+                        <th class="width20"><span class="">Request Status</span></th>
+                        <th class="width20"><span class="">Consent created on</span></th>
+                        <th class="width20"><span class="">Consent granted on</span></th>
+                        <th class="width20">Consent expiry on</th>
+                        <th class="width10"><span class="">Action</span></th>
+                    </tr>
+                    
+                    <!-- Table rows -->
+                    <tr ng-repeat="info in shareList">
+                        <td class="width20 text-center" style="padding: 23px !important;">{{info.abhaId}}</td>
+                        <td class="width20 text-center" style="padding: 23px !important;">{{info.abhaId}}</td>
+                        <td class="width10 text-center" style="padding: 23px !important;">{{info.consentStatus}}</td>
+                        <td class="width5 text-center" style="padding: 23px !important;">{{info.createdDate}}</td>
+                        <td class="width5 text-center" style="padding: 23px !important;">{{info.mobileNumber}}</td>
+                        <td class="width10 text-center" style="padding: 23px !important;">{{info.dob}}</td>
+                        <td class="width10 text-center" style="padding: 23px !important; display: none;">{{info.consentId}}</td>
+                        <td class="width10 text-center" style="padding: 23px !important;">
+                            <a href="#" ng-click="callFetchApi(info)">
+                               <!--  <svg class="MuiSvgIcon-root MuiSvgIcon-colorPrimary" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 33px !important;">
+                                    <path d="M5.88 4.12L13.76 12l-7.88 7.88L8 22l10-10L8 2z"></path>
+                                </svg> -->
+                                <i class="fa-solid fa-greater-than"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+</div>
+
+</div>
+</div>
+<!-- Include jsqr library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<script src="resources/assets/js/controller/opd/transection/qrcode.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="path/to/angular.js"></script>
+<script src="barcode-scanner.js"></script>
+
+<modal visible="showModal"></modal> 
+<script>
+		$(".selectedPageName").text("Consent Registration Master");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="cabinMaster"]').parents("li").addClass("active");
+		
+		
+		angular.element(document).ready(function() {
+		    angular.element('#reader').html5_qrcode(function(data) { // start webcam
+		          console.log(data); // print QR code content
+		          angular.element("#reader").html5_qrcode_stop(); // stop webcam 
+		        },
+		        function(error) {
+		          console.log(error);
+		        },
+		        function(videoError) {
+		          console.log(videoError);
+		        }
+		    );
+		});
+		
+		$('.clockpicker').clockpicker();
+</script>
+

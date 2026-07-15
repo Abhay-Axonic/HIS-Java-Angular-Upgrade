@@ -1,0 +1,1173 @@
+<!-- Page Content -->
+
+<head>
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" /> -->
+	<style>
+		.font-weight100{
+	font-weight: 100;
+}
+</style>
+</head>
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="ng-scope" ng-include="'./views/common/patient-demography-opd.html'"></div>
+		<!-- <div class="row">
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Patient Name
+				 :</b><label></label></span>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">UHID
+				 :</b><label></label></span>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Age
+				 :</b><label></label></span>
+			</div>
+		</div> -->
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">CPT Code: <span class="font-weight100">{{common.cptCode}}</span></b><label></label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Procedure: <span class="font-weight100">{{common.procedureName}}</span></b><label></label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Procedure Type: <span class="font-weight100">{{common.procedureType1}}</span></b><label></label></span>
+			</div>
+			<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">OT Type :</b><label></label></span>
+			</div> -->
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Order Date: <span class="font-weight100">{{common.orderDate}}</span></b><label></label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Prefer Date (s): <span class="font-weight100">{{common.preferredDate}}</span></b><label></label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Duration (mins): <span class="font-weight100">{{common.duration}}</span></b><label></label></span>
+			</div>
+		</div>
+		<div class="row custom-sub-tab padding-left-right-set4">
+			<ul class="tabs nav nav-tabs">
+				<li ng-class="{ active : isSetFirstTabLevel(1) }" id="procedure-details" class="active width13">
+					<a href="" ng-click="setFirstTabLevel(1)">Procedure Details</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(8) }" class="width13" id="time-sheet">
+					<a href="" ng-click="setFirstTabLevel(8)">Doctor Charges</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(5) }" id="service">
+					<a href="" ng-click="setFirstTabLevel(5)">Service</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(3) }" id="equipment">
+					<a href="" ng-click="setFirstTabLevel(3)">Equipment</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(4) }" id="inventory">
+					<a href="" ng-click="setFirstTabLevel(4)">Inventory</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(6) }" id="time-sheet">
+					<a href="" ng-click="setFirstTabLevel(6)">Time Sheet</a>
+				</li>
+
+				<!-- <li ng-class="{ active : isSetFirstTabLevel(2) }" id="staff">
+					<a href="" ng-click="setFirstTabLevel(2)">Staff</a>
+				</li> -->
+
+				<!-- <li ng-class="{ active : isSetFirstTabLevel(7) }" id="CSSD">
+					<a href="" ng-click="setFirstTabLevel(7)">CSSD</a>
+				</li> -->
+			</ul>
+		</div>
+		<div class="row padding-left-right-set4">
+			<!-- Procedure Details Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select ng-model="vm.model.procDtls.specialityId" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty">
+										<option value="" selected="selected">-</option>
+										<option value="{{spc.specialityId}}" ng-value="spc.specialityId" ng-repeat="spc in vm.model.specialityList">{{spc.specialityName}}</option>
+									</select>
+									<label for="code">Specialty</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select ng-model="vm.model.procDtls.procedureTypeId" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty">
+										<option value="" selected="selected">-</option>
+										<option value="{{prcType.procedureTypeId}}" ng-value="prcType.procedureTypeId" ng-repeat="prcType in vm.model.procedureTypes">{{prcType.procedureTypeName}}</option>
+									</select>
+									<label for="code">Procedure Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" class="text-input floating-label dirty" ng-model="vm.model.procDtls.service"
+									 uib-typeahead="psrv.serviceName + '|' +psrv.serviceCode for psrv in vm.model.searchProcServices($viewValue)"
+									 typeahead-on-select="vm.model.selectProcService($item, $model, $label)" />
+									<label for="code">Actual Procedure Performed</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" ng-click="vm.model.addProcedureDetails()" title="Add">
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+											<th class="width10">Specialty</th>
+											<th class="width10">Procedure Type</th>
+											<th class="width10">Actual Procedure Performed</th>
+											<th class="width5 text-center">Primary</th>
+											<th class="width5">Amount</th>
+											<th class="width5 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="proc in vm.model.procedureDetails">
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">{{proc.speciality}}</td>
+											<td class="width10 vertical-middle">{{proc.procedureType}}</td>
+											<td class="width10 vertical-middle">{{proc.serviceName}}</td>
+											<td class="width5 text-center">
+												<label class="switch vertical-middle">
+													<input type="checkbox" ng-model="proc.isPrimarySecondary" ng-init="proc.isPrimarySecondary = (proc.isPrimarySecondary == 'Y' ? 'Y' : 'N')"
+													 ng-true-value="'Y'" ng-false-value="'N'">
+													<div class="slider round"></div>
+												</label>
+											</td>
+											<td class="width5 vertical-middle"><input type="text" autocomplete="off" ng-decimal="200" ng-init="proc.rate = parseFloatNum(proc.rate)"
+												 readonly ng-model="proc.rate" class="w-100"></td>
+											<td class="width5 text-center vertical-middle"><a title="Remove" ng-click="vm.model.procedureDetails.splice($index,1);vm.model.resetCurrentProcedures()"><i
+													 class="fa fa-times"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Procedure Details Tab Content END-->
+
+			<!-- Equipment Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty"
+									 ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores">
+										<option value="?" selected="selected"></option>
+									</select>
+
+									<label for="code">Equipment Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty">
+									<label for="code">Equipment</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty">
+									<label for="description" class="LISDynamicLabel">From Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty">
+									<label for="description" class="LISDynamicLabel">To Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add">
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+											<th class="width10">Equipment Type</th>
+											<th class="width10">Equipment</th>
+											<th class="width5">From Time</th>
+											<th class="width5">To Time</th>
+											<th class="width10">Procedure</th>
+											<th class="width5">Amount</th>
+											<th class="width5 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr>
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width5 vertical-middle">-</td>
+											<td class="width5 vertical-middle">-</td>
+											<td class="width10 vertical-middle"><select class="w-100">
+													<option value=""></option>
+												</select></td>
+											<td class="width5 vertical-middle"><input type="text" autocomplete="off" class="w-100"></td>
+											<td class="width5 text-center vertical-middle"><a title="Remove"><i class="fa fa-times"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Equipment Tab Content END-->
+
+			<!-- Inventory Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(4)" class="second-level-tab-display-div">
+				<div class="row custom-sub-tab padding-left-right-set4">
+					<ul class="tabs nav nav-tabs">
+						<li ng-class="{ active : isSetSecondTabLevel(1) }" id="Medications" class="active;vm.model.active =1">
+							<a href="" ng-click="setSecondTabLevel(1); vm.model.active = 1;">Medications</a>
+						</li>
+						<li ng-class="{ active : isSetSecondTabLevel(2) }" id="Consumables" class="vm.model.active = 2">
+							<a href="" ng-click="setSecondTabLevel(2); vm.model.active = 2;">Consumables</a>
+						</li>
+						<li ng-class="{ active : isSetSecondTabLevel(3) }" id="MedicalGas" class="vm.model.active = 3">
+							<a href="" ng-click="setSecondTabLevel(3);vm.model.active = 3;">Medical Gas</a>
+						</li>
+						<li ng-class="{ active : isSetSecondTabLevel(4) }" id="Implants" class="vm.model.active = 4">
+							<a href="" ng-click="setSecondTabLevel(4); vm.model.active = 4;">Implants</a>
+						</li>
+					</ul>
+				</div>
+				<!-- Medications Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(1)" class="second-level-tab-display-div">
+					<div class="row">
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+							<label class="switch">
+								<input type="checkbox" class="">
+								<div class="slider round"></div>
+							</label>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12">
+							Item/Kit
+						</div>
+					</div>
+					<div class="row margin-top10">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off"  name="item-name" id="item-name" class="text-input floating-label"
+										 ng-model="vm.model.search" uib-typeahead="items.details for items in vm.model.SearchItems($viewValue)"
+										 typeahead-on-select="vm.model.AddItemToBill(vm.model.walkInSale, $item, $model, $label); vm.model.search = '';">
+										<label for="code">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add">
+								Add
+							</a>
+						</div>
+					</div> -->
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width6">Item Code</th>
+												<th class="width6">Item Name</th>
+												<th class="width6">UOM Type</th>
+												<th class="width6">UOM Unit</th>
+												<th class="width6">Booked Qty</th>
+												<th class="width6">Batch No.</th>
+												<th class="width6">Expiry Date</th>
+												<th class="width6">Used Qty</th>
+												<th class="width6">Remaining Qty</th>
+												<th class="width5">MRP</th>
+												<th class="width5">Total Amount</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<!-- <tr data-ng-repeat="item in vm.model.medicationItems">
+												<td class="width6 vertical-middle">{{item.itemName}}</td>
+												<td class="width6 vertical-middle">{{item.itemCode}}</td>
+												<td class="width6 vertical-middle">
+													<select ng-model="item.selectedUom" class="w-100" ng-focus="item.prevUom = item.selectedUom" ng-change="vm.model.UomChange($index, vm.model.walkInSale, item.selectedUom);vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isUOMValid}" ng-options="uom.uomDetails for uom in item.uom" ng-blur="vm.model.ValidateUOM(item)">
+													</select>
+												</td>
+												<td class="width6 vertical-middle">{{item.selectedUom.uomUnit}}</td>
+												<td class="width6 vertical-middle">{{item.bookedQuantity}}</td>
+												<td class="width6 vertical-middle"><select class="w-100" ng-model="item.selectedBatch" ng-focus="item.prevBatch = item.selectedBatch"
+													 ng-change="vm.model.BatchChange($index, item, item.selectedBatch); vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isBatchValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isBatchValid}" data-ng-options="batch.batchDetails for batch in item.batch"
+													 ng-blur="vm.model.ValidateBatch(item)">
+													</select></td>
+												<td class="width6 vertical-middle">{{item.selectedBatch.expiry | date:'MMM-yyyy'}}</td>
+												<td class="width6 vertical-middle"><input type="text" autocomplete="off" ng-model="item.usedQuantity" class="w-100"></td>
+												<td class="width5 vertical-middle">{{item.selectedBatch.rate}}</td>
+												<td class="width5 vertical-middle">   {{item.totalAmount= (((item.usedQuantity ||
+														0)*(item.selectedBatch.rate ||0))) | number:2}}</td>
+											</tr> -->
+											<tr data-ng-repeat="item in vm.model.medicationItems">
+												<td class="width6 vertical-middle">{{item.itemName}}</td>
+												<td class="width6 vertical-middle">{{item.itemCode}}</td>
+												<td class="width6 vertical-middle">{{item.uomType}}</td>
+												<!-- <td class="width6 vertical-middle">
+													<select ng-model="item.selectedUom" class="w-100" ng-focus="item.prevUom = item.selectedUom" ng-change="vm.model.UomChange($index, vm.model.walkInSale, item.selectedUom);vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isUOMValid}" ng-options="uom.uomDetails for uom in item.uom" ng-blur="vm.model.ValidateUOM(item)">
+													</select>
+												</td> -->
+												<td class="width6 vertical-middle">{{item.uomUnit}}</td>
+												<!-- <td class="width6 vertical-middle">{{item.selectedUom.uomUnit}}</td> -->
+												<td class="width6 vertical-middle">{{item.bookedQuantity}}</td>
+												<td class="width6 vertical-middle">{{item.batchNo}}</td>
+												<!-- <td class="width6 vertical-middle"><select class="w-100" ng-model="item.selectedBatch" ng-focus="item.prevBatch = item.selectedBatch"
+													 ng-change="vm.model.BatchChange($index, item, item.selectedBatch); vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isBatchValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isBatchValid}" data-ng-options="batch.batchDetails for batch in item.batch"
+													 ng-blur="vm.model.ValidateBatch(item)">
+													</select></td>
+												 -->
+												 <td class="width6 vertical-middle">{{item.expiryDate | date:'MMM-yyyy'}}</td>
+												<td class="width6 vertical-middle"><input type="text" autocomplete="off" ng-model="item.usedQuantity" class="w-100"></td>
+												<td class="width6 vertical-middle">{{item.remainingQty}}</td>
+												<td class="width5 vertical-middle">{{item.mrp}}</td>
+												<td class="width5 vertical-middle"> {{item.totalAmount= (((item.usedQuantity ||
+														0)*(item.mrp ||0))) | number:2}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Medications Tab Content END  -->
+
+				<!-- Consumables Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(2)" class="second-level-tab-display-div">
+					<div class="row">
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+							<label class="switch">
+								<input type="checkbox" class="">
+								<div class="slider round"></div>
+							</label>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12">
+							Item/Kit
+						</div>
+					</div>
+					<div class="row margin-top10">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off"  name="item-name" id="item-name" class="text-input floating-label"
+										 ng-model="vm.model.search" uib-typeahead="items.details for items in vm.model.SearchItems($viewValue)"
+										 typeahead-on-select="vm.model.AddItemToBill(vm.model.walkInSale, $item, $model, $label); vm.model.search = '';">
+										<label for="code">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+							<div class=" ">
+								<a class="btn btn-primary btn-save-box-shadow" title="Add">
+									Add
+								</a>
+							</div>
+						</div> -->
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width6">Item Code</th>
+												<th class="width6">Item Name</th>
+												<th class="width6">UOM Type</th>
+												<th class="width6">UOM Unit</th>
+												<th class="width6">Booked Qty</th>
+												<th class="width6">Batch No.</th>
+												<th class="width6">Expiry Date</th>
+												<th class="width6">Used Qty</th>
+												<th class="width5">MRP</th>
+												<th class="width5">Total Amount</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr data-ng-repeat="item in vm.model.consumableItems">
+												<td class="width6 vertical-middle">{{item.itemName}}</td>
+												<td class="width6 vertical-middle">{{item.itemCode}}</td>
+												<td class="width6 vertical-middle">
+													<select ng-model="item.selectedUom" class="w-100" ng-focus="item.prevUom = item.selectedUom" ng-change="vm.model.UomChange($index, vm.model.walkInSale, item.selectedUom);vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isUOMValid}" ng-options="uom.uomDetails for uom in item.uom" ng-blur="vm.model.ValidateUOM(item)">
+													</select>
+												</td>
+												<td class="width6 vertical-middle">{{item.selectedUom.uomUnit}}</td>
+												<td class="width6 vertical-middle">{{item.bookedQuantity}}</td>
+												<td class="width6 vertical-middle"><select class="w-100" ng-model="item.selectedBatch" ng-focus="item.prevBatch = item.selectedBatch"
+													 ng-change="vm.model.BatchChange($index, item, item.selectedBatch); vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isBatchValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isBatchValid}" data-ng-options="batch.batchDetails for batch in item.batch"
+													 ng-blur="vm.model.ValidateBatch(item)">
+													</select></td>
+												<td class="width6 vertical-middle">{{item.selectedBatch.expiry | date:'MMM-yyyy'}}</td>
+												<td class="width6 vertical-middle"><input type="text" autocomplete="off" ng-model="item.usedQuantity" class="w-100"></td>
+												<td class="width5 vertical-middle">{{item.selectedBatch.rate}}</td>
+												<td class="width5 vertical-middle"> {{item.totalAmount= (((item.usedQuantity ||
+														0)*(item.selectedBatch.rate ||0))) | number:2}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Consumables Tab Content END  -->
+
+				<!-- Medical Gas Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(3)" class="second-level-tab-display-div">
+					<div class="row margin-top10">
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty">
+										<label for="description" class="LISDynamicLabel">Service Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty">
+										<label for="code">Service</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty">
+										<label for="description" class="LISDynamicLabel">From Time</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty">
+										<label for="description" class="LISDynamicLabel">From Time</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+							<div class=" ">
+								<a class="btn btn-primary btn-save-box-shadow" title="Add">
+									Add
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+												<th class="width6">Service Code</th>
+												<th class="width6">Service</th>
+												<th class="width3">From Time</th>
+												<th class="width3">To Time</th>
+												<th class="width5">MRP</th>
+												<th class="width5">Total Amount</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr>
+												<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width3 vertical-middle">-</td>
+												<td class="width3 vertical-middle">-</td>
+												<td class="width5 vertical-middle"><input type="text" autocomplete="off" class="w-100"></td>
+												<td class="width5 vertical-middle"><input type="text" autocomplete="off" class="w-100"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Medical Gas Tab Content END  -->
+
+				<!-- Implants Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(4)" class="second-level-tab-display-div">
+					<div class="row">
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+							<label class="switch">
+								<input type="checkbox" class="">
+								<div class="slider round"></div>
+							</label>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12">
+							Item/Kit
+						</div>
+					</div>
+					<div class="row margin-top10">
+
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+											<input type="text" autocomplete="off"  name="item-name" id="item-name" class="text-input floating-label"
+											ng-model="vm.model.search" uib-typeahead="items.details for items in vm.model.SearchItems($viewValue)"
+											typeahead-on-select="vm.model.AddItemToBill(vm.model.walkInSale, $item, $model, $label); vm.model.search = '';">
+										   <label for="code">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width6">Item Code</th>
+												<th class="width6">Item Name</th>
+												<th class="width6">UOM Type</th>
+												<th class="width6">UOM Unit</th>
+												<th class="width6">Booked Qty</th>
+												<th class="width6">Batch No.</th>
+												<th class="width6">Expiry Date</th>
+												<th class="width6">Issue Qty</th>
+												<th class="width6">Remaining Qty</th>
+												<th class="width6">Used Qty</th>
+												<th class="width5">MRP</th>
+												<th class="width5">Total Amount</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr data-ng-repeat="item in vm.model.implantItems">
+												<td class="width6 vertical-middle">{{item.itemName}}</td>
+												<td class="width6 vertical-middle">{{item.itemCode}}</td>
+												<td class="width6 vertical-middle">
+													<select ng-model="item.selectedUom" class="w-100" ng-focus="item.prevUom = item.selectedUom" ng-change="vm.model.UomChange($index, vm.model.walkInSale, item.selectedUom);vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isUOMValid}" ng-options="uom.uomDetails for uom in item.uom" ng-blur="vm.model.ValidateUOM(item)">
+													</select>
+												</td>
+												<td class="width6 vertical-middle">{{item.selectedUom.uomUnit}}</td>
+												<td class="width6 vertical-middle">{{item.bookedQuantity}}</td>
+												<td class="width6 vertical-middle"><select class="w-100" ng-model="item.selectedBatch" ng-focus="item.prevBatch = item.selectedBatch"
+													 ng-change="vm.model.BatchChange($index, item, item.selectedBatch); vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isBatchValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isBatchValid}" data-ng-options="batch.batchDetails for batch in item.batch"
+													 ng-blur="vm.model.ValidateBatch(item)">
+													</select></td>
+												<td class="width6 vertical-middle">{{item.selectedBatch.expiry | date:'MMM-yyyy'}}</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle"><input type="text" autocomplete="off" ng-model="item.usedQuantity" class="w-100"></td>
+												<td class="width5 vertical-middle">{{item.selectedBatch.rate}}</td>
+												<td class="width5 vertical-middle"> {{item.totalAmount= (((item.usedQuantity ||
+														0)*(item.selectedBatch.rate ||0))) | number:2}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Implants Tab Content END  -->
+
+			</div>
+			<!-- Inventory Tab Content END-->
+
+			<!-- Service Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(5)" class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select ng-model="vm.model.serv.specialityId" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty">
+										<option value="" selected="selected">-</option>
+										<option value="{{spc.specialityId}}" ng-value="spc.specialityId" ng-repeat="spc in vm.model.specialityList">{{spc.specialityName}}</option>
+									</select>
+									<label for="code">Specialty</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" ng-model="vm.model.serv.service" typeahead-min-length="2"  uib-typeahead = "serviceMaster.serviceStandardName + '|' +serviceMaster.serviceStandardCode for serviceMaster in vm.model.searchServices($viewValue)" typeahead-on-select="vm.model.selectService($item, $model, $label)" class="text-input floating-label dirty">
+									<!--  <input type="text" autocomplete="off" name="description" ng-model="vm.model.serv.service" uib-typeahead="psrv.serviceName + '|' +psrv.serviceCode for psrv in vm.model.searchServices($viewValue)"
+									 typeahead-on-select="vm.model.selectService($item, $model, $label)" class="text-input floating-label dirty">-->
+									<label for="code">Service</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add" ng-click="vm.model.addService()">
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+											<th class="width10">Specialty</th>
+											<th class="width10"> Service</th>
+											<th class="width10">Procedure</th>
+											<th class="width5">Amount</th>
+											<th class="width5 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+									<tr ng-repeat="srv in vm.model.serviceDetails">
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">{{common.serviceSpecility}}</td>
+											<td class="width10 vertical-middle">{{common.serviceStandardName}}</td>
+											<td class="width10 vertical-middle">
+												<select class="w-100" ng-model="srvd" ng-change="selectProcedure(srv,srvd,$index);">
+													<option value="" selected>-</option>
+													<option value="{{cp.procedureId}}" ng-value="cp.procedureId" ng-repeat="cp in vm.model.currentProcedures">{{common.procedureName}}</option>
+												</select>
+											</td>
+											<td class="width5 vertical-middle"><input type="text" autocomplete="off" ng-model="srv.rate" readonly ng-init="srv.rate = parseFloatNum(srv.rate)"
+												 class="w-100"></td>
+											<td class="width5 text-center vertical-middle"><a title="Remove" ng-click="vm.model.serviceDetails.splice($index,1)"><i
+													 class="fa fa-times"></i></a></td>
+										</tr>
+										<tr ng-repeat="srv in vm.model.serviceDetails">
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">{{srv.speciality}}</td>
+											<td class="width10 vertical-middle">{{srv.serviceName}}</td>
+											<td class="width10 vertical-middle">
+												<select class="w-100" ng-model="srvd" ng-change="selectProcedure(srv,srvd,$index);">
+													<option value="" selected>-</option>
+													<option value="{{cp.procedureId}}" ng-value="cp.procedureId" ng-repeat="cp in vm.model.currentProcedures">{{cp.procedure}}</option>
+												</select>
+											</td>
+											<td class="width5 vertical-middle"><input type="text" autocomplete="off" ng-model="srv.rate" readonly ng-init="srv.rate = parseFloatNum(srv.rate)"
+												 class="w-100"></td>
+											<td class="width5 text-center vertical-middle"><a title="Remove" ng-click="vm.model.serviceDetails.splice($index,1)"><i
+													 class="fa fa-times"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Service Tab Content END-->
+
+			<!-- TimeSheet Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(6)" class="second-level-tab-display-div" style="overflow: -webkit-paged-y;">
+				<div class="row padding-top8">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" class="text-input floating-label dirty" datetime-picker date-format="dd-MM-yyyy HH:mm:ss"
+									 hour="23" minute="59" ng-model="vm.model.timeSheet.wheelInTime" ng-change="vm.model.timeSheet.wheelInTime = getFormattedDate(vm.model.timeSheet.wheelInTime,true)" />
+									<label for="code">Wheel-in Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" datetime-picker date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+									 ng-model="vm.model.timeSheet.tableOnTime" ng-change="vm.model.timeSheet.tableOnTime = getFormattedDate(vm.model.timeSheet.tableOnTime,true)"
+									 class="text-input floating-label dirty">
+									<label for="code">Table-on Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" datetime-picker date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+									 ng-model="vm.model.timeSheet.anesthesiaTime" ng-change="vm.model.timeSheet.anesthesiaTime = getFormattedDate(vm.model.timeSheet.anesthesiaTime,true)"
+									 class="text-input floating-label dirty">
+									<label for="code">Anesthesia Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-width-auto">
+								<b>Procedure &nbsp;:</b>
+							</div> -->
+					<!-- <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<label class="long-text-overflow">-</label>
+							</div> -->
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" datetime-picker date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+									 ng-model="vm.model.timeSheet.procedureStartTime" ng-change="vm.model.timeSheet.procedureStartTime = getFormattedDate(vm.model.timeSheet.procedureStartTime,true)"
+									 class="text-input floating-label dirty">
+									<label for="code">Procedure Start Time </label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" datetime-picker date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+									 ng-model="vm.model.timeSheet.procedureEndTime" ng-change="vm.model.timeSheet.procedureEndTime = getFormattedDate(vm.model.timeSheet.procedureEndTime,true)"
+									 class="text-input floating-label dirty">
+									<label for="code">Procedure End Time </label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" datetime-picker date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+									 ng-model="vm.model.timeSheet.tableOutTime" ng-change="vm.model.timeSheet.tableOutTime = getFormattedDate(vm.model.timeSheet.tableOutTime,true)"
+									 class="text-input floating-label dirty">
+									<label for="code">Table-out Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" datetime-picker date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+									 ng-model="vm.model.timeSheet.wheelOutTime" ng-change="vm.model.timeSheet.wheelOutTime = getFormattedDate(vm.model.timeSheet.wheelOutTime,true)"
+									 class="text-input floating-label dirty">
+									<label for="code">Wheel-out Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" datetime-picker date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+									 ng-model="vm.model.timeSheet.scheduleDischarge" ng-change="vm.model.timeSheet.wheelOutTime = getFormattedDate(vm.model.timeSheet.wheelOutTime,true)"
+									 class="text-input floating-label dirty">
+									<label for="code">Schedule Discharge</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" datetime-picker date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+									 ng-model="vm.model.timeSheet.actualDischarge" ng-change="vm.model.timeSheet.actualDischarge = getFormattedDate(vm.model.timeSheet.actualDischarge,true)"
+									 class="text-input floating-label dirty">
+									<label for="code">Actual Discharge</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- TimeSheet Tab Content END-->
+
+			<!-- Doctor Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(8)" class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label" name="roleId" ng-model="vm.model.docCharge.roleId" required>
+										<option>Select Role</option>
+										<option ng-repeat="roleInfo in vm.model.roleListByDoctorCharges" value="{{roleInfo.id}}">{{roleInfo.name}}</option>
+									</select>
+
+									<label for="code">Role</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group">
+									<select class="text-input floating-label" name="specialityId" ng-model="vm.model.docCharge.specialityId"
+									 ng-change="vm.model.getDoctorBySpeciality(vm.model.docCharge.specialityId)" required>
+										<option>Select Specialty</option>
+										<option ng-repeat="info in vm.model.doctorSpecialityList" ng-if="info.isClinicalSpeciality =='Y'" value="{{info.specialityId}}">{{info.specialityName}}</option>
+									</select>
+									<label for="code">Doctor Specialty</label>
+									<!-- <p class="help-block" ng-if="docShareform.specialityId.$error.required">Speciality is required</p> -->
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group">
+									<select class="text-input floating-label" name="doctorId" ng-model="vm.model.docCharge.doctorId" required>
+										<option>Select Doctor Name</option>
+										<option ng-repeat="info in vm.model.doctorList" value="{{info.doctorId}}">{{info.firstName+'
+											'+info.lastName}}</option>
+									</select>
+									<label for="code">Doctor Name</label>
+									<!-- <p class="help-block" ng-if="docShareform.doctorId.$error.required">Doctor is required</p> -->
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add" ng-click="vm.model.addDoctorCharges()">
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+											<th class="width10">Role</th>
+											<th class="width10">Doctor</th>
+											<th class="width10">Procedure</th>
+											<th class="width5">Amount</th>
+											<th class="width5 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+									
+									<tr ng-repeat="drCharges in vm.model.doctorCharges">
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">{{common.doctorRole}}</td>
+											<td class="width10 vertical-middle">{{common.doctorName}}</td>
+											<td class="width10 vertical-middle">
+												<select class="w-100" ng-model="drCharges.procedureId" ng-change="getRate(drCharges,$index)">
+													<option value="" selected>-</option>
+													<option value="{{cp.procedureId}}" ng-value="cp.procedureId" ng-repeat="cp in vm.model.currentProcedures">{{common.procedureName}}</option>
+												</select>
+											</td>
+											<td class="width5 vertical-middle"><input type="text" autocomplete="off" ng-model="drCharges.rate" readonly ng-init="drCharges.rate = parseFloatNum(drCharges.rate)"
+												 class="w-100"></td>
+											<td class="width5 text-center vertical-middle"><a title="Remove" ng-click="vm.model.doctorCharges.splice($index,1)"><i
+													 class="fa fa-times"></i></a></td>
+										</tr>
+										<tr ng-repeat="drCharges in vm.model.doctorCharges">
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">{{drCharges.roleName}}</td>
+											<td class="width10 vertical-middle">{{drCharges.doctorName}}</td>
+											<td class="width10 vertical-middle">
+												<select class="w-100" ng-model="drCharges.procedureId" ng-change="getRate(drCharges,$index)">
+													<option value="" selected>-</option>
+													<option value="{{cp.procedureId}}" ng-value="cp.procedureId" ng-repeat="cp in vm.model.currentProcedures">{{cp.procedure}}</option>
+												</select>
+											</td>
+											<td class="width5 vertical-middle"><input type="text" autocomplete="off" ng-model="drCharges.rate" readonly ng-init="drCharges.rate = parseFloatNum(drCharges.rate)"
+												 class="w-100"></td>
+											<td class="width5 text-center vertical-middle"><a title="Remove" ng-click="vm.model.doctorCharges.splice($index,1)"><i
+													 class="fa fa-times"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Doctor Tab Content END-->
+		</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+					<a href="#/OTBillingCompletion">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right" >
+					<a>
+						<input type="button" value="Save" ng-click="vm.model.saveProcedureOrders()" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			 
+				<div class="col-lg-2 col-md-2 padding-left-right-set4 pull-right vertical-middle padding-top10 text-center">
+					<label class="checkbox-inline vertical-middle">
+						<input type="checkbox" ng-model="vm.model.isCompleted" ng-true-value="'Y'" ng-false-value="'N'">Mark as Completed</label>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<!-- KitDetailsModal Start -->
+<div id="KitDetailsModal" class="common-large-popup modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-10">
+					<table class="table table-bordered  margin-top8">
+						<thead>
+							<tr>
+								<th class="width15">Instrument Name</th>
+								<th class="width15">Instrument Code</th>
+								<th class="width5">Qty</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td></td>
+								<td></td>
+								<td><input type="number" class="w-100"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="saveBtn" >Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- KitDetails END -->
+
+<script>
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("OT Billing Completion");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="OTBillingCompletion"]').parents("li").addClass("active");
+});
+</script>

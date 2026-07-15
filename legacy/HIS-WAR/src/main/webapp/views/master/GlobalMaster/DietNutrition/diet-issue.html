@@ -1,0 +1,336 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Diet Issue</legend> -->
+			<form name="dietOrderForm" novalidate >
+			<div class="row padding-top4">
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datepicker"
+									model-view-value="true" is-open="datepickerFlag.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePicker()" required> <label for="code" class="" >
+									Date</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-hospital-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+							<!-- ng-init="selectedFloorId = floorMasterList[1]" -->
+								<select class="text-input floating-label" name="code"
+									ng-model="selectedFloorId"
+									ng-options="data.floorId as data.floorName for data in floorMasterList">
+
+								</select> <label for="code">Floor</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-th" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label" name="code"
+									ng-model="selectedWardListId"
+									ng-options="data.wardId as data.wardName for data in wardMasterList"> 
+								</select><label for="code">Ward</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-cutlery" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label" name="code"
+									ng-model="selectedMealId"
+									ng-options="data.mealId as data.name for data in mealMasterList">
+								</select> <label for="code">Meal</label>
+							</div>
+						</div>
+					</div>
+				</div>
+<!--				<div class="col-md-3 col-sm-3 padding-left0px-right6px"></div>-->
+				<div class="col-md-1 col-sm-2 ">
+					<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 ">
+						<div class="common-save-button margin-top-5">
+							<a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" ng-click="getDietIssueList()" style="width: auto;">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="row margin-top4 padding-left-right-1">
+					<div
+						class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow"
+								title="Save" ng-click="saveDietOrder()" ng-if="saveBtnFlag" data-toggle="modal"><i
+								class="fa fa-floppy-o" style="font-size: 21px"
+								aria-hidden="true"></i></a>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right" style="margin-top: 5px !important">
+						<input type="text" autocomplete="off" class="text-search-box" placeholder="Search"
+							style="margin-top: 0px" ng-model="searchText"> <i
+							class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+				</div>
+				</form>
+				</fieldset>
+				
+				<modal visible="showModal"></modal> 
+				<div class="row padding-left-right-set4 margin-top10">
+					<div class="col-md-12">
+						<table class="table table-bordered">
+							<tr class="">
+								<th class="width10">Patient Details
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">Floor
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">Ward
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width4">Ward Bed
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width4">Diet Type
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width4">Food Type
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width4">Meal
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width3">Status(n)
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+<!--								<th class="width3 text-center">Barcode-->
+<!--									<div class="float_right">-->
+<!--										<div>-->
+<!--											<i class="fa fa-caret-up" aria-hidden="true"></i>-->
+<!--										</div>-->
+<!--										<div class="margin-top-8">-->
+<!--											<i class="fa fa-caret-down" aria-hidden="true"></i>-->
+<!--										</div>-->
+<!--									</div>-->
+<!--								</th>-->
+								<th class="width3 text-center">Issued
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+							</tr>
+							<tr
+								ng-repeat="info in dietIssueList | orderBy : 'mealName'  | filter:searchText">
+								<td>{{info.patientName}}</td>
+								<td>{{info.floorName}}</td>
+								<td>{{info.wardName}}</td>
+								<td>{{info.bedNumber}}</td>
+								<td>{{info.dietTypeDesc}}</td>
+								<td>{{info.dietPreferenceDesc}}</td>
+								<td class="vertical-middle"><a href="" data-toggle="modal"
+									data-target="#mealDetailsModal" ng-click="showDishListForPatient(info)">{{info.mealDetails.mealName}}</a></td>
+								<td class="vertical-middle"><label class="switch">
+										<input type="checkbox" ng-model="info.mealDetails.status"
+										ng-true-value="'A'" ng-false-value="'I'"
+										ng-change="updateDietOrderStatus(info)">
+										<div class="slider round"></div>
+								</label></td>
+<!--								<td-->
+<!--									class="padding-edit-button-table text-center vertical-middle">-->
+<!--									<a> <i class="fa fa-barcode" aria-hidden="true"-->
+<!--										title="Print Barcode"></i>-->
+<!--								</a>-->
+<!--								</td>-->
+								<td class="vertical-middle text-center" >
+									<input type="checkbox" id="FixedAssestRadioB1" class="" value="" ng-if="info.mealDetails.status=='A'"
+										   ng-model="info.isChecked" ng-change="selectDietIssue(info)">
+									<input type="checkbox" id="FixedAssestRadioB2" class="" value=""  ng-if="info.mealDetails.status!='A'"
+										   disabled="info.mealDetails.status=='I'"
+										   ng-model="info.isChecked" ng-change="selectDietIssue(info)">
+								</td>
+
+
+							</tr>
+						</table>
+					</div>
+				</div>
+
+			</div>
+	</div>
+
+
+
+
+
+	<!-- Meal Details Modal START -->
+	<div id="mealDetailsModal" class="modal fade ng-scope in" role="dialog">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Meal Details
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row patient-details-row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<span class="profile_pic margin-left10">
+<!--								<img alt="" ng-src="{{(dishListForPatient.genderName=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" class="img-circle" style="width: 30px">-->
+								<img alt="" ng-src="{{(dishListForPatient.imagePath!=null&&dishListForPatient.imagePath!='')?dishListForPatient.imagePath:(dishListForPatient.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" class="img-circle" style="width:30px;height:30px">
+							</span> <span class="margin-left10">{{dishListForPatient.patientName}} {{dishListForPatient.dob}} </span> <span
+								class="margin-left10"><b class="padding-right5 ">UHID
+									:</b> {{dishListForPatient.uhidNumber}}</span> <span class="margin-left10"><b
+								class="padding-right10 ">Priority :</b> Normal</span>
+								 <span class="margin-left10"><b
+								class="padding-right10 ">Doctor Name :</b>  {{dishListForPatient.dFirstName}} </span>
+						</div>
+					</div>
+					<div class="">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="text-center width15">Dish</th>
+									<th class="text-center width15">Qty</th>
+								</tr>
+							</thead>
+							<tbody>
+
+								<tr ng-repeat="dishList in dishListForPatient.mealDetails.dishList">
+								<td align="center">{{dishList.dishName}}</td>
+								<td align="center">{{dishList.quantity}}</td></div>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Meal Details Modal END -->
+
+
+
+
+
+
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var documentHeight = $(window).height();
+			var sideBarHeight = documentHeight - 55;
+			$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+			$(".selectedPageName").text("Diet Issue");
+			$(".sidebar-nav li").each(function() {
+				$(this).find("a").parents("li").removeClass("active");
+			});
+			$('a[href$="dietIssue"]').parents("li").addClass("active");
+		});
+		
+		$(document).ready(function(){
+		    $(".show-modal").click(function(){
+		        $("#mealDetailsModal").modal({
+		            backdrop: 'static',
+		            keyboard: false
+		        });
+		    });
+		});
+		
+	</script>

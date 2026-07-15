@@ -1,0 +1,916 @@
+<div id="page-content-wrapper" class="" ng-controller="companyContractController"> 
+	<div class="container-fluid padding-top10">
+		<div class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10 ng-binding"><b class="padding-right6 ">Payment Entitlement
+               :</b> {{contractObj.paymentEntitlementName}}  </span>
+        </div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b class="padding-right6 ">
+							Company:</b> {{contractObj.assCompanyName}} </span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b class="padding-right6 ">Associate
+							Company :</b> {{contractObj.assCompanyName}} </span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b class="padding-right6 ">
+							AR Code: </b> {{contractObj.arCodeDesc}} </span>
+				</div>
+			</div>
+		<div class="row margin-top10">
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10 ng-binding"><b
+					class="padding-right6 ">Visit Type :</b> {{contractObj.visitTypeName}}</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10 ng-binding"><b
+					class="padding-right6 "> Contract Name :</b> {{contractObj.contractName}} </span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10 ng-binding"><b
+					class="padding-right6 "> Contract Validity From :</b> {{contractObj.validityFrom | date : "dd/MM/y "}} </span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10 ng-binding"><b
+					class="padding-right6 "> Contract Validity To :</b> {{contractObj.validityTo| date : "dd/MM/y "}} </span>
+			</div>
+		</div>
+		
+		<div class="row margin-top10">
+			<!-- <div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10 ng-binding"><b
+					class="padding-right6 ">Grade :</b> {{contractObj.gradeName}}</span>
+			</div> -->
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10 ng-binding"><b
+					class="padding-right6 "> Co-Share :</b> {{contractObj.companyShare}} % </span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10 ng-binding"><b
+					class="padding-right6 "> Fall Back Tariff :</b> {{contractObj.tariffName}}</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"  ng-if="isSmartCardRequired=='Y'">
+				<span class="margin-left10 ng-binding"><b
+					class="padding-right6 ">Is Smart Applicable :</b> {{contractObj.isSmartApplicable=='Y'?"Yes":"No"}}</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"  ng-if="isSmartCardRequired=='Y'">
+				<span class="margin-left10 ng-binding"><b
+					class="padding-right6 ">Is Tariff Rate Applicable :</b> {{contractObj.isTariffRateApplicable=='Y'?"Yes":"No"}}</span>
+			</div>
+			
+		</div>
+		<!-- ************************** tabs level one start ****************************** -->
+		<div ng-hide="contractObj.isTariffRateApplicable=='Y'">
+			<div class="row" >
+					<ul class="tabs nav nav-tabs">
+						 <li ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="padding-top-bottom width9">
+							<a href ng-click="setFirstTabLevel(1)">Group Exclusion</a>
+						</li> 
+						<li ng-class="{ active : isSetFirstTabLevel(5) }" id="" class="padding-top-bottom width11">
+							<a href ng-click="setFirstTabLevel(5)">Group Wise Details</a>
+						</li>
+						<li ng-class="{ active : isSetFirstTabLevel(6) }" id="" class="padding-top-bottom width11">
+							<a href ng-click="setFirstTabLevel(6)">Service Wise Details</a>
+						</li>
+						<li ng-class="{ active : isSetFirstTabLevel(2) }" id="" class="padding-top-bottom width11">
+							<a href ng-click="setFirstTabLevel(2)">Pharmacy Exclusion</a>
+						</li>
+						<li ng-class="{ active : isSetFirstTabLevel(4) }" id="" class="padding-top-bottom width9">
+							<a href ng-click="setFirstTabLevel(4)">CAP Amount</a>
+						</li>
+						<li ng-class="{ active : isSetFirstTabLevel(9) }" id="" class="padding-top-bottom width12">
+							<a href ng-click="setFirstTabLevel(9)">Service Wise Cap Amount</a>
+						</li>
+						 <li ng-class="{ active : isSetFirstTabLevel(7) }" id="" class="padding-top-bottom width9">
+							<a href ng-click="setFirstTabLevel(7)">Procedure Details</a>
+						</li>
+						<!-- <li ng-class="{ active : isSetFirstTabLevel(8) }" id="" class="padding-top-bottom width9">
+							<a href ng-click="setFirstTabLevel(8)">Equipment Details</a>
+						</li> -->
+						 <li ng-class="{ active : isSetFirstTabLevel(3) }" id="" class="padding-top-bottom width11">
+							<a href ng-click="setFirstTabLevel(3)">Bed Billing Category</a>
+						</li> 
+						<li ng-class="{ active : isSetFirstTabLevel(10) }" id="" class="padding-top-bottom width9">
+							<a href  ng-click="setFirstTabLevel(10)">Package Details</a>
+						</li>
+					</ul>
+			</div>
+			<div class="row">
+			<div ng-show="isSetFirstTabLevel(1)">
+				<div class="row his-style">
+				<!-- 	<fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Department Wise</legend>
+						
+						</fieldset> -->
+						
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width10">
+											 Group
+										</th>
+										<th class="width10">
+											Sub Group
+										</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="groupExclusion in contractGroupExclusionDetails">
+										<td>{{groupExclusion.groupDesc}}</td>
+										<td>{{groupExclusion.subGroupDesc}}</td>
+									</tr>
+									
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="contractGroupExclusionDetails == '' || contractGroupExclusionDetails==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="isSetFirstTabLevel(2)">
+				<div class="row his-style">
+					<div class="row padding-left-right-set4 padding-top5">
+							<fieldset>
+								<div class="row margin-top10">
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set1 ">
+							  				<div class="row common-sub-table">
+								  				<table class="table table-bordered">
+													<thead>
+														<tr class="">
+															
+															<th class="width8">
+																Product Category
+																<div class="float_right">
+																	<div>
+																		<i class="fa fa-caret-up" aria-hidden="true"></i>
+																	</div>
+																	<div class="margin-top-8">
+																		<i class="fa fa-caret-down" aria-hidden="true"></i>
+																	</div>
+																</div>
+															</th>
+															
+													 	</tr>
+													 </thead>
+													 <tbody>
+													 	<tr ng-repeat="pharamExcwise in groupPharmacyExclusionDetailsList">
+													 		<td>{{pharamExcwise.category}}</td>
+													 	</tr>
+													 </tbody>
+												</table>
+												<table class="table table-bordered">
+													<tr ng-if="groupPharmacyExclusionDetailsList == '' || groupPharmacyExclusionDetailsList==null">
+														<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+													</tr>
+												</table>
+											</div>
+		  								</div>
+									</div>
+												
+							</fieldset>
+						</div>
+				</div>
+				
+				<div class="row his-style">
+					<fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Item Wise</legend>
+						
+						</fieldset>
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width10">
+											Product Category
+										</th>
+										<th class="width10">
+											Item Code
+										</th>
+										<th class="width10">
+											Item Name
+										</th>
+										<!-- <th class="width1">
+											Action
+										</th> -->
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="selectedItem in itemList">
+
+										<td>{{selectedItem.category}}</td>
+										<td>{{selectedItem.itemCode}}</td>
+										<td>{{selectedItem.itemName}}</td>
+										<!-- <td><a> <i class="fa fa-times"
+												ng-click="removeSelectedItemsList($index)"
+												aria-hidden="true"></i>
+										</a></td> -->
+									</tr>
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="itemList == '' || itemList==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="isSetFirstTabLevel(3)">
+				<div class="row his-style">
+					<!-- <fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Category Wise</legend>
+						
+						</fieldset> -->
+						<!-- <div class="row">
+							<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top3">
+						        <div class="">
+						            <input type="button" value="Add Bed Billing Category" class="btn btn-primary btn-save-box-shadow text-width-auto">
+						        </div>
+						     </div>
+						</div> -->
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left0">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width20">
+											Bed Billing Category											
+										</th>
+										<!-- <th class="width1">
+											Action
+										</th> -->
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="bedCategoryObj in contractBedCategoryList">
+										<td>{{bedCategoryObj.billingBedCategory}}</td>
+										<!-- <td>-</td> -->
+									</tr>
+									<!-- <tr>
+										<td>-</td>
+										<td>-</td>
+									</tr>
+									<tr>
+										<td>-</td>
+										<td>-</td>
+									</tr> -->
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="contractBedCategoryList == '' || contractBedCategoryList==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="isSetFirstTabLevel(4)">
+				<div class="row his-style">
+					 <fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Category Wise</legend>
+						
+						</fieldset> 
+						<!-- <div class="row">
+							<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top3">
+						        <div class="">
+						            <input type="button" value="Add Department" class="btn btn-primary btn-save-box-shadow text-width-auto">
+						        </div>
+						     </div>
+						</div> -->
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left0">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<!--  <th class="width8">
+											Billing Group											
+										</th> -->
+										<th class="width8">
+											Department											
+										</th>
+										
+										<th class="width8">
+											CAP Amount										
+										</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="capObj in contractCapList">
+										<!-- <td>-</td> -->
+										<td>{{capObj.specialityName}}</td>
+									   
+										<td>{{capObj.departmentCapAmount}}</td>
+										
+									</tr>
+									
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="contractCapList == '' || contractCapList==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row his-style">
+					 <fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Item Wise</legend>
+						
+						</fieldset>
+						<!-- <div class="row">
+							<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top5">
+						        <div class="">
+						            <input type="button" value="Add Product Category" class="btn btn-primary btn-save-box-shadow text-width-auto">
+						        </div>
+						     </div>
+						</div> -->
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-zero">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width10">
+											Product Category
+										</th>
+										<th class="width10">
+											CAP Quantity
+										</th>
+										<th class="width10">
+											CAP Amount
+										</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="capProductObj in contractProductCapList">
+										<td>{{capProductObj.productCategory}}</td>
+										<td>{{capProductObj.quantity}}</td>
+										<td>{{capProductObj.amount}}</td>
+									</tr>
+									
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="contractProductCapList == '' || contractProductCapList==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="isSetFirstTabLevel(5)">
+				<div class="row his-style">
+					<!-- <fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Category Wise</legend>
+						
+						</fieldset> -->
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left0">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<!-- <th class="width8">
+											Billing Group											
+										</th> -->
+										<th class="width8">
+											Department											
+										</th>
+										<th class="width8">
+											Sub Department											
+										</th>
+										<th class="width8">
+											Co-Share %											
+										</th>
+										 <th class="width8">
+											Variance										
+										</th>
+										<!--<th class="width8">
+											Category											
+										</th> 
+										<th class="width4">
+											%											
+										</th>-->
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="groupWiseDtls in contractGroupWiseDetails">
+										<!-- <td>-</td> -->
+										<td>{{groupWiseDtls.groupDesc}}</td>
+										<td>{{groupWiseDtls.subGroupDesc}}</td>
+										<td>{{groupWiseDtls.coShare}}</td>
+										<td>{{groupWiseDtls.apportionedPercent}}</td>
+										
+										<!--<td>-</td>
+										<td>-</td> -->
+										
+									</tr>
+									
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="contractGroupWiseDetails == '' || contractGroupWiseDetails==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					</div>
+				</div>
+				<div ng-show="isSetFirstTabLevel(6)">
+				<div class="row his-style">
+					<!-- <fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Category Wise</legend>
+						
+						</fieldset> -->
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left0">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width8">
+											Group											
+										</th>
+										<th class="width8">
+											Sub Group											
+										</th>
+										<th class="width8">
+											Service Description									
+										</th>
+										<th class="width8">
+											Service Amount									
+										</th>
+										<th class="width8">
+											Tax Percentage									
+										</th>
+										
+										<th class="width7">
+											Variance Price										
+										</th>
+										<th class="width8">
+											Rate											
+										</th>
+										<th class="width7">
+											Self Payable										
+										</th>
+										<th class="width7">
+											Credit Payable										
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="serviceobj in contractServiceList">
+										<td>{{serviceobj.departmentName}}</td>
+										<td>{{serviceobj.subDepartmentName}}</td> 
+										<td>{{serviceobj.serviceName}}</td>
+										<td>{{serviceobj.servicePrice}}</td>
+										<td>{{serviceobj.taxPercentage}}</td>
+										<td>{{serviceobj.apportionedPrice}}</td>
+										<td>{{serviceobj.finalPrice}}</td>
+										<td>{{serviceobj.selfPayable}}</td>
+										<td>{{serviceobj.creditPayable}}</td>
+									</tr>
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="contractServiceList == '' || contractServiceList==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					</div>
+				</div>
+				
+				<div ng-show="isSetFirstTabLevel(9)">
+				<div class="row his-style">
+					<!-- <fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Category Wise</legend>
+						
+						</fieldset> -->
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left0">
+							<table class="table table-bordered">
+												<thead>
+													<tr class="">
+													<th class="width18">
+															Service
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width18">
+															Group
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width18">
+															Sub Group
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8">
+															CAP Amount 
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8">
+																Applicable Qty
+																<div class="float_right">
+																	<div>
+																		<i class="fa fa-caret-up" aria-hidden="true"></i>
+																	</div>
+																	<div class="margin-top-8">
+																		<i class="fa fa-caret-down" aria-hidden="true"></i>
+																	</div>
+																</div>
+															</th>
+														<th class="width8">
+															Applicable Days
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+												 	</tr>
+												 </thead>
+												 <tbody>
+												 	<tr ng-repeat="capAmountdtls in capServiceWiseDetailsListForDetails">
+												 	   <td>{{capAmountdtls.serviceName}}</td>
+												 		<td>{{capAmountdtls.groupDesc}}</td>
+												 		<td>{{capAmountdtls.subGroupDesc != '' ? capAmountdtls.subGroupDesc : '-'}}</td>
+												 		<td>
+												 		{{capAmountdtls.amount}}
+												 		</td>
+												 		<td>
+													 		{{capAmountdtls.quantity}}
+													 	</td>
+												 		<td>
+												 	 <span ng-if="contractObj.visitTypeId != 1"><input type="checkbox" ng-disabled="true" ng-model="capAmountdtls.tillDischargeFlag"/>Till Discharge</span>
+                                                      {{capAmountdtls.applicableDays}}
+												 		</td>
+												 		
+												 </tbody>
+											</table>
+											<table class="table table-bordered">
+												<tr ng-if="capServiceWiseDetailsListForDetails =='' || capServiceWiseDetailsListForDetails == null">
+												<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+												</tr>
+											</table>
+						</div>
+					</div>
+					</div>
+				</div>
+				
+				<div ng-show="isSetFirstTabLevel(10)">
+			<!-- <div class="row his-style">
+						<div class="row padding-left-right-set4 padding-top5">
+						
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" ng-show="companyContarctObj.visitTypeId != 1">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select class="text-input floating-label dirty" ng-model="bedBillingCategoryIdPackage">
+													<option value="">-</option>
+													<option ng-repeat="bedCat in billingBedCategoryPackageList" value="{{bedCat.bedCategoryId}}">{{bedCat.bedCategoryDesc}}</option>
+												</select>
+												<label for="code">Billing Bed Category </label>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+								
+					  <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+					 		<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label" ng-model="packageTypeId">
+										<option value="0" >Select Package Type</option>
+											<option ng-repeat="packType in packageTypeList" value="{{packType.id}}" >{{packType.name}}</option>
+										</select> <label for="code">Package Type</label>
+									</div>
+								</div>
+							</div>
+						</div>	
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left0">
+												<div class="">
+													<select class="text-input floating-label" ng-model="packageTypeId">
+													<option value="0" >Select Package Type</option>
+														<option ng-repeat="packType in packageTypeList" value="{{packType.id}}" >{{packType.name}}</option>
+													</select> <label for="code">Package Type</label>
+												</div>
+											</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+									<input type="text" autocomplete="off" name="description" id="" placeholder="Search" uib-typeahead=" pack.serviceStandardName for pack in searchPackages($viewValue)"  typeahead-editable="false"  typeahead-on-select="selectPackageService($item, $model, $label);search=null" ng-model="packageName" class="text-input floating-label">
+								     <label for="description" class="LISDynamicLabel">Search Package</label>
+									</div>
+								</div>
+							</div>
+						</div>				
+									
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left0">
+							<div class="">
+								 
+								<input type="text" autocomplete="off" name="description" id="" placeholder="Search" uib-typeahead=" pack.serviceStandardName for pack in searchPackages($viewValue)"  typeahead-editable="false"  typeahead-on-select="selectPackageService($item, $model, $label);search=null" ng-model="packageName" class="text-input floating-label">
+								<label for="description" class="LISDynamicLabel">Search Package</label>
+							</div>
+											
+							</div>
+						</div>
+				</div> -->
+				
+				<div class="row his-style">
+					<!-- <fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Category Wise</legend>
+						
+						</fieldset> -->
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left0">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+									<th class="width8" >
+											Patient Category											
+										</th>
+									<th class="width8" ng-if="contractObj.visitTypeId != 1">
+											Billing Bed Category											
+										</th>
+										<th class="width8">
+											Group											
+										</th>
+										<th class="width8">
+											Sub Group											
+										</th>
+										<!-- <th class="width8">
+											Service Code											
+										</th> -->
+										<th class="width8">
+											Service Description									
+										</th>
+										<th class="width8">
+											Service Amount									
+										</th>
+										<th class="width8">
+											Tax Percentage									
+										</th>
+										
+										<th class="width7">
+											Variance Price										
+										</th>
+										<th class="width8">
+											Rate											
+										</th>
+										<th class="width7">
+											Self Payable										
+										</th>
+										<th class="width7">
+											Credit Payable										
+										</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="serviceobj in packageList">
+									<td>{{serviceobj.patientCategoryDesc}}</td>
+									<td ng-if="contractObj.visitTypeId != 1">{{serviceobj.billingBedCategoryDesc}}</td>
+										<td>{{serviceobj.departmentName}}</td>
+										<td>{{serviceobj.subDepartmentName}}</td> 
+										<td>{{serviceobj.serviceName}}</td>
+										<td>{{serviceobj.servicePrice}}</td>
+										<td>{{serviceobj.taxPercentage}}</td>
+										<td>{{serviceobj.apportionedPrice}}</td>
+										<td>{{serviceobj.finalPrice}}</td>
+										<td>{{serviceobj.selfPayable}}</td>
+										<td>{{serviceobj.creditPayable}}</td>
+									</tr>
+									
+									
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+					<tr ng-if="(packageList|filter:searchKeyword)=='' || (packageList|filter:searchKeyword)==null">
+						<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+					</tr>
+				</table>
+						</div>
+					</div>
+					</div>
+				</div>
+				
+				
+				<div ng-show="isSetFirstTabLevel(7)">
+				<div class="row his-style">
+					
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left0">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width20">
+											Speciality Name											
+										</th>
+										<th class="width20">
+											Procedure Name											
+										</th>
+										<th class="width20">
+											Cap Amount											
+										</th>
+										<!-- <th class="width1">
+											Action
+										</th> -->
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="procedureObj in contractProcedureList">
+										<td>{{procedureObj.specialityName}}</td>
+										 <td>{{procedureObj.procedureName}}</td> 
+										 <td>{{procedureObj.capAmount}}</td> 
+									</tr>
+								
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="contractProcedureList == '' || contractProcedureList==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div ng-show="isSetFirstTabLevel(8)">
+				<div class="row his-style">
+					<!-- <fieldset class="normalRegistration sub-fieldset main-fieldset ng-scope">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">Category Wise</legend>
+						
+						</fieldset> -->
+						<!-- <div class="row">
+							<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top3">
+						        <div class="">
+						            <input type="button" value="Add Bed Billing Category" class="btn btn-primary btn-save-box-shadow text-width-auto">
+						        </div>
+						     </div>
+						</div> -->
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left0">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width20">
+											Product Category Name 											
+										</th>
+									 <th class="width20">
+											Equipment
+										</th> 
+									</tr>
+								</thead>
+								<tbody>
+									<!-- <tr>
+										<td>-</td>
+										 <td>-</td>
+									</tr> -->
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="contractProcedureList == '' || contractProcedureList==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		
+		<div ng-show="contractObj.isTariffRateApplicable=='Y' && contractObj.visitTypeId!=1">
+			<div class="row" >
+					<ul class="tabs nav nav-tabs">
+						 <li ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="padding-top-bottom width11">
+							<a href ng-click="setFirstTabLevel(1)">Bed Billing Category</a>
+						</li> 
+					</ul>
+			</div>
+			<div class="row">
+			<div ng-show="isSetFirstTabLevel(1)">
+				<div class="row his-style">
+						<div class="row padding-left-right-set4 padding-top5">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left0">
+							<table class="table table-bordered first-checkBox-padding"><!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width20">
+											Bed Billing Category											
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="bedCategoryObj in contractBedCategoryList">
+										<td>{{bedCategoryObj.billingBedCategory}}</td>
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="contractBedCategoryList == '' || contractBedCategoryList==null">
+									<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+		
+		
+		<footer
+			class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+					<a href="#/companyContractMaster"> <input type="button" value="Back"
+						class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+/* 
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px"); */
+
+		$(".selectedPageName").text("Company Contract");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="companyContract"]').parents("li").addClass("active");
+	});
+</script>

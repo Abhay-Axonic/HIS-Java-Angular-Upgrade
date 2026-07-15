@@ -1,0 +1,45 @@
+package com.param.global.dao;
+
+import java.math.BigInteger;
+import java.util.List;
+
+import org.springframework.context.ApplicationContextException;
+
+import com.param.billing.global.transaction.model.UnitServiceTariffMaster;
+import com.param.global.common.Response;
+import com.param.global.dto.ServiceMasterDto;
+import com.param.global.dto.ServiceProfitMarginDto;
+import com.param.global.dto.UnitServiceTariffMasterDto;
+
+import in.param.common.dao.IGenericDao;
+@SuppressWarnings("rawtypes")
+public interface IUnitServiceTariffMasterDao extends IGenericDao<UnitServiceTariffMaster, Integer>{
+
+	Response saveUnitServiceTariffMaster(List<UnitServiceTariffMasterDto> finalListForSaveCall)throws ApplicationContextException;
+
+	Response getUnitServiceTariffsUniqueness(UnitServiceTariffMasterDto unitServiceTariffMasterDto)throws ApplicationContextException;
+
+	List<UnitServiceTariffMasterDto> getBasePriceByServiceTariffMaster(UnitServiceTariffMasterDto unitServiceTariffMasterDto)throws ApplicationContextException;
+
+	List<UnitServiceTariffMasterDto> getBasePriceOfServicesFromTariffMasterByServiceList(UnitServiceTariffMasterDto unitServiceTariffMasterDto)throws ApplicationContextException;
+
+	Response getUnitServiceTariffMasterList(UnitServiceTariffMasterDto unitServiceTariffMasterDto)throws ApplicationContextException;
+
+	Response getProfitMarginList(UnitServiceTariffMasterDto unitServiceTariffMasterDto);
+
+	Response saveServiceProfitMargin(List<ServiceProfitMarginDto> serviceProfitMarginDto);
+
+	Response getServiceListBySubSpecialityId(UnitServiceTariffMasterDto unitServiceTariffMasterDto)throws ApplicationContextException;
+
+	Response getServiceListBySpecialityIdSubSpecialityList(UnitServiceTariffMasterDto unitServiceTariffMasterDto)throws ApplicationContextException;
+
+	Response getUniqueEffectiveDate(UnitServiceTariffMasterDto unitServiceTariffMasterDto)throws ApplicationContextException;
+
+	Response getServiceListBySubSpecialityIdNotByTariff(UnitServiceTariffMasterDto unitServiceTariffMasterDto)throws ApplicationContextException;
+
+	void inactiveDuplicateIds(List<Integer> duplicateIdsList);
+
+	Response searchServicesByNameAndCode(ServiceMasterDto serviceMasterDto);
+
+	Response getUnitServiceTariffMasterListForWeb(UnitServiceTariffMasterDto unitServiceTariffMasterDto);
+}

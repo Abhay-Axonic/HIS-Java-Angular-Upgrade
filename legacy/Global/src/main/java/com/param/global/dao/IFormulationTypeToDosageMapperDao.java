@@ -1,0 +1,27 @@
+package com.param.global.dao;
+
+import com.param.global.common.Response;
+import com.param.global.dto.FormulationTypeToDosageMapperDto;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface IFormulationTypeToDosageMapperDao {
+
+	Response getFormulationTypeToDosageMapperByName(FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response saveFormulationTypeToDosageMapper(FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response getFormulationTypeToDosageMapperList(FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response updateFormulationTypeToDosageMapper(FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response getFormulationTypeToDosageMapperListByNameNotById(
+			FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response updateFormulationTypeToDosageMapperStatus(
+			FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response getFormTypeToDosMappListByFormTypeId(FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto);
+
+}

@@ -1,0 +1,385 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Room Master</legend> -->
+			<form action="" name="roomForm" novalidate="novalidate">
+				<div class="row">
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-hospital-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group">
+									<select class="text-input floating-label" name="ward"
+										ng-model="roomMasterObj.wardId" required="required"
+										ng-change="checkIsLaborward(roomMasterObj.wardId)">
+										<option>Select Ward</option>
+										<option ng-repeat="info in wardMasterList"
+											value="{{info.wardId}}">{{info.wardName}}</option>
+									</select> <label for="code">Ward <span class="star">*</span></label>
+									<p class="help-block" ng-if="roomForm.ward.$error.required">Ward
+										is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label"
+										ng-model="roomMasterObj.roomCode" required="required">
+									<label for="code">Room Code</label>
+									<p class="help-block" ng-if="roomForm.code.$error.required">Room
+										Code is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group">
+									<input type="text" autocomplete="off" name="desc" id=""
+										class="text-input floating-label"
+										ng-model="roomMasterObj.roomDesc" required="required">
+									<label for="code">Room Description<span class="star">*</span></label>
+									<p class="help-block" ng-if="roomForm.desc.$error.required">Room
+										Description is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-bed" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label"> <label for="code">No.
+									of Beds</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"
+						ng-if="hideBed=='N'">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-bed" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group">
+									<select class="text-input floating-label" name="bedCat"
+										ng-model="roomMasterObj.bedCategoryId"
+										ng-change="getBedCategory(roomMasterObj.bedCategoryId)"
+										required="required">
+										<option>Select Ward Bed Category</option>
+										<option ng-repeat="info in bedCategoryList"
+											value="{{info.bedCategoryId}}">
+											{{info.bedCategoryDesc}}</option>
+									</select> <label for="code">Ward Bed Category<span class="star">*</span></label>
+									<p class="help-block" ng-if="roomForm.bedCat.$error.required">Ward Bed
+										Category is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="row">
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"
+						ng-if="hideBed=='N'">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-bed" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label"
+										ng-model="roomMasterObj.billingBedDesc"> <label
+										for="code">Billing Ward Bed Category</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-bed" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label"> <label for="code">Bed
+									Class</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set padding-top15">
+					<label class="checkbox-inline" ng-if="hideBed=='N'"><input type="checkbox" ng-model="roomMasterObj.isIsolation" ng-true-value="'Y'" ng-false-value="'N'" id="isIsolation">
+						<span></span>Is Isolation</label>
+					<label class="checkbox-inline" ng-if="hideBed=='N'"><input type="checkbox" ng-model="roomMasterObj.erCategoryId" name="ERCategory" ng-true-value="1"><span></span>Red</label>
+					<label class="checkbox-inline"><input type="checkbox"  ng-model="roomMasterObj.erCategoryId" name="ERCategory" ng-true-value="2"><span></span>Yellow</label>
+					<label class="checkbox-inline"><input type="checkbox" ng-model="roomMasterObj.erCategoryId" name="ERCategory" ng-true-value="3"><span></span>Green</label>
+					<label class="checkbox-inline"><input type="checkbox" ng-model="roomMasterObj.erCategoryId" name="ERCategory" ng-true-value="4"><span></span>Black</label>
+					<label class="checkbox-inline"><input type="checkbox" ng-model="roomMasterObj.isModality" name="isModality"  ng-true-value="'Y'" ng-false-value="'N'"><span></span>Is Modality </label>
+				</div>
+					<!-- <div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set padding-top10"
+						ng-if="hideBed=='N'">
+						<div class="checkbox padding-top10">
+							<label class="common-lable-color-set"><input
+								type="checkbox" ng-model="roomMasterObj.isIsolation"
+								ng-true-value="'Y'" ng-false-value="'N'" id="isIsolation">Is
+								Isolation</label>
+						</div>
+					</div> -->
+
+					<!-- <div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set padding-top10"
+						ng-if="hideBed=='N'">
+						<div class="checkbox padding-top10">
+							<label class="common-lable-color-set"> <input
+								type="checkbox" ng-model="roomMasterObj.erCategoryId"
+								name="ERCategory" ng-true-value="1">ER
+							</label>
+
+						</div>
+					</div> -->
+
+					<!-- <div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set padding-top10"
+						ng-if="hideBed=='N'">
+						<div class="checkbox padding-top10">
+							<label class="common-lable-color-set"> <input
+								type="checkbox" ng-model="roomMasterObj.erCategoryId"
+								name="ERCategory" ng-true-value="2">Observations
+							</label>
+						</div>
+					</div> -->
+
+					<!-- <div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set padding-top10"
+						ng-if="hideBed=='N'">
+						<div class="checkbox padding-top10">
+							<label class="common-lable-color-set"> <input
+								type="checkbox" ng-model="roomMasterObj.erCategoryId"
+								name="ERCategory" ng-true-value="3">Resuscitation
+							</label>
+						</div>
+					</div> -->
+					<!-- <div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set padding-top10"
+						ng-if="hideBed=='N'">
+						<div class="checkbox padding-top10">
+							<label class="common-lable-color-set"> <input
+								type="checkbox" ng-model="roomMasterObj.isModality"
+								name="isModality"  ng-true-value="'Y'" ng-false-value="'N'">Is Modality 
+							</label>
+						</div>
+					</div> -->
+
+				</div>
+			</form>
+		</fieldset>
+		<div class="row margin-top10 padding-left-right-10">
+			<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+							<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save"
+						data-toggle="modal" ng-click="saveRoomMaster()"
+						ng-if="saveBtnFlag"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a> <a href=""
+						class="btn btn-primary btn-save-box-shadow" title="Update"
+						data-toggle="modal" ng-click="updateRoomMaster()"
+						ng-if="updateBtnFlag"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword"> 
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-10 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<tr class="">
+						<th class="UHID-width">Ward
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="patient-doc-details-width">Room Code
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="patient-doc-details-width">Room Description
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="">Billing Ward Bed Category
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th>Ward Bed Category
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width8">Isolation
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						
+						<th class="width8">Is Modality
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width5 text-center">Status(n)
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width5 text-center">Action taken</th>
+					</tr>
+					<tr
+						ng-repeat="info in roomMasterList |orderBy:column:reverse|filter:searchKeyword">
+						<td>{{info.wardName}}</td>
+						<td>{{info.roomCode}}</td>
+						<td>{{info.roomDesc}}</td>
+						<td>{{info.billingBedDesc}}</td>
+						<td>{{info.bedCategoryDesc}}</td>
+						<td>{{info.isIsolation}}</td>
+						<td>{{info.isModality}}</td>
+						<td class="text-center"><label class="switch"> <input
+								type="checkbox" ng-model="info.status" ng-true-value="'A'"
+								ng-false-value="'I'"
+								ng-change="updateStatus(info.roomId,info.status)">
+								<div class="slider round"></div></label></td>
+						<td class="padding-edit-button-table text-center"><a><i
+								class="fa fa-pencil" aria-hidden="true"
+								ng-click="showUpdateBtn(info.roomId)"></i></a></td>
+					</tr>
+				</table>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<modal visible="showModal"></modal>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+	});
+	$(".selectedPageName").text("Room Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="roomMaster"]').parents("li").addClass("active");
+</script>

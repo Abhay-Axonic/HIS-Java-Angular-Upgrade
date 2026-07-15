@@ -1,0 +1,450 @@
+<style>
+	.tableError {
+			border: 2px solid red !important;
+		}
+	
+		.tableError select.w-100.ng-pristine.ng-empty,
+		.tableError input.w-100.ng-valid.ng-empty,
+		.borderRed {
+			border: 2px solid red;
+		}
+	
+		.font-W600 td {
+			font-weight: 600 !important;
+		}
+	</style>
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row padding-top10">
+				<div class="col-lg-10 col-md-10 padding-left-right-10">
+					<!-- ***********Details row start *************** -->
+					<div class="row margin-top10">
+						<div class="col-md-3 col-sm-4">
+							<span>
+								<label>Requisition Number:</label>
+							</span>
+							<span>{{vm.model.itemList.requisitionNo}}</span>
+						</div>
+						<div class="col-md-3 col-sm-4">
+							<span>
+								<label>Requisition Date:</label>
+							</span>
+							<span>{{vm.model.itemList.requisitionDate | date:'dd/MM/yyyy' : 'UTC'}}</span>
+						</div>
+						<div class="col-md-3 col-sm-4">
+							<span>
+								<label>Store:</label>
+							</span>
+							<span>{{vm.model.itemList.store}}</span>
+						</div>
+						<div class="col-md-3 col-sm-4">
+							<span>
+								<label>Status:</label>
+							</span>
+							<span>{{vm.model.itemList.status}}</span>
+						</div>
+					</div>
+					<!-- ***********Details row end *************** -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="container-fluid his-style">
+					<div class="table-container padding-left-right-set4 padding-top5">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width2 text-center">
+											<input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" ng-change="vm.model.valueOnChange(item, true)"
+											 ng-disabled="vm.model.itemList.status == 'Cancelled'">
+										</th>
+										<th class="width6">Asset Code</th>
+										<th class="width8">Asset Name</th>
+										<th class="width6">Serial No.</th>
+										<th class="width6">Lot No.</th>
+										<th class="width8"> Vendor Name </th>
+										<th class="width6">GRN No.</th>
+										<th class="width5">GRN Date</th>
+										<th class="width5">{{vm.model.Currency}} COP</th>
+										<th class="width5">Qty</th>
+										<th class="width6">Auction Price</th>
+										<th class="width6">{{vm.model.Currency}} At COP</th>
+										<th class="width6">{{vm.model.Currency}} At Price</th>
+										<th class="width5">Accessories </th>
+										<th class="width5">Approve Qty</th>
+										<th class="width5">Reject Qty</th>
+										<th class="width4">Reject</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="height:350px; overflow-y: scroll;">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="item in vm.model.itemList.items | orderBy:sortType:sortReverse">
+										<td class="width2  text-center">
+											<!-- ng-disabled="item.status != 'Pending Approval'" -->
+											<input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItem(item)" ng-change="vm.model.valueOnChange(item, false)" />
+											<!-- ng-disabled="item.status == 'Approved' || item.status == 'Reject' || item.status == 'Cancelled' || item.status == 'Partially Approved'" -->
+										</td>
+										<td class="width6" title="{{item.assetCode}}">{{item.assetCode}}</td>
+										<td class="width8" title="{{item.assetName}}">{{item.assetName}}</td>
+										<td class="width6" title="{{item.serialNo}}">{{item.serialNo}}</td>
+										<td class="width6" title="{{item.lotNo}}">{{item.lotNo}}</td>
+										<td class="width8" title="{{item.vendorName}}">{{item.vendorName}}</td>
+										<td class="width6" title="{{item.grnNo ? item.grnNo : '-'| date:'dd/MM/yyyy'}}">{{item.grnNo ? item.grnNo :
+											'-' | date:'dd/MM/yyyy'}}</td>
+										<td class="width5" title="{{item.grnDate ? item.grnDate: '-'| date:'dd/MM/yyyy'}}">{{item.grnDate ?
+											item.grnDate: '-' | date:'dd/MM/yyyy'}}</td>
+										<td class="width5" title="{{vm.model.Currency}} {{item.cop | number:2}}">{{vm.model.Currency}} {{item.cop |
+											number:2}}</td>
+
+										<td class="width5" title="{{item.auctionQty}}">{{item.auctionQty}}</td>
+										<td class="width6" title="{{vm.model.Currency}}{{!!item.auctionPrice ? item.auctionPrice : 0 | number:2}}">
+											
+											<input type="text" autocomplete="off" ng-if="item.isSelected" class="select-box" numbers-only ng-model="item.auctionPrice" ng-blur="vm.model.ValidateCOP(item);"
+											 ng-if="!item.isDisabled"   ng-class="{tableError: item.isCopValid}" ng-change="item.isCopValid = false;"/>
+											
+											 <div ng-if="item.isDisabled">{{!!item.auctionPrice
+												? item.auctionPrice : 0 | number:2 }}</div>
+										</td>
+										<td class="width6">{{vm.model.Currency}} {{ item.copAmount = item.cop* item.auctionQty || 0 | number:2}}</td>
+										<td class="width6">{{vm.model.Currency}} {{item.totalAuctionPrice = item.auctionPrice * item.auctionQty || 0
+											|number:2}}</td>
+										<td class="width5 text-center media-middle">
+											<a data-toggle="modal" data-target="" ng-click="vm.model.viewAssets(item)">
+												<input type="button" value="Accessory" class="btn btn-primary btn-save-box-shadow" ng-disabled="item.isDisabled"
+												 data-toggle="modal">
+											</a>
+
+										</td>
+										<td class="width5">
+											<div class="row approved-qty-remark">
+
+												<input type="text" autocomplete="off" class="w-100" maxlength="5" ng-model="item.approvedQuantity" ng-blur="vm.model.ApprovedQuantity(item);vm.model.ValidateQuantity(item);"
+												 ng-change="vm.model.quantityChange(item);item.isQuantityValid = false;" ng-class="{tableError: item.isQuantityValid}" ng-if="!item.isDisabled" numbers-only>
+												<div ng-if="item.isDisabled" title="{{!!item.approvedQuantity ? item.approvedQuantity : 0 }}">{{!!item.approvedQuantity
+													? item.approvedQuantity : 0 }}</div>
+												<!-- ng-model="item.approvedQuantity = (item.isSelected ? item.quantity : 0)" -->
+											</div>
+										</td>
+										<td class="width5">
+											{{!!item.rejectQuantity
+											? item.rejectQuantity : 0}}
+										</td>
+										<td class="vertical-middle text-center" style="width: 3.6%!important;">
+											<label class="switch switch-small">
+												<input type="checkbox" class="switchInput" ng-disabled="item.isDisabled" ng-click="vm.model.RejectionPopup(item)"
+												 ng-model="item.isReject">
+												<div class="slider round slider-small"></div>
+											</label>
+										</td>
+									</tr>
+									<tr ng-if="!vm.model.itemList.items || vm.model.itemList.items == false">
+										<td colspan="9" class="text-center">
+											<p>No Record Found</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20 ">
+			<div class="row his-style margin-top10 padding-right20 ">
+				<div class="col-md-1 text-right ">
+					<!-- <label>Remark:</label> -->
+				</div>
+				<div class="col-md-9 padding-left-right8 ">
+					<!-- <input class="form-control " readonly /> -->
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 ">
+					<a href="">
+						<input type="button" ng-click="vm.model.SaveApproval()" value="Save" class="btn btn-primary btn-save-box-shadow ">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 ">
+					<a href="#/auctionRequisitionApproval ">
+						<input type="button " value="Back" class="btn btn-primary btn-save-box-shadow ">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<!--  Add Asset modal start -->
+<div id="addAsset" class="modal fade ng-scope in padding-left0" role="dialog">
+	<!-- getRequestWasteStore -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Accessories Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="container-fluid his-style">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<thead>
+											<tr>
+												<th class="width2"><input type="checkbox" ng-model="vm.model.selectAllRowsPopup" ng-click="vm.model.SelectAllItemsPopup()"
+													 ng-change="vm.model.valueOnChangePopup(item, true)"></th>
+												<th class="width8">Accessory Code
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width10">Accessory Description
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width15">Batch No
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width15">Auction Requisition Quantity
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width15">Approved Quantity 
+												</th>
+												<th class="width15">Reject Quantity 
+												</th>
+												<th class="width15">Reject 
+												</th>
+											</tr>
+										</thead>
+								</table>
+							</div>
+							<div class="table-container-body" style="height:350px; overflow-y: scroll;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="item in vm.model.accessoryList">
+											<td class="width2 text-center vertical-middle">
+												<input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItemPopup(item)" ng-change="vm.model.valueOnChangePopup(item, false)" />
+											</td>
+											<td class="width8">{{item.itemCode}}</td>
+											<td class="width10">{{item.itemName}}</td>
+											<td class="width15">{{item.batchNo}}</td>
+											<td class="width15">{{item.quantity}}</td>
+											<td class="width15">
+												<div class="row approved-qty-remark">
+													<input type="text" autocomplete="off" class="w-100" maxlength="5" ng-model="item.approvedQuantity" ng-blur="vm.model.ApprovedQuantityPopup(item);vm.model.ValidateQuantity(item);"
+													 ng-change="vm.model.quantityChange(item);item.isQuantityValid = false;" ng-class="{tableError: item.isQuantityValid}"
+													 ng-if="!item.isDisabled" numbers-only>
+													<div ng-if="item.isDisabled" title="{{!!item.approvedQuantity ? item.approvedQuantity : 0 }}">{{!!item.approvedQuantity
+														? item.approvedQuantity : 0 }}</div>
+												</div>
+											</td>
+											<td class="width15 vertical-middle" title="{{!!item.rejectQuantity ? item.rejectQuantity : 0}}">{{!!item.rejectQuantity
+												? item.rejectQuantity : 0}}</td>
+											<td class=" vertical-middle" title="{{item.returnReason}}" style="width: 14.5%!important;">
+												<div class="checkbox">
+													<label class="switch switch-small">
+														<input type="checkbox" class="switchInput" ng-disabled="item.isDisabled" ng-click="vm.model.RejectionAccessoryPopup(item)"
+														 ng-model="item.isReject">
+														<div class="slider round slider-small"></div>
+													</label>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="row his-style">
+						<div class="col-md-11"></div>
+						<div class="col-md-1 padding-left0px-right6px">
+							<div class="common-save-button">
+								<input type="button" value="Save" ng-click="vm.model.SaveAccessoryDetails()" class="btn btn-primary btn-save-box-shadow">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Reject Popup -->
+
+	<div id="qtyaccepatReject" class="modal fade ng-scope in common-small-popup " role="dialog " style="z-index:1300 !important;background:
+								 rgba(0, 0, 0, 0.33); ">
+		<div class="modal-dialog ">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content ">
+				<div class="modal-header ">
+					<div class="modal-title patient-details-row ">
+						Rejection
+						<button type="button " ng-click="vm.model.ModalDismiss( 'qtyaccepatReject') " class="close ">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body ">
+					<div class="row ">
+						<div class="col-md-12 padding-left-right-set ">
+							<div class="row input-container margin-top10 ">
+								<div class="col-lg-6 col-md-6 col-sm-12 ">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-dot-circle-o " aria-hidden="true "></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class=" ">
+											<input type="rejectQty " name="rejectQty " ng-model="vm.model.rejectQty " class="text-input floating-label
+								 "
+											 ng-class="{dirty: vm.model.rejectQty} " numbers-only>
+											<label for="rejectQty ">Qty</label>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 ">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-sticky-note-o " aria-hidden="true "></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class=" ">
+											<select name="rejectReason " id="rejectReason " class="text-input floating-label " ng-model="vm.model.rejectReason
+								 "
+											 data-ng-options="rejectReason.reason for rejectReason in vm.model.reasons " ng-class="{dirty: vm.model.rejectReason} ">
+											</select>
+											<label for="rejectReason ">Select Reason</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row input-container margin-top10 ">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-sticky-note " aria-hidden="true "></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class=" ">
+										<textarea name="rejectNote " rows="4 " id="rejectNote " class="text-input floating-label ng-pristine ng-untouched
+								 ng-valid ng-empty "
+										 ng-model="vm.model.rejectNote " ng-class="{dirty: vm.model.rejectNote} "></textarea>
+										<label for="rejectNote ">Note</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer " style="border:none; ">
+					<button type="button " class="btn btn-primary " ng-click="vm.model.SaveAcceptReject() ">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="qtyaccepatRejectPopup " class="modal fade ng-scope in common-small-popup " role="dialog " style="z-index:1300 !important;background:
+								 rgba(0, 0, 0, 0.33); ">
+		<div class="modal-dialog ">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content ">
+				<div class="modal-header ">
+					<div class="modal-title patient-details-row ">
+						Rejection
+						<button type="button " ng-click="vm.model.ModalDismiss( 'qtyaccepatRejectPopup') " class="close ">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body ">
+					<div class="row ">
+						<div class="col-md-12 padding-left-right-set ">
+							<div class="row input-container margin-top10 ">
+								<div class="col-lg-6 col-md-6 col-sm-12 ">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-dot-circle-o " aria-hidden="true "></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class=" ">
+											<input type="rejectQty " name="rejectQty " ng-model="vm.model.rejectQtyPopup" class="text-input floating-label
+								 "
+											 ng-class="{dirty: vm.model.rejectQty} " numbers-only>
+											<label for="rejectQty ">Qty</label>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 ">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-sticky-note-o " aria-hidden="true "></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class=" ">
+											<select name="rejectReason " id="rejectReason " class="text-input floating-label " ng-model="vm.model.rejectReason
+								 "
+											 data-ng-options="rejectReason.reason for rejectReason in vm.model.reasons " ng-class="{dirty: vm.model.rejectReason} ">
+											</select>
+											<label for="rejectReason ">Select Reason</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row input-container margin-top10 ">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-sticky-note " aria-hidden="true "></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class=" ">
+										<textarea name="rejectNote " rows="4 " id="rejectNote " class="text-input floating-label ng-pristine ng-untouched
+								 ng-valid ng-empty "
+										 ng-model="vm.model.rejectNote " ng-class="{dirty: vm.model.rejectNote} "></textarea>
+										<label for="rejectNote ">Note</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer " style="border:none; ">
+					<button type="button " class="btn btn-primary " ng-click="vm.model.SaveAcceptRejectPopup() ">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!--  Add Asset modal END-->
+	<div ng-include=" './views/common/qty-accept-reject.html' "></div>
+	<script src="resources/assets/js/common/page-height.js "></script>
+	<script type="text/javascript ">
+	$(document).ready(function(){
+		$(".selectedServicesList ").hide();
+	});
+
+	$(".add-accessories ").click(function(){
+		$(this).next().find(".selectedServicesList ").toggle();
+	});
+</script>

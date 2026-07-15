@@ -1,0 +1,483 @@
+<style>
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+      border-radius: 10px;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    .container {
+      padding: 2px 16px;
+    }
+    .card-body{
+    margin-left:6px;
+    }
+</style>
+
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <div class="padding-top4" ng-include="'./views/common/nutritional-patient-search.html'" style="margin-top:-5px"></div>
+        <div class="padding-top8 padding-left-right-set4" ng-include="'./views/common/nabh-patient-demography-info.html'"></div>
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+                <form name="nutritionalAssessment" novalidate ng-submit="submitForm()">
+                  <div class="row">
+                      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                              <div class="row input-container">
+                                  <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                      <i class="fa fa-bullseye" aria-hidden="true"></i>
+                                  </div>
+                                  <div class="col-lg-11 col-sm-11 col-md-11">
+                                      <div class="">
+                                          <input type="text" autocomplete="off" name="weight" ng-pattern="/^[0-9]{1,7}$/"   ng-model="formData.weight" ng-change="weightFun(formData.weight);calculateBMI();" class="text-input floating-label dirty" required>
+                                          <label for="description" class="LISDynamicLabel">Weight(kg)</label>
+                                      </div>
+                                  </div>
+                              </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                          <div class="row input-container">
+                              <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                  <i class="fa fa-bullseye" aria-hidden="true"></i>
+                              </div>
+                              <div class="col-lg-11 col-sm-11 col-md-11">
+                                  <div class="">
+                                      <input type="text" autocomplete="off" name="height"   ng-model="formData.height"  ng-change="heightFun(formData.height);calculateBMI();" class="text-input floating-label dirty" required >
+                                      <label for="description" class="LISDynamicLabel">Height(cm)</label>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                          <div class="row input-container">
+                              <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                  <i class="fa fa-bullseye" aria-hidden="true"></i>
+                              </div>
+                              <div class="col-lg-11 col-sm-11 col-md-11">
+                                  <div class="">
+                                      <input type="text" autocomplete="off" name="Bml"  ng-model="formData.Bml" class="text-input floating-label dirty" ng-readonly="true" required>
+                                      <label for="description" class="LISDynamicLabel">BMI</label>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                          <div class="row input-container">
+                              <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                  <i class="fa fa-bullseye" aria-hidden="true"></i>
+                              </div>
+                              <div class="col-lg-11 col-sm-11 col-md-11">
+                                  <div class="">
+                                      <input type="text" autocomplete="off" name="knee"   ng-model="formData.knee"  class="text-input floating-label dirty" required >
+                                      <label for="description" class="LISDynamicLabel">Knee Heigth(Cm)</label>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                    <form novalidate>
+                        <div class="row" style="margin-top: 12px;">
+                            <div class="col-sm-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 ><b>ANTHROPOMETRIC ASSESSMENT</b></h4>
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325;">Body Mass Index(BMI)(weight in kg)/(height in m)</h5>
+                                                    <select class="form-control" name="bodyMass"  ng-model="formData.bodyMass"  ng-options="item as item.name for item in nutritionalAssessmentList[0].assessmentList"   ng-change="changeBodyMassFun(formData.bodyMass,0)" required>
+                                                        <option value="">Select Body Mass Index</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{bodyMassPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Mid-arm circumference (MAC) in cm</h5>
+                                                    <select class="form-control" name="midarm"  ng-options="item as item.name for item in nutritionalAssessmentList[1].assessmentList"  ng-model="formData.midarm" ng-change="changeMidArmFun(formData.midarm,1)" required>
+                                                        <option value="">Select Mid arm circumference</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325;">Points {{midArmPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325;">Calf circumference (CC) in cm</h5>
+                                                    <select class="form-control" name="calf" ng-options="item as item.name for item in nutritionalAssessmentList[2].assessmentList"  ng-model="formData.calf" ng-change="changeCalfFun(formData.calf,2)" required>
+                                                        <option value="">Select Calf circumference</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325;">Points {{calPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325;">Weight loss during last 3 months</h5>
+                                                    <select class="form-control" name="weightloss"  ng-options="item as item.name for item in nutritionalAssessmentList[3].assessmentList"  ng-model="formData.weightloss" ng-change="changeWeightlossFun(formData.weightloss,3)" required>
+                                                        <option value="">Select Weight loss</option>
+<!--                                                        <option value="1">weight loss greater than 3kg (6.6 lbs) =0 points</option>-->
+<!--                                                        <option value="2">does not know 1 point</option>-->
+<!--                                                        <option value="3">weight loss between 1 and 3 kg (2.2 and 6.6 lbs) = 2 points</option>-->
+<!--                                                        <option value="4">no weight loss = 3 points</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{weightlossPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="margin-top: 20px">
+                                    <div class="card-body">
+                                        <h4 ><b>SELF ASSESSMENT</b></h4>
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Do they view themselves as having nutritional problems?</h5>
+                                                    <select class="form-control" name="nutritionalProblems" ng-options="item as item.name for item in nutritionalAssessmentList[4].assessmentList"   ng-model="formData.nutritionalProblems" ng-change="changeNutritionalProblemsFun(formData.nutritionalProblems,4)" required>
+                                                        <option value="">Select nutritional problems</option>
+<!--                                                        <option value="1">major malnutrition = 0 points</option>-->
+<!--                                                        <option value="2">does not know or moderate malnutrition = 1 point</option>-->
+<!--                                                        <option value="3">no nutritional problem = 2 point </option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{nutritionalProblemsPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">In comparison with other people of the same age,
+                                                        how do they consider their health status?</h5>
+                                                    <select class="form-control" name="comparison"  ng-options="item as item.name for item in nutritionalAssessmentList[5].assessmentList"  ng-model="formData.comparison" ng-change="changeComparisonFun(formData.comparison,5)" required>
+                                                        <option value="">Select comparison</option>
+<!--                                                        <option value="1">not as good = 0.0 points</option>-->
+<!--                                                        <option value="2">does not know = 0.5 points</option>-->
+<!--                                                        <option value="3">as good #1.0 points</option>-->
+<!--                                                        <option value="4">better = 2.0 points</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{comparisonPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 ><b>GENERAL ASSESSMENT</b></h4>
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Lives independently (not in a nursing home or hospital)</h5>
+                                                    <select class="form-control" name="livesIndependently"  ng-options="item as item.name for item in nutritionalAssessmentList[6].assessmentList"  ng-model="formData.livesIndependently" ng-change="changeLivesIndependentlyFun(formData.livesIndependently,6)" required>
+                                                        <option value="">Select Lives independently</option>
+<!--                                                        <option value="1">no = 0 points</option>-->
+<!--                                                        <option value="2">yes = 1 point</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{livesIndependentlyPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Takes more than 3 prescription drugs per day</h5>
+                                                    <select class="form-control" name="prescriptionDrugs" ng-options="item as item.name for item in nutritionalAssessmentList[7].assessmentList"   ng-model="formData.prescriptionDrugs" ng-change="changePrescriptionDrugsFun(formData.prescriptionDrugs,7)" required>
+                                                        <option value="">Select Prescription drugs</option>
+<!--                                                        <option value="1">yes = 0 points</option>-->
+<!--                                                        <option value="2">no = 1 point</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{prescriptionDrugsPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Has suffered psychological stress or acute disease in the past 3 months</h5>
+                                                    <select class="form-control" name="sufferedPsychological" ng-options="item as item.name for item in nutritionalAssessmentList[8].assessmentList"  ng-model="formData.sufferedPsychological" ng-change="changeSufferedPsychologicalFun(formData.sufferedPsychological,8)" required>
+                                                        <option value="">Select Suffered psychological</option>
+<!--                                                        <option value="1">yes = 0 points</option>-->
+<!--                                                        <option value="2">no = 2 points</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{sufferedPsychologicalPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Mobility</h5>
+                                                    <select class="form-control" name="mobility" ng-options="item as item.name for item in nutritionalAssessmentList[9].assessmentList"  ng-model="formData.mobility" ng-change="changeMobilityFun(formData.mobility,9)" required>
+                                                        <option value="">Select Mobility</option>
+<!--                                                        <option value="1">bed or chair bound a = 0 points</option>-->
+<!--                                                        <option value="2">able to get out of bed chair but does not go out = 1 point</option>-->
+<!--                                                        <option value="3">goes out = 2 points</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{mobilityPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Neuropsychological problems</h5>
+                                                    <select class="form-control" name="neuropsychologicalProblems" ng-options="item as item.name for item in nutritionalAssessmentList[10].assessmentList"  ng-model="formData.neuropsychologicalProblems" ng-change="changeNeuropsychologicalProblemsfFun(formData.neuropsychologicalProblems,10)" required>
+                                                        <option value="">Select Neuropsychological Problems</option>
+<!--                                                        <option value="1">severe dementia or depression = 0 </option>-->
+<!--                                                        <option value="2">mild dementia = 1 point</option>-->
+<!--                                                        <option value="3">no psychological problems = 2 point</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{neuropsychologicalProblemsfPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Pressure sores or skin ulcers</h5>
+                                                    <select class="form-control"  name="pressureSores" ng-options="item as item.name for item in nutritionalAssessmentList[11].assessmentList"  ng-model="formData.pressureSores" ng-change="changePressureSoresFun(formData.pressureSores,11)" required>
+                                                        <option value="">Select Pressure sores</option>
+<!--                                                        <option value="1">yes = 0 points </option>-->
+<!--                                                        <option value="2">mno = 1 point</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{pressureSoresPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 ><b>DIETARY ASSESSMENT</b></h4>
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">How many full meals does the patient eat daily?</h5>
+                                                    <select class="form-control" name="patientEat" ng-options="item as item.name for item in nutritionalAssessmentList[12].assessmentList"   ng-model="formData.patientEat" ng-change="changePatientEatfFun(formData.patientEat,12)" required>
+                                                        <option value="">Select Patient eat daily</option>
+<!--                                                        <option value="1">1 meal = 0 points</option>-->
+<!--                                                        <option value="2">2 meals = 1 point</option>-->
+<!--                                                        <option value="3">3 meals 2 points</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{patientEatfPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Selected Consumption markers for protein intake</h5>
+                                                    <label>At least one serving of dairy products (milk, cheese, yogurt) per day?
+                                                        <input type="radio" name="nutritionalDay" ng-model="nutritionalDay" value ="1" ng-click="nutritionalDayFun(1,19)">Yes
+                                                        <input type="radio" name="nutritionalDay" ng-model="nutritionalDay"  value ="0" ng-click="nutritionalDayFun(0,19)"> No
+                                                    </label>
+
+                                                    <label>Meat, fish or poultry every day?
+                                                        <input type="radio" name="nutritionalEveryDay" ng-model="nutritionalEveryDay" value ="1" ng-click="nutritionalEveryDayFun(1,20)"> Yes
+                                                        <input type="radio" name="nutritionalEveryDay" ng-model="nutritionalEveryDay" value ="0" ng-click="nutritionalEveryDayFun(0,20)"></label>No
+
+                                                    <label>Two or more servings of legumes or eggs per week?
+                                                        <input type="radio" name="nutritionalEveryWeek" ng-model="nutritionalEveryWeek" value ="1" ng-click="nutritionalEveryWeekFun(1,21)">Yes
+                                                        <input type="radio" name="nutritionalEveryWeek" ng-model="nutritionalEveryWeek" value ="0" ng-click="nutritionalEveryWeekFun(0,21)">No</label>
+                                                    <select class="form-control" name="comsumptionMarkers" ng-options="item as item.name for item in nutritionalAssessmentList[13].assessmentList"  ng-model="formData.comsumptionMarkers" ng-change="changeComsumptionMarkersFun(formData.comsumptionMarkers,13)" required>
+                                                        <option value="">Select Consumption markers</option>
+<!--                                                        <option value="1">if 0 or 1 yes = 0.0 points</option>-->
+<!--                                                        <option value="2">if 2 yes = 0.5 points</option>-->
+<!--                                                        <option value="3">if 3 yes = 1.0 points</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{comsumptionMarkersPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Consumes two or more servings of fruits or vegetables per day?</h5>
+                                                    <select class="form-control" name="servingsFruits" ng-options="item as item.name for item in nutritionalAssessmentList[14].assessmentList"  ng-model="formData.servingsFruits" ng-change="changeServingsFruitsFun(formData.servingsFruits,14)" required>
+                                                        <option value="">Select servings of fruits</option>
+<!--                                                        <option value="1">no = 0 points</option>-->
+<!--                                                        <option value="2">yes = 1 point</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{servingsFruitsPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Has food intake declined over the past three months due to loss of appetite,
+                                                        digestive problems, chewing or swallowing difficulties?</h5>
+                                                    <select class="form-control" name="foodIntake" ng-options="item as item.name for item in nutritionalAssessmentList[15].assessmentList"  ng-model="formData.foodIntake" ng-change="changeFoodIntakeFun(formData.foodIntake,15)" required>
+                                                        <option value="">Select food intake</option>
+<!--                                                        <option value="1">severe loss of appetite = 0 points</option>-->
+<!--                                                        <option value="2">moderate loss of appetite = 1 point</option>-->
+<!--                                                        <option value="3">no loss of appetite = 2 points</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{foodIntakePoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">How much fluid (water, juice, coffee, tea, milk....)
+                                                        is consumed per day? (1 cup = 8 oz.)</h5>
+                                                    <select class="form-control" name="fluid" ng-options="item as item.name for item in nutritionalAssessmentList[16].assessmentList"  ng-model="formData.fluid" ng-change="changeFluidFun(formData.fluid,16)" required>
+                                                        <option value="">Select fluid</option>
+<!--                                                        <option value="1">less than 3 cups = 0.0 points</option>-->
+<!--                                                        <option value="2">3 to 5 cups = 0.5 points</option>-->
+<!--                                                        <option value="3">more than 5 cups = 1.0 points</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{fluidPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="width: 90%">
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <h5 style="color:#212325">Mode of feeding</h5>
+                                                    <select class="form-control" name="modeFeeding" ng-options="item as item.name for item in nutritionalAssessmentList[17].assessmentList"  ng-model="formData.modeFeeding" ng-change="changeModeFeedingFun(formData.modeFeeding,17)" required>
+                                                        <option value="">Select Mode Feeding</option>
+<!--                                                        <option value="1">Unable to eat without assistance = 0 points</option>-->
+<!--                                                        <option value="2">self-fed with some difficulty = 1 point</option>-->
+<!--                                                        <option value="3">self-fed without any problem = 2 points</option>-->
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h5 style="color:#212325">Points {{modeFeedingPoint}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-6" >
+                                <h4><b>TOTAL: {{totalSelectedNutritionalAssessmentValue}}</b></h4>
+                                <h4><b style="color:#D22B2B" ng-show="totalSelectedNutritionalAssessmentValue<17 && assessmentSelectedList.length>20">Malnourished</b></h4>
+                                <h4><b style="color:#FFC300" ng-show="(totalSelectedNutritionalAssessmentValue>=17 && totalSelectedNutritionalAssessmentValue<=23.5) && assessmentSelectedList.length>20">At risk of malnutrition</b></h4>
+                                <h4><b style="color:#0000FF" ng-show="totalSelectedNutritionalAssessmentValue>=24 && assessmentSelectedList.length>20">Well-nourished</b></h4>
+                            </div>
+<!--                            <div class="col-sm-4">-->
+<!--                                <h4 ><b>ASSESSMENT TOTAL (max. 30 points):</b></h4>-->
+<!--                                <div class="card">-->
+<!--                                    <div class="card-body">-->
+<!--                                        <h4 ><b>MALNUTRITION INDICATOR SCORE</b></h4>-->
+<!--                                        <div class="form-group" style="width: 90%">-->
+<!--                                            <h4 style="color:#3f51b5" ng-if="totalSelectedNutritionalAssessmentValue > 17">≥ 24 points             well-nourished blue</h4>-->
+<!--                                            <h4 style="color:#3f51b5">17 to 23.5 points       at risk of malnutrition yellow </h4>-->
+<!--                                            <h4 style="color:#3f51b5"><17 points              malnourished red</h4>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+
+                        <div class="row" style="margin-top: 10px">
+
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Clear" data-toggle="modal" ng-click="saveRack()">
+                                    Clear</a>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <button type="submit" href="" ng-disabled="assessmentSelectedList.length<21" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveNutritionalAssessmentScore('N')">
+                                    <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Draft" id="saveBtn" data-toggle="modal" ng-click="saveNutritionalAssessmentScore('Y')">
+                                    Draft</a>
+                            </div>
+                        </div>
+                    </form>
+
+
+
+
+
+
+
+
+
+                </form>
+
+
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

@@ -1,0 +1,244 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Reason Type Master</legend> -->
+			<div class="row margin-top10">
+				<form action="" name="allergyForm" novalidate>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="form-group"   show-errors>
+										<select class="text-input floating-label dirty" name="allergyType" ng-model="common.allergyTypeId" required="required">
+											<option>Select Allergy Type</option>
+											<option ng-repeat="info in alergyTypeList" ng-if="info.isGeneric == 'N'" value="{{info.allergyTypeId}}">{{info.allergyTypeDesc}}</option>
+										</select> <label for="code">Allergy Type<span class="star">*</span></label>
+										<p class="help-block" ng-if="allergyForm.allergyType.$error.required">Allergy Type is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"   show-errors>
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label"
+										ng-model="common.allergyName" required="required"> <label
+										for="code" class="LISDynamicLabelOne"> Code<span class="star">*</span></label>
+										<p class="help-block" ng-if="allergyForm.code.$error.required">Code is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group"   show-errors>
+									<input type="text" autocomplete="off" name="desc" id=""
+										class="text-input floating-label"
+										ng-model="common.allergyDesc" required="required"> <label
+										for="code" class="LISDynamicLabelOne">
+										Description<span class="star">*</span></label>
+										<p class="help-block" ng-if="allergyForm.desc.$error.required">Description is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+						<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" ng-if="cimsOption =='Y'">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class=""   >
+									<input type="text" autocomplete="off" name="desc" id=""
+										class="text-input floating-label"
+										ng-model="common.cimsCode" > <label
+										for="code" class="LISDynamicLabelOne">
+										CIMS Code<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-if="cimsOption =='Y'">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class=""   >
+									<input type="text" autocomplete="off" name="desc" id=""
+										class="text-input floating-label"
+										ng-model="common.cimsType" > <label
+										for="code" class="LISDynamicLabelOne">
+										CIMS Type<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</fieldset>
+		<div class="row margin-top10 padding-left-right-set1">
+			<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save"
+						data-toggle="modal" ng-click="save()"
+						ng-if="saveBtnFlag"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a> <a href=""
+						class="btn btn-primary btn-save-box-shadow" title="Update"
+						data-toggle="modal" ng-click="update()"
+						ng-if="updateBtnFlag"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword" ng-keyup="serachTestmaster(searchKeyword);"
+					style="margin-top: 0px"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered">
+					<tr class="">
+						<th class="width18">Allergy Type
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width18">Code
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width18">Description
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width8" ng-if="cimsOption =='Y'">CIMMS Code 
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width8" ng-if="cimsOption =='Y'">CIMMS Type 
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width8">Status(n)
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="text-center width8">Action taken</th>
+					</tr>
+					<tr ng-repeat="info in commonList | filter:searchKeyword track by $index">
+						<td>{{info.allergyTypeDesc}}</td>
+						<td>{{info.allergyName}}</td>
+						<td>{{info.allergyDesc}}</td>
+						<td ng-if="cimsOption =='Y'">{{info.cimsCode}}</td>
+						<td ng-if="cimsOption =='Y'">{{info.cimsType}}</td>
+						<td><label class="switch"> <input type="checkbox"
+								ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"
+								ng-change="updateStatus(info.allergyId,info.status)">
+								<div class="slider round"></div></label></td>
+						<td class="padding-edit-button-table text-center"><a ng-class="{disabled: info.status=='I'}"  ><i
+								class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.allergyId)"></i></a></td>
+					</tr>
+				</table>				
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+	$(".selectedPageName").text("Allergy Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="allergyMaster"]').parents("li").addClass("active");
+</script>

@@ -1,0 +1,182 @@
+<div><!-- style="border-top: 2px solid black" -->
+	<div class="row">
+		<div class="custom-sub-tab padding-left-right-set4 ">
+			<ul class="tabs nav nav-tabs">
+				<li ng-class="{ active : isSetSecondTabLevel(21) }" id="nor" class="width10 active" style="">
+					<a href="" ng-click="setSecondTabLevel(21)">Package Services</a>
+				</li>
+				<li ng-class="{ active : isSetSecondTabLevel(22) }" class="width10" style="">
+					<a href="" ng-click="setSecondTabLevel(22)" class="">Package</a>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="row padding-left-right-set4">
+			<div ng-show="isSetSecondTabLevel(21)" class="second-level-tab-display-div" style="">
+				<table class="table table-bordered OPDBillService common-tbody-scroll">
+				<tbody class="scrollable">
+					<tr>
+						<td colspan="6">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th colspan="12">Packages
+										<!-- <div class="col-lg-5 col-md-5 col-sm-5 float_right width15">
+										<div class=" ">
+											<a href="" class="btn btn-primary btn-save-box-shadow enabled" id="savedisablebtn" title="Save" data-toggle="modal" ng-click="removeMultiServInpackage()" >
+												Remove From Package</a>
+										</div>
+									    </div> -->
+										</th>
+										
+									</tr>
+									<tr>
+									
+										<th class="width2">
+											<span class=""> </span>
+										</th>
+										<th class="width6">
+											<span class="">Package Code</span>
+										</th>
+										<th class="width15">
+											<span class="">Package Name</span>
+										</th>
+										<th class="width6">
+											<span class="">Service Code</span>
+										</th>
+										<th class="width15">
+											<span class="">Service Description</span>
+										</th>
+										<th class="width12">
+											<span class="">Doctor</span>
+										</th>
+										<th class="width12">
+											<span class="">Doctor Specialty</span>
+										</th>
+										<th class="width8">
+											<span class="">Service Amount</span>
+										</th>
+										<th class="width6">
+											<span class="">Item Code</span>
+										</th>
+										<th class="width15">
+											<span class="">Item Name</span>
+											<th class="width10">
+												<span class="">Package Amount</span>
+											</th>
+											<th class="width10">
+												<span class="">Order On</span>
+											</th>
+											<th class="width2">
+														
+										    </th> 		
+										</tr>
+									</thead>
+									<tbody ng-repeat="services in autoRenderedServicesFinalList" ng-init="serviceIndex=$index" ng-show="services.status=='A'">
+										<tr ng-repeat="packageMppr in services.orderDetailsPackageMapperDtosList" ng-if="packageMppr.isPackageService=='Y'">
+										 <td class="">
+						           	       <p>
+						           		    <label class="checkbox-inline">
+												<input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'" ng-model="packageMppr.checked" >
+												<span></span>
+											</label>
+						           		   </p>
+						           		 </td>
+											<td>{{(packageMppr.packageCode==null)?"-":packageMppr.packageCode}}</td>
+											<td>{{(packageMppr.packageName==null)?"-":packageMppr.packageName}}</td>
+											<td>{{(services.serviceStandardCode==null)?"-":services.serviceStandardCode}}</td>
+											<td>{{(services.serviceStandardName==null)?"-":services.serviceStandardName}}</td>
+											<td>{{value.doctorName}}
+											<div class="row"> <!-- ng-if="services.isDoctorRequired == 'Y'" -->
+							         		<div class="col-md-9">
+															<select style="height: 30px;" class="display-text-box" name="services.doctorId" ng-model="services.doctorId" ng-disabled="services.isDoctorRequired == 'N'" 
+															 ng-init=" services.doctorId > 0 ? getSpecialityByDoctorService(services.doctorId,serviceIndex) : ''" 
+															 ng-change="getSpecialityByDoctorService(services.doctorId,serviceIndex)" required="true" convert-to-number >
+																<option ng-repeat="info in services.docList" value="{{info.doctorId}}">{{info.doctorName}}</option>
+															</select>
+															<p ng-if="services.isDoctorRequired == 'Y' && (services.doctorId == 0 || services.doctorId == undefined)" style="color:red">Please Select Doctor.</p>
+											 </div>
+											<div class="col-md-3">
+											<i class="fa fa-eraser fa-lg ng-scope col-md-6" style="top:8px" title="Clear Doctor" ng-click="clearDoctor(services,serviceIndex)"></i>
+											</div>
+											 </div>
+											</td>
+											<td>
+													<div ng-if="services.isDoctorRequired == 'Y'">
+														<select style="height: 30px;" class="display-text-box" ng-model="services.doctorSpecialityId"  ng-disabled="services.doctorSpecialityList.length<=1" ng-init="services.doctorSpecialityId>0 ? getDoctorBySpeciality(services.doctorSpecialityId,serviceIndex,null) : ''" ng-change = "calculateShareAmount(services,serviceIndex)" required="true" convert-to-number>
+															<option ng-repeat="info in services.docSpecialityList" value="{{info.specialityId}}">{{info.specialityName}}</option>
+														</select>
+														<p ng-if="services.isDoctorRequired == 'Y' && (services.doctorSpecialityId == 0 || services.doctorSpecialityId == undefined)" style="color:red">Please Select Doctor Speciality.</p>
+													</div>
+													<div ng-if="services.isDoctorRequired == 'N'">
+														<select style="height: 30px;" class="display-text-box" ng-model="services.doctorSpecialityId"  ng-disabled="services.doctorSpecialityList.length<=1" ng-init="services.doctorSpecialityId>0 ? getDoctorBySpeciality(services.doctorSpecialityId,serviceIndex,null) : ''" ng-change = "calculateShareAmount(services,serviceIndex)" convert-to-number>
+															<option ng-repeat="info in services.docSpecialityList" value="{{info.specialityId}}">{{info.specialityName}}</option>
+														</select>
+													</div>
+											</td>
+											<td>{{parseFloatNum(services.basePrice)}}</td>
+											<td>{{(packageMppr.itemCode==null)?"-":packageMppr.itemCode}}</td>
+											<td>{{(packageMppr.itemName==null)?"-":packageMppr.itemName}}</td>
+											<td>{{parseFloatNum(packageMppr.packageAmount)}}</td>
+											<td class="">{{getDateByFormat(services.orderDateTimeString,false)}}</td><!-- {{services.orderDate | date: dateFormat}} -->
+										    <td class=" text-center">
+										    <a title="Cancel" ng-if="((services.serviceRendered == '0' || services.isAutoRender == 'Y')  && services.ordCancelled == 'N' && services.status == 'A' && services.packageTypeId==null) && (services.saleId == null )"  ng-click="getRemoveServicePopup(services,serviceIndex)">
+										     
+										       <i class="fa fa-times"></i></a>
+											        <a title="Remove from Package" ng-if="listPackageOrder!=null && listPackageOrder.length>0 && !services.isPackage && isForceUpdateServicePackage " ng-click="removeFromPackage(serviceIndex);">
+	         													 <span class="glyphicon glyphicon-arrow-left"></span>
+	       											 </a>
+										    </td>
+										</tr>
+									</tbody>
+								</table>
+								 <table class="table table-bordered">
+									<tr ng-if="(autoRenderedServicesFinalList)=='' || (autoRenderedServicesFinalList)==null ">
+										<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div ng-show="isSetSecondTabLevel(22)" class="second-level-tab-display-div" style="">
+				<div class="row serachedPatientList">
+					<div
+						class="col-md-6 col-lg-4 padding-left-right-set4 padding-bottom10">
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<th class="width10"><span class="">Package</span></th>
+									<th class="width1 text-center"><span class="">View</span></th>
+									<th class="width1 text-center"><span class="">Action</span></th> 
+								</tr>
+								<tr ng-repeat="info in listPackageOrder">
+									<td>{{info.packageName}}</td>
+									<td class="text-center"><a class="cursor-pointer"
+										ng-click="getAllPackageList()"> <i
+											class="fa fa-info-circle" title="Package view"></i>
+									</a></td>
+									 <td class="text-center" >
+										<div ng-if="info.isForceClose==null || info.isForceClose!=0 && info.packageTypeId  != 3 ">
+											<a class="cursor-pointer" ng-click="forceCancelPackage(info)">
+											 <i class="fa fa-times " title="Force close" ></i>
+											</a>
+										</div>
+										<div ng-if="info.isForceClose!=null && info.isForceClose==0 && info.packageTypeId  != 3 ">
+										 closed 
+										</div>
+									</td> 
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	</div> 
+
+

@@ -1,0 +1,537 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row margin-top10">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10">OPB No. :</b>
+					<label>{{vm.model.detailsFixedAssetMasterList.opbNo}}</label>
+				</span>
+
+				<span class="margin-left10">
+					<b class="padding-right10">OPB Date:</b>
+					<label>{{vm.model.detailsFixedAssetMasterList.opbDate | date:'dd/MM/yyyy':'UTC'}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10">Store:</b>
+					<label>{{vm.model.detailsFixedAssetMasterList.store}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10"> Requested By:</b>
+					<label>{{vm.model.detailsFixedAssetMasterList.requestedBy}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10">Status:</b>
+					<label>{{vm.model.detailsFixedAssetMasterList.status}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row margin-top4">
+			<div class="col-md-12 col-lg-12 col-sm-8 padding-left-right-set4">
+				<!-- id="nonBillableTableHt" -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 height500-table-with-scroll">
+						<table class="table table-bordered">
+							<tr class="">
+								<th class="width8" title="Asset Code">
+									Asset Code
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8" title="Asset Name">
+									Asset Name
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6" title="Serial No">
+									Serial No
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8" title="Year of Manufacture">
+									Year of Manufacture
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6" title="Vendor">
+									Vendor
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8" title="Service Provider">
+									Service Provider
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8" title="Warranty From">
+									Warranty From
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8" title="Warranty To">
+									Warranty To
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8" title="PMS Frequency">
+									PMS Frequency
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width4" title="Quantity">
+									Quantity
+								</th>
+								<th class="width4" title="Cop">
+									Cop
+								</th>
+								<th class="width4" title="Mrp">
+									Mrp
+								</th>
+								<th class="width8" title="Accessory">
+									Accessory
+								</th>
+								<th class="width8" title="Spares">
+									Spares
+								</th>
+								<th class="width8" title="Insurance Details">
+									Insurance Details
+								</th>
+								<th class="width10" title="Specifications">
+									Specifications
+								</th>
+							</tr>
+							<tr ng-repeat="item in vm.model.detailsFixedAssetMasterList.items">
+								<td title="{{item.itemCode}}">{{item.itemCode}}</td>
+								<td title="{{item.itemName}}">{{item.itemName}}</td>
+								<td title="{{item.serialNo}}">{{item.serialNo}}</td>
+								<td title="{{item.yearOfManufacture}}">{{item.yearOfManufacture}}</td>
+								<td title="{{item.vendor}}">{{item.vendor}}</td>
+								<td title="{{item.serviceProvider}}">{{item.serviceProvider}}</td>
+								<td title="{{item.warrantyFrom | date:'MMM-yyyy'}}">{{item.warrantyFrom | date:'MMM-yyyy'}}</td>
+								<td title="{{item.warrantyTo | date:'MMM-yyyy'}}">{{item.warrantyTo | date:'MMM-yyyy'}}</td>
+								<td title="{{item.pmsfrequency}}">{{item.pmsfrequency}}</td>
+								<td title="{{item.quantity}}">{{item.quantity}}</td>
+								<td title="{{item.cop}}">{{item.cop}}</td>
+								<td title="{{item.mrp}}">{{item.mrp}}</td>
+								<td>
+									<span class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set1">
+										<input type="button" value="View" class="btn btn-primary btn-save-box-shadow" 
+										ng-click="vm.model.OpenPopup('accessoryViewModal', item);vm.model.ViewAccessoryDetails(item.accesories)">
+									</span>
+								</td>
+								<td>
+									<span class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set1">
+										<input type="button" value="View" class="btn btn-primary btn-save-box-shadow" 
+										ng-click="vm.model.OpenPopup('SparesViewModal', item);vm.model.ViewSparesDetails(item.spares)">
+									</span>
+								</td>
+								<td>
+									<span class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set1">
+										<input type="button" value="View" class="btn btn-primary btn-save-box-shadow" ng-click="vm.model.OpenPopup('insuranceDetailsViewModal', item); vm.model.ViewInsuranceDetails(item.insurance)">
+									</span>
+								</td>
+								<td title="{{item.specification}}"> {{item.specification}} 
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-10 col-md-10 col-sm-8 padding-left-right8"></div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+					<!-- <div class="">
+					     <input type="button" value="Save" class="btn btn-primary btn-save-box-shadow">
+					   </div> -->
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+					<a href="#/addfixedAssetMaster">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<!-- ****************** Accessory Details View modal start************************ -->
+<div id="accessoryViewModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Accessory Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row ">
+					<div class="col-lg-4 col-md-4 col-sm-6 padding-left-right-set4 padding-top10">
+						<span class="margin-left10">
+							<b class="padding-right10">Accessory Details :</b>
+							<label>-</label>
+						</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4" id="">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width8">
+										Accessory Code
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width8">
+										Accessory Description
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6">
+										Serial No
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6">
+										warranty From
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6">
+										warranty To
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width4">
+										Quantity
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width12">
+										Specification
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="accesories in vm.model.itemForAccessoryDetail">
+									<td>{{accesories.itemCode}}</td>
+									<td>{{accesories.itemName}}</td>
+									<td>{{accesories.serialNumber}}</td>
+									<td>{{accesories.warrantyFrom | date:'MM/yyyy'}}</td>
+									<td>{{accesories.warrantyTo | date:'MM/yyyy'}}</td>
+									<td>{{accesories.quantity}}</td>
+									<td>{{accesories.specification}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ****************** Accessory Details View modal end************************ -->
+
+<!-- ****************** Insurance Details View modal start************************ -->
+<div id="insuranceDetailsViewModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Insurance Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+						<span class="margin-left10">
+							<b class="padding-right10">Insurance Company :</b>
+							<label>{{vm.model.insuranceCompany}}</label>
+						</span>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+						<span class="margin-left10">
+							<b class="padding-right10">Policy Number :</b>
+							<label>{{vm.model.policyNumber}}</label>
+						</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+						<span class="margin-left10">
+							<b class="padding-right10"> Policy From Date :</b>
+							<label>{{vm.model.policyFromDate | date:'MMM/yyyy'}}</label>
+						</span>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+						<span class="margin-left10">
+							<b class="padding-right10"> Policy To Date :</b>
+							<label>{{vm.model.policyToDate | date:'MMM/yyyy'}}</label>
+						</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+						<span class="margin-left10">
+							<b class="padding-right10">Amount Insured :</b>
+							<label>{{vm.model.amountInsured}}</label>
+						</span>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<span class="margin-left10">
+							<b class="padding-right10">Remarks :</b>
+						</span>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+						<textarea rows="2" readonly>{{vm.model.remark}}</textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ****************** Insurance Details View modal end************************ -->
+
+<!-- ****************** Spares Details View modal start************************ -->
+<div id="SparesViewModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Spares Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row ">
+					<div class="col-lg-4 col-md-4 col-sm-6 padding-left-right-set4 padding-top10">
+						<span class="margin-left10">
+							<b class="padding-right10">Spares Details :</b>
+							<label>-</label>
+						</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4" id="">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width8">
+										Spares Code
+										<div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width8">
+										Spares Description
+										<div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6">
+										Serial No
+										<div class="float_right" ng-click="sortType = 'serialNo'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6">
+										warranty From
+										<div class="float_right" ng-click="sortType = 'warrantyFrom'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6">
+										warranty To
+										<div class="float_right" ng-click="sortType = 'warrantyTo'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width4">
+										Quantity
+										<div class="float_right" ng-click="sortType = 'quantity'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width12">
+										Specification
+										<div class="float_right" ng-click="sortType = 'specification'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="spares in vm.model.itemForSpareDetail">
+									<td>{{spares.itemCode}}</td>
+									<td>{{spares.itemName}}</td>
+									<td>{{spares.serialNumber}}</td>
+									<td>{{spares.warrantyFrom | date:'MM/yyyy'}}</td>
+									<td>{{spares.warrantyTo | date:'MM/yyyy'}}</td>
+									<td>{{spares.quantity}}</td>
+									<td>{{spares.specification}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ****************** Spares Details View modal end************************ -->
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+		$(".selectedPageName").text("Add Fixed Asset Opening Balance");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="detailsFixedAssetMaster"]').parents("li").addClass("active");
+	});
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

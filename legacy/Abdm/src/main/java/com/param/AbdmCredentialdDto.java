@@ -1,0 +1,2498 @@
+package com.param;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+
+import org.json.JSONArray;
+
+import com.param.global.billing.dto.BillListResponse;
+import com.param.global.billing.dto.ItemDetailsResponse;
+import com.param.global.dto.InvestigationOrderMasterNewDto;
+import com.param.global.otims.dto.ProcedureOrderMasterDto;
+import com.param.opd.coversheet.dto.AppointmentVitalMapperDto;
+import com.param.opd.coversheet.dto.ComplaintAppointmentDetailsDto;
+import com.param.opd.coversheet.dto.ComplaintAppointmentDto;
+import com.param.opd.coversheet.dto.CoversheetInstructionDto;
+import com.param.global.unit.dto.AllergyPatientMapperDto;
+import com.param.opd.coversheet.dto.DiagnosisPatientAppointmentMapperDto;
+import com.param.opd.coversheet.dto.MedicationDTO;
+import com.param.opd.coversheet.dto.ObservationDto;
+import com.param.opd.coversheet.dto.PatientFamilyHistoryDto;
+import com.param.opd.coversheet.dto.PatientHabitDetailsDto;
+import com.param.opd.coversheet.dto.PatientMedicalHistoryDto;
+import com.param.opd.coversheet.dto.QuickNotesMapperDto;
+import com.param.opd.coversheet.dto.VaccineImmunizationMapperDto;
+import com.param.opd.encounter.dto.ComplaintsDto;
+import com.param.opd.encounter.dto.EncounterMasterDto;
+
+public class AbdmCredentialdDto {
+	
+	private Integer abdmCredentialId;
+
+	private String clientId;
+
+	private String clientSecret;
+
+	private Character status;
+
+	private Integer organizationId;
+
+	private Integer unitId;
+	
+	private Integer expiresIn;
+	
+	private Integer refreshExpiresIn;
+	
+	private String accessToken;
+	
+	private String admissionNumber;
+	
+	private String refreshToken;
+	
+	private String tokenType;
+	
+	private String name;
+	
+	private String aliseName;
+	
+	private String aadharNumber;
+	
+	private String transactionId;
+	private String otp;
+	private String mobileNumber;
+	private String facialityJson;
+	
+	private String aadharPreverifiedJson;
+	
+	private String devUrl;
+
+	private String healthidsbxUrl;
+
+	private String phrsbxUrl;
+
+	private String abdmHealthCard;
+	
+	private String base64PngCard;
+	
+	private String gatewayUrl;
+	
+	private String id;
+	private Integer ids;
+	private String lastName;
+	
+	private String pincode;
+	
+	private Integer districtCode;
+	
+	private String city;
+	
+	private String gender;
+	
+	private String districtName;
+	
+	private String mobile;
+	
+	private String careContextTime;
+	
+	private String healthId;
+	
+	private String fullName;
+	
+	private String BirthDate;
+	
+	
+	private Integer mCallBackResponseId;
+
+	private String hipId;
+
+	private String callBackJsonoNFetchMode;
+	
+	private String callBackJsonoNOnInit;
+	
+	private String callBackJsonoNOnConfirm;
+	
+	private String callBackJsononGenerateToken;
+	
+	private String requestId;
+	
+	private String requestIdFetch;
+	
+	private String requestIdInit;
+	
+	private String requestIdConfirm;
+	
+	private String sbxId;
+	
+	private String firstName;
+	
+	private String middleName;
+	
+	private String healthIdNumber;
+	
+	private String healthNumber;
+	
+	private String token;
+	
+	private String stateName;
+	
+	private String stateCode;
+	
+	private String email;
+	
+	private Integer userId;
+	
+	private String yearOfBirth;
+	
+	private String monthOfBirth;
+	
+	private String dayOfBirth;
+	
+	private Integer patientId;
+	
+	private Integer abdmShareId;
+
+	
+	private String shareJson;
+	
+	private String abhaId;
+	
+	private String checkCall;
+	
+	private String authMode;
+	
+	private Integer alradyExistAbha;
+	
+	private Integer alradyExistHis;
+	
+	private String discoverJson;
+	
+	private String initRequestId;
+	
+	private String confirmRequestId;
+	
+	private String initJson;
+	private String confirmJson;
+	
+	private String phrSuggestions;
+	
+	private boolean isExists;
+	
+	private String checkAndGenerate;
+	
+	private String devAbdmUrl;
+	
+	private String identifier;
+	
+	private String encounterNumber;
+	
+	private String uhidNumber;
+	
+	private String onAddContextsJson;
+	
+	private String requestIdAddContexts;
+	
+	private String callBackJsonOnAddContexts;
+	
+
+	private Character isFromCoversheet;
+	
+	private String consentsHipNotifyJson;
+	
+	private String consentId;
+	
+	private Character consentChecked;
+	
+	private Integer tokenNumber;
+	
+	private String hipRequestJson;
+	
+	List<EncounterMasterDto> list;
+	
+	private String publicKey;
+	
+	private Integer fetchById; 
+	
+	private Integer loginOtpVerification;
+	
+	private String abhasbxUrl;
+	
+	private String abhaNumber;
+	
+	private String txnId;
+	private List<String> scope;
+	private String loginHint;
+	private String loginId;
+	private String otpSystem;
+	
+	private Integer eventId;
+	
+    private String dob;
+	
+	private List authMethods;
+	
+	private String authMethodsString;
+	
+	private String consentNotifyJson;
+	
+	private String baseUrl;
+
+	private String basePath;
+
+	private String apiUrl;
+
+	private String autoGeneratedBenefitId;
+	private String benefitId;
+	private String benefitName;
+	private String consentHealthId;
+	private String dateOfBirth;
+	private String profilePhoto;
+	private String address;
+	private String validity;
+	private String documentType;
+	private String documentId;
+	
+	private String frontSidePhoto;
+	
+	private String backSidePhoto;
+	
+	private String captcha;
+	
+	private String transactionType;
+	
+	private String apiResponseEvent28;
+	
+	private String apiResponseEvent29;
+	
+	private String apiResponseEvent39;
+	
+	private String apiResponseEvent40;
+	
+	private String transactionIdCareContext;
+	
+	private String hiuId;
+	
+	private String xcmId;
+	
+	private Integer abdmFhirId;
+	
+	private String fhirString;
+	
+	private String createdDate;
+	
+	private String expiredDate;
+	private String doctorName;
+	private String unitName;
+	private String encounterDateString2;
+	
+	private String signtureImg;
+	
+	
+	private String genderCode;
+	
+	   private String unitEmailId;
+	     private String unitContact;
+	
+	private List<DiagnosisPatientAppointmentMapperDto> diagnosisListData;
+	private List<ComplaintsDto> complaintlistData;
+	private List<ComplaintAppointmentDto> complaintlistDataLastVisit;
+	private List<ComplaintAppointmentDetailsDto> listComplaintDataSave;
+	private List<InvestigationOrderMasterNewDto> labOrderList;
+	private List<CoversheetInstructionDto> adviceDataList;
+	private List<MedicationDTO> medicationDataList;
+	private List<QuickNotesMapperDto> QuickNotesMapperlist;
+	private List<EncounterMasterDto> patientRemarklist;
+	private List<AppointmentVitalMapperDto> listAppointmentVitalMapperDto;
+	private List<AllergyPatientMapperDto> allergyListData;
+	 List<ProcedureOrderMasterDto> procedureList;
+	 private String procedureStatus;
+	 List<PatientMedicalHistoryDto> listPatientMedicalHistoryDto;
+	 
+	 private JSONArray hiTypes;
+	 private String hiType;
+	 private String hiTypesRequested;
+	 private String consentSignature;
+	 //for lab object 
+	    private String serviceStandardName;
+		private String serviceStandardCode;
+		private String TestResult;
+		private Integer sampleStatusId;
+		private Integer labSampleDtlsId;
+		private Integer labTestResId;
+		private Integer subDeptId;
+		private Integer templateTransactionId;
+		private Integer microTemplateStatusId;
+		
+		// FOR MEDICATION OBJECT
+		private String itemCode;
+		private String itemName;
+		private String frequencyCode;
+		private String frequencyDesc;
+		private String instructionText;
+		private String roa;
+		private String startDate;
+		private Integer duration;
+		private String durationUnit;
+		private String strengthDesc;
+		
+		
+		//for immuniztion record 
+		private String vaccineName;
+		private String vaccineCode;
+		private String vaccineDate;
+		private String brandName;
+		
+		
+		private List<EncounterMasterDto> careContextList;
+	 private String onInitJson;
+	 private String onStatusJson;
+	 private String onFetchJson;
+	 private String notifyConsentJson;
+	 private String consentArtefactsId;
+	 private String consentStatus;
+	 private String onFetchResponse;
+	 private String onRequestJson;
+	 private String visitTypeName;
+	 private String diagnosisName;
+		
+		private String icpcCodeText;
+		
+		private String allergyName;
+		private String remark;
+		
+		private String recordedDate;
+		
+		private String advicedInstruction;
+		
+		private String strength ;
+		private  String uomUnit ;
+		private  String instructionDesc ;
+		private String preferedDateTime;
+		private String procedureName;
+		private List<PatientFamilyHistoryDto> listPatientFamilyHistoryDto;
+		private String apiResponsehip;
+		private String privateKey;
+		private String carecontexReference;
+		private String encryptedData;
+		private String decryptedData;
+		private String preferedTime;
+		private String datapushUrl;
+		
+		private String patientName;
+		private String timeStamp;
+		
+		private String consentResponseHitypes;
+		
+		private String consentDeniedDate;
+		
+		private String consentRevokedDate;
+		
+		private String consentGrantedDate;
+		
+		private String consentFromDate;
+		
+		private String consentToDate;
+		
+		private String consentRequestIdHiu;
+		
+		private String consentRequestId;
+		
+		private String onInitResponseJson;
+		
+		private String patientFullName;
+		
+		private Timestamp expiryDate;
+		
+		private String carecontextOnNotifyJson;
+		
+	 
+	    // Getter and Setter methods
+	    public JSONArray getHiTypes() {
+	        return hiTypes;
+	    }
+
+	    public void setHiTypes(JSONArray hiTypes) {
+	        this.hiTypes = hiTypes;
+	    }
+	    
+	 
+	 
+	 public List<EncounterMasterDto> getCareContextList() {
+			return careContextList;
+		}
+
+		public void setCareContextList(List<EncounterMasterDto> careContextList) {
+			this.careContextList = careContextList;
+		}
+
+
+
+	private Integer noOfAdministrationTime;
+	 
+	 List<VaccineImmunizationMapperDto> vacineList;
+	 List<ProcedureOrderMasterDto> procedureListAdmission;
+	 
+	 private Integer encounterId;
+	 
+	 private Integer admissionId;
+	 
+	private List<PatientHabitDetailsDto> listPatientHabitDetailsDto;
+	
+	 private List<ObservationDto> observationList;
+	 
+	 
+	 private ArrayList<String> healthInfoTypes = new ArrayList<>();
+	 
+	 private String purposeOfRequest;
+	 
+	 private String healthInfoFromDate;
+	 
+	 private String healthInfoToDate;
+	 private String consentExpiryDate;
+	 
+	 private String dataPushUrlJson;
+	 
+	private Integer dischargeFieldId;
+	
+	private String dischargeFieldColumnJson;
+	
+	private String dischargeFieldDesc;
+	
+	private Integer dischSumTabColMstId;
+	
+	private String columnName;
+	
+	private String tableName;
+	
+	private Integer tableId;
+	
+	private Double parameterMin;
+	private Double parameterMax;
+	
+	private boolean isColumnRequired;
+	
+	private Integer index;
+	
+	private List<EncounterMasterDto> invoiceList;
+	
+	 private BigInteger saleId;
+	 
+	 protected List<ItemDetailsResponse> items;
+	
+	public String getTxnId() {
+		return txnId;
+	}
+
+	public void setTxnId(String txnId) {
+		this.txnId = txnId;
+	}
+
+	public List<String> getScope() {
+		return scope;
+	}
+
+	public void setScope(List<String> scope) {
+		this.scope = scope;
+	}
+
+	public String getLoginHint() {
+		return loginHint;
+	}
+
+	public void setLoginHint(String loginHint) {
+		this.loginHint = loginHint;
+	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+
+	public String getOtpSystem() {
+		return otpSystem;
+	}
+
+	public void setOtpSystem(String otpSystem) {
+		this.otpSystem = otpSystem;
+	}
+
+	public Integer getAbdmShareId() {
+		return abdmShareId;
+	}
+
+	public void setAbdmShareId(Integer abdmShareId) {
+		this.abdmShareId = abdmShareId;
+	}
+
+	public String getShareJson() {
+		return shareJson;
+	}
+
+	public void setShareJson(String shareJson) {
+		this.shareJson = shareJson;
+	}
+
+	public String getAbhaId() {
+		return abhaId;
+	}
+
+	public void setAbhaId(String abhaId) {
+		this.abhaId = abhaId;
+	}
+
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+
+	
+	public Integer getAbdmCredentialId() {
+		return abdmCredentialId;
+	}
+
+	public void setAbdmCredentialId(Integer abdmCredentialId) {
+		this.abdmCredentialId = abdmCredentialId;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getClientSecret() {
+		return clientSecret;
+	}
+
+	public void setClientSecret(String clientSecret) {
+		this.clientSecret = clientSecret;
+	}
+
+	public Character getStatus() {
+		return status;
+	}
+
+	public void setStatus(Character status) {
+		this.status = status;
+	}
+
+	public Integer getOrganizationId() {
+		return organizationId;
+	}
+
+	public void setOrganizationId(Integer organizationId) {
+		this.organizationId = organizationId;
+	}
+
+	public Integer getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(Integer unitId) {
+		this.unitId = unitId;
+	}
+
+	public Integer getExpiresIn() {
+		return expiresIn;
+	}
+
+	public void setExpiresIn(Integer expiresIn) {
+		this.expiresIn = expiresIn;
+	}
+
+	public Integer getRefreshExpiresIn() {
+		return refreshExpiresIn;
+	}
+
+	public void setRefreshExpiresIn(Integer refreshExpiresIn) {
+		this.refreshExpiresIn = refreshExpiresIn;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public String getTokenType() {
+		return tokenType;
+	}
+
+	public void setTokenType(String tokenType) {
+		this.tokenType = tokenType;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAliseName() {
+		return aliseName;
+	}
+
+	public void setAliseName(String aliseName) {
+		this.aliseName = aliseName;
+	}
+
+	public String getAadharNumber() {
+		return aadharNumber;
+	}
+
+	public void setAadharNumber(String aadharNumber) {
+		this.aadharNumber = aadharNumber;
+	}
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public String getOtp() {
+		return otp;
+	}
+
+	public void setOtp(String otp) {
+		this.otp = otp;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+	
+	public String getFacialityJson() {
+		return facialityJson;
+	}
+
+	public void setFacialityJson(String facialityJson) {
+		this.facialityJson = facialityJson;
+	}
+
+	public String getAadharPreverifiedJson() {
+		return aadharPreverifiedJson;
+	}
+
+	public void setAadharPreverifiedJson(String aadharPreverifiedJson) {
+		this.aadharPreverifiedJson = aadharPreverifiedJson;
+	}
+
+	public String getDevUrl() {
+		return devUrl;
+	}
+
+	public String getPhrsbxUrl() {
+		return phrsbxUrl;
+	}
+
+	public void setPhrsbxUrl(String phrsbxUrl) {
+		this.phrsbxUrl = phrsbxUrl;
+	}
+
+	public void setDevUrl(String devUrl) {
+		this.devUrl = devUrl;
+	}
+
+	public String getHealthidsbxUrl() {
+		return healthidsbxUrl;
+	}
+
+	public void setHealthidsbxUrl(String healthidsbxUrl) {
+		this.healthidsbxUrl = healthidsbxUrl;
+	}
+
+	public String getAbdmHealthCard() {
+		return abdmHealthCard;
+	}
+
+	public void setAbdmHealthCard(String abdmHealthCard) {
+		this.abdmHealthCard = abdmHealthCard;
+	}
+
+	public String getBase64PngCard() {
+		return base64PngCard;
+	}
+
+	public void setBase64PngCard(String base64PngCard) {
+		this.base64PngCard = base64PngCard;
+	}
+
+	public String getGatewayUrl() {
+		return gatewayUrl;
+	}
+
+	public void setGatewayUrl(String gatewayUrl) {
+		this.gatewayUrl = gatewayUrl;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getPincode() {
+		return pincode;
+	}
+
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
+	}
+
+	public Integer getDistrictCode() {
+		return districtCode;
+	}
+
+	public void setDistrictCode(Integer districtCode) {
+		this.districtCode = districtCode;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getDistrictName() {
+		return districtName;
+	}
+
+	public void setDistrictName(String districtName) {
+		this.districtName = districtName;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getHealthId() {
+		return healthId;
+	}
+
+	public void setHealthId(String healthId) {
+		this.healthId = healthId;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getBirthDate() {
+		return BirthDate;
+	}
+
+	public void setBirthDate(String birthDate) {
+		BirthDate = birthDate;
+	}
+
+	public Integer getmCallBackResponseId() {
+		return mCallBackResponseId;
+	}
+
+	public void setmCallBackResponseId(Integer mCallBackResponseId) {
+		this.mCallBackResponseId = mCallBackResponseId;
+	}
+
+	public String getHipId() {
+		return hipId;
+	}
+
+	public void setHipId(String hipId) {
+		this.hipId = hipId;
+	}
+
+	public String getCallBackJsonoNFetchMode() {
+		return callBackJsonoNFetchMode;
+	}
+
+	public void setCallBackJsonoNFetchMode(String callBackJsonoNFetchMode) {
+		this.callBackJsonoNFetchMode = callBackJsonoNFetchMode;
+	}
+
+	public String getCallBackJsonoNOnInit() {
+		return callBackJsonoNOnInit;
+	}
+
+	public void setCallBackJsonoNOnInit(String callBackJsonoNOnInit) {
+		this.callBackJsonoNOnInit = callBackJsonoNOnInit;
+	}
+
+	public String getCallBackJsonoNOnConfirm() {
+		return callBackJsonoNOnConfirm;
+	}
+
+	public void setCallBackJsonoNOnConfirm(String callBackJsonoNOnConfirm) {
+		this.callBackJsonoNOnConfirm = callBackJsonoNOnConfirm;
+	}
+
+	public String getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
+	}
+
+	public String getRequestIdInit() {
+		return requestIdInit;
+	}
+
+	public void setRequestIdInit(String requestIdInit) {
+		this.requestIdInit = requestIdInit;
+	}
+
+	public String getRequestIdConfirm() {
+		return requestIdConfirm;
+	}
+
+	public void setRequestIdConfirm(String requestIdConfirm) {
+		this.requestIdConfirm = requestIdConfirm;
+	}
+
+	public String getRequestIdFetch() {
+		return requestIdFetch;
+	}
+
+	public void setRequestIdFetch(String requestIdFetch) {
+		this.requestIdFetch = requestIdFetch;
+	}
+
+	public String getSbxId() {
+		return sbxId;
+	}
+
+	public void setSbxId(String sbxId) {
+		this.sbxId = sbxId;
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getMiddleName() {
+		return middleName;
+	}
+
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+
+	public String getHealthIdNumber() {
+		return healthIdNumber;
+	}
+
+	public void setHealthIdNumber(String healthIdNumber) {
+		this.healthIdNumber = healthIdNumber;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getStateName() {
+		return stateName;
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+
+	public String getStateCode() {
+		return stateCode;
+	}
+
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public String getYearOfBirth() {
+		return yearOfBirth;
+	}
+
+	public void setYearOfBirth(String yearOfBirth) {
+		this.yearOfBirth = yearOfBirth;
+	}
+
+	public String getMonthOfBirth() {
+		return monthOfBirth;
+	}
+
+	public void setMonthOfBirth(String monthOfBirth) {
+		this.monthOfBirth = monthOfBirth;
+	}
+
+	public String getDayOfBirth() {
+		return dayOfBirth;
+	}
+
+	public void setDayOfBirth(String dayOfBirth) {
+		this.dayOfBirth = dayOfBirth;
+	}
+
+	public Integer getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(Integer patientId) {
+		this.patientId = patientId;
+	}
+
+	public String getCheckCall() {
+		return checkCall;
+	}
+
+	public void setCheckCall(String checkCall) {
+		this.checkCall = checkCall;
+	}
+
+	public String getAuthMode() {
+		return authMode;
+	}
+
+	public void setAuthMode(String authMode) {
+		this.authMode = authMode;
+	}
+
+	public Integer getAlradyExistAbha() {
+		return alradyExistAbha;
+	}
+
+	public void setAlradyExistAbha(Integer alradyExistAbha) {
+		this.alradyExistAbha = alradyExistAbha;
+	}
+
+	public Integer getAlradyExistHis() {
+		return alradyExistHis;
+	}
+
+	public void setAlradyExistHis(Integer alradyExistHis) {
+		this.alradyExistHis = alradyExistHis;
+	}
+	
+	public List getAuthMethods() {
+		return authMethods;
+	}
+
+	public void setAuthMethods(List authMethods) {
+		this.authMethods = authMethods;
+	}
+
+	public String getDiscoverJson() {
+		return discoverJson;
+	}
+
+	public void setDiscoverJson(String discoverJson) {
+		this.discoverJson = discoverJson;
+	}
+
+	public String getAuthMethodsString() {
+		return authMethodsString;
+	}
+
+	public void setAuthMethodsString(String authMethodsString) {
+		this.authMethodsString = authMethodsString;
+	}
+		
+	public String getInitJson() {
+		return initJson;
+	}
+
+	public void setInitJson(String initJson) {
+		this.initJson = initJson;
+	}
+
+	public String getConfirmJson() {
+		return confirmJson;
+	}
+
+	public void setConfirmJson(String confirmJson) {
+		this.confirmJson = confirmJson;
+	}
+
+	public String getPhrSuggestions() {
+		return phrSuggestions;
+	}
+
+	public void setPhrSuggestions(String phrSuggestions) {
+		this.phrSuggestions = phrSuggestions;
+	}
+
+	public boolean isExists() {
+		return isExists;
+	}
+
+	public void setExists(boolean isExists) {
+		this.isExists = isExists;
+	}
+
+	public String getCheckAndGenerate() {
+		return checkAndGenerate;
+	}
+
+	public void setCheckAndGenerate(String checkAndGenerate) {
+		this.checkAndGenerate = checkAndGenerate;
+	}
+
+	public String getDevAbdmUrl() {
+		return devAbdmUrl;
+	}
+
+	public void setDevAbdmUrl(String devAbdmUrl) {
+		this.devAbdmUrl = devAbdmUrl;
+	}
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+	public String getInitRequestId() {
+		return initRequestId;
+	}
+
+	public void setInitRequestId(String initRequestId) {
+		this.initRequestId = initRequestId;
+	}
+
+	public String getConfirmRequestId() {
+		return confirmRequestId;
+	}
+
+	public void setConfirmRequestId(String confirmRequestId) {
+		this.confirmRequestId = confirmRequestId;
+	}
+
+	public String getEncounterNumber() {
+		return encounterNumber;
+	}
+
+	public void setEncounterNumber(String encounterNumber) {
+		this.encounterNumber = encounterNumber;
+	}
+
+	public String getUhidNumber() {
+		return uhidNumber;
+	}
+
+	public void setUhidNumber(String uhidNumber) {
+		this.uhidNumber = uhidNumber;
+	}
+
+	public String getOnAddContextsJson() {
+		return onAddContextsJson;
+	}
+
+	public void setOnAddContextsJson(String onAddContextsJson) {
+		this.onAddContextsJson = onAddContextsJson;
+	}
+
+	public String getRequestIdAddContexts() {
+		return requestIdAddContexts;
+	}
+
+	public void setRequestIdAddContexts(String requestIdAddContexts) {
+		this.requestIdAddContexts = requestIdAddContexts;
+	}
+
+	public String getCallBackJsonOnAddContexts() {
+		return callBackJsonOnAddContexts;
+	}
+
+	public void setCallBackJsonOnAddContexts(String callBackJsonOnAddContexts) {
+		this.callBackJsonOnAddContexts = callBackJsonOnAddContexts;
+	}
+
+	public Character getIsFromCoversheet() {
+		return isFromCoversheet;
+	}
+
+	public void setIsFromCoversheet(Character isFromCoversheet) {
+		this.isFromCoversheet = isFromCoversheet;
+	}
+
+	public String getConsentsHipNotifyJson() {
+		return consentsHipNotifyJson;
+	}
+
+	public void setConsentsHipNotifyJson(String consentsHipNotifyJson) {
+		this.consentsHipNotifyJson = consentsHipNotifyJson;
+	}
+
+	public String getConsentId() {
+		return consentId;
+	}
+
+	public void setConsentId(String consentId) {
+		this.consentId = consentId;
+	}
+
+	public Character getConsentChecked() {
+		return consentChecked;
+	}
+
+	public void setConsentChecked(Character consentChecked) {
+		this.consentChecked = consentChecked;
+	}
+
+	public Integer getTokenNumber() {
+		return tokenNumber;
+	}
+
+	public void setTokenNumber(Integer tokenNumber) {
+		this.tokenNumber = tokenNumber;
+	}
+
+	public String getHipRequestJson() {
+		return hipRequestJson;
+	}
+
+	public void setHipRequestJson(String hipRequestJson) {
+		this.hipRequestJson = hipRequestJson;
+	}
+
+	public String getConsentNotifyJson() {
+		return consentNotifyJson;
+	}
+
+	public void setConsentNotifyJson(String consentNotifyJson) {
+		this.consentNotifyJson = consentNotifyJson;
+	}
+
+	public List<EncounterMasterDto> getList() {
+		return list;
+	}
+
+	public void setList(List<EncounterMasterDto> list) {
+		this.list = list;
+	}
+
+	public String getPublicKey() {
+		return publicKey;
+	}
+
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
+	}
+
+	public Integer getFetchById() {
+		return fetchById;
+	}
+
+	public void setFetchById(Integer fetchById) {
+		this.fetchById = fetchById;
+	}
+
+	public String getAbhasbxUrl() {
+		return abhasbxUrl;
+	}
+
+	public void setAbhasbxUrl(String abhasbxUrl) {
+		this.abhasbxUrl = abhasbxUrl;
+	}
+
+	public String getAbhaNumber() {
+		return abhaNumber;
+	}
+
+	public void setAbhaNumber(String abhaNumber) {
+		this.abhaNumber = abhaNumber;
+	}
+
+	public Integer getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(Integer eventId) {
+		this.eventId = eventId;
+	}
+
+	public String getBaseUrl() {
+		return baseUrl;
+	}
+
+	public void setBaseUrl(String baseUrl) {
+		this.baseUrl = baseUrl;
+	}
+
+	public String getBasePath() {
+		return basePath;
+	}
+
+	public void setBasePath(String basePath) {
+		this.basePath = basePath;
+	}
+
+	public String getApiUrl() {
+		return apiUrl;
+	}
+
+	public void setApiUrl(String apiUrl) {
+		this.apiUrl = apiUrl;
+	}
+
+	public String getAutoGeneratedBenefitId() {
+		return autoGeneratedBenefitId;
+	}
+
+	public void setAutoGeneratedBenefitId(String autoGeneratedBenefitId) {
+		this.autoGeneratedBenefitId = autoGeneratedBenefitId;
+	}
+
+	public String getBenefitId() {
+		return benefitId;
+	}
+
+	public void setBenefitId(String benefitId) {
+		this.benefitId = benefitId;
+	}
+
+	public String getBenefitName() {
+		return benefitName;
+	}
+
+	public void setBenefitName(String benefitName) {
+		this.benefitName = benefitName;
+	}
+
+	public String getConsentHealthId() {
+		return consentHealthId;
+	}
+
+	public void setConsentHealthId(String consentHealthId) {
+		this.consentHealthId = consentHealthId;
+	}
+
+	public String getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getProfilePhoto() {
+		return profilePhoto;
+	}
+
+	public void setProfilePhoto(String profilePhoto) {
+		this.profilePhoto = profilePhoto;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getValidity() {
+		return validity;
+	}
+
+	public void setValidity(String validity) {
+		this.validity = validity;
+	}
+
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
+
+	public String getDocumentId() {
+		return documentId;
+	}
+
+	public void setDocumentId(String documentId) {
+		this.documentId = documentId;
+	}
+
+	public String getFrontSidePhoto() {
+		return frontSidePhoto;
+	}
+
+	public void setFrontSidePhoto(String frontSidePhoto) {
+		this.frontSidePhoto = frontSidePhoto;
+	}
+
+	public String getBackSidePhoto() {
+		return backSidePhoto;
+	}
+
+	public void setBackSidePhoto(String backSidePhoto) {
+		this.backSidePhoto = backSidePhoto;
+	}
+
+	public Integer getLoginOtpVerification() {
+		return loginOtpVerification;
+	}
+
+	public void setLoginOtpVerification(Integer loginOtpVerification) {
+		this.loginOtpVerification = loginOtpVerification;
+	}
+
+	public String getCaptcha() {
+		return captcha;
+	}
+
+	public void setCaptcha(String captcha) {
+		this.captcha = captcha;
+	}
+
+	public String getTransactionType() {
+		return transactionType;
+	}
+
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
+	}
+
+	public String getCallBackJsononGenerateToken() {
+		return callBackJsononGenerateToken;
+	}
+
+	public void setCallBackJsononGenerateToken(String callBackJsononGenerateToken) {
+		this.callBackJsononGenerateToken = callBackJsononGenerateToken;
+	}
+
+	public String getApiResponseEvent28() {
+		return apiResponseEvent28;
+	}
+
+	public void setApiResponseEvent28(String apiResponseEvent28) {
+		this.apiResponseEvent28 = apiResponseEvent28;
+	}
+
+	public String getApiResponseEvent29() {
+		return apiResponseEvent29;
+	}
+
+	public void setApiResponseEvent29(String apiResponseEvent29) {
+		this.apiResponseEvent29 = apiResponseEvent29;
+	}
+
+	public String getApiResponseEvent39() {
+		return apiResponseEvent39;
+	}
+
+	public void setApiResponseEvent39(String apiResponseEvent39) {
+		this.apiResponseEvent39 = apiResponseEvent39;
+	}
+
+	public String getApiResponseEvent40() {
+		return apiResponseEvent40;
+	}
+
+	public void setApiResponseEvent40(String apiResponseEvent40) {
+		this.apiResponseEvent40 = apiResponseEvent40;
+	}
+
+	public String getTransactionIdCareContext() {
+		return transactionIdCareContext;
+	}
+
+	public void setTransactionIdCareContext(String transactionIdCareContext) {
+		this.transactionIdCareContext = transactionIdCareContext;
+	}
+	public String getHiuId() {
+		return hiuId;
+	}
+
+	public void setHiuId(String hiuId) {
+		this.hiuId = hiuId;
+	}
+
+	public String getXcmId() {
+		return xcmId;
+	}
+
+	public void setXcmId(String xcmId) {
+		this.xcmId = xcmId;
+	}
+
+	public List<DiagnosisPatientAppointmentMapperDto> getDiagnosisListData() {
+		return diagnosisListData;
+	}
+
+	public void setDiagnosisListData(List<DiagnosisPatientAppointmentMapperDto> list2) {
+		this.diagnosisListData = list2;
+	}
+
+	public Integer getAbdmFhirId() {
+		return abdmFhirId;
+	}
+
+	public void setAbdmFhirId(Integer abdmFhirId) {
+		this.abdmFhirId = abdmFhirId;
+	}
+
+	public String getFhirString() {
+		return fhirString;
+	}
+
+	public void setFhirString(String fhirString) {
+		this.fhirString = fhirString;
+	}
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getExpiredDate() {
+		return expiredDate;
+	}
+
+	public void setExpiredDate(String expiredDate) {
+		this.expiredDate = expiredDate;
+	}
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
+	public String getUnitName() {
+		return unitName;
+	}
+
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
+	}
+
+	public String getEncounterDateString2() {
+		return encounterDateString2;
+	}
+
+	public void setEncounterDateString2(String encounterDateString2) {
+		this.encounterDateString2 = encounterDateString2;
+	}
+
+	public String getGenderCode() {
+		return genderCode;
+	}
+
+	public void setGenderCode(String genderCode) {
+		this.genderCode = genderCode;
+	}
+
+	public String getUnitEmailId() {
+		return unitEmailId;
+	}
+
+	public void setUnitEmailId(String unitEmailId) {
+		this.unitEmailId = unitEmailId;
+	}
+
+	public String getUnitContact() {
+		return unitContact;
+	}
+
+	public void setUnitContact(String unitContact) {
+		this.unitContact = unitContact;
+	}
+
+	public List<ComplaintsDto> getComplaintlistData() {
+		return complaintlistData;
+	}
+
+	public void setComplaintlistData(List<ComplaintsDto> complaintlistData) {
+		this.complaintlistData = complaintlistData;
+	}
+
+	public List<ComplaintAppointmentDto> getComplaintlistDataLastVisit() {
+		return complaintlistDataLastVisit;
+	}
+
+	public void setComplaintlistDataLastVisit(List<ComplaintAppointmentDto> complaintlistDataLastVisit) {
+		this.complaintlistDataLastVisit = complaintlistDataLastVisit;
+	}
+
+	public List<ComplaintAppointmentDetailsDto> getListComplaintDataSave() {
+		return listComplaintDataSave;
+	}
+
+	public void setListComplaintDataSave(List<ComplaintAppointmentDetailsDto> listComplaintDataSave) {
+		this.listComplaintDataSave = listComplaintDataSave;
+	}
+
+	public List<InvestigationOrderMasterNewDto> getLabOrderList() {
+		return labOrderList;
+	}
+
+	public void setLabOrderList(List<InvestigationOrderMasterNewDto> labOrderList) {
+		this.labOrderList = labOrderList;
+	}
+
+	public List<CoversheetInstructionDto> getAdviceDataList() {
+		return adviceDataList;
+	}
+
+	public void setAdviceDataList(List<CoversheetInstructionDto> adviceDataList) {
+		this.adviceDataList = adviceDataList;
+	}
+
+	public List<MedicationDTO> getMedicationDataList() {
+		return medicationDataList;
+	}
+
+	public void setMedicationDataList(List<MedicationDTO> medicationDataList) {
+		this.medicationDataList = medicationDataList;
+	}
+
+	public List<QuickNotesMapperDto> getQuickNotesMapperlist() {
+		return QuickNotesMapperlist;
+	}
+
+	public void setQuickNotesMapperlist(List<QuickNotesMapperDto> quickNotesMapperlist) {
+		QuickNotesMapperlist = quickNotesMapperlist;
+	}
+
+	public List<EncounterMasterDto> getPatientRemarklist() {
+		return patientRemarklist;
+	}
+
+	public void setPatientRemarklist(List<EncounterMasterDto> patientRemarklist) {
+		this.patientRemarklist = patientRemarklist;
+	}
+
+	public List<AppointmentVitalMapperDto> getListAppointmentVitalMapperDto() {
+		return listAppointmentVitalMapperDto;
+	}
+
+	public void setListAppointmentVitalMapperDto(List<AppointmentVitalMapperDto> listAppointmentVitalMapperDto) {
+		this.listAppointmentVitalMapperDto = listAppointmentVitalMapperDto;
+	}
+	public List<AllergyPatientMapperDto> getAllergyListData() {
+		return allergyListData;
+	}
+
+	public void setAllergyListData(List<AllergyPatientMapperDto> allergyListData) {
+		this.allergyListData = allergyListData;
+	}
+
+	public List<ProcedureOrderMasterDto> getProcedureList() {
+		return procedureList;
+	}
+
+	public void setProcedureList(List<ProcedureOrderMasterDto> procedureList) {
+		this.procedureList = procedureList;
+	}
+
+	public String getProcedureStatus() {
+		return procedureStatus;
+	}
+
+	public void setProcedureStatus(String procedureStatus) {
+		this.procedureStatus = procedureStatus;
+	}
+
+	public List<PatientMedicalHistoryDto> getListPatientMedicalHistoryDto() {
+		return listPatientMedicalHistoryDto;
+	}
+
+	public void setListPatientMedicalHistoryDto(List<PatientMedicalHistoryDto> listPatientMedicalHistoryDto) {
+		this.listPatientMedicalHistoryDto = listPatientMedicalHistoryDto;
+	}
+
+	public String getInstructionText() {
+		return instructionText;
+	}
+
+	public void setInstructionText(String instructionText) {
+		this.instructionText = instructionText;
+	}
+
+	public Integer getNoOfAdministrationTime() {
+		return noOfAdministrationTime;
+	}
+
+	public void setNoOfAdministrationTime(Integer noOfAdministrationTime) {
+		this.noOfAdministrationTime = noOfAdministrationTime;
+	}
+
+	public List<VaccineImmunizationMapperDto> getVacineList() {
+		return vacineList;
+	}
+
+	public void setVacineList(List<VaccineImmunizationMapperDto> vacineList) {
+		this.vacineList = vacineList;
+	}
+	
+	public String getHealthNumber() {
+		return healthNumber;
+	}
+
+	public void setHealthNumber(String healthNumber) {
+		this.healthNumber = healthNumber;
+	}
+
+	public List<ProcedureOrderMasterDto> getProcedureListAdmission() {
+		return procedureListAdmission;
+	}
+
+	public void setProcedureListAdmission(List<ProcedureOrderMasterDto> procedureListAdmission) {
+		this.procedureListAdmission = procedureListAdmission;
+	}
+
+	public Integer getEncounterId() {
+		return encounterId;
+	}
+
+	public void setEncounterId(Integer encounterId) {
+		this.encounterId = encounterId;
+	}
+
+	public Integer getAdmissionId() {
+		return admissionId;
+	}
+
+	public void setAdmissionId(Integer admissionId) {
+		this.admissionId = admissionId;
+	}
+
+	public List<PatientHabitDetailsDto> getListPatientHabitDetailsDto() {
+		return listPatientHabitDetailsDto;
+	}
+
+	public void setListPatientHabitDetailsDto(List<PatientHabitDetailsDto> listPatientHabitDetailsDto) {
+		this.listPatientHabitDetailsDto = listPatientHabitDetailsDto;
+	}
+
+	public List<ObservationDto> getObservationList() {
+		return observationList;
+	}
+
+	public void setObservationList(List<ObservationDto> observationList) {
+		this.observationList = observationList;
+	}
+
+	public String getConsentSignature() {
+		return consentSignature;
+	}
+
+	public void setConsentSignature(String consentSignature) {
+		this.consentSignature = consentSignature;
+	}
+
+	public String getSigntureImg() {
+		return signtureImg;
+	}
+
+	public void setSigntureImg(String signtureImg) {
+		this.signtureImg = signtureImg;
+	}
+
+
+	public ArrayList<String> getHealthInfoTypes() {
+		return healthInfoTypes;
+	}
+
+	public void setHealthInfoTypes(ArrayList<String> healthInfoTypes) {
+		this.healthInfoTypes = healthInfoTypes;
+	}
+
+	public String getPurposeOfRequest() {
+		return purposeOfRequest;
+	}
+
+	public void setPurposeOfRequest(String purposeOfRequest) {
+		this.purposeOfRequest = purposeOfRequest;
+	}
+
+	public String getHealthInfoFromDate() {
+		return healthInfoFromDate;
+	}
+
+	public void setHealthInfoFromDate(String healthInfoFromDate) {
+		this.healthInfoFromDate = healthInfoFromDate;
+	}
+
+	public String getHealthInfoToDate() {
+		return healthInfoToDate;
+	}
+
+	public void setHealthInfoToDate(String healthInfoToDate) {
+		this.healthInfoToDate = healthInfoToDate;
+	}
+
+	public String getConsentExpiryDate() {
+		return consentExpiryDate;
+	}
+
+	public void setConsentExpiryDate(String consentExpiryDate) {
+		this.consentExpiryDate = consentExpiryDate;
+	}
+	public String getAdmissionNumber() {
+		return admissionNumber;
+	}
+
+	public void setAdmissionNumber(String admissionNumber) {
+		this.admissionNumber = admissionNumber;
+	}
+
+	public String getServiceStandardName() {
+		return serviceStandardName;
+	}
+
+	public void setServiceStandardName(String serviceStandardName) {
+		this.serviceStandardName = serviceStandardName;
+	}
+
+	public String getServiceStandardCode() {
+		return serviceStandardCode;
+	}
+
+	public void setServiceStandardCode(String serviceStandardCode) {
+		this.serviceStandardCode = serviceStandardCode;
+	}
+
+	public Integer getSampleStatusId() {
+		return sampleStatusId;
+	}
+
+	public void setSampleStatusId(Integer sampleStatusId) {
+		this.sampleStatusId = sampleStatusId;
+	}
+
+	public Integer getLabSampleDtlsId() {
+		return labSampleDtlsId;
+	}
+
+	public void setLabSampleDtlsId(Integer labSampleDtlsId) {
+		this.labSampleDtlsId = labSampleDtlsId;
+	}
+
+	public Integer getSubDeptId() {
+		return subDeptId;
+	}
+
+	public void setSubDeptId(Integer subDeptId) {
+		this.subDeptId = subDeptId;
+	}
+
+	public Integer getTemplateTransactionId() {
+		return templateTransactionId;
+	}
+
+	public void setTemplateTransactionId(Integer templateTransactionId) {
+		this.templateTransactionId = templateTransactionId;
+	}
+
+	public Integer getMicroTemplateStatusId() {
+		return microTemplateStatusId;
+	}
+
+	public void setMicroTemplateStatusId(Integer microTemplateStatusId) {
+		this.microTemplateStatusId = microTemplateStatusId;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public String getFrequencyCode() {
+		return frequencyCode;
+	}
+
+	public void setFrequencyCode(String frequencyCode) {
+		this.frequencyCode = frequencyCode;
+	}
+
+	public String getFrequencyDesc() {
+		return frequencyDesc;
+	}
+
+	public void setFrequencyDesc(String frequencyDesc) {
+		this.frequencyDesc = frequencyDesc;
+	}
+
+	public String getRoa() {
+		return roa;
+	}
+
+	public void setRoa(String roa) {
+		this.roa = roa;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public Integer getDuration() {
+		return duration;
+	}
+
+	public void setDuration(Integer duration) {
+		this.duration = duration;
+	}
+
+	public String getDurationUnit() {
+		return durationUnit;
+	}
+
+	public void setDurationUnit(String durationUnit) {
+		this.durationUnit = durationUnit;
+	}
+
+	public String getStrengthDesc() {
+		return strengthDesc;
+	}
+
+	public void setStrengthDesc(String strengthDesc) {
+		this.strengthDesc = strengthDesc;
+	}
+
+	public String getItemCode() {
+		return itemCode;
+	}
+
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+
+	public String getVaccineName() {
+		return vaccineName;
+	}
+
+	public void setVaccineName(String vaccineName) {
+		this.vaccineName = vaccineName;
+	}
+
+	public String getVaccineCode() {
+		return vaccineCode;
+	}
+
+	public void setVaccineCode(String vaccineCode) {
+		this.vaccineCode = vaccineCode;
+	}
+
+	public String getVaccineDate() {
+		return vaccineDate;
+	}
+
+	public void setVaccineDate(String vaccineDate) {
+		this.vaccineDate = vaccineDate;
+	}
+
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
+
+	public String getOnInitJson() {
+		return onInitJson;
+	}
+
+	public void setOnInitJson(String onInitJson) {
+		this.onInitJson = onInitJson;
+	}
+
+	public String getOnStatusJson() {
+		return onStatusJson;
+	}
+
+	public void setOnStatusJson(String onStatusJson) {
+		this.onStatusJson = onStatusJson;
+	}
+
+	public String getOnFetchJson() {
+		return onFetchJson;
+	}
+
+	public void setOnFetchJson(String onFetchJson) {
+		this.onFetchJson = onFetchJson;
+	}
+
+	public String getNotifyConsentJson() {
+		return notifyConsentJson;
+	}
+
+	public void setNotifyConsentJson(String notifyConsentJson) {
+		this.notifyConsentJson = notifyConsentJson;
+	}
+
+	public String getConsentArtefactsId() {
+		return consentArtefactsId;
+	}
+
+	public void setConsentArtefactsId(String consentArtefactsId) {
+		this.consentArtefactsId = consentArtefactsId;
+	}
+
+	public String getConsentStatus() {
+		return consentStatus;
+	}
+
+	public void setConsentStatus(String consentStatus) {
+		this.consentStatus = consentStatus;
+	}
+
+	public String getOnFetchResponse() {
+		return onFetchResponse;
+	}
+
+	public void setOnFetchResponse(String onFetchResponse) {
+		this.onFetchResponse = onFetchResponse;
+	}
+
+	public String getOnRequestJson() {
+		return onRequestJson;
+	}
+
+	public void setOnRequestJson(String onRequestJson) {
+		this.onRequestJson = onRequestJson;
+	}
+
+	public String getDataPushUrlJson() {
+		return dataPushUrlJson;
+	}
+
+	public void setDataPushUrlJson(String dataPushUrlJson) {
+		this.dataPushUrlJson = dataPushUrlJson;
+	}
+	
+	public String getVisitTypeName() {
+		return visitTypeName;
+	}
+
+	public void setVisitTypeName(String visitTypeName) {
+		this.visitTypeName = visitTypeName;
+	}
+
+	public String getDiagnosisName() {
+		return diagnosisName;
+	}
+
+	public void setDiagnosisName(String diagnosisName) {
+		this.diagnosisName = diagnosisName;
+	}
+
+	public String getIcpcCodeText() {
+		return icpcCodeText;
+	}
+
+	public void setIcpcCodeText(String icpcCodeText) {
+		this.icpcCodeText = icpcCodeText;
+	}
+
+	public String getAllergyName() {
+		return allergyName;
+	}
+
+	public void setAllergyName(String allergyName) {
+		this.allergyName = allergyName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public String getRecordedDate() {
+		return recordedDate;
+	}
+
+	public void setRecordedDate(String recordedDate) {
+		this.recordedDate = recordedDate;
+	}
+
+	public String getAdvicedInstruction() {
+		return advicedInstruction;
+	}
+
+	public void setAdvicedInstruction(String advicedInstruction) {
+		this.advicedInstruction = advicedInstruction;
+	}
+
+	public String getStrength() {
+		return strength;
+	}
+
+	public void setStrength(String strength) {
+		this.strength = strength;
+	}
+
+	public String getUomUnit() {
+		return uomUnit;
+	}
+
+	public void setUomUnit(String uomUnit) {
+		this.uomUnit = uomUnit;
+	}
+
+	public String getInstructionDesc() {
+		return instructionDesc;
+	}
+
+	public void setInstructionDesc(String instructionDesc) {
+		this.instructionDesc = instructionDesc;
+	}
+
+	public String getPreferedDateTime() {
+		return preferedDateTime;
+	}
+
+	public void setPreferedDateTime(String preferedDateTime) {
+		this.preferedDateTime = preferedDateTime;
+	}
+
+	public String getProcedureName() {
+		return procedureName;
+	}
+
+	public void setProcedureName(String procedureName) {
+		this.procedureName = procedureName;
+	}
+
+
+	public void setLabTestResId(Integer labTestResId) {
+		this.labTestResId = labTestResId;
+	}
+
+	public String getTestResult() {
+		return TestResult;
+	}
+
+	
+	public List<PatientFamilyHistoryDto> getListPatientFamilyHistoryDto() {
+		return listPatientFamilyHistoryDto;
+	}
+
+	public void setListPatientFamilyHistoryDto(List<PatientFamilyHistoryDto> listPatientFamilyHistoryDto) {
+		this.listPatientFamilyHistoryDto = listPatientFamilyHistoryDto;
+	}
+
+	public String getApiResponsehip() {
+		return apiResponsehip;
+	}
+
+	public void setApiResponsehip(String apiResponsehip) {
+		this.apiResponsehip = apiResponsehip;
+
+	}
+
+	public Integer getLabTestResId() {
+		return labTestResId;
+	}
+
+	public void setTestResult(String testResult) {
+		TestResult = testResult;
+	}
+
+	public String getPrivateKey() {
+		return privateKey;
+	}
+
+	public void setPrivateKey(String privateKey) {
+		this.privateKey = privateKey;
+	}
+
+	public String getCarecontexReference() {
+		return carecontexReference;
+	}
+
+	public void setCarecontexReference(String carecontexReference) {
+		this.carecontexReference = carecontexReference;
+	}
+
+	public String getEncryptedData() {
+		return encryptedData;
+	}
+
+	public void setEncryptedData(String encryptedData) {
+		this.encryptedData = encryptedData;
+	}
+
+	public String getDecryptedData() {
+		return decryptedData;
+	}
+
+	public void setDecryptedData(String decryptedData) {
+		this.decryptedData = decryptedData;
+	}
+
+	public String getPreferedTime() {
+		return preferedTime;
+	}
+
+	public void setPreferedTime(String preferedTime) {
+		this.preferedTime = preferedTime;
+	}
+
+	public String getDatapushUrl() {
+		return datapushUrl;
+	}
+
+	public void setDatapushUrl(String datapushUrl) {
+		this.datapushUrl = datapushUrl;
+	}
+
+
+	public String getPatientName() {
+		return patientName;
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public Integer getDischargeFieldId() {
+		return dischargeFieldId;
+	}
+
+	public void setDischargeFieldId(Integer dischargeFieldId) {
+		this.dischargeFieldId = dischargeFieldId;
+	}
+
+	public String getDischargeFieldColumnJson() {
+		return dischargeFieldColumnJson;
+	}
+
+	public void setDischargeFieldColumnJson(String dischargeFieldColumnJson) {
+		this.dischargeFieldColumnJson = dischargeFieldColumnJson;
+	}
+
+	public String getDischargeFieldDesc() {
+		return dischargeFieldDesc;
+	}
+
+	public void setDischargeFieldDesc(String dischargeFieldDesc) {
+		this.dischargeFieldDesc = dischargeFieldDesc;
+	}
+
+	public Integer getDischSumTabColMstId() {
+		return dischSumTabColMstId;
+	}
+
+	public void setDischSumTabColMstId(Integer dischSumTabColMstId) {
+		this.dischSumTabColMstId = dischSumTabColMstId;
+	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public Integer getTableId() {
+		return tableId;
+	}
+
+	public void setTableId(Integer tableId) {
+		this.tableId = tableId;
+	}
+
+	public boolean isColumnRequired() {
+		return isColumnRequired;
+	}
+
+	public void setColumnRequired(boolean isColumnRequired) {
+		this.isColumnRequired = isColumnRequired;
+	}
+	public String getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(String timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
+	public String getConsentResponseHitypes() {
+		return consentResponseHitypes;
+	}
+
+	public void setConsentResponseHitypes(String consentResponseHitypes) {
+		this.consentResponseHitypes = consentResponseHitypes;
+	}
+
+	public String getConsentDeniedDate() {
+		return consentDeniedDate;
+	}
+
+	public void setConsentDeniedDate(String consentDeniedDate) {
+		this.consentDeniedDate = consentDeniedDate;
+	}
+
+	public String getConsentRevokedDate() {
+		return consentRevokedDate;
+	}
+
+	public void setConsentRevokedDate(String consentRevokedDate) {
+		this.consentRevokedDate = consentRevokedDate;
+	}
+
+	public String getConsentGrantedDate() {
+		return consentGrantedDate;
+	}
+
+	public void setConsentGrantedDate(String consentGrantedDate) {
+		this.consentGrantedDate = consentGrantedDate;
+	}
+
+	public String getConsentFromDate() {
+		return consentFromDate;
+	}
+
+	public void setConsentFromDate(String consentFromDate) {
+		this.consentFromDate = consentFromDate;
+	}
+
+	public String getConsentToDate() {
+		return consentToDate;
+	}
+
+	public void setConsentToDate(String consentToDate) {
+		this.consentToDate = consentToDate;
+	}
+
+	public String getHiTypesRequested() {
+		return hiTypesRequested;
+	}
+
+	public void setHiTypesRequested(String hiTypesRequested) {
+		this.hiTypesRequested = hiTypesRequested;
+	}
+
+	public String getConsentRequestIdHiu() {
+		return consentRequestIdHiu;
+	}
+
+	public void setConsentRequestIdHiu(String consentRequestIdHiu) {
+		this.consentRequestIdHiu = consentRequestIdHiu;
+	}
+
+	public String getConsentRequestId() {
+		return consentRequestId;
+	}
+
+	public void setConsentRequestId(String consentRequestId) {
+		this.consentRequestId = consentRequestId;
+	}
+
+	public String getOnInitResponseJson() {
+		return onInitResponseJson;
+	}
+
+	public void setOnInitResponseJson(String onInitResponseJson) {
+		this.onInitResponseJson = onInitResponseJson;
+	}
+
+	public String getPatientFullName() {
+		return patientFullName;
+	}
+
+	public void setPatientFullName(String patientFullName) {
+		this.patientFullName = patientFullName;
+	}
+
+	public Timestamp getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Timestamp expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
+	public String getCarecontextOnNotifyJson() {
+		return carecontextOnNotifyJson;
+	}
+
+	public void setCarecontextOnNotifyJson(String carecontextOnNotifyJson) {
+		this.carecontextOnNotifyJson = carecontextOnNotifyJson;
+	}
+
+	public Double getParameterMin() {
+		return parameterMin;
+	}
+
+	public void setParameterMin(Double parameterMin) {
+		this.parameterMin = parameterMin;
+	}
+
+	public Double getParameterMax() {
+		return parameterMax;
+	}
+
+	public void setParameterMax(Double parameterMax) {
+		this.parameterMax = parameterMax;
+	}
+
+	public String getCareContextTime() {
+		return careContextTime;
+	}
+
+	public void setCareContextTime(String careContextTime) {
+		this.careContextTime = careContextTime;
+	}
+
+	public List<EncounterMasterDto> getInvoiceList() {
+		return invoiceList;
+	}
+
+	public void setInvoiceList(List<EncounterMasterDto> invoiceList) {
+		this.invoiceList = invoiceList;
+	}
+
+	public BigInteger getSaleId() {
+		return saleId;
+	}
+
+	public void setSaleId(BigInteger saleId) {
+		this.saleId = saleId;
+	}
+
+	public List<ItemDetailsResponse> getItems() {
+		return items;
+	}
+
+	public void setItems(List<ItemDetailsResponse> items) {
+		this.items = items;
+	}
+
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
+
+	public String getHiType() {
+		return hiType;
+	}
+
+	public void setHiType(String hiType) {
+		this.hiType = hiType;
+	}
+
+	public Integer getIds() {
+		return ids;
+	}
+
+	public void setIds(Integer ids) {
+		this.ids = ids;
+	}
+
+	
+	
+
+	
+}

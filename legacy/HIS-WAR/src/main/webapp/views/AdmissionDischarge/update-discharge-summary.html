@@ -1,0 +1,3134 @@
+<style>
+<!--CK editor height -->
+#cke_1_contents{
+	height:400px !important;
+	
+}
+.cke_contents {
+	height:130px !important;
+}
+
+cke_reset {width:807px !important; } 
+
+table>tbody>tr.td-bg-red > td
+	{
+		color : #ff0000d6 !important;
+	}
+	table>tbody>tr.td-bg-blue > td
+	{
+		color : #0000ffd6 !important;
+	}
+	table>tbody>tr.td-bg-green > td
+	{
+		color : #008000eb !important;
+	}
+
+
+
+
+
+	/* ================= DISCHARGE SUMMARY – NO TABLE ================= */
+
+.ds-wrapper {
+    width: 100%;
+    padding: 10px;
+    background: #fff;
+    font-family: "Times New Roman", serif;
+    font-size: 13px;
+    color: #000;
+}
+
+/* EACH SECTION */
+.ds-section {
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #000;
+}
+
+/* FIELD NAME */
+.ds-label {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+/* FIELD VALUE */
+.ds-value {
+    padding-left: 10px;
+}
+
+/* TEXT CONTENT */
+.ds-text {
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+/* LIST STYLE DATA */
+.ds-list {
+    margin-top: 6px;
+}
+
+.ds-list-row {
+    margin-bottom: 4px;
+}
+
+.ds-list-item {
+    margin-left: 12px;
+    line-height: 1.4;
+}
+
+.ds-list-label {
+    font-weight: bold;
+}
+
+.ds-list-value {
+    margin-left: 4px;
+}
+
+/* REMOVE ICONS IN PDF */
+@media print {
+    .fa,
+    i {
+        display: none !important;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    .ds-wrapper {
+        padding: 0;
+    }
+}
+
+
+
+	.scroll-container {
+    height: 600px;        /* FIXED HEIGHT */
+    overflow-y: auto;     /* ENABLE VERTICAL SCROLL */
+    overflow-x: hidden;
+    padding-right: 6px;   /* prevents text hiding behind scrollbar */
+}
+
+.ds-text {
+    white-space: pre-line;
+}
+
+.ds-section {
+    margin-bottom: 10px;
+}
+
+</style>
+
+ <div id="page-content-wrapper" >
+	<div class="container-fluid his-style">
+		 
+		<div class="row patient_details_block margin-top50">
+     <!--   <div  class="" ng-include="'./views/common/patient-demography-opd.html'"></div> -->
+
+			<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+						<fieldset class="normalRegistration sub-fieldset">
+							<div class="row">
+									
+									<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0 float_right padding-top8 text-right">
+										<div class=" ">
+											
+											<button class="btn btn-primary btn-save-box-shadow width40 margin-right10" id="save" title="Save" data-toggle="modal" data-target="#confirmSave">
+												<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+											</button>
+										</div>
+									</div> -->
+
+								<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0 float_right padding-top8 text-right">
+										<div class=" ">
+<!-- 											<button class="btn btn-primary btn-save-box-shadow width60 margin-right10" ng-click="printDischargeSumReportP(true);" id="updateBtn" title="Save"> -->
+<!-- 												Preview -->
+<!-- 											</button> -->
+											<button class="btn btn-primary btn-save-box-shadow width60 margin-right10"  id="updateBtn" title="Save" data-toggle="modal" data-target="#previewSave">
+												Preview
+											</button>
+										</div>
+									</div>
+									
+								</div>
+								
+								<div class="row">
+									<div class="col-md-12 col-lg-12  padding-left-right-set4 table-container padding-top8">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table	class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr >
+															<th class="width10">
+																<span class="">Field Name</span>
+																<div class="float_right">
+																	<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+																	<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+																</div>
+															</th>
+															<th class="width80 border-right-none">
+																 <span class=""></span>
+															</th>
+															<th class="width3"></th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay; height:500px;">
+												<!-- <table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody >
+														
+															<tr ng-repeat="info in DischargeSummaryFinalList track by $index">
+															 <td class="width10" style="white-space: inherit;"> 
+															<td >
+																<B>{{info.dischargeFieldName}}</B>
+															</td>
+															<td class="width80">
+															   <div class="row">
+															     <div class="col-lg-12 col-md-12">
+																	 <textarea  style="width:100%;height:50%;" name="editor1123" type="text" autocomplete="off" id="ckidx{{$index}}"  rows="10" cols="2"  ng-model="info.dischargeFieldDescription"  ck-editor-field ng-init="setids();">
+														           </textarea>
+															     </div>
+															 </div>
+															</td>
+															<td class="text-center width3">fa-file-audio-o
+																<i class="fa fa-microphone" aria-hidden="true" title="Microphone"></i>
+																<i  class="fa fa-info-circle"  aria-hidden="true" title="Information" data-toggle="modal" Id="info{{$index}}" ng-click="showCoversheetData(info,$index);"></i>
+															</td>
+														</tr>
+										
+													</tbody>
+												</table> -->
+												
+												
+												<table class="table table-striped table-hover table-condensed table-bordered">
+														<tbody>
+																<tr ng-repeat="info in DischargeSummaryFinalList track by $index">
+																 <td class="width10" style="white-space: inherit;"> 
+																<!-- <td > -->
+																
+																	<B>{{info.dischargeFieldName}}</B>
+																</td>
+																<td class="width80">
+																   <div class="row">
+																     <div class="col-lg-12 col-md-12" ng-show="info.dischargeSummaryDataViewOptionIdTest == 1">
+																		 <textarea     style="width:100%;height:50%;" name="editor1123" type="text" autocomplete="off" id="ckidx{{$index}}" 
+																		  rows="10" cols="2"  ng-model="info.dischargeFieldDescription"  ck-editor-field ng-init="setids();">
+															           </textarea>
+																     </div>
+																     <div class="col-lg-12 col-md-12" ng-show="info.dischargeSummaryDataViewOptionIdTest == 2">
+																     
+																     <div ng-show="info.dischargeFieldDescription != ''">
+																      <textarea     style="width:100%;height:50%;" name="editor1123" type="text" autocomplete="off" id="ckidx{{$index}}" 
+																		  rows="10" cols="2"  ng-model="info.dischargeFieldDescription"  ck-editor-field ng-init="setids();">
+															           </textarea>
+															           </div>
+																     <!--  tabular data code start -->
+																		<table class="table table-bordered" ng-if="info.columnListAllergies.length > 0">
+																			<thead>
+																				<div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tabelNameAllergis}}<B></span>
+																				</div>
+																				<tr class="">
+																					
+																					<th class="width8" ng-repeat="infos in info.columnHeaderListAllergies track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListAllergies track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListAllergies track by $index" >
+																	                  <div ng-repeat="test in info.savedListAllergies">
+																							<div ng-show="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		
+																		
+																		<table class="table table-bordered" ng-if="info.columnListOperativeDetails.length > 0">
+																			<thead>
+																				<div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tableNameOperativeDetails}}<B></span>
+																				</div>
+																				<tr class="">
+																					
+																					<th class="width8" ng-repeat="infos in info.columnHeaderListOperativeDetails track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListOperativeDetails track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListOperativeDetails track by $index" >
+																	                  <div ng-repeat="test in info.savedListOperativeDetails">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		<table class="table table-bordered" ng-if="info.columnListDischargeMedication.length > 0">
+																			<thead>
+																				<div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tableNameDischargeMedication}}<B></span>
+																				</div>
+																				<tr class="">
+																					
+																					<th class="width8" ng-repeat="infos in info.columnHeaderListDischargeMedication track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListDischargeMedication track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListDischargeMedication track by $index" >
+																	                  <div ng-repeat="test in info.savedListDischargeMedication">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		
+																		
+																			<table class="table table-bordered" ng-if="info.columnListSurgeriesProceduresPerformed.length > 0">
+																			<thead>
+																				<div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tableNameSurgeriesProceduresPerformed}}<B></span>
+																				</div>
+																				<tr class="">
+																					
+																					<th class="width8" ng-repeat="infos in info.columnHeaderListSurgeriesProceduresPerformed track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListSurgeriesProceduresPerformed track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListSurgeriesProceduresPerformed track by $index" >
+																	                  <div ng-repeat="test in info.savedListSurgeriesProceduresPerformed">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		
+																		<table class="table table-bordered" ng-if="info.columnListMediAdmini.length > 0">
+																			<thead>
+																			  <div class="" >
+																					   <span><B>{{info.tableNameMediAdmini}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infos in info.columnHeaderListMediAdmini track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListMediAdmini track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListMediAdmini track by $index" >
+																	                  <div ng-repeat="test in info.savedListMediAdmini">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																	  <table class="table table-bordered" ng-if="info.columnListConsultOrder.length > 0">
+																			<thead>
+																			<div class="" >
+																					   <span><B>{{info.tableNameConsultOrder}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infos in info.columnHeaderListConsultOrder track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListConsultOrder track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListConsultOrder track by $index" >
+																	                  <div ng-repeat="test in info.savedListConsultOrder">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="table table-bordered" ng-if="info.columnListDiagnosis.length > 0">
+																			<thead>
+																				<div class="" >
+																					   <span><B>{{info.tableNameDiagnosis}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infos in info.columnHeaderListDiagnosis track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListDiagnosis track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListDiagnosis track by $index" >
+																	                  <div ng-repeat="test in info.savedListDiagnosis">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		<table class="table table-bordered" ng-if="info.columnListAdmisssionReason.length > 0">
+																			<thead>
+																		   	<div class="" >
+																					   <span><B>{{info.tableNameAdmisssionReason}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infos in info.columnHeaderListAdmisssionReason track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListAdmisssionReason track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListAdmisssionReason track by $index" >
+																	                  <div ng-repeat="test in info.savedListAdmisssionReason">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		<table class="table table-bordered" ng-if="info.columnListInvestigation.length > 0">
+																			<thead>
+																			   <div class="" >
+																					   <span><B>{{info.tableNameInvestigation}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infos in info.columnHeaderListInvestigation track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListInvestigation track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListInvestigation track by $index" >
+																	                  <div ng-repeat="test in info.savedListInvestigation">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		<table class="table table-bordered" ng-if="info.columnHeaderList.length > 0">
+																			<thead>
+																			 <div class="" >
+																					   <span><B>{{info.tableNameComplaint}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infos in info.columnHeaderList track by $index" >
+																					 <span > {{infos.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowList track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnList track by $index" >
+																	                  <div ng-repeat="test in info.savedList">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		<table class="table table-bordered" ng-if="info.columnHeaderListPersonalHistory.length > 0">
+																			<thead>
+																			  <div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tableNamePersonalHistory}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosPer in info.columnHeaderListPersonalHistory track by $index">
+																					 <span > {{infosPer.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListPersonalHistory track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListPersonalHistory track by $index" >
+																						<div ng-repeat="test in info.savedListPersonalHistory">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		<table class="table table-bordered"  ng-if="info.columnHeaderListFamilyHistory.length > 0">
+																			<thead>
+																			  <div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tableNameFamilyHistory}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFam in info.columnHeaderListFamilyHistory track by $index">
+																					 <span > {{infosFam.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListFamilyHistory track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListFamilyHistory track by $index" >
+																						<div ng-repeat="test in info.savedListFamilyHistory">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="table table-bordered" ng-if="info.columnListSurgicalHistory.length > 0">
+																			<thead>
+																			 <div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tableNameSurgicalHistory}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFam in info.columnHeaderListSurgicalHistory track by $index">
+																					 <span > {{infosFam.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListSurgicalHistory track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListSurgicalHistory track by $index" >
+																						<div ng-repeat="test in info.savedListSurgicalHistory">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		<table class="table table-bordered" ng-if="info.columnListMedicationHistory.length > 0">
+																			<thead>
+																				   <div class="" >
+																					   <span><B>{{info.tableNameMedicationHistory}}<B></span>
+																					</div>
+																				 <tr class="">
+																					<th class="width8" ng-repeat="infosFam in info.columnHeaderListMedicationHistory track by $index">
+																					 <span > {{infosFam.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListMedicationHistory track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListMedicationHistory track by $index" >
+																						<div ng-repeat="test in info.savedListMedicationHistory">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		<table class="table table-bordered" ng-if="info.columnListMedicalHistory.length > 0">
+																			<thead>
+																			 <div class="" >
+																					   <span><B>{{info.tableNameMedicalHistory}}<B></span>
+																					</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFam in info.columnHeaderMedicalHistory track by $index">
+																					 <span > {{infosFam.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListMedicalHistory track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListMedicalHistory track by $index" >
+																						<div ng-repeat="test in info.savedListMedicalHistory">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="table table-bordered" ng-if="info.columnListVaccinationHistory.length > 0">
+																			<thead>
+																			  <div class="" >
+																					   <span><B>{{info.tableNameVaccinationHistory}}<B></span>
+																					</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFam in info.columnHeaderListVaccinationHistory track by $index">
+																					 <span > {{infosFam.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListVaccinationHistory track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListVaccinationHistory track by $index" >
+																						<div ng-repeat="test in info.savedListVaccinationHistory">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="table table-bordered" ng-if="info.columnListTravelHistory.length > 0">
+																			<thead>
+																				  <div class="" >
+																					   <span><B>{{info.tableNameTravelHistory}}<B></span>
+																					</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFam in info.columnHeaderListTravelHistory track by $index">
+																					 <span > {{infosFam.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListTravelHistory track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListTravelHistory track by $index" >
+																						<div ng-repeat="test in info.savedListTravelHistory">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="table table-bordered" ng-if="info.columnListTreatmentHistory.length > 0">
+																			<thead>
+																			<div class="" >
+																					   <span><B>{{info.tableNameTreatmentHistory}}<B></span>
+																					</div>
+																			
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFs in info.columnHeaderListTreatmentHistory track by $index">
+																					 <span > {{infosFs.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListTreatmentHistory track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListTreatmentHistory track by $index" >
+																						<div ng-repeat="test in info.savedListTreatmentHistory">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+																		<table class="table table-bordered" ng-if="info.columnListTransferOfCare.length > 0">
+																			<thead>
+																			 <div class="" >
+																					   <span><B>{{info.tableNameTransferOfCare}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFs in info.columnHeaderListTransferOfCare track by $index">
+																					 <span > {{infosFs.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListTransferOfCare track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListTransferOfCare track by $index" >
+																						<div ng-repeat="test in info.savedListTransferOfCare">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="table table-bordered" ng-if="info.columnListObservation.length > 0">
+																			<thead>
+																			<div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tabelNameObservation}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFs in info.columnHeaderListObservation track by $index">
+																					 <span > {{infosFs.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListObservation track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListObservation track by $index" >
+																						<div ng-repeat="test in info.savedListObservation">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="table table-bordered" ng-if="info.columnListInstructions.length > 0">
+																			<thead>
+																			  <div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tabelNameInstructions}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFs in info.columnHeaderListInstructions track by $index">
+																					 <span > {{infosFs.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListInstructions track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListInstructions track by $index" >
+																						<div ng-repeat="test in info.savedListInstructions">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="table table-bordered" ng-if="info.columnListfollowUp.length > 0">
+																			<thead>
+																			  <div class="" style="white-space: inherit;">
+																				   <span><B>{{info.tabelNamefollowUp}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFs in info.columnHeaderListfollowUp track by $index">
+																					 <span > {{infosFs.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListfollowUp track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListfollowUp track by $index" >
+																						<div ng-repeat="test in info.savedListfollowUp">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="table table-bordered" ng-if="info.columnListVital.length > 0">
+																			<thead>
+																			  <div class="" >
+																					   <span><B>{{info.tableNameVital}}<B></span>
+																				</div>
+																				<tr class="">
+																					<th class="width8" ng-repeat="infosFs in info.columnHeaderListVital track by $index">
+																					 <span > {{infosFs.columnName}}</span>
+																					</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr class="" ng-repeat="info1 in info.rowListVital track by $index">
+																					<td class="text-center" ng-repeat="item in info.columnListVital track by $index" >
+																						<div ng-repeat="test in info.savedListVital">
+																							<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+																							  <textarea     type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+																						       style="border-radius:0px !important;padding: 0 !important;font: initial !important" 
+																						       name="selectedForSave" ng-model="test.inputValue"></textarea>
+																							</div>
+																						</div>  
+																						
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		
+															     </div>
+															 </div>
+															</td>
+															<td class="text-center width5">
+																<i class="fa fa-microphone" aria-hidden="true" style="    color: #254EDB !important;" title="Start Microphone" ng-click="startRecording(info,$index);" ng-if="!recordingState[$index]" ng-show="info.dischargeSummaryDataViewOptionIdTest == 1 || (info.dischargeSummaryDataViewOptionIdTest == 2 && info.dischargeFieldDescription != '')"></i>
+																<i class="fa fa-stop" aria-hidden="true" id="cancelBtn" title="Stop Microphone" ng-click="startRecording(info,$index);" ng-if = "recordingState[$index]"></i>
+																<i  class="fa fa-info-circle"  aria-hidden="true" title="Information" data-toggle="modal" Id="info{{$index}}" ng-click="getColumnsDetails(info,$index);"></i>
+															</td>
+														</tr>
+										
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								
+								<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right padding-top8">
+										<div class="">
+											<button title="Back" class="btn btn-primary patient_list_header" ng-click="blankTempalteList()" >
+											Back
+											</button>
+										</div>
+									</div>
+								
+						</fieldset>
+					</div>
+				</div>
+				</div>
+		
+</div>
+
+</div>
+
+
+<!--  commonDischargeSummaryModal START -->
+<div id="commonDischargeSummaryModal" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					{{modalHeader}}
+					<button type="button" class="close" id="closeCommonDischargeSummaryModal" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+			
+			<!-- Table START principal diagnosis -->
+				<div ng-show="fieldId==8" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+									<th class="width5" ><span class="">Select</span></th>
+										<th class="width10" title="ICD Code"><span class="">ICD Code</span></th>
+										<th class="width10" title="Description"><span class="">Description</span></th>
+										<th class="width10" title="Diagnosis Type"><span class="">Diagnosis Type</span>
+										</th>
+										<th class="width10" title="Disease Type"><span class="">Disease Type</span></th>
+										<th class="width10" title="Remark"><span class="">Remark</span></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-if="patientDiagnosisList.length==0"><td class="text-center">{{loadingMessage}}</td></tr>
+									<tr ng-repeat="info in patientDiagnosisList">
+									<td class="width5"><input type="checkbox" ng-model="info.diagnosisChk" ng-true-value="1"  ng-false-value="0" ng-click="addDiagnosis(info,$index);"></td>
+										<td class="width10">{{info.code}}</td>
+										<td class="width10">{{info.diagnosisName}}</td>
+										<td class="width10">
+<!-- 											<div ng-if="info.type == '1'">Provisional</div> -->
+<!-- 											<div ng-if="info.type == '2'">Final</div> -->
+												<span ng-if="info.type == '1'">Provisional</span>
+												<span ng-if="info.type == '2'">Final</span>,
+												<span ng-if="info.diagnosisType == '1'">Primary</span>
+												<span ng-if="info.diagnosisType == '2'">Secondary</span>
+										</td>
+										<td class="width10">
+											<div ng-if="info.isNotifiable == 'Y'">Notifiable</div>
+											<div ng-if="info.isComorbidity == 'Y'">Comorbidity</div>
+										</td>
+										<td class="width10">{{info.remark}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+			
+			<!-- Table START reason for hospitalization -->
+				<div ng-show="fieldId==9" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+									<th class="width5"><span class="">Select</span></th>
+										<th class="width10"><span class="">Admission Reason</span></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr ng-if="admissionReasonList.length==0"><td class="text-center">{{loadingMessage}}</td></tr>
+									<tr ng-repeat="info in admissionReasonList">
+									<td class="width5"><input type="checkbox" ng-model="info.admissionReasonChk" ng-true-value="1"  ng-false-value="0" ng-click="addAdmissionReason(info,$index);"></td>
+										<td class="width10">{{info.admissionReason}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+				
+			<!-- Table START Allergies -->
+				<div ng-show="fieldId==1" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+									<th class="width5"><span class="">Select</span></th>
+										<th class="width10"><span class="">Allergy Type</span></th>
+										<th class="width10"><span class="">Allergen</span></th>
+										<th class="width10">Severity</th>
+										<th class="width10">Nature of Reaction</th>
+
+										<th class="width10">Type</th>
+										<th class="width15">Remark</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="info in allergyCurrentList">
+										<td class="width5"><input type="checkbox"
+											ng-model="info.allergyChk" ng-true-value='1' ng-false-value="0" ng-click="addAllergy(info,$index);"></td>
+										<td class="width10">
+											<div>{{(info.isNoKnownAllergies=='Y')?"No Allergy"
+												:info.allergyTypeName}}</div>
+										</td>
+										<td class="width10">
+											<div ng-if="info.allergyId != 'null' || info.allergyId > '0'">
+												{{info.allergyName}}</div>
+											<div ng-if="info.genericId != 'null' || info.genericId > '0'">
+												{{info.genericName}}</div>
+										</td>
+										<td class="width10">{{info.severityDesc}}</td>
+										<td class="width10">{{info.natureOfReaction}}</td>
+										<td class="width10">{{info.type}}</td>
+										<td class="width15">{{info.remark}}</td>
+
+									</tr>
+									
+									<tr ng-repeat="info in allergyOldList">
+										<td class="width5"><input type="checkbox"
+											ng-model="info.allergyChk" ng-true-value='1' ng-false-value="0" ng-click="addAllergy(info,$index);"></td>
+										<td class="width10">
+											<div>{{(info.isNoKnownAllergies=='Y')?"No Allergy"
+												:info.allergyTypeName}}</div>
+										</td>
+										<td class="width10">
+											<div ng-if="info.allergyId != 'null' || info.allergyId > '0'">
+												{{info.allergyName}}</div>
+											<div ng-if="info.genericId != 'null' || info.genericId > '0'">
+												{{info.genericName}}</div>
+										</td>
+										<td class="width10">{{info.severityDesc}}</td>
+										<td class="width10">{{info.natureOfReaction}}</td>
+										<td class="width10">{{info.type}}</td>
+										<td class="width15">{{info.remark}}</td>
+									</tr>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+			
+			<!-- Table START History-->
+				<div ng-show="fieldId==2" class="row padding-left-right-set4 table-container padding-top8">
+				<fieldset class="normalRegistration">
+				      <legend class="heading-div">Personal History</legend>
+				</fieldset>
+																
+				<div class="table-container">
+                        <table class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr>
+								<!-- <th class="width15"><span class="">No
+									Significant History</span></th> -->
+							   <th class="width2"><span class="">Select</span></th>
+								<th class="width5"><span class="">Date</span></th>
+								<th class="width15"><span class="">Description</span>
+								</th>
+								<th class="width15">Remarks</th>
+
+							</tr>
+							<tr ng-repeat="info in personalHistoryCurrentList"
+								ng-if="info.isReviewedFlag == 'N'">
+								<td class="width2"><input type="checkbox" ng-model="info.personalHistoryCurrentChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,0);"></td>
+								<td>{{info.createdDate | date : "dd/MM/y" }}</td>
+								<td>{{info.description}}</td>
+								<td  style="white-space: normal;">{{info.remark}}</td>
+							</tr>
+								<tr ng-repeat="info in personalHistoryOldList">
+								<td class="width2"><input type="checkbox" ng-model="info.personalHistoryCurrentChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,0);"></td>
+									<td>{{info.createdDate | date : "dd/MM/y" }}</td>
+									<td>{{info.description}}</td>
+									<td  style="white-space: normal;">{{info.remark}}</td>
+								</tr>
+
+						</tbody>
+					</table>
+					</div>
+																
+				
+				<fieldset class="normalRegistration">
+						<legend class="heading-div">Family History</legend>
+					</fieldset>
+					<div class="table-container">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+															<tbody><tr>
+															<!-- <th class="width15">
+																	<span class="">No Family History</span>
+																</th> -->
+																<th class="width2"><span class="">Select</span></th>
+																<th class="width10">
+																	<span class="">ICD 10</span>
+																</th>
+																<th class="width5">
+																	<span class="">ICD Code</span>
+																</th>
+																<th class="width2">
+																	 <span class="">Relation</span>
+																</th>
+																<th class="width3">
+																	Date
+																</th>
+																<th class="width10">
+																	Remark
+																</th>
+																<!-- <th class="width5">Action</th> -->
+																<!-- <th>Acronyms</th> -->
+
+													</tr>
+													
+													<tr ng-repeat="info in familyHistoryCurrentList" ng-if="info.isReviewedFlag == 'N'">
+															<!-- <td>
+																{{info.isNoFamilyHistoryStatus}}
+																
+															</td> -->
+																<td class="width2"><input type="checkbox" ng-model="info.familyHistoryCurrentChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,1);"></td>
+																<td>
+																	
+																	<div ng-if="info.isNoFamilyHistoryStatus=='N'">{{info.diagnosisName}}</div>
+																	<div ng-if="info.isNoFamilyHistoryStatus=='Y'">No Significant Family History</div>
+																</td>
+																<td> {{info.diagnosisCode}}</td>
+																<td>
+																	{{info.desc}}
+																	
+																</td>
+																<td>
+																{{ info.createdDate | date : "dd/MM/y" }}
+																</td>
+																<td>
+																	{{info.remark}}
+																</td>
+																<!-- <td class="text-center"><a><i
+																class="fa fa-pencil" aria-hidden="true"
+																ng-click="showUpdateFamilyHistory(info)"
+																data-toggle="modal"
+																data-target="#updateFamilyHistoryModal"></i></a></td> -->
+																<!-- <td><label class="switch"> <input
+																type="checkbox" ng-model="info.isEnterInErrorStatus"
+																ng-true-value="'Y'" ng-false-value="'N'"
+																ng-change="updateStatusForAcronymsFamily(info)" ng-disabled="info.isEnterInErrorStatus == 'Y'">
+																<div class="slider round"></div>
+																</label></td> -->
+													</tr>	
+													 <tr ng-repeat="info in familyHistoryOldList" >
+													 <td class="width2"><input type="checkbox" ng-model="info.familyHistoryCurrentChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,1);"></td>
+															<!-- <td>
+																	<div ng-if="info.isNoFamilyHistoryStatus=='N'">{{info.diagnosisName}}</div>
+																	<div ng-if="info.isNoFamilyHistoryStatus=='Y'">No Significant Family History</div>
+															</td> -->
+																<td>
+																	
+																	<div ng-if="info.isNoFamilyHistoryStatus=='N'">{{info.diagnosisName}}</div>
+																	<div ng-if="info.isNoFamilyHistoryStatus=='Y'">No Significant Family History</div>
+																</td>
+																	<td> {{info.diagnosisCode}}</td>
+																<td>
+																	{{info.desc}}
+																</td>
+																<td>
+																{{ info.createdDate | date : "dd/MM/y" }}
+																</td>
+																<td>
+																	{{info.remark}}
+																</td>
+																	<!-- <td class="text-center"><a><i
+																class="fa fa-pencil" aria-hidden="true"
+																ng-click="showUpdateFamilyHistory(info)"
+																data-toggle="modal"
+																data-target="#updateFamilyHistoryModal"></i></a></td> -->
+																				
+													</tr>														
+														</tbody></table>
+						</div>
+					
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Surgical History</legend>
+					</fieldset>
+					<div class="table-container">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody><tr>
+														<!-- <th class="width15">
+																<span class="">No Significant History</span>
+															</th> -->
+															<th class="width2">
+																<span class="">Select</span>
+															</th>
+															<th class="width5">
+																<span class="">Surgery</span>
+															</th>
+															<th class="width5">
+																<span class="">Surgeon Name</span>
+															</th>
+															<th class="width2">
+																 <span class="">Month</span>
+															</th>
+															<th class="width2">
+																 <span class="">Year</span>
+															</th>
+															<th class="width10">
+																Remark
+															</th>
+															<!-- <th>Action</th> -->
+														<!-- 	<th>Acronyms</th> -->
+															
+														</tr>
+														<tr ng-repeat="info in surgicalHistoryCurrentList" ng-if="info.isReviewedFlag == 'N'">
+														<td class="width2"><input type="checkbox" ng-model="info.surgicalHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,2);"></td>
+																<!-- <td>
+																	{{info.isNoSignificantStatus}}
+																	
+																</td> -->
+																<td>
+																    <div ng-if="info.isNoSignificantStatus=='N' &&  info.surgeryName==info.surgeryNameFormulary ">{{info.surgeryName}}</div>
+																	<div ng-if="info.isNoSignificantStatus=='N' &&  info.surgeryNameFormulary == null ">{{info.surgeryName}}</div>
+																	<div ng-if="info.surgeryNameFormulary != null || info.surgeryName !=info.surgeryNameFormulary " >{{info.surgeryNameFormulary}}</div> 
+																	<div ng-if="info.isNoSignificantStatus=='Y'">No Significant Surgical History</div>
+																</td>
+																<td>
+																	{{info.surgenName}}
+																</td>
+																<td>
+																	
+																	<div ng-repeat="mon in months" ng-if="info.month == mon.value">
+																	{{mon.text}}
+																	</div>
+																</td>
+																<td>
+																	{{info.year}}
+																</td>
+																<td>
+																	{{info.remark}}
+																</td>
+																	<!-- <td class="text-center"><a><i
+																class="fa fa-pencil" aria-hidden="true"
+																ng-click="showUpdateSurgicalHistory(info)"
+																data-toggle="modal"
+																data-target="#updateSurgicalHistoryModal"></i></a></td> -->
+																<!-- <td><label class="switch"> <input
+																type="checkbox" ng-model="info.isEnterInErrorStatus"
+																ng-true-value="'Y'" ng-false-value="'N'"
+																ng-change="updateStatusForAcronymsSurgical(info)" ng-disabled="info.isEnterInErrorStatus == 'Y'">
+																<div class="slider round"></div>
+																</label></td> -->
+															</tr>
+															<tr ng-repeat="info in surgicalHistoryOldList" ng-if="info.surgeryName!=null || info.surgeryNameFormulary!=null ">
+															<td class="width2"><input type="checkbox" ng-model="info.surgicalHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,2);"></td>
+																<!-- <td>
+																	{{info.isNoSignificantStatus}}
+																	
+																</td> -->
+																<td>
+																	 <div ng-if="info.isNoSignificantStatus=='N' &&  info.surgeryName==info.surgeryNameFormulary ">{{info.surgeryName}}</div>
+																	<div ng-if="info.isNoSignificantStatus=='N' &&  info.surgeryNameFormulary == null ">{{info.surgeryName}}</div>
+																	<div ng-if="info.surgeryNameFormulary != null || info.surgeryName !=info.surgeryNameFormulary " >{{info.surgeryNameFormulary}}</div> 
+																	<div ng-if="info.isNoSignificantStatus=='Y'">No Significant Surgical History</div>
+																</td>
+																<td>
+																	{{info.surgenName}}
+																</td>
+																<td>
+																	
+																	<div ng-repeat="mon in months" ng-if="info.month == mon.value">
+																	{{mon.text}}
+																	</div>
+																</td>
+																<td>
+																	{{info.year}}
+																</td>
+																<td>
+																	{{info.remark}}
+																</td>
+																	<!-- <td class="text-center"><a><i
+																class="fa fa-pencil" aria-hidden="true"
+																ng-click="showUpdateSurgicalHistory(info)"
+																data-toggle="modal"
+																data-target="#updateSurgicalHistoryModal"></i></a></td>
+																				<td></td> -->
+															</tr> 
+														
+													</tbody></table>
+						</div>
+					<!-- Medication History -->
+						<fieldset class="normalRegistration">
+						<legend class="heading-div">Medication History</legend>
+					</fieldset>
+						<div class="table-container">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>	
+															<tr>
+															<th class="width2"><span class="">Select</span></th>
+																<th class="width5"><span class="">Brand Name</span></th>
+																<th class="width3"><span class="">Generic Name</span></th>
+																<th class="width3"><span class="">Dose</span></th>
+																<!-- <th class="width2"><span class="">Dose Unit</span></th> -->
+																
+																<!-- <th class="width8"><span class="">UOM Unit</span></th> -->
+																<th class="width3"><span class="">Frequency</span></th>
+																<th class="width2"><span class="">Duration</span></th>
+																<th class="width3"><span class="">ROA</span></th>
+																<th class="width2"><span class="">Quantity</span></th>
+																<th class="width2"><span class="">Start Date</span></th>
+																<th class="width2"><span class="">End Date</span></th>
+																<th class="width5"><span class="">Instruction</span></th>
+																<!-- <th class="width6">Action</th> -->
+															</tr>
+														</thead>	
+														<tbody>	
+														
+															<tr ng-repeat="activeMedication in detailedMedicationsHistory">
+															<td class="width2"><input type="checkbox" ng-model="activeMedication.MedicationHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(activeMedication,$index,3);"></td>
+																<td>
+																 <div ng-if="activeMedication.isNoSignificantMedication == 'N'">
+																     {{activeMedication.itemName}}
+																</div>
+																<div ng-if="activeMedication.isNoSignificantMedication == 'Y'">
+																	No Significant Medication History
+																</div>
+																</td>
+																<td>{{activeMedication.genericName}}</td>
+																<td>{{activeMedication.doseId}} {{activeMedication.doseUnit}}</td>
+																<!-- <td>{{activeMedication.doseUnit}}</td> -->
+																<td>{{activeMedication.frequencyDesc}}</td>
+																<td>{{activeMedication.duration}}</td>
+																<td>{{activeMedication.roaDesc}}</td>
+																<td>{{activeMedication.orderQty}}</td>
+																<td>{{activeMedication.startDate}}</td>
+																<td>{{activeMedication.endDate}}</td>
+																<td>{{activeMedication.instructionDesc}}</td>
+																<!-- <td class="">
+																	<a>
+																		<i class="fa fa-pencil" aria-hidden="true" style="font-size: 18px;"></i>
+																	</a>
+																</td> -->
+															</tr>
+															
+															<tr ng-repeat="activeMedication in medicationListForMedicalHistoryList">
+															<td class="width2"><input type="checkbox" ng-model="activeMedication.MedicationHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(activeMedication,$index,3);"></td>
+																<td>{{activeMedication.itemName}}</td>
+																<td>{{activeMedication.genericName}}</td>
+																<td>{{activeMedication.doseDesc}} {{activeMedication.strengthDesc}}</td>
+																<td>{{activeMedication.frequencyDesc}}</td>
+														     	<td>{{activeMedication.duration}}</td> 
+														     	<td>{{activeMedication.roaDesc}}</td>
+																<td>{{activeMedication.orderQty}}</td>
+																<td>{{activeMedication.startDate}}</td>
+																<td>{{activeMedication.endDate}}</td>
+																<td>
+																   <div ng-if="activeMedication.instructionDesc != null">
+																	{{activeMedication.instructionDesc}}
+																	</div>
+																	<div ng-if="activeMedication.instructionText != null">
+																	{{activeMedication.instructionText}}
+																	</div>
+																</td>
+															</tr>
+														</tbody></table>
+						</div>
+					
+					
+					<!-- Medical History -->
+						<fieldset class="normalRegistration">
+						<legend class="heading-div">Medical History</legend>
+					</fieldset>
+						<div class="table-container">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody><tr>
+														<!-- 	<th class="width15">
+																<span class="">No Significant History</span>
+															</th> -->
+															<th class="width2">
+																	<span class="">Select</span>
+																</th>
+																<th class="width15">
+																	<span class="">ICD 10</span>
+																</th>
+																<th class="width5">
+																	<span class="">ICD code</span>
+																</th>
+																<th class="width5">
+																	 <span class="">Since</span>
+																</th>
+																<th class="width15">
+																	 <span class="">Remark</span>
+																</th>
+																<!-- <th>Action</th> -->
+																<!-- <th>Acronyms</th> -->
+															</tr>
+														<tr ng-repeat="info in medicalHistoryCurrentList" ng-if="info.isReviewedFlag == 'N'">
+															<!-- <td>
+															{{info.isNoSignificantStatus}}
+															</td> -->
+															<td class="width2"><input type="checkbox" ng-model="info.medicalHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,4);"></td>
+															<td>
+																
+																<div ng-if="info.isNoSignificantStatus=='N'">{{info.diagnosisName}}</div>
+																<div ng-if="info.isNoSignificantStatus=='Y'">No Significant Medical History</div>
+															</td>
+															<td>
+																 {{info.code}}
+															</td>
+															<td>
+																 {{info.since}} {{info.duration}}
+															</td>
+															<td>
+																 {{info.remark}}
+															</td>
+															
+														</tr>
+														<tr ng-repeat="info in medicalHistoryOldList" >
+															<td class="width2"><input type="checkbox" ng-model="info.medicalHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,4);"></td>
+															
+															<td>
+																<div ng-if="info.isNoSignificantStatus=='N'">{{info.diagnosisName}}</div>
+																<div ng-if="info.isNoSignificantStatus=='Y'">No Significant Medical History</div>
+															</td>
+															<td>
+																{{info.code}}
+															</td>
+															<td>
+																 {{info.since}} {{info.duration}}
+															</td>
+															<td>
+																 {{info.remark}}
+															</td>
+															
+														</tr> 
+														
+														<tr ng-repeat="info in patientDiagnosisListForMedicalHistory" >
+														<td class="width2"><input type="checkbox" ng-model="info.medicalHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,4);"></td>
+															<td>{{info.diagnosisName}} </td>
+															<td>{{info.code}}</td>
+															<td>{{info.resolvedDays}} Day(s)</td>
+															<td>{{info.remark}}</td>
+														</tr> 
+															
+														</tbody></table>
+						</div>
+					
+					
+					<!-- Immunization History -->
+						<fieldset class="normalRegistration">
+						<legend class="heading-div">Vaccination History</legend>
+					</fieldset>
+						<div class="table-container">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody><tr>
+																<th class="width2">
+																	<span class="">Select</span>
+																</th>
+																<th class="width3">Age</th>
+																<!-- <th class="width4">Brand Name</th> -->
+																<th class="width4">Generic Name</th>
+																<th class="width2">Series</th>
+																<th class="width6"> Planned Date</th>
+																<th class="width6" style="z-index:1023 !important;">Actual Administration Date</th>
+																<th class="width6" style="z-index:1023 !important;">Location</th>
+																<!-- <th class="width6" >Actual Date</th> -->
+																<th class="width6" style="z-index:1023 !important;">Remarks</th>
+															</tr>
+														<tr ng-repeat="info in immunizationHistoryCurrentList" >
+														<td class="width2"><input type="checkbox" ng-model="info.immunizationHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,5);"></td>
+														        <td class="width3">{{info.minAge+' '+info.minDay}}</td>
+															<!-- 	<td class="width4">{{info.name}}</td> -->
+																<td class="width4">{{info.genericName}}</td>
+																<td class="width2">{{info.abbreviation+''+info.series}}</td>
+																<td  class="width6">{{info.calculatedDateShow}}</td>
+															   <td  class="width6">{{info.plannedDate}}</td>
+															   <td  class="width6">{{info.location}}</td>
+															   <td  class="width6">{{info.remarks}}</td>
+														</tr>
+															
+														</tbody></table>
+						</div>
+					
+					
+					
+					<!-- Travel History -->
+						<fieldset class="normalRegistration">
+						<legend class="heading-div">Travel History</legend>
+					</fieldset>
+						<div class="table-container">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+										
+														<tbody><tr>        <th class="width2">
+																				<span class="">Select</span>
+																			</th>
+																			<th class="width15">
+																				<span class="">Text</span>
+																			</th>
+																			<th class="width5">
+																				When
+																			</th>
+																		<!-- 	<th>Action</th> -->
+																			<!-- <th>Acronyms</th> -->
+																			
+																		</tr>
+																		<tr ng-repeat="info in travelHistoryCurrentList" ng-if="info.isReviewedFlag == 'N'">
+																		<td class="width2"><input type="checkbox" ng-model="info.travelHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,6);"></td>
+																			<td style="white-space: normal;">
+																			   <textarea type="text" autocomplete="off" class="text-input floating-label" rows="1" disabled="disabled" ng-if="info.isNoSignificantTravel =='N'">{{info.description}}</textarea>
+														                       <div ng-if="info.isNoSignificantTravel =='Y'">No Significant Travel History</div>
+																			</td>
+																			<td class="width15">{{info.whenTravel |  date : "dd/MM/y" }}
+																			</td>
+																			
+																		</tr>
+																		 <tr ng-repeat="info in travelHistoryOldList" ng-if="info.isReviewedFlag == 'N'">
+																		 	<td class="width2"><input type="checkbox" ng-model="info.travelHistoryChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,6);"></td>
+																			<td style="white-space: normal;">
+																			   <textarea type="text" autocomplete="off" class="text-input floating-label" rows="1" disabled="disabled" ng-if="info.isNoSignificantTravel =='N'">{{info.description}}</textarea>
+														                       <div ng-if="info.isNoSignificantTravel =='Y'">No Significant Travel History</div>
+																			</td>
+																			<td class="width5">{{info.whenTravel | date : "MM/dd/y" }}
+																			</td>
+																			
+																		</tr> 
+																		
+																	</tbody></table>
+						</div>
+					
+					<!--  Investigation history -->
+					<fieldset class="normalRegistration">
+				      <legend class="heading-div">Treatment / Investigations</legend>
+				</fieldset>
+																
+				<div class="table-container">
+                        <table class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr>
+								
+							    <th class="width2"><span class="">Select</span></th>
+								<th class="width5"><span class="">Date</span></th> 
+								<th class="width10"><span class="">Treatment / Investigations</span></th>
+								<th class="width12">Treatment Details / Impression</th>
+								<!-- <th class="width7"><span class="">Doctor Name</span></th>
+								<th class="width5"><span class=""> Record Date</span></th> -->
+
+							</tr>
+							<tr ng-repeat="info in treatmentHistoryCurrentList">
+								<td class="width2"><input type="checkbox" ng-model="info.treamentHistoryCurrentChk"  ng-true-value="1"  ng-false-value="0" ng-click="addHistory(info,$index,7);"></td>
+								<td>{{info.treatDate}}</td>
+								<td class=""><!-- output-textarea -->
+									<div ng-if="info.isNoSignificantStatus=='N'">{{info.treatementName}}</div>
+									<div ng-if="info.isNoSignificantStatus=='Y'">No Significant Treatment/Investigation History</div>
+								</td>
+								<td>{{info.remark}}</td>
+								<!-- <td>{{info.surgenName}}</td>
+								<td>{{info.createdDate}}</td> -->
+							</tr>
+								
+						</tbody>
+					</table>
+					</div>
+					
+					
+					
+					
+							<!--  Lifestyle history  -->
+					<fieldset class="normalRegistration">
+				      <legend class="heading-div">Lifestyle history</legend>
+				</fieldset>
+																
+				<div class="table-container" id="lifestylehabits">
+                        <table class="table table-bordered ">
+											<tr>
+												<th class="width15"><span class="">Types</span></th>
+												<th class="width15"><span class="">Status</span></th>
+												<th class="width15"><span class="">Details</span></th>
+												<th class="width15"><span class="">Remarks</span></th>
+											</tr>
+											<tr ng-repeat="info in patientHabitList">
+
+												<td ng-if="info.isReviewedFlag == 'N' ">
+													<div ng-if="info.habitId == '6'">Alcohol</div>
+													<div ng-if="info.habitId == '1'">Smoking</div>
+													<div ng-if="info.habitId == '2'">Tobacco chewing</div>
+													<div ng-if="info.habitId == '3'">Gutkha, Pan Masala</div>
+													<div ng-if="info.habitId == '4'">Recreation Drug</div>
+													<div ng-if="info.habitId == '5'">Exercise</div>
+												</td>
+												<td ng-if="info.isReviewedFlag == 'N'">
+													<div ng-if="info.habitId == '1' ">
+														<div ng-switch="info.habitTypeId">
+															<div ng-switch-when="1">Non User</div>
+															<div ng-switch-when="2">Current</div>
+															<div ng-switch-when="3">Quit</div>
+															<div ng-switch-default></div>
+														</div>
+													</div>
+													<div ng-if="info.habitId == '3' ">
+														<div ng-switch="info.habitTypeId">
+															<div ng-switch-when="1">Non User</div>
+															<div ng-switch-when="2">Current</div>
+															<div ng-switch-when="3">Quit</div>
+															<div ng-switch-default></div>
+														</div>
+													</div>
+													<div ng-if="info.habitId == '4' ">
+														<div ng-switch="info.habitTypeId">
+															<div ng-switch-when="1">Non User</div>
+															<div ng-switch-when="2">Current</div>
+															<div ng-switch-when="3">Quit</div>
+															<div ng-switch-default></div>
+														</div>
+													</div>
+													<div ng-if="info.habitId == '6' ">
+														<div ng-switch="info.habitTypeId">
+															<div ng-switch-when="1">Non User</div>
+															<div ng-switch-when="2">Current</div>
+															<div ng-switch-when="3">Quit</div>
+															<div ng-switch-default></div>
+														</div>
+													</div>
+													<div ng-if="info.habitId == '2' ">
+														<div ng-switch="info.habitTypeId">
+															<div ng-switch-when="1">Non User</div>
+															<div ng-switch-when="2">Current</div>
+															<div ng-switch-when="3">Quit</div>
+															<div ng-switch-default></div>
+														</div>
+													</div>
+												</td>
+												<td
+																			ng-if="info.isReviewedFlag == 'N' ">
+																			<div ng-if="info.habitId == '6'">
+																				<div ng-switch="info.habitTypeId">
+																					<div ng-switch-when="1"></div>
+																					<div ng-switch-when="2">
+																						<p>mls per day :&nbsp;{{info.mlsPerDay}}&nbsp;mls/day</p>
+																						<p>years used :&nbsp;{{info.yearsUsed}}&nbsp;year(s)</p>
+																					</div>
+																					<div ng-switch-when="3">
+																						<p>mls per day :&nbsp;{{info.mlsPerDay}}&nbsp;mls/day</p>
+																						<p>years used :&nbsp; {{info.yearsUsed}}&nbsp;year(s)</p>
+																						<p>left when :&nbsp;{{info.leftWhen}}&nbsp;{{info.durationOfLeftWhen}}(s)</p>
+																					</div>
+
+																					<div ng-switch-default></div>
+																				</div>
+																			</div>
+																		<div ng-if="info.habitId == '1' ">
+																				<div ng-switch="info.habitTypeId">
+																					<div ng-switch-when="1"></div>
+																					<div ng-switch-when="2">
+																						<p>cigarette/day :&nbsp;{{info.cigarettesPerDay}}&nbsp;cigarettes/day</p>
+																						<p>years smoked :&nbsp;{{info.yearsSmoked}}&nbsp;year(s)</p>
+																						<p>pack year :&nbsp;{{info.packYear| number: 2}}&nbsp;year(s)</p>
+																					</div>
+																					<div ng-switch-when="3">
+																						<p>cigarette/day :&nbsp;{{info.cigarettesPerDay}}&nbsp;cigarettes/day</p>
+																						<p>years smoked :&nbsp;{{info.yearsSmoked}}&nbsp;year(s)</p>
+																						<p>pack year :&nbsp;{{info.packYear | number: 2}}&nbsp;year(s)</p>
+																						<p>left when :&nbsp;{{info.leftWhen}}&nbsp;{{info.durationOfLeftWhen}}(s)</p>
+																					</div>
+						
+																					<div ng-switch-default></div>
+																				</div>
+																			</div>
+																			<div ng-if="info.habitId == '2' ">
+																				<div ng-switch="info.habitTypeId">
+																					<div ng-switch-when="1"></div>
+																					<div ng-switch-when="2" ng-if="info.gmsPerDay !='' || info.yearsUsed !=''">
+																						<p>gms per day :&nbsp;{{info.gmsPerDay}}&nbsp;gms/day</p>
+																						<p>years used :&nbsp;{{info.yearsUsed}}&nbsp;year(s)</p>
+																					</div>
+																					<div ng-switch-when="3" ng-if="info.gmsPerDay !='' || info.yearsUsed !=''"> 
+																						<p>gms per day :&nbsp;{{info.gmsPerDay}}&nbsp;gms/day</p>
+																						<p>years used :&nbsp;{{info.yearsUsed}}&nbsp;year(s)</p>
+																						<p>left when :&nbsp;{{info.leftWhen}}&nbsp;{{info.durationOfLeftWhen}}(s)</p>
+																					</div>
+																					<div ng-switch-default></div>
+																				</div>
+																			</div>
+																			<div ng-if="info.habitId == '3' ">
+																				<div ng-switch="info.habitTypeId">
+																					<div ng-switch-when="1"></div>
+																					<div ng-switch-when="2" ng-if="info.frequency != null && info.frequency != ''">
+																						<p>Frequency :&nbsp;{{info.frequency}}&nbsp; /day</p>
+																					</div>
+																					<div ng-switch-when="3" ng-if="info.frequency != null && info.frequency != ''">
+																						<p>Frequency :&nbsp; {{info.frequency}}&nbsp; /day</p>
+																						<p>left when :&nbsp;{{info.leftWhen}}&nbsp;{{info.durationOfLeftWhen}}(s)</p>
+																					</div>
+																					<div ng-switch-default></div>
+																				</div>
+																			</div>
+
+																			<div ng-if="info.habitId == '4' ">
+																				<div ng-switch="info.habitTypeId">
+																					<div ng-switch-when="1"></div>
+																					<div ng-switch-when="2">Drug :&nbsp; {{info.drug}}</div>
+																					<div ng-switch-when="3">
+																						<p>recreation drug :&nbsp; {{info.drug}}</p>
+																						<p>left when :&nbsp;{{info.leftWhen}}&nbsp;{{info.durationOfLeftWhen}}(s)</p>
+																					</div>
+																					<div ng-switch-default></div>
+																				</div>
+																			</div>
+																			<div ng-if="info.habitId == '5' ">
+																				<div ng-switch="info.habitTypeId">
+																				<div class="row">
+																                        
+															                        
+																					<div ng-switch-when="1">Frequency : Daily 
+																						</div>
+																					<div ng-switch-when="2">Frequency : Occasionally 
+																						</div>
+																					<div ng-switch-when="3">Frequency :Rarely 
+																						</div>
+																					<div ng-switch-when="4">Frequency : Never 
+																						</div>
+																					<div ng-switch-when="5">Quit</div>
+																					<div ng-switch-default></div>
+																					</div>
+																				</div>
+																				<div class= "row">
+																				<div >
+																                   Type :{{info.typeOfExercise}}
+														                         </div>
+														                         </div>
+																			</div>
+
+																		</td>
+												
+												<td ng-if="info.isReviewedFlag == 'N'">{{info.remark}}</td>
+
+											</tr>
+										</table>
+					</div>
+					
+					
+					
+					
+					
+					
+					
+				</div>
+				<!-- Table END -->
+				
+				<!-- Table START Examination -->
+				<div ng-show="fieldId==3" class="row padding-left-right-set4 table-container padding-top8">
+				<fieldset class="normalRegistration">
+						<legend class="heading-div">Vitals</legend>
+					</fieldset>
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+									    <th class="width5">
+									    <input ng-if="patientViatalList.length>0" type="checkbox"
+									    id="allVitalChk" ng-model="allChkSel"  ng-true-value="1"  ng-false-value="0" ng-click="addAllVitals();">
+									    select</th>
+										<th class="width5"><span class="">Date</span></th>
+										<th class="width15">Vitals</th>
+										<th class="width5"><span class="">Value</span></th>
+										<!-- <th class="width15"><span class="">Recorded By</span></th> -->
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll200" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-if="patientViatalList.length==0"><td class="text-center">{{loadingMessage}}</td></tr>
+									<tr ng-repeat="info in patientViatalList" ng-if="info.value!=0">
+									<td class="width5"><input type="checkbox" ng-model="info.vitalChk"  ng-true-value="1"  ng-false-value="0" ng-click="addExaminations(info,$index);"></td>
+										<td class="width5">{{info.createdDate}}</td>
+										<td class="width15">{{info.vitalName}}</td>
+										<td class="width5">{{info.value}} {{info.unitDesc}}</td>
+										<!-- <td ng-if="info.doctorName!=null" class="width15">{{info.doctorName}}</td>
+										<td ng-if="info.employeeName!=null" class="width15">{{info.employeeName}}</td> -->
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<fieldset class="normalRegistration">
+					<legend class="heading-div">General Examination</legend>
+					</fieldset>
+					<div class="table-container">
+						<!-- <div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th></th>
+									</tr>
+								</thead>
+							</table>
+						</div> -->
+						<div class="table-container-body" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody class="" ng-repeat="info in getSavedGeneralExamList">
+									<tr>
+										<th class="text-left">
+											<span class="">{{info.systemName}}</span>
+											<span style="margin-left:40px;" ng-if="info.isNADValue =='Y'"> NAD</span>
+										</th>
+												
+									</tr>
+									<tr>
+										<td  style="padding: 0px !important;  border-top: none !important; border-bottom: none !important;">
+											<table class="table table-bordered">
+												<tr>
+													<td class="width10" style="border-bottom:none !important">
+													 	<span class="">{{info.observationName}}</span>
+													</td>
+													<td ng-if="info.propertyName == null" style="border-bottom:none !important">
+														{{info.remark}}
+													</td>
+												</tr>
+												<tr ng-if="info.systemObervationPropertyId != null" >
+													<td  style="padding: 0px !important;  border-top: none !important; border-bottom: none !important;">
+														<table class="table table-bordered">
+															<tr>
+																<td style="border-bottom:none !important">
+																	{{info.propertyName}}
+																</td>
+																<td style="border-bottom:none !important">
+																	{{info.remark}}
+																</td>
+															</tr>
+															
+														</table>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="row padding-top15">
+										<div class="col-lg-1 col-md-1 text-width-auto">Descriptive Examination : </div>
+										<div class="col-lg-10 col-md-10 col-sm-10 pull-right">
+											<textarea rows="3" class="width-100" ng-model="descriptiveGeneralExamination"  ></textarea>
+										</div>
+							</div>
+						</div>
+					</div> 
+					 <fieldset class="normalRegistration">
+						<legend class="heading-div">Systemic Examination</legend>
+					</fieldset>
+					<div class="table-container">
+					<div class="table-container-header">
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<!-- <tr>
+									<th></th>
+								</tr> -->
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tbody class="scrollable" ng-repeat="info in getSavedPhysicalExamList">
+								<tr>
+										<th class="text-left">
+											<span class="">{{info.systemName}}</span>
+											<span style="margin-left:40px;" ng-if="info.isNADValue =='Y'"> NAD</span>
+										</th>
+												
+									</tr>
+								<tr>
+									
+								</tr> 
+								<tr >
+									<td  style="padding: 0px !important;  border-top: none !important; border-bottom: none !important;">
+										<table class="table table-bordered">
+											<tr>
+												<td class="width10" >
+												 	<span class="">{{info.observationName}}</span>
+												</td>
+												<td ng-if="info.propertyName == null">
+													{{info.remark}}
+												</td>
+											</tr>
+											<tr ng-if="info.systemObervationPropertyId != null">
+												<td  style="padding: 0px !important;  border-top: none !important; border-bottom: none !important;">
+													<table class="table table-bordered">
+														<tr>
+															<td>
+																{{info.propertyName}}
+															</td>
+															<td>
+																{{info.remark}}
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="row padding-top15">
+										<div class="col-lg-1 col-md-1 text-width-auto">Descriptive Examination : </div>
+										<div class="col-lg-10 col-md-10 col-sm-10 pull-right">
+											<textarea rows="3" class="width-100" ng-model="descriptivePhysicalExamination"  ></textarea>
+										</div>
+							</div>
+					</div>
+				</div> 
+				</div>
+
+				
+				<!-- Table END -->
+				
+				<!-- Table operative Procedures-->
+				 <div ng-show="fieldId==4" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+									<th class="width5">Select</th>
+										<th class="width8 vertical-top" title="Speciality"><span
+											class="">Speciality</span></th>
+										<th class="width8 vertical-top" title="Procedure"><span
+											class="">Procedure</span></th>
+										<th class="width8 vertical-top" title="Date of Procedure"><span
+											class="">Date of Procedure</span></th>
+										<th class="width8 vertical-top" title="Priority"><span
+											class="">Priority</span></th>
+										<th class="width10 vertical-top" title="Reason For Request"><span
+											class="">Reason For Request</span></th>
+										<th class="width8 vertical-top" title="ICU Required"><span
+											class="">ICU Required</span></th>
+										<th class="width10 vertical-top"
+											title="Blood Component Required"><span class="">Blood
+												Component Required</span></th>
+										<th class="width8 vertical-top" title="PAC Required"><span
+											class="">PAC Required</span></th>
+										<th class="width8 vertical-top" title="Primary"><span
+											class="">Primary</span></th>
+										<!-- <th class="width8 vertical-top text-center" title="Medication"><span
+											class="">Medication</span></th>
+										<th class="width8 vertical-top text-center" title="Implant"><span
+											class="">Implant</span></th>
+										<th class="width4 text-center vertical-top" title="Action"><span
+											class="">Action</span></th> -->
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> 
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr ng-if="orderedProcedureList.length==0"><td class="text-center">{{loadingMessage}}</td></tr>
+									<tr ng-repeat="procedreOrderObj in orderedProcedureList">
+										<td class="width5"><input type="checkbox" ng-model="procedreOrderObj.operativeChk" ng-true-value="1"  ng-false-value="0" ng-click="addOperativeProcedure(procedreOrderObj,$index);"></td>
+										<td class="width8">{{procedreOrderObj.specialityName}}</td>
+										<td class="width8">{{procedreOrderObj.procedureName}}</td>
+										<td class="width8">{{procedreOrderObj.preferedDateTime}}</td>
+										<td class="width8">{{(procedreOrderObj.urgency==0)?"Normal":"Urgent"}}</td>
+										<td class="width10">{{procedreOrderObj.requestReason}}</td>
+										<td class="width8">{{(procedreOrderObj.isIcuRequired=='Y')?"Yes":"No"}}</td>
+										<td class="width10">{{(procedreOrderObj.isBloodComponentRequired=='Y')?"Yes":"No"}}</td>
+										<td class="width8">{{(procedreOrderObj.isPacRequired=='Y')?"Yes":"No"}}</td>
+										<td class="width8">{{(procedreOrderObj.isPrimarySecondary=='Y')?"Primary":"Secondary"}}</td>
+										<!-- <td class="width8 text-center"><a data-toggle="modal"
+											data-target="#savedKitDetailsModel"
+											ng-click="getMedicationDetails(procedreOrderObj.procedureOrderId);"><i
+												class="fa fa-info-circle"></i></a></td>
+										<td class="width8 text-center"><a data-toggle="modal"
+											data-target="#savedImplantDetailsModel"
+											ng-click="getImplantDetails(procedreOrderObj.procedureOrderId);"><i
+												class="fa fa-info-circle"></i></a></td>
+										<td class="width4 text-center"></td> -->
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+
+				<!-- Surgery and Procedure Performed-->
+				<div ng-show="fieldId==6"
+					class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered ">
+								<thead>
+									<tr>
+										<!-- <th class="width15">
+																<span class="">No Significant History</span>
+															</th> -->
+										<th class="width5"><span class="">Select</span></th>
+										<th class="width15"><span class="">Procedure Name</span></th>
+										<th class="width10"><span class="">Procedure Preferred Time</span></th>
+										<th class="width15">Reason for Request</th>
+										<!-- <th class="width15"><span class="">Surgery</span></th>
+										<th class="width15"><span class="">Surgeon Name</span></th>
+										<th class="width5"><span class="">Month</span></th>
+										<th class="width5"><span class="">Year</span></th>
+										<th class="width15">Remark</th> -->
+										<!-- <th>Action</th> -->
+										<!-- 	<th>Acronyms</th> -->
+
+									</tr>
+								</thead>
+							</table>
+							<div class="table-container-body fix-height-scroll200"
+								style="overflow: overlay;">
+								<!-- fix-height-scroll230, background: #fff; -->
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+									<tr ng-if="surgeryAndProcedureList.length==0"><td class="text-center">{{loadingMessage}}</td></tr> 
+										<tr ng-repeat="info in surgeryAndProcedureList">
+										<td class="width5"><input type="checkbox" ng-model="info.surgeryAndProcedureChk" ng-true-value="1"  ng-false-value="0" ng-click="addSurgeryAndProcedure(info,$index);"></td>
+											<td class="width15">{{info.procedureName}}</td>
+											<td class="width10">{{info.preferedDateTime}}</td>
+											<td class="width15">{{info.requestReason}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+				
+				
+				<!-- Table Investigation Lab Report-->
+				<div ng-show="fieldId==10" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered ">
+								<thead>
+								<tr>
+								    <th class="width5"><span class="">Select</span></th>
+									<th class="width15"><span class="">Date</span></th>
+									<th class="width15"><span class="">Type</span></th>
+									<th class="width15"><span class="">Investigation</span></th>
+									<th class="width15"><span class="">Details</span></th>
+									<th class="width10"><span class="">Status</span></th>
+									<th class="width10 text-center"><span class="">Action</span>
+								</tr>
+								</thead>
+								<!-- </table> -->
+							<!-- <div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> --> <!-- fix-height-scroll230, background: #fff; -->
+							<!-- <table class="table table-striped table-hover table-condensed table-bordered"> -->
+								<tbody>
+								<tr ng-if="finalCurrentEncounterOrderLists.length==0"><td class="text-center">{{loadingMessage}}</td></tr>
+							<!-- 	<tr ng-if="countFlag==0"><td class="text-center">No report released</td></tr> -->
+								<!-- <tr ng-if="(investigation.sampleStatusId!=null || investigation.serviceRendered==1)" ng-repeat="investigation in finalCurrentEncounterOrderLists"> -->
+									<!-- <td class="width5"><input type="checkbox" ng-model="info.orderId"></td> -->
+									<tr ng-if="investigation.serviceRendered==1 || investigation.statusName!=null" ng-repeat="investigation in finalCurrentEncounterOrderLists"> 
+									
+									<td class="width5"><input type="checkbox" ng-model="investigation.investigationChk" ng-true-value="1"  ng-false-value="0" ng-click="addInvestigation(investigation,$index,0);"></td>
+									<td class="width15">{{investigation.createdDate}}</td>
+									<td class="width15">{{investigation.specialityName}}</td>
+									<td class="width15">{{investigation.serviceStandardName}}</td>
+									<td class="width15">{{investigation.serviceStandardCode}}</td>
+									<td class="width10" >{{(investigation.statusName==null)?((investigation.serviceRendered==1)?"Completed":"Pending"):investigation.statusName}}</td> 
+									<!-- <td class="width10" ng-if="investigation.orderStatus=='A'">{{(investigation.statusName==null)?((investigation.serviceRendered==1)?"Completed":"Pending"):investigation.statusName}}</td> -->
+									<!-- <td class="width10" ng-if="investigation.orderStatus==null">{{investigation.statusName}}</td> -->
+									<!-- <td ng-if="investigation.orderStatus=='I'" class="width10">Cancelled</td> -->
+											<!-- <td class="text-center width10"><a id="labTestResId"
+												ng-if="investigation.isPanel=='N'"
+												ng-click="rePrintInvestigation(investigation,$index)"><i
+													class="fa fa-print"></i></a>&nbsp; <a class="cursor-pointer"
+												ng-if="investigation.isPanel=='Y'"
+												ng-click="getInvestigationDetails(investigation);">Details</a>
+											</td> -->
+									<td class="text-center width10" >
+									<a  id="labTestResId" title="View Outsource Service Report" ng-if="investigation.sampleStatusId==37" ng-click="getOutsourceServiceReport(investigation);"><i class="fa fa-info-circle"></i></a>&nbsp;
+									<a id="labTestResId" ng-if="investigation.sampleStatusId==8 || investigation.templateTransactionId!=null " title="Print"  ng-click="rePrintInvestigation(investigation,$index,1)"><i class="fa fa-print"></i></a>&nbsp;
+									<a id="labTestResId" ng-if="investigation.sampleStatusId==8 || investigation.templateTransactionId!=null " title="Re Print"  ng-click="rePrintInvestigation(investigation,$index,0)"><i class="fa fa-print"></i></a>&nbsp;
+									</td>
+										</tr>
+								</tbody>
+							</table>
+							<!-- </div> -->
+						</div>
+					</div>	
+					
+					<!--  Investigation history -->
+					<fieldset class="normalRegistration">
+				      <legend class="heading-div">Treatment / Investigations</legend>
+				</fieldset>
+																
+				<div class="table-container">
+                        <table class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr>
+								<!-- <th class="width15"><span class="">No
+									Significant History</span></th> -->
+							   <th class="width2"><span class="">Select</span></th>
+								<th class="width5"><span class="">Date</span></th> 
+								<th class="width10"><span class="">Treatment / Investigations</span></th>
+								<th class="width12">Treatment Details / Impression</th>
+								<!-- <th class="width7"><span class="">Doctor Name</span></th>
+								<th class="width5"><span class=""> Record Date</span></th> -->
+
+							</tr>
+							<tr ng-repeat="info in treatmentHistoryCurrentList1">
+								<td class="width2"><input type="checkbox" ng-model="info.treamentHistoryCurrentChk1"  ng-true-value="1"  ng-false-value="0" ng-click="addInvestigation(info,$index,1);"></td>
+								<td>{{info.treatDate}}</td>
+								<td>{{info.treatementName}}</td>
+								<td>{{info.remark}}</td>
+								<!-- <td>{{info.surgenName}}</td>
+								<td>{{info.createdDate}}</td> -->
+							</tr>
+								
+						</tbody>
+					</table>
+					</div>
+				
+				
+				</div>
+				<!-- Table END -->
+				
+				<!-- Table START Medication-->
+				<div ng-show="fieldId==5" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+									<th class="width5"><span class="">Select</span></th>
+													<th class="width10">
+														<span class="">Brand Name</span>
+													</th>
+													<th class="width10">
+														 <span class="">Generic Name</span>
+													</th>
+													<th class="width8">
+														<span class="">ROA</span>
+													</th>
+													<th class="width4">
+														 <span class="">Dose</span>
+													</th>
+													<th class="width8">
+														 <span class="">Frequency</span>
+													</th>
+													
+													<th class="width5">
+														 <span class="">Start Date</span>
+													</th>
+													<th class="width5">
+														 <span class="">End Date</span>
+													</th>
+													<th class="width15">
+														 <span class="">Instruction</span>
+													</th>
+												</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								     <tr ng-if="detailedMedications.length==0"><td class="text-center">{{loadingMessage}}</td></tr> 
+									<tr  ng-repeat="activeMedication in detailedMedications">
+									<td class="width5"><input type="checkbox" ng-model="activeMedication.medicationChk" ng-true-value="1"  ng-false-value="0" ng-click="addMedication(activeMedication,$index);"></td>
+													<td class="width10">
+														{{activeMedication.itemName}}
+													</td>
+													<td class="width10">
+														{{activeMedication.genericName}}
+													</td>
+													<td class="width8">
+														{{activeMedication.roa_details}}
+													</td>
+													<td class="width4">
+<!-- 						                                 <div ng-if="activeMedication.doseId==null"> -->
+<!-- 						                                   {{activeMedication.doseDesc +' '+ activeMedication.strengthDesc!= null ? activeMedication.strengthDesc:''}} -->
+<!-- 						                                 </div> -->
+<!-- 						                                 <div ng-if="activeMedication.doseId!=null"> -->
+						                                   {{activeMedication.dose}}
+<!-- 						                                 </div> -->
+														 
+													</td>
+													<td class="width8">
+														 {{activeMedication.frequencyDesc}}
+													</td>
+													<td class="width5">
+														 {{activeMedication.startDate}}
+													</td>
+													<td class="width5">
+														 {{activeMedication.endDate}}
+													</td>
+													<td class="width15">
+														<div ng-if="activeMedication.instructionDesc != null">
+																{{activeMedication.instructionDesc}}
+																</div>
+																<div ng-if="activeMedication.instructionText != null">
+																{{activeMedication.instructionText}}
+																</div>
+													</td>
+													
+												</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+				
+				<!-- Table Surgeries and procedure Performed-->
+				<!-- <div ng-show="fieldId==6" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width5"><span class="">Date</span></th>
+										<th class="width15">Vitals</th>
+										<th class="width15"><span class="">Value</span></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> fix-height-scroll230, background: #fff;
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr>
+										<td class="width5"></td>
+										<td class="width15"></td>
+										<td class="width15"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div> -->
+				<!-- Table END -->
+				
+				<!-- Table Transfer of Care-->
+				 	<div ng-show="fieldId==7" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+									<th class="width5"><span class="">Select</span></th>
+										<!-- <th class="width5"><span class="">UHID</span></th>
+										<th class="width5"><span class="">Patient Name</span></th> -->
+										<th class="width10"><span class="">Referred To</span></th>
+										<th class="width10"><span class="">Referred By</span></th>
+										<th class="width7"><span class="">Specialty</span></th>
+										<th class="width18"><span class="">Note</span></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr ng-if="consultOrdersList.length==0"><td class="text-center">{{loadingMessage}}</td></tr> 
+									<tr ng-repeat="consultOrder in consultOrdersList">
+									<td class="width5"><input type="checkbox" ng-model="consultOrder.consultReferalChk" ng-true-value="1"  ng-false-value="0" ng-click="addConsultReferral(consultOrder,$index);"></td>
+									<!-- 	<td class="width5">{{consultOrder.uhidNumber}}</td>
+										<td class="width5">{{consultOrder.patientName}}</td> -->
+										<td class="width10">{{consultOrder.refToDoctor}}</td>
+										<td class="width10">{{consultOrder.refByDoctor}}</td>
+										<td class="width7">{{consultOrder.specialityName}}</td>
+										<td class="width18">{{consultOrder.notes}}</td>
+										
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+				
+				<!-- Table Transfer of Care-->
+				 	<div ng-show="fieldId==11" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+									<th class="width5"><span class="">Select</span></th>
+										<th class="width10"><span class="">Discharge Note</span></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr ng-if="allTransferOfcareNoteslist.length==0"><td class="text-center">{{loadingMessage}}</td></tr>
+									<tr ng-if="info.note!=null && info.note!=''" ng-repeat="info in allTransferOfcareNoteslist">
+									<td class="width5"><input type="checkbox" ng-model="info.trasferOfCareChk" ng-true-value="1"  ng-false-value="0" ng-click="addTransferOfCare(info,$index);"></td>
+										<td class="width10">{{info.note}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+				                         
+					<!-- Discharge Medications -->
+				 	<div ng-show="fieldId==12" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width5"><span class="">Select</span></th>
+										<th class="width12"><span class="">Brand Name</span></th>
+										<th class="width12"><span class="">Generic Name</span></th>
+										<th class="width8"><span class="">Dose</span></th>
+										<!-- <th class="width8"><span class="">Dose Unit</span></th> -->
+										<!-- <th class="width8"><span class="">UOM Unit</span></th> -->
+										<th class="width8"><span class="">Frequency</span></th>
+									    <th class="width8"><span class="">Duration</span></th> 
+									   	<th class="width8"><span class="">ROA</span></th>
+										<!-- <th class="width5"><span class="">Start Date</span></th>
+										<th class="width5"><span class="">End Date</span></th> -->
+										<th class="width5"><span class="">Quantity</span></th>
+										<th class="width15"><span class="">Instruction</span></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr ng-if="DischargeMedicationlist.length==0"><td class="text-center">{{loadingMessage}}</td></tr>
+									<tr ng-repeat="activeMedication in DischargeMedicationlist">
+									  <td class="width5"><input type="checkbox" ng-model="activeMedication.dischargeMedicationChk" ng-true-value="1"  ng-false-value="0" ng-click="dischargeMedications(activeMedication,$index);"></td>
+			                          <td class="width12 white-space-normal" >{{activeMedication.itemName}}</td>
+										<td class="width12 white-space-normal">{{activeMedication.genericName}}</td>
+											<td class="width8">{{activeMedication.doseDesc}} {{activeMedication.strengthDesc}}</td>
+											<td class="width8">{{activeMedication.frequencyDesc}}</td>
+											<td class="width8">{{activeMedication.duration}}</td> 
+										    <td class="width8">{{activeMedication.roa_details}}</td>
+									
+										<!-- <td class="width8">{{activeMedication.strengthDesc}}</td> -->
+									
+									 	
+									<!-- 	<td class="width5">{{activeMedication.startDate}}</td>
+										<td class="width5">{{activeMedication.endDate}}</td> -->
+										<td class="width5">{{activeMedication.quantity}}</td>
+										<td class="width15">
+										       <div ng-if="activeMedication.instructionDesc != null">
+												{{activeMedication.instructionDesc}}
+												</div>
+												<div ng-if="activeMedication.instructionText != null">
+												{{activeMedication.instructionText}}
+												</div>
+					                	</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+				
+				
+					<!-- Advice and follow up -->
+				 	<div ng-show="fieldId==18" class="row padding-left-right-set4 table-container padding-top8">
+				 	 <fieldset class="normalRegistration">
+						<legend class="heading-div">Advice</legend>
+					 </fieldset>
+					<div class="table-container">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								   <tr>
+									  <th class="width5"><span class="">Select</span></th>
+									   <th class="width40"><span class="">Advice</span></th>
+										<th class="width40"><span class="">Note</span></th>
+									</tr>
+								<tr ng-if="allInstructions.length==0"><td class="text-center" colspan="3">{{loadingMessage}}</td></tr>
+									<tr ng-repeat="instruction in allInstructions">
+									  <td class="width5"><input type="checkbox" ng-model="instruction.instructionChk" ng-true-value="1"  ng-false-value="0" ng-click="addInstructions(instruction,$index);"></td>
+			                          <td class="width40 white-space-normal" >{{instruction.instructionDetailsId!=null ? instruction.instructionDesc:instruction.advicedInstruction}}</td>
+										<td class="width40 white-space-normal">{{instruction.notes}}</td>
+									</tr>
+								</tbody>
+							</table>
+					</div>
+				 	
+				 	<fieldset class="normalRegistration">
+					<legend class="heading-div">Follow up</legend>
+				   </fieldset>
+					<div class="table-container">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr>
+								  <th class="width5"><span class="">Select</span></th>
+								   <th class="width40"><span class="">Date</span></th>
+									<th class="width40"><span class="">Time</span></th>
+								</tr>
+								<tr ng-if="followupAppointmentList.length==0"><td class="text-center" colspan="3">{{loadingMessage}}</td></tr>
+									<tr ng-repeat="appointment in followupAppointmentList">
+									  <td class="width5"><input type="checkbox" ng-model="appointment.followUpChk" ng-true-value="1"  ng-false-value="0" ng-click="addFollowUpApp(appointment,$index);"></td>
+			                          <td class="width40 white-space-normal" >{{appointment.appointmentDate}}</td>
+										<td class="width40 white-space-normal">{{appointment.fromTimeString}}</td>
+									</tr>
+								</tbody>
+							</table>
+					</div>
+					
+				</div>
+				<!-- Table END -->
+				
+				
+					<!-- get complaints list -->
+				 	<div ng-show="fieldId==13" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width5"><span class="">Select</span></th>
+										<th class="width7"><span class="">Date</span></th>
+										<th class="width12"><span class="">ICPC System</span></th>
+										<th class="width12"><span class="">ICPC Code</span></th>
+										<th class="width12"><span class="">ICPC Description</span></th>
+									    <th class="width8"><span class="">Since</span></th> 
+									   	<th class="width8"><span class="">HOPC</span></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr ng-if="allComplaintList.length==0"><td class="text-center">{{loadingMessage}}</td></tr>
+									<tr ng-repeat="complaint in allComplaintList">
+									  <td class="width5"><input type="checkbox" ng-model="complaint.complaintChk" ng-true-value="1"  ng-false-value="0" ng-click="addComplaints(complaint,$index);"></td>
+			                          <td class="width7 white-space-normal" >{{complaint.createdDate}}</td>
+										<td class="width12 white-space-normal">{{complaint.icpcSystemDesc}}</td>
+											<td class="width12">{{complaint.icpcCode}} </td>
+											<td class="width12">{{complaint.icpcCodeText!=''?complaint.icpcCodeText:complaint.diagnosisName}}</td>
+											<td class="width8">{{complaint.since}} {{complaint.duration}}</td> 
+										    <td class="width8">{{complaint.remark}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- Table END -->
+					<div ng-show="fieldId==109" class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width5" title="Select All"><span class="">
+										<input type="checkbox" ng-model="allObservationChkSel" ng-true-value="1"  ng-false-value="0" ng-click="addAllObservation();">
+										</span></th>
+										<th style="width:{{dynamicWidth}}%" ng-repeat="info in observationColumns|orderBy:'dischSumTabColMstId'" ng-if='info.isColumnRequired == true'><span class="">{{info.columnName}}</span></th>
+<!-- 										<th class="width12"><span class="">ICPC Code</span></th> -->
+<!-- 										<th class="width12"><span class="">ICPC Description</span></th> -->
+<!-- 									    <th class="width8"><span class="">Since</span></th>  -->
+<!-- 									   	<th class="width8"><span class="">HOPC</span></th> -->
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+								<tr ng-if="observationListNew.length==0"><td class="text-center">{{loadingMessage}}</td></tr>
+									<tr ng-repeat="observation in observationListNew">
+									  <td class="width5"><input type="checkbox" ng-model="observation.observationChk" ng-true-value="1"  ng-false-value="0" ng-click="addAllObservation(observation,$index);"></td>
+			                          <td class="white-space-normal" style="width:{{dynamicWidth}}%" ng-if='observation.isColumnRequired == true && observation.createdDate!= undefined'>{{observation.createdDate| date :dateFormat}}</td>
+										<td class="white-space-normal" style="width:{{dynamicWidth}}%" ng-if='observation.isColumnRequired == true && observation.createdTime!= undefined '>{{observation.createdTime}}</td>
+										<td><textarea style="width:{{dynamicWidth}}%" ng-if='observation.isColumnRequired == true && observation.observationDesc!= undefined' type="text" autocomplete="off" class="text-input floating-label" rows="2" disabled="disabled">{{observation.observationDesc}}</textarea></td>
+											<!-- <td style="width:{{dynamicWidth}}%" ng-if='observation.isColumnRequired == true && observation.observationDesc!= undefined'>{{observation.observationDesc}} </td> -->
+											<td style="width:{{dynamicWidth}}%" ng-if='observation.isColumnRequired == true && observation.employeeName!= undefined'>{{observation.employeeName}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						
+					</div>
+				</div>
+				
+				</div>
+			<div class="modal-footer" style="border:none;">
+				<!-- <button type="button"  class="btn btn-primary" ng-click="addData();" id="">Add</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel"  data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Add" ng-click="addData();">
+						<i class="fa fa-plus" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal END -->
+
+<div id="doctorPinModal" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Pin Details
+					<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10 row padding-top10">
+					<div class="col-md-3 col-lg-3 col-sm-3">
+						<span>Enter Pin</span> 
+					</div>
+					<form name="doctorPinForm" novalidate="novalidate">
+					<div class="col-md-6 col-lg-6 col-sm-6 form-group" show-errors>
+					
+					  <input type="text" autocomplete="off" id="password-fields" class="text-input floating-label dirty"  name="doctorPin" ng-model="doctorPin"  ng-maxlength="4" ng-minlength="4" numbers-only required>
+					  <a onclick="showPin();"><span toggle="#password-field" class="fa fa-fw fa-eye toggle-password"  style="float: right; margin-left: -25px; margin-top: -25px; position: relative; z-index: 2;"></span></a>
+						<p class="help-block" ng-if="doctorPinForm.doctorPin.$error.required">Pin
+							is required</p>
+						<p class="help-block" ng-if="doctorPinForm.doctorPin.$error.maxlength||doctorPinForm.doctorPin.$error.minlength">4 Digit Pin is Required.</p>
+					</div>
+					</form>	
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button"   id="closeDoctorPinModal"  ng-disabled="isReleasePopupBtn" class="btn btn-primary " ng-click="checkDoctorPin();">Release</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="closePopup()">cancel</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal" ng-click="closePopup()">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"  ng-click="checkDoctorPin();" id="closeDoctorPinModal"  ng-disabled="isReleasePopupBtn">Release</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- cancel Complaints order -->
+<div id="reportReleaseWithoutPin" class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-bottom10">
+						<div class="padding-left-right-10">
+							<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10 padding-bottom10">
+							 		<div class="row input-container">
+										<div class="col-lg-11 col-sm-11 col-md-11"><label><b>Do you want to release discharge summary report ?</b></label>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+			</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="finalReleaseWithoutPin();">Release</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+					 <div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" id="updateBtn"  ng-click="finalReleaseWithoutPin();" data-dismiss="modal">Release</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+<!-- outSourceServiceModal START -->
+<div id="outSourceServiceModal" class="modal fade ng-scope in common-medium-popup" data-backdrop="static" role="dialog">
+	<div class="modal-dialog">
+	<form name="uploadForm" novalidate>
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Outsource Service Report
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<div class="row">
+					<div class="row margin-top10 common-sub-table padding-left-right-set4">
+					<table class="table table-striped table-bordered">
+						<thead>
+								<tr>
+									
+									<th class="test-name-width">Document Type</th>
+									<th class="test-name-width">Document Upload Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat = "documentObj in patientDocumentList">
+									<td>
+										<div>
+										  {{documentObj.documentName}}
+										</div>
+									</td>
+									<td>
+										<div>
+										 <a fancybox ng-click="openImage($index)">View</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+					</table>
+					<table class="table table-bordered">
+						 <tr ng-if="patientDocumentList.length==0">
+							<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+						</tr>
+					</table>
+				</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary">Ok</button> -->
+				 <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+		</form>
+		
+	</div>
+</div>
+<!-- outSourceServiceModal END -->
+<!-- ******* Reschedule Follow up modal start ********** -->
+
+<!-- info Modal -->
+<div id="scheduleFollowUp_modal" data-backdrop="static" class="modal fade ng-scope in common-medium-popup"
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Schedule Follow Up
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+					<div class="row ">
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-touched"
+											name="datepicker" id="datepicker"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="datepickerScheduleAppointment"
+											model-view-value="true" is-open="datepickerSchedule.opened"
+											datepicker-options="dateOptionsSchedule" show-button-bar="false"
+											ng-click="openDatePickerSchedule()"
+											ng-change="scheduleAppointmentPopup()" style=""><label
+											for="code"></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon "></div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="" ng-if="fromTimeStringSlot != ''">
+										<label for="code">Time : {{fromTimeStringSlotShow}}</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-0 col-sm-0 padding-left-right-set4 padding-top10"></div>
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row padding-top4">
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+									<div class="color-indiction-green-div"></div>
+								</div>
+								<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set0 long-text-overflow">
+									<span class="color-indication-green-span">Slot available</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row padding-top4">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="color-indiction-orange-div"></div>
+								</div>
+								<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set0">
+									<span class="color-indication-orange-span">Slot available for over booking</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				<div class="row fix-height-scroll400">
+					<div class="col-lg-1 col-md-1 col-sm-2 margin-top2 padding-left-right-set1 width10"
+						ng-repeat="info in slotDetailsList"
+						ng-if="info.isBlockedUnblocked == '2' && info.allowedOverBookingSlots > 0 && info.slotPatientDetailsListsSize >= '0' && info.slotPatientDetailsListsSize < info.allowedOverBookingSlots && info.originalFromTime > slotCheckTime && info.isVip=='N'">
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set1">
+							<div ng-class="checkDateIsBefore(info)"
+								style="padding: 0px !important;" ng-click="slotBooking1(info)">
+								<div class="font-size-12 text-center ng-binding">{{info.fromTimeString2}}</div>
+							</div>
+
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 margin-top2 padding-left-right-set1 width10"
+						ng-repeat="info in slotDetailsList"
+						ng-if="info.isBlockedUnblocked == '2' && info.slotPatientDetailsListsSize == '0' && info.allowedOverBookingSlots=='0' && info.originalFromTime > slotCheckTime && info.isVip=='N'">
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set1">
+							<div ng-class="checkDateIsBefore(info)"
+								style="padding: 0px !important;" ng-click="slotBooking1(info)">
+								<div class="font-size-12 text-center ng-binding">{{info.fromTimeString2}}</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary"  ng-click="saveAppointmentshedul()">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+				<!-- 	<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-plus" aria-hidden="true"></i> </button>
+					</div> -->
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						 <button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal" >
+						<i class="fa fa-times" aria-hidden="true"></i> </button> 
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						 <button class="btn btn-primary btn-save-box-shadow  width100" title="Save" data-dismiss="modal" ng-click="saveAppointmentshedul()">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button> 
+					</div>
+					
+				</div>
+			</div>confirm
+		</div>
+	</div>
+</div>
+
+<!-- <div id="confirmSave" class="common-small-popup modal fade ng-scope" role="dialog" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Confirm
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+            </div>
+            <div class="modal-body">
+	            <div class="row" style="padding-bottom:3%; padding-top:3%;">
+	   	        	<p style="padding-left: 3%;">Are you sure you want to Save?</p>
+	   	        	<div class=" pull-right" style="padding-right: 3%; padding-top:3%;">
+	       	    		<button type="button" class="btn btn-primary btn-save-box-shadow  width100" id="complaint-add-btn" data-dismiss="modal" style="width: 31px !important;"><i class="fa fa-times" aria-hidden="true"></i></button>	               	    
+	               	</div>
+	       	    	<div class=" pull-right" style="padding-right: 3%; padding-top:3%;">
+	       	    		<button type="button" class="btn btn-primary btn-save-box-shadow  width100" id="complaint-add-btn" data-dismiss="modal"  ng-click="save();" style="width: 31px !important;">
+	       	    		<i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+	       					               	    
+	               	</div>	
+	               		
+        		</div>
+        	</div>
+    	</div>
+    </div>
+</div> -->
+<!-- Modal -->
+  <div id="confirmSave" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 400px !important;">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+         <div class="modal-title patient-details-row">
+                    Confirm
+                    <button type="button" class="close" data-dismiss="modal" style="    margin-top: 17px !important;">×</button>
+                </div>
+        </div>
+         <div class="modal-body">
+	            <div class="row" style="padding-bottom:3%; padding-top:3%;">
+	   	        	<p style="padding-left: 3%;">Are you sure you want to Save?</p>
+	   	        	<div class=" pull-right" style="padding-right: 3%; padding-top:3%;">
+	       	    		<button type="button" class="btn btn-primary btn-save-box-shadow  width100" id="cancelBtn" data-dismiss="modal" style="width: 31px !important;"><i class="fa fa-times" aria-hidden="true"></i></button>
+	               	</div>
+	       	    	<div class=" pull-right" style="padding-right: 3%; padding-top:3%;">
+	       	    		<button type="button" class="btn btn-primary btn-save-box-shadow  width100" id="saveBtn" data-dismiss="modal"  ng-click="save();" style="width: 31px !important;">
+	       	    		<i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+	       					               	    
+	               	</div>	
+	               		
+        		</div>
+        	</div>
+         </div>
+
+    </div>
+  </div>
+
+
+
+<div id="previewSave" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-lg" style="padding-top:20px;">
+		<div class="modal-content">
+
+			<!-- HEADER -->
+			<div class="modal-header">
+				<h4 class="modal-title">
+					Preview
+					<button type="button" class="close" data-dismiss="modal">×</button>
+				</h4>
+			</div>
+
+			<!-- BODY -->
+			<div class="modal-body" style="max-height:75vh;overflow:auto;    padding-left: 10px !important;">
+
+				<div ng-repeat="info in DischargeSummaryFinalList track by $index"
+					 style="border:1px solid #ccc;border-radius:8px;padding:12px;margin-bottom:15px;">
+
+					<!-- SECTION NAME -->
+					<h5 style="font-weight:bold;margin-bottom:8px;">
+						{{info.dischargeFieldName}}
+					</h5>
+
+					<!-- ================= TEXT ================= -->
+					<div ng-if="info.dischargeSummaryDataViewOptionIdTest == 1"
+						 ng-bind-html="cleanHtml(info.dischargeFieldDescription)">
+					</div>
+
+					<!-- ================= TABLE ================= -->
+					<div ng-if="info.dischargeSummaryDataViewOptionIdTest == 2">
+
+						<div ng-if="info.dischargeFieldDescription"
+							 ng-bind-html="cleanHtml(info.dischargeFieldDescription)"
+							 style="margin-bottom:8px;">
+						</div>
+
+						<!-- ================= ALL TABLES ================= -->
+
+						<!-- ALLERGIES -->
+						<div ng-if="info.columnListAllergies.length">
+							<!-- <h6><b>{{info.tabelNameAllergis}}</b></h6> -->
+							<table class="table table-bordered table-condensed">
+								<thead>
+								<tr>
+									<th ng-repeat="h in info.columnHeaderListAllergies">
+										{{h.columnName}}
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="r in info.rowListAllergies">
+									<td ng-repeat="c in info.columnListAllergies">
+                      <span ng-repeat="v in info.savedListAllergies"
+							ng-if="r.rowId==v.rowId && c.coulmnId==v.coulmnId">
+                        {{v.inputValue}}
+                      </span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- OPERATIVE DETAILS -->
+						<div ng-if="info.columnListOperativeDetails.length">
+							<!-- <h6><b>{{info.tableNameOperativeDetails}}</b></h6> -->
+							<table class="table table-bordered table-condensed">
+								<thead>
+								<tr>
+									<th ng-repeat="h in info.columnHeaderListOperativeDetails">
+										{{h.columnName}}
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="r in info.rowListOperativeDetails">
+									<td ng-repeat="c in info.columnListOperativeDetails">
+                      <span ng-repeat="v in info.savedListOperativeDetails"
+							ng-if="r.rowId==v.rowId && c.coulmnId==v.coulmnId">
+                        {{v.inputValue}}
+                      </span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- DISCHARGE MEDICATION -->
+						<div ng-if="info.columnListDischargeMedication.length">
+							<!-- <h6><b>{{info.tableNameDischargeMedication}}</b></h6> -->
+							<table class="table table-bordered table-condensed">
+								<thead>
+								<tr>
+									<th ng-repeat="h in info.columnHeaderListDischargeMedication">
+										{{h.columnName}}
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="r in info.rowListDischargeMedication">
+									<td ng-repeat="c in info.columnListDischargeMedication">
+                      <span ng-repeat="v in info.savedListDischargeMedication"
+							ng-if="r.rowId==v.rowId && c.coulmnId==v.coulmnId">
+                        {{v.inputValue}}
+                      </span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- DIAGNOSIS -->
+						<div ng-if="info.columnListDiagnosis.length">
+							<!-- <h6><b>{{info.tableNameDiagnosis}}</b></h6> -->
+							<table class="table table-bordered table-condensed">
+								<thead>
+								<tr>
+									<th ng-repeat="h in info.columnHeaderListDiagnosis">
+										{{h.columnName}}
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="r in info.rowListDiagnosis">
+									<td ng-repeat="c in info.columnListDiagnosis">
+                      <span ng-repeat="v in info.savedListDiagnosis"
+							ng-if="r.rowId==v.rowId && c.coulmnId==v.coulmnId">
+                        {{v.inputValue}}
+                      </span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- INVESTIGATION -->
+						<div ng-if="info.columnListInvestigation.length">
+							<!-- <h6><b>{{info.tableNameInvestigation}}</b></h6> -->
+							<table class="table table-bordered table-condensed">
+								<thead>
+								<tr>
+									<th ng-repeat="h in info.columnHeaderListInvestigation">
+										{{h.columnName}}
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="r in info.rowListInvestigation">
+									<td ng-repeat="c in info.columnListInvestigation">
+                      <span ng-repeat="v in info.savedListInvestigation"
+							ng-if="r.rowId==v.rowId && c.coulmnId==v.coulmnId">
+                        {{v.inputValue}}
+                      </span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- INSTRUCTIONS -->
+						<div ng-if="info.columnListInstructions.length">
+							<!-- <h6><b>{{info.tabelNameInstructions}}</b></h6> -->
+							<table class="table table-bordered table-condensed">
+								<thead>
+								<tr>
+									<th ng-repeat="h in info.columnHeaderListInstructions">
+										{{h.columnName}}
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="r in info.rowListInstructions">
+									<td ng-repeat="c in info.columnListInstructions">
+                      <span ng-repeat="v in info.savedListInstructions"
+							ng-if="r.rowId==v.rowId && c.coulmnId==v.coulmnId">
+                        {{v.inputValue}}
+                      </span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- FOLLOW UP -->
+						<div ng-if="info.columnListfollowUp.length">
+							<!-- <h6><b>{{info.tabelNamefollowUp}}</b></h6> -->
+							<table class="table table-bordered table-condensed">
+								<thead>
+								<tr>
+									<th ng-repeat="h in info.columnHeaderListfollowUp">
+										{{h.columnName}}
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="r in info.rowListfollowUp">
+									<td ng-repeat="c in info.columnListfollowUp">
+                      <span ng-repeat="v in info.savedListfollowUp"
+							ng-if="r.rowId==v.rowId && c.coulmnId==v.coulmnId">
+                        {{v.inputValue}}
+                      </span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- VITAL -->
+						<div ng-if="info.columnListVital.length">
+							<!-- <h6><b>{{info.tableNameVital}}</b></h6> -->
+							<table class="table table-bordered table-condensed">
+								<thead>
+								<tr>
+									<th ng-repeat="h in info.columnHeaderListVital">
+										{{h.columnName}}
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="r in info.rowListVital">
+									<td ng-repeat="c in info.columnListVital">
+                      <span ng-repeat="v in info.savedListVital"
+							ng-if="r.rowId==v.rowId && c.coulmnId==v.coulmnId">
+                        {{v.inputValue}}
+                      </span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+			<!-- FOOTER -->
+			<div class="modal-footer">
+				<button class="btn btn-default" data-dismiss="modal" id="cancelBtn" style="width: 100px;">Back</button>
+				<button class="btn btn-primary" id="saveBtn" title="Save" ng-click="save();">Save</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+
+
+<div id="previewSaverr" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h4 class="modal-title">Discharge Summary Preview</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+
+			<div class="modal-body" style="height:80vh; padding:0;">
+				<iframe ng-if="pdfUrl"
+						ng-src="{{pdfUrl}}"
+						style="width:100%; height:100%; border:none;">
+				</iframe>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+
+<!-- <modal visible="showModal"></modal> -->
+<!-- <script src="resources/assets/js/common/page-height.js"></script>  -->
+
+
+<script>
+
+$(document).ready(function() {
+	//$(".patienttSearchResult").hide();
+	
+	
+	//$(".patientListRow").show();
+	//$(".patient_details_block").hide();
+	
+	 $(".selectedPageName").text("Update Discharge Summary");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="updateDischargeSummary"]').parents("li").addClass("active");
+	
+	
+	$(document).on('click','.patient_img_click_class', function(){
+		$(".patient_details_block").show(1000);
+		$(".patient_List_Row").hide(1000);
+	}) 
+	$(document).on('click','.patient_list_header', function(){
+		//alert("2");
+		$(".patient_details_block").hide(1000);
+		$(".patient_List_Row").show(1000);
+	})
+});
+
+CKEDITOR.editorConfig = function( config ) {
+	   config.height = 350;
+	   config.width = '100%';
+	};
+
+</script>

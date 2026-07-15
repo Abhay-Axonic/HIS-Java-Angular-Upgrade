@@ -1,0 +1,458 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset class="">
+			<!-- <legend class="heading-div">Store Indent Details</legend> -->
+			<div class="row margin-top10">
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Issue No. :</b>{{viewKitIssueObj.issueNo}} </span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Issue
+							Date:</b>{{viewKitIssueObj.createdDate}} </span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Indent
+							No. :</b>{{viewKitIssueObj.indentNo}} </span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Indent
+							Date :</b>{{viewKitIssueObj.indentDate}} </span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">
+							Store (Origin):</b>{{viewKitIssueObj.fromStore}} </span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">
+							Store (Destination):</b>{{viewKitIssueObj.toStore}}</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Status()
+							:</b>{{viewKitIssueObj.status}}</span>
+				</div>
+			</div>
+			<div class="row padding-left-right-set4 padding-top10">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered first-checkBox-padding">
+					<!-- mainServiceTable -->
+					<thead class="mainServiceTableCommon">
+						<tr>
+						<th class="width2 vertical-middle"></th>
+							<th class="width6 vertical-middle">Kit Code
+							</th>
+							<th class="width6 vertical-middle">Kit Name
+							</th>
+							<th class="width6 vertical-middle">Issued Quantity
+							</th>
+							<th class="width6 vertical-middle">Accepted Quantity
+							</th>
+							<th class="width6 vertical-middle">Rejected Quantity
+							</th>
+							<th class="width6 vertical-middle">Action taken</th>
+						</tr>
+					</thead>
+					<!-- <tbody>
+						<tr class="addedKit-details">
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td class=" vertical-middle text-center">
+								<div class="checkbox mt0 mb0">
+								  <label><input type="checkbox" value="" data-toggle="modal" data-target="#qtyaccepatReject">Reject</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="6" class="addedkitList" style="display: none;">
+								<div>
+									<table class="table table-bordered">
+										<thead>
+											<tr class="">
+													<th class="width8">
+														Kit Code
+													</th>
+													<th class="width8">
+														Kit Name
+													</th>
+													<th class="width8">
+														Batch No.
+													</th>
+													<th class="width8">
+														AutoClave No.
+													</th>
+													<th class="width8">
+														AutoClave Date
+													</th>
+													<th class="width8">
+														Expiry Date
+													</th>
+													<th class="width1"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td class="text-center"><a href="" data-toggle="modal" data-target="#instrumentInfo"><i class="fa fa-info-circle"></i></a></td>
+												</tr>
+											</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
+					</tbody> -->
+					<tbody>
+						<tr class="table-th-bg " ng-repeat="data in viewKitIssueObj.kitList">
+
+							<td colspan="9">
+								<table class="table table-bordered">
+									<tr class="cursor-pointer">
+										 <td class="width2 text-center"><input
+											type="checkbox" class="" name="selectedKitData"  ng-checked="data.isSelected"  ng-disabled="{{data.is_active==false}}"
+											ng-model="data.isSelected" ng-true-value="'Y'" ng-false-value="'N'" ng-click="selectKitsToIssue(data,$index)" ></td>
+										<td ng-click="showSterilizedKitListRow(data)" class="width6 vertical-middle">{{data.kitCode}}</td>
+										<td ng-click="showSterilizedKitListRow(data)" class="width6 vertical-middle">{{data.kitName}}</td>
+										<td ng-click="showSterilizedKitListRow(data)" class="width6 vertical-middle">{{data.issuedQuantity}}</td>
+										<td ng-click="showSterilizedKitListRow(data)" class="width6 vertical-middle">{{data.acceptedQuantity}}</td>
+										<td ng-click="showSterilizedKitListRow(data)" class="width6 vertical-middle">{{data.rejectedQuantity}}</td>
+										<td class="width6 vertical-middle text-center">
+										  <!-- <div class="checkbox mt0 mb0">
+								 		    <label><input type="checkbox" value="" data-toggle="modal" data-target="#qtyaccepatReject" ng-click="toReject(data)">Reject</label>
+								          </div> -->
+								        <!--   <div class="col-lg-6 col-md-6 padding-left-right-set4 text-right">
+											<a href="" data-toggle="modal" data-target="#KitInfoModal" ng-click="setSubKitList(data)"><i class="fa fa-eye"></i></a>
+										  </div> -->
+											<input ng-disabled="data.is_active==false" type="radio"
+													name="optradio_{{$index}}"
+													ng-checked="data.isAccepted" 
+													 ng-click="setIsAcceptedTrue(data)">Accept 
+												
+												<input type="radio" ng-disabled="data.is_active==false"
+													name="optradio_{{$index}}"
+													ng-checked = "data.isRejected" 
+													data-toggle="modal" data-target="#qtyaccepatReject" 
+													 ng-click="setIsRejectedTrue(data)">Reject	 
+							           </td>
+
+									</tr>
+
+									<tr id="kitId-{{data.kitId}}" class="subKitRow-{{data.kitId}}"
+										style="display: none;">
+										<td colspan="7">
+											<div>
+												<table class="table table-bordered">
+													<thead>
+														<tr class="">
+															<th class="width8">Kit Code</th>
+															<th class="width8">Kit Name</th>
+															<th class="width8">Batch No.</th>
+															<th class="width8">AutoClave No.</th>
+															<th class="width8">AutoClave Date</th>
+															<th class="width8">Expiry Date</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng-repeat="kitDetails in data.subKitList">
+															<td>{{kitDetails.kitCode}}</td>
+															<td>{{kitDetails.kitName}}</td>
+															<td>{{kitDetails.batchNumber}}</td>
+															<td>{{kitDetails.autoclaveNumber}}</td>
+															<td>{{kitDetails.autoclaveDate}}</td>
+															<td>{{kitDetails.expiryDate}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</td>
+									</tr>
+
+
+
+
+								</table>
+
+
+							</td>
+
+						</tr>
+
+					</tbody>
+					
+				</table>
+			</div>
+		</div>
+		</fieldset>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-top5 margin-top10 padding-right20">
+				<div class="col-lg-10 col-sm-10"></div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+				<button type="button" data-toggle="modal" data-target="#confirmPopupOnAccept" class="btn btn-primary" data-dismiss="modal" ng-disabled="saveDisabled">Save</button>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a href="#/KitIndentAcceptance">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+	
+	<!-- Qty Accept Reject Modal -->
+  <div id="qtyaccepatReject" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Rejection
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<!-- <div class="col-lg-6 col-md-6 col-sm-12">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<input type="text" autocomplete="off" name="code" id="" ng-model="rejectionQuantity" class="text-input floating-label">
+												<label for="code">Qty</label>
+											</div>
+										</div>
+									</div> -->
+									<div class="col-lg-6 col-md-6 col-sm-6">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<!-- <select class="text-input floating-label dirty"  id="rejectReasonId" name="code" ng-model="rejectReasonId">
+											<option value="">Select Reason</option>
+											<option ng-repeat="info in reasonList" value="{{info.reasonMasterId}}" >{{info.reasonDesc}}</option>
+											</select>		
+											<label for="code">Select Reasons</label> -->
+											<select class="text-input floating-label"
+											name="rejectionReason" ng-model="rejectReasonId"
+											ng-options="data.id as data.reason for data in rejectReasonsList"
+											required>
+											</select> <label for="rejectionReason">Select Reason</label>
+										</div>
+									</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-sticky-note" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<textarea name="code" rows="4" id="noteReject"
+													class="text-input floating-label" ng-model="rejectReasonNote"></textarea>
+												<label for="code">Note</label>
+											</div>
+										</div>
+									</div>
+									<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="setRejectionDetails()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End -->
+	
+	
+	<!-- KitIssue Acceptance Details Modal Start -->
+	<div id="KitInfoModal"
+		class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-left-right-set4 padding-top4">
+						<div class="col-md-12 common-table-height-250">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+										<th class="width4">Kit Code
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">Kit Name
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">Batch No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">AutoClave No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">AutoClave Date
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">Expiry Date
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width3">Action taken</th>
+										<!-- <th class="width1"></th> -->
+									</tr>
+								</thead>
+								<tbody>
+									<!-- <tr ng-repeat="kitInfo in kitInKitIndentList"> -->
+									<tr ng-repeat="kitDetails in subKitList">
+										<td>{{kitDetails.kitCode}}</td>
+										<td>{{kitDetails.kitName}}</td>
+										<td>{{kitDetails.batchNumber}}</td>
+										<td>{{kitDetails.autoclaveNumber}}</td>
+										<td>{{kitDetails.autoclaveDate}}</td>
+										<td>{{kitDetails.expiryDate}}</td>
+										<td class="vertical-middle">
+											<div class="row">
+												<label class="cursor-pointer"><input type="radio"
+													name="optradio_{{$index}}"
+													ng-disabled= "isDisabled(kitDetails)"
+													ng-checked="kitDetails.isAccepted"
+													ng-click="setIsAcceptedTrue(kitDetails)">Accept</label> 
+												
+												<label
+													class="cursor-pointer"><input type="radio"
+													name="optradio_{{$index}}"
+													ng-disabled="isDisabled(kitDetails)"
+													ng-checked = "kitDetails.isRejected"
+													data-toggle="modal" data-target="#qtyaccepatReject"
+													ng-click="setIsRejectedTrue(kitDetails)">Reject</label>	
+											</div>
+											
+											
+											<!-- <div class="row">
+												<label class="cursor-pointer"><input type="radio"
+													name="optradio_{{$index}}"
+													ng-disabled= "isDisabled(kitDetails)"
+													ng-checked="kitDetails.isAccepted"
+													data-toggle="modal" data-target="#confirmPopupOnAccept"
+													ng-click="setAcceptItem(kitDetails)">Accept</label> 
+												
+												<label
+													class="cursor-pointer"><input type="radio"
+													name="optradio_{{$index}}"
+													ng-disabled="isDisabled(kitDetails)"
+													ng-checked = "kitDetails.isRejected"
+													data-toggle="modal" data-target="#qtyaccepatReject"
+													ng-click="toReject(kitDetails)">Reject</label>	
+											</div> -->
+											
+										</td>
+										
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" data-toggle="modal" data-target="#confirmPopupOnAccept" class="btn btn-primary" data-dismiss="modal" >Save</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="cancelAcceptance()" >Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--  KitIssue Acceptance Details Modal End -->
+	
+	<!-- Confirmation PopUp For Accept Kit -->
+	<div id="confirmPopupOnAccept" class="modal fade ng-scope in"
+		role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal"
+							ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>Are you sure you want to perform this action?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+						id="" ng-click="acceptRejectKits()">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+</div>
+<!-- <div ng-include="'./views/common/qty-accept-reject.html'"></div>
+<div ng-include="'./views/common/note-save.html'"></div> -->
+<script>
+$(".addedKit-details").click(function(){
+	$(this).next().find(".addedkitList").toggle();
+});
+</script>

@@ -1,0 +1,449 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	<form name="serviceProviderForm" novalidate >
+	<div class="row padding-top12">
+		<div class="row">
+		  <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderName" ng-model="serviceProvider.serviceProviderName" required="required"> 
+							<label for="description" class="LISDynamicLabel">Service Provider Name<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderName.$error.required">Service Provider Name is required</p>
+						<input type="hidden" name="serviceProviderMasterId" ng-model="serviceProvider.serviceProviderMasterId" class="text-input floating-label">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="">
+						<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderAddress" ng-model="serviceProvider.serviceProviderAddress" required="required"> 
+							<label for="description" class="LISDynamicLabel">Address<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderAddress.$error.required">Address is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors="">
+							<select class="text-input floating-label" name="serviceProviderCountry" ng-model="serviceProvider.serviceProviderCountry" ng-change="getStateByCountry(serviceProvider.serviceProviderCountry)"  required="required">
+							<option ng-repeat="info in countryList" value="{{info.countryId}}">{{info.countryName}}</option>
+						</select> <label for="code">Country<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderCountry.$error.required">Country is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors="">
+							<select class="text-input floating-label" name="serviceProviderState" convert-to-number ng-change="getDistrictByState(serviceProvider.serviceProviderState)"  ng-model="serviceProvider.serviceProviderState" required="required">
+							<option ng-repeat="info in stateList"  value="{{info.stateId}}">{{info.stateName}}</option>
+						</select> <label for="code">State<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderState.$error.required">State is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors="">
+						<select class="text-input floating-label" name="serviceProviderDistrict" convert-to-number ng-change="getCityByDistrict(serviceProvider.serviceProviderDistrict)" ng-model="serviceProvider.serviceProviderDistrict" required="required">
+							<option ng-repeat="info in districtList"  value="{{info.districtId}}">{{info.districtName}}</option>
+						</select> <label for="code">District<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderDistrict.$error.required">District is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row padding-top10">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors="">
+							<select class="text-input floating-label" name="serviceProviderCity" convert-to-number ng-change="getAreaByCity(serviceProvider.serviceProviderCity)" ng-model="serviceProvider.serviceProviderCity" required="required">
+							<option ng-repeat="info in cityList" value="{{info.cityId}}">{{info.cityName}}</option>
+						</select> <label for="code">City<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderCity.$error.required">City is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors="">
+						<select class="text-input floating-label" name="serviceProviderArea" convert-to-number ng-model="serviceProvider.serviceProviderArea" required="required">
+							<option ng-repeat="info in areaList" value="{{info.areaId}}">{{info.areaName}}</option>
+						</select> <label for="code">Area<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderArea.$error.required">Area is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+						<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderZipCode" ng-model="serviceProvider.serviceProviderZipCode" required="required"> 
+							<label for="description" class="LISDynamicLabel">Zip Code<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderZipCode.$error.required">Zip Code is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+							<select class="text-input floating-label" name="serviceProviderAmbulanceType" ng-change="getNameByAmbType(serviceProvider.serviceProviderAmbulanceType)" ng-model="serviceProvider.serviceProviderAmbulanceType" required="required">
+							<option ng-repeat="info in ambulanceTypeList" value="{{info.ambulanceTarrifMasterId}}">{{info.ambulanceType}}</option>
+						</select> <label for="code">Ambulance Tariff Name<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderAmbulanceType.$error.required">Ambulance Tariff Name is required</p>
+							</div>
+						</div>
+					</div>
+			 </div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+						<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderPersonName" ng-model="serviceProvider.serviceProviderPersonName" required="required"> 
+							<label for="description" class="LISDynamicLabel">Person Name<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderPersonName.$error.required">Person Name is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		</div>
+		<div class="row padding-top10">
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+						<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderPhoneNo" ng-model="serviceProvider.serviceProviderPhoneNo" required="required"> 
+							<label for="description" class="LISDynamicLabel">Phone Number<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderPhoneNo.$error.required">Phone Number is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderCellNo" ng-model="serviceProvider.serviceProviderCellNo" required="required"> 
+							<label for="description" class="LISDynamicLabel">Cell Number<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderCellNo.$error.required">Cell Number is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderEmailAddress" ng-model="serviceProvider.serviceProviderEmailAddress" required="required"> 
+							<label for="description" class="LISDynamicLabel">Email Address<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderEmailAddress.$error.required">Email Address is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="serviceProviderContractFromDate" id="datepicker1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="serviceProvider.serviceProviderContractFromDate"
+													model-view-value="true" is-open="datepicker1.opened"
+													datepicker-options="dateOptions" show-button-bar="false"
+													ng-click="openDatePicker1()" required>
+							<label for="description" class="LISDynamicLabel">Contract Valid Date (From)<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderContractFromDate.$error.required">Contract Valid From Date is required</p>
+							</div>
+						</div>
+					</div>
+			 </div>
+		</div>
+		<div class="row padding-top10">
+			 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="serviceProviderContractToDate" id="datepicker2"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="serviceProvider.serviceProviderContractToDate"
+													model-view-value="true" is-open="datepicker2.opened"
+													datepicker-options="dateOptions" show-button-bar="false"
+													ng-click="openDatePicker2()" required>
+							<label for="description" class="LISDynamicLabel">Contract Valid Date-Till<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderContractToDate.$error.required">Contract Valid To Date is required</p>
+							</div>
+						</div>
+					</div>
+			 </div>
+			  <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					  <div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderFirstDistance" ng-model="serviceProvider.serviceProviderFirstDistance" required="required"> 
+							<label for="description" class="LISDynamicLabel">First Distance<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderFirstDistance.$error.required">First Distance is required</p>
+							</div>
+						</div>
+					</div>
+		       </div>
+		       <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderFirstDistanceRate" ng-model="serviceProvider.serviceProviderFirstDistanceRate" required="required"> 
+							<label for="description" class="LISDynamicLabel">Rate<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderFirstDistanceRate.$error.required">Rate is required</p>
+							</div>
+						</div>
+					</div>
+			  </div>
+			  <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderAdditionalMileage" ng-model="serviceProvider.serviceProviderAdditionalMileage" required="required" disabled> 
+							<label for="description" class="LISDynamicLabel">Additional Mileage Rate Per Km<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderAdditionalMileage.$error.required">Additional Mileage is required</p>
+								</div>
+							</div>
+						</div>
+				 </div>
+			 </div> 
+			  <div class="row padding-top10">
+				 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label"  name="serviceProviderAdditionalMileageRate" ng-model="serviceProvider.serviceProviderAdditionalMileageRate" required="required"> 
+							<label for="description" class="LISDynamicLabel">Additional Mileage Rate Per Km<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderAdditionalMileageRate.$error.required">Additional Mileage Rate Per Km is required</p>
+								</div>
+							</div>
+						</div>
+				 </div>
+			</div> 
+			</div>
+		</form>
+			<div class="row padding-top8">
+			<div class="col-md-6 col-sm-7 padding-left-right-set4">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+							<div class="search">
+							<label class="show-entries">Show 
+							<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+						</div>
+					</div>
+				</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"  ng-click="saveServiceProvider()" ng-if="saveBtnFlag">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateServiceProvider()" ng-if="updateBtnFlag">
+			        	<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+						<input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty search-popUp-ddl" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+						<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+		   </div>	
+		   <modal visible="showModal"></modal>
+		<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+			  <table id="main-table" class="main-table width200">
+			    <thead>
+							<tr>
+								<th class="width2">
+									Service Provider Name
+								</th>
+								<th class="width2">
+									Address
+								</th>
+								<th class="width2">
+									Ambulance Type
+								</th>
+								<th class="width2">
+									Person name
+								</th>
+								<th class="width2">
+									Phone/Cell No.
+								</th>
+								<th class="width2">
+									Email Address
+								</th>
+								<th class="width2">
+									Contract Valid Date (From)
+								</th>
+								<th class="width2">
+									Contract Valid Date-Till
+								</th>
+								<th class="width2">
+									First Distance
+								</th>
+								<th class="width2">
+									Rate
+								</th>
+								<th class="width2">
+									Additional Mileage
+								</th>
+								<th class="width2">
+									Additional Mileage Rate Per Km 
+								</th>
+								<th class="width2 text-center">
+									Status(n)
+								</th>
+								<th class="width2 text-center">
+									Action taken
+								</th>
+							</tr>
+						</thead>
+			    <tbody>
+			    			<tr ng-repeat="info in serviceProviderList|filter:searchKeyword">
+								<td class="width2">{{info.serviceProviderName}}</td>
+								<td class="width2">{{info.serviceProviderAddress}}</td>
+								<td class="width2">{{info.serviceProviderAmbulanceType}}</td>
+								<td class="width2">{{info.serviceProviderPersonName}}</td>
+								<td class="width2">{{info.serviceProviderPhoneNo + ',' + info.serviceProviderCellNo}}</td>
+								<td class="width3">{{info.serviceProviderEmailAddress}}</td>
+								<td class="width3">{{info.serviceProviderContractFromDate}}</td>
+								<td class="width3">{{info.serviceProviderContractToDate}}</td>
+								<td class="width3">{{info.serviceProviderFirstDistance}}</td>
+								<td class="width3">{{info.serviceProviderFirstDistanceRate}}</td>
+								<td class="width3">{{info.serviceProviderAdditionalMileage}}</td>
+								<td class="width3">{{info.serviceProviderAdditionalMileageRate}}</td>
+								<td class="width2 text-center">
+									<label class="switch"> 
+									<input type="checkbox" ng-model="info.status" placeholder="Delete" ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info.serviceProviderMasterId,info.status)">
+									<div class="slider round"></div>
+									</label>
+								</td>
+								<td class="width2 text-center"><a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.serviceProviderMasterId)"></i></a></td>
+							</tr>
+						</tbody>
+			  </table>
+			</div>
+			<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+		</div>
+	</div>
+</div>	
+
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	var documentHeight = $(window).height();
+	var sideBarHeight = documentHeight - 55;
+	 $(".selectedPageName").text("Service Provider Master");
+	 $('.clockpicker').clockpicker();
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="ambulanceServiceProviderMaster"]').parents("li").addClass("active");
+});
+</script>	
+	

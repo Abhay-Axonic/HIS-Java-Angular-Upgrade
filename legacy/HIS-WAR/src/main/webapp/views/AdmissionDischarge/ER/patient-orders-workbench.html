@@ -1,0 +1,773 @@
+<style>
+    #timeID {
+        margin-right: 54px;
+        margin-top: -12px;
+
+        .btn-link {
+            color: #00003B;
+        }
+        .table.table-bordered tr:nth-child(n+2){
+            background:none !important;
+        }
+    }
+    .table.table-bordered tr:nth-child(n+2) {
+        background-color: #fff !important;
+    }
+    .uib-time{
+        background: #fff !important;
+    }
+    td input {
+        border-radius: 10px;
+    }
+
+  /*radioButton code Start*/
+input[type=radio].css-radioBtn {
+  display: none;
+}
+
+
+input[type=radio].css-radioBtn + label.css-label{
+  padding-left: 36px;
+  height: 30px;
+  display: inline-block;
+  line-height: 36px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  font-size: 16px;
+  vertical-align: middle;
+  cursor: pointer;
+  font-family: 'Montserrat' !important;
+  background-image: url('resources/assets/images/icon/dashboard/radioBtnOff1.png');
+}
+
+
+input[type=radio].css-radioBtn:checked + label.css-label {
+  background-image: url('resources/assets/images/icon/dashboard/radioBtnOn.png');
+}
+/*radioButton code End*/
+
+
+
+</style>
+<div id="page-content-wrapper">
+
+    <div class="container-fluid his-style">
+        <fieldset class="normalRegistration main-fieldset">
+            <legend class="commonPatientSearch cursor-pointer main-heading-div">
+                Patient List</legend>
+            <div class="row patienttSearchResult">
+                <fieldset class="normalRegistration sub-fieldset border-none">
+                    <div class="row serachedPatientList">
+                        <div class="col-md-12 col-lg-12 headerHeight" style="max-height: 300px;">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th class="width1"></th>
+                                    <th class="width15"><span class="">UHID
+											</span></th>
+                                    <th class="width15"><span class="">Patient's Name</span></th>
+                                    <th class="width5">Gender</th>
+                                    <th class="width15">Mobile No.</th>
+                                    <th class="date-column">Birth Date</th>
+                                    <th class="width15">Identification Type</th>
+                                    <th class="width15">Identification No..</th>
+                                </tr>
+                                <tr class="cursor-pointer" ng-repeat="patient in erAdmittedPatientList" ng-click="getPatientDetailsByIndex($index);selectedPatientRadioCommon($index)">
+                                    <td>
+                                        <input type="radio" name="patient-list-radio" class="css-radioBtn"
+                                               id="patientSelectRadioCommon_{{$index}}"
+                                               ng-click="getInvetigation(patient)">
+                                        <label class="css-label" for="patientSelectRadioCommon_{{$index}}"></label>
+                                    </td>
+                                    <td>{{patient.uhidnumber}}</td>
+                                    <td>{{patient.pFirstName}}</td>
+                                    <td>{{patient.genderName}}</td>
+                                    <td>{{patient.mobileNo}}</td>
+                                    <td>{{patient.dateOfBirth | date : "dd-MM-yyyy" }}</td>
+                                    <td>{{patient.identificationName}}</td>
+                                    <td>{{patient.identificationNo}}</td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div  class="" ng-include="'./views/common/patient-demography-opd.html'"></div>
+        </fieldset>
+
+        <fieldset>
+            <div  class="row margin-top8">
+                <div class="row">
+                    <div class=" col-md-10 col-lg-10 custom-sub-tab padding-left-right-set4 ">
+                        <ul class="tabs nav nav-tabs">
+                            <li ng-class="{ active : isSetFirstTabLevel(1) }" id="pathologyTab" class="width10 active" style="">
+                                <a href="" ng-click="setFirstTabLevel(1)" >Pathology Tests</a>
+                            </li>
+                            <li ng-class="{ active : isSetFirstTabLevel(2) }" id="nor" class="width15" style="">
+                                <a href="" ng-click="setFirstTabLevel(2)" >Imaging Tests</a>
+                            </li>
+                            <li ng-class="{ active : isSetFirstTabLevel(3) }" class="width10" style="">
+                                <a href="" ng-click="setFirstTabLevel(3);getDetailedMedication();" class="employeeRegRadioParent">Medications</a>
+                            </li>
+                            <li ng-class="{ active : isSetFirstTabLevel(4) }" id="nor" class="width15" style="">
+                                <a href="" ng-click="setFirstTabLevel(4)">Bed Side Investigations</a>
+                            </li>
+                           <!-- <li ng-class="{ active : isSetFirstTabLevel(5) }" id="nor" class="width15" style="">
+                                <a href="" ng-click="setFirstTabLevel(5)">Bed Side Procedures</a>
+                            </li>-->
+                            <li ng-class="{ active : isSetFirstTabLevel(6) }" id="nor" class="width15" style="">
+                                <a href="" ng-click="setFirstTabLevel(6);consultOrderList();">Cross Referrals</a>
+                            </li>
+                            <li ng-class="{ active : isSetFirstTabLevel(7) }" id="nor" class="width15" style="">
+                                <a href="" ng-click="setFirstTabLevel(7);getOPDAdmissionDetails();">Admission</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class=" col-md-2 col-lg-2 row padding-top10">
+                      <!--  <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                            <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveBox(tabId)" ng-hide="saveBtnFlag">
+                                <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                            <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="showUpdateBtn(info)" ng-hide="updateBtnFlag">
+                                <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+
+
+
+            <form ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" name="patientRegistrationform" novalidate>
+
+                <div class="row padding-left-right-set4 margin-top4">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="">
+                                <th class="width6">Investigation Name</th>
+                                <th class="width5">Department</th>
+                                <th class="width6">Order Date &Time</th>
+                                <th class="width7">Sample Collection Date & Time</th>
+                                <th class="width7">Report Released Date & Time</th>
+                                <th class="width7">Result (Normal / Abnormal)</th>
+                                <th class="width7">Remarks</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="order in currentPathologyEncounterOrderLists" style="text-align: center;">
+                                <td>{{order.serviceStandardName}}</td>
+                                <td>{{order.specialityName}}</td>
+                                <td>{{order.createdDate}} </td>
+                                <td>{{order.sampleGenDatetime}}</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-top: 31px;">
+                                            <input type="text"
+                                                   class="text-input floating-label"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   ng-model="order.workbenchAddedDate"
+                                                   is-open="order.opened"
+                                                   datepicker-options="dateOptions"
+                                                   show-button-bar="false"
+                                                   ng-click="openDateTh(order)"
+                                                   readonly />
+                                        </div>
+                                        <div class="col-md-6" style="margin-left: -21px;">
+                                            <uib-timepicker ng-model="order.workbenchAddedDate"
+                                                            hour-step="1"
+                                                            minute-step="5"
+                                                            show-meridian="true">
+                                            </uib-timepicker>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="text-input floating-label"
+                                            ng-model="order.resultId"
+                                            ng-options="r.id as r.label for r in resultOptions">
+                                    </select>
+                                </td>
+                                <td>
+                                    <textarea style="border-radius: 10px;height: 40px !important;" ng-model="order.workbenchRemark"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row padding-top10">
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveBox(1)" ng-hide="saveBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="showUpdateBtn(info)" ng-hide="updateBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="row margin-bottom45 sss">
+                    <ul ng-if="pager.pages.length" class="pagination table-list"
+                        style="font-size: 14px;">
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(1,'true')">First</a></li>
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+                        <li ng-repeat="page in pager.pages"
+                            ng-class="{active:pager.currentPage === page}"><a
+                                ng-click="setPage(page,'true')">{{page}}</a></li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+                        </li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.totalPages,'true')">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+            <form ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" name="patientRegistrationform" novalidate>
+
+                <div class="row padding-left-right-set4 margin-top4">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="">
+                                <th class="width6">Investigation Name</th>
+                                <th class="width5">Department</th>
+                                <th class="width6">Order Date &Time</th>
+                                <th class="width7">Report Accepted Date & Time</th>
+                                <th class="width7">Report Released Date & Time</th>
+                                <th class="width7">Result (Normal / Abnormal)</th>
+                                <th class="width7">Remarks</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="order in currentImageTestEncounterOrderLists" style="text-align: center;">
+                                <td>{{order.serviceStandardName}}</td>
+                                <td>{{order.specialityName}}</td>
+                                <td>{{order.createdDate}} </td>
+                                <td>{{order.ordRenderDatetime}}</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-top: 31px;">
+                                            <input type="text"
+                                                   class="text-input floating-label"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   ng-model="order.workbenchAddedDate"
+                                                   is-open="order.opened"
+                                                   datepicker-options="dateOptions"
+                                                   show-button-bar="false"
+                                                   ng-click="openDateImage(order)"
+                                                   readonly />
+                                        </div>
+                                        <div class="col-md-6" style="margin-left: -21px;">
+                                            <uib-timepicker ng-model="order.workbenchAddedDate"
+                                                            hour-step="1"
+                                                            minute-step="5"
+                                                            show-meridian="true">
+                                            </uib-timepicker>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="text-input floating-label"
+                                            ng-model="order.resultId"
+                                            ng-options="r.id as r.label for r in resultOptions">
+                                    </select>
+                                </td>
+                                <td>
+                                    <textarea style="border-radius: 10px;height: 40px !important;" ng-model="order.workbenchRemark"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row padding-top10">
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveBox(2)" ng-hide="saveBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="showUpdateBtn(info)" ng-hide="updateBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="row margin-bottom45 sss">
+                    <ul ng-if="pager.pages.length" class="pagination table-list"
+                        style="font-size: 14px;">
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(1,'true')">First</a></li>
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+                        <li ng-repeat="page in pager.pages"
+                            ng-class="{active:pager.currentPage === page}"><a
+                                ng-click="setPage(page,'true')">{{page}}</a></li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+                        </li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.totalPages,'true')">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <form ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div" name="patientRegistrationform" novalidate>
+
+                <div class="row padding-left-right-set4 margin-top4">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="">
+                                <th class="width6">Medication Name</th>
+                                <th class="width5">Generic Name</th>
+                                <th class="width6">Order Date &Time</th>
+                                <th class="width5">Frequency</th>
+                                <th class="width7">Adminstration Start Date &Time</th>
+                                <th class="width7">Administration Stop Date &Time</th>
+                                <th class="width7">Remarks</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="medication in detailedMedications" style="text-align: center;">
+                                <td> {{medication.itemName}}</td>
+                                <td> {{medication.genericName}}</td>
+                                <td> {{medication.addedDate1 }} {{ medication.addedTime }}</td>
+                                <td> {{medication.frequencyDesc}}</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-top: 31px;">
+                                            <input type="text"
+                                                   class="text-input floating-label"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   ng-model="medication.workbenchAddedDate"
+                                                   is-open="medication.opened"
+                                                   datepicker-options="dateOptions"
+                                                   show-button-bar="false"
+                                                   ng-click="openDateMedication(medication)"
+                                                   readonly />
+                                        </div>
+                                        <div class="col-md-6" style="margin-left: -21px;">
+                                            <uib-timepicker ng-model="medication.workbenchAddedDate"
+                                                            hour-step="1"
+                                                            minute-step="5"
+                                                            show-meridian="true">
+                                            </uib-timepicker>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-top: 31px;">
+                                            <input type="text"
+                                                   class="text-input floating-label"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   ng-model="medication.workbenchEndDate"
+                                                   is-open="medication.opened"
+                                                   datepicker-options="dateOptions"
+                                                   show-button-bar="false"
+                                                   ng-click="openDateMedication(medication)"
+                                                   readonly />
+                                        </div>
+                                        <div class="col-md-6" style="margin-left: -21px;">
+                                            <uib-timepicker ng-model="medication.workbenchEndDate"
+                                                            hour-step="1"
+                                                            minute-step="5"
+                                                            show-meridian="true">
+                                            </uib-timepicker>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <textarea style="border-radius: 10px;height: 40px !important;" ng-model="medication.workbenchRemark"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row padding-top10">
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveBox(3)" ng-hide="saveBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="showUpdateBtn(info)" ng-hide="updateBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="row margin-bottom45 sss">
+                    <ul ng-if="pager.pages.length" class="pagination table-list"
+                        style="font-size: 14px;">
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(1,'true')">First</a></li>
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+                        <li ng-repeat="page in pager.pages"
+                            ng-class="{active:pager.currentPage === page}"><a
+                                ng-click="setPage(page,'true')">{{page}}</a></li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+                        </li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.totalPages,'true')">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <form ng-show="isSetFirstTabLevel(4)" class="second-level-tab-display-div" name="patientRegistrationform" novalidate>
+
+                <div class="row padding-left-right-set4 margin-top4">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="">
+                                <th class="width6">Investigation Name</th>
+                                <th class="width5">Department</th>
+                                <th class="width6">Order Date &Time</th>
+                                <th class="width7">Test Performed Date &Time</th>
+                                <th class="width7">Result (Normal / Abnormal)</th>
+                                <th class="width7">Remarks</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="order in currentBedSideEncounterOrderLists" style="text-align: center;">
+                                <td>{{order.serviceStandardName}}</td>
+                                <td>{{order.specialityName}}</td>
+                                <td>{{order.createdDate}} </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-top: 31px;">
+                                            <input type="text"
+                                                   class="text-input floating-label"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   ng-model="order.workbenchAddedDate"
+                                                   is-open="order.opened"
+                                                   datepicker-options="dateOptions"
+                                                   show-button-bar="false"
+                                                   ng-click="openDateBedSide(order)"
+                                                   readonly />
+                                        </div>
+                                        <div class="col-md-6" style="margin-left: -21px;">
+                                            <uib-timepicker ng-model="order.workbenchAddedDate"
+                                                            hour-step="1"
+                                                            minute-step="5"
+                                                            show-meridian="true">
+                                            </uib-timepicker>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="text-input floating-label"
+                                            ng-model="order.resultId"
+                                            ng-options="r.id as r.label for r in resultOptions">
+                                    </select>
+                                </td>
+                                <td>
+                                    <textarea style="border-radius: 10px;height: 40px !important;" ng-model="order.workbenchRemark"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row padding-top10">
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveBox(4)" ng-hide="saveBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="showUpdateBtn(info)" ng-hide="updateBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="row margin-bottom45 sss">
+                    <ul ng-if="pager.pages.length" class="pagination table-list"
+                        style="font-size: 14px;">
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(1,'true')">First</a></li>
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+                        <li ng-repeat="page in pager.pages"
+                            ng-class="{active:pager.currentPage === page}"><a
+                                ng-click="setPage(page,'true')">{{page}}</a></li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+                        </li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.totalPages,'true')">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <form ng-show="isSetFirstTabLevel(5)" class="second-level-tab-display-div" name="patientRegistrationform" novalidate>
+
+                <div class="row padding-left-right-set4 margin-top4">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="">
+                                <th class="width6">Investigation Name</th>
+                                <th class="width5">Department</th>
+                                <th class="width6">Order Date &Time</th>
+                                <th class="width7">Procedure Perfomed Date & Time</th>
+                                <th class="width7">Remarks</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="info in getMrd |filter:searchKeyword track by $index" style="text-align: center;">
+                                <td>ECG</td>
+                                <td>Hopsital Services</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-top: 21px;">
+                                            <input type="text"
+                                                   autocomplete="off"
+                                                   class="text-input floating-label dirty"
+                                                   name="pathlogyTestDate"
+                                                   id="pathlogyTestDate"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   ui-mask="99/99/9999"
+                                                   placeholder="DD/MM/YYYY"
+                                                   ng-model="pathlogyTestDate"
+                                                   is-open="pathlogyTestDatePopup.opened"
+                                                   datepicker-options="dateOptions"
+                                                   show-button-bar="false"
+                                                   ng-click="openDateTh()"
+                                                   readonly />
+                                        </div>
+                                        <div class="col-md-6" style="margin-left: -21px;">
+                                            <uib-timepicker ng-model="time" id="timeID"
+                                                            hour-step="1"
+                                                            minute-step="5"
+                                                            show-meridian="true">
+                                            </uib-timepicker>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-top: 21px;">
+                                            <input type="text"
+                                                   autocomplete="off"
+                                                   class="text-input floating-label dirty"
+                                                   name="pathlogyTestDate"
+                                                   id="pathlogyTestDate"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   ui-mask="99/99/9999"
+                                                   placeholder="DD/MM/YYYY"
+                                                   ng-model="pathlogyTestDate"
+                                                   is-open="pathlogyTestDatePopup.opened"
+                                                   datepicker-options="dateOptions"
+                                                   show-button-bar="false"
+                                                   ng-click="openDateTh()"
+                                                   readonly />
+                                        </div>
+                                        <div class="col-md-6" style="margin-left: -21px;">
+                                            <uib-timepicker ng-model="time" id="timeID"
+                                                            hour-step="1"
+                                                            minute-step="5"
+                                                            show-meridian="true">
+                                            </uib-timepicker>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <textarea style="border-radius: 10px;height: 40px !important;"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row padding-top10">
+                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+                        <input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword" ng-keyup="serachDepartmentMaster(searchKeyword)">
+                        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="row margin-bottom45 sss">
+                    <ul ng-if="pager.pages.length" class="pagination table-list"
+                        style="font-size: 14px;">
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(1,'true')">First</a></li>
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+                        <li ng-repeat="page in pager.pages"
+                            ng-class="{active:pager.currentPage === page}"><a
+                                ng-click="setPage(page,'true')">{{page}}</a></li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+                        </li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.totalPages,'true')">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <form ng-show="isSetFirstTabLevel(6)" class="second-level-tab-display-div" name="patientRegistrationform" novalidate>
+
+                <div class="row padding-left-right-set4 margin-top4">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="">
+                                <th class="width6">Specialty</th>
+                                <th class="width5">Doctor</th>
+                                <th class="width6">Order Date &Time</th>
+                                <th class="width7">Doctor Visit Date and Time</th>
+                                <th class="width7">Remarks</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="details in consultOrdersList |filter:searchKeyword track by $index" style="text-align: center;">
+                                <td>{{details.specialityName}}</td>
+                                <td>{{details.refToDoctor!=null ? details.refToDoctor :details.outsideHospitalDoctorName}}</td>
+                                <td>{{details.createdDate}}</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-top: 31px;">
+                                            <input type="text"
+                                                   class="text-input floating-label"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   ng-model="details.workbenchAddedDate"
+                                                   is-open="details.opened"
+                                                   datepicker-options="dateOptions"
+                                                   show-button-bar="false"
+                                                   ng-click="openDateCross(details)"
+                                                   readonly />
+                                        </div>
+                                        <div class="col-md-6" style="margin-left: -21px;">
+                                            <uib-timepicker ng-model="details.workbenchAddedDate"
+                                                            hour-step="1"
+                                                            minute-step="5"
+                                                            show-meridian="true">
+                                            </uib-timepicker>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <textarea style="border-radius: 10px;height: 40px !important;"ng-model="details.workbenchRemark"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row padding-top10">
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveBox(6)" ng-hide="saveBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="showUpdateBtn(info)" ng-hide="updateBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="row margin-bottom45 sss">
+                    <ul ng-if="pager.pages.length" class="pagination table-list"
+                        style="font-size: 14px;">
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(1,'true')">First</a></li>
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+                        <li ng-repeat="page in pager.pages"
+                            ng-class="{active:pager.currentPage === page}"><a
+                                ng-click="setPage(page,'true')">{{page}}</a></li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+                        </li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.totalPages,'true')">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <form ng-show="isSetFirstTabLevel(7)" class="second-level-tab-display-div" name="patientRegistrationform" novalidate>
+
+                <div class="row padding-left-right-set4 margin-top4">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="">
+                                <th class="width6">Adsmission request Date and Time</th>
+                                <th class="width5">Department</th>
+                                <th class="width6">Admission Date & Time</th>
+                                <th class="width7">Admission Note</th>
+                                <th class="width7">Remarks</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="admission in opdAdmissionDetails |filter:searchKeyword track by $index" style="text-align: center;">
+                                <td>{{admission.createdDate}}</td>
+                                <td>{{admission.specialityName}}</td>
+                                <td>
+                                    <div class="col-md-6" style="margin-top: 31px;">
+                                        <input type="text"
+                                               class="text-input floating-label"
+                                               uib-datepicker-popup="dd/MM/yyyy"
+                                               ng-model="admission.workbenchAddedDate"
+                                               is-open="admission.opened"
+                                               datepicker-options="dateOptions"
+                                               show-button-bar="false"
+                                               ng-click="openDateAddmision(admission)"
+                                               readonly />
+                                    </div>
+                                    <div class="col-md-6" style="margin-left: -21px;">
+                                        <uib-timepicker ng-model="admission.workbenchAddedDate"
+                                                        hour-step="1"
+                                                        minute-step="5"
+                                                        show-meridian="true">
+                                        </uib-timepicker>
+                                    </div>
+                                </td>
+                                <td>{{admission.note}}</td>
+                                <td>
+                                    <textarea style="border-radius: 10px;height: 40px !important;" ng-model="admission.workbenchRemark"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row padding-top10">
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveBox(7)" ng-hide="saveBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="showUpdateBtn(info)" ng-hide="updateBtnFlag">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="row margin-bottom45 sss">
+                    <ul ng-if="pager.pages.length" class="pagination table-list"
+                        style="font-size: 14px;">
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(1,'true')">First</a></li>
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+                        <li ng-repeat="page in pager.pages"
+                            ng-class="{active:pager.currentPage === page}"><a
+                                ng-click="setPage(page,'true')">{{page}}</a></li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+                        </li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.totalPages,'true')">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+        </fieldset>
+
+
+
+
+    </div>
+</div>
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

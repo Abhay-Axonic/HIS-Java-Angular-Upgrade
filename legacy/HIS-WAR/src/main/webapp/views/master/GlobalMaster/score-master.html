@@ -1,0 +1,325 @@
+
+
+	<div id="page-content-wrapper">
+		<!-- <div class="row"> -->
+
+		<div class="container-fluid his-style">
+			<fieldset>
+				<!-- <legend class="heading-div">Score Master</legend> -->
+				<form name="scoremasterform" novalidate>
+
+					<div class="row margin-top10">
+						<div class="col-lg-1 col-md-1 col-sm-1">
+							<label>Name : </label>
+						</div>
+						<div class="col-lg-3 col-md-4 col-sm-4 ">
+							<div class="form-group" show-errors>
+								<input type="text" autocomplete="off" class="form-control" placeholder="Enter name"
+									name="scoreName" ng-model="scoreMasterObj.scoreName" style="border: 1px solid;border-radius: 10px;"
+									#scoreName="ng-model" required>
+								<p class="help-block"
+									ng-if="scoremasterform.scoreName.$error.required">Name is
+									required</p>
+							</div>
+						</div>
+
+						<!--         <div class="col-lg-1 col-md-1 col-sm-1">
+			 <div class="form-group" show-errors>
+				<input type="text" autocomplete="off" name="scoreName" id="code"
+											ng-model="scoreMasterObj.scoreName"
+											class="text-input floating-label" required> <label
+											for="code">Name</label>
+										<p class="help-block"
+											ng-if="scoremasterform.scoreName.$error.required">Code is
+											required</p>
+									</div>
+								</div>
+             -->
+
+
+					</div>
+
+					<div class="row margin-top10 grey-border"
+						style="border: 2px solid #ddd; padding: 2px 4px;"
+						ng-repeat=" paramDetails in scoreMasterObj.parameterList;">
+						<button ng-if="itemIndex !== 0" style="width: 3%" value="-"
+							class="btn-sm btn-primary pull-right margin-left3"
+							ng-click="removeParamDetails(itemIndex)">
+							<i class="fa fa-minus font-size12" style="color: #EA0303 !important;"></i>
+						</button>
+						<button class="btn-sm btn-primary pull-right" style="width: 3%" value="+"
+							ng-click="addParamDetails()">
+							<i class="fa fa-plus font-size12" style="color: #2A83F2 !important;"></i>
+						</button>
+
+
+						<div class="row margin-top10">
+							<div class="col-lg-1 col-md-1 col-sm-1">
+								<label>Parameter: </label>
+							</div>
+							<div class="col-lg-3 col-md-4 col-sm-4">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" placeholder="Enter parameter name"
+										name="parameterName" ng-model="paramDetails.parameterName" style="border: 1px solid;border-radius: 10px;"
+										class="form-control" #scoreParameterName="ng-model" required>
+									<p class="help-block"
+										ng-if="scoremasterform.parameterName.$error.required">ParameterName
+										is required</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- <div class="row margin-top10"> -->
+						<div class="row margin-top10" style="margin-bottom: 10px;"
+							ng-repeat=" subParamDetails in paramDetails.subParameterList">
+							<div class="col-lg-1 col-md-1 col-sm-1">
+								<label> Sub Parameter : </label>
+							</div>
+							<div class="col-lg-3 col-md-4 col-sm-4 ">
+								<input type="text" autocomplete="off" placeholder="Enter subparameter name" style="border: 1px solid;border-radius: 10px;"
+									name="subParameterName"
+									ng-model="subParamDetails.subParameterName"
+									class="form-control" #scoreSubParameterName="ng-model" required />
+								<!-- <div *ngIf="scoreSubParameterName.invalid && (scoreSubParameterName.dirty || scoreSubParameterName.touched)" class="">
+                    <div *ngIf="scoreSubParameterName.errors.required" class="validate">
+                        Sub Parameter Name is required
+                    </div>
+                </div> -->
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<input type="text" autocomplete="off" placeholder="Enter subparameter value"
+									name="subParameterValue" ng-model="subParamDetails.value" style="border: 1px solid;border-radius: 10px;"
+									class="form-control" #scoreSubParameterValue="ng-model"
+									required />
+
+							</div>
+							<div class="row">
+								<button class="btn-sm btn-primary" style="width: 3%" value="+"
+									ng-click="addSubParamDetails($parent.$index)" >
+									<i class="fa fa-plus font-size12" style="color: #2A83F2 !important;"></i>
+								</button>
+
+								<button *ngIf="$index !== 0" class="btn-sm btn-primary"
+									style="width: 3%" value="-"
+									ng-click="removeSubParamDetails($parent.$index, $index)">
+									<i class="fa fa-minus font-size12" style="color: #EA0303 !important;"></i>
+								</button>
+
+							</div>
+						</div>
+
+						<!--  </div>
+   -->
+
+
+
+					</div>
+
+
+				</form>
+			</fieldset>
+			<modal visible="showModal"></modal>
+
+
+			<!--   <div class="row margin-top10">         
+        <div class="col-lg-10 col-md-10 col-sm-10"> </div>                    
+        <div class="col-lg-1 col-md-1 col-sm-1">
+      
+          <button class="btn-lg btn-primary font-size14 width100" (click)="addUpdateScoreMaster()">Save</button>
+        </div>
+     </div> -->
+
+
+			<div class="row margin-top10 padding-left-right-set1">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow"
+							title="Save" data-toggle="modal" ng-click="saveScoreMaster()"
+							ng-if="saveBtnFlag"> <i class="fa fa-floppy-o"
+							style="font-size: 21px" aria-hidden="true"></i></a> <a href=""
+							class="btn btn-primary btn-save-box-shadow" title="Update"
+							data-toggle="modal" ng-click="updateScoreMaster()"
+							ng-if="updateBtnFlag"> <i class="fa fa-floppy-o"
+							style="font-size: 21px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search"
+						ng-model='searchText' style="margin-top: 0px"> <i
+						class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div>
+
+
+
+			<!-- </form> -->
+
+
+
+			<div class="row padding-left-right-set4 margin-top8">
+				<div class="col-md-12">
+					<table class="table table-bordered">
+						<tr class="">
+							<th class="width10">Score Name
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5">View
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5">Is Active
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width1">Action taken
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+
+						</tr>
+						<tr ng-repeat="scoreDetail in scoreDetailsList">
+							<td>{{scoreDetail.scoreName}}</td>
+
+							<!--  <td>
+                  
+                 			 <button class="button padding-bootom5 padding-top5
+                  				background-color-orange" data-toggle="modal" ng-click="getScoreMasterDetailsById(scoreDetail)"
+                 				 data-target="#viewDetails"> View</button>
+              					</td> -->
+
+							<td class="text-center"><a><i class="fa fa-info-circle"
+									aria-hidden="true"
+									ng-click="getScoreMasterDetailsById(scoreDetail)"
+									data-toggle="modal" data-target="#viewDetails"></i></a></td>
+
+							<td><label class="switch"> <input type="checkbox"
+									ng-model="scoreDetail.status" ng-true-value="'A'"
+									ng-false-value="'I'"
+									ng-change="updateStatusScoreMaster(scoreDetail)">
+									<span class="slider round"></span>
+							</label></td>
+
+							<td class="text-center"><a><i class="fa fa-pencil"
+									aria-hidden="true" ng-click="editScore(scoreDetail)"></i></a></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+			<!--Modal For View Score -->
+			<div class="modal fade" id="viewDetails" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<div class="modal-title patient-details-row border-radius4">
+								Details
+								<button type="button" class="close" data-dismiss="modal">�</button>
+							</div>
+						</div>
+						<div class="modal-body row">
+
+							<div
+								class="row margin-top10 grey-border margin-left3 margin-right4"
+								style="border: 2px solid #ddd; padding: 2px 4px;"
+								ng-repeat="paramDetails in selectedScore.parameterList">
+
+								<div class="row margin-top10">
+									<div class="col-lg-2 col-md-1 col-sm-1">
+										<label>Parameter : </label>
+									</div>
+									<div class="col-lg-3 col-md-4 col-sm-4">
+										<input type="text" autocomplete="off" placeholder="" name="parameterName"
+											ng-model="paramDetails.parameterName" class="form-control"
+											disabled />
+
+									</div>
+
+								</div>
+
+								<div class="row margin-top10" style="margin-bottom: 10px;"
+									ng-repeat="subParamDetails in paramDetails.subParameterList">
+									<div class="col-lg-2 col-md-1 col-sm-1">
+										<label> Sub Parameter : </label>
+									</div>
+									<div class="col-lg-3 col-md-4 col-sm-4"
+										ng-if="!subParamDetails.subParameterName">
+										<span>NA</span>
+									</div>
+									<div class="col-lg-3 col-md-4 col-sm-4"
+										ng-if="subParamDetails.subParameterName">
+										<input type="text" autocomplete="off" placeholder="" name="subParameterName"
+											ng-model="subParamDetails.subParameterName"
+											class="form-control" disabled />
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"
+										ng-if="subParamDetails.value">
+										<input type="text" autocomplete="off" placeholder="" name="subParameterValue"
+											ng-model="subParamDetails.value" class="form-control"
+											disabled />
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+						<div class="modal-footer" style="border: none;">
+							<button type="button" class="btn btn-primary" style="width: 5%"
+								data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+  
+  $(".selectedPageName").text("Score Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="score"]').parents("li").addClass("active");
+
+</script>
+
+
+

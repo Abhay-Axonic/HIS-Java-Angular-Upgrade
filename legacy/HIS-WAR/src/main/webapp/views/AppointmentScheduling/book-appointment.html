@@ -1,0 +1,874 @@
+<html>
+<title>Web Appointment</title>
+<!-- <title>SD Global Technologies</title> -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Remove Tap Highlight on Windows Phone IE -->
+    <meta name="msapplication-tap-highlight" content="no"/>
+    
+	<link rel="stylesheet" href="resources/assets/css/bootstrap.min.css" media="all">
+<!--    <link rel="stylesheet" type="text/css" href="resources/assets/css/param.common.master.css" /> -->
+	<link rel="stylesheet" href="resources/assets/css/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="resources/assets/css/book-appointment.css" />
+	<link rel="stylesheet" type="text/css" href="resources/assets/css/datepicker3.min.css" />
+	
+	<!-- for tables -->
+	<!-- <link rel="stylesheet" href="resources/assets/css/datatables.bootstrap.css"> -->
+	<link rel="stylesheet" type="text/css" href="resources/assets/js/docviewer/jquery.fancybox.css" />
+<style>
+#appointmentReason1 .bar{
+ height: 2px !important;
+}
+#dateOfBirth1 .bar{
+ height: 2px !important;
+}
+.radio-group{
+    position: relative;
+}
+
+.radio{
+    display:inline-block;
+    cursor:pointer;
+}
+
+.radio.selected{
+    border-color: red;
+    background-color: rgba(244, 184, 66, 1);
+}
+
+.thstyle {
+	border: none !important;
+    cursor: pointer !important;
+    width: 65px;
+    background-color: white !important;
+}
+.group76:hover{
+	background-color: rgba(244, 184, 66, 1) !important;
+}
+.labeltopadd{
+	font-size: 16.00px !important;
+    font-weight: 700 !important;
+    font-style: normal;
+    color: rgba(101, 96, 96, 1);
+    font-family: Lato, Arial;
+}
+.labeltopadd1 {
+    font-size: 12.00px !important;
+    font-weight: 400 !important;
+    font-style: normal;
+    color: rgba(101, 96, 96, 1);
+    font-family: Lato, Arial;
+}
+.trstyle {
+	border: none !important;
+    cursor: pointer !important;
+    width: 65px;
+	padding: 0px !important;
+}
+.patientName {
+	letter-spacing: 0.00px !important;
+    color: rgba(162, 162, 162, 1) !important;
+    -webkit-text-stroke: 1.00px rgba(0, 0, 0, 0) !important;
+    font-size: 14.00px !important;
+    font-weight: 700 !important;
+    font-style: normal !important;
+    font-family: Raleway, Arial !important;
+    text-decoration: none !important;
+}
+.polymer-form label.placeholder {
+	letter-spacing: 0.00px !important;
+    color: rgba(162, 162, 162, 1) !important;
+    -webkit-text-stroke: 1.00px rgba(0, 0, 0, 0) !important;
+    font-size: 14.00px !important;
+    font-weight: 700 !important;
+    font-style: normal !important;
+    font-family: Raleway, Arial !important;
+    text-decoration: none !important;
+}
+.padding-left-right2 {
+	padding-left: 2% !important;
+    padding-right: 2% !important;
+}
+.btnConfirmApp{
+	transform-origin: center;
+    opacity: 1;
+    cursor: default;
+    margin-top: 0.00px;
+    margin-right: 0.00px;
+    margin-bottom: 0.00px;
+    margin-left: 0.00px;
+    padding-top: 0.00px;
+    padding-right: 0.00px;
+    padding-bottom: 0.00px;
+    padding-left: 0.00px;
+    background-color: rgba(55, 188, 223, 1) !important;
+    border-bottom-color: rgba(112, 112, 112, 1) !important;
+    border-bottom-style: none !important;
+    border-bottom-width: 1.00px !important;
+    border-left-color: rgba(112, 112, 112, 1) !important;
+    border-left-style: none !important;
+    border-left-width: 1.00px !important;
+    border-right-color: rgba(112, 112, 112, 1) !important;
+    border-right-style: none !important;
+    border-right-width: 1.00px !important;
+    border-top-color: rgba(112, 112, 112, 1) !important;
+    border-top-style: none !important;
+    border-top-width: 1.00px;
+    border-top-left-radius: 0.00px;
+    border-top-right-radius: 0.00px;
+    border-bottom-left-radius: 0.00px;
+    border-bottom-right-radius: 0.00px;
+    -webkit-filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.1607843137254902));
+    filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.1607843137254902));
+    width: 200.00px;
+    height: 57.00px;
+    left: 0.00px;
+    top: 0.00px;
+    font-size: 18.00px !important;
+    font-weight: 700 !important;
+    font-family: Raleway, Arial !important;
+}
+.visitTypelabel {
+	font-size: 17.00px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.00px;
+    color: rgba(112, 112, 112, 1);
+}
+ul.a {
+  list-style-position: outside;
+}
+.desk{
+  width:auto;
+  height:auto;
+}
+.div-only-mobile{
+  width:auto;
+  height:auto;
+}
+.btnConfirmApp1{
+	transform-origin: center;
+    opacity: 1;
+    cursor: default;
+    margin-top: 0.00px;
+    margin-right: 0.00px;
+    margin-bottom: 0.00px;
+    margin-left: 0.00px;
+    padding-top: 0.00px;
+    padding-right: 0.00px;
+    padding-bottom: 0.00px;
+    padding-left: 0.00px;
+    background-color: rgba(55, 188, 223, 1) !important;
+    border-bottom-color: rgba(112, 112, 112, 1) !important;
+    border-bottom-style: none !important;
+    border-bottom-width: 1.00px !important;
+    border-left-color: rgba(112, 112, 112, 1) !important;
+    border-left-style: none !important;
+    border-left-width: 1.00px !important;
+    border-right-color: rgba(112, 112, 112, 1) !important;
+    border-right-style: none !important;
+    border-right-width: 1.00px !important;
+    border-top-color: rgba(112, 112, 112, 1) !important;
+    border-top-style: none !important;
+    border-top-width: 1.00px;
+    border-top-left-radius: 0.00px;
+    border-top-right-radius: 0.00px;
+    border-bottom-left-radius: 0.00px;
+    border-bottom-right-radius: 0.00px;
+    -webkit-filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.1607843137254902));
+    filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.1607843137254902));
+    width: 150.00px;
+    height: 57.00px;
+    left: 0.00px;
+    top: 0.00px;
+    font-size: 22.00px !important;
+    font-weight: 700 !important;
+    font-family: Raleway, Arial !important;
+}
+.table>tbody>tr>th, .table>thead>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th
+{
+    background-color: white !important; /* #F5F5A6 */
+	color:#fff !important;
+}
+.patientSearchTable>.table>tbody>tr>th{
+    background-color: #2e6ea2 !important; /* #F5F5A6 */
+	color:#fff !important;
+}
+
+
+</style>
+<body>
+ <div id="page-content-wrapper">
+  <div class="container-fluid row " id="">
+  <div class="row desk">
+  	<div class="row rectangle65" style="width: -webkit-fill-available; border-bottom: groove;">
+	  	<div class="col-md-4 col-sm-4 col-xs-4" style="padding-left: 6% !important;">
+	  	<!-- 	<img id="logo" width="80" height="70" /> --> <!-- class="unnamed" -->
+	  	</div>
+	  	<div class="col-md-4 col-sm-4 col-xs-4 text-center" style="margin-top: 2%;">
+	  		<label class="addressLable labeltopadd" id="unitAddress">{{unitAddress}}</label>
+	  	</div>
+	  	<div class="col-md-4 col-sm-4 col-xs-4 text-center" style="padding-top: 7;">
+	  		<div data-layer="c3417a13-20b4-4f5a-a628-b347578346f1" class="poweredBy">Powered by</div>
+	  		 <img src="resources/assets/images/icon/bed/temp/CHT_logo_2July.png" style="width: 212px !important;margin-left: 96px;"> <!-- class="image17" -->
+	  	</div>
+	</div>
+	
+	<div class="row" style="margin-left: 5% !important; margin-right: 5% !important;">
+		<div class="col-md-5 col-sm-5 col-xs-12 padding-left-right-set0">
+		 <div class="row">
+		   <img ng-if="doctorImage==null || doctorImage=='' " id="doctorProfileImagePath" src="resources/assets/images/tempImages/Dr2 copy.png" class="rectangle59"  style="width: 100%; height: 387px;" />
+		     <img ng-if="doctorImage!=null && doctorImage!='' " id="doctorProfileImagePath" src="{{doctorImage}}" class="rectangle59"  style="width: 100%; height: 387px;" />
+		 </div>
+		 
+		 <div class="row">
+		 <img src="resources/assets/images/icon/bed/temp/rectangle43.png" class="rectangle60"  style="width: 100%; height: 300px;" />
+		 </div>
+		 <div class="row">
+		  <div class="rectangle61">
+		  	<div class="row" style="text-align: center !important; padding-top: 5px !important;"><label class="drName"> Dr. {{doctorName}}</label><br>
+		  	<label class="generalMedicine" id="specialityId5"></label>
+		  	</div>`
+		  	 <div class="row padding-top10" style="margin-left: 5% !important; margin-right: 5% !important;">
+		  		<div class="selectTypeOfAppointment">Area Of Expertise</div>
+		  		<div class="row">
+		  		<ul class="a" id="expertise">
+ 				 <li class="areapractice" >{{areaOfExpertise}}</li>
+ 				 </ul>
+ 			   </div>
+ 			   <div class="row">
+	 			   <div class="col-md-6 col-sm-6 col-xs-6 padding-left-right-set0">
+	 			    <div class="selectTypeOfAppointment">Qualification</div>
+	 			  	 <div  style="width: auto !important; white-space: break-spaces !important; height: auto !important;" class="areapractice">{{webAppDetObj.doctorDegrees}}</div>
+	 			   </div>
+	 			    <div class="col-md-6 col-sm-6 col-xs-6">
+	 	<!-- 		    <div class="selectTypeOfAppointment">Years Of Practice</div> -->
+	 			  	 <div class="areapractice"> </div>
+	 			   </div>
+	 			    <!-- <div class="col-md-4 col-sm-4 col-xs-4">
+	 			    <div class="selectTypeOfAppointment">Visit Fee</div>
+	 			  	 <div class="areapractice">RS. 1700</div>
+ 			  		 </div> -->
+ 			  	</div>	 
+ 			  <!--  <div class="selectTypeOfAppointment padding-top10">About the Doctor </div> -->
+ 			   <div class="aboutDoctor"><p></p></div>
+		  </div>
+		 </div> 
+		</div>
+		</div>
+		
+		<div class="col-md-7 col-sm-7 col-xs-12 padding-left-right-set0">
+		 <div class="row"  style="margin-top: 5%; margin-left: 5% !important;">
+		  <div class="bookYourAppointment">Book your Appointment </div>
+		</div>
+		
+		 <div class="row" style="padding-top: 3%;">
+			<div class="rectangle45">
+				<div class="row" style="margin-left: 5% !important; margin-right: 5% !important;">
+				   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 uk-input-group widyh-auto padding-left-right2" style="margin-top: 10px">
+					    <div class="selectTypeOfAppointment" style="margin-top: 1%; margin-left: 2% !important;">Practice Location</div>
+					   		<select id="unitId" class="custom-dropdown patientName width-auto" name="unitId" aria-invalid="false" ng-model="selectedUnitId" 
+					   		     ng-change="getChangedUnitData();" >
+										<!-- <option value="0">Select Practice Location</option>  -->
+										<option ng-repeat="info in webAppDetObj.unitDetList"  value="{{info.unitId}}">{{info.unitName}}</option>
+										</select>
+					</div>
+					
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 uk-input-group widyh-auto padding-left-right2" style="margin-top: 10px">
+					<div class="selectTypeOfAppointment" style="margin-top: 1%; margin-left: 2% !important;">Speciality</div>
+							<select id="specId" class="custom-dropdown patientName width-auto" name="specId" aria-invalid="false" ng-model="selSpecId" 
+					   		     ng-change="getChangedSpecialityData();" convert-to-number>
+										<!-- <option value="0">Select Practice Location</option>  -->
+										<option ng-repeat="info in docSpecObj.docSpecList"  value="{{info.specialityId}}">{{info.specialityName}}</option>
+										</select>
+						<!-- <select id="specialityId" class="custom-dropdown patientName width-auto"  name="specialityId" aria-invalid="false" ng-model="selectedSpecialityId"
+						       ng-change="getChangedSpecialityData();">
+						                <option value="0">Select Speciality</option> 
+										<option ng-repeat="info in docSpecObj.docSpecialityList" value="{{info.specialityId}}">{{info.specialityName}}</option>
+						
+					   </select> -->
+					</div>
+				</div>	
+				<div class="row" style="margin-left: 5% !important; margin-right: 5% !important;">	
+				<div class="selectTypeOfAppointment" style="margin-top: 1%; margin-left: 2% !important;">Select Type of Appointment</div>
+				<div class="row">
+				<div class="col-md-8 col-sm-8 col-xs-8" id="visit-type-div">
+					<span class="icheck-inline" style="padding-left: 3% !important;"> <!-- class="css-checkbox padding-left5" -->
+						    <input type="radio" name="visit" checked="checked" id="newAppointment"  ng-model="patientAppObj.systemDefiedVisitType" value="1"  aria-required="true">
+							<label for="radio_visit_type1" class="radGroup2 visitTypelabel">New Appointment</label>
+							<!-- class="css-checkbox" -->
+							<input type="radio" name="visit" id="followUpApointment" ng-model="patientAppObj.systemDefiedVisitType" value="2"  aria-required="true"  ng-click="openPatientSearchModal();">
+					        <label for="radio_visit_type2" class="radGroup2 visitTypelabel">Follow Up Appointment</label>
+					</span>
+				</div>
+					<div class="col-md-4 col-sm-4 col-xs-4" id="visit-type-div">
+					
+					<span class="icheck-inline" style="padding-left: 2% !important; font-family: Raleway, Arial;"> 
+					<input type="checkbox" id="teleConsulation" ng-model="isTeleconsultationAppointment" ng-true-value="1" ng-false-value="0" class="css-label radGroup2 visitTypelabel" style="margin-top: px;">
+                            <label for="" class="visitTypelabel">Tele Consultation</label>
+                     </span>        
+	                                        
+				</div></div>
+				<div class="selectTypeOfAppointment" style="margin-top: 1%; margin-left: 2% !important;"><span>Visit Fee:-</span><span id="charges">{{appCharge}}</span></div>
+				<div class="availableDates" style="margin-top: 1%; margin-left: 2%;">Available Dates</div>
+			</div>
+			<div class="row" style="margin-top: 3% !important; margin-bottom: 1% !important;">
+			    <div class="col-md-6 col-sm-6 col-xs-6 padding-top10">
+			   	 	<label style=" margin-left: 7% !important;font-weight: 700 !important; font-size: 16px !important;font-family: Raleway, Arial!important; color: rgba(112, 112, 112, 1);" id="month"></label>
+			    </div>
+			    <div class="col-md-6 col-sm-6 col-xs-4 group119" style=" "><div class="col-md-2 col-sm-2 col-xs-2">
+   				 </div>
+			     <div class="col-md-6 col-sm-6 col-xs-8 padding-top10" style="/* padding-left: 102% !important; */text-align: -webkit-right;"> 
+			     	<div data-layer="ed5b3dc3-6c9d-4ab0-8cc9-1e9b1315610c" class="jumpToDate">Jump to Date</div>
+			     </div>
+			     		<div class="col-md-3 col-sm-3 col-xs-3 text-center" >           <!--  style="margin-left: 25% !important;" -->
+                     
+						<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+														name="slotDatePicker" id="slotDatePicker"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" ng-model="slotDatePicker"
+														model-view-value="true" is-open="slotDatePicker.opened"
+														datepicker-options="slotDateOptions" show-button-bar="false"
+														ng-click="openSlotDatePicker()" ng-change="onDatePickerDateChange();"  ng-disabled="disablePatForm" >
+														
+						</div>
+			     </div>
+			</div>    
+			 <div class="row">
+			 	<div data-layer="2faaea51-0a4b-44f8-8b66-f1c8664c634a" preserveAspectRatio="none" viewBox="0 -0.5 656 1" class="line7"><path d="M 0 0 L 656 0"></path></svg>
+				 </div>
+			</div>
+			 <div class="row" style="padding-left: 7% !important; padding-right: 7% !important; overflow: auto;">
+						<div class="row margin-bottom10 margin-top10">
+		   			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set">
+		   				<table class="table table-striped table-bordered" id="coversheetTable"  style="border: none !important;background-color:white !important;">
+		   					<thead>
+					      		<tr id="weekDaysRow" class="radio-group">
+					      		<th class='thstyle' style='width: 35px; vertical-align: middle;'>
+					      		<a type='button' id='prevBtn' class='carousel-control-prev-icon' title='Previous' style='width: 5px;float: left;' 
+					      		ng-click="getPreviousWeek(mondayOfWeek);"><i class='fa fa-caret-left' aria-hidden='true'></i></a></th>
+					      		<th class='thstyle' ng-repeat="week in weekArray" ng-click="getSlotByDate(week);"><div    class='group76 radio {{week.style}}' id="{{week.weekDate.getTime()}}"  ><div class='mon'>{{weekdays[week.weekDate.getDay()]}}</div><div class='x17'>{{week.weekDate.getDate()}}</div></th>
+					      		<th class='thstyle' style='width: 1px;vertical-align: middle;'><a type='button' id='nextBtn' class='carousel-control-next' title='Next' style='width: 50px;' ><i class='fa fa-caret-right' aria-hidden='true' ng-click="getNextWeek(sundayOfWeek);"></i></a></th>
+					      		</tr>
+				      		</thead>
+				      	</table>
+		   			</div>
+			</div>
+		   </div>
+		   
+		   <div class="row rectangle46" style="margin-top: 10;">
+		   		<div class="col-lg-4 col-md-4 col-sm-4 availableSlots" style="margin-top: 2%; margin-left: 7%; width: auto;">Available Slots</div>   
+		   		<div class="col-lg-6 col-md-6 col-sm-6 availableSlots" style="margin-top: 2%; margin-left: 5%;font-style: italic;" id="doctorAvailibilityTime"></div>
+			</div>
+			
+			<div class="row" style="padding-left: 9% !important; padding-right: 7% !important;overflow: auto !important;max-height:200px !important;">
+						<div class="row margin-bottom10">
+		   			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set" >
+		   			  <div id="slotDiv"><!-- info.originalFromTime > slotCheckTime -->
+				      	<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set1 margin-top2 slotBtn" ng-repeat="info in doctorSlotList"  id="{{info.slotId}}"
+				      	ng-if="info.isBlockedUnblocked == '2' && (info.slotPatientDetailsListsSize >= '0' && info.slotPatientDetailsListsSize < info.allowedOverBookingSlots) && (checkDateTime(info)==true) && info.isVip=='N' "
+				      	ng-click="selectSlotFun(info);">
+								<div ng-if="info.isBlockedUnblocked == '2' && (info.slotPatientDetailsListsSize >= '0' && info.slotPatientDetailsListsSize < info.allowedOverBookingSlots) "  ng-class="checkDateIsBefore(info)" style="padding:0px !important;"   >
+									<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+								</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set1 margin-top2 slotBtn" ng-repeat="info in doctorSlotList"  id="{{info.slotId}}"
+						            ng-if="info.isBlockedUnblocked == '2' && info.slotPatientDetailsListsSize == '0' && info.allowedOverBookingSlots=='0' && (checkDateTime(info)==true) && info.isVip=='N'" 
+						            ng-click="selectSlotFun(info);">
+								<div ng-if="info.isBlockedUnblocked == '2' && (info.slotPatientDetailsListsSize == '0' && info.allowedOverBookingSlots=='0') "  ng-class="checkDateIsBefore(info)" style="padding:0px !important;"   >
+									<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+								</div>
+						</div>
+						</div>
+						<div ng-if="doctorSlotList.length==0" style="text-align:center;">
+						 {{loadingMsg}}
+						</div> 
+		   			</div>
+			</div>
+		   </div>
+		   <br>
+		 
+		 <!-- <form method="POST"  id="appointmentBooking"> 
+		    <div class="row rectangle46" style="margin-top: 10;">
+		   		<div class="col-lg-4 col-md-4 col-sm-4 patientDetails" style="margin-top: 2%; margin-left: 7%; width: auto;">Patient Details</div>   
+			</div>	
+			<div class="row padding-top10" style="margin-left: 5% !important; margin-right: 5% !important;">
+										   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 uk-input-group widyh-auto padding-left-right2" style="margin-top: 21px">
+												<select id="prefixDropdown" class="custom-dropdown patientName" name="prefixId" value="${patientDetails.prefixId}" onchange="changeGender()"> style="width: 51% !important; margin-left: 45%;
+													 <c:if test="${not empty listPrefix}">
+													 	<c:forEach items="${listPrefix}" var="prefix"> 
+													 	<option value="${prefix.prefixId}">${prefix.prefixDesc}</option>
+													 	</c:forEach>
+														</c:if>
+											   </select>
+											</div>
+											<input type="hidden" id="navigate" name="navigate" value="${navigate}">
+											<div class="col-lg-3 col-md-3 col-sm-6 col-xs-10 uk-input-group padding-left-right2">
+											   <input type="text" id="firstName" label="First Name*" name="firstName" class="clini text-capitalize patientName" value="${patientDetails.firstName}" onkeyup = "capitaliseName(this)" />text-capitalize
+											</div>
+												
+											<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 uk-input-group padding-left-right2">
+												 <input type="text" id="middleName" label="Middle Name" onkeyup = "capitaliseName(this)"
+													name="middleName" class="clini text-capitalize patientName" value="${patientDetails.middleName}"/>
+											</div>
+
+											<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 uk-input-group padding-left-right2">
+												 <input type="text" id="lastName" label="Last Name*" onkeyup = "capitaliseName(this)"
+													name="lastName" class="clini text-capitalize patientName" value="${patientDetails.lastName}" />
+											</div>
+											
+											<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 uk-input-group padding-left-right2" style="padding-top: 15px;">
+													 <label for="gender" class="uk-forms-label patientName">Gender<span
+														class="req">*</span></label>
+													<nobr>
+														<span class="icheck-inline padding-left10">
+															<c:if test="${not empty listGenders}">
+																<c:forEach items="${listGenders}" var="genders" begin="0" end="0">
+																	<input type="radio" name="genderId" checked="checked" id="radio-for-gender${genders.genderId}" class="css-checkbox padding-left10" value="${genders.genderId}" />
+																	<label for="radio-for-gender${genders.genderId}" class="css-label radGroup2">${genders.desc}</label>
+																</c:forEach>
+																<c:forEach items="${listGenders}" var="genders" begin="1">
+																	<input type="radio" name="genderId" id="radio-for-gender${genders.genderId}" class="css-checkbox padding-left10" value="${genders.genderId}" />
+																	<label for="radio-for-gender${genders.genderId}"
+																		class="css-label radGroup2">${genders.desc}</label>
+																</c:forEach>
+															</c:if>
+														</span>
+													</nobr>
+
+											</div>
+											
+											<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 uk-input-group padding-left-right2" id="dateOfBirth1">
+												 <input type="text" id="dateOfBirth" label="Date Of Birth*" 
+													name="dateOfBirth" class="clini text-capitalize patientName" value="${patientDetails.dateOfBirth}" value="" readonly="readonly" />
+											</div>
+											
+											<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 uk-input-group padding-left-right2">
+												<input type="text" id="emailId" label="Email id*" 
+													name="emailId" class="clini patientName" value="${patientDetails.emailId}"/>
+													onkeyup = "capitaliseName(this)"
+											</div>
+											<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 uk-input-group padding-left-right2">
+											   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+											      <input type="text"  name="code" id="code" label="Code"  value="+44" maxlength="3" autocomplete="off"  class="clini text-capitalize patientName" value="${patientDetails.code}" >readonly="readonly"
+											   </div>
+											   <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="padding-left: 5px !important">
+											    <input type="text" id="mobileNumber" label="Mobile Number*" onkeyup = "capitaliseName(this)"
+													  name="mobileNumber" class="clini text-capitalize patientName" value="${patientDetails.mobileNumber}" autocomplete="off"/>
+											   </div>
+											</div>
+											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 uk-input-group padding-left-right2" id="appointmentReason1">
+												 <input type="text" id="appointmentReason" label="Enter Symptoms, complaints" onkeyup = "capitaliseName(this)"
+													name="appointmentReason" class="clini patientName" value="${patientDetails.appointmentReason}"/>
+											</div>
+										</div>
+			
+			<div class="row padding-top10 text-center">
+				<a><input type="button" id="" class="btn btn-primary btnConfirmApp" data-toggle="modal" data-target=" " value="Confirm Appointment" style="margin-left: 20px;" onclick="confirmBooking();"></a>
+			</div>
+		
+         </form>  -->
+         
+         
+         
+         
+         
+         
+         	<form name="modalityForm"  novalidate>
+										<div class="row">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="form-group" show-errors>
+															<select class="text-input floating-label" ng-disabled="disablePatForm" name="prefixId" ng-model="patientDetails.prefixId"  convert-to-number required>
+																<option ng-repeat="info in prefixList" value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+															</select>
+															<label for="code">Prefix<span class="star">*</span></label>
+															<p class="help-block" style="color:red;" ng-if="modalityForm.prefixId.$error.required">Prefix is required</p>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="form-group" show-errors>
+															<input only-letters-input ng-disabled="disablePatForm" type="text" autocomplete="off"  name="firstName" id=""  ng-model="patientDetails.firstName" class="text-input floating-label " required> 
+															<label for="description" class="LISDynamicLabel" >First Name<span class="star">*</span></label>
+															<p class="help-block" style="color:red;" ng-if="modalityForm.firstName.$error.required">First Name is required</p>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="">
+															<input only-letters-input type="text" autocomplete="off"  name="description" id="" ng-model="patientDetails.middleName" ng-disabled="disablePatForm"  class="text-input floating-label " > 
+															<label for="description" class="LISDynamicLabel" >Middle Name</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-10 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="">
+															<input only-letters-input type="text" autocomplete="off"  name="lastName" id="" ng-model="patientDetails.lastName"  ng-disabled="disablePatForm" class="text-input floating-label "> 
+															<label for="description" class="LISDynamicLabel" >Last Name</label>
+					<!-- 										<p class="help-block" ng-if="modalityForm.lastName.$error.required">Last Name is required</p> -->
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="form-group" show-errors>
+															<select class="text-input floating-label" name="genderId" ng-model="patientDetails.genderId" ng-disabled="disablePatForm" convert-to-number required>
+																<option></option>
+																<option ng-repeat="gen in genderList" value="{{gen.id}}">{{gen.desc}}</option>
+															</select>
+															<label for="code">Gender<span class="star">*</span></label>
+															<p class="help-block" style="color:red;" ng-if="modalityForm.genderId.$error.required">Gender is required</p>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="form-group" show-errors>
+															<!-- <input type="text" autocomplete="off" name="description" id="" ng-model="patientDetails.birthDate" ng-disabled="disablePatForm" class="text-input floating-label "> --> 
+															<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+														name="datepickerDOB" id="datepickerDOB"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" ng-model="datepickerDOB"
+														model-view-value="true" is-open="datepickerDOB.opened"
+														datepicker-options="dateOptionsDob" show-button-bar="false"
+														ng-click="openDatePickerDOB()" ng-blur="calculateAge()"  ng-disabled="disablePatForm" required> 
+															<label for="description" class="LISDynamicLabel" >DOB(DD/MM/YYYY)<span class="star">*</span></label>
+															<p class="help-block" style="color:red;" ng-if="modalityForm.datepickerDOB.$error.required">DOB is required</p>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="">
+															<input numbers-only type="text" autocomplete="off"  name="description" id="" ng-model="patientDetails.age" ng-blur="showDOBByAge(patientDetails.age)" ng-disabled="disablePatForm" class="text-input floating-label "> 
+															<label for="description" class="LISDynamicLabel" >Age</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-10 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="form-group" show-errors>
+															<input numbers-only type="text" autocomplete="off"  name="mobileNumber" id="mobileNumber" ng-model="patientDetails.mobileNumber" ng-disabled="disablePatForm" class="text-input floating-label " maxlength="{{registrationFieldObj.mobileDigit}}" required> 
+															<label for="description" class="LISDynamicLabel" >Mobile No.<span class="star">*</span></label>
+															<p class="help-block" style="color:red;" ng-if="modalityForm.mobileNumber.$error.required">Mobile No. is required</p>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+													<!-- 	<div class="" show-errors> -->
+															<input type="text" autocomplete="off"  name="email" id="" ng-model="patientDetails.email" ng-disabled="disablePatForm" class="text-input floating-label"> 
+															<label for="description" class="LISDynamicLabel" >Email Id</label>
+													<!--<p class="help-block" ng-if="modalityForm.email.$error.required">Email Id is required</p> -->
+													<!-- </div> -->
+													</div>
+												</div>
+											</div>
+											 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" ng-if="selectedSlotId == '3'">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="">
+															<!-- <select class="text-input floating-label" ng-model="patientDetails.ehcPackageId" >
+																<option ng-repeat="package in packageEHCList" value="{{package.packageMasterId}}">{{package.serviceDescription}}</option>
+															</select> -->
+															<input type="text" autocomplete="off"  name="description" placeholder="Search" id="searchServiceId" class="text-input floating-label ng-pristine ng-valid dirty ng-empty ng-touched" ng-model="search" uib-typeahead="pack.serviceStandardName for pack  in searchPackages($viewValue)" typeahead-on-select="selectPackageService($item, $model, $label)" aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-394-4323" style="">
+															<label for="code">EHC Package</label>
+														</div>
+													</div>
+												</div>
+											</div>
+									<!-- 	<div
+											class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="checkbox padding-top10">
+												<label class="common-lable-color-set"> <input
+													type="checkbox" ng-model="isTeleconsultationAppointment"
+													ng-true-value="1" ng-false-value="0">Teleconsultation Appointment
+												</label>
+											</div>
+										</div> -->
+										
+										<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="form-group">
+															<select class="text-input floating-label" ng-model="patientDetails.reasonForAppointmentId">
+																<option value=""></option>
+																<option ng-repeat="info in reasonList" ng-if="info.reasonTypeId == 5" value="{{info.reasonMasterId}}">{{info.reasonDesc}}</option>
+															</select>
+															<label for="code">Reason for appointment</label>
+														</div>
+													</div>
+												</div>
+											</div> --> 
+											
+											<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11">
+														<div class="">
+															<input type="text" autocomplete="off"   name="description" id="" ng-model="patientDetails.remark" class="text-input floating-label "> 
+															<label for="description" class="LISDynamicLabel" >Remark</label>
+														</div>
+													</div>
+												</div>
+											</div>
+									
+										</div>
+								
+								     <div class="row">
+										<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+											<div class="col-lg-11 col-sm-11 col-md-11">
+											   <a><input type="button" id="" class="btn btn-primary btnConfirmApp" data-toggle="modal" data-target=" "
+											    value="Book Appointment" style="margin-left: 20px;"  ng-click="bookNormalAppointment();"></a><!-- bookNormalAppointment ng-click="confirmBooking();" -->
+											</div>
+											
+											</div>
+										</div>
+										
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+											<div class="col-lg-11 col-sm-11 col-md-11">
+											   <a><input type="button" id="" class="btn btn-primary btnConfirmApp1" value="Reset" style="margin-left: 20px;"  ng-click="resetDetails();"></a><!-- bookNormalAppointment ng-click="confirmBooking();" -->
+											</div>
+											
+											</div>
+										</div>
+										
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+											<div class="col-lg-11 col-sm-11 col-md-11">
+											   <a><input ng-if="applicationConfig.isPaymentGatewayReqForWebApp!=null && applicationConfig.isPaymentGatewayReqForWebApp=='Y' 
+											   && applicationConfig.razorPayKeyId!=null && applicationConfig.razorPayKeyId!=''  && applicationConfig.razorPaySecretKey!=null && applicationConfig.razorPaySecretKey!='' " 
+											   type="button" id="" class="btn btn-primary btnConfirmApp1" value="Book and Pay" style="margin-left: 20px;"  ng-click="openPaymentPage();"></a><!-- bookNormalAppointment ng-click="confirmBooking();" -->
+											</div>
+											
+											</div>
+										</div>
+										
+									</div>
+									</form>	
+         
+  </div>
+ </div>  
+  </div>             		
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div id="patientSearchModal" class="modal fade ng-scope in common-medium-popup" data-backdrop="static" role="dialog">
+	<div class="modal-dialog">
+	<form name="uploadForm" novalidate>
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Patient Search
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+					<div class="row" style="margin-top:10px !important;">
+						<div class="col-lg-3 col-sm-3 col-md-3" style="margin-right:20px;margin-left:20px;">
+											<div class="">
+												<input type="text" autocomplete="off" name="registrationNumber" ng-model="searchObj.uhidNumber" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid dirty ng-empty" press-enter="searchPatient(patientSearchObj)">
+												<label for="description" class="LISDynamicLabel">UHID Number</label>
+											</div>
+						</div>
+							<div class="col-lg-2 col-sm-2 col-md-2">
+											<div class="">
+											<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="searchPatientByUhid()">
+										   <i class="fa fa-search" style="font-size: 16px !important;" aria-hidden="true"></i></a>
+							</div>
+						</div>
+						
+					</div>
+						
+				<div class="row">
+					<div class="row margin-top10 common-sub-table padding-left-right-set4 patientSearchTable">
+					<table class="table table-striped table-bordered">
+						<thead>
+								<tr>
+									<th style="width:2%;background-color: #2e6ea2 !important;"></th>
+									<th style="background-color: #2e6ea2 !important;" class="test-name-width">Patient's Name</th>
+									<th style="background-color: #2e6ea2 !important;" class="test-name-width">Mobile Number</th>
+									<th style="background-color: #2e6ea2 !important;" class="test-name-width">Birth Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat = "pat in searchPatList">
+								    <td>
+										<input type="radio" ng-click="fetchAndFillPatDetail(pat);">
+									</td>
+									<td>
+										<div>
+										  {{pat.firstName}} {{pat.lastName}}
+										</div>
+									</td>
+									<td>
+										  {{pat.mobileNumber}} 
+								    </td>
+								    <td>
+										  {{pat.birthDate}} 
+								    </td>
+								</tr>
+							</tbody>
+					</table>
+					<table class="table table-bordered">
+						 <tr ng-if="searchPatList.length==0">
+							<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">{{searchLoadingMsg}}</p></td>
+						</tr>
+					</table>
+				</div>
+				</div>
+			</div>
+			
+		<!-- 	<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Ok</button>
+				 <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div> -->
+		</div>
+		</form>
+		
+	</div>
+</div>
+
+
+
+
+<div id="patientAlreadyExist" class="modal fade ng-scope in common-medium-popup" data-backdrop="static" role="dialog">
+	<div class="modal-dialog">
+	<form name="uploadForm" novalidate>
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Patient 
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+					<div class="row" style="margin-top:10px !important;">
+						
+					</div>
+						
+				<div class="row">
+					<div class="row margin-top10 common-sub-table padding-left-right-set4 patientSearchTable">
+					<table class="table table-striped table-bordered">
+						<thead>
+								<tr>
+									<th style="width:2%;background-color: #2e6ea2 !important;"></th>
+									<th style="background-color: #2e6ea2 !important;" class="test-name-width">Patient's Name</th>
+									<th style="background-color: #2e6ea2 !important;" class="test-name-width">Mobile Number</th>
+									<th style="background-color: #2e6ea2 !important;" class="test-name-width">Birth Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat = "pat in patientAvailList">
+								    <td>
+										<input type="radio" ng-click="fetchAndFillPatDetail(pat);">
+									</td>
+									<td>
+										<div>
+										  {{pat.firstName}} {{pat.lastName}}
+										</div>
+									</td>
+									<td>
+										  {{pat.mobileNumber}} 
+								    </td>
+								    <td>
+										  {{pat.dob}} 
+								    </td>
+								</tr>
+							</tbody>
+					</table>
+					<table class="table table-bordered">
+						 <tr ng-if="patientAvailList.length==0">
+							<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">{{searchLoadingMsg}}</p></td>
+						</tr>
+					</table>
+				</div>
+				</div>
+			</div>
+			
+		</div>
+		</form>
+		
+	</div>
+</div>
+
+ <!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
+
+</body>
+</html>
+
+ 
+  

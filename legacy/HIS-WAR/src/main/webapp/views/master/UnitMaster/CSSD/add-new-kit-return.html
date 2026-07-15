@@ -1,0 +1,515 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+		<form name="addNewKitReturnForm">
+			<!-- <legend class="heading-div">Material Return</legend> -->
+			<div class="row margin-top10">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<!-- <div class="">
+								<select class="text-input floating-label dirty">
+									<option>Pharmacy Store</option>
+								</select>
+								<label for="code">From Store</label>
+							</div> -->
+							<div class="">
+								<select class="text-input floating-label" name="fromStore"
+								ng-model="selectedFromStoreId"
+								 ng-options="data.storeId as data.storeName for data in kitReturnFromStoreList" required>
+								
+								</select> <label for="fromStore">From Store</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<!-- <div class="">
+								<select class="text-input floating-label dirty">
+									<option>Main Store</option>
+								</select>
+								<label for="code">To Store</label>
+							</div> -->
+							<div class="">
+								<select class="text-input floating-label" name="toStore"
+								ng-model="selectedToStoreId"
+								 ng-options="data.storeId as data.storeName for data in kitReturnToStoreList" required>
+								
+								</select> <label for="toStore">To Store</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-md-1 padding-left-right-set1">
+					<div class="common-save-button pull-right">
+						<input type="button" value="Get Issue" class="btn btn-primary btn-save-box-shadow" data-target="#getItemList" data-toggle="modal">
+					</div>
+				</div> -->
+				<!-- <div class=" col-lg-3 col-md-3 col-sm-3 padding-left-right-set1 padding-top10">
+					<label class="cursor-pointer radio-inline padding-top10"><input type="radio" name="optradio" class="radioAcceptedHold4" data-toggle="modal" data-target="#searchKit" checked>Get Item</label> 
+					<label class="cursor-pointer radio-inline padding-top10"><input type="radio" name="optradio" class="radioRejected4" data-toggle="modal" data-target="#ur">Near Expiry</label>
+				</div> -->
+				<div class="col-lg-1 col-sm-1 col-md-1 padding-top4 padding-left-right-set4">
+					<div class="common-save-button" > 
+						 <Button href="" id="updateBtn" class="btn btn-primary btn-save-box-shadow" ng-disabled="isGetKitDisabled()" style="width: auto;" data-target="#searchKitModal" data-toggle="modal" >
+						 	Get Kit 
+						 </Button> 
+					</div> 
+				</div>
+			</div>
+			</form>
+		</fieldset>
+		<div class="row padding-left-right-set0 padding-top4">
+			<div class="col-md-12 col-lg-12 col-sm-8 padding-left-right-set4"  id="nonBillableTableHt">
+				<fieldset>
+					<!-- <legend class="heading-div">Table</legend> -->
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+							<table class="table table-bordered">
+						<thead>
+							<tr>
+							<th class="width1 vertical-middle text-center"><!-- <input type="checkbox" class=""> --></th>
+							   
+							  			<th class="width4">Kit Code
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">Kit Name
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">Batch No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">AutoClave No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">AutoClave Date
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">Expiry Date
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+							   
+								<!-- <th class="width4">Kit Code
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width5">Kit Name
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width5">Generic Name
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th> -->
+								<!-- 
+								<th class="width5">Stock Available
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width3">UOM
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width4">UOM Unit
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th> -->
+								<!-- <th class="width6">Batch No.
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width4">Expiry Date
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th> 
+								<th class="width3">Return Qty
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>-->
+								<th class="width10">Reason for Return
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width1"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- <tr>
+								<td class="vertical-middle text-center"><input type="checkbox"></td>
+								<td class="vertical-middle"></td>
+								<td class="vertical-middle"></td>
+								<td class="vertical-middle"></td>
+								<td class="vertical-middle">BT-672</td>
+								<td class="vertical-middle">25/02/2019	</td>
+								<td class="vertical-middle"><input type="Number" class="w-100 ng-pristine ng-valid ng-empty ng-touched select-box" value="5"></td>
+								<td class="vertical-middle">
+									<select class="border-dropdown ng-pristine ng-valid ng-empty ng-touched select-box" ng-model="paramRefrengMaster.ageGroupId" style="">
+											<option selected="" value="">Please Select Return Reason</option>
+									</select>
+									<select class="border-dropdown select-box">
+										<option>Unuse</option>
+									</select>
+								</td>
+								<td class="text-center vertical-middle"><a><i class="fa fa-times"></i></a></td>
+							</tr> -->
+							
+							<tr ng-repeat="data in kitList">
+								<td class="vertical-middle text-center"><!-- <input type="checkbox" name="selectedKitReturn" ng-checked="selectedKitToReturn" ng-click="selectKitsToReturn(data)" ng-model="selectedKitReturn" value={{data}} multiple></td> -->
+								<td class="vertical-middle">{{data.kitCode}}</td>
+								<td class="vertical-middle">{{data.kitName}}</td>
+								<td class="vertical-middle">{{data.batchNumber}}</td>
+								<td class="vertical-middle">{{data.autoclaveNumber}}</td>
+								<td class="vertical-middle">{{data.autoclaveDate}}</td>
+								<td class="vertical-middle">{{data.expiryDate}}</td>
+								<!-- <td class="vertical-middle"><input type="Number" class="w-100 ng-pristine ng-valid ng-empty ng-touched select-box" ng-model="data.returnQuantity"></td> -->
+								<td class="vertical-middle">
+									<!-- <select class="border-dropdown select-box">
+										<option>Unuse</option>
+									</select> -->
+									<input type="text" autocomplete="off" class="w-100 ng-pristine ng-valid ng-empty ng-touched select-box" ng-model="data.reasonForReturn">
+								</td>
+								<td class="text-center vertical-middle"><a><i class="fa fa-times" ng-click="removeKit(data)"></i></a></td>
+							</tr>
+						</tbody>
+					</table>
+						</div>
+					</div>
+				</fieldset>
+				<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+					<div class="row his-style margin-top10 padding-right20">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-caret-square-o-right " aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<!-- <div class="">
+									<select class="text-input floating-label dirty">
+										<option value="">Saeed G</option>
+									</select> <label for="code">Carrier</label>
+								</div> -->
+								<div class="">
+									<select ng-model="kitReturnObj.carrier" class="text-input floating-label dirty">
+										<option value="Saeed G" >Saeed G</option>
+									</select> <label for="code">Carrier</label>
+								</div>
+							</div>
+						</div>
+					</div>
+						<div class="col-md-1 text-right">
+							<label>Remark:</label>
+						</div>
+						<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right8">
+							<textarea row="1" class="form-control" ng-model="kitReturnObj.remark"></textarea>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left0px-right6px">
+							<div class="">
+								<!-- common-save-button -->
+								<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#confirmPopupOnSaveKitReturn" ng-disabled="isSaveDisabled()" >
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left0px-right6px">
+							<div class="">
+								<!-- common-save-button -->
+								<a href="#/KitReturn">
+									<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+								</a>
+							</div>
+						</div>
+					</div>
+				</footer>
+			</div>
+		</div>
+	</div>
+	
+	
+<!-- Confirmation PopUp To Save Kit Return -->
+	<div id="confirmPopupOnSaveKitReturn" class="modal fade ng-scope in"
+		role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static" >
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal"
+							ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>Are you sure you want to save?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+							id="okBtn" ng-click="saveKitReturn();">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>	
+	
+	
+	<!-- Search Kit Modal Start -->
+<div id="searchKitModal" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					 Search Kit
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top8">
+					<div class="col-lg-8 col-md-8 col-sm-10 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label"  ng-model="searchKitField"> <label for="code">Search Kit</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-1 padding-left-right-set4 padding-top4">
+						<div class="common-save-button"> 
+							 <a href="" class="btn btn-primary btn-save-box-shadow text-width-auto pull-left" ng-click="searchKitByName()"> 
+							 	<i class="fa fa-search" aria-hidden="true"></i> 
+							 </a> 
+						</div>
+					</div>
+				</div>
+				<div class="row padding-left-right-10 margin-top10">
+						<div class="col-md-12 common-table-height-250">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+									<th class="width1"></th>
+										<!-- <th class="width15">
+											Kit Code
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width15">
+											Kit Name
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width4">Batch No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th> -->
+										<th class="width4">Kit Code
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">Kit Name
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">Batch No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">AutoClave No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">AutoClave Date
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4">Expiry Date
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="kitInfo in kitDetailsList">
+											<td class="vertical-align text-center"><input type="checkbox" name="selectedKitInfo" ng-checked="selectedKitIndent" ng-click="selectKitInfo(kitInfo)" ng-model="selectedKitInfo" value={{kitInfo}} multiple></td>
+											<td>{{kitInfo.kitCode}}</td>
+											<td>{{kitInfo.kitName}}</td>
+											<td>{{kitInfo.batchNumber}}</td>
+											<td>{{kitInfo.autoclaveNumber}}</td>
+											<td>{{kitInfo.autoclaveDate}}</td>
+											<td>{{kitInfo.expiryDate}}</td>
+										</tr>
+									</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="showKitInfo()">Select</button>
+					<span><button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button></span>
+				</div>
+		</div>
+	</div>
+</div>
+<!-- Search Kit Modal End -->
+	
+</div>
+
+<script src="resources/assets/js/common/page-height.js"></script>

@@ -1,0 +1,831 @@
+<form ng-show="tab=='2'" name="" class="second-level-tab-display-div">
+<fieldset class="normalRegistration sub-fieldset margin-top4 padding-left-right-set4">
+			<legend class="sub-legend" ng-if="kinsList.length > 0">Next of Kin List</legend>
+			
+				<div class="row" ng-if="kinsList.length > 0">
+					<div class="col-md-12 col-lg-12 headerHeight">
+						<table class="table table-bordered">
+							<tr>
+								<th class="width1">
+									<span class=""></span>
+								</th>
+								<th class="width15">
+									<span class="">Name</span>
+								</th>
+								<!-- <th class="width5">
+									Gender
+								</th> -->
+								<th class="width15">
+									Mobile No.
+								</th>
+								<th class="width15">
+									Relationship
+								</th>
+								<th class="date-column">
+									Action taken
+								</th>
+							</tr>
+							<tr ng-repeat = "kin in kinsList">
+								<td>
+									<input  type="radio" ng-model="nextOfKinId" ng-change="setKinId(kin.kinDetailsId)" value="{{kin.kinDetailsId}}"  name="kins-of-patient">
+								</td>
+								<td>
+									{{kin.kinName}}
+								</td>
+								<!-- <td>
+									-
+								</td> -->
+								<td>
+									{{kin.mobileNo}}
+								</td>
+								<td>
+									{{kin.relationDesc}}
+								</td>
+								<td>
+									<a href="" ng-click="getKinDetailsById(kin.kinDetailsId)" data-toggle="modal" ><i class="fa fa-pencil" aria-hidden="true"></i></a> <!-- data-target="#editKinDetalsModal" -->
+									<a href="" class="margin-left10" ng-click="updateKinDetailsStatus(kin.kinDetailsId)"><i class="fa fa-times" aria-hidden="true"></i></a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+</fieldset>
+
+<fieldset class="normalRegistration sub-fieldset margin-top4" ng-repeat="kinDetails in kinDetailsList"><!-- ng-form="paramReform" -->
+	<legend class="sub-legend"> Next of Kin Details</legend>
+				<div class="row padding-top12">
+				  <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon"> 
+								<i class="fa fa-object-group" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10" ng-if="registrationFieldObj.kinprefix=='Y'">
+									<div  class="form-group"><!-- {{prefixId}} -->
+									<select  class="text-input floating-label" id="prefixId11" name="prefixId" ng-model="kinDetails.prefixId" convert-to-number required> 
+										<!--<option value="">Select Prefix</option> -->
+										<option ng-repeat="info in prefixList" value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+									</select>
+									<label for="code">Prefix <span class="star">*</span></label>	
+								</div>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10" ng-if="registrationFieldObj.kinprefix=='N'">
+									<div  class="form-group">
+									<select  class="text-input floating-label" id="prefixId11" name="prefixId" ng-model="kinDetails.prefixId" convert-to-number required> 
+										<option ng-repeat="info in prefixList" value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+									</select>
+									<label for="code">Prefix</label>	
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-user-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 " ng-if="registrationFieldObj.kinName=='Y'">
+								<div class=""   ><!-- only-letters-input -->
+									<input  type="text" autocomplete="off" name="kinName" id="requiredOn" ng-model="kinDetails.kinName" class="text-input floating-label" required>
+									<label for="code">Name<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 " ng-if="registrationFieldObj.kinName=='N'">
+								<div class=""><!-- only-letters-input -->
+									<input  type="text" autocomplete="off" name="kinName" id="requiredOn" ng-model="kinDetails.kinName" class="text-input floating-label" required>
+									<label for="code">Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-user-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 " ng-if="registrationFieldObj.relationId=='Y'">
+								<div class="form-group">
+									<select class="text-input floating-label" name="relationId" ng-model="kinDetails.relationId" convert-to-number required>
+										<!--<option value="">Select Relationship With Patient</option> -->
+										<option ng-repeat="info in relationList" value="{{info.id}}">{{info.desc}}</option>
+									</select>
+									<label for="code">Relationship with Patient<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 " ng-if="registrationFieldObj.relationId=='N'">
+								<div class="">
+									<select class="text-input floating-label" name="relationId" ng-model="kinDetails.relationId" convert-to-number >
+										<option ng-repeat="info in relationList" value="{{info.id}}">{{info.desc}}</option>
+
+									</select>
+									<label for="code">Relationship with Patient</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-mobile" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 " ng-if="registrationFieldObj.kinMobileNo=='Y'">
+								<div class="form-group">
+									<input numbers-only type="text" autocomplete="off" name="mobileNo" id="requiredOn" ng-model="kinDetails.mobileNo" class="text-input floating-label" maxlength="{{registrationFieldObj.mobileDigit}}" required>
+									<label for="code">Mobile No.<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 " ng-if="registrationFieldObj.kinMobileNo=='N'">
+								<div class=""   >
+									<input numbers-only type="text" autocomplete="off" name="mobileNo" id="requiredOn" ng-model="kinDetails.mobileNo" class="text-input floating-label" maxlength="{{registrationFieldObj.mobileDigit}}" >
+									<label for="code">Mobile No</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+				 <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-mobile" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-11 col-md-10 " ng-if="registrationFieldObj.phoneNo=='Y'">
+								<div class="form-group">
+									<input numbers-only type="text" autocomplete="off" name="code" id="requiredOn" ng-model="kinDetails.phoneNo" class="text-input floating-label" maxlength="{{registrationFieldObj.mobileDigit}}" required>
+									<label for="code">Phone No<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 " ng-if="registrationFieldObj.phoneNo=='N'">
+								<div class="">
+									<input numbers-only type="text" autocomplete="off" name="code" id="requiredOn" ng-model="kinDetails.phoneNo" class="text-input floating-label" maxlength="{{registrationFieldObj.mobileDigit}}">
+									<label for="code">Phone No</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-id-card-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11" ng-if="registrationFieldObj.identificationId=='Y'">
+								<div class="form-group">
+									<select class="text-input floating-label" name="code" ng-model="kinDetails.identificationId"  ng-change="disableEnableExpiry(kinDetails.identificationId,$index)" required>
+										<!--<option value="">Select Identification</option>-->
+										<option ng-repeat="info in identificationList"  value="{{info.identificationId+'_'+info.isExpiryRequired}}">{{info.identificationName}}</option>
+									</select>
+									<label for="code">Identification Type<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10" ng-if="registrationFieldObj.identificationId=='N'">
+								<div class="">
+									<select class="text-input floating-label" name="code" ng-model="kinDetails.identificationId"  ng-change="disableEnableExpiry(kinDetails,kinDetails.identificationId,$index,true)">
+										<option ng-repeat="info in identificationList"  value="{{info.identificationId+'_'+info.isExpiryRequired}}">{{info.identificationName}}</option>
+									</select>
+									<label for="code">Identification Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-id-card-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10" ng-if="registrationFieldObj.identificationNo=='Y'">
+								<div class="form-group">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" ng-model="kinDetails.identificationNo" class="text-input floating-label" required>
+									<label for="code">Identification No.<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10" ng-if="registrationFieldObj.identificationNo=='N'">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" ng-model="kinDetails.identificationNo" class="text-input floating-label">
+									<label for="code">Identification No.</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4" ng-if="kinDetails.isExpiry == 'Y'">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class=""  >
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="kinDetails.expiry"
+									model-view-value="true" is-open="expiry.opened[$index]"
+									datepicker-options="dateOptionsKinDetails" show-button-bar="false"
+									ng-click="openDatePickerExpiry($index)"> <label for="code" class="">
+									Expiry Date</label>
+							</div>
+						</div>
+						</div>
+					</div>
+				 </div>	
+				
+		</div>
+		<div class="row padding-top10">
+			<div class="col-lg-6 col-md-6 col-sm-12 padding-left-right-set0">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15">
+						<div class="row input-container">
+							<input type="checkbox" ng-model="kinDetails.isGuarantor" ng-true-value="'Y'" ng-false-value="'N'">Guarantor
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set0 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon" style="width:30px"> 
+								<i class="fa fa-map-marker" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10" ng-if="registrationFieldObj.kinAddress=='Y'">
+								<div class="form-group">
+									<input type="text" autocomplete="off" name="code" id="requiredOn"  ng-model="kinDetails.address" class="text-input floating-label" required>
+									<label for="code">Address<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10" ng-if="registrationFieldObj.kinAddress=='N'">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn"  ng-model="kinDetails.address" class="text-input floating-label">
+									<label for="code">Address</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-flag" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 " ng-if="registrationFieldObj.countryId=='Y'">
+							<div class="form-group">
+							<!-- <input type="hidden" ng-model="area.areaId"> -->
+							
+								<select class="text-input floating-label" name="countryId" ng-model="kinDetails.countryId" ng-change="getStateByCountry(kinDetails.countryId)" convert-to-number required>
+									<!--<option value="">Select Country</option> -->
+									<option ng-repeat="info in countryList" value="{{info.countryId}}">{{info.countryName}}</option>
+								</select> <label for="code">Country<span class="star">*</span></label>
+							</div>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 " ng-if="registrationFieldObj.countryId=='N'">
+							<div class=""   >
+								<select class="text-input floating-label" name="countryId" ng-model="kinDetails.countryId" ng-change="getStateByCountry(kinDetails.countryId)" convert-to-number>
+									<!--<option value="">Select Country</option> -->
+									<option ng-repeat="info in countryList" value="{{info.countryId}}">{{info.countryName}}</option>
+								</select> <label for="code">Country</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-university" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10" ng-if="registrationFieldObj.stateId=='Y'">
+						<div class="form-group">
+								<select class="text-input floating-label" name="stateId" ng-model="kinDetails.stateId" ng-change="getDistrictByState(kinDetails.stateId)" convert-to-number required>
+									<!--<option>Select State</option> -->
+									<option ng-repeat="info in stateList" value="{{info.stateId}}">{{info.stateName}}</option>
+								</select> <label for="code">State<span class="star">*</span></label>
+							</div>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10" ng-if="registrationFieldObj.stateId=='N'">
+						<div class=""   >
+								<select class="text-input floating-label" name="stateId" ng-model="kinDetails.stateId" ng-change="getDistrictByState(kinDetails.stateId)" convert-to-number>
+									<!--<option>Select State</option> -->
+									<option ng-repeat="info in stateList" value="{{info.stateId}}">{{info.stateName}}</option>
+								</select> <label for="code">State</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>	
+			<div class="col-lg-5 col-md-5 col-sm-11 padding-left-right-set0">
+				<div class="col-lg-3 col-md-3 col-sm-12 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-university" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10 " ng-if="registrationFieldObj.districtId=='Y'">
+						<div class="form-group">
+								<select class="text-input floating-label" name="districtId" ng-model="kinDetails.districtId" ng-change="getCityByDistrict(kinDetails.districtId)" convert-to-number required>
+									<!-- <option>Select District</option> -->
+									<option ng-repeat="info in districtList" value="{{info.districtId}}">{{info.districtName}}</option>
+								</select> <label for="code">District<span class="star">*</span></label>
+							</div>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10 " ng-if="registrationFieldObj.districtId=='N'">
+						<div class=""   >
+								<select class="text-input floating-label" name="districtId" ng-model="kinDetails.districtId" ng-change="getCityByDistrict(kinDetails.districtId)" convert-to-number>
+									<!-- <option>Select District</option> -->
+									<option ng-repeat="info in districtList" value="{{info.districtId}}">{{info.districtName}}</option>
+								</select> <label for="code">District</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="col-lg-3 col-md-3 col-sm-12 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-building-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 " ng-if="registrationFieldObj.cityId=='Y'">
+								<div class="form-group">
+									<select class="text-input floating-label" name="cityId" ng-model="kinDetails.cityId" ng-change="getAreaByCity(kinDetails.cityId)" convert-to-number required>
+										<!-- <option>Select City</option> -->
+										<option ng-repeat="info in cityList" value="{{info.cityId}}">{{info.cityName}}</option>
+									</select> <label for="code">City<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 " ng-if="registrationFieldObj.cityId=='N'">
+								<div class="">
+									<select class="text-input floating-label" name="cityId" ng-model="kinDetails.cityId" ng-change="getAreaByCity(kinDetails.cityId)" convert-to-number>
+										<!-- <option>Select City</option> -->
+										<option ng-repeat="info in cityList" value="{{info.cityId}}">{{info.cityName}}</option>
+									</select> <label for="code">City</label>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-12 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-building-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 " ng-if="registrationFieldObj.areaId=='Y'">
+								<div class="form-group">
+									<select class="text-input floating-label" name="areaId" ng-model="kinDetails.areaId" convert-to-number required>
+										<!-- <option>Select Area</option> -->
+										<option ng-repeat="info in areaList" value="{{info.areaId}}">{{info.areaName}}</option>
+									</select> <label for="code">Area<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 " ng-if="registrationFieldObj.areaId=='N'">
+								<div class=""   >
+									<select class="text-input floating-label" name="areaId" ng-model="kinDetails.areaId" convert-to-number>
+										<option ng-repeat="info in areaList" value="{{info.areaId}}">{{info.areaName}}</option>
+									</select> <label for="code">Area</label>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-12 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-university" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 " ng-if="registrationFieldObj.postCode=='Y'">
+								<div class="form-group">
+									<input type="text" autocomplete="off" name="" id=""
+										class="text-input floating-label" ng-model="kinDetails.postCode" required>
+										 <label for="code">Post Code<span class="star">*</span></label>
+								</div>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 " ng-if="registrationFieldObj.postCode=='N'">
+								<div class=""   >
+									<input type="text" autocomplete="off" name="" id=""
+										class="text-input floating-label" ng-model="kinDetails.postCode">
+										 <label for="code">Post Code</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<label class="checkbox-inline padding-top10">
+					      <input type="checkbox" value="" class="" style="">Same as Local Address
+					   </label>
+					</div> -->
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto">
+						<div class="">
+							<button ng-click="addNewKinDetails()" id="addBtn" class="btn btn-info" style="width:36px"><b>+</b></button>
+							 
+                    	    <button ng-if="$index > 0" ng-click="removeKinDetails($index)" id="cancelBtn" class="btn btn-info" ><b>-</b></button>
+						</div>
+					</div></div>
+				<!-- <div class="row margin-top10">
+					 <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+						<div class="row input-container">
+							<input type="checkbox" ng-model="kinDetails.isGuarantor" ng-true-value="'Y'" ng-false-value="'N'">Guarantor
+						</div>
+					</div>
+					</div> -->
+				 
+			
+		<!-- <fieldset class="normalRegistration sub-fieldset ">
+			<legend class="sub-legend">Contact details</legend>		
+				<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10" style="margin-left: -17px;">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" ng-model="nextOfKinDetails.address" class="text-input floating-label"> <label for="description" class="">Address</label>
+									</div>
+								</div>
+							</div>
+						</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" ng-model="nextOfKinDetails.country" ng-change="getStateByCountry(nextOfKinDetails.country)">
+										<option></option>
+										<option ng-repeat="country in countryList" value="{{country.countryId}}">{{country.countryName}}</option>
+									</select> <label for="code">Country</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" ng-model="nextOfKinDetails.state">
+										<option></option>
+										<option ng-repeat="state in stateList" value="{{state.stateId}}">{{state.stateName}}</option>
+									</select> <label for="code">State</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" ng-model="nextOfKinDetails.city">
+										<option></option>
+										<option>-</option>
+										<option>-</option>
+										<option>-</option>
+									</select> <label for="code">City</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" ng-model="nextOfKinDetails.area">
+										<option></option>
+										<option>-</option>
+										<option>-</option>
+										<option>-</option>
+									</select> <label for="code">Area</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="nextOfKinDetails.zipCode"> <label for="description" class="">Zip Code</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-2 col-sm-2 col-md-2 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="nextOfKinDetails.code"> <label for="description" class="">Code</label>
+								</div>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9 padding-left-right-set4">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="nextOfKinDetails.contactNumber"> <label for="description" class="">Contact No</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row" >
+					<div class="col-md-1 col-lg-1 margin-top10 float_right">
+						<div class="width-div-for-patient-reg padding-bottom10">
+							<input type="button" value="+" ng-click="addNewKinOfDetails()" class=" btn btn-primary btn-save-box-shadow ">&nbsp;
+							<input ng-if="$index!=0" type="button" name="" id="delrow" value="-" ng-click="removeNewKinOfDetails($index);" class="btn btn-info" style="padding: 0 4px;">
+						</div>
+					</div>
+		</div>
+		</fieldset> -->
+</fieldset>
+</form>
+<!-- editKinDetalsModal START -->
+<div id="editKinDetalsModal" class="modal fade ng-scope in common-large-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Kin Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<fieldset class="normalRegistration sub-fieldset margin-top4" ng-repeat="kinDetails in kinDetailsList">
+	<legend class="sub-legend"> Next of Kin Details</legend>
+				<div class="row padding-top8">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-object-group" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class=""><!-- {{prefixId}} -->
+									<select  class="text-input floating-label" name="prefixId" ng-model="kinDetails.prefixId">
+										<!--<option value="">Select Prefix</option> -->
+										<option ng-repeat="info in prefixList" value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+										
+									</select>
+									<label for="code">Prefix</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-user-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input only-letters-input type="text" autocomplete="off" name="kinName" id="requiredOn" ng-model="kinDetails.kinName" class="text-input floating-label">
+									<label for="code">Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-user-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" name="relationId" ng-model="kinDetails.relationId" convert-to-number>
+										<!--<option value="">Select Relationship With Patient</option> -->
+										<option ng-repeat="info in relationList" value="{{info.id}}">{{info.desc}}</option>
+										
+									</select>
+									<label for="code">Relationship with patient</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-mobile" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input numbers-only type="text" autocomplete="off" name="mobileNo" id="requiredOn" ng-model="kinDetails.mobileNo" class="text-input floating-label" maxlength="10">
+									<label for="code">Mobile No.</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row margin-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-mobile" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input numbers-only type="text" autocomplete="off" name="code" id="requiredOn" ng-model="kinDetails.phoneNo" class="text-input floating-label" maxlength="10">
+									<label for="code">Phone No.</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-3 col-md-3 polymer-icon">
+								<i class="fa fa-id-card-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 ">
+								<div class="">
+									<select class="text-input floating-label" name="code" ng-model="kinDetails.identificationId"  ng-change="disableEnableExpiry(kinDetails.identificationId,$index)">
+										<!--<option value="">Select Identification</option>-->
+										<option ng-repeat="info in identificationList"  value="{{info.identificationId+'_'+info.isExpiryRequired}}">{{info.identificationName}}</option>
+									
+									</select>
+									<label for="code">Identification Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-id-card-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn" ng-model="kinDetails.identificationNo" class="text-input floating-label">
+									<label for="code">Identification No..</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" ng-if="kinDetails.isExpiry == 'Y'">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class=""  >
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="kinDetails.expiry"
+									model-view-value="true" is-open="expiry.opened[$index]"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerExpiry($index)"> <label for="code" class="">
+									Expiry Date</label>
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+						<div class="row input-container">
+							<input type="checkbox" ng-model="kinDetails.isGuarantor" ng-true-value="'Y'" ng-false-value="'N'">Guarantor
+						</div>
+					</div>
+				</div>
+			<div class="row padding-top10">
+			<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon" style="width:30px"> 
+								<i class="fa fa-map-marker" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="requiredOn"  ng-model="kinDetails.address" class="text-input floating-label">
+									<label for="code">Address</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-flag" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class=""   >
+							<!-- <input type="hidden" ng-model="area.areaId"> -->
+							
+								<select class="text-input floating-label" name="countryId" ng-model="kinDetails.countryId" ng-change="getStateByCountry(kinDetails.countryId)" convert-to-number>
+									<!--<option value="">Select Country</option> -->
+									<option ng-repeat="info in countryList" value="{{info.countryId}}">{{info.countryName}}</option>
+								</select> <label for="code">Country</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-university" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class=""   >
+								<select class="text-input floating-label" name="stateId" ng-model="kinDetails.stateId" ng-change="getDistrictByState(kinDetails.stateId)" convert-to-number>
+									<!--<option>Select State</option> -->
+									<option ng-repeat="info in stateList" value="{{info.stateId}}">{{info.stateName}}</option>
+								</select> <label for="code">State</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-university" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class=""   >
+								<select class="text-input floating-label" name="districtId" ng-model="kinDetails.districtId" ng-change="getCityByDistrict(kinDetails.districtId)" convert-to-number>
+									<!-- <option>Select District</option> -->
+									<option ng-repeat="info in districtList" value="{{info.districtId}}">{{info.districtName}}</option>
+								</select> <label for="code">District</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row margin-top10">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-building-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class=""   >
+									<select class="text-input floating-label" name="cityId" ng-model="kinDetails.cityId" ng-change="getAreaByCity(kinDetails.cityId)" convert-to-number>
+										<!-- <option>Select City</option> -->
+										<option ng-repeat="info in cityList" value="{{info.cityId}}">{{info.cityName}}</option>
+									</select> <label for="code">City</label>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-building-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class=""   >
+									<select class="text-input floating-label" name="areaId" ng-model="kinDetails.areaId" convert-to-number>
+										<!-- <option>Select Area</option> -->
+										<option ng-repeat="info in areaList" value="{{info.areaId}}">{{info.areaName}}</option>
+									</select> <label for="code">Area</label>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-university" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class=""   >
+									<input type="text" autocomplete="off" name="" id=""
+										class="text-input floating-label" ng-model="kinDetails.postCode">
+										 <label for="code">Post Code</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<label class="checkbox-inline padding-top10">
+					      <input type="checkbox" value="" class="" style="">Same as Local Address
+					   </label>
+					</div> -->
+					<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto pull-right">
+						<div class="">
+							<button ng-click="addNewKinDetails()" class="btn btn-info" style="width:36px"><b>+</b></button>
+							 
+                    	    <button ng-if="$index > 0" ng-click="removeKinDetails($index)" class="btn btn-info" ><b>-</b></button> 
+						</div>
+					</div> -->
+				</div>
+				<div class="row margin-top10">
+				</div>
+			
+		
+</fieldset>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width8" id="" ng-click="">Update</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary width8" id="" ng-click="">Cancel</button> -->
+					 <div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal"  ng-click="">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" data-dismiss="modal"  ng-click="">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- editKinDetalsModal END -->

@@ -1,0 +1,153 @@
+<style>
+    /*height set for div*/
+.unit-appointment-scheduling-div{
+border: 1px solid #d2d2d2;
+    background-color: white;
+    height: 44px;
+    padding: 5px;
+}
+</style>
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <form name="commonform" novalidate>
+            <div class="row margin-top10">
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                    <div class="row input-container padding-top2 padding-top10" >
+                        <div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-10">
+                            <div class="form-group" >
+                                <select class="text-input floating-label" id="dashboardId" name="dashboardId" ng-model="role" ng-change="getRoleId(role, getActiveList)" ng-options="info.id as info.label for info in getActiveList">
+                                    <option value="">Select Role</option>
+                                </select>
+                                <label for="dashboardId">Role<span class="star">*</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <div class="row input-container padding-top2 padding-top10" >
+                        <div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-10">
+                            <div class="">
+                                <input type="text" autocomplete="off"  class="text-input floating-label" tabindex="3" placeholder="Search"
+                                       uib-typeahead="group.empName+'-'+group.empCode  for group in getListByName($viewValue)"
+                                       typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  ng-model="empName" >
+                                <label>Employee<span class="star">*</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4" style="margin-top: 18px;">
+                    <div class=""><!-- width-div-for-patient-reg pull-left -->
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="searchEmployeeVaccination(appointmentSearchObject)">
+                            <i class="fa fa-search" style="" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+
+
+        </form>
+
+    </div>
+
+    <div ng-if="vaccinationListByRoleList.length > 0">
+        <div class="row padding-left-right-set4 padding-top8">
+            <div class="padding-top8 padding-left-right-set4" ng-include="'./views/common/vaccination-header.html'"></div>
+        </div>
+
+        <div class="row padding-left-right-set4 padding-top8"   >
+            <div class="col-lg-8 col-md-8 col-sm-8">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th class="width2">Vaccination</th>
+                        <th class="width2">Selection Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="info in vaccinationListByRoleList">
+                        <td>{{info.vaccinationName}}</td>
+                        <td>
+                            <div class="">
+                                <input type="text" autocomplete="off" class="text-input floating-label dirty"
+                                       name="datepicker{{$index}}" id="datepicker{{$index}}"
+                                       uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                                       placeholder="DD/MM/YYYY" ng-model="info.selectionDate"
+                                       model-view-value="true" is-open="info.datepickerOpened"
+                                       datepicker-options="dateOptionsToForm" show-button-bar="false"
+                                       ng-click="openDatePicker($index)" ng-change="updateSelectedDate(info)" ng-disabled="info.employeeVaccinationId > 0">
+                            </div>
+                        </td>
+                    </tr>
+
+<!--                    <tr ng-repeat="info in vaccinationListByRoleList">-->
+<!--                        <td>{{info.vaccinationName}}</td>-->
+<!--                        <td>-->
+<!--                            <div class="input-group">-->
+<!--                                <input type="text" autocomplete="off" class="form-control"-->
+<!--                                       uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"-->
+<!--                                       placeholder="DD/MM/YYYY" ng-model="info.selectionDate"-->
+<!--                                       is-open="info.datepickerOpened" datepicker-options="dateOptions"-->
+<!--                                       ng-change="updateSelectedDate(info.selectionDate)"-->
+<!--                                       close-text="Close" />-->
+<!--                                <span class="input-group-btn">-->
+<!--                <button type="button" class="btn btn-default" ng-click="openDatePicker(info)" ng-click="openDatePickerSearch()">-->
+<!--                    <i class="glyphicon glyphicon-calendar"></i>-->
+<!--                </button>-->
+<!--            </span>-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+                    </tbody>
+                </table>
+                <div class="row margin-bottom45 sss">
+                    <ul ng-if="pager.pages.length" class="pagination table-list"
+                        style="font-size: 14px;">
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(1,'true')">First</a></li>
+                        <li ng-class="{disabled:pager.currentPage === 1}"><a
+                                ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+                        <li ng-repeat="page in pager.pages"
+                            ng-class="{active:pager.currentPage === page}"><a
+                                ng-click="setPage(page,'true')">{{page}}</a></li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+                        </li>
+                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                            <a ng-click="setPage(pager.totalPages,'true')">Last</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="row padding-left-right-set4 padding-top8">
+                    <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0 float-right">
+                        <button type="button" class="btn btn-primary" ng-click="saveEmpVaccination()" >Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</div>
+<modal visible="showModal"></modal>
+
+<div ng-include="'./views/common/add-view-role.html'"></div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+    $(document).ready(function() {
+        // $(".patienttSearchResult").hide();
+         $(".selectedPageName").text("Role Creation");
+        $(".sidebar-nav li").each(function() {
+            $(this).find("a").parents("li").removeClass("active");
+        });
+        $('a[href$="roleCreation"]').parents("li").addClass("active");
+    });
+</script>

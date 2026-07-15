@@ -1,0 +1,179 @@
+<link rel="stylesheet" type="text/css" href="resources/assets/css/template/drag-drop.css"/>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<!-- Pateint details Header -->
+			<div class="ng-scope" ng-include="'./views/common/patient-demography-opd.html'">
+			</div>
+	   </div>
+	   <div class="row">
+	   <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" ng-if="isTransactionFlag=='N'">
+ 		<div class="row input-container">
+			<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+				<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+			</div>
+			<div class="col-lg-11 col-sm-11 col-md-11">
+				<div class="">
+					<select class="text-input floating-label" ng-model="info11" ng-change="selectTemplate(info11);">
+						<option>-</option>
+						<option ng-repeat="info11 in templateListRadiology" value="{{info11}}" >{{info11.title}}</option>
+					</select> <label for="code">Templates</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10" ng-if="isTransactionFlag=='N'">
+ 		<div class="row input-container">
+			<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+				<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+			</div>
+			<div class="col-lg-11 col-sm-11 col-md-11">
+				<div class="" style="border:none;">
+				   <button type="button" class="btn btn-primary" id="" ng-click="addTemplate();">Add</button>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
+			<div
+				class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 padding-top10 text-width-auto "
+				ng-if="isTransactionFlag=='N'">
+				<button class="btn btn-primary btn-save-box-shadow  width100"
+					title="Add" ng-click="addTemplate();">
+					<i class="fa fa-plus" aria-hidden="true"></i>
+				</button>
+			</div>
+
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" ng-if="isTransactionFlag=='Y'">
+ 		<div class="row input-container">
+			<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+				<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+			</div>
+			<div class="col-lg-11 col-sm-11 col-md-11">
+				<div class="">
+				   <input type="text" autocomplete="off"  class="text-input floating-label disabled" placeholder="{{templateName}}"  name="groupName" >
+					<label for="code">Templates</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select ng-model="templateDoctorId"
+								class="text-input floating-label" convert-to-number>
+								<option ng-repeat="info in doctorsList"
+									value="{{info.doctorId}}">{{info.doctorName}}</option>
+							</select> <label for="code">Doctor</label>
+						</div>
+					</div>
+				</div>
+	</div>
+	<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4 padding-right20" ng-if="radioLogyReportObj.isTempFinalRelease=='N'">
+			<div class="row his-style margin-top10">
+					<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right">
+						<a href="#/diagnosticProcedureResultEntry">
+							<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div> -->
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right"  >
+						<a href="#/diagnosticProcedureResultEntry">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Back">
+							<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> </button>
+						</a>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left0px-right6px pull-right">
+						<div class="">
+							<input type="button" value="Provisional Release" class="btn btn-primary btn-save-box-shadow" ng-click="updateReport('Y');">
+						</div>
+					</div>
+					<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px pull-right" ng-if="radioLogyReportObj.isProvisionalRelease!='Y'">
+						<div class="">
+							<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" ng-click="updateReport('N');">
+						</div>
+					</div> -->
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right"   ng-if="radioLogyReportObj.isProvisionalRelease!='Y'">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="updateReport('N');">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+			</div>
+		</div>
+		<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4" ng-if="radioLogyReportObj.isTempFinalRelease=='Y'">
+			<div class="row his-style margin-top10">
+				<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set0 pull-right">
+					<a href="#/diagnosticProcedureResultValidation">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div> -->
+				<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right"  >
+					<a href="#/diagnosticProcedureResultValidation">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Back" >
+						<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> </button>
+					</a>
+				</div>
+				<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px pull-right" ng-if="radioLogyReportObj.isFinalRelease!='Y'">
+					<div class="">
+						<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" ng-click="updateFinalReport('N');">
+					</div>
+				</div> -->
+				<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right"  ng-if="radioLogyReportObj.isFinalRelease!='Y'">
+					<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="updateFinalReport('N');">
+					<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left0px-right6px pull-right" ng-if="radioLogyReportObj.isFinalRelease!='Y'" style="width:auto;">
+					<div class="">
+						<input type="button" value="Final Release" class="btn btn-primary btn-save-box-shadow" ng-click="updateFinalReport('Y');">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row padding-top5 padding-left-right-set4">
+		<div id="formeo-editor"></div>
+		<div id="myHtml" class="render-form" style="display: none"></div>
+	</div>
+	<div class="col-lg-12 col-md-12 padding-left-right-set4 padding-top5">
+		<!-- <textarea name="editor" type="text" autocomplete="off" id="editor" rows="10" cols="50"
+			ng-model="value" ck-editor>
+	</textarea> -->
+			<div ng-show="radioLogyReportObj.templateFormatId==1">
+				<div style="padding:4px 8px !important; background-color: white !important;">
+					<div id="htmlContentReport" class="row" >
+					
+					</div>
+				</div>
+			</div>
+			<div ng-show="radioLogyReportObj.templateFormatId==2">
+			 	 <textarea  name="editor" type="text" autocomplete="off" id="editor"  rows="100" cols="50" ck-editor ng-model="value"></textarea>
+			 </div>
+		</div>
+  </div>	
+</div>		
+<div ng-include="'./views/common/accept-reject.html'"></div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="diagnosticProcedureReport"]').parents("li").addClass("active");
+});
+
+
+</script>
+<script>
+CKEDITOR.replace('editor');
+// added newly bcoz it was giving error as 'editor instance "editor" is already attached to the provided element' , so below line is added  start
+var editor = CKEDITOR.instances["editor"]; 
+if (editor) { editor.destroy(true); }
+// end
+    CKEDITOR.config.width="100%";
+    CKEDITOR.config.height="380px"
+    </script>

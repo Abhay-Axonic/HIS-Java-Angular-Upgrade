@@ -1,0 +1,269 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-left-right-set4 margin-top4">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 padding-top10">
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon padding-top2">
+								<i class="fa fa-dot-circle-o ddp-padding-top" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label ng-touched dirty"
+										ng-model="assignUnit" name="unitId" required convert-to-number>
+										<option ng-repeat="unitObj in unitMasterList" value="{{unitObj.unitId}}">{{unitObj.unitName}}</option>
+									</select>
+									<label for="" class="LISDynamicLabel">Clinical Unit</label>
+								</div>
+							</div>			
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-top10">
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-plus-o ddp-padding-top padding-top2" aria-hidden="true"></i>
+								</div> 
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input name="fromDate"
+											id="date1" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" tabindex="13" ng-model="fromDate"
+											model-view-value="true" is-open="popup.opened"
+											datepicker-options="dateOptions" show-button-bar="false" ng-click="open()" />
+											<label for="" class="LISDynamicLabel">Date (From)</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-calendar-minus-o ddp-padding-top padding-top5" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input name="toDate"
+											id="date2" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" tabindex="13" ng-model="toDate"
+											model-view-value="true" is-open="popup1.opened"
+											datepicker-options="dateOptions" show-button-bar="false" ng-click="open1()"/>
+											<label for="" class="LISDynamicLabel">Date-Till</label>
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" ng-model="uhid"  class="text-input floating-label">
+										<label for="description" class="LISDynamicLabel">UHID</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="form-group" >
+										 <input type="text" autocomplete="off"
+											 class="text-input floating-label" tabindex="3"
+											 ng-model="patientId"
+											 placeholder="Search"
+											 uib-typeahead=" patient.patientWithUhid for patient in getSendToCRList($viewValue)"
+											 typeahead-editable="false"
+											 typeahead-on-select="selectPatient($item, $model, $label);"
+											 name="patientName"  />
+										<label for="description" class="LISDynamicLabel">Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-6 padding-left-right-set4 padding-top10">
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-dot-circle-o ddp-padding-top" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<label for="" class="LISDynamicLabel">Test</label>
+										<div class="custom-drop-down-btn" ng-dropdown-multiselect="" options="testList" 
+											selected-model="selectedtestList" extra-settings="dropDownSetting">
+										</div>
+									</div>
+								</div>			
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" style="    margin-left: -121px !important;">
+						<div class="row input-container">
+							<!-- <div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+								<i class="fa fa-dot-circle-o ddp-padding-top" aria-hidden="true"></i>
+							</div> -->
+							<div class="col-lg-11 col-sm-11 col-md-11" style="    margin-top: 10px;">
+								<div class="form-group">
+									<!-- <label for="" class="LISDynamicLabel">Sample No.</label> -->
+									<input type="text" autocomplete="off" name="sampleno" id="" class="text-input floating-label" tabindex="3"
+									  ng-model="selectedSampleNo"
+									  placeholder="Search Sample No."
+									 uib-typeahead="sample.sampleNo for sample in getSampleNoList($viewValue)"
+									 typeahead-on-select="selectSampleNo($item, $model, $label);"
+									  style="margin-top: -7px !important;">
+								</div>
+							</div>			
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" style="margin: -49px 0px 0px 943px !important;">
+					<div class="col-lg-6 col-md-6 col-sm-6 text-right padding-left-right-set4 padding-top10 pull-right text-width-auto">
+				   		 <div class="common-save-button" style="padding-top:0px;"> 
+			        		<a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" title="Save" ng-click="saveOrUpdate();">
+			       				 <i class="fa fa-floppy-o" aria-hidden="true"></i></a>
+			     		 </div>
+			     	 </div>
+						<div class="col-lg-6 col-md-6 col-sm-6 text-right padding-left-right-set4 padding-top10 pull-right text-width-auto">
+						<div class="common-save-button" style="padding-top:0px;"> 
+							 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" id="searchBtn" ng-click="searchList();"  title="Search">
+							 	<i class="fa fa-search" aria-hidden="true"></i> 
+							 </a> 
+						</div> 
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 text-right padding-left-right-set4 padding-top10 pull-right text-width-auto">
+						<div class="common-save-button" style="padding-top:0px;"> 
+								 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" ng-click="clearFields();" title="Clear"> 
+								 	<i class="fa fa-eraser" aria-hidden="true"></i> 
+								 </a> 
+						</div> 
+				    </div>
+				    
+					</div>
+				</div>
+				
+         		<!-- <div class="row padding-left-right-set4">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-top8">
+						<div class="search">
+							<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='100'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="75">75</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+					</div>
+					
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 pull-right">
+						<div>
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword">
+							<i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+						</div>
+					</div>
+		  </div> -->
+	
+		<div class="row padding-top10 padding-left-right-set4 padding-top4">
+			<div class="col-md-12 col-lg-12 fixed-thead-tfoot-scroll fix-height-scroll380" id="fixed-thead-tfoot-scroll">
+				<table class="table table-bordered" style="max-width: 162% !important;width: 151% !important;">
+					<thead>
+						<tr>
+						    <th class="width3">Sample No</th>
+							<th class="width4">UHID</th>
+							<th class="width6">Patient Name</th>
+							<th class="width8">Test Name</th>
+							<th class="width6">Department</th>
+							<th class="width9">Phlebotomist Name and User ID</th>
+							<th class="width6">Order Date and Time</th>
+							<th class="width8">Sample Collection</th>
+							<th class="width8">Sample Reception</th>
+							<th class="width8">Sample Processing</th>
+							<th class="width8">Sample Analysis and Detection</th>
+							<th class="width6">Result Entry</th>
+							<th class="width8">Report Validation & Report Release</th>
+							<th class="width8">Report Uploaded to RDS and Email to Customer</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="resultEntry in resultEntryWorklist track by $index">
+							
+							<td class="text-center"> {{resultEntry.labSampleNo}}</td>
+							<td>{{resultEntry.uhid}}</td>
+							<td>{{resultEntry.patientDetails}}</td>
+							<td>{{resultEntry.testDesc}}</td>
+							<td>{{resultEntry.deptName}}</td>
+							<td>{{resultEntry.userName}}</td>
+							<td>{{getDateByFormat(resultEntry.orderDateTimeString,true)}}</td>
+							<td>{{getDateByFormat(resultEntry.sampleCollectionDatetimeString,true)}}</td>
+						  	<td><input data-ng-class="{disabled:resultEntry.sampleReceptionflag}" type="text" autocomplete="off" rows="" name="" id="" class="text-input floating-label" tabindex="3"
+									  ng-model="resultEntry.sampleReception"
+									  placeholder=""
+									ng-change="getSampleReception(resultEntry)"
+									  ></td>
+							<td><input data-ng-class="{disabled:resultEntry.sampleProcessingflag}" type="text" autocomplete="off" rows="" name="" id="" class="text-input floating-label" tabindex="3"
+									  ng-model="resultEntry.sampleProcessing"
+									  placeholder=""
+									  ng-change="getSampleProcessing(resultEntry)"
+									  ></td>
+							<td><input data-ng-class="{disabled:resultEntry.sampleAnalysisAndDetectionflag}" type="text" autocomplete="off" rows=""  name="" id="" class="text-input floating-label" tabindex="3"
+									  ng-model="resultEntry.sampleAnalysisAndDetection"
+									  placeholder=""
+									 ng-change="getSampleAnalysisAndDetection(resultEntry)"
+									  ></td>
+							<td>{{getDateByFormat(resultEntry.resultEntryDateString,true)}}</td>
+							<td>{{getDateByFormat(resultEntry.resultValidatedDateString,true)}}</td>
+							<td>{{getDateByFormat(resultEntry.reportUploadedDateString,true)}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- <div class="row margin-bottom45 sss padding-top8">
+			<ul ng-if="pager.pages.length" class="pagination table-list"
+				style="font-size: 14px;">
+				<li ng-class="{disabled:pager.currentPage === 1}"><a
+					ng-click="setPage(1,'true')">First</a></li>
+				<li ng-class="{disabled:pager.currentPage === 1}"><a
+					ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+				<li ng-repeat="page in pager.pages"
+					ng-class="{active:pager.currentPage === page}"><a
+					ng-click="setPage(page,'true')">{{page}}</a></li>
+				<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+					<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+				</li>
+				<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+					<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+				</li>
+			</ul>
+		</div> -->
+	</div>
+</div>
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("UHID Merge Request");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="testSampleStatus"]').parents("li").addClass("active");
+});
+
+
+</script>

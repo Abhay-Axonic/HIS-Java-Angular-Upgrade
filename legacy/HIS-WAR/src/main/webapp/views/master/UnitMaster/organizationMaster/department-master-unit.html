@@ -1,0 +1,287 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<legend class="heading-div">Department Master</legend>
+			<div class="row margin-top10">
+				<form action="">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"></div>
+				<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+					<div class="row col-md-5set" id="">
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set"> Global Master</label>
+								<div class="masterborderScroll">
+								<div ng-repeat="speciality in specialityMasterList">
+									<div class="checkbox">
+										<label class="common-lable-color-set"><input type="checkbox" value="" ng-model="specialityMst[speciality.specialityId]" ng-click="addTempSpecialty(speciality.specialityId,speciality.specialityName)" value="{{speciality.specialityName}}" ng-checked="selectedSpecialityList.indexOf(speciality.specialityId) != -1 ">{{speciality.specialityName}}</label>
+									</div>
+								</div>
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+							<div class="text-center margintop120">
+								<button type="button" class="btn btn-primary text-width-auto btn-sm" ng-click="selectSpeciality()" style="border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;">&lt;&lt;&gt;&gt;</button>
+<!-- 								<div class="padding-top10"><button type="button" class="btn btn-primary text-width-auto btn-sm"><<</button></div> -->
+							</div>
+						</div>
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Unit Master</label>
+								<div class="masterborderScroll">
+								<div ng-repeat="selectedSpeciality in selectedSpecialityList">
+									<div class="checkbox">
+										<label class="common-lable-color-set">{{selectedSpeciality.specialityName}}</label>
+									</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"></div>
+				</form>
+			</div>
+		</fieldset>
+		<div class="row margin-top10 padding-left-right-10">
+			<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow"
+							title="Save" ng-if="saveBtnFlag" ng-click="saveDeptAtUnitLevel()"><i
+							class="fa fa-floppy-o" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword" ng-keyup="searchDepartmentMasterUnit(searchKeyword)"
+					style="margin-top: 0px"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-10 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<tr class="">
+						<th style="witdh:10%">
+							 Department Code
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th>
+						<th style="witdh:10%">
+							 Department Description
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th>
+						<th style="witdh:10%">
+							 Details
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th>
+						<th class="width8">
+							Status(n)
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th>
+						<!-- <th class="width8 text-center">
+							Action
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th> -->
+						</tr>
+						<tr ng-repeat="info in unitDeptMasterList | filter:searchKeyword ">
+							<td>{{info.specialityCode}}</td>
+							<td>{{info.specialityName}}</td>
+							<td class="text-center">
+								<a ng-click="getFlagByMapperId(info)" ><i class="fa fa-info-circle"  ></i></a>
+							</td>
+							<td>
+								<label class="switch"> 
+									<input type="checkbox"
+								ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"
+								ng-change="updateStatus(info.unitSpecialityMapperId,info.status)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<!-- <td class="padding-edit-button-table text-center">
+								<a>
+									<i class="fa fa-pencil" aria-hidden="true" title="Edit" ng-click="showUpdateBtn(info.unitSpecialityMapperId)"></i>
+								</a>
+							</td> -->
+						</tr>
+						<tr ng-if="unitDeptMasterList.length==0"><td colspan="6" class="text-center">{{loadingMsg}}</td></tr>
+					</table>
+					<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				</div>
+			</div>
+	</div>
+</div>
+
+<!-- detailsModal START -->
+<div id="detailsMapperModal" data-backdrop="static" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set0">
+								<div class="checkbox">
+									<label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'"
+																		  ng-false-value="'N'" ng-model="isSurgicalCode"><span></span>Is
+										Surgical Department</label>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set0">
+								<div class="checkbox">
+									<label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'"
+										ng-false-value="'N'" ng-model="isClinicalSpeciality"> <span></span>Is
+										Clinical Department</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set0">
+								<div class="checkbox">
+									<label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'"
+										ng-false-value="'N'" ng-model="isRenderingSpeciality"><span></span>Is
+										Rendering Department</label>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set0">
+								<div class="checkbox">
+									<label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'"
+										ng-false-value="'N'" ng-model="isKioskDept"><span></span>Is
+										Kiosk Department</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set0">
+								<div class="checkbox">
+									<label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'"
+										ng-false-value="'N'" ng-model="isNursingAssessmentRequired"><span></span>Is Nursing Assessment Required</label>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set0">
+								
+								<div class="checkbox">
+									<label class="checkbox-inline"><input type="checkbox" ng-true-value="'Y'"
+										ng-false-value="'N'" ng-model="deptWiseAppointment"><span></span>Is
+										Department wise Scheduling</label>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" ng-hide="deptWiseAppointment=='N'">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<input type="text" autocomplete="off" id="" class="text-input floating-label" ng-model="allowedOverbookingSlots"> 
+								<label for="code">Allowed Over booking Slots</label>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" >
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<input type="text" autocomplete="off" id="" class="text-input floating-label" ng-model="pddDays"> 
+								<label for="code">Pdd Days</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<div class="row">
+						
+						<div class="col-lg-1 col-md-2 col-sm-2 float-right padding-left5">
+							<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2 float-right">
+							<button type="button"  class="btn btn-primary" id="updateBtn" ng-click="updateDetails()">Update</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Department Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="departmentMasterUnit"]').parents("li").addClass("active");
+});
+</script>

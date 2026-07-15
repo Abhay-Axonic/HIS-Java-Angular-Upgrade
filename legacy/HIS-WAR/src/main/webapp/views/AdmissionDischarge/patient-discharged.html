@@ -1,0 +1,163 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+            	
+            	<div class="row">
+            	
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar-plus-o " aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" press-enter="searchDeposit()"
+													placeholder="DD/MM/YYYY" ng-model="search.fromDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptions" 
+													show-button-bar="false"	ng-click="openDatePicker()" required>
+										<label for="description" class="LISDynamicLabel">From Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" press-enter="searchDeposit()"
+													placeholder="DD/MM/YYYY" ng-model="search.toDate" model-view-value="true" is-open="datepickerTo.opened" datepicker-options="dateOptions" 
+													show-button-bar="false"	ng-click="openDatePickerTo()" required>
+										<label for="description" class="LISDynamicLabel">To Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-user" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input type="text" autocomplete="off" name="description"  id="" ng-model="search.patientName" class="text-input floating-label" > 
+												<label for="description" class="LISDynamicLabel">Patient Name</label>
+											</div>
+										</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-file-text-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id=""  ng-model="search.bedNumber" class="text-input floating-label"> 
+										<label for="description" class="LISDynamicLabel">Bed No.</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 margin-top10 text-width-auto">
+							<div class="">
+								<a href="" id="searchBtn" class="btn btn-primary btn-save-box-shadow width-100" id="searchBtn" ng-click="searchDischargedPatient()">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+						<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<a href="" class="btn btn-primary btn-save-box-shadow" ng-click="searchDischargedPatient()" title="Search" style="width:60% !important;">
+									<i class="fa fa-search" style="font-size: 16px" aria-hidden="true"></i>
+								</a>
+										
+									</div>
+								</div>
+							</div>
+						</div> -->
+				</div>
+        <div class="row margin-top10 padding-left-right-set4 padding-bottom5">
+			
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model="searchtxt"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+        
+        
+        <div class="row padding-left-right-set4 table-container padding-top8">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr class="">
+								<th class="width5">
+									UHID
+								</th>
+								<th class="width15">
+									Patient Details
+								</th>
+								<th class="width15">
+									Doctor Details
+								</th>
+								<th class="width5">
+									Bed Number
+								</th>
+								<th class="width20">
+									Reason For Discharge
+								</th>
+								<th class="width5 text-center">
+									Action
+								</th>
+								
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="table-container-body fix-height-scroll550" style="overflow: overlay !important;"> <!-- fix-height-scroll230, background: #fff; -->
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr ng-repeat="info in dischargedPatientList | filter : searchtxt">
+								<td class="width5">{{info.uhidnumber}}</td>
+								<td class="width15">{{info.pFirstName}}</td>
+								<td class="width15">{{info.dFirstName}}</td>
+								<td class="width5">{{info.bedNumber}}</td>
+								<td class="width20">{{info.dischargeTypeName}}</td>
+								<td class="width5 text-center">
+								<span>
+							           <a href="" ng-click="printDischargeSumReport(info.dischargeSummaryId);" >
+							          	<i class="fa fa-print" title="Summery" aria-hidden="true"></i>
+							          </a>
+								</span>
+								</td>
+								</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+        
+        	
+	</div>
+	
+</div>
+	<script type="text/javascript">
+
+	$( document ).ready(function() {
+		
+		var documentHeight= $(window).height();
+	    var sideBarHeight = documentHeight - 55;
+	 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+	 	
+		
+		$(".selectedPageName").text("Final Discharge");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="readyForBilling"]').parents("li").addClass("active");
+	});
+	</script>

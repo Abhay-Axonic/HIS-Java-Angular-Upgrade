@@ -1,0 +1,175 @@
+				<!-- <div class="row his-style margin-top4">
+            		<div class="col-lg-8"></div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0">
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<input type="text" autocomplete="off" class="text-search-box" style="margin-top: 0px" ng-model="groupName" placeholder="Search"
+                       uib-typeahead="group.patientName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                       typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  required/>
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+            		<div class="col-md-1 padding-left0px-right6px">
+						<div class="width-div-for-patient-reg ">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="submitRequest()"><i class="fa fa-floppy-o" style="font-size:21px" aria-hidden="true"></i></a>	
+						</div>
+					</div>
+					</div> -->
+					<div class="row margin-top5 padding-left-right-set4 his-style">
+
+
+						<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+							<div class="search">
+								<label class="show-entries">Show
+									<select ng-init="pagination.pageSize='10'"
+											ng-model="pagination.pageSize"
+											ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+									</select> records
+								</label>
+							</div>
+						</div>
+
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+							<!-- <input type="text" autocomplete="off" class="text-search-box" style="margin-top: 0px" ng-model="groupName" placeholder="Search"
+                       		uib-typeahead="group.patientName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                       		typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  required style="margin-top: 0px"/> -->
+							 <input type="text" autocomplete="off" class="text-search-box" style="margin-top: 0px" ng-model="searchKeyword" ng-change="searchWardPhysicalTransferRequest(searchKeyword)" placeholder="Search"  style="margin-top: 0px"/>
+							 <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+					<div class="row padding-top10 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll420">
+						  <table id="main-table" class="main-table width150">
+						    <thead>
+						      <tr class="">
+<!-- 									<th class="width6"> -->
+<!-- 										UHID -->
+<!-- 									</th> -->
+									<th class="width10 fixed">
+										Patient Details
+									</th>
+									<th class="width6">
+										Ward
+									</th>
+									<th class="width6">
+										Bed No. <!-- Room/Bed -->						
+									</th>
+									<th class="width8">
+										Current Bed Category						
+									</th>
+									<th class="width6">
+										To Ward							
+									</th>
+									<th class="width6">
+										To BedRoom								
+									</th>
+									<th class="width8">
+										To Bed Category							
+									</th>
+									<th class="width10">
+										Reason for Transfer					
+									</th>
+									
+									<th class="width6">
+										Doctor Rejection Details		
+									</th>
+									<th class="width6">
+										IPD Rejection Details			
+									</th>
+									<!-- <th class="width5">
+										Transfer			
+									</th>
+									<th class="width5">
+										Abort			
+									</th> -->
+									<th class="width5">
+										Action			
+									</th>
+									<th class="width15">
+										Status			
+									</th>
+								</tr>
+						    </thead>
+						    <tbody>
+						      <tr  ng-repeat="info in pagination.data" >
+<!-- 								<td>{{info.uhidnumber}}</td> -->
+<!-- 								<td class="fixed" ng-init='age=getAge(info.dob)'> -->
+<!-- 									<div ng-if="info.patientId > 0">{{info.patientFullName+' '+age+'/'+info.genderCode}}</div> -->
+<!-- 									<div  ng-if="info.tPatientId > 0">{{info.patientFullName+' '+info.dob+'/'+info.genderCode}}</div> -->
+<!-- 								</td> -->
+                                <td class="text-center width15 fixed" >
+                                    <div class="row patient-details" id="45#1247#2_new" >
+                                        <div class="col-lg-3 col-sm-12 col-md-3">
+                                            <div class="" >
+                                                <img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+                                            <div class="patient-name">{{info.prefixDesc+' '+info.patientFullName}}
+                                        </div>
+                                            <div class="patient-details">
+                                                <span class="patient-details patient">{{info.ageStr}}/ </span>
+                                                <span class="patient-details patient">{{info.genderCode}}</span>
+                                               <!--  <span class="patient-details patient" >||||||
+                                                <span class="patient-details patient" >info</span> -->
+                                            </div>
+                                            <div class="patient">{{info.uhidnumber}}</div>
+                                        </div>
+                                    </div>
+                                </td>
+								<td >{{info.wardName}}</td>
+								<td>{{info.bedNumber}}</td>
+								<td>{{info.bedCategoryDesc}}</td>
+								<td>{{info.toWardName}}</td>
+								<td>{{info.toBedNumber}}</td>
+								<td>{{info.toBedCategoryDesc}}</td>
+								<td>{{info.reasonDesc}}</td>
+								<td class="text-center"><a href="" data-toggle="modal" ng-show="info.doctorReasonDesc != null" data-target="#reasonDetailsDoctor" ng-click="reasonPopupDoctor(info.doctorReasonDesc,info.doctorNote)"><i class="fa fa-info-circle" aria-hidden="true"></i></a></td>
+								<td class="text-center">
+									<a href="" data-toggle="modal" data-target="#reasonDetails" ng-show="info.adtReasonDesc != null " ng-click="reasonPopupADT(info.adtReasonDesc,info.adtRejectReason)"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
+								</td>
+								<!-- <td >
+									<a href="" ng-if="info.transferStatusId == 6" data-toggle="modal" data-target="{{info.transferStatusId == 6 ? '#commonNote':''}}"  ng-click="getAdmissionDataAccept(info)" ><i class="fa fa-exchange" aria-hidden="true"></i></a>
+								</td>
+								<td class="text-center">
+									<a href="" ng-if="info.transferStatusId == 6" data-toggle="modal" data-target="{{info.transferStatusId == 6 ? '#accepatReject':''}}"  ng-click="getAdmissionDataAccept(info)"  ng-disabled="{{info.transferStatusId != 6}}"><i class="fa fa-window-close" aria-hidden="true" ></i> </a>
+								</td> -->
+								<td >
+									<a href="" ng-if="info.transferStatusId == 6" title="Transfer" data-toggle="modal" data-target="#commonNote"  ng-click="getAdmissionDataAccept(info)" ><i class="fa fa-exchange" aria-hidden="true"></i></a>
+									<a href="" ng-if="info.transferStatusId != 5 && info.transferStatusId != 9" title="Abort" data-toggle="modal" data-target="#accepatReject" style="    color: red;
+    font-size: 32px;"  ng-click="getAdmissionDataAccept(info)" >&times;</a>
+								</td>
+								<td>{{info.transferStatusDesc}}</td>
+								
+							</tr>
+						    </tbody>
+						  </table>
+						</div>
+						<div class="row margin-bottom45 center-block">
+							<ul class="pagination table-list"
+								style="font-size: 14px; cursor: pointer;">
+								<li ng-class="{disabled:pagination.currentPage === 1}"><a
+										ng-click="pagination.setFirstPage(pagination)">First</a>
+								</li>
+								<li ng-class="{disabled:pagination.currentPage === 1}"><a
+										ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+								</li>
+								<li ng-repeat="page in pagination.getPagesList(pagination)"
+									ng-class="{active:pagination.currentPage === page}"><a
+										ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+								</li>
+								<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+									<a ng-click="pagination.setNextPage(pagination)">Next</a>
+								</li>
+								<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+									<a ng-click="pagination.setLastPage(pagination)">Last</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+									
+
+				

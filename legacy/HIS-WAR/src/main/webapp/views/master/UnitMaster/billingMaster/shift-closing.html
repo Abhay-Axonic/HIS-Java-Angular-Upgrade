@@ -1,0 +1,1697 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset class="" style="margin-top: -5px !important">
+			<div class="row padding-top10">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+					<fieldset class="normalRegistration sub-fieldset">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-calendar" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<div class="">
+												<!-- <input type="text" autocomplete="off" date-format="dd-MM-yyyy hh:mm:ss" class="text-input floating-label dirty"
+													 name="fromDatepicker" id="fromDatepicker"
+										  	    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+												placeholder="DD/MM/YYYY" ng-model="fromDatepicker"
+												model-view-value="true" is-open="fromDatepicker.opened"
+												datepicker-options="dateOptions" show-button-bar="false"
+												ng-click="openFromDatePicker()"  required > -->
+												 <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="fromDatepicker" id="fromDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="fromDatepicker"
+											model-view-value="true" is-open="fromDtpicker.opened"
+											datepicker-options="fromDtOptions" show-button-bar="false"
+											 onkeydown="event.preventDefault()"
+											ng-click="openFromDtPicker()"  required >
+											<label for="description" class=""> Date (From)<span class="star">*</span></label>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-calendar" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<!-- <input type="text" autocomplete="off" date-format="dd-MM-yyyy hh:mm:ss" class="text-input floating-label dirty"
+												ng-model="toDatepicker"
+											name="toDatepicker" id="toDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="toDatepicker"
+											model-view-value="true" is-open="toDatepicker.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openToDatePicker()"  required>  -->
+											<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="toDatepicker" id="toDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											ng-model="toDatepicker" placeholder="DD/MM/YYYY"
+											model-view-value="true" is-open="toDtpicker.opened"
+											datepicker-options="toDtpickerOptions" show-button-bar="false"
+											 onkeydown="event.preventDefault()"
+											ng-click="openToDtPicker()"  required >
+											<label for="description" class=""> Date-Till<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-10 col-md-10">
+										<div class="">
+											<input type="text" autocomplete="off" name="description" id=""
+												class="text-input floating-label"  value="{{handoverByUser}}" readonly> <label
+												for="description" class="LISDynamicLabel">Handover
+												By<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-10 col-md-10">
+										<div class="">
+											<select class="text-input floating-label dirty "name = "handoverToUser" id="handoverToUser"  ng-model="handoverToUser" required >
+												 <option value="" selected="selected">Select Handover To</option>
+												 <option ng-repeat="info in usersList" ng-value="{{info.userId}}" value="{{info.userId}}"> {{info.userName}}</option>
+											</select> 
+											<label for="code">Handover To</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-10 col-md-10">
+										<div class="">
+											<input type="text" autocomplete="off" name="" id=""
+												class="text-input floating-label" ng-model="closingNumber"> <label
+												for="" class="LISDynamicLabel">Closing  No.</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right text-width-auto padding-top8">
+								<div class=" ">
+									<a href="" class="btn btn-primary btn-save-box-shadow" id="updateBtn" title="" ng-click="openShiftClosingModal();">Shift Closing </a><!-- addNewCashOpeningClosingBalance -->
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10 text-width-auto">
+								<div class="width-div-for-patient-reg ">
+									<a href="" class="btn btn-primary btn-save-box-shadow" title="Print" ng-click="printShiftClosing();">
+									
+										<i class="fa fa-print" style="font-size: 16px;" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10 text-width-auto" >
+								<div class="width-div-for-patient-reg ">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										title="Save" ng-click="getshiftClosingRecords()"> <i class="fa fa-search"
+										style="font-size: 16px !important;" aria-hidden="true"></i></a>
+								</div>
+							</div>
+						</div>
+
+					</fieldset>
+				</div>
+			</div>
+			<div class="row">
+			    <div class="col-lg-9 col-md-9 col-sm-9">
+					<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="pagination.pageSize='10'" 
+								ng-model="pagination.pageSize" 
+								ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchWord" 
+						style="margin-top: 0px"> <i
+						class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div>
+			<div class="row padding-left-right-set4 table-container padding-top8">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr>
+								<th class="width10"><span class="">Closing No.</span></th>
+								<th class="width10"><span class="">Closing Date</span></th>
+								<th class="width10">Amount</th>
+								<th class="width10">Difference</th>
+								<th class="width10">Cashier Name</th>
+								<th class="width10">Handover By</th>
+								<th class="width10">Handover To</th>
+								<!-- <th class="width5 text-center">Action</th> -->
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+								<tr ng-repeat="info12 in pagination.data | filter:searchWord">
+									<td class="width10">{{info12.closingNumber}}</td>
+									<td class="width10">{{info12.createdDate}}</td>
+									<td class="width10">{{info12.amount}}</td>
+									<td class="width10">{{info12.difference}}</td>
+									<td class="width10">{{info12.cashierName}}</td>
+									<td class="width10">{{info12.cashierName}}</td>
+									<td class="width10">{{info12.userName}}</td>
+									<!-- <td class="width5 text-center">
+										<a href="" title="Details" class="cursor-pointer">Details</a> detailsCashOpeningClosingBalance
+										<a class="cursor-pointer" title="Print"><i class="fa fa-print"></i></a>
+									</td> -->
+								</tr>
+							</tbody>
+					</table>
+				</div>
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		</fieldset>
+	</div>
+
+</div>
+<!-- shiftClosingModal START -->
+<div id="shiftClosingModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Shift Closing
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div class="row">
+					<div class="custom-sub-tab padding-left-right-set4 ">
+						<ul class="tabs nav nav-tabs">
+							<li ng-class="{ active : isSetFirstTabLevel(1) }" class="width10 active" style="">
+								<a href="" ng-click="setFirstTabLevel(1)">Summary</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+								<a href="" ng-click="setFirstTabLevel(2)">Cash</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width10" style="">
+								<a href="" ng-click="setFirstTabLevel(3)">Bank</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(4) }" class="width10" style="">
+								<a href="" ng-click="setFirstTabLevel(4)">Card</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(5) }" class="width10" style="">
+								<a href="" ng-click="setFirstTabLevel(5)">M-Pesa</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(6) }" class="width10" style="">
+								<a href="" ng-click="setFirstTabLevel(6)">Loyalty Card</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(7) }" class="width10" style="">
+								<a href="" ng-click="setFirstTabLevel(7)">E - Transfer</a>
+							</li>
+						</ul>
+					</div>
+					<div class="row padding-left-right-set4">
+						<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div class="custom-sub-tab padding-left-right-set4 ">
+									<ul class="tabs nav nav-tabs">
+										<li ng-class="{ active : isSetSecondTabLevel(1) }" class="width15 active" style="">
+											<a href="" ng-click="setSecondTabLevel(1)">Cash Receipts</a>
+										</li>
+										<li ng-class="{ active : isSetSecondTabLevel(2) }" class="width15" style="">
+											<a href="" ng-click="setSecondTabLevel(2)">Interim Handover</a>
+										</li>
+										<li ng-class="{ active : isSetSecondTabLevel(3) }" class="width15" style="">
+											<a href="" ng-click="setSecondTabLevel(3)">Refunds</a>
+										</li>
+										<li ng-class="{ active : isSetSecondTabLevel(4) }" class="width15" style="">
+											<a href="" ng-click="setSecondTabLevel(4)">Cash in Hand</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div ng-show="isSetSecondTabLevel(1)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">Invoice No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Patient Name</th>
+															<th class="width5">UHID</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info1 in cashReceipt">
+															<td class="width5">{{info1.recieptNumber}}</td>
+															<td class="width5">{{info1.createdDate}}</td>
+															<td class="width5">{{info1.pName}}</td>
+															<td class="width5">{{info1.uhidNumber}}</td>
+															<td class="width5">{{info1.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalCashReciept | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											
+											<!-- <div class="modal-footer" style="border:none;">
+											<button type="button" class="btn btn-primary" id="" data-toggle="modal" data-target="#saveInterimOpening">Save</button>
+											<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+										</div> -->
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetSecondTabLevel(2)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">ICH No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info6 in intrimCash">
+															<td class="width5">{{info6.ichNumber}}</td>
+															<td class="width5">{{info6.createdDate}}</td>
+															<td class="width5">{{info6.cashHandoverAmount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalIntrimCash | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetSecondTabLevel(3)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">Voucher No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Patient Name</th>
+															<th class="width5">UHID</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info10 in refundList">
+															<td class="width5">{{info10.voucherNo}}</td>
+															<td class="width5">{{info10.createdDate}}</td>
+															<td class="width5">{{info10.pName}}</td>
+															<td class="width5">{{info10.uhidNumber}}</td>
+															<td class="width5">{{info10.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{refundAmount | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetSecondTabLevel(4)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width10">Denomination</th>
+															<th class="width5">Qty</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info in denominationList">
+															<td class="width10" value="{{info.denominationId}}" >{{info.denomination}}</td>
+															<td class="width5"><input type="text" autocomplete="off" class="w-100" ng-model="info.qty"  ng-blur="calculateFun(info,$index)" numbers-only></td>
+															<td class="width5">{{info.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width10 border-right-none"></td>
+															<td class="width5 text-right" >Total</td>
+															<td class="width5"> <p>{{totalAmount | number:0}}</p></td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<div class="table-container-footer">
+										<table>
+											<tfoot>
+												<tr>
+													<td style="width:1500px;"></td><br/>
+													<td style="width:300px;"><button type="button" class="btn btn-primary" id="saveBtn" data-toggle="modal" data-target="#saveInterimOpening" ng-disabled="saveCash" ng-click="saveCashAmount()">Save</button>
+											</td>
+													<td style="width:100px;"></td>
+													<td style="width:300px;"><button type="button" data-dismiss="modal" id="cancelBtn" class="btn btn-primary">Cancel</button></td>
+												</tr>
+											</tfoot>
+										</table>
+										</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div class="custom-sub-tab padding-left-right-set4 ">
+									<ul class="tabs nav nav-tabs">
+										<li ng-class="{ active : isSetThirdTabLevel(1) }" class="width15 active" style="">
+											<a href="" ng-click="setThirdTabLevel(1)">Bank Cash Receipts</a>
+										</li>
+										<li ng-class="{ active : isSetThirdTabLevel(2) }" class="width15" style="">
+											<a href="" ng-click="setThirdTabLevel(2)">Interim Handover</a>
+										</li>
+										<li ng-class="{ active : isSetThirdTabLevel(3) }" class="width15" style="">
+											<a href="" ng-click="setThirdTabLevel(3)">Cheque in Hand</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div ng-show="isSetThirdTabLevel(1)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">Invoice No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Patient Name</th>
+															<th class="width5">UHID</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info1 in bankReceipt">
+															<td class="width5">{{info1.recieptNumber}}</td>
+															<td class="width5">{{info1.createdDate}}</td>
+															<td class="width5">{{info1.pName}}</td>
+															<td class="width5">{{info1.uhidNumber}}</td>
+															<td class="width5">{{info1.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalBankReciept | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetThirdTabLevel(2)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">ICH No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info7 in intrimCheque">
+															<td class="width5">{{info7.ichNumber}}</td>
+															<td class="width5">{{info7.createdDate}}</td>
+															<td class="width5">{{info7.cashHandoverAmount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalIntrimCheque | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetThirdTabLevel(3)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width10">Cheque No.</th>
+															<th class="width10">Date</th>
+															<th class="width10">Bank</th>
+															<th class="width15">Patient Name</th>
+															<th class="width10">UHID</th>
+															<th class="width10">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info2 in cheque">
+															<td class="width10">{{info2.chequeNumber}}</td>
+															<td class="width10">{{info2.createdDate}}</td>
+															<td class="width10">{{info2.bankName}}</td>
+															<td class="width15">{{info2.pName}}</td>
+															<td class="width10">{{info2.uhidNumber}}</td>
+															<td class="width10">{{info2.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width10 border-right-none"></td>
+															<td class="width10 border-right-none"></td>
+															<td class="width10 border-right-none"></td>
+															<td class="width15 border-right-none"></td>
+															<td class="width10 text-right">Total</td>
+															<td class="width10">{{totalchequeReciept | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<div class="table-container-footer">
+										<table>
+											<tfoot>
+												<tr>
+													<td style="width:1500px;"></td><br/>
+													<td style="width:300px;"><button type="button" class="btn btn-primary" id="saveBtn" data-toggle="modal" data-target="#saveInterimOpening"  ng-disabled="saveBank" ng-click="saveBankAmount()">Save</button>
+											</td>
+													<td style="width:100px;"></td>
+													<td style="width:300px;"><button type="button" data-dismiss="modal" id="cancelBtn" class="btn btn-primary">Cancel</button></td>
+												</tr>
+											</tfoot>
+										</table>
+										</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div ng-show="isSetFirstTabLevel(4)" class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div class="custom-sub-tab padding-left-right-set4 ">
+									<ul class="tabs nav nav-tabs">
+										<li ng-class="{ active : isSetForthTabLevel(1) }" class="width15 active" style="">
+											<a href="" ng-click="setForthTabLevel(1)">Card Receipts</a>
+										</li>
+										<li ng-class="{ active : isSetForthTabLevel(2) }" class="width15" style="">
+											<a href="" ng-click="setForthTabLevel(2)">Interim Handover</a>
+										</li>
+										<li ng-class="{ active : isSetForthTabLevel(3) }" class="width15" style="">
+											<a href="" ng-click="setForthTabLevel(3)">Receipts in Hand</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div ng-show="isSetForthTabLevel(1)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">Invoice No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Patient Name</th>
+															<th class="width5">UHID</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr  ng-repeat="info3 in cardReceipts">
+															<td class="width5">{{info3.recieptNumber}}</td>
+															<td class="width5">{{info3.createdDate}}</td>
+															<td class="width5">{{info3.pName}}</td>
+															<td class="width5">{{info3.uhidNumber}}</td>
+															<td class="width5">{{info3.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalCardReciept | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetForthTabLevel(2)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">ICH No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info8 in intrimCard">
+															<td class="width5">{{info8.ichNumber}}</td>
+															<td class="width5">{{info8.createdDate}}</td>
+															<td class="width5">{{info8.cashHandoverAmount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalIntrimCard | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetForthTabLevel(3)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width10">Card No.</th>
+															<th class="width10">Card Type</th>
+															<th class="width10">Transaction ID</th>
+															<th class="width15">Patient Name</th>
+															<th class="width10">UHID</th>
+															<th class="width10">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info4 in card">
+															<td class="width10">{{info4.cardNumber}}</td>
+															<td class="width10">{{info4.cardTypeName}}</td>
+															<td class="width10">{{info4.transactionNo}}</td>
+															<td class="width15">{{info4.pName}}</td>
+															<td class="width10">{{info4.uhidNumber}}</td>
+															<td class="width10">{{info4.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width10 border-right-none"></td>
+															<td class="width10 border-right-none"></td>
+															<td class="width10 border-right-none"></td>
+															<td class="width15 border-right-none"></td>
+															<td class="width10 text-right">Total</td>
+															<td class="width10">{{totalCard | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<div class="table-container-footer">
+										<table>
+											<tfoot>
+												<tr>
+													<td style="width:1500px;"></td><br/>
+													<td style="width:300px;"><button type="button" class="btn btn-primary" id="saveBtn" data-toggle="modal" data-target="#saveInterimOpening"  ng-disabled="saveCard"  ng-click="saveCardAmount()">Save</button>
+											</td>
+													<td style="width:100px;"></td>
+													<td style="width:300px;"><button type="button" data-dismiss="modal" id="cancelBtn" class="btn btn-primary">Cancel</button></td>
+												</tr>
+											</tfoot>
+										</table>
+										</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top5 padding-bottom5">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-10 col-md-10">
+											<div class="">
+												<select class="text-input floating-label dirty "name = "handoverToUser" id="handoverToUser"  ng-model="handoverToshift" required convert-to-number>
+												 <option value="" selected="selected">Select Handover To</option>
+												 <option ng-repeat="info in usersList" ng-value="{{info.userId}}" value="{{info.userId}}"> {{info.userName}}</option>
+											</select> 
+											<label for="code">Handover To<span class="star">*</span></label>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row padding-left-right-set4 table-container">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width5">Mode of Payment</th>
+													<th class="width5">Total Amount</th>
+													<th class="width5">ICH</th>
+													<th class="width5">To Be Handover</th>
+													<th class="width5">Actual Amount</th>
+													<th class="width5">Difference</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												
+												<tr ng-repeat="info9 in ShiftCloseBlaSheet">
+													<td class="width5">{{info9.modeOfPayment}}</td>
+													<td class="width5">{{info9.amountCash}}</td>
+													<td class="width5">{{info9.ichAmount}}</td>
+													<td class="width5">{{info9.toBeHandover}}</td>
+													<td class="width5">{{info9.actualAmountCash }}</td>
+													<td class="width5">{{info9.difference | number:0}}</td>
+													<br/>
+													
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="table-container-footer">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tfoot>
+												<tr>
+													<td class="width5 border-right-none"></td>
+													<td class="width5 border-right-none"></td>
+													<td class="width5 border-right-none"></td>
+													<td class="width5 border-right-none"></td>
+													<td class="width5 text-right">Total Difference</td>
+													<td class="width5">{{totalDifference | number:0}}</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+									<div class="table-container-footer">
+										<table>
+											<tfoot>
+												<tr>
+													<td style="width:1500px;"></td><br/>
+													<td style="width:300px;"><button type="button" class="btn btn-primary" id="saveBtn" data-dismiss="modal" data-toggle="modal"  data-target="#confirmPatientTypeUpdate" ng-disabled="saveSummery">Save</button>
+											</td>
+													<td style="width:100px;"></td>
+													<td style="width:300px;"><button type="button" data-dismiss="modal" id="cancelBtn" class="btn btn-primary">Cancel</button></td>
+												</tr>
+											</tfoot>
+										</table>
+										</div>
+									<!-- <div class="row padding-top10">
+										<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+											<label>Remark:</label>
+										</div>
+										<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+											<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+										</div>
+									</div> -->
+							</div>
+						</div>
+					</div>
+						<div ng-show="isSetFirstTabLevel(5)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<div class="custom-sub-tab padding-left-right-set4 ">
+										<ul class="tabs nav nav-tabs">
+											<li ng-class="{ active : isSetFifthTabLevel(1) }" class="width15 active" style="">
+												<a href="" ng-click="setFifthTabLevel(1)">M-Pesa Receipts</a>
+											</li>
+											<li ng-class="{ active : isSetFifthTabLevel(2) }" class="width15" style="">
+												<a href="" ng-click="setFifthTabLevel(2)">Interim Handover</a>
+											</li>
+											<li ng-class="{ active : isSetFifthTabLevel(3) }" class="width15" style="">
+												<a href="" ng-click="setFifthTabLevel(3)">Receipts in Hand</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="row">
+									<div ng-show="isSetFifthTabLevel(1)" class="second-level-tab-display-div" style="">
+										<div class="row padding-left-right-set4 table-container">
+											<div class="table-container">
+												<div class="table-container-header">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<thead>
+															<tr>
+																<th class="width5">Invoice No.</th>
+																<th class="width5">Date</th>
+																<th class="width5">Patient Name</th>
+																<th class="width5">UHID</th>
+																<th class="width5">Amount</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+												<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<tbody>
+															<tr  ng-repeat="info3 in cardReceipts">
+																<td class="width5">{{info3.recieptNumber}}</td>
+																<td class="width5">{{info3.createdDate}}</td>
+																<td class="width5">{{info3.pName}}</td>
+																<td class="width5">{{info3.uhidNumber}}</td>
+																<td class="width5">{{info3.amount}}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+												<div class="table-container-footer">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<tfoot>
+															<tr>
+																<td class="width5 border-right-none"></td>
+																<td class="width5 border-right-none"></td>
+																<td class="width5 border-right-none"></td>
+																<td class="width5 text-right">Total</td>
+																<td class="width5">{{totalCardReciept | number:0}}</td>
+															</tr>
+														</tfoot>
+													</table>
+												</div>
+												<!-- <div class="row padding-top10">
+													<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+														<label>Remark:</label>
+													</div>
+													<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+														<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+													</div>
+												</div> -->
+											</div>
+										</div>
+									</div>
+									<div ng-show="isSetFifthTabLevel(2)" class="second-level-tab-display-div" style="">
+										<div class="row padding-left-right-set4 table-container">
+											<div class="table-container">
+												<div class="table-container-header">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<thead>
+															<tr>
+																<th class="width5">ICH No.</th>
+																<th class="width5">Date</th>
+																<th class="width5">Amount</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+												<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<tbody>
+															<tr ng-repeat="info8 in intrimCard">
+																<td class="width5">{{info8.ichNumber}}</td>
+																<td class="width5">{{info8.createdDate}}</td>
+																<td class="width5">{{info8.cashHandoverAmount}}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+												<div class="table-container-footer">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<tfoot>
+															<tr>
+																<td class="width5 border-right-none"></td>
+																<td class="width5 text-right">Total</td>
+																<td class="width5">{{totalIntrimCard | number:0}}</td>
+															</tr>
+														</tfoot>
+													</table>
+												</div>
+												<!-- <div class="row padding-top10">
+													<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+														<label>Remark:</label>
+													</div>
+													<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+														<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+													</div>
+												</div> -->
+											</div>
+										</div>
+									</div>
+									<div ng-show="isSetFifthTabLevel(3)" class="second-level-tab-display-div" style="">
+										<div class="row padding-left-right-set4 table-container">
+											<div class="table-container">
+												<div class="table-container-header">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<thead>
+															<tr>
+																<th class="width10">Card No.</th>
+																<th class="width10">Card Type</th>
+																<th class="width10">Transaction ID</th>
+																<th class="width15">Patient Name</th>
+																<th class="width10">UHID</th>
+																<th class="width10">Amount</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+												<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<tbody>
+															<tr ng-repeat="info4 in card">
+																<td class="width10">{{info4.cardNumber}}</td>
+																<td class="width10">{{info4.cardTypeName}}</td>
+																<td class="width10">{{info4.transactionNo}}</td>
+																<td class="width15">{{info4.pName}}</td>
+																<td class="width10">{{info4.uhidNumber}}</td>
+																<td class="width10">{{info4.amount}}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+												<div class="table-container-footer">
+													<table class="table table-striped table-hover table-condensed table-bordered">
+														<tfoot>
+															<tr>
+																<td class="width10 border-right-none"></td>
+																<td class="width10 border-right-none"></td>
+																<td class="width10 border-right-none"></td>
+																<td class="width15 border-right-none"></td>
+																<td class="width10 text-right">Total</td>
+																<td class="width10">{{totalCard | number:0}}</td>
+															</tr>
+														</tfoot>
+													</table>
+												</div>
+												<div class="table-container-footer">
+											<table>
+												<tfoot>
+													<tr>
+														<td style="width:1500px;"></td><br/>
+														<td style="width:300px;"><button type="button" class="btn btn-primary" id="saveBtn" data-toggle="modal" data-target="#saveInterimOpening"  ng-disabled="saveCard"  ng-click="saveCardAmount()">Save</button>
+												</td>
+														<td style="width:100px;"></td>
+														<td style="width:300px;"><button type="button" data-dismiss="modal" id="cancelBtn" class="btn btn-primary">Cancel</button></td>
+													</tr>
+												</tfoot>
+											</table>
+											</div>
+												<!-- <div class="row padding-top10">
+													<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+														<label>Remark:</label>
+													</div>
+													<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+														<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+													</div>
+												</div> -->
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<div ng-show="isSetFirstTabLevel(6)" class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div class="custom-sub-tab padding-left-right-set4 ">
+									<ul class="tabs nav nav-tabs">
+										<li ng-class="{ active : isSetSixthTabLevel(1) }" class="width15 active" style="">
+											<a href="" ng-click="setSixthTabLevel(1)">Card Receipts</a>
+										</li>
+										<li ng-class="{ active : isSetSixthTabLevel(2) }" class="width15" style="">
+											<a href="" ng-click="setSixthTabLevel(2)">Interim Handover</a>
+										</li>
+										<li ng-class="{ active : isSetSixthTabLevel(3) }" class="width15" style="">
+											<a href="" ng-click="setSixthTabLevel(3)">Receipts in Hand</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div ng-show="isSetSixthTabLevel(1)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">Invoice No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Patient Name</th>
+															<th class="width5">UHID</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr  ng-repeat="info3 in cardReceipts">
+															<td class="width5">{{info3.recieptNumber}}</td>
+															<td class="width5">{{info3.createdDate}}</td>
+															<td class="width5">{{info3.pName}}</td>
+															<td class="width5">{{info3.uhidNumber}}</td>
+															<td class="width5">{{info3.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalCardReciept | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetSixthTabLevel(2)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">ICH No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info8 in intrimCard">
+															<td class="width5">{{info8.ichNumber}}</td>
+															<td class="width5">{{info8.createdDate}}</td>
+															<td class="width5">{{info8.cashHandoverAmount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalIntrimCard | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetSixthTabLevel(3)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width10">Card No.</th>
+															<th class="width10">Card Type</th>
+															<th class="width10">Transaction ID</th>
+															<th class="width15">Patient Name</th>
+															<th class="width10">UHID</th>
+															<th class="width10">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info4 in card">
+															<td class="width10">{{info4.cardNumber}}</td>
+															<td class="width10">{{info4.cardTypeName}}</td>
+															<td class="width10">{{info4.transactionNo}}</td>
+															<td class="width15">{{info4.pName}}</td>
+															<td class="width10">{{info4.uhidNumber}}</td>
+															<td class="width10">{{info4.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width10 border-right-none"></td>
+															<td class="width10 border-right-none"></td>
+															<td class="width10 border-right-none"></td>
+															<td class="width15 border-right-none"></td>
+															<td class="width10 text-right">Total</td>
+															<td class="width10">{{totalCard | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<div class="table-container-footer">
+										<table>
+											<tfoot>
+												<tr>
+													<td style="width:1500px;"></td><br/>
+													<td style="width:300px;"><button type="button" class="btn btn-primary" id="saveBtn" data-toggle="modal" data-target="#saveInterimOpening"  ng-disabled="saveCard"  ng-click="saveCardAmount()">Save</button>
+											</td>
+													<td style="width:100px;"></td>
+													<td style="width:300px;"><button type="button" data-dismiss="modal" id="cancelBtn" class="btn btn-primary">Cancel</button></td>
+												</tr>
+											</tfoot>
+										</table>
+										</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div ng-show="isSetFirstTabLevel(7)" class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div class="custom-sub-tab padding-left-right-set4 ">
+									<ul class="tabs nav nav-tabs">
+										<li ng-class="{ active : isSetFifthTabLevel(1) }" class="width15 active" style="">
+											<a href="" ng-click="setFifthTabLevel(1)">E - Transfer Receipts</a>
+										</li>
+										<li ng-class="{ active : isSetFifthTabLevel(2) }" class="width15" style="">
+											<a href="" ng-click="setFifthTabLevel(2)">Interim Handover</a>
+										</li>
+										<li ng-class="{ active : isSetFifthTabLevel(3) }" class="width15" style="">
+											<a href="" ng-click="setFifthTabLevel(3)">Receipts in Hand</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div ng-show="isSetFifthTabLevel(1)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">Invoice No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Patient Name</th>
+															<th class="width5">UHID</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr  ng-repeat="info3 in cardReceipts">
+															<td class="width5">{{info3.recieptNumber}}</td>
+															<td class="width5">{{info3.createdDate}}</td>
+															<td class="width5">{{info3.pName}}</td>
+															<td class="width5">{{info3.uhidNumber}}</td>
+															<td class="width5">{{info3.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalCardReciept | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetFifthTabLevel(2)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width5">ICH No.</th>
+															<th class="width5">Date</th>
+															<th class="width5">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info8 in intrimCard">
+															<td class="width5">{{info8.ichNumber}}</td>
+															<td class="width5">{{info8.createdDate}}</td>
+															<td class="width5">{{info8.cashHandoverAmount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width5 border-right-none"></td>
+															<td class="width5 text-right">Total</td>
+															<td class="width5">{{totalIntrimCard | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetFifthTabLevel(3)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set4 table-container">
+										<div class="table-container">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr>
+															<th class="width10">Card No.</th>
+															<th class="width10">Card Type</th>
+															<th class="width10">Transaction ID</th>
+															<th class="width15">Patient Name</th>
+															<th class="width10">UHID</th>
+															<th class="width10">Amount</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="overflow: overlay;background: #fff;"> <!-- fix-height-scroll230, background: #fff; -->
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="info4 in card">
+															<td class="width10">{{info4.cardNumber}}</td>
+															<td class="width10">{{info4.cardTypeName}}</td>
+															<td class="width10">{{info4.transactionNo}}</td>
+															<td class="width15">{{info4.pName}}</td>
+															<td class="width10">{{info4.uhidNumber}}</td>
+															<td class="width10">{{info4.amount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-footer">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tfoot>
+														<tr>
+															<td class="width10 border-right-none"></td>
+															<td class="width10 border-right-none"></td>
+															<td class="width10 border-right-none"></td>
+															<td class="width15 border-right-none"></td>
+															<td class="width10 text-right">Total</td>
+															<td class="width10">{{totalCard | number:0}}</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+											<div class="table-container-footer">
+										<table>
+											<tfoot>
+												<tr>
+													<td style="width:1500px;"></td><br/>
+													<td style="width:300px;"><button type="button" class="btn btn-primary" id="saveBtn" data-toggle="modal" data-target="#saveInterimOpening"  ng-disabled="saveCard"  ng-click="saveCardAmount()">Save</button>
+											</td>
+													<td style="width:100px;"></td>
+													<td style="width:300px;"><button type="button" data-dismiss="modal" id="cancelBtn" class="btn btn-primary">Cancel</button></td>
+												</tr>
+											</tfoot>
+										</table>
+										</div>
+											<!-- <div class="row padding-top10">
+												<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+													<label>Remark:</label>
+												</div>
+												<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set0">
+													<textarea row="1" maxlength="100" class="form-control dirty"></textarea>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+			<!-- <div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id=""
+										class="text-input floating-label"> <label
+										for="description" class="LISDynamicLabel">Date</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label dirty">
+										<option value=""></option>
+										<option value="-">-</option>
+									</select> <label for="code">Handover To</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label dirty">
+										<option value=""></option>
+										<option value="-">-</option>
+									</select> <label for="code">Mode</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id=""
+										class="text-input floating-label"> <label
+										for="description" class="LISDynamicLabel">Amount</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+						<div class="width-div-for-patient-reg padding-top2">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Save"> <i class="fa fa-search" style="font-size: 21px" aria-hidden="true"></i></a>
+						</div>
+					</div>
+				</div>-->				
+				
+			</div>
+			<!-- <div class="modal-footer" style="border:none;">
+				<button type="button" class="btn btn-primary" id="" data-toggle="modal" data-target="#saveInterimOpening">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div> -->
+		</div>
+	</div>
+</div>
+</div>
+<!-- shiftClosingModal END -->
+<!-- saveIntrimCashOpening Modal START -->
+<div id="saveIntrimCashOpening" class="modal fade ng-scope in common-small-popup" role="dialog"  data-keyboard="false" data-backdrop="static" style="background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal" ng-click="cancel();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10 row padding-top10">
+					<div class="col-md-6 col-lg-6 col-sm-6 margin-top5 padding-left-right-set0">
+						<span>Handover By Sercurity Code</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-10">
+						<input type="password" class="w-100">
+					</div>
+				</div>
+				<div class="margin-left10 row padding-top10">
+					<div class="col-md-6 col-lg-6 col-sm-6 margin-top5 padding-left-right-set0">
+						<span>Handover To Sercurity Code</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-10">
+						<input type="password" class="w-100">
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- saveIntrimCashOpening Modal END -->
+<!-- CONFIRM POPUP FOR UPDATE START-->
+<div id="confirmPatientTypeUpdate" class="modal fade ng-scope in common-small-popup"
+	role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal"
+						ng-click="cancel();">�</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>This is Total Difference {{totalDifference | number:0}}, Are you sure you want to Save?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"
+					ng-click="savesummery()" id="okBtn">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- CONFIRM POPUP FOR UPDATE END -->
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+$(document).ready(function() {
+	 
+	$(".selectedPageName").text("Shift Closing");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="shiftClosing"]').parents("li").addClass("active");
+});
+</script>
+

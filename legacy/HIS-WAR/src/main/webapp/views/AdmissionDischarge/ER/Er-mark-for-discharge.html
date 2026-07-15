@@ -1,0 +1,1145 @@
+
+<!-- Page Content -->
+ <style>
+.cke_contents {
+	height:310px !important;
+}
+
+</style> 
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<!-- <div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<select class="text-input floating-label" ng-model="search.allocationTypeId">
+								<option >Select Allocation Type</option>
+								<option value="1">ER</option>
+								<option value="2">Observation</option>
+								<option value="3">Resuscitation</option>
+							</select> <label for="code">Allocation Type</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="registrationNumber" id=""
+								class="text-input floating-label"> 
+								<input type="text" autocomplete="off"
+                class="text-input floating-label" tabindex="3" ng-model="groupName"
+                placeholder="Search"
+                uib-typeahead="group.patientName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                typeahead-editable="false"
+                typeahead-on-select="selectPatientId($item, $model, $label);"
+                name="groupName" 
+                required /><label
+								for="description" class="LISDynamicLabel">Patient Search</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+				<div class="common-save-button">
+					<a href="" class="btn btn-primary btn-save-box-shadow"
+						style="width: 36%; margin-top: 6px;" ng-click="getERAdmittedPatientByAllocationPatientId()"> <i class="fa fa-search"
+						aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div> -->
+				<div class="row margin-top8 padding-left-right-set4  multipal-button-div padding-top-bottom-set5">
+					<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4 "  >
+						<div class="disabled" id="pendingServies">
+							<i class="fa fa-file-image-o" aria-hidden="true"></i>
+							<a data-toggle="modal" data-target="{{pendingServicePopupFlag == true ? '#pendingServiceList':''}}" ng-click="pendingServies()">Service-Pendings</a>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4 ">
+						<div ng-class="dischargeMedicationlist.length==0 ?'disabled':'enabled'"id="dischargeMedication">
+							<i class="fa fa-barcode" aria-hidden="true"></i>
+							<a  ng-click="showDischargeMedication()">Medication at Hospital Discharge</a>
+						</div>
+					</div>
+            		<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4 ">
+						<div class="disabled" id="billing">
+							<i class="fa fa-file-image-o" aria-hidden="true"></i>
+							<a value="Billing" id="billing" ng-click="redirectBilling()" disabled="">Billing</a>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4 ">
+						<div  ng-class="dischargeSummaryId==null ? 'disabled':'enabled'" id="dischargeSummary" >
+							<!-- <i class="fa fa-ravelry" aria-hidden="true"></i> -->
+							<i class="fa fa-print" style="font-size: 19px" aria-hidden="true"></i>
+							<a value="Discharge Summary" id="dischargeSummary" data-toggle="modal" data-target="" ng-click="printDischargeSumReport()" >Hospital Discharge Summary</a>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4">
+						<div class="disabled" id="medicationHandOver" >
+							<i class="fa fa-money" aria-hidden="true"></i>
+							<a ng-click="redirectMedicationhandOver()">Medication Handed Over</a>
+						</div>
+					</div>
+				</div>
+				<div class="row margin-top8 padding-left-right-set4  multipal-button-div padding-top-bottom-set5">
+					<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4 ">
+						<div class="disabled" id="vacateBed">
+							<i class="fa fa-barcode" aria-hidden="true"></i>
+							<a id="vacateBed" ng-click="finalDischarge()">Vacate Ward Bed</a>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4">
+						<div class="disabled" id="dischargeSlip">
+							<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+							<a   data-toggle="modal"  ng-click="getTemplateListByTempType(21)">Hospital Discharge Slip</a><!-- data-target="{{dischargeSlipPdfViewPopupFlag == true ? '#addtemplateModal':''}}" -->
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4">
+						<div class="disabled" id="deathId">
+							<i class="fa fa-money" aria-hidden="true"></i>
+							<a  data-toggle="modal"  ng-click="getTemplateListByTempType(3)">Death Certificate</a><!--  data-target="{{deathPdfViewPopupFlag == true ? '#deathPdfView':''}}" -->  
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2  padding-left-right-set4">
+						<div class="disabled" id="damaContent">
+							<i class="fa fa-folder" aria-hidden="true"></i>
+							<a  data-toggle="modal"  data-target="{{damaPdfViewPopupFlag == true ? '#damaPdfView':''}}" ng-click="commonFuntion('1')" >DAMA Consent</a>
+						</div>
+					</div>
+				</div>
+		
+<!-- <div class="row padding-left-right-10 margin-top8">
+				<div class="col-lg-2 col-md-2">
+					 style="top: -11px;"
+					<div class="ssearch">
+						<span class="fa fa-search icon-size search-icon-for-search"></span> <input placeholder="Search" ng-model="searchKeyword" class="search-popUp-ddl">
+					</div>
+				</div>
+				<div class="col-lg-7  col-md-7"></div>
+				<div class="col-lg-2 col-md-2" style="text-align: right; padding-right: 0px;">
+					<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries 
+						</label>
+					</div>
+				</div>
+			</div> -->
+
+		<div class="row padding-left-right-10 padding-top8">
+			<div class="col-lg-9 col-md-9 col-sm-9">
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-3"
+						style="padding-right: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries 
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0">
+				        <input type="text" autocomplete="off" class="text-search-box search-popUp-ddl" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+				        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				      </div>
+		</div>
+			<!-- <div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+			  <table id="main-table" class="main-table width200"> -->		
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll450">
+				<table id="main-table"  class="table table-bordered table-th-alignment main-table padding-bottom5">
+					<thead>
+					<tr class="">
+						<th class="width1"></th>
+<!-- 						<th class="UHID-width">UHID -->
+<!-- 							<div class="float_right"> -->
+<!-- 								<div> -->
+<!-- 									<i class="fa fa-caret-up" aria-hidden="true"></i> -->
+<!-- 								</div> -->
+<!-- 								<div class="margin-top-8"> -->
+<!-- 									<i class="fa fa-caret-down" aria-hidden="true"></i> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</th> -->
+						<th class="width15 ">Patient Details
+							<!-- <div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div> -->
+						</th>
+						<!-- <th class="patient-doc-details-width">Doctor Details
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th> -->
+						<th class="width6">Hospital Discharge Date
+							<!-- <div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div> -->
+						</th>
+						<th class="width5">Ward
+							<!-- <div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div> -->
+						</th>
+						<th class="width5">Ward Bed No.
+							<!-- <div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div> -->
+						</th>
+						<th class="patient-doc-details-width">Hospital Discharge-Clinical Re
+							<!-- <div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div> -->
+						</th>
+						<th class="patient-doc-details-width">Hospital Discharge Status
+							<!-- <div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div> -->
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="info in listOfAdmittedPatientList | orderBy:'dischargeDate':false |filter:searchKeyword">
+						<td class="text-center">
+						<input type="radio" name="radioName" value="info.dischargeId" ng-model="dischargePatient" ng-click="selectPatient(info)" />
+						</td>
+<!-- 						<td>{{info.uhidnumber}}</td> -->
+<!-- 						<td > -->
+<!-- 							<div ng-show="{{info.patientId > 0}}" ng-init='age=getAge(info.dob)'> -->
+<!-- 								{{info.patientName+' '+age+'/'+info.genderCode}} -->
+<!-- 								</div> -->
+<!-- 								<div ng-show="{{info.tpatientId > 0}}"> -->
+<!-- 								{{info.patientName+' '+info.dob+'/'+info.genderCode}} -->
+<!-- 								</div> -->
+<!-- 								</td> -->
+					<!-- 	<td>
+							<div> Dr. {{info.dFirstName}}</div>
+						</td> -->
+						<td class="text-center width10">
+								<div class="row patient-details" id="45#1247#2_new" >
+									<div class="col-lg-3 col-sm-12 col-md-3">
+										<div class="" >
+											<img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="40" height="40" ng-click="patientDocumnetInformation(info)">
+										</div>
+									</div>
+									<div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+										<div class="patient-name">{{info.prefixDesc+' '+info.patientName}}</div>
+										<div class="patient-details">
+											<span class="patient-details patient">{{info.ageStr}}/ </span>
+											<span class="patient-details patient">{{info.genderCode}}</span>
+											<!-- <span class="patient-details patient" >||||||</span>
+											<span class="patient-details patient" >info</span> -->
+										</div>
+										<div class="patient">{{info.uhidnumber}}</div>
+									</div>
+								</div>
+							</td>
+						<td class=""><div>{{info.datepickerPdd}}</div></td>
+						<td><div>{{info.wardName}}</div></td>
+						<td>{{info.bedNumber}}</td>
+						<td><div>{{info.dischargeTypeName}}</div></td>
+						<td><div>{{info.dischargeDesc}}</div></td>
+					</tr>
+					</tbody>
+
+				</table>
+				</div>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ******************** START MODEL FOR PDF VIEW **************************** -->
+<div id="commonPdfView" class="modal fade ng-scope in common-popup-header-content" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10">
+							<img src="resources/assets/images/tempImages/pdf.jpg">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>  
+<div id="dischargePdfView" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10">
+							<!-- <img src="resources/assets/images/tempImages/dischargesummary.jpg"> -->
+							 <textarea  name="editor" type="text" autocomplete="off" id="editor"  rows="10" cols="50" ng-model="templateObj.templetText" ck-editor>
+                             </textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+						<div class=" ">
+							<a ng-click="saveTemplate()" class="btn btn-primary btn-save-box-shadow" title="Save">Save</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div> 
+<div id="dischargeSlipPdfView" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10">
+							<!-- <img src="resources/assets/images/tempImages/dischargeSlip.jpg"> -->
+							 <textarea  name="editor" type="text" autocomplete="off" id="editor"  rows="10" cols="50" ng-model="templateObj.templetText" ck-editor>
+                             </textarea>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+						<div class=" ">
+							<a ng-click="saveTemplate()" class="btn btn-primary btn-save-box-shadow" title="Save">Save</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+
+ <div id="deathPdfView" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10">
+							<!-- <img src="resources/assets/images/tempImages/death.jpg"> -->
+							 <textarea  name="editor" type="text" autocomplete="off" id="editor"  rows="10" cols="50" ng-model="templateObj.templetText" ck-editor>
+                             </textarea>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+						<div class=" ">
+							<a ng-click="saveTemplate()" class="btn btn-primary btn-save-box-shadow" title="Save">Save</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+
+ <div id="damaPdfView" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10" >
+							<!-- <img src="resources/assets/images/tempImages/dama.jpg"> -->
+							 <textarea  name="editor" type="text" autocomplete="off" id="editor"  rows="10" cols="50" ng-model="templateObj.templetText" ck-editor>
+                             </textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+						<div class=" ">
+							<a ng-click="saveTemplate()" class="btn btn-primary btn-save-box-shadow" title="Save">Save</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+ 			<!-- ******************** END MODEL FOR PDF VIEW   **************************** -->	
+
+
+
+		
+<!-- ******************** START MODEL FOR PENDING SERVICE LIST **************************** -->
+<!-- <div id="pendingServiceList" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			width: 25% !important;margin: 200px 0 0 510px !important;
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Pending Service List
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div class="row padding-left-right-set4">
+	            		<div class="col-md-8"></div>
+						<div class="col-md-4">
+							<div>
+								<input type="text" autocomplete="off" class="text-search-box" placeholder="Search">
+								<i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+							</div>
+						</div>
+						
+            		</div>
+            		<div class="row padding-left-right-set4 margin-top10">
+					<div class="col-md-12 fix-height-scroll450">
+						<table class="table table-bordered table-striped">
+							<tr class="table-th-bg">
+								<th class="width12">
+									UHID
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="patient-doc-details-width">
+									Patient Details
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="patient-doc-details-width">
+									Doctor Details
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="patient-doc-details-width">
+									Location
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								
+								<th class="patient-doc-details-width">
+									Date
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="patient-doc-details-width">
+									Service
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="patient-doc-details-width">
+									Sub Department
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="status">
+									Status
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="status">
+									Action
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+							</tr>
+							<tr ng-repeat="info in pendingServicesList">
+								<td>{{info.uhidnumber}}</td>
+									<td ng-init='age=getAge(info.dob)'>
+									<div ng-if="info.patientId > 0">{{info.pFirstName+' '+age+'/'+info.genderCode}}</div>
+									<div  ng-if="info.tPatientId > 0">{{info.pFirstName+' '+info.dob+'/'+info.genderCode}}</div>
+								</td>
+								<td>
+									<div> Dr. {{info.dFirstName+', '+info.specialityName}}</div>
+								</td>
+								<td><div>{{info.bedNumber}}</div></td>
+								<td><div>{{info.createdDate}}</div></td>
+								<td><div>{{info.serviceName}}</div></td>
+								<td><div>{{info.subSpecialityName}}</div></td>
+								<td><div>{{info.orderDesc}}</div></td>
+								<td>
+									<div><a href=""><button type="button" class="btn btn-primary cancel-service" ng-click="cancelPendingService(cancelReasonId,info.admissionId,info.patientSevicesOrderId)">Cancel Service</button></a></div>
+									<div class="row hide-show-reason-for-cancel-service margin-top8">
+										<div class="col-md-12">
+											<select ng-model="cancelReasonId">
+											<option value="">Select Reason</option>
+												<option ng-repeat="res in reasonList" value="{{res.reasonMasterId}}">{{res.reasonDesc}}</option>
+											</select>
+										</div>
+									</div>
+								</td>
+							</tr>
+							
+							
+						</table>
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>
+</div> -->
+<div id="pendingServiceList" class="modal fade ng-scope in common-popup-header-content common-large-popup" data-backdrop="static"  role="dialog">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Pending Service List
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+				<div  ng-include="'./views/common/patient-demography.html'" style=""></div>
+					<div class="row padding-left-right-set4">
+	            		<div class="col-lg-9 col-md-9 col-sm-9"></div>
+						<div class="col-lg-3 col-md-3 col-sm-3">
+							<div>
+								<input type="text" autocomplete="off" class="text-search-box" ng-model="searchKeywordPendingSer" placeholder="Search">
+								<i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+							</div>
+						</div>
+						
+            		</div>
+            		<div class="row padding-left-right-set4 margin-top10">
+					<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450">
+					
+					
+						<table class="table">
+							<tr class="table-th-bg">
+								<!-- <th class="width12">
+									UHID
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th> 
+								<th class="patient-doc-details-width">
+									Patient Details
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="patient-doc-details-width">
+									Doctor Details
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="patient-doc-details-width">
+									Location
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>-->
+								
+								<th class="width4">
+									Date
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width10">
+									Service
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width10">
+									Sub Department
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width5">
+									Status
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width6">
+									Action
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+							</tr>
+							<tr ng-repeat="info in pendingServicesList | filter : searchKeywordPendingSer">
+								<td><div>{{info.createdDate | date:"dd/MM/yyyy"}}</div></td>
+								<td><div>{{info.serviceStandardName}}</div></td>
+								<td><div>{{info.subSpecialityName}}</div></td>
+								<td><div>Pending</div></td>
+								<td title="Reason Type -'Billing'">
+									<span class="hide-show-reason-for-cancel-service margin-top8">
+										<select ng-model="cancelReasonId" class="width65">
+										<option value="">Select Reason</option>
+											<option ng-repeat="res in reasonList" ng-if="res.reasonTypeId == 8" value="{{res.reasonMasterId}}">{{res.reasonDesc}}</option>
+										</select>
+									</span>
+									<span class="pull-right vertical-middle padding-top4">
+										<a href="" class="cursor-pointer"><i class="fa fa-times" title="Cancel Service" ng-click="cancelPendingService(cancelReasonId,info)"></i></a></span> <!-- cancel-service -->
+								</td>
+							</tr>
+							
+							
+						</table>
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>
+</div>
+<div id="commonPdfView" class="modal fade ng-scope in common-popup-header-content" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10">
+							<img src="resources/assets/images/tempImages/pdf.jpg">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div> 
+
+<div id="dischargePdfView" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10">
+							<!-- <img src="resources/assets/images/tempImages/dischargesummary.jpg"> -->
+							 <textarea  name="editor" type="text" autocomplete="off" id="editor"  rows="10" cols="50" ng-model="templateObj.templetText" ck-editor>
+                             </textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+						<div class=" ">
+							<a ng-click="saveTemplate()" class="btn btn-primary btn-save-box-shadow" title="Save">Save</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div> 
+
+<div id="templateDataModal" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close"  data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10">
+							<!-- <img src="resources/assets/images/tempImages/dischargeSlip.jpg"> -->
+							 <textarea  name="editor" type="text" autocomplete="off" id="editor"  rows="10" cols="50" ng-model="templateObj.templateObject" ck-editor>
+                             </textarea>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<div
+						class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" ng-class="{disabled: disablePrintBtn}"
+								class="btn btn-primary btn-save-box-shadow width100"
+								title="Print" id="print"
+								ng-click="printTemplateData(templateObj);"> <i
+								class="fa fa-print" style="font-size: 18px" aria-hidden="true"></i></a>
+						</div>
+					</div>
+
+					<div
+						class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow width100"
+								title="Save" ng-click="saveTemplateTransaction();"> <i
+								class="fa fa-floppy-o" style="font-size: 21px"
+								aria-hidden="true"></i></a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+</div>
+
+	
+	<!-- <modal visible="showModal"></modal> --> 
+	<div id="deathPdfView" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10">
+							<!-- <img src="resources/assets/images/tempImages/death.jpg"> -->
+							 <textarea  name="editor" type="text" autocomplete="off" id="editor"  rows="10" cols="50" ng-model="templateObj.templetText" ck-editor>
+                             </textarea>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+						<div class=" ">
+							<a ng-click="saveTemplate()" class="btn btn-primary btn-save-box-shadow" title="Save">Save</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+ <div id="damaPdfView" class="modal fade ng-scope in common-popup-header-content common-large-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						View
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					<div ng-include="'./views/common/common-patient-details.html'"></div>
+					<div class="row margin-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450 margin-top10 margin-bottom10" >
+							<!-- <img src="resources/assets/images/tempImages/dama.jpg"> -->
+							 <textarea  name="editor" type="text" autocomplete="off" id="editor"  rows="10" cols="50" ng-model="templateObj.templetText" ck-editor>
+                             </textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+						<div class=" ">
+							<a ng-click="saveTemplate()" class="btn btn-primary btn-save-box-shadow" title="Save">Save</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+
+
+<div id="cancelConfirmPopup" class="modal fade ng-scope in  common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+				</div>
+				<div class="modal-body">
+					<!-- <div class="col-md-12 ">
+						<div class="common-small-popup-body">
+							<div><b>Are you sure you want to continue?</b> <span style=" margin-left: 20px;">: Johan Hosy, <span>29 Y Male</span>{{tokenNumber}}</span></div>
+						</div>
+						
+					</div> -->
+					<div class="margin-left10 padding-bottom30"><span>Are you sure you want to cancel?</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="finalCancelService()">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+</div>
+
+
+ <div id="dischargeMedicationDetails" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Discharge Medication Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll380 padding-left-right-10 padding-top8">
+						<table class="table table-bordered">
+								<tr>
+								
+									<th class="width10">
+										<span class="">Brand Name</span>
+									</th>
+									<th class="width10">
+										 <span class="">Generic Name</span>
+									</th>
+									<th class="width8">
+										<span class="">ROA</span>
+									</th>
+									<th class="width8">
+										 <span class="">Dose</span>
+									</th>
+									<th class="width8">
+										 <span class="">Frequency</span>
+									</th>
+									<th class="width8">
+										 <span class="">Instruction</span>
+									</th>
+									<th class="width6">
+										 <span class="">Start Date</span>
+									</th>
+									<th class="width6">
+										 <span class="">End Date</span>
+									</th>
+										<th class="width6">
+										 <span class="">Doctor Name</span>
+									</th>
+									<th class="width2 text-center">
+										 <span class="">Action</span>
+									</th>
+								</tr>
+								<tr ng-repeat="activeMedication in dischargeMedicationlist">
+								     
+									<td>{{activeMedication.itemName}}</td>
+									<td>{{activeMedication.genericName}}</td>
+									<td>{{activeMedication.roa_details}}</td>
+									<td>{{activeMedication.doseDesc +' '+ activeMedication.strengthDesc}}</td>
+									<td>{{activeMedication.frequencyDesc}}</td>
+									<td>
+<!-- 									  {{activeMedication.instructionDesc}} -->
+										<div ng-if="activeMedication.instructionDesc!=null">{{activeMedication.instructionDesc}}</div>
+										<div ng-if="activeMedication.instructionText!= null">{{activeMedication.instructionText}}</div>
+									</td>
+									<td>{{activeMedication.startDate}}</td>
+									<td>{{activeMedication.endDate}}</td>
+									<td>{{activeMedication.doctorName}}</td>
+									<td class="text-center">
+										<a ng-if="activeMedication.isMedicationStopHis=='N'"  title="start"><i class="fa fa-circle-o"></i></a>
+										<a ng-if="activeMedication.isMedicationStopHis!='N'"  title="Stop "><i class="fa fa-ban"></i></a>
+									</td>
+								</tr>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary margin-top10" id="okBtn">Ok</button>
+			</div>
+			</div>
+		</div>
+</div> 
+
+<!-- addtemplateModal START -->
+<div id="addtemplateModal" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static"
+	style="margin-left: 10%; width: 80%; height: 100%; margin-top: 4%; padding-right: 0 !important; background-color: transparent !important; position: absolute;">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body fix-height-scroll230">
+				<div class="row">
+					<div
+						class="col-lg-12 col-md-12 col-sm-12 padding-left-right-10 padding-top8"
+						ng-repeat="template in templateList">
+						<input type="radio" ng-model="templateObj" class="margin-right05"
+							name="template" ng-true-value="true" ng-false-value="false"
+							ng-click="selectTemplate(template);">{{template.title}}
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" class="btn btn-primary" id="" ng-click="addTemplate();">View</button>fa-eye -->
+				 <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="View" ng-click="addTemplate();">
+						<i class="fa fa-eye" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" id="patientDocumentOption" role="dialog">
+     <div  class="modal-dialog" style="width: 700px !important; margin: 161px auto !important;">
+         <div class="modal-content" style="border-radius: 20px;">
+             	<div class="modal-header padding-zero" style="padding:0px;margin-left: -34px;background-size: 210px 72px !important;">
+		   <div class="modal-title patient-details-row">
+                  <span class="heading-dialog"> APPOINTMENT DETAILS</span>
+                  <button type="button" class="close" data-dismiss="modal" >&times;</button>
+              </div>
+             </div>
+             <div class="modal-body">
+                 <div class="body-content" style="padding-top: 0px;">
+                     <div class="row">
+                        
+                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 padding-left-right-set margin-top10" style="text-align: -webkit-center;">
+                             <div class="" style="vertical-align: middle !important;text-align: ;padding-right: 0px !important;">
+                             <span class=" " id="patPhoto">
+                             <img ng-src="{{(patientDocumentOption.imagePath!=null&&patientDocumentOption.imagePath!='')?patientDocumentOption.imagePath:(patientDocumentOption.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" class="img-circle" width="60" height="60">
+                             </span>
+                             </div>
+                         </div>
+                        
+                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 uk-input-group">
+                             <div class="row">
+                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                     <div class="row">
+                                         <span class="LISDynamicLabel"  id="mrnNumber">UHID:{{patientDocumentFlipBook.uhidNumber != null ? patientDocumentFlipBook.uhidNumber :patientDocumentFlipBook.uhidnumber}}</span>
+                                     </div>
+                                 </div>
+                                  <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                     <div class="row">
+                                         <span class="LISDynamicLabel"id="patName">Name:{{patientDocumentFlipBook.prefixDesc+' '+patientDocumentFlipBook.patientName}}</span>
+                                     </div>
+                                 </div>
+                                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                     <div class="row">
+                                         <span class="LISDynamicLabel" id="patAgeAndGender">Age:{{patientDocumentFlipBook.age != null ? patientDocumentFlipBook.age : patientDocumentFlipBook.ageStr}}</span>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     
+                     <div class="row padding-top20">
+                     </div>
+                     <div class="row padding-top20">
+                      <div class="patientDetailsBox">
+                         <div class="row text-center">
+                             <span class="appDetailsHeader"></span>
+                         </div>
+                         <div class="row padding-top20">
+                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                             <!--     <div class="row">
+                                   <div class="row" style="padding-top: 15px;">
+                                     <span class="LISDynamicLabel">Template:</span>
+                                   </div>    
+                                     <div class="row">
+                                         <span class="LISDynamicLabel" id="templateView">View the templates</span>
+                                     </div>
+                                 </div> -->
+                                 <div class="row">
+                                   <div class="row" style="padding-top: 15px;">
+                                     <span class="LISDynamicLabel">Medical File:</span>
+                                   </div>    
+                                     <div class="row">
+                                         <a href="" ng-click="generateFlipbookData()">
+                                         <span class="LISDynamicLabel" id="viewFlipBookTemplate">View the documents </span>
+                                         </a>
+                                     </div>
+                                 </div>
+                             </div>
+                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-left10">
+                                    <div class="row padding-left10" style="padding-top: px;">
+                                        <span class="LISDynamicLabel">Appointment Time:</span><br>
+                                        <span id="patAppTime"><div>{{getDateByFormat(patientDocumentFlipBook.encounterDateWithTimeString != null ? patientDocumentFlipBook.encounterDateWithTimeString : patientDocumentFlipBook.doa ,false)}}</div> </span>
+                                      </div>
+                                      <div class="row padding-left10" style="padding-top: 5px;" > 
+                                        <span class="LISDynamicLabel">Visit Type:</span><br>
+                                        <span id="patVisit">Emergency</span>
+                                      </div>
+<!--                                       <div class="row padding-left10" style="padding-top: 5px;">
+                                        <span class="LISDynamicLabel">Sponsor:</span><br>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementTypeId == 1">Self</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementTypeId == 2">Insurance</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementTypeId == 3">Corporate</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementId == 1">Self</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementId == 2">Insurance</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementId== 3">Corporate</span>
+                                      </div>
+ -->
+                                      <div class="row padding-left10" style="padding-top: 5px;"  ng-if=" patientDocumentFlipBook.visitTypeId ==1">
+                                        <span class="LISDynamicLabel">Status:</span><br>
+                                        <span id="appStatus"> {{patientDocumentFlipBook.appointmentStatusDesc}} </span>
+                                      </div>
+                                </div>
+                         </div>
+                      </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+
+
+
+<!-- addviewTemplateModal START -->
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+		$(".selectedPageName").text("ER Mark For Discharge");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="admittedPatientList"]').parents("li").addClass("active");
+
+	});
+</script>

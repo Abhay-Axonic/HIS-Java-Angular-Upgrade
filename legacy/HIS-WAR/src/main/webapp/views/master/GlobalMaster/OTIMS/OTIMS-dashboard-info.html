@@ -1,0 +1,604 @@
+<style>
+.table>tbody>tr.bgGreen > td
+{
+    background-color: #b4da80 !important;
+}
+.table>tbody>tr.bgRed > td 
+{
+    background-color: #f94545 !important;
+}
+.table>tbody>tr.bgGrey > td 
+{
+    background-color: #b3abab !important;
+}
+.padding-set-lable{
+padding :0px 10px 0px 2px!important;
+}
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<!-- Patient Info -->
+			<!-- <div ng-include="'./views/common/common-patient-details.html'"></div> -->
+			<div ng-include="'./views/common/patient-demography-opd.html'"></div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+				<span class="margin-left10">
+					<b class="padding-right10">Specialty :</b>
+					<label class="ng-binding">{{common.specialityName}}</label>
+				</span>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top5 ">
+				<div class="margin-left10 row">
+					<div class="col-lg-4 col-md-4 col-sm-4 text-width-auto "><b >Procedure</b></div>
+					<div class="col-lg-8 col-md-8 col-sm-8 text-width-auto  ">
+					    <label class="ng-binding"><b class="padding-set-lable">:</b>{{common.procedures}} </label>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top5 ">
+				<div class="margin-left10 row">
+					<div class="col-lg-4 col-md-4 col-sm-4 text-width-auto  "><b >Procedure Type</b></div>
+					<div class="col-lg-8 col-md-8 col-sm-8 text-width-auto ">
+					    <label class="ng-binding"><b class="padding-set-lable">:</b>{{common.procedureTypes}}</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+				<span class="margin-left10">
+					<b class="padding-right10">OT Type</b>
+					<label class="ng-binding"><b>:</b>{{common.OTTypes}}</label>
+				</span>
+			</div>
+		
+		</div>
+		<div class="row">
+			<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+				<span class="margin-left10">
+					<b class="padding-right10">Order Date :</b>
+					<label class="ng-binding">{{common.requestDate}}</label>
+				</span>
+			</div> -->
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+				<span class="margin-left10">
+					<b class="padding-right10">Procedure Date :</b>
+					<label class="ng-binding">{{dStartDate}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+				<span class="margin-left10">
+					<b class="padding-right10">Expected Duration :</b>
+					<label class="ng-binding">{{common.totalDuration}} (mins)</label>
+				</span>
+			</div>
+			<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+				<span class="margin-left10">
+					<b class="padding-right10">Procedure Start Date :</b>
+					<label class="ng-binding">{{common.preferedDateTime}}</label>
+				</span>
+			</div> -->
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+				<span class="margin-left10">
+					<b class="padding-right10">Expected End Date :</b>
+					<label class="ng-binding">{{dStartDate}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+				<div class="row">
+					<div class="custom-sub-tab padding-left-right-set4 ">
+						<ul class="tabs nav nav-tabs">
+							<li ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="width12 active" style="">
+								<a href="" ng-click="setFirstTabLevel(1)">OT</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width12" style="">
+								<a href="" ng-click="setFirstTabLevel(2); getDefaultSurgeon();" class="">Staff</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width18" style="">
+								<a href="" ng-click="setFirstTabLevel(3)" class="">Equipment</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-1 col-sm-1 padding-left-right-set4 text-width-auto pull-right " style="margin-bottom:8px;">
+		        <div class="">
+		            <button  data-toggle="modal" class="btn btn-primary" id="updateBtn" data-target="#change_of_date_modal">Change of Date</button>
+		        </div>
+		    </div>
+			<div class="col-lg-4 col-md-4 col-sm-7 padding-left-right-set4 pull-right" style="padding-top: 8px;">
+				<div class="row">
+					<div class="col-lg-3 col-md-4 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="color-indiction-green-div"></div>
+							</div>
+							<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set0 long-text-overflow">
+								<span class="color-indication-green-span">Available</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-4 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="color-indiction-Red-div"></div>
+							</div>
+							<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set0">
+								<span class="color-indication-red-span">Unavailable</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-4 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="color-indiction-Grey-div"></div>
+							</div>
+							<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set0">
+								<span class="color-indication-grey-span">Maintenance</span>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					<div class="row padding-top5">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="theatreObj" class="text-input floating-label"
+										ng-options="x as x.theatreName for x in activeOperationTheatreList track by x.operationTheatreId"
+										ng-change="getOperationTableByTheatreId(theatreObj.operationTheatreId,0,$index)"
+										class="form-control" 
+										ng-required="true">
+										</select>
+										 <label for="code">Operation Theatre</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+									<select ng-model="tableObj" class="text-input floating-label"
+										ng-options="x as x.tableName for x in activeOperationTableList track by x.operationTableId"
+										class="form-control" 
+										ng-required="true">
+										</select>
+										 <label for="code">Operating Table</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+							<div class="">
+								<a href="">
+									<input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-click="addOTDetails();">
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 table-container padding-top5">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width1">Operation Theatre</th>
+											<th class="width4">Operation Table</th>
+											<th class="width1 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll300" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr  ng-repeat = "info in otList">
+											<td class="width1" ng-style="setColor(info)" >
+												<select name="" id="" ng-model="info.selectedTheatreId" class="text-input floating-label"  ng-change="getOperationTableByTheatreId(info.selectedTheatreId,1,$index)">
+													<option value="" selected>Select Theatre</option>
+													<option value="{{theatre.operationTheatreId}}" ng-value="theatre.operationTheatreId" 
+													ng-repeat="theatre in info.theatreList">{{theatre.theatreName}}</option>
+												
+												</select>
+											</td>
+											<td class="width4" ng-style="setColor(info)" >
+												<select name="" id="" ng-model="info.selectedTableId" class="text-input floating-label" 
+												ng-change="checkAvailableOTSlot(info,0);">
+													<option value="" selected>Select Table</option>
+													<option value="{{table.operationTableId}}" ng-value="table.operationTableId" 
+													ng-repeat="table in info.tableList">{{table.tableName}}</option>
+												</select>
+											</td>
+											<td class="width1 text-center" ng-style="setColor(info)">
+												<i class="fa fa-times"  title="Remove" ng-click="removeOTDetails($index,0);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<tr  ng-repeat = "info in otAddedList">
+											<td class="width1" ng-style="setColor(info)">{{info.theatreTypeName}}</td>
+											<td class="width4" ng-style="setColor(info)">{{info.tableName}}</td>
+											<td class="width1 text-center" ng-style="setColor(info)">
+												<i class="fa fa-times"  title="Remove" ng-click="removeOTDetails($index,1);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<!-- <tr class="bgRed">
+											<td class="width1"></td>
+											<td class="width4"></td>
+											<td class="width1 text-center">
+												<i class="fa fa-times"  title="Remove"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<tr class="bgGrey">
+											<td class="width1"></td>
+											<td class="width4"></td>
+											<td class="width1 text-center">
+												<i class="fa fa-times"  title="Remove"></i>&nbsp;&nbsp;
+											</td>
+										</tr> -->
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					<div class="row padding-top5">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="roleObj" class="text-input floating-label"
+												ng-options="x as x.roleName for x in otimsRoleList track by x.roleId"
+												class="form-control" 
+												ng-change="getStaffListByRoleId(roleObj.roleId,0)"
+												ng-required="true">
+											</select>
+										 <label for="code">Role</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="staffObj" class="text-input floating-label"
+												ng-options="x as x.userName for x in staffList track by x.userId"
+												class="form-control" 
+												ng-required="true">
+											</select>
+										 <label for="code">Staff Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+							<div class="">
+								<a href="">
+									<input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-click="addStaffSDetails();">
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 table-container padding-top5">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width1">Role</th>
+											<th class="width4">Staff Name</th>
+											<th class="width1 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll300" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="info in otAddedStaffDetailsList">
+											<td class="width1" ng-style="setColor(info)" >{{info.roleName}}</td>
+											<td class="width4" ng-style="setColor(info)" >{{info.userName}}</td>
+											<td class="width1 text-center" ng-style="setColor(info)" >
+												<i class="fa fa-times"  title="Remove" ng-click="removeStaffDetails($index,0);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<tr ng-repeat="info in otStaffDetailsList">
+											<td class="width1" ng-style="setColor(info)" >{{info.roleName}}</td>
+											<td class="width4" ng-style="setColor(info)" >
+												<select ng-model="info.selectedStaffId" class="text-input floating-label"
+													ng-options="x as x.userName for x in info.staffList track by x.userId"
+													class="form-control" 
+													ng-change = "checkAvailabilityOfStaff(info,1,$index);"
+													ng-required="true">
+												</select>
+											</td>
+											<td class="width1 text-center" ng-style="setColor(info)" >
+												<i class="fa fa-times"  title="Remove" ng-click="removeStaffDetails($index,1);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div" style="">
+					<div class="row padding-top5">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="equipmentTypeObj" class="text-input floating-label"
+												ng-options="x as x.category for x in equipmentTypeList track by x.id"
+												class="form-control" 
+												ng-change="getEquipmentNamesByEquipmentId(equipmentTypeObj)"
+												ng-required="true">
+											</select>
+										 <label for="code">Equipment Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="equipmentNameObj" class="text-input floating-label"
+												ng-options="x as x.itemName for x in equipmentNameList track by x.id"
+												class="form-control" 
+												ng-required="true">
+										</select>
+										<label for="description" class="">Equipment Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+							<div class="">
+								<a href="">
+									<input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-click="addEquipmentDetails();">
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 table-container padding-top5">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width1">Equipment Type</th>
+											<th class="width4">Equipment Name</th>
+											<th class="width4">Equipment Name and Batch</th>
+											<th class="width1 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll300" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="info in equipmentDetailList">
+											<td class="width1" ng-style="setColor(info)">{{info.equipmentTypeName}}</td>
+											<td class="width4" ng-style="setColor(info)">{{info.equipmentName}}</td>
+											<td class="width4" ng-style="setColor(info)">{{info.itemName}}</td>
+											<td class="width1 text-center" ng-style="setColor(info)">
+												<i class="fa fa-times"  title="Remove " ng-click="removeEquipment($index,0);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<tr ng-repeat="info in equipmentBatchList">
+											<td class="width1" ng-style="setColor(info)">{{info.equipmentTypeName}}</td>
+											<td class="width4" ng-style="setColor(info)">{{info.itemName}}</td>
+											<td class="width4" ng-style="setColor(info)">
+											 	<select ng-model="info.selectedItemBatchObj" class="text-input floating-label"
+												ng-options="x as x.itemName for x in info.itemBatchList track by x.batchId"
+												class="form-control" 
+												ng-change="checkAvailabilityOfEquipment(info,$index,0);"
+												ng-required="true">
+											</select>
+											</td>
+											<td class="width1 text-center" ng-style="setColor(info)">
+												<i class="fa fa-times"  title="Remove" ng-click="removeEquipment($index,1);"></i>&nbsp;&nbsp;
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top5">
+					<!-- <a href="#/OTIMSdashboard">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a><input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#confirmSave"> -->
+				
+			  <div class="row">
+				<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+					<a href="#/OTIMSdashboard"><button class="btn btn-primary btn-save-box-shadow  width100" title="Back">
+					<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> </button></a>
+				</div>
+				<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+					<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" data-toggle="modal" data-target="#confirmSave">
+					<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+ <!-- ************change of date modal start ************** -->
+ <div id="change_of_date_modal" class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Change of Date
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body"><!-- <div class="margin-left10"><span>Are you sure you want to Save?</span></div> -->
+				<div class="row padding-top8">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+						<div class="row input-container padding-top10">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10 ">
+								<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+                                            name="dateOptionsProc" id="dateOptionsProc"
+                                            uib-datepicker-popup="dd/MM/yyyy" 
+                                            placeholder="DD/MM/YYYY" ng-model="changeOfDate"
+                                            model-view-value="true" is-open="datepickerOpen.opened"
+                                            datepicker-options="dateOptions" show-button-bar="false"
+                                            ng-click="openDatepicker()"  >
+								<label for="description" class="LISDynamicLabel">Prefer Date<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+                             <div class="row input-container padding-top10">
+                                 <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                     <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                 </div>
+                                 <div class="col-lg-10 col-sm-10 col-md-10">
+                                 <div class="clockpicker">
+                                     <input type="text" autocomplete="off" name="description" id="" ng-model="changeOfTime" class="text-input floating-label"  ng-init="initClockPicker()" ng-disabled="isDisabled" > 
+                                     <label for="description" class="LISDynamicLabel">Prefer Time<span class="star">*</span></label>
+                                 </div>    
+                                 </div>
+                             </div>
+                         </div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="clearAllList();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="cancelChangeDate();">Cancel</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel"  ng-click="cancelChangeDate();" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Continue" ng-click="clearAllList();" data-dismiss="modal">
+						<i class="fa fa-arrow-circle-right" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ************change of date modal end ************** -->
+
+
+
+
+<!-- Comform Save Dashboard START -->
+<div id="confirmSave"class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					OTIMS Dashboard
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top4">
+					<label for="description" class="">Do you want to Save ?</label><!-- LISDynamicLabel -->
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary"id="" ng-click="saveProcedureSchedule();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="">Cancel</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel"  data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save"  ng-click="saveProcedureSchedule();" data-dismiss="modal">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Comform Save Dashboard END -->
+
+<!-- Comform Save Dashboard START -->
+<div id="resourceNotAvailable"class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Resources not available
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top4">
+					<label for="description" class=""> Resources not available , still do you want to save ?</label><!-- LISDynamicLabel -->
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary"id="" ng-click="finalSaveProcedureSchedule();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="">Cancel</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel"  data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="finalSaveProcedureSchedule();" data-dismiss="modal">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Comform Save Dashboard END -->
+
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("OTIMS Dashboard");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="OTIMSdashboardInfo"]').parents("li").addClass("active");
+});
+</script>

@@ -1,0 +1,127 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<!-- <fieldset class="main-fieldset">
+			<div class="row margin-top10 padding-left-right-set4">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+              				<input   class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="billSearch.fromDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptions" 
+													show-button-bar="false"	ng-click="openDatePicker()" >
+							<label for="fromDate">From Date</label>
+						</div>
+					</div>
+				</div>
+				
+				
+			</div>
+		</fieldset> -->
+		<fieldset class="main-fieldset">
+		<div class="container-fluid his-style">
+	  <center></center><webcam channel="channel" 
+													        on-streaming="onSuccess()" 
+													        on-error="onError(err)" 
+													        on-stream="onStream(stream)">
+													     </webcam></center>
+													     
+													     
+													     <div class="width-div-for-patient-reg pull-left width12 margin-top4">
+													<button ng-click="makeSnapshot('1')"  class="btn btn-primary btn-save-box-shadow" title="Back">Self Front Id</button>
+												</div>&nbsp;&nbsp;
+												 <div class="width-div-for-patient-reg pull-left width12  margin-top4" style="    margin-left: 10px;">
+													<button ng-click="makeSnapshotBack('2')" class="btn btn-primary btn-save-box-shadow" title="Back">Self Back Id</button>	
+												</div>&nbsp;&nbsp;
+												 <div class="width-div-for-patient-reg pull-left width12  margin-top4" style="    margin-left: 10px;">
+													<button ng-click="makeSnapshotBack('3')" class="btn btn-primary btn-save-box-shadow" title="Back">Kin Front Id</button>	
+												</div>&nbsp;&nbsp;
+												 <div class="width-div-for-patient-reg pull-left width12  margin-top4" style="    margin-left: 10px;">
+													<button ng-click="makeSnapshotBack('4')" class="btn btn-primary btn-save-box-shadow" title="Back">Kin Back Id</button>	
+												</div>
+												
+												 <div class="width-div-for-patient-reg pull-left width12  margin-top4" style="    margin-left: 10px;">
+													<button ng-click="resetContent()" class="btn btn-primary btn-save-box-shadow" title="Back">Reset</button>	
+												</div>
+												
+													  
+    
+</div>
+</fieldset>
+<fieldset class="main-fieldset" style="display:none;">
+   <div class="col-lg-12 col-md-12 col-sm-12 margin-top10 margin-left5 padding-left-right-set4">
+														<label for="code"></label>
+														<div class="">
+				    									<canvas id="snapshot1" width="160" height="120"></canvas>
+				    									<canvas id="snapshot2" width="160" height="120"></canvas>
+				    									<canvas id="snapshot3" width="160" height="120"></canvas>
+				    									<canvas id="snapshot4" width="160" height="120"></canvas>
+													</div>
+													</div>
+</fieldset>
+		<fieldset class="main-fieldset">
+			<div class="row margin-top10 padding-left-right-set4">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+					<textarea name="editor" type="text" autocomplete="off" id="editor" rows="10" cols="50"
+						ng-model="value" ck-editor>
+					</textarea>
+					
+					
+					</div>
+				</div>
+				
+			</div>
+		</fieldset>
+	   
+<div class="modal-footer" style="border:none;">
+				<button type="button" class="btn btn-primary width12" id="printBtn" ng-click="printTemplate();">Print</button>
+			</div>
+		
+		
+	</div>
+</div>
+
+<!-- CONFIRM POPUP FOR SAVE START-->
+<div id="cancelReuestPopup" data-backdrop="static"  class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+				<button type="button" class="close" data-dismiss="modal" "></button> 
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are sure you want to cancel ?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary"  ng-click="printFinalBill()">Yes</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="splitBill()">Cancel</button> -->
+				 <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="No"  data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Yes" ng-click="cancelRequest()" data-dismiss="modal">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$( document ).ready(function() {
+	$(".onholdItem").hide();
+	$(".selectedPageName").text(" ");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	
+});
+
+</script>

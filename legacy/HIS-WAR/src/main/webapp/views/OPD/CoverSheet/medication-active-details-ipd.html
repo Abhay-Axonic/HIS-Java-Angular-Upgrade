@@ -1,0 +1,178 @@
+<!-- ACTIVE POPUP -->
+ <div id="activeDetailsIpd" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+					<div class="modal-title patient-details-row">
+						Active Medication Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12 fix-height-scroll380 padding-left-right-10 padding-top8">
+						<table class="table table-bordered">
+								<tr>
+								
+								    <th class="width1">Select</th> 
+									<th class="width10">
+										<span class="">Brand Name</span>
+									</th>
+									<th class="width10">
+										 <span class="">Generic Name</span>
+									</th>
+									<th class="width8">
+										<span class="">ROA</span>
+									</th>
+									<th class="width8">
+										 <span class="">Strength</span>
+									</th>
+									<th class="width8">
+										 <span class="">Prescribed Dose</span>
+									</th>
+									<th class="width8">
+										 <span class="">Frequency</span>
+									</th>
+									<th class="width8">
+										 <span class="">Instruction</span>
+									</th>
+									<!-- <th class="width10">
+										 <span class="">Duration</span>
+									</th> -->
+									<th class="width6">
+										 <span class="">Start Date</span>
+									</th>
+									<th class="width6">
+										 <span class="">End Date</span>
+									</th>
+										<th class="width6">
+										 <span class="">Doctor Name</span>
+									</th>
+									<th class="width2 text-center">
+										 <span class="">Action</span>
+									</th>
+								</tr>
+								<tr ng-repeat="activeMedication in activeMedications">
+								    <td class="text-center">
+<!-- 								    <input type="radio" id="radio"  name="radio"  ng-value="'Y'" ng-model="activeMedication.checkTrue" ng-click="checkAllTrueMedi()">  -->
+									<label class="checkbox-inline">
+										<input type="checkbox"  checklist-value="'Y'"
+											   checklist-model="activeMedication.checkTrue"
+											   checklist-value="medication">
+										       <span></span>
+									</label>
+								    </td> 
+									<td>{{activeMedication.itemName}}</td>
+									<td>{{activeMedication.genericName}}</td>
+									<td>{{activeMedication.roaDesc}}</td>
+									<td>{{(activeMedication.doseDesc!=null ? activeMedication.doseDesc : '') +' '+ (activeMedication.strengthDesc != null ? activeMedication.strengthDesc : '')}}</td>
+									<td  ng-if="activeMedication.factorId!=null && activeMedication.factorId==1">{{activeMedication.prescribeDose}} {{activeMedication.prescribeDoseUnit}}</td>
+								    <td  ng-if="activeMedication.factorId!=null && activeMedication.factorId==2">{{activeMedication.dosageForm}}</td>
+									<td class="vertical-top" ng-if="activeMedication.factorId==null" >{{activeMedication.dosageForm}}</td>
+									<td>{{activeMedication.frequencyDesc}}</td>
+									<td>
+									 <div ng-if="activeMedication.instructionDesc != null">
+											{{activeMedication.instructionDesc}}
+											</div>
+											<div ng-if="activeMedication.instructionText != null">
+											{{activeMedication.instructionText}}
+											</div>
+                                    </td>
+									<!-- <td>{{activeMedication.duration}} {{activeMedication.durationUnit}}</td> -->
+									<td>{{activeMedication.startDateNew | date :dateFormat }}</td>
+									<td>{{activeMedication.endDateNew | date :dateFormat }}</td>
+									<td>{{activeMedication.doctorName}}</td>
+									<td class="text-center">
+										<a ng-if="activeMedication.isMedicationStop=='N'" data-toggle="modal" data-target="#cancelMedication"  title="Click to stop medication" ng-click="stopMedication(activeMedication)"><i class="fa fa-circle-o"></i></a>
+										<a ng-if="activeMedication.isMedicationStop!='N'"><i class="fa fa-ban"></i></a>
+									</td>
+								</tr>
+								<tr ng-repeat="activeMedicationHis in continuedMedicationHistoryList" ng-if="activeMedicationHis.isMedicationContinue=='Y'" >
+								   <td class="text-center">
+<!-- 								    <input type="radio" id="radio"  name="radio" ng-value="'Y'" value="" ng-model="activeMedicationHis.checkTrue" ng-click="checkAllTrueMedi()">  -->
+								  <label class="checkbox-inline">
+									  <input type="checkbox"  checklist-value="'Y'" ng-disabled="activeMedicationHis.isNonFormulary == 'Y'"
+											 checklist-model="activeMedicationHis.checkTrue"
+											 checklist-value="medication">
+									        <span></span>
+								  </label>
+								    </td> 
+									<td>{{activeMedicationHis.itemName}}</td>
+									<td>{{activeMedicationHis.genericName}}</td>
+									<td>{{activeMedicationHis.roaDesc}}</td>
+									<td ng-if = "activeMedicationHis.doseId !== null && activeMedicationHis.doseId !== ''">{{(activeMedicationHis.doseId != null ? activeMedicationHis.doseId : '') +' '+ (activeMedicationHis.doseUnit != null ? activeMedicationHis.doseUnit : '')}}</td>
+									<td ng-if = "activeMedicationHis.doseId === null || activeMedicationHis.doseId === ''">{{(activeMedicationHis.strengthVal != null ? activeMedicationHis.strengthVal : '') +' '+ (activeMedicationHis.strengthUnit != null ? activeMedicationHis.strengthUnit : '')}}</td>
+									<td></td>
+									<td>{{activeMedicationHis.frequencyDesc}}</td>
+									<td>
+									 <div ng-if="activeMedicationHis.instructionDesc != null">
+											{{activeMedicationHis.instructionDesc}}
+											</div>
+											<div ng-if="activeMedicationHis.instructionText != null">
+											{{activeMedicationHis.instructionText}}
+											</div>
+									</td>
+									<td>{{activeMedicationHis.startDateNew | date : dateFormat }}</td>
+									<td>{{activeMedicationHis.endDateNew | date : dateFormat }}</td>
+									<td>{{activeMedicationHis.doctorName}}</td>
+									<td class="text-center">
+										<a ng-if="activeMedicationHis.isMedicationStopHis=='N'" data-toggle="modal" data-target="#cancelMedicationHistory"  title="Click to stop medication" ng-click="stopMedicationHis(activeMedicationHis)"><i class="fa fa-circle-o"></i></a>
+										<a ng-if="activeMedicationHis.isMedicationStopHis!='N'"><i class="fa fa-ban"></i></a>
+									</td>							  
+								</tr>
+								 <tr ng-if="!activeMedications || activeMedications.length == 0">
+									<td colspan="13" class="text-center" style="font-weight: bold; color: #e74c3c;">
+									No Active Medication ordered against this Encounter !!
+									</td>
+								</tr>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary margin-top10" id="" ng-click="continueActiveMedictaion()">Add</button> -->
+				  <div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Add for re-order" value="+" ng-click="continueActiveMedictaion()" data-dismiss="modal" ng-disabled="flagCheckActiveMed == true">
+							<i class="fa fa-plus" aria-hidden="true"></i> </button>
+						</div>
+					</div> 
+			</div>
+			</div>
+		</div>
+</div> 
+<!-- cancel Complaints order -->
+<!-- <div id="cancelMedication" class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> width: 25% !important;margin: 200px 0 0 510px !important;
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-bottom10">
+						<div class="padding-left-right-10">
+							<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10 padding-bottom10">
+							 		<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11"><label>Reason for delete Medication</label>
+											<div class="">
+												<textarea rows="3" class="width-100"
+															ng-model="justificationStop"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+			</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="cancelMedication(justificationStop)">Save</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+</div> -->

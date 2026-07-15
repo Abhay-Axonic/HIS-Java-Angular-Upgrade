@@ -1,0 +1,330 @@
+<div id="page-content-wrapper" >
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row padding-top5">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input class="text-input floating-label dirty" ng-model="schedulerObj.assetCategory"/>
+								<label for="code">Asset Category</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="schedulerObj.itemCode">
+								<label for="code">Asset Code</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="schedulerObj.itemName">
+								<label for="code">Asset Name</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="schedulerObj.serialNo">
+								<label for="code">Serial No.</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="schedulerObj.vendorName">
+								<label for="code">Vendor</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-top10">
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 ">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label" ng-model="schedulerObj.pmsFrequency" ><!-- convert-to-number -->
+									<option ng-repeat="info in pmsFrequencyList" value="{{info.code}}">{{info.description}}</option>
+								</select>
+								<label for="code">PMS Frequency<span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 ">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label" ng-model="schedulerObj.pmsType">
+									<option></option>
+									<option value="InHouse">In House</option>
+									<option value="OutSource">Out Source</option>
+								</select>
+								<label for="code">PMS Type<span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 ">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<!-- <label for="code">Start Date</label>
+								<input type="date" class="text-input floating-label" ng-model="schedulerObj.startDate"/> -->
+								<input type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+								 name="datepickerS" id="datepickerS" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" ng-model="schedulerObj.startDate" model-view-value="true" 
+								 is-open="datepickerS.opened" datepicker-options="dateOptions" show-button-bar="false" ng-click="openDatePickerS()" required="" style="">
+								  <label for="description" class="">Start Date <span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 ">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<!-- <label for="code">End Date</label>
+								<input type="date" class="text-input floating-label" ng-model="schedulerObj.endDate"/> -->
+								<input type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+								 name="datepickerE" id="datepickerE" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY" ng-model="schedulerObj.endDate" model-view-value="true" 
+								 is-open="datepickerE.opened" datepicker-options="dateOptions" show-button-bar="false" ng-click="openDatePickerE()" required="" style="">
+								 <label for="description" class="">End Date <span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" ng-show="saveFFF" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveAssetSchedule()"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+				<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float_right">
+					<div class=" ">
+						<a href="">
+							<input type="button" ng-show="saveFFF" value="Add" class="btn btn-primary btn-save-box-shadow" ng-click="createAssetSchedule()">
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-2 col-sm-3 padding-left-right-set4 float_right margin-top2">
+					<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div>
+		</fieldset>
+		<div class="row margin-top5">
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width5">Asset Code</th>
+							<th class="width8">Asset Name</th>
+							<th class="width5">Serial No.</th>
+							<th class="width8">Vendor</th>
+							<th class="width8">PMS Frequency</th>
+							<th class="width5">Month</th>
+							<th class="width5">PMS Type</th>
+							<!-- <th class="width5">Start Date</th> -->
+							<th class="width6 text-center">Checklist</th>
+							<th class="width10">Remarks</th>
+							<th class="width5 text-center">Action</th>
+						</tr>
+					</thead>
+						<tbody>
+							<tr ng-repeat="info in createAssetScheduleList|filter:searchKeyword">
+								<td>{{info.itemCode}}</td>
+								<td>{{info.itemName}}</td>
+								<td>{{info.serialNo}}</td>
+								<td>{{info.vendor}}</td>
+								<td>{{info.pmsFrequency}}</td>
+								<td>{{info.nextDate | date : "dd/MM/y" }}</td>
+								<td>{{info.pmsType}}</td>
+								<td class="text-center">
+									<div ng-if="info.assetScheduleId != 0" >
+										<a class="cursor-pointer" data-toggle="modal" data-target="#addViewChecklistModal" ng-click="addToCheckList($index,info.assetScheduleId);setIndex($index);"  title="Add"><i class="fa fa-plus"></i></a>&nbsp; <!-- ng-click="addToCheckList($index,info.assetScheduleId);" -->
+										<a class="cursor-pointer" data-toggle="modal" data-target="#addViewChecklistModal" ng-click="getCheckListByAssetScheduleId(info.assetScheduleId);getIndex($index);" title="View"><i class="fa fa-eye"></i></a>
+									</div>
+									<div ng-if="info.assetScheduleId == 0">
+										<a class="cursor-pointer" data-toggle="modal" data-target="#addViewChecklistModal"  ng-click="setIndex($index);" title="Add"><i class="fa fa-plus"></i></a>&nbsp;
+										<a class="cursor-pointer" data-toggle="modal" data-target="#addViewChecklistModal" ng-click="getIndex($index);" title="View"><i class="fa fa-eye"></i></a>
+									</div>
+								</td>
+								<td>
+									<textarea rows="2" class="vertical-middle" ng-model="info.remark"></textarea>
+								</td>
+								<td class="text-center">
+									<a class="" title="Edit"><i class="fa fa-pencil" ng-click="updateAssetSchedule(info)" ></i></a>&nbsp;
+									<!-- <a class="" title="Cancel"><i class="fa fa-times"></i></a> -->
+								</td>
+							</tr>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-10 col-md-10 col-sm-8  padding-left-right8"></div>
+				<div class="col-lg-1 col-md-1 col-sm-2  padding-left0px-right6px">
+					
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+					<div class=""><!-- common-save-button -->
+						<a href="#/assetPMSScheduler">
+							<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<!-- addViewChecklistModal Modal START -->
+<div id="addViewChecklistModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					CheckList
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div ng-show="showAdd" class="row padding-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select type="text" autocomplete="off" name="code" ng-model="checklistMapperObj.checklistEquipmentMasterId"   class="text-input floating-label dirty">
+										<option ng-repeat="infoN in checklistEquipmentList" ng-if="infoN.status=='A'" value="{{infoN.checklistEquipmentMasterId}}">{{infoN.checklistName}}</option>
+									</select>
+									<label for="code">CheckList Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select type="text" autocomplete="off" name="code" ng-model="checklistMapperObj.checklistEquipmentMasterId"  class="text-input floating-label dirty">
+										<option ng-repeat="infoC in checklistEquipmentList" ng-if="infoC.status=='A'" value="{{infoC.checklistEquipmentMasterId}}">{{infoC.checklistCode}}</option>
+									</select>
+									<label for="code">CheckList Code</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top8">
+						<div class=" ">
+							<a href="">
+								<input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-click="addChecklistToAsset()">
+								<input type="hidden" ng-model="selectedAssetScheduleId" value='0' ng-value='0' convert-to-number >
+								<!-- <div ng-if="selectedAssetScheduleId !=0 ">
+									<input type="button" value="Add " ng-show="showAdd" class="btn btn-primary btn-save-box-shadow" 
+										ng-click="addAndUpdateChecklist();">
+								</div> -->
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row margin-top5">
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-10">
+						<table class="table table-bordered">
+							<thead>
+								<tr class="">
+									<th class="width10">Checklist Name</th>
+									<th class="width10">Checklist Code</th>
+									<th ng-show="showAdd" class="width5 text-center">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="infoCl in addChecklist track by $index">
+									<td>{{infoCl.checklistName}}</td>
+									<td>{{infoCl.checklistCode}}</td>
+									<td class="text-center" ng-show="showAdd" >
+										<div ng-if="infoCl.assetScheduleChecklistId != 0">
+											<a class="" title="Delete"><i ng-show="showView" class="fa fa-trash" ng-click="deleteChecklist(infoCl.assetScheduleChecklistId)" ></i></a>&nbsp;
+											<!-- <input type="button" name="" ng-show="showView"   
+												title="Delete" value="-" class="btn btn-info add-dynamic-row" style="padding: 0 2px !important;"> -->
+										</div>
+										<div ng-if="infoCl.assetScheduleChecklistId == 0">
+											<a class="" title="Remove"><i ng-show="showView" class="fa fa-times" ng-click="removeChecklistToAsset($index)" ></i></a>
+											<!-- <input type="button" name="" ng-show="showView"  
+												title="Delete" value="-" class="btn btn-info add-dynamic-row" style="padding: 0 2px !important;"> -->
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" ng-show="showAdd" data-dismiss="modal" class="btn btn-primary" ng-click="addChecklistData();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- addViewChecklistModal Modal END -->
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Create Asset PMS Scheduler");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="assetScheduler"]').parents("li").addClass("active");
+});
+</script>

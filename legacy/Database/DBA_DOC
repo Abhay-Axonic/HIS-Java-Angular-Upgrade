@@ -1,0 +1,1317 @@
+--START---
+-- Add new columns
+ALTER TABLE public.t_patient_casesheet_details
+ADD COLUMN vital_status TEXT,
+ADD COLUMN advice_status TEXT,
+ADD COLUMN allergy_status TEXT,
+ADD COLUMN diagnosis_status TEXT,
+ADD COLUMN complaint_status TEXT,
+ADD COLUMN habit_status VARCHAR,
+ADD COLUMN family_history_status VARCHAR,
+ADD COLUMN medical_history_status VARCHAR,
+ADD COLUMN patient_map_status VARCHAR DEFAULT 'false',
+ADD COLUMN status VARCHAR;
+
+-- Add primary key constraint on id
+ALTER TABLE public.t_patient_casesheet_details
+ADD CONSTRAINT t_patient_casesheet_details_pkey PRIMARY KEY (id);
+
+select * from t_patient_casesheet_details tpcd 
+
+UPDATE public.t_patient_casesheet_details
+SET 
+patient_map_status=NULL, vital_status=NULL, advice_status=NULL, allergy_status=NULL, diagnosis_status=NULL,
+complaint_status=NULL, habit_status=NULL, family_history_status=NULL, medical_history_status=NULL
+
+
+-- Process all not done encounters
+SELECT process_full_casesheet_by_encounter();
+
+SELECT process_full_casesheet_by_encounter(96356);
+
+select * from t_full_casesheet_fun_log order by 1 desc
+
+
+select appointment_id ,* from opd.t_encounter_master tem where encounter_id in(96356,
+78156,
+78157,
+81063,
+78165)
+
+
+-- Or process a specific encounter
+
+select * from patient.t_advice_appo_mapper taam where appointment_id in(127676,
+127677,
+127685,
+130583,
+145876)
+
+select * from patient.t_allergy_patient_mapper tapm where encounter_id in(96356,
+78156,
+78157,
+81063,
+78165)
+
+select * from patient.t_complaint_appo_mapper tcam   where encounter_id in(96356,
+78156,
+78157,
+81063,
+78165)
+
+
+select * from patient.t_patient_diagnosis_appo_mapper tpdam   where encounter_id in(96356,
+78156,
+78157,
+81063,
+78165)
+
+
+select * from patient.t_family_history tfh  where encounter_id in(96356,
+78156,
+78157,
+81063,
+78165)
+
+select * from patient.t_patient_habit_details tphd where encounter_id in(96356,
+78156,
+78157,
+81063,
+78165)
+
+select * from patient.t_patient_medical_history tpmh  where encounter_id in(96356,
+78156,
+78157,
+81063,
+78165)
+
+select * from patient.t_appointment_vital_mapper tavm where encounter_id in(96356,
+78156,
+78157,
+81063,
+78165)
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+--CALLING ALL FUNCTION
+CREATE TABLE public.t_full_casesheet_fun_log (
+	log_id serial4 NOT NULL,
+	encounter_id int4 NULL,
+	status text NULL,
+	error_msg text NULL,
+	processed_at timestamp DEFAULT now() NULL,
+	CONSTRAINT t_full_casesheet_fun_log_pkey PRIMARY KEY (log_id)
+);
+
+--DROP FUNCTION IF EXISTS process_full_casesheet_by_encounter(INT);
+
+CREATE OR REPLACE FUNCTION process_full_casesheet_by_encounter(p_encounter_id INT DEFAULT NULL)
+RETURNS VOID AS $$
+DECLARE
+    rec RECORD;
+    v_found BOOLEAN := FALSE;
+    v_status TEXT;
+    v_error_msg TEXT;
+    v_updated_count INT;
+BEGIN
+    FOR rec IN
+        SELECT encounter_id, patient_map_status
+        FROM public.t_patient_casesheet_details
+        WHERE 
+            (
+                p_encounter_id IS NULL AND (patient_map_status IS NULL OR patient_map_status != 'done')
+            )
+            OR 
+            (p_encounter_id IS NOT NULL AND encounter_id = p_encounter_id)
+    LOOP
+        v_found := TRUE;
+
+        BEGIN
+            -- Skip if already marked done
+            IF rec.patient_map_status = 'done' THEN
+                CONTINUE;
+            END IF;
+
+            -- Call processing functions
+            PERFORM process_advice_by_encounter(rec.encounter_id);
+            PERFORM process_family_history(rec.encounter_id);
+            PERFORM process_medical_history_by_encounter(rec.encounter_id);
+            PERFORM process_diagnosis_by_encounter(rec.encounter_id);
+            PERFORM process_complaints_by_encounter(rec.encounter_id);
+            PERFORM process_casesheet_vitals(rec.encounter_id);
+            PERFORM process_allergy_by_encounter(rec.encounter_id);
+            PERFORM process_habit_by_encounter(rec.encounter_id);
+
+            -- Mark as done
+            UPDATE public.t_patient_casesheet_details
+            SET patient_map_status = 'done', updated_date = now()
+            WHERE encounter_id = rec.encounter_id;
+
+            GET DIAGNOSTICS v_updated_count = ROW_COUNT;
+
+            IF v_updated_count > 0 THEN
+                v_status := 'done';
+                v_error_msg := NULL;
+            ELSE
+                v_status := 'skipped';
+                v_error_msg := 'Already processed or not updated';
+            END IF;
+
+        EXCEPTION WHEN OTHERS THEN
+            v_status := 'error';
+            v_error_msg := SQLERRM;
+        END;
+
+        -- Always log
+        INSERT INTO public.t_full_casesheet_fun_log(
+            encounter_id, status, error_msg
+        ) VALUES (
+            rec.encounter_id, v_status, v_error_msg
+        );
+    END LOOP;
+
+    -- If no matching record at all
+    IF NOT v_found THEN
+        INSERT INTO public.t_full_casesheet_fun_log(
+            encounter_id, status, error_msg
+        ) VALUES (
+            p_encounter_id, 'error', 'No matching encounter_id found or all already processed'
+        );
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+--ADVICE
+CREATE TABLE IF NOT EXISTS public.t_advice_mapper_fun_log (
+    log_id SERIAL PRIMARY KEY,
+    encounter_id INT,
+    advice_list TEXT,
+    status TEXT,
+    error_msg TEXT,
+    processed_at TIMESTAMP DEFAULT NOW()
+);
+
+
+-- DROP FUNCTION public.process_advice_by_encounter(int4);
+
+CREATE OR REPLACE FUNCTION public.process_advice_by_encounter(p_encounter_id integer DEFAULT NULL::integer)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    rec RECORD;
+    v_json JSONB;
+    v_advice JSONB;
+    v_advice_desc TEXT;
+    v_patient_id INT;
+    v_encounter_id INT;
+    v_unit_id INT;
+    v_org_id INT;
+    v_admission_id INT := NULL;
+    v_appointment_id INT := NULL;
+    v_inserted BOOLEAN := FALSE;
+    v_advice_list TEXT := '';
+    v_advice_id INT;
+BEGIN
+    FOR rec IN
+        SELECT * FROM public.t_patient_casesheet_details
+        WHERE (p_encounter_id IS NULL AND (patient_map_status IS NULL OR patient_map_status != 'done'))
+           OR (p_encounter_id IS NOT NULL AND encounter_id = p_encounter_id)
+    LOOP
+        BEGIN
+            v_json := rec.json_message::jsonb;
+            v_unit_id := rec.unit_id;
+            v_org_id := rec.org_id;
+            v_encounter_id := rec.encounter_id;
+
+            -- Get patient info
+            SELECT tem.patient_id INTO v_patient_id
+            FROM opd.t_encounter_master tem
+            WHERE tem.encounter_id = v_encounter_id;
+
+            -- Get latest admission ID if available
+            SELECT ta.admission_id INTO v_admission_id
+            FROM adt.t_admission ta
+            WHERE ta.patient_id = v_patient_id
+            ORDER BY ta.admission_id DESC
+            LIMIT 1;
+
+            -- Get appointment_id from encounter master
+            SELECT appointment_id INTO v_appointment_id
+            FROM opd.t_encounter_master
+            WHERE encounter_id = v_encounter_id
+            LIMIT 1;
+
+            v_inserted := FALSE;
+            v_advice_list := '';
+
+            -- Loop through advice array if exists
+            FOR v_advice IN SELECT * FROM jsonb_array_elements(v_json -> 'adviceData')
+            LOOP
+                v_advice_desc := TRIM(v_advice->>'adviceDesc');
+
+                IF v_advice_desc IS NOT NULL AND v_advice_desc <> '' THEN
+                    -- Check if advice exists in emr.m_advice_master
+                    SELECT advice_id INTO v_advice_id
+                    FROM emr.m_advice_master
+                    WHERE advice_desc = v_advice_desc
+                      AND unit_id = v_unit_id
+                      AND organization_id = v_org_id
+                    LIMIT 1;
+
+                    -- If not found, insert new advice and get advice_id
+                    IF NOT FOUND THEN
+                        INSERT INTO emr.m_advice_master
+                        (advice_desc, status, created_by, created_date, updated_by, updated_date, marathi_advice_desc, unit_id, organization_id)
+                        VALUES
+                        (v_advice_desc, 'A'::char, 1, now(), 1, now(), NULL, v_unit_id, v_org_id)
+                        RETURNING advice_id INTO v_advice_id;
+                    END IF;
+
+                    -- Insert into observation table
+                    INSERT INTO opd.t_observation (
+                        unit_id, organization_id, patient_id, encounter_id,
+                        status, created_date, created_by, updated_date, updated_by,
+                        doctor_id, admission_id, observation_desc, cov_template_id
+                    ) VALUES (
+                        v_unit_id, v_org_id, v_patient_id, v_encounter_id,
+                        'A', now(), 1, now(), 1,
+                        1, v_admission_id, v_advice_desc, NULL
+                    );
+
+                    -- Insert into patient.t_advice_appo_mapper
+                    INSERT INTO patient.t_advice_appo_mapper (
+                        advice_id, appointment_id, status, created_by, created_date,
+                        description, updated_by, updated_date, unit_id, organization_id
+                    ) VALUES (
+                        v_advice_id,
+                        v_appointment_id,
+                        'A'::char,
+                        1,
+                        NOW(),
+                        v_advice_desc,
+                        1,
+                        NOW(),
+                        v_unit_id,
+                        v_org_id
+                    );
+
+                    v_advice_list := v_advice_list || v_advice_desc || ', ';
+                    v_inserted := TRUE;
+                END IF;
+            END LOOP;
+
+            -- Clean up trailing comma and space
+            IF RIGHT(v_advice_list, 2) = ', ' THEN
+                v_advice_list := LEFT(v_advice_list, LENGTH(v_advice_list) - 2);
+            END IF;
+
+            -- Insert into log table
+            INSERT INTO public.t_advice_mapper_fun_log (
+                encounter_id, advice_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_advice_list,
+                CASE WHEN v_inserted THEN 'done' ELSE 'not done' END,
+                NULL
+            );
+
+            -- Update status in casesheet details table
+            UPDATE public.t_patient_casesheet_details
+            SET advice_status = 'done'
+            WHERE id = rec.id;
+
+        EXCEPTION WHEN OTHERS THEN
+            -- Log error and continue
+            INSERT INTO public.t_advice_mapper_fun_log (
+                encounter_id, advice_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_advice_list, 'error', SQLERRM
+            );
+        END;
+    END LOOP;
+END;
+$function$
+;
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+--FAMILY HISTORY
+
+CREATE TABLE IF NOT EXISTS public.t_family_history_fun_log (
+    log_id SERIAL PRIMARY KEY,
+    encounter_id INT,
+    family_history_list TEXT,
+    status TEXT,
+    error_msg TEXT,
+    processed_at TIMESTAMP DEFAULT NOW()
+);
+
+
+
+-- DROP FUNCTION public.process_family_history(int8);
+
+CREATE OR REPLACE FUNCTION public.process_family_history(p_encounter_id bigint DEFAULT NULL::bigint)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    rec RECORD;
+    v_json JSONB;
+    v_item JSONB;
+    v_encounter_id INT;
+    v_patient_id INT;
+    v_unit_id INT;
+    v_org_id INT;
+    v_admission_id INT := NULL;
+    v_relation_name TEXT;
+    v_relation_id INT;
+    v_diag_code TEXT;
+    v_diag_name TEXT;
+    v_diag_desc TEXT;
+    v_diag_id INT;
+    v_remark TEXT;
+    v_inserted BOOLEAN := FALSE;
+    v_list TEXT := '';
+BEGIN
+    FOR rec IN
+        SELECT * FROM public.t_patient_casesheet_details
+        WHERE (p_encounter_id IS NULL AND (family_history_status IS NULL OR family_history_status != 'done'))
+           OR (p_encounter_id IS NOT NULL AND encounter_id = p_encounter_id)
+    LOOP
+        BEGIN
+            v_json := rec.json_message::jsonb;
+            v_encounter_id := rec.encounter_id;
+            v_unit_id := rec.unit_id;
+            v_org_id := rec.org_id;
+
+            -- Get patient ID from encounter
+            SELECT tem.patient_id INTO v_patient_id
+            FROM opd.t_encounter_master tem
+            WHERE tem.encounter_id = v_encounter_id;
+
+            -- Get admission ID if available
+            SELECT ta.admission_id INTO v_admission_id
+            FROM adt.t_admission ta
+            WHERE ta.patient_id = v_patient_id
+            ORDER BY ta.admission_id DESC LIMIT 1;
+
+            -- Loop through familyHistory array
+            FOR v_item IN SELECT * FROM jsonb_array_elements(v_json -> 'familyHistory')
+            LOOP
+                v_diag_code := TRIM(v_item->>'code');
+                v_diag_name := TRIM(v_item->>'diagnosisDesc');
+                v_diag_desc := v_diag_name;
+                v_relation_name := TRIM(v_item->>'relationDesc');
+                v_remark := NULLIF(TRIM(v_item->>'remark'), '');
+
+                -- Get or insert relation
+                SELECT relation_id INTO v_relation_id
+                FROM public.m_relation_master
+                WHERE LOWER(relation_name) = LOWER(v_relation_name)
+                LIMIT 1;
+
+                IF v_relation_id IS NULL THEN
+                    INSERT INTO public.m_relation_master (
+                        relation_code, relation_name, created_by, created_date, status,
+                        updated_by, updated_date, organization_id
+                    ) VALUES (
+                        LEFT(UPPER(v_relation_name), 3), INITCAP(v_relation_name), 1, NOW(), 'A',
+                        1, NOW(), v_org_id
+                    ) RETURNING relation_id INTO v_relation_id;
+                END IF;
+
+                -- Get or insert diagnosis
+                SELECT diagnosis_id INTO v_diag_id
+                FROM emr.m_diagnosis_master
+                WHERE code = v_diag_code
+                LIMIT 1;
+
+                IF v_diag_id IS NULL THEN
+                    INSERT INTO emr.m_diagnosis_master (
+                        diagnosis_desc, diagnosis_name, status, created_date,
+                        created_by, code, updated_by, updated_date, unit_id, organization_id,
+                        is_notifiable, is_comorbidity
+                    ) VALUES (
+                        v_diag_desc, v_diag_name, 'A', NOW(),
+                        1, v_diag_code, 1, NOW(), v_unit_id, v_org_id,
+                        'N', 'N'
+                    ) RETURNING diagnosis_id INTO v_diag_id;
+                END IF;
+
+                -- Insert into t_family_history
+                INSERT INTO patient.t_family_history (
+                    relation_id, diagnosis_id, status, remark, created_by, created_date,
+                    updated_by, updated_date, unit_id, organization_id,
+                    is_no_family_history_status, patient_id, encounter_id, role_id,
+                    is_reviewed_flag, is_enter_in_error, admission_id, cov_template_id
+                ) VALUES (
+                    v_relation_id, v_diag_id, 'A', v_remark, 1, NOW(),
+                    1, NOW(), v_unit_id, v_org_id,
+                    'N', v_patient_id, v_encounter_id, 2,
+                    'N', 'N', v_admission_id, NULL
+                );
+
+                v_list := v_list || v_relation_name || '-' || v_diag_name || ', ';
+                v_inserted := TRUE;
+            END LOOP;
+
+            -- Clean up trailing comma
+            IF RIGHT(v_list, 2) = ', ' THEN
+                v_list := LEFT(v_list, LENGTH(v_list) - 2);
+            END IF;
+
+            -- Insert log
+            INSERT INTO public.t_family_history_fun_log (
+                encounter_id, family_history_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_list,
+                CASE WHEN v_inserted THEN 'done' ELSE 'not done' END,
+                NULL
+            );
+
+            -- Update status
+            UPDATE public.t_patient_casesheet_details
+            SET family_history_status = 'done'
+            WHERE id = rec.id;
+
+        EXCEPTION WHEN OTHERS THEN
+            INSERT INTO public.t_family_history_fun_log (
+                encounter_id, family_history_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_list, 'error', SQLERRM
+            );
+        END;
+    END LOOP;
+END;
+$function$
+;
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+--MEDICAL HISTORY
+CREATE TABLE IF NOT EXISTS public.t_medical_history_fun_log (
+    log_id SERIAL PRIMARY KEY,
+    encounter_id INT,
+    medical_history_list TEXT,
+    status TEXT,
+    error_msg TEXT,
+    processed_at TIMESTAMP DEFAULT NOW()
+);
+
+
+-- DROP FUNCTION public.process_medical_history_by_encounter(int4);
+
+CREATE OR REPLACE FUNCTION public.process_medical_history_by_encounter(p_encounter_id integer DEFAULT NULL::integer)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    rec RECORD;
+    v_json JSONB;
+    v_medhist JSONB;
+    v_code TEXT;
+    v_diag_desc TEXT;
+    v_remark TEXT;
+    v_patient_id INT;
+    v_encounter_id INT;
+    v_unit_id INT;
+    v_org_id INT;
+    v_admission_id INT := NULL;
+    v_diagnosis_id INT;
+    v_inserted BOOLEAN := FALSE;
+    v_medhist_list TEXT := '';
+BEGIN
+    FOR rec IN
+        SELECT * FROM public.t_patient_casesheet_details
+        WHERE (p_encounter_id IS NULL AND (medical_history_status IS NULL OR medical_history_status != 'done'))
+           OR (p_encounter_id IS NOT NULL AND encounter_id = p_encounter_id)
+    LOOP
+        BEGIN
+            v_json := rec.json_message::jsonb;
+            v_unit_id := rec.unit_id;
+            v_org_id := rec.org_id;
+            v_encounter_id := rec.encounter_id;
+
+            -- Get patient ID from encounter master
+            SELECT tem.patient_id INTO v_patient_id
+            FROM opd.t_encounter_master tem
+            WHERE tem.encounter_id = v_encounter_id;
+
+            -- Get latest admission ID if any
+            SELECT ta.admission_id INTO v_admission_id
+            FROM adt.t_admission ta
+            WHERE ta.patient_id = v_patient_id
+            ORDER BY ta.admission_id DESC
+            LIMIT 1;
+
+            -- Loop through medicalHistory array if exists
+            FOR v_medhist IN SELECT * FROM jsonb_array_elements(v_json -> 'medicalHistory')
+            LOOP
+                v_code := TRIM(v_medhist->>'code');
+                v_diag_desc := TRIM(v_medhist->>'diagnosisDesc');
+                v_remark := COALESCE(TRIM(v_medhist->>'remarks'), '');
+
+                IF v_code IS NOT NULL AND v_code <> '' THEN
+                    -- Check if diagnosis exists in master
+                    SELECT diagnosis_id INTO v_diagnosis_id
+                    FROM emr.m_diagnosis_master
+                    WHERE code = v_code AND unit_id = v_unit_id AND organization_id = v_org_id
+                    LIMIT 1;
+
+                    -- Insert diagnosis if not found
+                    IF v_diagnosis_id IS NULL THEN
+                        INSERT INTO emr.m_diagnosis_master (
+                            diagnosis_desc, status, created_date, created_by, code, diagnosis_name, updated_by, updated_date, unit_id, organization_id, is_notifiable, is_comorbidity
+                        ) VALUES (
+                            v_diag_desc, 'A', now(), 1, v_code, v_diag_desc, 1, now(), v_unit_id, v_org_id, 'N', 'N'
+                        )
+                        RETURNING diagnosis_id INTO v_diagnosis_id;
+                    END IF;
+
+                    -- Insert into patient medical history
+                    INSERT INTO patient.t_patient_medical_history (
+                        patient_id, diagnosis_id, remark, created_date, created_by, status, updated_by, updated_date,
+                        unit_id, organization_id, is_no_significant_status, encounter_id, admission_id
+                    ) VALUES (
+                        v_patient_id, v_diagnosis_id, v_remark, now(), 1, 'A', 1, now(),
+                        v_unit_id, v_org_id, 'N', v_encounter_id, v_admission_id
+                    );
+
+                    v_medhist_list := v_medhist_list || v_diag_desc || ', ';
+                    v_inserted := TRUE;
+                END IF;
+            END LOOP;
+
+            -- Clean trailing comma and space
+            IF RIGHT(v_medhist_list, 2) = ', ' THEN
+                v_medhist_list := LEFT(v_medhist_list, LENGTH(v_medhist_list) - 2);
+            END IF;
+
+            -- Insert into log
+            INSERT INTO public.t_medical_history_fun_log (
+                encounter_id, medical_history_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_medhist_list,
+                CASE WHEN v_inserted THEN 'done' ELSE 'not done' END,
+                NULL
+            );
+
+            -- Update medical_history_status in casesheet details
+            UPDATE public.t_patient_casesheet_details
+            SET medical_history_status = 'done'
+            WHERE id = rec.id;
+
+        EXCEPTION WHEN OTHERS THEN
+            INSERT INTO public.t_medical_history_fun_log (
+                encounter_id, medical_history_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_medhist_list, 'error', SQLERRM
+            );
+        END;
+    END LOOP;
+END;
+$function$
+;
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+--DAIGNOSIS
+
+CREATE TABLE IF NOT EXISTS public.t_diagnosis_mapper_fun_log (
+    log_id SERIAL PRIMARY KEY,
+    encounter_id INT,
+    diagnosis_list TEXT,
+    status TEXT,
+    error_msg TEXT,
+    processed_at TIMESTAMP DEFAULT NOW()
+);
+
+-- DROP FUNCTION public.process_diagnosis_by_encounter(int8);
+
+CREATE OR REPLACE FUNCTION public.process_diagnosis_by_encounter(p_encounter_id bigint DEFAULT NULL::bigint)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    rec RECORD;
+    v_json JSONB;
+    v_diag JSONB;
+    v_diag_code TEXT;
+    v_diag_desc TEXT;
+    v_patient_id BIGINT;
+    v_encounter_id BIGINT;
+    v_unit_id INT;
+    v_org_id INT;
+    v_admission_id BIGINT := NULL;
+    v_diagnosis_id BIGINT;
+    v_inserted BOOLEAN := FALSE;
+    v_diag_list TEXT := '';
+BEGIN
+    FOR rec IN
+        SELECT * FROM public.t_patient_casesheet_details
+        WHERE (p_encounter_id IS NULL AND (diagnosis_status IS NULL OR diagnosis_status != 'done'))
+           OR (p_encounter_id IS NOT NULL AND encounter_id = p_encounter_id)
+    LOOP
+        BEGIN
+            v_json := rec.json_message::jsonb;
+            v_unit_id := rec.unit_id;
+            v_org_id := rec.org_id;
+            v_encounter_id := rec.encounter_id;
+
+            -- Get patient ID
+            SELECT tem.patient_id INTO v_patient_id
+            FROM opd.t_encounter_master tem
+            WHERE tem.encounter_id = v_encounter_id;
+
+            -- Get latest admission ID if available
+            SELECT ta.admission_id INTO v_admission_id
+            FROM adt.t_admission ta
+            WHERE ta.patient_id = v_patient_id
+            ORDER BY ta.admission_id DESC
+            LIMIT 1;
+
+            -- Process diagnosis array
+            FOR v_diag IN SELECT * FROM jsonb_array_elements(v_json -> 'diagnosis')
+            LOOP
+                v_diag_code := TRIM(v_diag->>'code');
+                v_diag_desc := TRIM(v_diag->>'diagnosisDesc');
+
+                IF v_diag_code IS NOT NULL AND v_diag_code <> '' THEN
+                    -- Get or insert diagnosis_id
+                    SELECT diagnosis_id INTO v_diagnosis_id
+                    FROM emr.m_diagnosis_master
+                    WHERE code = v_diag_code
+                    LIMIT 1;
+
+                    IF NOT FOUND THEN
+                        INSERT INTO emr.m_diagnosis_master (
+                            diagnosis_desc, status, created_date, created_by, code, diagnosis_name,
+                            updated_by, updated_date, unit_id, organization_id, is_notifiable, is_comorbidity
+                        ) VALUES (
+                            v_diag_desc, 'A', NOW(), 1, v_diag_code, v_diag_desc,
+                            1, NOW(), v_unit_id, v_org_id, 'N', 'N'
+                        ) RETURNING diagnosis_id INTO v_diagnosis_id;
+                    END IF;
+
+                    INSERT INTO patient.t_patient_diagnosis_appo_mapper (
+                        organization_id, unit_id, encounter_id, patient_id, diagnosis_id,
+                        type, remark, created_by, created_date, updated_by, updated_date, status,
+                        admission_id, is_diagnosis_cancel, diagnosis_type, is_deleted, is_resolved, resolved_date
+                    ) VALUES (
+                        v_org_id, v_unit_id, v_encounter_id, v_patient_id, v_diagnosis_id,
+                        2, TRIM(v_diag->>'remarks'), 1, NOW(), 1, NOW(), 'A',
+                        v_admission_id, 'N', 1, 'N', 'N', NOW()
+                    );
+
+                    v_diag_list := v_diag_list || v_diag_desc || ', ';
+                    v_inserted := TRUE;
+                END IF;
+            END LOOP;
+
+            -- Remove trailing comma
+            IF RIGHT(v_diag_list, 2) = ', ' THEN
+                v_diag_list := LEFT(v_diag_list, LENGTH(v_diag_list) - 2);
+            END IF;
+
+            INSERT INTO public.t_diagnosis_mapper_fun_log (
+                encounter_id, diagnosis_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_diag_list,
+                CASE WHEN v_inserted THEN 'done' ELSE 'not done' END,
+                NULL
+            );
+
+            -- Update status in source table
+            UPDATE public.t_patient_casesheet_details
+            SET diagnosis_status = 'done'
+            WHERE id = rec.id;
+
+        EXCEPTION WHEN OTHERS THEN
+            INSERT INTO public.t_diagnosis_mapper_fun_log (
+                encounter_id, diagnosis_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_diag_list, 'error', SQLERRM
+            );
+        END;
+    END LOOP;
+END;
+$function$
+;
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+--COMPLATINT
+
+
+CREATE TABLE IF NOT EXISTS public.t_complaint_mapper_fun_log (
+    log_id SERIAL PRIMARY KEY,
+    encounter_id INT,
+    complaint_list TEXT,
+    status TEXT,
+    error_msg TEXT,
+    processed_at TIMESTAMP DEFAULT NOW()
+);
+
+-- DROP FUNCTION public.process_complaints_by_encounter(int4);
+
+CREATE OR REPLACE FUNCTION public.process_complaints_by_encounter(p_encounter_id integer DEFAULT NULL::integer)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    rec RECORD;
+    v_json JSONB;
+    v_complaint JSONB;
+    v_complaint_desc TEXT;
+    v_remark TEXT;
+    v_patient_id INT;
+    v_encounter_id INT;
+    v_unit_id INT;
+    v_org_id INT;
+    v_admission_id INT := NULL;
+    v_icpc_id INT;
+    v_icpc_system_id INT;
+    v_complaint_list TEXT := '';
+    v_inserted BOOLEAN := FALSE;
+BEGIN
+    FOR rec IN
+        SELECT * FROM public.t_patient_casesheet_details
+        WHERE (p_encounter_id IS NULL AND (complaint_status IS NULL OR complaint_status != 'done'))
+           OR (p_encounter_id IS NOT NULL AND encounter_id = p_encounter_id)
+    LOOP
+        BEGIN
+            v_json := rec.json_message::jsonb;
+            v_unit_id := rec.unit_id;
+            v_org_id := rec.org_id;
+            v_encounter_id := rec.encounter_id;
+
+            -- Get patient info
+            SELECT tem.patient_id INTO v_patient_id
+            FROM opd.t_encounter_master tem
+            WHERE tem.encounter_id = v_encounter_id;
+
+            -- Get latest admission ID if available
+            SELECT ta.admission_id INTO v_admission_id
+            FROM adt.t_admission ta
+            WHERE ta.patient_id = v_patient_id
+            ORDER BY ta.admission_id DESC
+            LIMIT 1;
+
+            -- Loop through complaints array if exists
+            FOR v_complaint IN SELECT * FROM jsonb_array_elements(v_json -> 'complaints')
+            LOOP
+                v_complaint_desc := TRIM(v_complaint->>'complaintDesc');
+                v_remark := COALESCE(TRIM(v_complaint->>'remark'), '');
+
+                IF v_complaint_desc IS NOT NULL AND v_complaint_desc <> '' THEN
+                    -- Search ICPC case-insensitive
+                    SELECT icpc_id, icpc_system_id INTO v_icpc_id, v_icpc_system_id
+                    FROM emr.m_icpc
+                    WHERE LOWER(icpc_desc) = LOWER(v_complaint_desc)
+                    LIMIT 1;
+
+                    -- If not found, insert new ICPC record with icpc_code = NULL and status 'A'
+                    IF v_icpc_id IS NULL THEN
+                        INSERT INTO emr.m_icpc (icpc_system_id, icpc_code, icpc_desc, status)
+                        VALUES (NULL, NULL, v_complaint_desc, 'A')
+                        RETURNING icpc_id, icpc_system_id INTO v_icpc_id, v_icpc_system_id;
+                    END IF;
+
+                    -- Insert complaint mapping
+                    INSERT INTO patient.t_complaint_appo_mapper
+                    (encounter_id, status, created_by, cerated_date, updated_by, updated_date,
+                     unit_id, organization_id, diagnosis_id, remark, role_id,
+                     is_reviewed_flag, icpc_system_id, icpc_code_text, patient_id)
+                    VALUES
+                    (v_encounter_id, 'A', 1, now(), 1, now(),
+                     v_unit_id, v_org_id, v_icpc_id, v_remark, 2,
+                     'N', v_icpc_system_id, v_complaint_desc, v_patient_id);
+
+                    v_complaint_list := v_complaint_list || v_complaint_desc || ', ';
+                    v_inserted := TRUE;
+                END IF;
+            END LOOP;
+
+            -- Clean trailing comma and space
+            IF RIGHT(v_complaint_list, 2) = ', ' THEN
+                v_complaint_list := LEFT(v_complaint_list, LENGTH(v_complaint_list) - 2);
+            END IF;
+
+            -- Insert into log
+            INSERT INTO public.t_complaint_mapper_fun_log (
+                encounter_id, complaint_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_complaint_list,
+                CASE WHEN v_inserted THEN 'done' ELSE 'not done' END,
+                NULL
+            );
+
+            -- Mark complaint_status as done
+            UPDATE public.t_patient_casesheet_details
+            SET complaint_status = 'done'
+            WHERE id = rec.id;
+
+        EXCEPTION WHEN OTHERS THEN
+            INSERT INTO public.t_complaint_mapper_fun_log (
+                encounter_id, complaint_list, status, error_msg
+            ) VALUES (
+                v_encounter_id, v_complaint_list, 'error', SQLERRM
+            );
+        END;
+    END LOOP;
+END;
+$function$
+;
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+--VITALS
+CREATE TABLE public.t_vital_mapper_fun_log (
+    log_id SERIAL PRIMARY KEY,
+    encounter_id INT,
+    vital_ids TEXT,
+    status TEXT, -- 'done' or 'not done'
+    processed_at TIMESTAMP DEFAULT NOW()
+);
+
+
+-- DROP FUNCTION public.process_casesheet_vitals(int4);
+
+CREATE OR REPLACE FUNCTION public.process_casesheet_vitals(p_encounter_id integer DEFAULT NULL::integer)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    rec RECORD;
+    v_json JSONB;
+    v_vital JSONB;
+    v_vital_name TEXT;
+    v_vital_value TEXT;
+    v_vital_id INT;
+    v_patient_id INT;
+    v_admission_id INT := NULL;
+    v_inserted BOOLEAN;
+    v_vital_ids TEXT := '';
+BEGIN
+    FOR rec IN
+        SELECT * FROM public.t_patient_casesheet_details
+        WHERE (p_encounter_id IS NULL AND (patient_map_status IS NULL OR patient_map_status != 'done'))
+           OR (p_encounter_id IS NOT NULL AND encounter_id = p_encounter_id)
+    LOOP
+        v_inserted := FALSE;
+        v_vital_ids := '';
+ 
+        v_json := rec.json_message::jsonb;
+ 
+        SELECT tem.patient_id INTO v_patient_id
+        FROM opd.t_encounter_master tem
+        WHERE tem.encounter_id = rec.encounter_id;
+ 
+        SELECT ta.admission_id INTO v_admission_id
+        FROM adt.t_admission ta
+        WHERE ta.patient_id = v_patient_id
+        ORDER BY ta.admission_id DESC
+        LIMIT 1;
+ 
+        FOR v_vital IN
+            SELECT * FROM jsonb_array_elements(v_json -> 'vitals')
+        LOOP
+            v_vital_name := TRIM(LOWER(v_vital ->> 'vitalName'));
+            v_vital_value := v_vital ->> 'value';
+ 
+            SELECT mvm.vital_id INTO v_vital_id
+            FROM emr.m_vital_master mvm
+            WHERE TRIM(LOWER(mvm.vital_name)) = v_vital_name
+            LIMIT 1;
+ 
+            IF v_vital_id IS NOT NULL THEN
+                INSERT INTO patient.t_appointment_vital_mapper (
+                    vital_id, value, status, created_by, created_date, is_self_triage,
+                    patient_id, updated_by, updated_date,
+                    unit_id, organization_id, encounter_id, role_id, is_reviewed_flag,
+                    admission_id, is_entered_in_error, is_post_facto, post_facto_time, post_facto_date
+                )
+                VALUES (
+                    v_vital_id, v_vital_value, 'A', 1, NOW(), 'I',
+                    v_patient_id, 1, NOW(),
+                    rec.unit_id, rec.org_id, rec.encounter_id, 2, 'N',
+                    v_admission_id, 'N', 'N', CURRENT_TIME::time, CURRENT_DATE
+                );
+ 
+                -- Track inserted vital_ids
+                v_vital_ids := v_vital_ids || v_vital_id || ',';
+                v_inserted := TRUE;
+            END IF;
+        END LOOP;
+ 
+        -- Remove trailing comma
+        IF RIGHT(v_vital_ids, 1) = ',' THEN
+            v_vital_ids := LEFT(v_vital_ids, LENGTH(v_vital_ids) - 1);
+        END IF;
+ 
+        -- Update status in source table
+        UPDATE public.t_patient_casesheet_details
+        SET vital_status = CASE WHEN v_inserted THEN 'done' ELSE 'not done' END
+        WHERE id = rec.id;
+ 
+        -- Insert into log table
+        INSERT INTO public.t_vital_mapper_fun_log(encounter_id, vital_ids, status)
+        VALUES (rec.encounter_id, v_vital_ids, CASE WHEN v_inserted THEN 'done' ELSE 'not done' END);
+    END LOOP;
+END;
+$function$
+;
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+--ALLERGY
+
+CREATE TABLE public.t_allergy_mapper_fun_log (
+	log_id serial4 NOT NULL,
+	encounter_id int4 NULL,
+	allergy_ids text NULL,
+	status text NULL,
+	error_msg text NULL,
+	processed_at timestamp DEFAULT now() NULL,
+	CONSTRAINT t_allergy_mapper_fun_log_pkey PRIMARY KEY (log_id)
+);
+
+-- DROP FUNCTION public.process_allergy_by_encounter(int4);
+
+CREATE OR REPLACE FUNCTION public.process_allergy_by_encounter(p_encounter_id integer DEFAULT NULL::integer)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    rec RECORD;
+    v_json JSONB;
+    v_allergy JSONB;
+    v_allergy_name TEXT;
+    v_allergy_type_name TEXT;
+    v_severity_desc TEXT;
+    v_remark TEXT;
+    v_allergy_id INT;
+    v_severity_id INT;
+    v_patient_id INT;
+    v_admission_id INT := NULL;
+    v_appointment_id INT := NULL;
+    v_unit_id INT;
+    v_org_id INT;
+    v_allergy_type_id INT;
+    v_allergy_ids TEXT := '';
+    v_inserted BOOLEAN := FALSE;
+BEGIN
+    FOR rec IN
+        SELECT * FROM public.t_patient_casesheet_details
+        WHERE (p_encounter_id IS NULL AND (patient_map_status IS NULL OR patient_map_status != 'done'))
+           OR (p_encounter_id IS NOT NULL AND encounter_id = p_encounter_id)
+    LOOP
+        BEGIN
+            v_json := rec.json_message::jsonb;
+            v_unit_id := rec.unit_id;
+            v_org_id := rec.org_id;
+
+            IF jsonb_typeof(v_json->'allergy') != 'array' OR jsonb_array_length(v_json->'allergy') = 0 THEN
+                CONTINUE;
+            END IF;
+
+            -- Get patient and appointment info
+            SELECT tem.patient_id, tem.appointment_id INTO v_patient_id, v_appointment_id
+            FROM opd.t_encounter_master tem
+            WHERE tem.encounter_id = rec.encounter_id;
+
+            -- Optional admission id
+            SELECT ta.admission_id INTO v_admission_id
+            FROM adt.t_admission ta
+            WHERE ta.patient_id = v_patient_id
+            ORDER BY ta.admission_id DESC
+            LIMIT 1;
+
+            -- Process allergies
+            FOR v_allergy IN SELECT * FROM jsonb_array_elements(v_json -> 'allergy')
+            LOOP
+                v_allergy_name := TRIM(LOWER(v_allergy->>'allergyName'));
+                v_allergy_type_name := TRIM(LOWER(v_allergy->>'allergyTypeName'));
+                v_severity_desc := TRIM(LOWER(v_allergy->>'severityDesc'));
+                v_remark := v_allergy->>'remark';
+
+                -- Step 1: Lookup or insert allergy_type_id
+                SELECT matm.allergy_type_id INTO v_allergy_type_id
+                FROM emr.m_allergy_type_master matm
+                WHERE TRIM(LOWER(matm.allergy_type_name)) = v_allergy_type_name
+                LIMIT 1;
+
+                IF v_allergy_type_id IS NULL THEN
+                    INSERT INTO emr.m_allergy_type_master (
+                        allergy_type_name, created_by, created_date, updated_by, updated_date, status,
+                        allergy_type_desc, marathi_allergy_type_name, unit_id, organization_id, is_generic
+                    )
+                    VALUES (
+                        INITCAP(v_allergy_type_name), 1, now(), 1, now(), 'A',
+                        INITCAP(v_allergy_type_name), NULL, v_unit_id, v_org_id, 'N'
+                    )
+                    RETURNING allergy_type_id INTO v_allergy_type_id;
+                END IF;
+
+                -- Step 2: Lookup or insert allergy_id
+                SELECT mam.allergy_id INTO v_allergy_id
+                FROM emr.m_allergy_master mam
+                WHERE TRIM(LOWER(mam.allergy_name)) = v_allergy_name
+                LIMIT 1;
+
+                IF v_allergy_id IS NULL THEN
+                    INSERT INTO emr.m_allergy_master (
+                        allergy_name, status, created_by, created_date, updated_by, updated_date,
+                        allergy_type_id, unit_id, organization_id
+                    )
+                    VALUES (
+                        INITCAP(v_allergy_name), 'A', 1, now(), 1, now(),
+                        v_allergy_type_id, v_unit_id, v_org_id
+                    )
+                    RETURNING allergy_id INTO v_allergy_id;
+                END IF;
+
+                -- Step 3: Lookup severity_id
+                SELECT msm.severity_id INTO v_severity_id
+                FROM emr.m_severity_master msm
+                WHERE TRIM(LOWER(msm.severity_desc)) = v_severity_desc
+                LIMIT 1;
+
+                -- Step 4: Insert into patient.t_allergy_patient_mapper
+                INSERT INTO patient.t_allergy_patient_mapper (
+                    allergy_id, patient_id, type, nature_of_reaction, comments, severity_id, remark,
+                    allergy_type_id, created_by, created_date, updated_by, updated_date,
+                    status, month, year, is_no_known_allergies, unit_id, organization_id,
+                    encounter_id, admission_id
+                ) VALUES (
+                    v_allergy_id, v_patient_id, '20', NULL, '', v_severity_id, v_remark,
+                    v_allergy_type_id, 1, now(), 1, now(),
+                    'A', NULL, NULL, 'N', v_unit_id, v_org_id,
+                    rec.encounter_id, v_admission_id
+                );
+
+                v_allergy_ids := v_allergy_ids || v_allergy_id || ',';
+                v_inserted := TRUE;
+            END LOOP;
+
+            -- Clean up trailing comma
+            IF RIGHT(v_allergy_ids, 1) = ',' THEN
+                v_allergy_ids := LEFT(v_allergy_ids, LENGTH(v_allergy_ids) - 1);
+            END IF;
+
+            -- Insert into log
+            INSERT INTO public.t_allergy_mapper_fun_log (
+                encounter_id, allergy_ids, status, error_msg
+            ) VALUES (
+                rec.encounter_id, v_allergy_ids, 
+                CASE WHEN v_inserted THEN 'done' ELSE 'not done' END, NULL
+            );
+
+            -- Update source status
+            UPDATE public.t_patient_casesheet_details
+            SET allergy_status = 'done'
+            WHERE id = rec.id;
+
+        EXCEPTION WHEN OTHERS THEN
+            INSERT INTO public.t_allergy_mapper_fun_log (
+                encounter_id, allergy_ids, status, error_msg
+            ) VALUES (
+                rec.encounter_id, v_allergy_ids, 'error', SQLERRM
+            );
+        END;
+    END LOOP;
+END;
+$function$
+;
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+--HABITS
+
+CREATE TABLE IF NOT EXISTS public.t_habit_mapper_fun_log (
+    log_id SERIAL PRIMARY KEY,
+    encounter_id INT,
+    habit_ids TEXT,
+    status TEXT,
+    error_msg TEXT,
+    processed_at TIMESTAMP DEFAULT NOW()
+);
+
+-- DROP FUNCTION public.process_habit_by_encounter(int4);
+
+CREATE OR REPLACE FUNCTION public.process_habit_by_encounter(p_encounter_id integer DEFAULT NULL::integer)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    rec RECORD;
+    v_json JSONB;
+    v_habit JSONB;
+    v_habit_desc TEXT;
+    v_habit_type_desc TEXT;
+    v_remark TEXT;
+    v_habit_id INT;
+    v_habit_type_id INT;
+    v_patient_id INT;
+    v_admission_id INT := NULL;
+    v_appointment_id INT := NULL;
+    v_unit_id INT;
+    v_org_id INT;
+    v_habit_ids TEXT := '';
+    v_inserted BOOLEAN := FALSE;
+BEGIN
+    FOR rec IN
+        SELECT * FROM public.t_patient_casesheet_details
+        WHERE (p_encounter_id IS NULL AND (patient_map_status IS NULL OR patient_map_status != 'done'))
+           OR (p_encounter_id IS NOT NULL AND encounter_id = p_encounter_id)
+    LOOP
+        BEGIN
+            v_json := rec.json_message::jsonb;
+            v_unit_id := rec.unit_id;
+            v_org_id := rec.org_id;
+
+            -- Get patient and appointment info
+            SELECT tem.patient_id, tem.appointment_id INTO v_patient_id, v_appointment_id
+            FROM opd.t_encounter_master tem
+            WHERE tem.encounter_id = rec.encounter_id;
+
+            -- Get admission id (optional)
+            SELECT ta.admission_id INTO v_admission_id
+            FROM adt.t_admission ta
+            WHERE ta.patient_id = v_patient_id
+            ORDER BY ta.admission_id DESC
+            LIMIT 1;
+
+            -- Loop through habit array if exists
+            FOR v_habit IN SELECT * FROM jsonb_array_elements(v_json -> 'habbits')
+            LOOP
+                v_habit_desc := TRIM(LOWER(v_habit->>'habitDesc'));
+                v_habit_type_desc := TRIM(LOWER(v_habit->>'habitTypeDesc'));
+                v_remark := v_habit->>'remark';
+
+                -- Insert into habit_type_master if not exists
+                SELECT habit_type_id INTO v_habit_type_id
+                FROM emr.m_habit_type_master
+                WHERE TRIM(LOWER(habit_type_desc)) = v_habit_type_desc
+                LIMIT 1;
+
+                IF v_habit_type_id IS NULL THEN
+                    INSERT INTO emr.m_habit_type_master (
+                        habit_type_desc, status, created_by, created_date, marathi_habit_type_desc, updated_by, updated_date, unit_id, organization_id
+                    ) VALUES (
+                        INITCAP(v_habit_type_desc), 'A', 1, now(), NULL, 1, now(), v_unit_id, v_org_id
+                    ) RETURNING habit_type_id INTO v_habit_type_id;
+                END IF;
+
+                -- Insert into habit_master if not exists
+                SELECT habit_id INTO v_habit_id
+                FROM emr.m_habit_master
+                WHERE TRIM(LOWER(habit_desc)) = v_habit_desc
+                LIMIT 1;
+
+                IF v_habit_id IS NULL THEN
+                    INSERT INTO emr.m_habit_master (
+                        habit_desc, status, created_date, created_by, updated_by, updated_date, marathi_habit_desc, unit_id, organization_id
+                    ) VALUES (
+                        INITCAP(v_habit_desc), 'A', now(), 1, 1, now(), NULL, v_unit_id, v_org_id
+                    ) RETURNING habit_id INTO v_habit_id;
+                END IF;
+
+                -- Insert into patient habit details
+                INSERT INTO patient.t_patient_habit_details (
+                    patient_id, habit_id, habit_type_id, remark,
+                    cigarettes_per_day, years_smoked, gms_per_day, years_used,
+                    mls_per_day, frequency, pack_year, type_of_exercise,
+                    created_by, created_date, updated_by, updated_date, status,
+                    unit_id, organization_id, encounter_id, admission_id
+                ) VALUES (
+                    v_patient_id, v_habit_id, v_habit_type_id, v_remark,
+                    COALESCE((v_habit->>'cigarettesPerDay')::INT, 0),
+                    COALESCE((v_habit->>'yearsSmoked')::INT, 0),
+                    COALESCE((v_habit->>'gmsPerDay')::INT, 0),
+                    COALESCE((v_habit->>'yearsUsed')::INT, 0),
+                    COALESCE((v_habit->>'mlsPerDay')::INT, 0),
+                    v_habit->>'frequency',
+                    COALESCE((v_habit->>'packYear')::FLOAT, 0),
+                    v_habit->>'typeOfExercise',
+                    1, now(), 1, now(), 'A',
+                    v_unit_id, v_org_id, rec.encounter_id, v_admission_id
+                );
+
+                v_habit_ids := v_habit_ids || v_habit_id || ',';
+                v_inserted := TRUE;
+            END LOOP;
+
+            -- Clean up trailing comma
+            IF RIGHT(v_habit_ids, 1) = ',' THEN
+                v_habit_ids := LEFT(v_habit_ids, LENGTH(v_habit_ids) - 1);
+            END IF;
+
+            -- Log result
+            INSERT INTO public.t_habit_mapper_fun_log (
+                encounter_id, habit_ids, status, error_msg
+            ) VALUES (
+                rec.encounter_id, v_habit_ids,
+                CASE WHEN v_inserted THEN 'done' ELSE 'not done' END, NULL
+            );
+
+            -- Update source table
+            UPDATE public.t_patient_casesheet_details
+            SET habit_status = 'done'
+            WHERE id = rec.id;
+
+        EXCEPTION WHEN OTHERS THEN
+            INSERT INTO public.t_habit_mapper_fun_log (
+                encounter_id, habit_ids, status, error_msg
+            ) VALUES (
+                rec.encounter_id, v_habit_ids, 'error', SQLERRM
+            );
+        END;
+    END LOOP;
+END;
+$function$
+;
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+

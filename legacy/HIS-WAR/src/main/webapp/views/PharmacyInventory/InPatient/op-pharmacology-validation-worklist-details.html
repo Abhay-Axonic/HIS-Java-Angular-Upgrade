@@ -1,0 +1,267 @@
+<style>
+    .tableError {
+        border: 2px solid red !important;
+    }
+    
+    .tableError select.w-100.ng-pristine.ng-empty,
+    .tableError input.w-100.ng-valid.ng-empty,
+    .borderRed {
+        border: 2px solid red;
+    }
+</style>
+
+    <style>
+	.highPriority {
+		color: red !important;
+	}
+</style>
+<!-- *****************************************************************************************************************************
+                                                        Pharmacology Validation Worklist 
+****************************************************************************************************************************** -->
+<!-- Page Content -->
+<div id="page-content-wrapper" class="clockPopupOver ">
+    <div class="container-fluid his-style">
+        <!-- <div ng-include="'./views/common/common-patient-search-opd-without-counter.html'"></div> -->
+
+        <div class="row">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                    <span class="profile_pic">
+                        <img alt="" src="resources/assets/images/tempImages/m.jpg" class="img-circle" style="width:35px" data-toggle="modal"
+                            data-target="#patientDetailsModal">
+                    </span>
+                    <!-- <span class="margin-left10">{{patientDetails.patientName}} {{patientDetails.age}} </span> -->
+                    <span class="margin-left10"></span>
+                    <span class="padding-right5 font-weight600">UHID :</span> {{vm.model.pharmacologyValidationDetailsList.uhid ? vm.model.pharmacologyValidationDetailsList.uhid : '-'}}</span>
+                    <span class="margin-left10"></span>
+                    <span class="padding-right5 font-weight600">Patient Details : </span> {{vm.model.pharmacologyValidationDetailsList.patientDetail ? vm.model.pharmacologyValidationDetailsList.patientDetail : '-'}}</span>
+                    <!-- <span class=""><span class=" font-weight600">/</span> 36</span> -->
+                    <!-- <span class=""><span class=" font-weight600">/</span> M</span> -->
+
+                    <span class="margin-left10">
+                        <span class="padding-right5 font-weight600">DOB :</span> {{vm.model.pharmacologyValidationDetailsList.dob | date:'dd/MM/yyyy' : 'UTC'}}</span>
+                    <span class="margin-left10"></span>
+                    <span class="padding-right5 font-weight600">Doctor Details : </span> Dr.
+                    {{vm.model.pharmacologyValidationDetailsList.doctorDetail ? vm.model.pharmacologyValidationDetailsList.doctorDetail : '-'}}</span>
+                    <span class="margin-left10"></span>
+                    <!-- <span class="padding-right5 font-weight600">DOA :</span> {{vm.model.worklistDetails.doa | date:'dd/MM/yyyy' : 'UTC'}}</span> -->
+                    <span class="margin-left10"></span>
+                    <!-- <span class="padding-right5 font-weight600">PDD :</span> {{vm.model.worklistDetails.pdd | date:'dd/MM/yyyy' : 'UTC'}}</span> -->
+                    <span class="margin-left10"></span>
+                    <!-- <span class="padding-right5 font-weight600">Ward Name :</span> {{vm.model.worklistDetails.wardName}}</span> -->
+                </div>
+            </div>
+            <div class="row">
+            	<span class="margin-left10"></span>
+            	<span class="padding-right5 font-weight600">Prescription No : 
+                    {{vm.model.pharmacologyValidationDetailsList.prescriptionNo ? vm.model.pharmacologyValidationDetailsList.prescriptionNo : '-'}}</span>
+                    <!-- <span class="padding-right5 font-weight600">Bed No. :</span>{{vm.model.worklistDetails.bedNo}}</span> -->
+                    <span class="margin-left8 bed-mang-box-icon">
+                        <img src="resources/assets/images/icon/bed/Allergies.png" title="Allergies" alt="Allergy" style="width:20px"
+                            class="popper" data-toggle="popover" data-trigger="hover">
+                        <div class="popper-content hide">
+                            <div>1.Egg Protein</div>
+                            <div>2.Penicillin</div>
+                        </div>
+                    </span>
+                    <span class="margin-left8 bed-mang-box-icon">
+                        <img src="resources/assets/images/icon/bed/other investigation order.png" title="Comorbidity" alt="Allergy"
+                            style="width:20px" class="popper" data-toggle="popover" data-trigger="hover">
+                        <div class="popper-content hide">
+                            <div>1.Hyper Tension</div>
+                        </div>
+                    </span>
+                    <span class="margin-left8 bed-mang-box-icon">
+                        <img src="resources/assets/images/icon/bed/High Risk Patient.png" title="High Risk" alt="Allergy" style="width:20px"
+                            class="popper" data-toggle="popover" data-trigger="hover">
+                        <div class="popper-content hide">
+                            <div>1.Hepatitis b</div>
+                        </div>
+                    </span>
+            </div>
+        </div>
+    
+    <div class="row padding-top10 padding-left-right-set4">
+		<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll500">
+		  <table id="main-table" class="main-table width100">
+		    <thead>
+	              <tr class="table-th-bg">
+	                  <th class="width12" title="Brand Name">
+	                      Brand Name
+	                      <div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+	                          <div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+	                          <div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+	                      </div>
+	                  </th>
+	                  <th class="width12" title="Generic Name">
+	                      Generic Name
+	                      <div class="float_right" ng-click="sortType = 'genericName'; sortReverse = !sortReverse">
+	                          <div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+	                          <div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+	                      </div>
+	                  </th>
+	                  <th class="width9" title="Frequency">
+	                      Frequency
+	                      <div class="float_right" ng-click="sortType = 'frequency'; sortReverse = !sortReverse">
+	                          <div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+	                          <div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+	                      </div>
+	                  </th>
+	                  <th class="width5" title="Dose">
+	                      Dose
+	                      <div class="float_right" ng-click="sortType = 'dose'; sortReverse = !sortReverse">
+	                          <div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+	                          <div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+	                      </div>
+	                  </th>
+	                  <th class="width6" title="Start Date">
+	                      Start Date
+	                      <div class="float_right" ng-click="sortType = 'startDate'; sortReverse = !sortReverse">
+	                          <div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+	                          <div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+	                      </div>
+	                  </th>
+	                  <th class="width6" title="Stop Date">
+	                      Stop Date
+	                      <div class="float_right" ng-click="sortType = 'stopDate'; sortReverse = !sortReverse">
+	                          <div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+	                          <div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+	                      </div>
+	                  </th>
+	                  <th class="width15" title="Remark">
+	                      Remark 
+	                  </th>
+	                  <th class="width7" title="Intervention">
+	                      <!-- <input type="checkbox" class="margin-right2"/> -->
+	                      Intervention 
+	                  </th>
+	                  <th class="width7" title="Combination">Combination
+	                  </th>
+	                  
+	              </tr>
+	          </thead>
+		    <tbody>
+              <tr ng-if="vm.model.pharmacologyValidationDetailsList.items == null || !vm.model.pharmacologyValidationDetailsList.items.length">
+                  <td colspan="9">
+                      <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No
+                          Records
+                          Found</p>
+                  </td>
+              </tr>
+              <tr ng-repeat="item in vm.model.pharmacologyValidationDetailsList.items | filter : search |   orderBy:sortType:sortReverse"
+              data-ng-class="{'disabled':item.itemDisabled ,'highPriority': item.statusId == 9}">
+                  <td class="" title="{{item.itemName}}">
+                          {{item.itemName}}  
+                  </td>
+                  <td class="" title="{{item.genericName}} ">
+                          {{item.genericName}}   
+                  </td>
+                  <td class="" title="{{item.frequency}} ">
+                          {{item.frequency}}      
+                  </td>
+                  <td class="" title="{{item.dose}} {{item.doseUnit}}">
+                          {{item.dose}}  {{item.doseUnit}}
+                  </td>
+                  <td class="" title="{{item.startDate | date:'dd/MM/yyyy'}}">
+                          {{item.startDate | date:'dd/MM/yyyy'}} 
+                  </td>
+                  <td class="" title="{{item.stopDate | date:'dd/MM/yyyy'}}">
+                          {{item.stopDate | date:'dd/MM/yyyy'}}
+                  </td>
+                  <td class="">
+                      <textarea rows="2" ng-model="item.interventionRemark" maxlength="100"  class="w-100"  data-ng-class="{tableError: item.isinterventionRemarkValid}"
+                          ng-change="item.isinterventionRemarkValid = false"></textarea>
+                  </td>
+                  <td title="text-center">
+                      <label class="checkbox-inline">
+                          <input type="checkbox" ng-model="item.intervention" value="1"ng-click="vm.model.IsValidateToggle(vm.model.pharmacologyValidationDetailsList)"
+                              ng-change="vm.model.isSaveValid = false" name="validated_checkbox">Intervention
+                      </label>
+                  </td>
+                  <td class="text-center vertical-top">
+                      <a ng-click="vm.model.ViewCombinationDetails(item)" title="View Combination Details">
+                          <i class="fa fa-info-circle" aria-hidden="true"></i>
+                      </a>
+                  </td>
+              </tr>
+          </tbody>
+		  </table>
+		</div>
+	</div>
+	<div class="row padding-left-right-set4">
+        <div class="col-lg-6 col-md-6 col-sm-6 pull-right padding-left-right-set0">
+                <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class="">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Back" data-dismiss="modal" ng-click="vm.model.NavigateToPharmacologicalValidation()">
+						<i class="fa fa-arrow-circle-o-left" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+				
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class="">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Save" data-dismiss="modal" ng-click="vm.model.SavePharmacologyValidationWorkList(vm.model.pharmacologyValidationDetailsList)"
+                    ng-disabled="vm.model.SaveButtonValidation(vm.model.pharmacologyValidationDetailsList) || saveFlag == true ">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+				
+
+               
+                <label class="checkbox-inline pull-right margin-top8 padding-left-right-set">
+                    <input type="checkbox" ng-change="vm.model.isSaveValid = false"
+                        ng-disabled="vm.model.isValidateValid;!vm.model.pharmacologyValidationDetailsList.items.length || saveFlag == true" ng-model="vm.model.validate"
+                        value="">Is Validate
+                </label>
+            </div>
+        </div>
+    </div>
+    
+</div>
+</div>
+    
+<!-- Generic Is Combination Details modal -->
+    
+<div id="combinationDetails" class="modal fade ng-scope in common-small-popup" data-keyboard="false" data-backdrop="static" role="dialog">
+    <div class="modal-dialog" style="width: 600px !important;">
+        <div class="modal-content">
+            <div class="modal-header padding-zero" style="margin-left: -34px;background-size: 210px 72px !important;">
+                <div class="modal-title patient-details-row">
+                    Generic Combination
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row padding-left-right-set4 padding-top4 padding-bottom10">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="">
+                                    <th class="width8">Generic Name
+                                    </th>
+                                    <th class="width8">Strength
+                                    </th>
+                                    <th class="width8">Strength Unit
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="generics in vm.model.genericCombinationList">
+                                    <td>{{generics.name}}</td>
+                                    <td>{{generics.strengthUnit}}</td>
+                                    <td>{{generics.strength}}</td>
+                                </tr>
+                                <tr ng-if="vm.model.genericCombinationList.length == 0">
+                                    <td colspan="4" class="text-center">
+                                        <p>No Record Found</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+<!-- Generic Is Combination Details modal -->

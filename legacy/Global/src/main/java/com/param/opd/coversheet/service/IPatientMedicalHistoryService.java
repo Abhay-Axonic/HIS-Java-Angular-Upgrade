@@ -1,0 +1,39 @@
+package com.param.opd.coversheet.service;
+
+import in.param.exception.ApplicationException;
+
+import org.springframework.transaction.annotation.Transactional;
+
+import com.param.global.common.Response;
+import com.param.opd.coversheet.dto.PatientFamilyHistoryDto;
+import com.param.opd.coversheet.dto.PatientMedicalHistoryDto;
+import com.param.opd.coversheet.model.PatientFamilyHistory;
+import com.param.opd.coversheet.model.PatientMedicalHistory;
+
+@Transactional
+@SuppressWarnings("rawtypes")
+public interface IPatientMedicalHistoryService {
+
+	public Response savePatientMedicalHistory(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+
+	public Response getOldPatientMedicalHistory(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+	
+	public Response getCurrentPatientMedicalHistory(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+	
+	public Response updatePatientMedicalHistory(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+	
+	public Response updateSaveNurseReviewedFlag(PatientMedicalHistory patientMedicalHistory)throws ApplicationException;
+	
+	public Response updateStatusEnterInError(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+
+	public Response getCurrentPatientMedicalHistoryDetailsForCoversheet(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+
+	public Response getPatientMedicalHistoryForBookView(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+
+	public Response updateStatusRemoveMedicalHistory(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+
+	public Response getPatientDataForBookView(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+
+	public Response getPatientMedicalHistory(PatientMedicalHistoryDto patientMedicalHistoryDto)throws ApplicationException;
+
+}

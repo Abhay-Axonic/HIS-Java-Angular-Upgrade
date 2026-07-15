@@ -1,0 +1,358 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	
+		<fieldset>
+		<form name="addNewKitIndentForm">
+			<!-- <legend class="heading-div">Package Master</legend> -->
+			<div class="row margin-top10">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<select class="text-input floating-label" name="fromStore"
+								ng-model="kitIndentObj.fromStoreId"
+								 ng-options="data.storeId as data.storeName for data in kitIndentFromStoreList" required>
+								
+								</select> <label for="fromStore">Store (Origin)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<select class="text-input floating-label" name="toStore"
+								ng-model="kitIndentObj.toStoreId" ng-change="changeToStore()"
+								 ng-options="data.storeId as data.storeName for data in kitIndentToStoreList" required>
+								
+								</select> <label for="toStore">Store (Destination)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<select class="text-input floating-label" name="priority"
+								ng-model="kitIndentObj.priorityId"
+								 ng-options="data.id as data.desc for data in kitIndentPriorityList" required>
+								
+								</select> <label for="priority">Indent Priority</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label">
+								<label for="code">Search Kit</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				<div class="col-lg-1 col-sm-1 col-md-1 padding-top4 padding-left-right-set4">
+					<div class="common-save-button" > 
+						 
+						 <input type="button" value="Get Kit" id="updateBtn" class="btn btn-primary btn-save-box-shadow" style="width: auto;" ng-click="clearSearchField()" id="updateBtn" data-target="#searchKitModal" data-toggle="modal"  ng-disabled="isGetKitDisabled()">
+						 <!-- <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" data-target="#searchKitModal" data-toggle="modal"> 
+						 	Get Kit 
+						 </a>  -->
+					</div> 
+				</div>
+			</div>
+			</form>
+		</fieldset>
+		
+		<modal visible="showModal"></modal>
+		
+		<div class="row margin-top8 padding-left-right-set4">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width12">
+								Kit Code/Instrument Code
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								Kit Name/Instrument Name
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width3">
+								Quantity
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width1"></th>
+							<th class="width3"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- <tr>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td class="text-center"><a href="" data-toggle="modal" data-target="#instrumentInfo"><i class="fa fa-info-circle"></i></a></td>
+						</tr> -->
+						<tr ng-repeat="data in kitList">
+							<!-- <td class="width1 text-center"><input type="checkbox"></td> -->
+							<td>{{data.code}}</td>
+							<td>{{data.name}}</td>
+							<!-- <td><input type="text" autocomplete="off" value="{{data.quantity}}"></td> -->
+							<td ><input  type="text" autocomplete="off" ng-model="data.quantity"></td>
+							<!-- <td ng-if="data.isInstrument"><input  type="text" autocomplete="off" ng-model="data.quantity" value="1" ng-disabled=true ></td> -->
+							<td class="text-center"><a  ng-if="!data.isInstrument" href="" data-toggle="modal" data-target="#instrumentInfoModal" ng-click="getInstrumentInfo(data)"><i class="fa fa-info-circle"></i></a></td>
+							<td class=" width3 text-center vertical-middle cursor-pointer">
+                      						<a ng-click="removeKit(data)">
+                        					<i class="fa fa-times"></i>
+                      						</a>
+							</td>						
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+	<div class="row his-style margin-top10 padding-right20">
+		<div class="col-md-1 text-right">
+			<label>Remark:</label>
+		</div>
+		<div class="col-md-9 padding-left-right8">
+			<textarea row="1" class="form-control" ng-model="kitIndentObj.remarks"></textarea>
+		</div>
+		<div class="col-md-1 padding-left0px-right6px">
+			<div class=""><!-- common-save-button -->
+			<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" ng-disabled="isSaveDisabled()" data-target="#saveKitIndent" data-toggle="modal"  >
+				<!-- <input type="button" value="Save" class="btn btn-primary btn-save-box-shadow"  ng-if="saveBtnFlag" data-target="#confirmLogout" data-toggle="modal"> -->
+			</div>
+		</div>
+		<div class="col-lg-1 col-md-1 padding-left-right-set4">
+				<a href="#/KitIndent">
+					<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+				</a>
+			</div>
+	</div>			
+</footer>
+
+<!-- <modal visible="showModal"></modal> -->
+	</div>
+	
+	<!-- SAVE POP UP MODAL -->
+	<div id="saveKitIndent" class="modal fade ng-scope in" role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> width: 25% !important;margin: 200px 0 0 510px !important;
+			<div class="modal-content">
+				<div class="modal-header" style="padding:0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal" ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10"><span>Are you sure you want to Save?</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="saveKitIndent();">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Search Kit Modal Start -->
+<div id="searchKitModal" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+			<div class="modal-header padding-zero" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					 Search Kit/Instrument
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top8">
+					<div class="col-lg-8 col-md-8 col-sm-10 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label"  ng-model="searchKitField"> <label for="code">Search Kit</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-1 padding-left-right-set4 padding-top4">
+						<div class="common-save-button"> 
+							 <a href="" id="searchBtn" class="btn btn-primary btn-save-box-shadow text-width-auto pull-left" ng-click="searchKitByName()">
+							 	<i class="fa fa-search" aria-hidden="true"></i> 
+							 </a> 
+						</div>
+					</div>
+					
+					<div class="col-lg-5 col-sm-5 col-md-5 right" style="margin-top: 15px;">
+							<div class="col-md-2">
+								<label>Kit</label>
+							</div>
+								<div class="col-md-2" style="margin-top: -3px;margin-right: 6px;margin-left: -28px;">
+									<label class="switch">
+										<input type="checkbox" name="isInstrument" class="ng-pristine ng-untouched ng-valid ng-empty" ng-model="isInstrument"
+											   ng-change = "clearSearchDetails()" data-toggle="modal" ng-true-value="true"
+											   ng-false-value="false" ng-change="">
+										<div class="slider round"></div>
+									</label>
+								</div>
+						<div class="col-md-2">
+							<label>Instrument</label>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-left-right-10 margin-top10">
+						<div class="col-md-12 common-table-height-250">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+									<th class="width1"></th>
+										<th class="width15">
+											Kit Code/Instrument Code
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width15">
+											Kit Name/Instrument Name
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr ng-if="kitDetailsList.length==0 && showLoadingMsg=='Y' "><td class="text-center" colspan="3">{{loadingMsg}}</td></tr>
+										<tr ng-repeat="kitInfo in kitDetailsList">
+											<td class="vertical-align text-center"><input type="checkbox" name="selectedKitInfo" ng-checked="selectedKitIndent" ng-click="selectKitInfo(kitInfo)" ng-model="selectedKitInfo" value={{kitInfo}} multiple></td>
+											<td>{{kitInfo.code}}</td>
+											<td>{{kitInfo.name}}</td>
+										</tr>
+									</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="showKitInfo()">Select</button>
+					<span><button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button></span>
+				</div>
+		</div>
+	</div>
+</div>
+<!-- Search Kit Modal End -->
+
+<!-- <div id="confirmIndentSave" class="modal fade ng-scope in" role="dialog" style="padding-left: 17px;">
+	<div class="modal-dialog"> width: 25% !important;margin: 200px 0 0 510px !important;
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal" ng-click="cancel();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to Save?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="saveKitIndent();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+ -->
+<!-- instrumentInfo Modal Start -->
+<div id="instrumentInfoModal" class="modal fade ng-scope in common-medium-popup" role="dialog" style="z-index: 9999;background: rgba(0, 0, 0, 0.33)" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					  Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 padding-top4">
+						<div class="col-md-12 common-table-height-250">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+										<th class="width15">
+											Instrument Code
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width15">
+											Instrument Name
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width5">
+											Quantity
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+									</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="instrumentInfo in indentKitInstrumentInfo.kitInstrumentList">
+											<td>{{instrumentInfo.instrumentCode}}</td>
+											<td>{{instrumentInfo.instrumentName}}</td>
+											<td>{{instrumentInfo.quantity}}</td>
+										</tr>
+									</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+				</div>
+		</div>
+	</div>
+</div>
+<!--  instrumentInfo Modal End -->
+
+</div>

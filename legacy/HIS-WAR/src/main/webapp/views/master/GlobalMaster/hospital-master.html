@@ -1,0 +1,1016 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<!-- <div ng-include="'./views/common/common-patient-details.html'"></div> -->
+		<fieldset>
+			<!-- <legend class="heading-div">Hospital Master</legend> -->
+			<form name="hospitalMasterForm" novalidate>
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container padding-top10">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-10 ">
+
+								<div class="form-group" show-errors>
+									<!-- minesh -->
+									<select class="text-input floating-label dirty"
+										name="organizationId" ng-model="unit.organizationId"
+										ng-change="setTimeZoneOrganizationWise(unit.organizationId)"
+										required="required">
+										<option ng-repeat="organization in organizationMasterList"
+											ng-value="{{organization.organizationId}}"
+											value="{{organization.organizationId}}">{{organization.organizationName}}</option>
+									</select> <label for="code">Organization<span class="star">*</span></label>
+									<p class="help-block"
+										ng-if="hospitalMasterForm.organizationId.$error.required">Organization
+										is required</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-10">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="unitCode" id=""
+										ng-model="unit.unitCode" class="text-input floating-label"
+										required="required"> <label for="code">Hospital
+										Code<span class="star">*</span>
+									</label>
+									<p class="help-block"
+										ng-if="hospitalMasterForm.unitCode.$error.required">Hospital
+										Code is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-hospital-o " aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-10">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="unitName" id=""
+										ng-model="unit.unitName" class="text-input floating-label"
+										required="required"> <label for="code">Hospital
+										Name<span class="star">*</span>
+									</label>
+									<p class="help-block"
+										ng-if="hospitalMasterForm.unitName.$error.required">Hospital
+										Name is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div
+								class="col-lg-11 col-sm-10 col-md-10 padding-left-right-set4">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="registrationNumber"
+										class="text-input floating-label"
+										ng-model="unit.registrationNumber" required="required">
+									<label for="code">Registration Number<span class="star">*</span></label>
+									<p class="help-block"
+										ng-if="hospitalMasterForm.registrationNumber.$error.required">Registration
+										Number is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row margin-top4">
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-map-marker" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-10">
+								<div class="form-group" show-errors>
+									<textarea row="1" type="text" autocomplete="off"
+										name="unitAddress" id="" ng-model="unit.unitAddress"
+										class="text-input floating-label" style="height: 31px;"
+										required="required"></textarea>
+									<label for="code">Address<span class="star">*</span></label>
+									<p class="help-block"
+										ng-if="hospitalMasterForm.unitAddress.$error.required">Address
+										is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-6  padding-left-right-set4 padding-top10">
+						<div
+							class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set4 padding-top4">
+							<div class="row input-container">
+								<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+									<i class="fa fa-flag" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label" name="unitCountryId"
+											ng-model="unit.unitCountryId"
+											ng-change="getStateMasterList(unit.unitCountryId)"
+											required="required">
+											<option ng-repeat="country in countryList"
+												ng-value="{{country.countryId}}"
+												value="{{country.countryId}}">{{country.countryName}}</option>
+										</select> <label for="code">Choose Country<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="hospitalMasterForm.unitCountryId.$error.required">Country
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set4 padding-top4">
+							<div class="row input-container">
+								<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+									<i class="fa fa-university" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label" name="unitStateId"
+											ng-model="unit.unitStateId"
+											ng-change="getDistrictByState(unit.unitStateId)"
+											required="required">
+											<option ng-repeat="state in stateList"
+												ng-value="{{state.stateId}}" value="{{state.stateId}}">{{state.stateName}}</option>
+										</select> <label for="code">Choose State<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="hospitalMasterForm.unitStateId.$error.required">State
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-6  padding-left-right-set4 padding-top10">
+						<div
+							class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set4 padding-top4">
+							<div class="row input-container">
+								<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+									<i class="fa fa-university" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label"
+											name="unitDistrictId" ng-model="unit.unitDistrictId"
+											ng-change="getCityByDistrict(unit.unitDistrictId)"
+											required="required">
+											<option></option>
+											<option ng-repeat="info in districtList"
+												ng-value="{{info.districtId}}" value="{{info.districtId}}">{{info.districtName}}</option>
+										</select> <label for="code">Choose District<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="hospitalMasterForm.unitDistrictId.$error.required">District
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top4">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-building-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label" name="unitCityId"
+											ng-model="unit.unitCityId"
+											ng-change="getAreaByCity(unit.unitCityId)"
+											required="required">
+											<option ng-repeat="city in cityList"
+												ng-value="{{city.cityId}}" value="{{city.cityId}}">{{city.cityName}}</option>
+										</select> <label for="code">Choose City<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="hospitalMasterForm.unitCityId.$error.required">City
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-6  padding-left-right-set4 padding-top4">
+						<div class="col-lg-6 col-md-6 col-sm-6  padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+									<i class="fa fa-location-arrow" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<!-- <div class="form-group" show-errors>
+									<select class="text-input floating-label" name="unitAreaId" ng-model="unit.unitAreaId"   ng-change="setPostCode(unit.unitAreaId)" required="required">
+											<option></option>
+											<option ng-repeat="info in areaList" ng-value="{{info.areaId}}" value="{{info.areaId}}">{{info.areaName}}</option>
+									</select>  <label for="code">Choose Area<span class="star">*</span></label>
+									<p class="help-block" ng-if="hospitalMasterForm.unitAreaId.$error.required">Area is required</p>
+								</div> -->
+									<!-- <div  class="form-group"  style="width: -webkit-fill-available; border: none;border-bottom: 1px solid;" show-errors>
+									<label for="code" style="color: #3f51b5;">Choose Area<span class="star">*</span></label>border-color: transparent;
+									<select   class="floating-label" when-scrolled="loadMore1()" name="unitAreaId"  id="selRegs"
+									ng-model="unit.unitAreaId"  ng-change="setPostCode(unit.unitAreaId)"  style="width: -webkit-fill-available;border: none;"  required>
+										<option ng-repeat="info in areaList =(logEvents| limitTo:numberToDisplay) track by $index " ng-value="{{info.areaId}}"  value="{{info.areaId}}">{{info.areaName}}</option>
+									</select>
+									<p class="help-block" ng-if="hospitalMasterForm.unitAreaId.$error.required">Area is required</p>
+							    </div> -->
+									<div class="form-group" show-errors>
+										<label for="code" style="color: #3f51b5;">Choose Area<span
+											class="star">*</span></label>
+										<!-- <select class="table table-striped "  name="unitAreaId"  id="selRegs"  ng-change="setPostCode(patientObj.areaId,0);setFlag(false);"
+											when-scrolled="loadMore1()" ng-model="unit.unitAreaId"
+											ng-click="onClickDropdownmyFun()">
+											<option
+												data-ng-repeat="info in areaList = (logEvents | filter:searchTerm | limitTo:numberToDisplay) track by $index"
+												ng-value="{{info.areaId}}" value="{{info.areaId}}">
+												{{info.areaName}}</option>
+												<p class="help-block" ng-if="hospitalMasterForm.unitAreaId.$error.required">Area is required</p>
+										</select> -->
+										<input name="unitAreaId" type="text" autocomplete="off"
+											name="description" id="searchServiceId"
+											class="text-input floating-label" ng-model="unit.areaName"
+											typeahead-min-length="2"
+											uib-typeahead="areaMaster.areaName  for areaMaster in searchAreaByCityId($viewValue)"
+											typeahead-on-select="addAreaById($item, $model, $label)"
+											required>
+										<p class="help-block"
+											ng-if="hospitalMasterForm.unitAreaId.$error.required">Area
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top4">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-arrows" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<div class="form-group" show-errors>
+										<input type="text" autocomplete="off" name="postCode" id=""
+											class="text-input floating-label dirty"
+											ng-model="unit.postCode" required="required"> <label
+											for="code">PinCode<span class="star">*</span></label>
+										<p class="help-block"
+											ng-if="hospitalMasterForm.postCode.$error.required">PinCode
+											is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container padding-top10">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-mobile " aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-10">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="unitContact" id=""
+										ng-model="unit.unitContact" class="text-input floating-label"
+										required="required"> <label for="code">Contact
+										No.<span class="star">*</span>
+									</label>
+									<p class="help-block"
+										ng-if="hospitalMasterForm.unitContact.$error.required">Contact
+										No is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container padding-top10">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-fax" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-10 col-md-10">
+								<div>
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label"> <label for="code">Fax
+										No.</label>
+									<!-- <p class="help-block" ng-if="hospitalMasterForm.code.$error.required">Fax no. is required</p> -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container padding-top10 padding-leftright15">
+							<div class="col-lg-1 col-sm-3 col-md-3 polymer-icon">
+								<i class="fa fa-envelope-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-9 col-md-9">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="unitEmailId" id=""
+										ng-model="unit.unitEmailId" class="text-input floating-label"
+										required="required"> <label for="code">Email
+										Id<span class="star">*</span>
+									</label>
+									<p class="help-block"
+										ng-if="hospitalMasterForm.unitEmailId.$error.required">Email
+										Id is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container padding-top10 padding-leftright15">
+							<div class="col-lg-1 col-sm-3 col-md-3 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-9 col-md-9">
+								<div class="form-group" show-errors>
+									<!-- <input type="text" autocomplete="off" name="unitTimeZone" id="" ng-model="unit.unitTimeZone"
+                                    class="text-input floating-label" required="required"> <label for="code">Time Zone<span class="star">*</span></label>
+                                <p class="help-block" ng-if="hospitalMasterForm.unitTimeZone.$error.required">T<!-- ime Zone required</p> -->
+									<select class="text-input floating-label" name="timezone"
+										ng-model="unit.unitTimeZone" required="required">
+										<option ng-repeat="tzList in timezoneList"
+											value="{{tzList.value}}">{{tzList.code}}
+											{{tzList.value}}</option>
+									</select> <label for="code">Choose Time Zone<span class="star">*</span></label>
+									<p class="help-block"
+										ng-if="hospitalMasterForm.unitTimeZone.$error.required">Time
+										Zone is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="col-lg-8 col-md-8 col-sm-8 padding-top10">
+							<div>
+								<label for="code">Hospital Logo </label>
+							</div>
+							<input type="file" file-model="myFile" validfile>
+							<p ng-show="fileError" style="color:red;">{{fileError}}</p>
+							<!-- ng-file-select="onFileSelect($files)" -->
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4">
+							<img ng-src="{{imageSrc}}" style="width: 78px; height: 52px;" />
+						</div>
+					</div>
+
+					<div class="padding-top15" style="margin-top: 10px;">
+						<button ng-if="editMode && isSuperAdmin==='Y'"
+							id="subscription-button" ng-click="openSubscriptionPopup()">
+							Subscription</button>
+					</div>
+				</div>
+				<div class="row">
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container padding-top10">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon"></div>
+							<div class="col-lg-11 col-sm-10 col-md-10">
+								<label class="checkbox-inline"> <input type="checkbox"
+									name="processingUnit" ng-model="unit.processingUnit"
+									class="ng-pristine ng-valid ng-not-empty ng-touched" style="">
+									Is Lab Processing Unit
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="row">
+				<div class="col-lg-4 col-md-4 col-sm-6 padding-left-right-set4">
+						<label>License Details</label>
+						<div class="radio-btn-div-style table-responsive refarnce-range">
+							<table class="table table-bordered" id="delta">
+								<tbody><tr class="">
+									<th class="width25">License Type</th>
+									<th class="width25">License No.</th>
+									<th class="width25">Expiry Date</th>
+									<th class="width12"></th>
+								</tr>
+								
+								<tr class="ng-scope" ng-repeat="licenceDetailsMaster in listLicenceDetailsMaster " ng-form="hospitalChiild">
+									<td>
+									<div class="form-group" show-errors>
+										<select class="border-dropdown" name="licenceTypeId"  ng-model = "licenceDetailsMaster.licenceTypeId" convert-to-number>
+											<option   ng-repeat="licenceType in licenceTypeList"  ng-if="licenceType.status=='A'"  value="{{licenceType.licenceTypeId}}" >{{licenceType.licenceType}}</option>
+									</select>
+									</div>
+									</td>
+									<td>
+										<div class="form-group" show-errors>
+										<textarea rows="auto" cols="auto" style="height: 26px" name="licenceNumber" ng-model = "licenceDetailsMaster.licenceNumber"></textarea>
+										</div>
+										</td>
+										
+									<td>
+									<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" name="expiryDate" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="licenceDetailsMaster.expiryDate" model-view-value="true" is-open="expiryDate.opened[$index]" datepicker-options="dateOptions" 
+													show-button-bar="false"	ng-click="openDatePicker($index)">
+										</div>
+										</td>			
+									<td>
+										<input type="button" name="" id="refranceRangeAgeGroup" value="+" class="btn btn-info add-dynamic-row" style="padding:2px 6px !important;" ng-click="addLicenceDetails()"> 
+										<input ng-if="$index!=0" type="button" name="" id="delrow" value="-" ng-click="removeLicenceDetails($index)" class="btn btn-info" style="padding:2px 7px !important;">
+									</td>
+								</tr>
+							</tbody></table>
+						</div>
+					</div>
+			</div> -->
+
+				<!-- <div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left10 padding-top10">
+					<label class="checkbox-inline"> <input type="checkbox"
+						value="">Status
+					</label>
+				</div>
+			</div> -->
+			</form>
+		</fieldset>
+		<div class="row margin-top10">
+			<!-- <div class="col-md-4 col-sm-4">
+				<div class="col-lg-10 col-md-9 col-sm-9">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search">
+					<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+				<div class="col-md-1 col-sm-2 padding-leftright15 float_right">
+					<div class="width-div-for-patient-reg ">
+						<a href="" class="btn btn-primary btn-save-box-shadow"
+							title="Save" data-toggle="modal" data-target="#confirmLogout"><i
+							class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div> -->
+			<div class="col-md-8 col-sm-8">
+				<div>
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6"
+							style="padding-left: 10px;">
+							<div class="search">
+								<label class="show-entries">Show <select
+									name="DataTables_Table_0_length"
+									aria-controls="DataTables_Table_0"
+									ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+									ng-change="setNoOfRecords();" class="search-popUp-ddl">
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+								</select> entries
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save"
+						data-toggle="modal" ng-click="saveUnit()" ng-show="saveBtnFlag"><i
+						class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+
+					<a href="" class="btn btn-primary btn-save-box-shadow"
+						title="Update" data-toggle="modal" ng-click="updateUnit()"
+						ng-show="updateBtnFlag"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box"
+					placeholder="Search" style="margin-top: 0px"
+					ng-model="searchKeyword"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+
+		</div>
+		<div class="row padding-left-right-set4 margin-top4">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<tr class="">
+						<th>Organization</th>
+						<th>Hospital Code</th>
+						<th>Hospital Name</th>
+						<th class="width8">Registration Number</th>
+						<th>Address</th>
+						<th>Country</th>
+						<th>State</th>
+						<th>City</th>
+						<th>Pincode</th>
+						<th>Contact No.</th>
+						<!-- <th>
+									Fax No.
+								</th> -->
+						<th>Email Id</th>
+						<th>Processing Unit</th>
+						<!-- <th class="width6">
+									License Details
+								</th> -->
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+					<tr
+						ng-repeat="units in unitMasterList|orderBy:column:reverse|filter:searchKeyword">
+						<td>{{units.organizationName}}</td>
+						<td>{{units.unitCode}}</td>
+						<td>{{units.unitName}}</td>
+						<td>{{units.registrationNumber}}</td>
+						<td>{{units.unitAddress}}</td>
+						<td>{{units.countryName}}</td>
+						<td>{{units.stateName}}</td>
+						<td>{{units.cityName}}</td>
+						<td>{{units.postCode}}</td>
+						<td>{{units.unitContact}}</td>
+						<!-- <td>-</td> -->
+						<td>{{units.unitEmailId}}</td>
+						<td>{{units.processingUnit}}</td>
+						<!-- <td class="text-center"><a data-toggle="modal" data-target="#licenseDetailsModal"><i class="fa fa-info-circle" ng-click="licenceDetails(units.unitId)"></i></a></td> -->
+						<td><label class="switch"> <input type="checkbox"
+								ng-model="units.status" ng-true-value="'A'" ng-false-value="'I'"
+								ng-change="updateStatus(units.unitId,units.status)"
+								ng-checked="units.status =='A'">
+								<div class="slider round"></div>
+						</label></td>
+						<td class="padding-edit-button-table text-center"><a> <i
+								ng-click="editUnit(units.unitId)" class="fa fa-pencil"
+								aria-hidden="true" title="Edit"></i>
+						</a></td>
+					</tr>
+					<!-- <tr>
+									<td>Pune</td>
+									<td>102201</td>
+									<td>Sancheti</td>
+									<td>Shivaji Nagar</td>
+									<td>United Kingdom</td>
+									<td>Abingdon</td>
+									<td>Queensland</td>
+									<td>411005</td>
+									<td>02096665965</td>
+									<td></td>
+									<td></td>
+									<td class="text-center"><a data-toggle="modal" data-target="#licenseDetailsModal"><i class="fa fa-info-circle"></i></a></td>
+									<td>
+										<label class="switch"> <input type="checkbox">
+												<div class="slider round"></div>
+										</label>
+									</td>
+									<td class="padding-edit-button-table text-center"><a> <i
+											class="fa fa-pencil" aria-hidden="true" title="Edit"></i>
+									</a>
+									</td>
+								</tr> -->
+				</table>
+			</div>
+			<div class="row margin-bottom45 sss">
+				<ul ng-if="pager.pages.length" class="pagination table-list"
+					style="font-size: 14px;">
+					<li ng-class="{disabled:pager.currentPage === 1}"><a
+						ng-click="setPage(1,'true')">First</a></li>
+					<li ng-class="{disabled:pager.currentPage === 1}"><a
+						ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+					<li ng-repeat="page in pager.pages"
+						ng-class="{active:pager.currentPage === page}"><a
+						ng-click="setPage(page,'true')">{{page}}</a></li>
+					<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+						<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+					</li>
+					<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+						<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- licenseDetailsModal POPUP -->
+<div id="licenseDetailsModal"
+	class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					License Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row serachedPatientList padding-left-right-set4">
+					<div class="col-md-12 col-lg-12  fix-height-scroll230">
+						<table class="table table-bordered  margin-top4">
+							<thead>
+								<tr>
+									<th><span class="">License Type </span></th>
+									<th><span class="">License No. </span></th>
+									<th><span class="">Expiry Date </span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="licenceDetails in listLicenceDetails">
+									<td>{{licenceDetails.licenceType}}</td>
+									<td>{{licenceDetails.licenceNumber}}</td>
+									<td>{{licenceDetails.expiryDate}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="subscriptionDetails"
+	class="modal common-medium-popup fade ng-scope in"
+	data-backdrop="static" role="dialog">
+	<div class="modal-dialog" style="width: 110rem !important;margin-top: 10rem;">
+		<div class="modal-content" style="position: absolute !important;">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Subscription Details
+					<button type="button" class="close" data-dismiss="modal"
+						ng-click="closeSubscriptionPopup()">&times;</button>
+				</div>
+			</div>
+
+			
+				<div class="modal-body" style="margin-top: 20px">
+					<form name="subscriConfigForm" novalidate>
+					<div class="row">
+
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div>
+									<div class="form-group" show-errors>
+										<select class="text-input floating-label dirty"
+												name="subscriptionType" ng-model="subscriptionConfig.subscriptionType"
+												required="required">
+											<option ng-repeat="scri in subscriptionTypeList"
+													value="{{scri.code}}">{{scri.name}}</option>
+										</select> <label for="subscriptionType">Subscription
+										Type:<span class="star">*</span></label>
+										<p class="help-block"
+										   ng-if="subscriConfigForm.subscriptionType.$error.required">Subscription type is required.</p>
+									</div>
+								</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+
+									<div class="form-group" show-errors>
+										<input type="text" autocomplete="off" id=""
+											   ng-model="subscriptionConfig.subscriptionAmount" class="text-input floating-label"
+											   required="required" name="subscriptionAmount" allow-decimal-numbers ng-decimal="200"> <label for="subscriptionAmount">Subscription amount
+										<span class="star">*</span>
+									</label>
+										<p class="help-block"
+										   ng-if="subscriConfigForm.subscriptionAmount.$error.required">Amount is required</p>
+									</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off"  id=""
+										   ng-model="subscriptionConfig.subscriptionDiscount" class="text-input floating-label"
+										   required="required" name="subscriptionDiscount" allow-decimal-numbers ng-decimal="200"> <label for="subscriptionDiscount">Discount amount
+									<span class="star">*</span>
+								</label>
+									<p class="help-block"
+									   ng-if="subscriConfigForm.subscriptionDiscount.$error.required">Amount is required</p>
+								</div>
+						</div>
+					</div>
+						<div class="row"></div>
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+									<div class="form-group" show-errors>
+										<input type="text" autocomplete="off" id=""
+											   ng-model="subscriptionConfig.subscriptionTax" class="text-input floating-label"
+											   required="required" name="subscriptionTax" allow-decimal-numbers ng-decimal="200"> <label for="subscriptionTax" style="top: -6px;!important;"> Tax amount
+										<span class="star">*</span>
+									</label>
+										<p class="help-block"
+										   ng-if="subscriConfigForm.subscriptionTax.$error.required">Amount is required</p>
+									</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="form-group" show-errors>
+										<input type="text" autocomplete="off" id=""
+											   ng-model="subscriptionConfig.subscriptionNetAmount" class="text-input floating-label"
+											   required="required" name="subscriptionNetAmount" allow-decimal-numbers ng-decimal="200"> <label for="subscriptionNetAmount" style="top: -6px;!important;">Net amount<span class="star">*</span>
+									</label>
+										<p class="help-block"
+										   ng-if="subscriConfigForm.subscriptionNetAmount.$error.required">Amount is required</p>
+									</div>
+							</div>
+						</div>
+					</form>
+					<div></div>
+
+
+					<div class="row">
+						<div class="col-md-4">
+							<label for="amount-paid"
+								style="color: #3f51b5; margin-left: 20px; margin-top: 20px;"><B>Subscription
+									History: </B></label>
+						</div>
+						<table class="table table-bordered">
+							<tr class="">
+								<th>Start Date</th>
+								<th>End Date</th>
+								<th>Type</th>
+								<th>Status</th>
+								<th>Amount</th>
+								<th>Discount</th>
+								<th>Tax</th>
+								<th>Net Amount</th>
+								<th>Paid Amount</th>
+								<th>Amount Status</th>
+								<th>Created Date</th>
+								<th>Remark</th>
+<!--								<th>Action</th>-->
+							</tr>
+							<tr ng-repeat="units in subscriptionList"
+								style="text-align: center;" >
+								<td>{{units.subscriptionStartDateString}}</td>
+								<td>{{units.subscriptionEndDateString}}</td>
+								<td>{{units.subscriptionType}}</td>
+								<td>{{units.subscriptionStatus}}</td>
+								<td>{{units.subscriptionAmount}}</td>
+								<td>{{units.subscriptionDiscount}}</td>
+								<td>{{units.subscriptionTax}}</td>
+								<td>{{units.subscriptionNetAmount}}</td>
+								<td>{{units.paidAmount}}</td>
+								<td>{{units.amountPaidStatus}}</td>
+								<td>{{units.createdDate}}</td>
+								<td>{{units.remark}}</td>
+<!--								<td class="padding-edit-button-table text-center"><a> <i-->
+<!--										ng-click="editSubscription(units.subscriptionId)" class="fa fa-pencil"-->
+<!--										aria-hidden="true" title="Edit"></i>-->
+<!--								</a></td>-->
+							</tr>
+
+						</table>
+						<table class="table table-bordered">
+							<tr ng-if="!(subscriptionList!=null && subscriptionList.length>0)">
+								<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+							</tr>
+						</table>
+
+					</div>
+				</div>
+			
+
+			<div class="modal-footer">
+				<div class="row">
+					<div
+							class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+								title="Create Subscription" ng-click="openManualSubScripionPopup();" ng-disabled="!(subscriptionConfig.subscriptionConfigId>0)">
+							Create Subscription
+						</button>
+					</div>
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Create Configuration" ng-click="createSubscriptionConfig();" >Create Configuration
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="manualSubscription"
+class="modal common-medium-popup fade ng-scope in"
+data-backdrop="static" role="dialog">
+<div class="modal-dialog" style="width: 110rem !important;margin-top: 10rem;">
+	<div class="modal-content" >
+		<div class="modal-header">
+			<div class="modal-title patient-details-row">
+				Create Subscription
+				<button type="button" class="close" data-dismiss="modal"
+						ng-click="closeManualSubscriptionPopup()">&times;</button>
+			</div>
+		</div>
+
+
+		<div class="modal-body" style="margin-top: 20px">
+			<form name="mannualSubscriptionForm" novalidate>
+				<div class="row">
+
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div>
+							<div class="form-group" show-errors>
+								<input type="text" autocomplete="off" id=""
+									   ng-model="subscription.subscriptionType" class="text-input floating-label"
+									   required="required" name="subscriptionType" disabled> <label for="subscriptionType">Subscription type
+								<span class="star">*</span>
+							</label>
+								<p class="help-block"
+								   ng-if="mannualSubscriptionForm.subscriptionType.$error.required">Subscription type is required.</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="form-group" show-errors>
+							<input type="text" autocomplete="off" id=""
+								   ng-model="subscription.subscriptionAmount" class="text-input floating-label"
+								   required="required" name="subscriptionAmount" disabled> <label for="subscriptionAmount">Subscription amount
+							<span class="star">*</span>
+						</label>
+							<p class="help-block"
+							   ng-if="mannualSubscriptionForm.subscriptionAmount.$error.required">amount required</p>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="form-group" show-errors>
+							<input type="text" autocomplete="off"  id=""
+								   ng-model="subscription.subscriptionDiscount" class="text-input floating-label"
+								   required="required" name="subscriptionDiscount" disabled> <label for="subscriptionDiscount">Discount amount
+							<span class="star">*</span>
+						</label>
+							<p class="help-block"
+							   ng-if="mannualSubscriptionForm.subscriptionDiscount.$error.required">Amount is required</p>
+						</div>
+					</div>
+				</div>
+				<div class="row"></div>
+				<div class="row">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="form-group" show-errors>
+							<input type="text" autocomplete="off" id=""
+								   ng-model="subscription.subscriptionTax" class="text-input floating-label"
+								   required="required" name="subscriptionTax" disabled> <label for="subscriptionTax"> Tax amount
+							<span class="star">*</span>
+						</label>
+							<p class="help-block"
+							   ng-if="mannualSubscriptionForm.subscriptionTax.$error.required">Amount is required</p>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="form-group" show-errors>
+							<input type="text" autocomplete="off" id=""
+								   ng-model="subscription.subscriptionNetAmount" class="text-input floating-label"
+								   required="required" name="subscriptionNetAmount" disabled> <label for="subscriptionNetAmount">Net amount<span class="star">*</span>
+						</label>
+							<p class="help-block"
+							   ng-if="mannualSubscriptionForm.subscriptionNetAmount.$error.required">Amount is required</p>
+						</div>
+					   </div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="form-group" show-errors>
+								<input type="text" autocomplete="off" id=""
+									   ng-model="subscription.paymentType" class="text-input floating-label"
+									   required="required" name="paymentType" disabled> <label for="paymentType"> Payment Type
+								<span class="star">*</span>
+							</label>
+								<p class="help-block"
+								   ng-if="mannualSubscriptionForm.paymentType.$error.required">Amount is required</p>
+							</div>
+						</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="form-group" show-errors>
+							<input type="text" autocomplete="off"
+								   class="text-input floating-label dirty" name="subscriptionStartDate"
+								   id="datepicker" uib-datepicker-popup="dd/MM/yyyy"
+								   placeholder="DD/MM/YYYY" ng-model="subscription.subscriptionStartDate"
+								   model-view-value="true" is-open="datepicker.opened"
+								   datepicker-options="dateOptions" show-button-bar="false"
+								   ng-click="openDatePicker()" ng-change="updateEndDate()" required="required"
+								   style="width: 80%; margin-left: 20px;" ng-blur="validateDate(subscription.subscriptionStartDate,true)">
+							<label for="subscriptionStartDate"> Start date
+								<span class="star">*</span>
+							</label>
+							<p class="help-block"
+							   ng-if="mannualSubscriptionForm.subscriptionStartDate.$error.required">Date is required</p>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+						<div class="form-group" show-errors>
+							<input type="text" autocomplete="off"
+								   class="text-input floating-label dirty"
+								   name="subscriptionEndDate" id="datepickerDOA_Date"
+								   uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+								   placeholder="DD/MM/YYYY" ng-model="subscription.subscriptionEndDate"
+								   model-view-value="true" is-open="enddatepicker.opened"
+								   datepicker-options="dateOptions" show-button-bar="false"
+								   ng-click="openDatePickerEndDate()" required="required" style="width: 80%" ng-blur="validateDate(subscription.subscriptionEndDate,false)">
+							<label for="subscriptionEndDate">End Date<span class="star">*</span>
+							</label>
+							<p class="help-block"
+							   ng-if="mannualSubscriptionForm.subscriptionEndDate.$error.required">Date is required</p>
+						</div>
+					</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="form-group" show-errors>
+								<input type="text" autocomplete="off" id=""
+									   ng-model="subscription.paidAmount" class="text-input floating-label"
+									   required="required" name="paidAmount" allow-decimal-numbers ng-decimal="200" ng-pattern="paidAmtReg"> <label for="paidAmount"> Paid Amount
+								<span class="star">*</span>
+							</label>
+								<p class="help-block"
+								   ng-if="mannualSubscriptionForm.paidAmount.$error.required">Amount is required</p>
+								<p class="help-block"
+								   ng-if="mannualSubscriptionForm.paidAmount.$error.pattern">Amount is invalid</p>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container padding-top10">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon"></div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<label class="checkbox-inline"> <input type="checkbox"
+																		   name="processingUnit"
+																		   ng-model="subscription.amountPaidStatus"
+																		   class="ng-pristine ng-valid ng-not-empty ng-touched"
+																		   style=""  ng-true-value="'PAID'" ng-false-value="'UNPAID'" disabled>
+										AMOUNT PAID
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container padding-top10">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon"></div>
+								  <div class="col-lg-11 col-sm-10 col-md-10">
+									<label>
+										<textarea style="width:200px !important" class="text-input floating-label" ng-model="subscription.remark" ng-disabled="subscription.amountPaidStatus=='UNPAID'"></textarea>
+										<label for="remark">
+										Remark
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+			  </form>
+			<div></div>
+
+
+
+		</div>
+
+
+		<div class="modal-footer">
+			<div class="row">
+				<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+					<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Manual Subscription" ng-click="createSubscription();">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$('#selRegs').focus(function() {
+			$('#selRegs').attr("size", "4");
+		});
+
+		$('#selRegs').change(function() {
+			$('#selRegs').attr("size", "1");
+			$("#selRegs").blur();
+		});
+	});
+
+	$(document).ready(function() {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+		$(".selectedPageName").text("Hospital Master");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="hospitalMaster"]').parents("li").addClass("active");
+	});
+</script>

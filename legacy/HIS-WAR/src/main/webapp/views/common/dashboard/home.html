@@ -1,0 +1,113 @@
+<style>
+.hame-bgimg {
+	margin-top: 89px;
+	margin-left: 450px;
+	opacity: 0.2;
+}
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+
+		<div class="row margin-top10">
+
+
+			<img alt="Home" src="resources/assets/images/logo/kiosk_bg.png"
+				class="hame-bgimg">
+
+
+
+		</div>
+
+
+
+
+	</div>
+</div>
+
+<!-- For Nursing Station Popup -->
+<div id="nursingStationModal" data-backdrop="static"  class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Select Nursing Station
+					<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10 padding-bottom10">
+					<div class="col-md-5 col-lg-5 col-sm-5 padding-left-right-5">
+						<span>Select Nursing Station</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-set1">
+						<select class="dirty select-box" style="width:100%;border-radius: 10px;height: 40px;"  ng-model="departmentNursing" >
+						<option value="">Select Nursing Station</option>
+							<option value="{{departmentNursing}}" ng-repeat="departmentNursing in departmentNursingStationMapperDtoslist">{{departmentNursing.nursingStationDesc}}</option>
+						</select>
+					</div>
+					
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button"  class="btn btn-primary width13" id="otpOk" ng-click="selectsetNursingStation();">Ok</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" id="otpOk" ng-click="selectsetNursingStation();">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Nursing Station Popup -->
+
+<!-- counterDetailsModal START -->
+<div id="counterDetailsModal" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Counter Details
+					<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10 row padding-top10">
+					<div class="col-md-3 col-lg-3 col-sm-3">
+						<span>Select Counter</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6">
+						<select class="dirty" style="width:100%" ng-change="selectCounter(counterMstObj);" ng-model="counterMstObj" >
+						<option selected value>Select Counter</option>
+							<option value="{{counter}}" ng-repeat="counter in counterList">{{counter.name}}</option>
+						</select>
+					</div>				
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" class="btn btn-primary width13" id="otpOk" ng-click="confirmCounter();">Ok</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" id="otpOk" ng-click="confirmCounter();">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- counterDetailsModal END -->
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		// $(".patienttSearchResult").hide();
+		//$(".icon-span").hide();
+		$(".selectedPageName").text("Dashboard");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="dashboard"]').parents("li").addClass("active");
+	});
+</script>

@@ -1,0 +1,429 @@
+<!-- /********************************************************************************************************************************************
+Details Drug Recall main page
+Created by : Pranita Patil
+Created Date : 15-May-2018 
+/********************************************************************************************************************************************/ -->
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Recall No. :</b> <label for="">{{vm.model.drugRecallDetail.recallNo}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Recall Date:</b> <label for="">{{vm.model.drugRecallDetail.recallDate | date:'dd/MM/yyyy'}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Against :</b> <label for="">{{vm.model.drugRecallDetail.requestType}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Requested By:</b> <label for="">{{vm.model.drugRecallDetail.requestedBy}}</label>
+					</span>
+				</div>
+			</div>
+		</fieldset>
+		<div class="row margin-top4">
+			<div class="col-md-12 col-lg-12 col-sm-8 padding-left-right-set4 height500-table-with-scroll" id="nonBillableTableHt">
+				<fieldset>
+					<!-- ************ Item Selection Table start ************ -->
+					<div class="row" id="itemRowId" ng-show="vm.model.drugRecallDetail.requestTypeId == 10">
+						<div class="container-fluid his-style">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width8" title="Item Code">
+													Item Code
+													<div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width8" title="Item Name">
+													Item Name
+													<div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width10" title="Reason">
+													Reason
+													<div class="float_right" ng-click="sortType = 'reason'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body" style="height:350px; overflow-y: scroll;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr ng-repeat="drug in vm.model.drugRecallDetail.items | orderBy:sortType:sortReverse | filter:search">
+												<td class="width8" title="{{drug.itemCode}}">{{drug.itemCode}}</td>
+												<td class="width8" class="width8" title="{{drug.itemName}}">{{drug.itemName}}</td>
+												<td style="width: 9.9%!important;" title="{{drug.reason}}">{{drug.reason}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- ************ Item Selection Table end ************ -->
+
+					<!-- ************ Batch Selection Table start ************ -->
+					<div class="row" id="batchRowId" ng-show="vm.model.drugRecallDetail.requestTypeId == 11">
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-top10">
+							<!-- height500-table-with-scroll -->
+							<table class="table table-bordered first-checkBox-padding">
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width6">
+											Item Code
+											<div class="float_right"ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6">
+											Item Name
+											<div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Batch No.
+											<div class="float_right" ng-click="sortType = 'batchNo'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Expiry Date
+											<div class="float_right" ng-click="sortType = 'expiry'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">
+											Reason
+											<div class="float_right" ng-click="sortType = 'reason'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="drug in vm.model.drugRecallDetail.items | orderBy:sortType:sortReverse | filter:search">
+										<td>{{drug.itemCode}}</td>
+										<td>{{drug.itemName}}</td>
+										<td>{{drug.batchNo}}</td>
+										<td>{{drug.expiryDate | date:'MMM-yyyy'}}</td>
+										<td>{{drug.reason}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<!-- ************ Batch Selection Table end ************ -->
+				</fieldset>
+			</div>
+		</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-11 col-md-10 col-sm-10 padding-left-right8"></div>
+				<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+					<a href="#/drugRecall">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<!-- ***************** #detailsModal modal start *****************  -->
+<div id="detailsDrugRecallModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body padding10">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 padding-left-right-set4 common-table-height-250 margin-top4" id="">
+						<div class="row schedulerTabs">
+							<ul class="tabs nav nav-tabs">
+								<li ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="padding-top-bottom width15">
+									<a href ng-click="setFirstTabLevel(1)">Store Details</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(2) }" id="" class="padding-top-bottom width15">
+									<a href ng-click="setFirstTabLevel(2)">Patient Details</a>
+								</li>
+							</ul>
+						</div>
+						<div class="row">
+							<!-- **************  store Details TAB start ************** ************** ************** ************** -->
+							<div ng-show="isSetFirstTabLevel(1)">
+								<div class="row">
+									<div class="col-lg-12 col-md-12 col-sm-12">
+										<table class="table table-bordered table-striped">
+											<thead>
+												<tr class="table-th-bg">
+													<th class="width8">
+														Store
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8">
+														Item Code
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width10">
+														Item Name
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8">
+														Batch No
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8">
+														Expiry Date
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8">
+														Available Stock
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>StoreOne</td>
+													<td>IT-111</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+												</tr>
+											</tbody>
+										</table>
+
+									</div>
+								</div>
+							</div>
+							<!-- **************  store Details TAB end ************** ************** ************** ************** -->
+							<!-- **************  patient Details TAB start ************** ************** ************** ************** -->
+							<div ng-show="isSetFirstTabLevel(2)">
+								<div class="row">
+									<div class="col-lg-12 col-md-12 col-sm-12">
+										<table class="table table-bordered table-striped">
+											<thead>
+												<tr class="table-th-bg">
+													<th class="width8">
+														Visit Type
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8">
+														UHID
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width15">
+														Patient Details
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8">
+														Visit No
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8">
+														Batch No
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8">
+														Expiry Date
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8">
+														Ward
+														<div class="float_right">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>IPD</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!-- **************  patient Details TAB end ************** ************** ************** ************** -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ***************** #detailsModal modal end *****************  -->
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#storeWiseSelectionTableRowId").hide();
+		$(".selectedPageName").text("Drug Recall");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+	});
+	/*************************** add button function start*********************************/
+	$(".table-th-bg").click(function () {
+		/* alert(); */
+		$(this).next().find(".selectedServicesList").toggle();
+	});
+
+
+</script>

@@ -1,0 +1,920 @@
+
+
+<link rel="stylesheet" type="text/css"
+      href="resources/assets/css/template/drag-drop.css" />
+<style>
+    .card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 10px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
+.card-body{
+margin-left:6px;
+}
+
+label {
+   color: #3F77CF;
+}
+.custom-drop-down-btn-set-vital button.custom-drop-down-btn:focus{
+    width :auto !important;
+}
+.table-container-nowrapping table td, .table-container-nowrapping table th{
+    white-space: inherit !important;
+    text-overflow: clip !important;
+}
+/***************** overlap class for drag-drop.css file*********************/
+.modal {
+    background-color: transparent !important;
+    margin-left: inherit !important;
+    width: -webkit-fill-available !important;
+    height: inherit !important;
+    margin-top: inherit !important;
+    padding-right: 0 !important;
+}
+/***************** *********************/
+.customRadioBtnS input[type="radio"]+label {
+    cursor: pointer;
+    padding: 4px 10px;
+    border: 1px solid #ccc;
+    background: #efefef;
+    color: #aaa;
+    /* border-radius: 3px; */
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0);
+    margin-right: -4px;
+    margin-top: 5px;
+}
+
+.drop-down-shadow {
+    padding: 10px 0px 10px 30px;
+    box-shadow: 1px 2px 7px 3px rgba(0, 0, 0, 0.4)
+}
+
+.width60 {
+    width: 60%;
+}
+
+.marginTop5 {
+    margin-top: 5px
+}
+
+.customRadioBtnS input[type="radio"] {
+    display: none;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/*  .customRadioBtnS input[type="radio"]:checked + label {
+    background: #f5f5a6;
+    border: 1px solid #afa6a6;
+    color: #171717;
+} */
+.margin-right05 {
+    margin-right: 5px !important;
+}
+
+ul.tabs li {
+    margin-right: 3px !important;
+}
+
+.readOnlyTemp{
+pointer-events: none;
+}
+.height-auto{
+    height: auto !important;
+}
+
+
+table>tbody>tr.td-bg-red > td
+    {
+        color : #ff0000 !important;
+    }
+#page-content-wrapper{
+    height: auto !important;
+    padding-bottom: 0% !important;
+}
+
+    #select
+    {
+     border-radius: 5px;
+    }
+
+    .panel{
+      background-color: #d8c9c9 !important;
+    }
+
+</style>
+
+
+<div id="page-content-wrapper" >
+    <div class="container-fluid his-style" style="height: 600px;" >
+        <div class="padding-top4" ng-include="'./views/common/nutritional-patient-search.html'" style="margin-top:-5px"></div>
+        <div class="padding-top8 padding-left-right-set4" ng-include="'./views/common/nabh-patient-demography-info.html'"></div>
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                    <div class="row input-container">
+                        <label for="description" class="">Patient's Status</label>
+                         <select class="form-control" name="reasonHandover" id="selectStatusId" ng-model="initialAssessmentStatusId"  required>
+                                <option value="">Select Status</option>
+                                <option ng-repeat="item in alertList" value="{{item.id}}" ng-selected="item.id === initialAssessmentStatusId">{{item.name}}</option>
+                            </select>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5" style="
+                margin-top: 10px !important;
+            ">
+                    <input type="text" ng-click="openDatePicker($event);" autocomplete="off"
+                        class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-empty ng-valid-date ng-invalid ng-invalid-required ng-touched"
+                        name="datepicker" id="datepicker" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+                        ng-model="startDate" is-open="dobPicker.opened" datepicker-options="dateOptions" show-button-bar="false"
+                        ng-change="focusdata3($event)"  &amp;&amp;
+                        ng-readonly="true" required="" readonly="readOnly" style="
+                margin-top: 10px !important;
+            ">
+                    <div uib-datepicker-popup-wrap="" ng-model="date" ng-change="dateSelection(date)"
+                        template-url="uib/template/datepickerPopup/popup.html" class="ng-empty ng-valid">
+                        <!-- ngIf: isOpen -->
+                    </div>
+                    <label for="datepicker" style="
+                margin-top: 13px !important;
+            ">Start Date<span class="star">*</span></label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                    <input type="text" autocomplete="off" name="fromTime" id="fromTime" ng-model="fromTime"
+                        class="text-input floating-label ng-pristine ng-untouched ng-valid dirty ng-empty" ng-readonly="true"
+                        readonly="readOnly" style="
+                margin-top: 15px !important;
+            ">
+                    <label for="fromTime" style="
+                margin-top: 15px !important;
+            ">Start Time<span class="star">*</span></label>
+                </div>
+            </div>
+            <div class="row margin-top10">
+                <!-- <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+                        <div class="row input-container">
+                            <label for="description" class="">Patient's Status</label>
+                            <select class="form-control" name="reasonHandover" id="selectStatusId" ng-model="initialAssessmentStatusId"  required>
+                                <option value="">Select Status</option>
+                                <option ng-repeat="item in alertList" value="{{item.id}}" ng-selected="item.id === initialAssessmentStatusId">{{item.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="row padding-top0 padding-left-right-set4 margin-top5">
+                  <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+                      <div class="card">
+                          <div class="card-body">
+                              <h4 ><b>Vital Observations</b></h4>
+                              <div class="form-group">
+                                  <div  class="fixed-thead-tfoot-scroll">
+                                      <table id="main-table" class="main-table width100">
+                                          <thead>
+                                          <tr>
+                                              <th class=" text-center width20">Vitals</th>
+                                              <th class=" text-center width20">Value</th>
+                                              <th class=" text-center width20">UOM</th>
+                                          </tr>
+                                          </thead>
+                                          <tbody>
+                                          <tr>
+                                              <td>Pulse</td>
+                                              <td><input class="form-control" type="number" ng-model="vitalPulse" ng-change="selectKeyValue(0,'vitals',0,'pulse',vitalPulse)" ng-blur="validation(0,'vitals',0,'pulse',vitalPulse)"></td>
+                                              <td>bpm</td>
+                                          </tr>
+                                          <tr>
+                                              <td>Systolic blood pressure</td>
+                                              <td><input class="form-control" type="number" ng-model="vitalSysBloodPress" ng-change="selectKeyValue(0,'vitals',1,'Systolic blood pressure',vitalSysBloodPress)" ng-blur="validation(0,'vitals',1,'Systolic blood pressure',vitalSysBloodPress)"></td>
+                                              <td>mm of Hg</td>
+                                          </tr>
+
+                                          <tr>
+                                              <td>Diastolic blood pressure</td>
+                                              <td><input class="form-control" type="number" ng-model="vitalDaiBloodPress" ng-change="selectKeyValue(0,'vitals',2,'Diastolic blood pressure',vitalDaiBloodPress)" ng-blur="validation(0,'vitals',2,'Diastolic blood pressure',vitalDaiBloodPress)"></td>
+                                              <td>mm of Hg</td>
+                                          </tr>
+
+                                          <tr>
+                                              <td>Temperature</td>
+                                              <td><input class="form-control" type="number" ng-model="vitalTemperature" ng-change="selectKeyValue(0,'vitals',3,'Temperature',vitalTemperature)" ng-blur="validation(0,'vitals',3,'Temperature',vitalTemperature)"></td>
+                                              <td>°F</td>
+                                          </tr>
+
+                                          <tr>
+                                              <td>Respiratory rate</td>
+                                              <td><input class="form-control" type="number" ng-model="vitalRespiratoryRate" ng-change="selectKeyValue(0,'vitals',4,'Respiratory rate',vitalRespiratoryRate)" ng-blur="validation(0,'vitals',4,'Respiratory rate',vitalRespiratoryRate)"></td>
+                                              <td>bpm</td>
+                                          </tr>
+
+                                          <tr>
+                                              <td>Oxygen saturation</td>
+                                              <td><input class="form-control" type="number" ng-model="vitalOxySatur" ng-change="selectKeyValue(0,'vitals',5,'Oxygen saturation',vitalOxySatur)" ng-blur="validation(0,'vitals',5,'Oxygen saturation',vitalOxySatur)"></td>
+                                              <td>%</td>
+                                          </tr>
+
+                                          </tbody>
+                                      </table>
+                                  </div>
+                              </div>
+
+                          </div>
+                      </div>
+                      <div class="card" style="margin-top:10px">
+                          <div class="card-body">
+                              <h4 ><b>Elimination</b></h4>
+                              <div class="row">
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Bladder Incontinence</label>
+                                      <select class="form-control" name="Diet" id="select" ng-model="bladderIncontinence" ng-change="selectKeyValue(2,'elimination',0,'Bladder Incontinence',bladderIncontinence)"  required>
+                                          <option  value="">Select Bladder Incontinence</option>
+                                          <option ng-repeat="item in BladderList" value="{{item.id}}" ng-selected="item.id === bladderIncontinence">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Bowel Incontinence</label>
+                                      <select class="form-control" name="Bowel" id="select" ng-model="bowelIncontinence" ng-change="selectKeyValue(2,'elimination',1,'Bowel Incontinence',bowelIncontinence)" required>
+                                          <option  value="">Select Bowel Incontinence</option>
+                                          <option ng-repeat="item in BowelList" value="{{item.id}}" ng-selected="item.id === bowelIncontinence">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Incontinence management techniques</label>
+                                      <select class="form-control" name="Diet" id="select" ng-model="incontManageTech" ng-change="selectKeyValue(2,'elimination',2,'Incontinence management techniques',incontManageTech)"  required>
+                                          <option  value="">Select Incontinence management techniques</option>
+                                          <option ng-repeat="item in IncontinenceList" value="{{item.id}}" ng-selected="item.id === incontManageTech">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Bowel sounds present</label>
+                                      <select class="form-control" name="swallowingList" id="select" ng-model="bowelSoundPresent" ng-change="selectKeyValue(2,'elimination',3,'Bowel sounds present',bowelSoundPresent)"  required>
+                                          <option  value="">Select Bowel sounds present</option>
+                                          <option ng-repeat="item in BowelsoundsList" value="{{item.id}}" ng-selected="item.id === bowelSoundPresent">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Constipation</label>
+                                      <select class="form-control" name="mealtimes" id="select" ng-model="EliminationConstipation" ng-change="selectKeyValue(2,'elimination',4,'Constipation',EliminationConstipation)"  required>
+                                          <option  value="">Select Constipation</option>
+                                          <option ng-repeat="item in ConstipationList" value="{{item.id}}" ng-selected="item.id === EliminationConstipation">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Ostomies</label>
+                                      <select class="form-control" name="mealtimes" id="select" ng-model="eliminationOostomies" ng-change="selectKeyValue(2,'elimination',5,'Ostomies',eliminationOostomies)"  required>
+                                          <option  value="">Select Ostomies</option>
+                                          <option ng-repeat="item in OstomiesList" value="{{item.id}}" ng-selected="item.id === eliminationOostomies">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="card" style="margin-top:10px">
+                          <div class="card-body">
+                              <h4 ><b>Skin</b></h4>
+                              <div class="row">
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Assessment</label>
+                                      <select class="form-control" name="Vision" id="select" ng-model="skinAssessment" ng-change="selectKeyValue(6,'Skin',0,'Assessment',skinAssessment)" required>
+                                          <option  value="">Select Assessment</option>
+                                          <option ng-repeat="item in SkinPainAssessmentList"  value="{{item.id}}" ng-selected="item.id === skinAssessment">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Skin Intact</label>
+                                      <select class="form-control" name="Diet" id="select" ng-model="skinIntact" ng-change="selectKeyValue(6,'Skin',1,'Skin Intact',skinIntact)" required>
+                                          <option  value="">Select Skin Intact</option>
+                                          <option ng-repeat="item in SkinIntactList"  value="{{item.id}}" ng-selected="item.id === skinIntact">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Special Care</label>
+                                      <select class="form-control" name="SpecialCare" id="select" ng-model="skinSpecialCare" ng-change="selectKeyValue(6,'Skin',2,'Special Care',skinSpecialCare)" required>
+                                          <option  value="">Select Special Care</option>
+                                          <option ng-repeat="item in SpecialCareList"  value="{{item.id}}" ng-selected="item.id === skinSpecialCare">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="card" style="margin-top:10px">
+                          <div class="card-body">
+                              <h4 ><b>Circulation</b></h4>
+                              <div class="row">
+                                  <div class="col-md-10">
+                                      <label for="description" class="">History</label>
+                                      <select class="form-control" name="Vision" id="select" ng-model="circulationHistory" ng-change="selectKeyValue(8,'Circulation',0,'History',circulationHistory)" required>
+                                          <option  value="">Select History</option>
+                                          <option ng-repeat="item in HistoryList" value="{{item.id}}" ng-selected="item.id === circulationHistory">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Pulse</label>
+                                      <select class="form-control" name="Diet" id="select" ng-model="circulationPulse" ng-change="selectKeyValue(8,'Circulation',1,'Pulse',circulationPulse)" required>
+                                          <option  value="">Select Pulse</option>
+                                          <option ng-repeat="item in PulseList" value="{{item.id}}" ng-selected="item.id === circulationPulse">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Skin</label>
+                                      <select class="form-control" name="SpecialCare" id="select" ng-model="circulationSkin" ng-change="selectKeyValue(8,'Circulation',2,'Skin',circulationSkin)" required>
+                                          <option  value="">Select Skin</option>
+                                          <option ng-repeat="item in SkinList" value="{{item.id}}" ng-selected="item.id === circulationSkin">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Edema</label>
+                                      <select class="form-control" name="SpecialCare" id="select" ng-model="circulationEdema" ng-change="selectKeyValue(8,'Circulation',3,'Edema',circulationEdema)" required>
+                                          <option  value="">Select Edema</option>
+                                          <option ng-repeat="item in EdemaList" value="{{item.id}}" ng-selected="item.id === circulationEdema">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                          <label for="description" class="">Pitting</label>
+                                          <select class="form-control" name="SpecialCare" id="select" ng-model="circulationPitting" ng-change="selectKeyValue(8,'Circulation',4,'Pitting',circulationPitting)" required>
+                                              <option  value="">Select Pitting</option>
+                                              <option ng-repeat="item in PittingList" value="{{item.id}}" ng-selected="item.id === circulationPitting">{{item.name}}</option>
+                                          </select>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="card" style="margin-top:10px">
+                          <div class="card-body">
+                              <h4 ><b>Dental</b></h4>
+                              <div class="row">
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Teeth</label>
+                                      <select class="form-control" name="Vision" id="select" ng-model="dentalTeeth" ng-change="selectKeyValue(10,'Dental',0,'Teeth',dentalTeeth)" required>
+                                          <option  value="">Select Teeth</option>
+                                          <option ng-repeat="item in teethList" value="{{item.id}}" ng-selected="item.id === dentalTeeth">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Dental Hygiene</label>
+                                      <select class="form-control" name="Vision" id="select" ng-model="dentalHygiene" ng-change="selectKeyValue(10,'Dental',1,'Dental Hygiene',dentalHygiene)" required>
+                                          <option  value="">Select Dental Hygiene</option>
+                                          <option ng-repeat="item in DentalHygieneList" value="{{item.id}}" ng-selected="item.id === dentalHygiene">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="card" style="margin-top:10px">
+                          <div class="card-body">
+                              <h4 ><b>Psychosocial</b></h4>
+                              <div class="row">
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Self Injurious behavior</label>
+                                      <select class="form-control" name="Vision" id="select" ng-model="psychosocialInjurious" ng-change="selectKeyValue(11,'Psychosocial',0,'Self Injurious behavior',psychosocialInjurious)" required>
+                                          <option  value="">Select Self Injurious behavior</option>
+                                          <option ng-repeat="item in InjuriousBehaviorList" value="{{item.id}}" ng-selected="item.id === psychosocialInjurious">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Behavior</label>
+                                      <select class="form-control" name="Vision" id="select" ng-model="psychosocialBehavior" ng-change="selectKeyValue(11,'Psychosocial',1,'Behavior',psychosocialBehavior)" required>
+                                          <option  value="">Select Behavior</option>
+                                          <option ng-repeat="item in BehaviorList" value="{{item.id}}" ng-selected="item.id === psychosocialBehavior">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Answers questions</label>
+                                      <select class="form-control" name="Vision" id="select" ng-model="psychosocialAnswers" ng-change="selectKeyValue(11,'Psychosocial',2,'Answers questions',psychosocialAnswers)" required>
+                                          <option  value="">Select Answers questions</option>
+                                          <option ng-repeat="item in AnswersQuestionsList" value="{{item.id}}" ng-selected="item.id === psychosocialAnswers">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Delusions and / or Hallucinations</label>
+                                      <select class="form-control" name="Vision" id="select" ng-model="psychosocialDelusions" ng-change="selectKeyValue(11,'Psychosocial',3,'Delusions and / or Hallucinations',psychosocialDelusions)" required>
+                                          <option  value="">Select Delusions and / or Hallucinations</option>
+                                          <option ng-repeat="item in HallucinationsList" value="{{item.id}}" ng-selected="item.id === psychosocialDelusions">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                  </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+                      <div class="card">
+                          <div class="card-body">
+                              <h4 ><b>Ward Bed Side Devices</b></h4>
+                              <div class="form-group">
+                                  <div  class="fixed-thead-tfoot-scroll">
+                                      <table id="main-table" class="main-table width100">
+                                          <thead>
+                                          <tr>
+                                              <th class=" text-center width20">Parameter</th>
+                                              <th class=" text-center width20">Reading</th>
+                                          </tr>
+                                          </thead>
+                                          <tbody>
+                                          <tr>
+                                              <td>Respiratory rate</td>
+                                              <td><input class="form-control" type="text" ng-model="bedSideRespiratory" ng-change="selectKeyValue(12,'Bed side devices',0,'Respiratory rate',bedSideRespiratory)" ng-blur="validation(12,'Bed side devices',0,'Respiratory rate',bedSideRespiratory)"></td>
+
+                                          </tr>
+                                          <tr>
+                                              <td>Tidal Volume</td>
+                                              <td><input class="form-control" type="text" ng-model="bedSideTidal" ng-change="selectKeyValue(12,'Bed side devices',1,'Tidal Volume',bedSideTidal)"></td>
+                                          </tr>
+
+                                          <tr>
+                                              <td>Flow Rate</td>
+                                              <td><input class="form-control" type="text" ng-model="bedSideFlow" ng-change="selectKeyValue(12,'Bed side devices',2,'Flow Rate',bedSideFlow)" ng-blur="validation(12,'Bed side devices',2,'Flow Rate',bedSideFlow)"></td>
+                                          </tr>
+
+                                          <tr>
+                                              <td>Inspiratory / Expiratory (I/E) Ratio</td>
+                                              <td><input class="form-control" type="text" ng-model="bedSideInspiratory" ng-change="selectKeyValue(12,'Bed side devices',3,'Inspiratory / Expiratory (I/E) Ratio',bedSideInspiratory)"></td>
+                                          </tr>
+                                          </tbody>
+                                      </table>
+                                  </div>
+                              </div>
+
+                          </div>
+                      </div>
+
+                        <div class="card" style="margin-top:10px">
+                          <div class="card-body">
+                              <h4 ><b>Sensory</b></h4>
+                             <div class="row">
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Vision</label>
+                                     <select class="form-control" name="Vision" id="select" ng-model="sensoryVision" ng-change="selectKeyValue(3,'Sensory',0,'Vision',sensoryVision)"  required>
+                                         <option  value="">Select Vision</option>
+                                         <option ng-repeat="item in VisionList" value="{{item.id}}" ng-selected="item.id === sensoryVision">{{item.name}}</option>
+                                     </select>
+                                 </div>
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Hearing</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="sensoryHearing" ng-change="selectKeyValue(3,'Sensory',1,'Hearing',sensoryHearing)"  required>
+                                         <option  value="">Select Hearing</option>
+                                         <option ng-repeat="item in HearingList" value="{{item.id}}" ng-selected="item.id === sensoryHearing">{{item.name}}</option>
+                                     </select>
+                                 </div>
+                             </div>
+                          </div>
+                      </div>
+                        <div class="card" style="margin-top:10px">
+                          <div class="card-body">
+                              <h4 ><b>Musculoskeletal</b></h4>
+                             <div class="row">
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Mobility</label>
+                                     <select class="form-control" name="Mobility" id="select" ng-model="musculoskeletalMobility" ng-change="selectKeyValue(4,'Musculoskeletal',0,'Mobility',musculoskeletalMobility)" required>
+                                         <option  value="">Select mobility</option>
+                                         <option ng-repeat="item in MobilityList" value="{{item.id}}" ng-selected="item.id === musculoskeletalMobility">{{item.name}}</option>
+                                     </select>
+                                 </div>
+                                 <div class="col-md-10">
+                                     <label for="description" class="">ROM</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="musculoskeletalRom" ng-change="selectKeyValue(4,'Musculoskeletal',1,'ROM',musculoskeletalRom)" required>
+                                         <option  value="">Select ROM</option>
+                                         <option ng-repeat="item in ROMList" value="{{item.id}}" ng-selected="item.id === musculoskeletalRom">{{item.name}}</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Motor Development</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="musculoskeletalMotorDev" ng-change="selectKeyValue(4,'Musculoskeletal',2,'Motor Development',musculoskeletalMotorDev)" required>
+                                         <option  value="">Select Motor Development</option>
+                                         <option ng-repeat="item in MotorList" value="{{item.id}}" ng-selected="item.id === musculoskeletalMotorDev">{{item.name}}</option>
+                                     </select>
+                                 </div>
+                             </div>
+
+                          </div>
+                      </div>
+                        <div class="card" style="margin-top:10px">
+                          <div class="card-body">
+                              <h4 ><b>Neurological</b></h4>
+                             <div class="row">
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Sensation</label>
+                                     <select class="form-control" name="Mobility" id="select" ng-model="neurologicalSensation" ng-change="selectKeyValue(7,'Neurological',0,'Sensation',neurologicalSensation)" required>
+                                         <option  value="">Select Sensation</option>
+                                         <option ng-repeat="item in SensationList" value="{{item.id}}" ng-selected="item.id === neurologicalSensation">{{item.name}}</option>
+                                     </select>
+                                 </div>
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Verbal Response</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="neurologicalVerbal" ng-change="selectKeyValue(7,'Neurological',1,'Verbal Response',neurologicalVerbal)" required>
+                                         <option  value="">Select Verbal Response</option>
+                                         <option ng-repeat="item in VerbalList" value="{{item.id}}" ng-selected="item.id === neurologicalVerbal">{{item.name}}</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Aphasia</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="neurologicalAphasia" ng-change="selectKeyValue(7,'Neurological',2,'Aphasia',neurologicalAphasia)" required>
+                                         <option  value="">Select Aphasia</option>
+                                         <option ng-repeat="item in AphasiaList" value="{{item.id}}" ng-selected="item.id === neurologicalAphasia">{{item.name}}</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Memory Deficits</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="neurologicalMemory" ng-change="selectKeyValue(7,'Neurological',3,'Memory Deficits',neurologicalMemory)" required>
+                                         <option  value="">Select Memory Deficits</option>
+                                         <option ng-repeat="item in MemoryDeficitsList" value="{{item.id}}" ng-selected="item.id === neurologicalMemory">{{item.name}}</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Impaired Decision making</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="neurologicalDecision" ng-change="selectKeyValue(7,'Neurological',4,'Impaired Decision making',neurologicalDecision)" required>
+                                         <option  value="">Select Impaired Decision making</option>
+                                         <option ng-repeat="item in ImpairedDecisionList" value="{{item.id}}" ng-selected="item.id === neurologicalDecision">{{item.name}}</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Sleep aids</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="neurologicalSleep" ng-change="selectKeyValue(7,'Neurological',5,'Sleep aids',neurologicalSleep)" required>
+                                         <option  value="">Select Sleep aids</option>
+                                         <option ng-repeat="item in SleepaidsList" value="{{item.id}}" ng-selected="item.id === neurologicalSleep">{{item.name}}</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Seizures</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="neurologicalSeizures" ng-change="selectKeyValue(7,'Neurological',6,'Seizures',neurologicalSeizures)" required>
+                                         <option  value="">Select Seizures</option>
+                                         <option ng-repeat="item in SeizuresList" value="{{item.id}}" ng-selected="item.id === neurologicalSeizures">{{item.name}}</option>
+                                     </select>
+                                 </div>
+                             </div>
+
+                          </div>
+                      </div>
+                        <div class="card" style="margin-top:10px">
+                          <div class="card-body">
+                              <h4 ><b>Respiration</b></h4>
+                             <div class="row">
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Respiration</label>
+                                     <select class="form-control" name="Mobility" id="select" ng-model="respirationRespiration" ng-change="selectKeyValue(9,'Respiration',0,'Respiration',respirationRespiration)" required>
+                                         <option  value="">Select Respiration</option>
+                                         <option ng-repeat="item in RespirationList" value="{{item.id}}" ng-selected="item.id === respirationRespiration">{{item.name}}</option>
+                                     </select>
+                                 </div>
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Shortness of Breath</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="respirationShortness" ng-change="selectKeyValue(9,'Respiration',1,'Shortness of Breath',respirationShortness)" required>
+                                         <option  value="">Select Shortness of Breath</option>
+                                         <option ng-repeat="item in ShortnessList" value="{{item.id}}" ng-selected="item.id === respirationShortness">{{item.name}}</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Respiratory Treatment</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="respirationTreatment" ng-change="selectKeyValue(9,'Respiration',2,'Respiratory Treatment',respirationTreatment)" required>
+                                         <option  value="">Select Respiratory Treatment</option>
+                                         <option ng-repeat="item in TreatmentList" value="{{item.id}}" ng-selected="item.id === respirationTreatment">{{item.name}}</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="col-md-12" style="margin-top:5px">
+                                     <div  class="fixed-thead-tfoot-scroll">
+                                         <table id="main-table" class="main-table width100">
+                                             <thead>
+                                             <tr>
+                                                 <th class=" text-center width20">Parameter</th>
+                                                 <th class=" text-center width20">Setting</th>
+                                             </tr>
+                                             </thead>
+                                             <tbody>
+                                             <tr>
+                                                 <td>FiO2</td>
+                                                 <td><input class="form-control" type="text" ng-model="respirationFiO2" ng-change="selectKeyValue(9,'Respiration',3,'FiO2',respirationFiO2)" ng-blur="validation(9,'Respiration',3,'FiO2',respirationFiO2)"></td>
+
+                                             </tr>
+                                             <tr>
+                                                 <td>PEEP</td>
+                                                 <td><input class="form-control" type="text" ng-model="respirationPEEP" ng-change="selectKeyValue(9,'Respiration',4,'PEEP',respirationPEEP)" ng-blur="validation(9,'Respiration',4,'PEEP',respirationPEEP)"></td>
+
+                                             </tr>
+
+                                             <tr>
+                                                 <td>PS</td>
+                                                 <td><input class="form-control" type="text" ng-model="respirationPS" ng-change="selectKeyValue(9,'Respiration',5,'PS',respirationPS)" ng-blur="validation(9,'Respiration',5,'PS',respirationPS)"></td>
+                                             </tr>
+
+                                             <tr>
+                                                 <td>Tidal Volume</td>
+                                                 <td><input class="form-control" type="text" ng-model="respirationTidal" ng-change="selectKeyValue(9,'Respiration',6,'Tidal',respirationTidal)"></td>
+                                             </tr>
+
+                                             <tr>
+                                                 <td>Respiratory Rate</td>
+                                                 <td><input class="form-control" type="text" ng-model="respirationRate" ng-change="selectKeyValue(9,'Respiration',7,'Rate',respirationRate)" ng-blur="validation(9,'Respiration',7,'Rate',respirationRate)"></td>
+                                             </tr>
+
+                                             <tr>
+                                                 <td>I/E </td>
+                                                 <td><input class="form-control" type="text" ng-model="respirationIE" ng-change="selectKeyValue(9,'Respiration',8,'I/E',respirationIE)"></td>
+                                             </tr>
+
+                                             <tr>
+                                                 <td>Flow Rate</td>
+                                                 <td><input class="form-control" type="text" ng-model="respirationFlow" ng-change="selectKeyValue(9,'Respiration',9,'Flow',respirationFlow)" ng-blur="validation(9,'Respiration',9,'Flow',respirationFlow)"></td>
+                                             </tr>
+
+                                             <tr>
+                                                 <td>I Time</td>
+                                                 <td><input class="form-control" type="text" ng-model="respirationITime" ng-change="selectKeyValue(9,'Respiration',10,'I Time',respirationITime)" ng-blur="validation(9,'Respiration',10,'I Time',respirationITime)"></td>
+                                             </tr>
+
+                                             </tbody>
+                                         </table>
+                                     </div>
+                                 </div>
+
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Breath Sounds '(R)</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="respirationBreathR" ng-change="selectKeyValue(9,'Respiration',11,'Breath Sounds (R)',respirationBreathR)" required>
+                                         <option  value="">Select Breath Sounds '(R)</option>
+                                         <option ng-repeat="item in BreathSoundsRList" value="{{item.id}}" ng-selected="item.id === respirationBreathR">{{item.name}}</option>
+                                     </select>
+                                 </div>
+                                 <div class="col-md-10">
+                                     <label for="description" class="">Breath Sounds '(L)</label>
+                                     <select class="form-control" name="Diet" id="select" ng-model="respirationBreathL" ng-change="selectKeyValue(9,'Respiration',12,'Breath Sounds (L)',respirationBreathL)"  required>
+                                         <option  value="">Select Breath Sounds '(L)</option>
+                                         <option ng-repeat="item in BreathSoundsLList" value="{{item.id}}" ng-selected="item.id === respirationBreathL">{{item.name}}</option>
+                                     </select>
+                                 </div>
+
+                             </div>
+
+                          </div>
+                      </div>
+                  </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+                      <div class="card">
+                          <div class="card-body">
+                              <h4 ><b>Nutrition</b></h4>
+                              <div class="row">
+<!--                                  <div class="col-md-10">-->
+<!--                                      <label for="description" class="">Diet</label>-->
+<!--                                      <select class="form-control" name="Diet" id="select" ng-model="nutritionDiet" ng-change="selectKeyValue(1,'Nutrition',0,'Diet',nutritionDiet)"  required>-->
+<!--                                          <option  value="">Select Diet</option>-->
+<!--                                          <option ng-repeat="item in dietList"  value="{{item.id}}">{{item.name}}</option>-->
+<!--                                      </select>-->
+<!--                                  </div>-->
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Diet</label>
+                                      <select class="form-control" name="Diet" id="select" ng-model="nutritionDiet" ng-change="selectKeyValue(1,'Nutrition',0,'Diet',nutritionDiet)" required>
+                                          <option value="">Select Diet</option>
+                                          <option ng-repeat="item in dietList" ng-value="{{item.id}}" value="{{item.id}}" ng-selected="item.id === nutritionDiet">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Recent weight changes</label>
+                                      <select class="form-control" name="Diet" id="select" ng-model="nutritionWeightChanges" ng-change="selectKeyValue(1,'Nutrition',1,'Recent weight changes',nutritionWeightChanges)"  required>
+                                          <option  value="">Select Recent weight changes</option>
+                                          <option ng-repeat="item in weightchangesList" value="{{item.id}}" ng-selected="item.id === nutritionWeightChanges">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Supplements</label>
+                                      <select class="form-control" name="Diet" id="select" ng-model="nutritionSupplements" ng-change="selectKeyValue(1,'Nutrition',2,'Supplements',nutritionSupplements)"   required>
+                                          <option  value="">Select Supplements</option>
+                                          <option ng-repeat="item in supplementsList" value="{{item.id}}" ng-selected="item.id === nutritionSupplements">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Conditions affecting eating,chewing or swallowing</label>
+                                      <select class="form-control" name="swallowingList" id="select" ng-model="nutritionSwallowing" ng-change="selectKeyValue(1,'Nutrition',3,'Conditions affecting eating, chewing or swallowing',nutritionSwallowing)"  required>
+                                          <option  value="">Select Conditions affecting eating,chewing or swallowing</option>
+                                          <option ng-repeat="item in swallowingList" value="{{item.id}}" ng-selected="item.id === nutritionSwallowing">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Monitoring Required at mealtimes</label>
+                                      <select class="form-control" name="mealtimes" id="select" ng-model="nutritionMealtimes" ng-change="selectKeyValue(1,'Nutrition',4,'Monitoring required at mealtimes',nutritionMealtimes)"  required>
+                                          <option  value="">Select Monitoring Required at mealtimes</option>
+                                          <option ng-repeat="item in mealtimesList" value="{{item.id}}" ng-selected="item.id === nutritionMealtimes">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Fluids monitoring</label>
+                                      <select class="form-control" name="mealtimes" id="select"  ng-model="nutritionMonitoring" ng-change="selectKeyValue(1,'Nutrition',5,'Fluids monitoring',nutritionMonitoring)"  required>
+                                          <option  value="">Select Fluids monitoring</option>
+                                          <option ng-repeat="item in monitoringList" value="{{item.id}}" ng-selected="item.id === nutritionMonitoring">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Mucous membranes</label>
+                                      <select class="form-control" name="mealtimes" id="select" ng-model="nutritionMucous" ng-change="selectKeyValue(1,'Nutrition',6,'Mucous membranes',nutritionMucous)" required>
+                                          <option  value="">Select Mucous membranes</option>
+                                          <option ng-repeat="item in mucousList" value="{{item.id}}" ng-selected="item.id === nutritionMucous">{{item.name}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-md-10">
+                                      <label for="description" class="">Skin turgor</label>
+                                      <select class="form-control" name="mealtimes" id="select" ng-model="nutritionSkin" ng-change="selectKeyValue(1,'Nutrition',7,'Skin turgor',nutritionSkin)"  required>
+                                          <option  value="">Select Skin turgor</option>
+                                          <option ng-repeat="item in SkinList" value="{{item.id}}" ng-selected="item.id === nutritionSkin">{{item.name}}</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                        <div class="card" style="margin-top:10px">
+                            <div class="card-body">
+                                <h4 ><b>Pain</b></h4>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <label for="description" class="">Pain Assessment</label>
+                                        <select class="form-control" name="Mobility" id="select" ng-model="painAssessment" ng-change="selectKeyValue(5,'Pain',0,'Pain Assessment',painAssessment)" required>
+                                            <option  value="">Select Pain Assessment</option>
+                                            <option ng-repeat="item in PainAssessmentList" value="{{item.id}}" ng-selected="item.id === painAssessment">{{item.name}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="description" class="">Describe Pain</label><br>
+                                                <span>
+                                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox1" ng-click="prescribing(5,1,0)"><label class="labelName" style="padding: 5px">Aching</label>
+                                                </span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox2" ng-click="prescribing(5,1,1)"><label class="labelName" style="padding: 5px">Throbbing</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox3" ng-click="prescribing(5,1,2)"><label class="labelName" style="padding: 5px">Burning</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox4" ng-click="prescribing(5,1,3)"><label class="labelName" style="padding: 5px">Shooting</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox5" ng-click="prescribing(5,1,4)"><label class="labelName" style="padding: 5px">Stabbing</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox6" ng-click="prescribing(5,1,5)"><label class="labelName" style="padding: 5px">Gnawing</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox7" ng-click="prescribing(5,1,6)"><label class="labelName" style="padding: 5px">Sharp</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox8" ng-click="prescribing(5,1,7)"><label class="labelName" style="padding: 5px">Tender</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox9" ng-click="prescribing(5,1,8)"><label class="labelName" style="padding: 5px">Numb</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox10" ng-click="prescribing(5,1,9)"><label class="labelName" style="padding: 5px">Exhausting</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox11" ng-click="prescribing(5,1,10)"><label class="labelName" style="padding: 5px">Tiring</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox12" ng-click="prescribing(5,1,11)"><label class="labelName" style="padding: 5px">Penetrating</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox13" ng-click="prescribing(5,1,12)"><label class="labelName" style="padding: 5px">Gnawing</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox14" ng-click="prescribing(5,1,13)"><label class="labelName" style="padding: 5px">Nagging</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox15" ng-click="prescribing(5,1,14)"><label class="labelName" style="padding: 5px">Miserable</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox16" ng-click="prescribing(5,1,15)"><label class="labelName" style="padding: 5px">Unbearable</label></span><br>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="description" class="">Nonverbal signs</label><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox17" ng-click="prescribingNonverbal(5,2,16)"><label class="labelName" style="padding: 5px">Griming</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox18" ng-click="prescribingNonverbal(5,2,17)"><label class="labelName" style="padding: 5px">Moaning</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox19" ng-click="prescribingNonverbal(5,2,18)"><label class="labelName" style="padding: 5px">Guarded</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox20" ng-click="prescribingNonverbal(5,2,19)"><label class="labelName" style="padding: 5px">Frowning</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox21" ng-click="prescribingNonverbal(5,2,20)"><label class="labelName" style="padding: 5px">Restless</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox22" ng-click="prescribingNonverbal(5,2,21)"><label class="labelName" style="padding: 5px">Gnawing</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox23" ng-click="prescribingNonverbal(5,2,22)"><label class="labelName" style="padding: 5px">Increased BP</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox24" ng-click="prescribingNonverbal(5,2,23)"><label class="labelName" style="padding: 5px">Increased Pulse</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox25" ng-click="prescribingNonverbal(5,2,24)"><label class="labelName" style="padding: 5px">Numb</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox26" ng-click="prescribingNonverbal(5,2,25)"><label class="labelName" style="padding: 5px">Exhausting</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox27" ng-click="prescribingNonverbal(5,2,26)"><label class="labelName" style="padding: 5px">Poor appetite</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox28" ng-click="prescribingNonverbal(5,2,27)"><label class="labelName" style="padding: 5px">Perspiring</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox29" ng-click="prescribingNonverbal(5,2,28)"><label class="labelName" style="padding: 5px">Crying</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox30" ng-click="prescribingNonverbal(5,2,29)"><label class="labelName" style="padding: 5px">Agitation</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox31" ng-click="prescribingNonverbal(5,2,30)"><label class="labelName" style="padding: 5px">Rigid posture</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox32" ng-click="prescribingNonverbal(5,2,31)"><label class="labelName" style="padding: 5px">Jaws clenched</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2"  ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox33" ng-click="prescribingNonverbal(5,2,32)"><label class="labelName" style="padding: 5px">Legs drawn up</label></span><br>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-10">
+                                        <label for="description" class="">Motor Development</label>
+                                        <select class="form-control" name="Diet" id="select" ng-model="painMotorDev" ng-change="selectKeyValue(5,'Pain',3,'Motor Development',painMotorDev)" required>
+                                            <option  value="">Select Motor Development</option>
+                                            <option ng-repeat="item in MotorList" value="{{item.id}}" ng-selected="item.id === painMotorDev">{{item.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card" style="margin-top:10px">
+                            <div class="card-body">
+                                <h4 ><b>Insertions</b></h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox34" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">IV Cannula</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox35" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">Drain</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox36" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">Central Line</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox37" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">AV Fistula</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox38" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">Arterial Line</label></span><br>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox39" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">Traction / POP</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox40" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">ETT / TT</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox41" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">Ryles Tube</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox42" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">Epidural</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox43" ng-click="prescribingInsertions()"><label class="labelName" style="padding: 5px">Dialysis catheter</label></span><br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-top:10px">
+                            <div class="card-body">
+                                <h4 ><b>Infusions</b></h4>
+                                <div class="row">
+                                    <textarea class="form-control" ng-model="infusions"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-top:10px">
+                            <div class="card-body">
+                                <h4 ><b>Immediate Care & Support Needs</b></h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox44" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Pain</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox45" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Fatique</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox46" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Nausea</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox47" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Depression</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox48" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Anxiety</label></span><br>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox49" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Drowsiness</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox50" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Appetite</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox51" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Shortness of Breath</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox52" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Well being</label></span><br>
+                                                <span><input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox53" ng-click="prescribingImmediate()"><label class="labelName" style="padding: 5px">Other</label></span><br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                  </div>
+                </div>
+
+                <div class="row padding-top0 padding-left-right-set4 margin-top5">
+<!--                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">-->
+<!--                        <button type="submit" href="" ng-disabled="assessmentSelectedList.length<21" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveInitialAssessmentScore('N')">-->
+<!--                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>-->
+<!--                    </div>-->
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <button type="submit" href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveInitialAssessmentScore('N')"  ng-disabled="isSaveDisabled">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save as Draft" data-toggle="modal" id="saveBtn" ng-click="saveInitialAssessmentScore('Y')">
+                            Draft</a>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+
+</div>
+
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

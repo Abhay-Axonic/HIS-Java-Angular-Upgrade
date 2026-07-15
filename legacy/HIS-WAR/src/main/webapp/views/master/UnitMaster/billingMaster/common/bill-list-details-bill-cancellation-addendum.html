@@ -1,0 +1,55 @@
+
+<!-- BILL LIST VIEW POPUP -->
+<div id="billListDetails" class="common-large-popup modal fade ng-scope in his-style" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Bill Details
+						<button type="button" class="close" data-dismiss="modal" ng-click="closePopup()">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body row fix-height-scroll550" style="overflow-y: auto;">
+					 <div class="col-md-12">
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										 <div class="">
+											<select class="text-input floating-label"  convert-to-number ng-model="payeeId" ng-change="changePayee(payeeId)">
+												<option>-</option>
+												<option ng-repeat="payee in payeeList" value="{{payee.payeeId}}" >{{payee.companyDesc}}</option>
+											</select> <label for="code">Payer</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row margin-top8">
+									<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 custom-sub-tab">
+										<ul class="tabs nav nav-tabs">
+											<li ng-class="{ active : isSetFirstTabLevel(1) }" class="active width25" ><a href="" ng-click="setFirstTabLevel(1);" ng-href="#/addendumBill/serviceDetails">Service Details</a></li>
+											<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width25"><a href="" ng-click="setFirstTabLevel(2);" ng-href="#/addendumBill/packageDetails">Package Details</a></li>
+											<!-- <li ng-class="{ active : isSetFirstTabLevel(3) }" class="width25"  ng-click="setFirstTabLevel(3);" ng-if="isPreOrPostBilling=='N' && visitTypeId==1"><a ng-click="getPendingServicesByEncounterId()" ng-href="#/badDebtsList/groupDetails">Pending Services</a></li>
+											 <li ng-class="{ active : isSetFirstTabLevel(3) }" class="width25"  ng-click="setFirstTabLevel(3);" ng-if="isPreOrPostBilling=='Y' && visitTypeId==1"><a ng-click="getAutoRenderedServicesByPatient()" ng-href="#/badDebtsList/groupDetailsPrePost">Pending Services</a></li> -->
+											
+											
+										</ul>
+									</div>
+								
+						</div>
+						 <div class="" ui-view="">
+			
+						</div>
+					</div> 
+				</div>
+			</div>
+		</div>
+</div>
+<div ng-include="'./views/common/collect-payment-modal-bad-debit.html'" ></div>
+
+
+

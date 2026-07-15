@@ -1,0 +1,219 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Indent Date:
+						</b>
+						<label>{{vm.model.indentDetail.indentDate | date:'dd/MM/yyyy'}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Indent No. :</b>
+						<label>{{vm.model.indentDetail.indentNo}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Requesting Store :</b>
+						<label style="text-transform: capitalize;">{{vm.model.indentDetail.fromStore}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Issuing Store:
+						</b>
+						<label style="text-transform: capitalize;">{{vm.model.indentDetail.toStore}}</label>
+					</span>
+				</div>
+			</div>
+			<div class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Priority :
+						</b>
+						<label>{{vm.model.indentDetail.priority}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Type:</b>
+						<label style="text-transform: capitalize;">{{vm.model.indentDetail.type}}</label>
+					</span>
+				</div>
+				<!-- comment to resolved HIS-9510 Hide Is consignment from store screens -->
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Is Consignment:</b>
+						<label style="text-transform: capitalize;">{{vm.model.indentDetail.isConsignment}}</label>
+					</span>
+				</div> -->
+			</div>
+			<!--  fixed asset table start -->
+			<div class="row" id="fixeAssetRowId">
+				<div class="container-fluid his-style">
+					<div class="table-container padding-left-right-set4 padding-top5">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width8" title="Item Code">Item Code
+											<div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8" title="Item Name">Item Name
+											<div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10" title="Generic Name">Generic Name
+											<div class="float_right" ng-click="sortType = 'genericname'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width5" title="UOM Type">UOM
+											<div class="float_right" ng-click="sortType = 'uomType'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7" title="UOM Unit">UOM Unit
+											<div class="float_right" ng-click="sortType = 'uomUnit'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7" title="Indent Quantity">Indent Qty
+											<div class="float_right" ng-click="sortType = 'quantity'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10" title="Stock Available">Stock Available
+											<div class="float_right" ng-click="sortType = 'stockAvailable'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10" title="Stock In Transit">Stock in Transit
+											<div class="float_right" ng-click="sortType = 'stockInTransit'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10" title="Last Month Sale">Last Month Sale
+											<div class="float_right" ng-click="sortType = 'lastMonthSale'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width12" title="Current Month Sale">Current Month Sale
+											<div class="float_right" ng-click="sortType = 'currentMonthSale'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10" title="Max Order Qty">Max Order Qty
+											<div class="float_right" ng-click="sortType = 'maxOrderQuantity'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="height:350px; overflow-y: scroll;">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="item in vm.model.indentDetail.items | orderBy:sortType:sortReverse">
+										<td class="width8" title="{{item.itemCode}}">{{item.itemCode}}</td>
+										<td class="width8" title="{{item.itemName}}">{{item.itemName}}</td>
+										<td class="width10" title="{{item.genericName}}">{{item.genericName}}</td>
+										<td class="width5" title="{{item.uomType}}">{{item.uomType}}</td>
+										<td class="width7">
+											<span ng-if="item.receivedQtyCon!=''">({{item.receivedQtyCon}}) = </span> <br/>
+											<span> {{item.receivedQtyCalculation}} {{item.uomUnitData}}</span>
+										</td>
+										<td class="width7" title="{{item.quantity}}">{{item.quantity}}</td>
+										<td class="width10" title="{{item.stockAvailable}}">{{item.stockAvailable}}</td>
+										<td class="width10 text-center media-middle" title="{{item.stockInTransit}}">{{item.stockInTransit}}</td>
+										<td class="width10 text-center media-middle" title="{{item.lastMonthSale}}">{{item.lastMonthSale}}</td>
+										<td class="width12 text-center media-middle" title="{{item.currentMonthSale}}">{{item.currentMonthSale}}</td>
+										<td style="width: 9.67% !important;" class="text-center media-middle" title="{{item.maxOrderQuantity}}">{{item.maxOrderQuantity}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- fixed asset table end -->
+		</fieldset>
+
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-top5 margin-top10 padding-right20">
+				<div class="col-lg-11 col-sm-11">
+					<b>Remark: </b>
+					<label>{{vm.model.indentDetail.remark}}</label>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a href="#/storeIndenting">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>

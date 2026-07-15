@@ -1,0 +1,195 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+		
+		<div class="main-heading-div">
+				<div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div>
+			</div>
+		
+			<!-- <legend class="heading-div">Package Master</legend> -->
+			<div class="row padding-top8">
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<!-- <div class="">
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label"> <label for="code">From Date</label>
+							</div> -->
+							<div class="">
+						
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForFromDate" id="datePickerForFromDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForFromDate" model-view-value="true" is-open="datePickerForFromDate.opened"
+									   datepicker-options="dateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForFromDate()" required="" style="">
+									
+									<label for="code" class="">
+									Date (From)</label> <!-- Date should be selected from-to Date  -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<!-- <div class="">
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label"> <label for="code">To Date</label>
+							</div> -->
+							<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForToDate" id="datePickerForToDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForToDate" model-view-value="true" is-open="datePickerForToDate.opened"
+									   datepicker-options="dateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForToDate()" required="" style=""> <label
+								for="code">Date-Till</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label" ng-model="batchNo"> <label for="code">Batch No.</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 text-center">
+					<div class="row input-container padding-top10">
+						<input type="checkbox" name="" id="isBiological" class="" ng-model="biologicalIndicator">
+							<label for="isBiological" class="checkbox-margin-left-right">Biological Indicator</label>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label dirty" name="code" ng-model="selectedLoadBatchStatus">
+									<option value="">All</option>
+									<option value="Batch Loaded">Batch Loaded</option>
+									<option value="Sterilized">Sterilized</option>
+									<!-- <option value="Completed">Completed</option>
+									<option value="Pending">Pending</option> -->
+								</select> <label for="code">Status(n)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="getLoadBatchListByMultipleFields()"><i class="fa fa-search" aria-hidden="true" ></i></a>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+				<div class=" ">
+					<a href="#/addNewSterilizationLoadBatch" class="btn btn-primary btn-save-box-shadow" title="Add New">Add
+						New</a>
+				</div>
+			</div>
+			</div>
+		</fieldset>
+		<div class="row margin-top8 padding-left-right-set4">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width12">
+								Batch No.
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								Autoclave No.
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								Autoclave Date
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<!-- <th class="width12">
+								Expiry Date
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th> -->
+							<th class="width3">
+								Status(n)
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width3 text-center">
+								Action taken
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-if="loadBatchList.length==0"><td class="text-center" colspan="5">{{loadingMessage}}</td></tr>
+						<tr ng-repeat="batchInfo in loadBatchList">
+							<td>{{batchInfo.batchNumber}}</td>
+							<td>{{batchInfo.autoclaveNumber}}</td>
+							<td>{{batchInfo.autoclaveDate}}</td>
+							<!-- <td>{{batchInfo.expiryDate}}</td> -->
+							<td>{{batchInfo.status}}</td>
+							<td class="text-center"><a ui-sref="showSterilizationLoadBatch({batchNo: batchInfo.batchNumber})" title="View"><i class="fa fa-eye"></i></a></td>
+						</tr>
+						<!-- <tr>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td class="text-center"><a ui-sref="viewSterilizationLoadBatch({transitionNumber: data.transitionNumber})" title="View"><i class="fa fa-eye"></i></a></td>
+						</tr> -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+});
+  
+  $(".selectedPageName").text("Sterilization Batch Load");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="sterilizationLoadBatch"]').parents("li").addClass("active");
+
+</script>
+

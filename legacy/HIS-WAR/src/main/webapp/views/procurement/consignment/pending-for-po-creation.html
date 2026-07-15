@@ -1,0 +1,369 @@
+<head>
+	<style type="text/css">
+		.tableError {
+			border: 2px solid red !important;
+		}
+
+		.tableError select.w-100.ng-pristine.ng-empty,
+		.tableError input.w-100.ng-valid.ng-empty,
+		.borderRed {
+			border: 2px solid red;
+		}
+
+		.borderRed {
+			border: 2px solid #ff0000;
+		}
+
+		.bottomRed {
+			border-bottom: 2px solid #ff0000;
+		}
+
+		.text-input[disabled] {
+			cursor: not-allowed !important;
+		}
+	</style>
+</head>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-top10">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate"
+								uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate"
+								model-view-value="true" is-open="vm.model.fromDateOpened"
+								datepicker-options="vm.model.fromDateOptions" show-button-bar="false"
+								ng-click="vm.model.OpenFromDate()" ng-disabled="!!vm.model.poId">
+							<label for="description" class="LISDynamicLabel">From Date</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate"
+								uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY" ng-model="vm.model.toDate"
+								model-view-value="true" is-open="vm.model.toDateOpened"
+								datepicker-options="vm.model.toDateOptions" show-button-bar="false"
+								ng-click="vm.model.OpenToDate()" ng-disabled="!!vm.model.poId">
+							<label for="description" class="LISDynamicLabel">To Date</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label" ng-model="vm.model.store"
+								data-ng-options="store.store for store in vm.model.storeList"
+								ng-class="{bottomRed: vm.model.isStoreValid}" ng-change="vm.model.isStoreValid = false"
+								ng-disabled="!!vm.model.poId"></select>
+							<label for="code">Store</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+						<i class="fa fa-user" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" ng-model="vm.model.vendorName"
+								uib-typeahead="vendorNames.detail for vendorNames in vm.model.SearchVendorNames($viewValue)"
+								typeahead-on-select="vm.model.AddVendorName($item); vm.model.search = '';"
+								ng-class="{bottomRed: vm.model.isVendorValid}"
+								ng-change="vm.model.isVendorValid = false" ng-disabled="!!vm.model.poId">
+							<label for="vendorName">Vendor</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-sm-2 col-md-2 text-width-auto">
+				<div class="common-save-button" style="padding-top:  0px;">
+					<a href="" ng-click="vm.model.AddItemForPO()" class="btn btn-primary btn-save-box-shadow"
+						style="width: auto;" ng-disabled="!!vm.model.poId">
+						<i class="fa fa-search" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		<!-- 	<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div> -->
+		<div class="row padding-left-right-set4 padding-top10">
+
+			<div class="table-container padding-top5">
+				<div class="table-container-header">
+					<table class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr>
+								<th class="width2 text-center vertical-middle"></th>
+								<th class="width5 vertical-middle" title="Store">Store</th>
+								<th class="width5 vertical-middle" title="Item Code">Item Code</th>
+								<th class="width5 vertical-middle" title="Item Name">Item Name</th>
+								<th class="width5 vertical-middle" title="Batch Code">Batch Code</th>
+								<th class="width5 vertical-middle" title="Expiry Date">Expiry Date</th>
+								<th class="width4 vertical-middle" title="Qty">Qty</th>
+								<th class="width5 vertical-middle" title="COP">COP</th>
+								<th class="width5 vertical-middle" title="MRP">MRP</th>
+								<th class="width5 vertical-middle" title="GST Code">GST Code</th>
+								<th class="width5 vertical-middle" title="GST %">GST %</th>
+								<!-- <th class="width5 vertical-middle" title="Discount %">Disc %</th>
+								<th class="width5 vertical-middle" title="Discount Amount">Disc Amt</th> -->
+								<th class="width5 vertical-middle" title="GST Amount">GST Amt</th>
+								<th class="width5 vertical-middle" title="Total Amount">Total Amt</th>
+								<th class="width5 vertical-middle" title="Net Amount">Net Amt</th>
+								<th class="width5 vertical-middle" title="LCOP">LCOP</th>
+								<th class="width5 vertical-middle" title="Remarks">Remarks</th>
+								<th class="width3 vertical-middle text-center" title="Action">Action</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="table-container-body" style="height: 330px; overflow-y: overlay;">
+					<table class="table table-striped table-hover table-condensed table-bordered">
+						<tbody ng-repeat="item in vm.model.itemDetails">
+							<tr class="table-th-bg cursor-pointer">
+								<td class="width2 text-center vertical-middle">
+									<a class="cursor-pointer"
+										ng-click="vm.model.activeItem = (vm.model.activeItem == item.itemId ? 0 : item.itemId)">
+										<i
+											class="fa fa-{{vm.model.activeItem == item.itemId ? 'minus' : 'plus'}}-circle"></i>
+									</a>
+								</td>
+								<td class="width5" title="{{item.store}}">{{item.store}}</td>
+								<td class="width5" title="{{item.itemCode}}">{{item.itemCode}}</td>
+								<td class="width5" title="{{item.itemName}}">{{item.itemName}}</td>
+								<td class="width5" title="{{item.batchNo}}">{{item.batchNo}}</td>
+								<td class="width5" title="{{item.expiry | date:'dd/MM/yyyy'}}">
+									{{item.expiry | date:'dd/MM/yyyy'}}</td>
+								<td class="width4" title="{{item.quantity}}">{{item.quantity}}</td>
+								<td class="width5">
+									<input type="number" ng-model="item.cop"
+										ng-change="vm.model.costOfPurchase[$index]=false;"
+										ng-blur="vm.model.SetDecimal('costOfPurchase', item, item.costOfPurchase); vm.model.ValidateConsumableAmount(item, $index);vm.model.discountCalc(item)"
+										ng-class="{borderRed: vm.model.costOfPurchase[$index]}" class="select-box"
+										allow-decimal-numbers /> </td>
+								<td class="width5">
+									<input type="number" ng-model="item.mrp" ng-change="vm.model.mrp[$index]=false;"
+										ng-blur="vm.model.SetDecimal('costOfPurchase', item, item.mrp); vm.model.ValidateConsumableAmount(item, $index);vm.model.discountCalc(item)"
+										ng-class="{borderRed: vm.model.mrp[$index]}" class="select-box"
+										allow-decimal-numbers /> </td>
+								<td class="width5" title="{{item.taxCode}}">{{item.taxCode}}</td>
+								<td class="width5" title="{{item.taxPercentage || 0| number:2}}">
+									{{item.taxPercentage || 0| number:2}}</td>
+								<!-- <td class="width5" title="{{item.discountPercentage || 0| number:2}}">{{item.discountPercentage || 0| number:2}}</td>
+								<td class="width5" title="{{vm.model.Currency}} {{item.discountAmnt || 0| number:2}}">{{vm.model.Currency}} {{item.discountAmnt || 0| number:2}}</td> -->
+								<td class="width5" title="{{item.taxAmount}}">{{vm.model.Currency}} {{ (item.taxAmount = (((item.totalAmnt) *
+										(item.taxPercentage/100) || 0))) | number:2}} </td>
+								<td class="width5" title="{{item.totalAmnt}}">{{vm.model.Currency}}
+									{{ ((item.totalAmnt =(item.quantity * item.cop)) || 0) | number:2}}</td>
+								<td class="width5" title="{{item.netAmount}}">
+									{{vm.model.Currency}} {{((item.netAmount = ((item.totalAmnt -
+											item.discountAmnt) + (item.taxAmount) ) || 0)) | number:2}}
+								</td>
+								<td class="width5"></td>
+								<td class="width5" title="{{item.remark}}">
+									<textarea ng-model="item.remark" row="2" maxlength="100"></textarea>
+								</td>
+								<td class="width3 vertical-middle text-center">
+									<a ng-click="vm.model.ConfirmRemove(item)">
+										<i class="fa fa-times" title="Remove"></i>
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="16" ng-show="vm.model.activeItem == item.itemId">
+									<div>
+										<div class="table-container padding-zero">
+											<div class="table-container-header">
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr>
+															<th class="width6">Issue No.</th>
+															<th class="width6">Issue Date</th>
+															<th class="width6">Visit Type</th>
+															<th class="width6">Visit No.</th>
+															<th class="width6">Patient Details</th>
+															<th class="width6">Item Code</th>
+															<th class="width6">Item Name</th>
+															<th class="width6">Batch Code</th>
+															<th class="width6">Expiry Date</th>
+															<th class="width6">Qty</th>
+															<th class="width6">COP</th>
+															<th class="width6">GST Code</th>
+															<th class="width6">GST %</th>
+															<th class="width6">MRP</th>
+															<th class="width6">Net Amt</th>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-body"
+												style="max-height: 112px;overflow: overlay;height: auto;">
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="issue in item.issueList">
+															<td class="width6" title="{{issue.issueNo}}">
+																{{issue.issueNo}}</td>
+															<td class="width6"
+																title="{{issue.issueDate | date:'dd/MM/yyyy'}}">
+																{{issue.issueDate | date:'dd/MM/yyyy'}}
+															</td>
+															<td class="width6" title="{{issue.visitType}}">
+																{{issue.visitType}}</td>
+															<td class="width6" title="{{issue.visitNo}}">
+																{{issue.visitNo}}</td>
+															<td class="width6" title="{{issue.patientDetails}}">
+																{{issue.patientDetails}}</td>
+															<td class="width6" title="{{issue.issueItemCode}}">
+																{{issue.issueItemCode}}</td>
+															<td class="width6" title="{{issue.issueItemName}}">
+																{{issue.issueItemName}}</td>
+															<td class="width6" title="{{issue.batchNo}}">
+																{{issue.batchNo}}</td>
+															<td class="width6"
+																title="{{issue.issueExpiry | date:'dd/MM/yyyy'}}">
+																{{issue.issueExpiry | date:'dd/MM/yyyy'}}
+															</td>
+															<td class="width6" title="{{issue.issueQty}}">
+																{{issue.issueQty}}</td>
+															<td class="width6" title="{{issue.issueCop| number:2}}">
+																{{vm.model.Currency}} {{issue.issueCop| number:2}}
+															</td>
+															<td class="width6" title="{{issue.issueTaxCode}}">
+																{{issue.issueTaxCode}}</td>
+															<td class="width6" title="{{issue.issueTaxPercentage}}">
+																{{issue.issueTaxPercentage}}</td>
+															<td class="width6" title="{{issue.issueMrp}}">
+																{{vm.model.Currency}} {{issue.issueMrp| number:2}}</td>
+															<td class="width6" title="{{issue.issueNetAmount| number:2}}">
+																{{vm.model.Currency}} {{issue.issueNetAmount| number:2}}
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-left-right-set4">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+					<table class=" table table-bordered">
+						<tbody>
+							<tr>
+								<th class="width6"><label>Total Amount</label></th>
+								<td class="width6 ng-binding vertical-middle">{{vm.model.Currency}} {{(vm.model.totalAmount = (vm.model.itemDetails |
+										sumByColumn:
+										'totalAmnt') || 0) | number:2}}
+
+								<th class="width6"><label>Total Tax Amount</label></th>
+								<td class="width6 ng-binding vertical-middle">{{vm.model.Currency}} {{(vm.model.totalTaxAmount = (vm.model.itemDetails |
+										sumByColumn:
+										'taxAmount') || 0) | number:2}}</td>
+								<th class="width6"><label>Net Amount</label></th>
+								<td class="width6 ng-binding vertical-middle">{{vm.model.Currency}} {{(vm.model.totalNetAmount = (vm.model.itemDetails |
+												sumByColumn:
+												'netAmount') || 0) | number:2}}</td>
+							</tr>
+							<tr>
+								<th class="width8 padding-top10">
+									<label>Remark</label>
+								</th>
+								<td class="width8" colspan="5">
+									<textarea ng-model="vm.model.purchaseOrderRemark" rows="2"
+										maxlength="100"></textarea>
+								</td>
+
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-md-1 text-right"></div>
+				<div class="col-md-9 padding-left-right8"></div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div class="">
+						<!-- common-save-button -->
+						<input type="button" value="Save" ng-click="vm.model.savePOCreation()"
+							class="btn btn-primary btn-save-box-shadow">
+					</div>
+				</div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div class="">
+						<!-- common-save-button -->
+						<a href="#/consignmentPOCreation"> <input type="button" value="Back"
+								class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+	</div>
+</div>
+<div id="confirmRemove" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to remove item?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" class="btn btn-primary" id="okBtn"
+					ng-click="vm.model.RemoveItem(vm.model.itemForRemove)">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(".selectedPageName").text("Consignment PO Creation");
+	$(".sidebar-nav li").each(function () {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="pendingForPOCreation"]').parents("li").addClass("active");
+	$(".selectedServicesList").hide();
+	$(".indent-details").click(function () {
+		$(this).next().find(".selectedServicesList").toggle();
+	});
+	$(".table-th-bg").click(function () {
+		$(this).next().find(".selectedServicesList").toggle();
+	});
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

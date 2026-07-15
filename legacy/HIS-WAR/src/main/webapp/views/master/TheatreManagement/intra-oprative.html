@@ -1,0 +1,1696 @@
+<!-- References: https://github.com/fancyapps/fancyBox -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+<style>
+body {
+    font-family: "Open Sans", sans-serif !important;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-family: inherit !important;
+}
+h4 {
+    font-size: 13px !important;
+    line-height: 1.4;
+    font-family: inherit !important;
+}
+h1, h2, h3, h4, h5, h6, .w3-slim, .w3-wide {
+    font-family: inherit !important;
+}
+.panel {
+    margin-bottom: 10px !important;
+    border-radius: 10px !important;
+}
+#page-content-wrapper {
+    padding: 0px 0px !important;
+    height: 675px !important;
+    overflow-x: hidden !important;
+}
+.card-panel-new{
+    box-shadow: 0 0px 3px 0px rgb(0 0 0 / 12%), 0 1px 9px 1px rgb(0 0 0 / 4%);
+    height: 75px;
+    border-radius: 10px;
+    background-color: #eff8ff !important;
+}
+.card-new {
+    height: 8px !important;
+    width: 100% !important;
+    border-radius: 7px 7px 0px 0px;
+    margin: 0px !important;
+}
+.card-height.text-font {
+    margin-top: 8px;
+}
+.text-font a h4 {
+    font-size: 14px;
+    font-weight: normal;
+}
+.text-font h4 {
+    font-size: 14px;
+    font-weight: normal;
+}
+.border-none-card {
+    -webkit-box-shadow: none;
+    border: none !important;
+}
+.searched-patient-details-row {
+    height: 60px;
+}
+span.profile_pic img {
+    height: 45px !important;
+    width: 45px !important;
+    margin-top: 10px;
+}
+
+
+
+
+/******Pop-Up CSS START********/
+.close {
+    color: #ffffff !important;
+    opacity: 4 !important;
+    padding-top: 2px !important;
+}
+.modal-body {
+    padding: 5px 5px 0px 5px !important;
+}
+.btn_success {
+    background: #008a27 !important;
+    color: #fff !important;
+    height: 25px !important;
+    padding: 1px 5px 5px 5px !important;
+    border: none !important;
+}
+.btn_danger {
+    background: #d80000 !important;
+    color: #fff !important;
+    height: 25px !important;
+    padding: 1px 5px 5px 5px !important;
+    border: none !important;
+}
+.text-width-auto .btn {
+    padding: 3px 12px !important;
+}
+.table>tbody>tr>th, .table>thead>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th {
+    background-color: #044e88 !important;
+    color: #fff !important;
+}
+ul.tabs li {
+    background-color: #044e88 !important;
+    font-weight: normal;
+}
+.custom-sub-tab .nav-tabs>li.active>a, .custom-sub-tab .nav-tabs>li.active>a:focus, .custom-sub-tab .nav-tabs>li.active>a:hover {
+    color: #044e88 !important;
+    font-weight: normal !important;
+}
+.nav-tabs>li>a:hover {
+    border-color: #075694 !important;
+}
+.nav>li>a:focus, .nav>li>a:hover {
+    background-color: #075694 !important;
+}
+.btn:focus, .btn:hover {
+    color: #5c5c5c !important;
+    text-decoration: none;
+}
+.modal {
+    background-color: transparent !important;
+    margin-left: 0px !important;
+    width: 100% !important;
+    height: 90% !important;
+    margin-top: 0% !important;
+    padding-right: 0 !important;
+}
+.modal {
+    background-color: transparent !important;
+    margin-left: inherit !important;
+    width: -webkit-fill-available !important;
+    height: inherit !important;
+    margin-top: inherit !important;
+    padding-right: 0 !important;
+}
+/******Pop-Up CSS END*********/
+
+
+/***************************/
+
+.MultiCarousel {
+    float: left;
+    overflow: hidden;
+    padding: 6px;
+    width: 90%;
+    margin-left: 44px;
+    height: 145px !important;
+    overflow-y: scroll;
+}
+    .MultiCarousel .MultiCarousel-inner { transition: 1s ease all; float: left; }
+        .MultiCarousel .MultiCarousel-inner .item { float: left;}
+        .MultiCarousel .MultiCarousel-inner .item > div {
+    padding: 0px !important;
+    margin: 0px 5px 5px 0px !important;
+    float: left !important;
+    width: 149px !important;
+    border: 2px solid #b7a399;
+}
+        canvas {
+    display: inline-flex;
+    width: 100%;
+    background-repeat: no-repeat;
+}
+    .MultiCarousel .leftLst, .MultiCarousel .rightLst { position:absolute; border-radius:50%;top:calc(50% - 20px); }
+    .MultiCarousel .leftLst { left:0; }
+    .MultiCarousel .rightLst { right:0; }
+    
+        .MultiCarousel .leftLst.over, .MultiCarousel .rightLst.over { pointer-events: none; background:#ccc; }
+.his-style .btn-primary {
+    background-color: #6d6868 ;
+    border-color: #6d6868 ;
+    width: 30px;
+    height: 30px;
+}
+.MultiCarousel-inner {
+    width: 1990px !important;
+}.MultiCarousel .MultiCarousel-inner .item {
+    float: initial !important;
+}
+/**************************/
+.camera-recording {
+    background: #393939;
+    border: 4px solid #6d6868;
+}
+
+.Start {
+    background: #039c2e !important;
+    color: #fff !important;
+    padding: 5px 5px 5px 5px !important;
+    border: none !important;
+    width: 40px;
+    height: 40px !important;
+    text-transform: uppercase;
+    vertical-align: bottom;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+    font-weight: 500;
+    border-radius: 50%;
+}
+.Start:hover {
+    background: #196b30 !important;
+}
+.Stop {
+    background: #d51a1a !important;
+    color: #fff !important;
+    padding: 5px 5px 5px 5px !important;
+    border: none !important;
+    width: 40px;
+    height: 40px !important;
+    text-transform: uppercase;
+    vertical-align: bottom;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+    font-weight: 500;
+    border-radius: 50%;
+}
+.Stop:hover {
+    background: #a30303 !important;
+}
+.Capture {
+    background: #f2ac21 !important;
+    color: #fff !important;
+    padding: 5px 5px 5px 5px !important;
+    border: none !important;
+    width: 40px;
+    height: 40px !important;
+    text-transform: uppercase;
+    vertical-align: bottom;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+    font-weight: 500;
+    border-radius: 50%;
+}
+
+.Capture:hover {
+    background: #cf9218 !important;
+}
+.download {
+    background: #039c2e !important;
+    color: #fff !important;
+    padding: 5px 5px 5px 5px !important;
+    border: none !important;
+    width: 40px;
+    height: 40px !important;
+    text-transform: uppercase;
+    vertical-align: bottom;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+    font-weight: 500;
+    border-radius: 50%;
+}
+.download:hover {
+    background: #196b30 !important;
+}
+i.fa.fa-download {
+    font-size: 18px;
+    margin-top: 3px;
+}
+.span-font span {
+    font-size: 12px;
+}
+.m-t-8 {
+    margin-top: 8px;
+}
+i.fa.fa-video-camera {
+    font-size: 18px;
+    margin-top: 3px;
+}
+
+i.fa.fa-stop-circle {
+    font-size: 23px;
+    margin-top: 1px;
+}
+
+i.fa.fa-camera {
+    font-size: 17px;
+    margin-top: 2px;
+}
+.group-modal-main {
+    padding: 10px;
+}
+</style>
+<link rel="stylesheet" type="text/css" href="resources/assets/css/template/drag-drop.css"/>
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+        <div class="row searched-patient-details-row span-font">
+            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                <span class="profile_pic">
+                    <img alt="" 
+                    src="{{(intraObj.imagePath!=null&&intraObj.imagePath!='')?intraObj.imagePath:(intraObj.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}"
+                    class="img-circle" style="width:35px">
+                </span>
+                
+                <span class="padding-right5 font-weight600">Patient Name: {{intraObj.patientName}}  </span>
+                <span class="margin-left10"></span>
+                <span class="padding-right5 font-weight600">UHID No.: {{intraObj.uhidNumber}}</span>
+                <span class="margin-left10"></span>
+                <span class="padding-right5 font-weight600">Doctor Name:  {{intraObj.doctorName}}</span>
+                <span class="margin-left10"></span>
+                <span class="padding-right5 font-weight600"> DOB: {{intraObj.birthDate}}</span>
+                <span class="margin-left10" ng-if="intraObj.visitTypeId!=1"></span>
+                <span class="padding-right5 font-weight600" ng-if="intraObj.visitTypeId!=1">DOA.: {{intraObj.doa}}</span>
+                <span class="margin-left10" ng-if="intraObj.visitTypeId!=1"></span>
+                <span class="padding-right5 font-weight600" ng-if="intraObj.visitTypeId!=1">PDD.: {{intraObj.pdd}}</span>
+                <span class="margin-left10" ng-if="intraObj.visitTypeId!=1"></span>
+                <span class="padding-right5 font-weight600" ng-if="intraObj.visitTypeId!=1">Ward.: {{intraObj.wardName}}</span>
+                <span class="margin-left10" ng-if="intraObj.visitTypeId!=1"></span>
+                <span class="padding-right5 font-weight600" ng-if="intraObj.visitTypeId!=1">Bed No.: {{intraObj.bedNumber}}</span>
+                <span class="margin-left10" ng-if="intraObj.visitTypeId!=1"></span>
+                <span class="padding-right5 font-weight600" ng-if="intraObj.visitTypeId!=1">LOS.: {{intraObj.los}}</span>
+            </div>
+        </div>
+        <div class="col-lg-2 m-t-8">
+	         <div class="row">
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card"  style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(1);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a> <!-- data-toggle="modal" data-target="#checklistPopup" -->
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">Checklist</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(2);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a> <!-- data-toggle="modal" data-target="#consentPopup" -->
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">Consent</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(3);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a> <!-- data-toggle="modal" data-target="#identityPopup" -->
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">Identity</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(4);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a data-toggle="modal" data-target="#whochecklistPopup">
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">WHO Checklist</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(5);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a><!-- data-toggle="modal" data-target="#bloodAvailabilityPopup" -->
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">Blood Availability</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(3);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a href="https://demo.teleradtech.com:4435/ZFP/?&sUID=1.2.840.113619.2.415.3.2831194113.904.1529328066.968&aetitle=AEDIVINE&stdtitle=9407&src=RADSPA&wfid=9407&sessionkey=951a4d25-8264-43d2-b172-ef0d8a6a883e"  target="_blank">
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">PAC</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	        </div> 
+        </div>
+        
+		<div class="col-lg-8 m-t-8">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card-height camera-recording" style="height: 425px !important">
+					
+						<div class="text-center">
+							<video id="cameraPreview" width="350" height="250" autoplay
+								controls style="width: 805px !important;height: 363px !important;padding-top: 15px;"></video>
+							<p>
+								<button title="START" class="Start" id="startButton" ng-click="startCapture();"><i class="fa fa-video-camera" aria-hidden="true"></i></button>
+								<button title="STOP" class="Stop" id="stopButton" ng-click="stopCapture();"><i class="fa fa-stop-circle" aria-hidden="true"></i></button>
+								<button title="CAPTURE" class="Capture" ng-click="makeSnapshot(snapCount)"><i class="fa fa-camera" aria-hidden="true"></i></button>
+   					     		<button class="download"><a title="DOWNLOAD" id="downloadButton"><i class="fa fa-download" aria-hidden="true"></i></a></button>
+   					     	</p>
+							
+														<!-- 
+							<webcam channel="channel" 
+							on-streaming="onSuccess()" 
+							on-error="onError(err)" 
+							on-stream="onStream(stream)">
+							</webcam> -->
+							<!-- <div class="width-div-for-patient-reg pull-left margin-top4">
+							<a href="" ng-click="makeSnapshot(snapCount)" class="btn btn-primary btn-save-box-shadow" title="Capture"><i class="fa fa-camera" style="font-size:21px" aria-hidden="true"></i></a>	
+							</div> -->
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-12">
+					<div class="row">
+			          <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel"  data-interval="1000" style="background: #eff8ff;border: 4px solid #6d6868;margin-top: 8px;">
+	                    <div class="MultiCarousel-inner" style="transform: translateX(0px);width: 1990px !important;">
+	                       <div ng-repeat="can in canvasList" class="item" style="width: 100% !important;">
+	                           <div class="pad15" style="display: flex;height: 125px !important;">
+	                             <canvas id="{{can.id}}" class="lead" style="width: 265px !important;background-repeat: no-repeat !important;height: 233px !important;"></canvas>
+	                           </div>
+	                       </div>
+	                   </div>
+	                   <button class="btn btn-primary leftLst left_side_arrow" style="width: 44px; height: 145px; margin-left: 15px; border-radius: 0px; margin-top: -49px;"> <i class="fa fa-arrow-left" aria-hidden="true" style="font-size: 20px;"></i> </button>
+	                   <button class="btn btn-primary rightLst right_side_arrow" style="width: 39px; height: 145px; margin-right: 15px; border-radius: 0px; margin-top: -49px;"> <i class="fa fa-arrow-right" aria-hidden="true" style="font-size: 20px;"></i> </button>
+	                </div>
+	                </div>
+		        </div>
+			</div>
+			<!-- demo code here -->
+			<!-- <div class="row">
+				<div class='list-group gallery'>
+		            <div class='col-sm-4 col-xs-6 col-md-3 col-lg-3' ng-repeat="can in canvasList">
+		                <a  id="{{can.id}}" class="thumbnail fancybox" rel="ligthbox">
+		                    <img  id="{{can.id}}" class="img-responsive" alt=""  />
+		                </a>
+		            </div>
+		        </div> <!-- list-group / end -->
+			<!-- </div> --> <!-- row / end -->
+		</div>
+        
+        <div class="col-lg-2 m-t-8">
+	         <div class="row">
+	         	 <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(3);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a data-toggle="modal" data-target="#anaestheticDistressPopup">
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">Anaesthetic Distress</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(3);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a data-toggle="modal" data-target="#surgicalHelpPopup">
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">Surgical Help</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(3);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a data-toggle="modal" data-target="#extraEquimentRequestPopup">
+							                 <h4 style="color: black;margin-top: 10px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">Extra Equiment Request</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(3);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a data-toggle="modal" data-target="#incidentReportPopup">
+							                 <h4 style="color:color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">Incident Report</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(8);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a data-toggle="modal" data-target="#timeSheetPopup">
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">Time Sheet</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+	             <div class="col-lg-12">
+					<div class="d-card-small cursor-pointer" style="height: 100px !important;">
+					<div class="panel panel-default border-none-card" style="border: 1px solid #00003b !important;">
+						<div class="card-new" style="height: 23px; background-color: rgb(255, 253, 208); width: 28px; margin: -12px 0px 0px 10px; float: left;" ng-style="setColor(3);"></div>
+						<div class="panel-body padding5 card-panel-new" style="background-color: #eff8ff !important;height: 85px !important;">
+							<div class="row">
+							     <div class="card-height text-font">
+							         <div class="text-center">
+							             <a ng-click="saveIntraOperativeDetails();"><!-- data-toggle="modal" data-target="#endofprocedurePopup" -->
+							                 <h4 style="color: black;margin-top: 18px;float: left;font-weight: bold;width: 100%;text-align: center;font-size: 15px;">End Of Procedure</h4>
+							             </a>
+							         </div>
+							     </div>
+							</div>
+						</div>
+					</div>
+					</div>
+	             </div>
+        	 </div>
+        </div>
+    </div>
+</div>
+  <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-4 text-center ql-card ng-scope" style="padding-right: 0px; float: right !important;">
+   	    		<div class="cursor-pointer">
+		    		<div class="">
+			    	    <div class="" style="width: 125px;margin-left: 250px !important;">
+				            <div class="row">
+				    	        <div class="">
+				    		        <div class=""ng-click="backScreen()">
+				    			        <a class="btn" ng-click="backScreen()" style="width: 68px;height: 33px;" id="cancelBtn">
+                                                              <h4 style=" margin-top: 5px; text-align: center;">Back</h4>
+				    			        </a>
+				    		        </div>
+				    	        </div>
+				            </div>
+				        </div>
+				    </div>
+			    </div>
+            </div>
+          </div>
+<div id="checklistPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    Checklist
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+                    </div>
+				</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="consentPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    Consent
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+                    </div>
+				</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="identityPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    Identity
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+                    </div>
+				</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <div id="whochecklistPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    WHO Checklist
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+                    </div>
+				</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> -->
+
+
+<!-- *********** whochecklistPopup Modal start ********* -->
+<div id="whochecklistPopup" class="modal fade ng-scope in common-large-popup" role="dialog" >
+	<div class="modal-dialog"> 
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					WHO Checklist
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width18">Checklist Name</th>
+											<th class="width5"><span class="">Is WHO</span></th>
+											<th class="width25">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll320" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered ">
+									<tbody class="">
+										<tr ng-repeat="checklist in intraOperativeCheckList">
+											<td>
+												<div class="row">
+													<table class="table table-striped table-hover table-condensed table-bordered ">									
+														<tbody class="">
+														<tr >
+															<td class="width35 bed-management" style="width: 488px !important;"><div class="font-size15">{{checklist.description}}</div></td>
+															<td class="width18"style="width: 137px !important; text-align: center;">
+																<div  ng-if="checklist.isWho">Y</div>
+																<div  ng-if="!checklist.isWho">N</div>
+															</td>
+															<td class="width40">
+																<div id="" class="row ">
+																	<label class="radio-inline">
+																		<input type="radio" name="consentStsRadioBtn{{$index}}"  id="consentPending_{{$index}}" 
+																		ng-value="1"  ng-model="checklist.whoStatusId" convert-to-number ng-click="checkWhoStatus();">1.Confirmed
+																	</label>
+																	<label class="radio-inline">
+																		<input type="radio" name="consentStsRadioBtn{{$index}}"  id="consentCompleted_{{$index}}"  
+																		ng-value="2"  ng-model="checklist.whoStatusId" convert-to-number ng-click="checkWhoStatus();">2.Pending
+																	</label>
+																	<label class="radio-inline">
+																		<input type="radio" name="consentStsRadioBtn{{$index}}"  id="consentOverride_{{$index}}" 
+																		 ng-value="3"  ng-model="checklist.whoStatusId" convert-to-number ng-click="checkWhoStatus();">3.Override
+																	</label>
+																</div>
+															</td>	
+														</tr>
+														<tr>
+															<td></td>
+															<td colspan="3">
+																<div class="col-lg-12 col-md-12 col-sm-12 ">
+																	<textarea id="w" rows="5" cols="50" class="fix-height-scroll80" Placeholder="Remark" ng-model="checklist.remark"></textarea>
+																</div>
+															</td>
+														</tr>
+												</tbody>
+											</table>
+										</div>
+										</td>
+										</tr>
+										</tbody>
+									</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary btn-sm btn_success"id="okBtn">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary btn-sm btn_danger"id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- *********** whochecklistPopup Modal end ********* -->
+
+
+<div id="bloodAvailabilityPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    Blood Availability
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+                    </div>
+				</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="anaestheticDistressPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    Anaesthetic Distress
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width10">
+										<span class="">Doctor Name</span>
+									</th>
+									<th class="width10">
+										 <span class="">Email</span>
+									</th>
+									<th class="width8">
+										<span class="">Mobile No.</span>
+									</th>
+									<th class="width6">
+										 <span class="">Action</span>
+									</th>
+										
+								</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="info in aneasthesiaList">
+									<td>{{info.doctorName}}</td>
+									<td>{{info.email}}</td>
+									<td>{{info.mobileNumber}}</td>
+									<td><button type="button" class="btn btn-primary" ng-click="notifyToDoctor(info)">Notify</button></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="consentPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    Consent
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+                    </div>
+				</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="extraEquimentRequestPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    Extra Equiment Request
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<!-- <div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+                    </div>
+				</div> -->
+				<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="equipmentTypeObj"
+													class="text-input floating-label"
+													ng-options="x as x.category for x in equipmentTypeList track by x.id"
+													class="form-control"
+													ng-change="getEquipmentNamesByEquipmentId(equipmentTypeObj.id)"
+													ng-required="true">
+												</select> <label for="code">Equipment Type</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="equipmentNameObj"
+													class="text-input floating-label"
+													ng-options="x as x.name for x in equipmentNameList track by x.id"
+													class="form-control" ng-required="true">
+												</select> <label for="description" class="">Equipment Name</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add"
+											class="btn btn-primary btn-save-box-shadow"
+											ng-click="addEquipmentDetails();"
+											ng-disabled="procedureDisabledFlag">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width10">Equipment Category</th>
+													<th class="width10">Equipment Name</th>
+													<th class="width1">Qty</th>
+													<th class="width2 text-center">Action</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500" style="overflow: scroll;height: 250px !important;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr ng-repeat="info in extraEquipmentList">
+													<td class="width10">{{info.equipmentTypeName}}</td>
+													<td class="width10">{{info.itemName}}</td>
+													<td class="width1"><input type="text" autocomplete="off" numbers-only
+														name="description" id="" class="text-input floating-label"
+														ng-model="info.qty"></td>
+													<td class="width2 text-center"><a class=""
+														title="Remove"><i class="fa fa-times"
+															ng-click="removeEquipment($index);"></i></a></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--  payeeDetails Modal START -->
+<div id="incidentReportPopup" class="common-large-popup modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content" style="overflow-y: scroll;height: 605px;">
+			<div class="modal-header" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Incident Report
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div>
+		     	<div ng-include="'./views/common/patient-demography-opd.html'" class="ng-scope" style=""></div>
+			</div>
+		<div class="group-modal-main">
+		<div class="row">
+		
+		<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+				<div class="row input-container">
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<label for="code">Type of Incident</label>
+					<div id="mediaType" class="customRadioBtn">
+						<span> <input id="billDiscount" name="discount"
+							type="radio" value="1" val="yes"
+							ng-model="incidentTypeId" checked="checked">
+							<label for="billDiscount"
+							ng-click="set('1');">Patient</label>
+						</span> <span> <input id="groupDiscount" name="discount"
+							type="radio" value="2"
+							ng-model="incidentTypeId"> <label
+							for="groupDiscount" >Department</label>
+						</span>
+					</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-calendar" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input  type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="incidentReportingDate"
+									model-view-value="true" is-open="datepickerDate.opened"
+									datepicker-options="dateOptionDate" show-button-bar="false"
+									ng-click="openDatePickerDate()" required    > 
+							<label for="description" class="">Date </label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-calendar" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="clockpicker" >
+							<input  type="text" autocomplete="off" name="description" id="" ng-model="incidentReportingDateTime" class="text-input floating-label" ng-init="initClockPicker()"  ng-change="validateTime()" >
+							<label for="description" class="">Time <span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+								<select class="text-input floating-label dirty" id="specialityId" ng-model="specialityId">
+								<option ng-repeat="info in specialityMasterList" ng-value="{{info.specialityId}}" value="{{info.specialityId}}">{{info.specialityName}}</option>
+							</select>
+								 <label for="code">Department<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							
+							<select class="text-input floating-label dirty" id="icpcsystem" ng-model="incidentCategoryId">
+								<option ng-repeat="info in incidentCategoryMasterList" ng-value="{{info.incidentCategoryId}}" value="{{info.incidentCategoryId}}">{{info.incidentCategoryDesc}}</option>
+							</select>
+							 <label for="code">Category<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select ng-model="obj2" class="text-input floating-label dirty" ng-change="getRoleMappedToIncidentReport(obj2)"
+													ng-options="x as x.incidentReportDesc for x in getActiveIncidentReportList track by x.incidentReportId"
+													class="form-control" ng-required="true">
+												</select>
+							 <label for="code">Incident<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		</div>
+		<div class="row">
+		
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+						<select class="text-input floating-label dirty" id="icpcsystem" ng-model="roleId"  ng-change="getRolewiseUsers(roleId)">
+								<option ng-repeat="info in getActiveRoleList" ng-value="{{info.id}}" value="{{info.id}}">{{info.label}}</option>
+							</select>
+							<label> Role<span class="star">*</span></label>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+						   <select class="text-input floating-label dirty" id="icpcsystem" ng-model="incidentUserId">
+								<option ng-repeat="info in getRoleWiseUsersList" ng-value="{{info.userId}}" value="{{info.userId}}">{{info.userName}}</option>
+							</select>
+								<label for="" class="">user<span class="star">*</span></label>
+							</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" id="icpcsystem" ng-model="reportingTemplateId"  ng-click="addTemplate(reportingTemplateId)">
+								<option ng-repeat="info in incidentReportTemplateMapperList" ng-value="{{info.templateId}}" value="{{info.templateId}}">{{info.title}}</option>
+							</select>
+							 <label for="code">Reporting Template<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set padding-top15">
+				<!-- <input type="file" ng-model="fileInput" name="file{{$index}}"> -->
+				<form action="" method="post" enctype="multipart/form-data">
+							<input type="file" fileinput="file" id="csvfile"
+								file-model="csvfile" filepreview="filepreview" validfile
+								multiple progress drag preview>
+					    <p ng-show="fileError" style="color:red;">{{fileError}}</p>
+						</form>
+			</div>
+			
+		</div>
+		<div class="row">
+			<div class="row">
+				<div class="modal-body"  style="overflow-y: scroll !important; max-height:600px; padding-bottom:15px !important;" ng-show="templateFormatId==1">
+				<div style="padding:4px 8px !important; background-color: white !important;">
+					<div id="htmlContent" class="row">
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12 col-md-12">
+                   <textarea ck-editor ng-model="value"></textarea>
+                              
+			  </div>
+			</div>
+	
+		</div>
+		<div class="row his-style margin-top10">
+			<div class="col-lg-1 col-md-1 col-sm-2 text-right">
+				<label>Remark:</label>
+			</div>
+			<div class="col-lg-9 col-md-9 col-sm-6 padding-left-right8">
+				<textarea rows="1" ng-model="incidentRemark" class="form-control"></textarea>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+				<div class="">
+					<input type="button" value="Save" ng-click="saveIncidentReporting()"  data-dismiss="modal" class="btn btn-primary btn-save-box-shadow" style="background: #008a27 !important; color: #fff !important; height: 25px !important; padding: 2px 5px 5px 5px !important; border: none !important; width: 100%; margin-left: 105px;">
+				</div>
+			</div>
+		</div>
+		</div>
+		</div>
+	</div>
+</div>
+<!-- paymentEntitlementModal END -->
+
+
+
+<div id="timeSheetPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    Time Sheet
+                    <button type="button" class="close" style="    width: 25px !important;
+    color: #EA0303 !important;
+    margin-top: 19px !important;" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body" style="overflow: -webkit-paged-y;">
+			<div class="thumbnail">
+				<div class="row padding-top8">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="clockpicker">
+<!--									<input type="text" autocomplete="off" name="description" id=""-->
+<!--										ng-value="timesheet.wheelInTime" class="text-input floating-label"-->
+<!--										 ng-init="initClockPicker()">-->
+										<input type="text" autocomplete="off" name="wheelInTime" id=""
+											   ng-value="timesheet.wheelInTime" class="text-input floating-label">
+										<label
+										for="description" class="LISDynamicLabel">Wheel-in
+										Time<span class="star">*</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+<!--									<input type="text" autocomplete="off" name="description" id=""-->
+<!--										ng-value="timesheet.tableOnTime" class="text-input floating-label"-->
+<!--										 ng-init="initClockPicker()">-->
+									<input type="text" autocomplete="off" name="tableOnTime" id=""
+										   ng-value="timesheet.tableOnTime" class="text-input floating-label">
+									<label
+										for="description" class="LISDynamicLabel">Table-on
+										Time<span class="star">*</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+<!--									<input type="text" autocomplete="off" name="description" id=""-->
+<!--										ng-value="timesheet.anesthesiaTime" class="text-input floating-label"-->
+<!--										 ng-init="initClockPicker()">-->
+									<input type="text" autocomplete="off" name="anesthesiaTime" id=""
+										   ng-value="timesheet.anesthesiaTime" class="text-input floating-label">
+									<label
+										for="description" class="LISDynamicLabel">Anesthesia Time<span class="star">*</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+			    <div class="row">
+					
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+<!--									<input type="text" autocomplete="off" name="description" id=""-->
+<!--										ng-value="timesheet.procedureStartTime" class="text-input floating-label"-->
+<!--										 ng-init="initClockPicker()">-->
+									<input type="text" autocomplete="off" name="procedureStartTime" id=""
+										   ng-value="timesheet.procedureStartTime" class="text-input floating-label">
+									<label
+										for="description" class="LISDynamicLabel">Procedure Start Time<span class="star">*</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+<!--									<input type="text" autocomplete="off" name="description" id=""-->
+<!--										ng-value="timesheet.procedureEndTime" class="text-input floating-label"-->
+<!--										 ng-init="initClockPicker()">-->
+									<input type="text" autocomplete="off" name="procedureEndTime" id=""
+										   ng-value="timesheet.procedureEndTime" class="text-input floating-label">
+									<label
+										for="description" class="LISDynamicLabel">Procedure End Time<span class="star">*</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+<!--									<input type="text" autocomplete="off" name="description" id=""-->
+<!--										ng-value="timesheet.tableOutTime" class="text-input floating-label"-->
+<!--										 ng-init="initClockPicker()">-->
+									<input type="text" autocomplete="off" name="tableOutTime" id=""
+										   ng-value="timesheet.tableOutTime" class="text-input floating-label">
+									<label
+										for="description" class="LISDynamicLabel">Table-out Time<span class="star">*</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+<!--									<input type="text" autocomplete="off" name="description" id=""-->
+<!--										ng-value="timesheet.wheelOutTime" class="text-input floating-label"-->
+<!--										 ng-init="initClockPicker()">-->
+									<input type="text" autocomplete="off" name="wheelOutTime" id=""
+										   ng-value="timesheet.wheelOutTime" class="text-input floating-label">
+									<label
+										for="description" class="LISDynamicLabel">Wheel-out Time<span class="star">*</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+				<!-- 	<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+									<input type="text" autocomplete="off" name="description" id=""
+										ng-model="timesheet.scheduleDischarge" class="text-input floating-label"
+										 ng-init="initClockPicker()"> <label
+										for="description" class="LISDynamicLabel">Schedule Discharge<span class="star">*</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div> -->
+<!--					<div-->
+<!--						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">-->
+<!--						<div class="row input-container">-->
+<!--							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">-->
+<!--								<i class="fa fa-clock-o" aria-hidden="true"></i>-->
+<!--							</div>-->
+<!--							<div class="col-lg-11 col-sm-11 col-md-11">-->
+<!--								<div class="clockpicker">-->
+<!--									<input type="text" autocomplete="off" name="description" id=""-->
+<!--										ng-model="timesheet.actualDischarge" class="text-input floating-label"-->
+<!--										 ng-init="initClockPicker()"> <label-->
+<!--										for="description" class="LISDynamicLabel">Actual Discharge<span class="star">*</span>-->
+<!--									</label>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+				</div>
+			</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="width100" title="Ok" data-dismiss="modal" id="okBtn">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="endofprocedurePopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+                    End Of Procedure
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+                    </div>
+				</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+ <!-- medicationHistoryPopup START -->
+<div id="surgicalHelpPopup" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+	<div class="modal-dialog" style="width: 75% !important;margin: 120px 0 0 190px !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Surgical Help
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width10">
+										<span class="">Doctor Name</span>
+									</th>
+									<th class="width10">
+										 <span class="">Email</span>
+									</th>
+									<th class="width8">
+										<span class="">Mobile No.</span>
+									</th>
+									<th class="width6">
+										 <span class="">Action</span>
+									</th>
+										
+								</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="info in doctorList">
+									<td>{{info.doctorName}}</td>
+									<td>{{info.email}}</td>
+									<td>{{info.mobileNumber}}</td>
+									<td><button type="button" class="btn btn-primary" ng-click="notifyToDoctor(info)">Notify</button></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+            <div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-sm btn_success btn-sm btn_success btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+ <!-- medicationHistoryPopup END -->
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+CKEDITOR.replace('editor');
+// added newly bcoz it was giving error as 'editor instance "editor" is already attached to the provided element' , so below line is added  start
+var editor = CKEDITOR.instances["editor"]; 
+if (editor) { editor.destroy(true); }
+// end
+    CKEDITOR.config.width="99.9%";
+    CKEDITOR.config.height="300px"
+</script>
+
+
+
+<script>
+$(document).ready(function () {
+    var itemsMainDiv = ('.MultiCarousel');
+    var itemsDiv = ('.MultiCarousel-inner');
+    var itemWidth = "";
+
+    $('.leftLst, .rightLst').click(function () {
+        var condition = $(this).hasClass("leftLst");
+        if (condition)
+            click(0, this);
+        else
+            click(1, this)
+    });
+
+    ResCarouselSize();
+
+
+
+
+    $(window).resize(function () {
+        ResCarouselSize();
+    });
+
+    //this function define the size of the items
+    function ResCarouselSize() {
+        var incno = 0;
+        var dataItems = ("data-items");
+        var itemClass = ('.item');
+        var id = 0;
+        var btnParentSb = '';
+        var itemsSplit = '';
+        var sampwidth = $(itemsMainDiv).width();
+        var bodyWidth = $('body').width();
+        $(itemsDiv).each(function () {
+            id = id + 1;
+            var itemNumbers = $(this).find(itemClass).length;
+            btnParentSb = $(this).parent().attr(dataItems);
+            itemsSplit = btnParentSb.split(',');
+            $(this).parent().attr("id", "MultiCarousel" + id);
+
+
+            if (bodyWidth >= 1200) {
+                incno = itemsSplit[3];
+                itemWidth = sampwidth / incno;
+            }
+            else if (bodyWidth >= 992) {
+                incno = itemsSplit[2];
+                itemWidth = sampwidth / incno;
+            }
+            else if (bodyWidth >= 768) {
+                incno = itemsSplit[1];
+                itemWidth = sampwidth / incno;
+            }
+            else {
+                incno = itemsSplit[0];
+                itemWidth = sampwidth / incno;
+            }
+            $(this).css({ 'transform': 'translateX(0px)', 'width': itemWidth * itemNumbers });
+            $(this).find(itemClass).each(function () {
+                $(this).outerWidth(itemWidth);
+            });
+
+            $(".leftLst").addClass("over");
+            $(".rightLst").removeClass("over");
+
+        });
+    }
+
+
+    //this function used to move the items
+    function ResCarousel(e, el, s) {
+        var leftBtn = ('.leftLst');
+        var rightBtn = ('.rightLst');
+        var translateXval = '';
+        var divStyle = $(el + ' ' + itemsDiv).css('transform');
+        var values = divStyle.match(/-?[\d\.]+/g);
+        var xds = Math.abs(values[4]);
+        if (e == 0) {
+            translateXval = parseInt(xds) - parseInt(itemWidth * s);
+            $(el + ' ' + rightBtn).removeClass("over");
+
+            if (translateXval <= itemWidth / 2) {
+                translateXval = 0;
+                $(el + ' ' + leftBtn).addClass("over");
+            }
+        }
+        else if (e == 1) {
+            var itemsCondition = $(el).find(itemsDiv).width() - $(el).width();
+            translateXval = parseInt(xds) + parseInt(itemWidth * s);
+            $(el + ' ' + leftBtn).removeClass("over");
+
+            if (translateXval >= itemsCondition - itemWidth / 2) {
+                translateXval = itemsCondition;
+                $(el + ' ' + rightBtn).addClass("over");
+            }
+        }
+        $(el + ' ' + itemsDiv).css('transform', 'translateX(' + -translateXval + 'px)');
+    }
+
+    //It is used to get some elements from btn
+    function click(ell, ee) {
+        var Parent = "#" + $(ee).parent().attr("id");
+        var slide = $(Parent).attr("data-slide");
+        ResCarousel(ell, Parent, slide);
+    }
+
+});
+</script>
+<script>
+$(document).ready(function(){
+    //FANCYBOX
+    //https://github.com/fancyapps/fancyBox
+    $(".fancybox").fancybox({
+        openEffect: "none",
+        closeEffect: "none"
+    });
+});
+   
+  
+</script>
+
+
+
+<script>
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var ox = canvas.width / 2;
+var oy = canvas.height / 2;
+ctx.font = "42px serif";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.fillStyle = "#800";
+ctx.fillRect(ox / 2, oy / 2, ox, oy);
+
+download_img = function(el) {
+  // get image URI from canvas object
+  var imageURI = canvas.toDataURL("image/jpg");
+  el.href = imageURI;
+};
+</script>

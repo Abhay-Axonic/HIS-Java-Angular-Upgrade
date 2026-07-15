@@ -1,0 +1,47 @@
+package com.param.global.org.common.dao;
+
+import com.param.global.common.Response;
+import com.param.global.dto.global.InstructionMasterDto;
+import com.param.global.dto.global.TranslatedInstructionMasterDto;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+public interface IInstructionMasterDao {
+	
+	
+	Response saveInspectionMaster(InstructionMasterDto instructionMasterDto) throws ApplicationException;
+
+	Response getInspectionMasterList(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response updateInspectionMasterStatus(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response getInspectionMasterCount(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response updateInspectionMaster(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+	
+	Response getInspectionMasterByName(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+	
+	Response getInspectionMasterByNameNotById(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response getInspectionMasterListById(int inspectionId, int orgId) throws ApplicationException;
+
+	Response getActiveInspectionMasterList(InstructionMasterDto instructionMasterDto) throws ApplicationException;
+
+	Response getDeptSpecilityById(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response getSpecialityByDept(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response saveTranslatedInstruction(TranslatedInstructionMasterDto dto)throws ApplicationException;
+
+	Response updateTranslatedInstruction(TranslatedInstructionMasterDto dto)throws ApplicationException;
+
+	Response inactiveTranslatedInstruction(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response getConvertedLanguageListById(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response getSearchedInstructionList(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response getMostFrequentlyUsedInstructions(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+
+	Response getSearchedFreeTextInstructionList(InstructionMasterDto instructionMasterDto)throws ApplicationException;
+}

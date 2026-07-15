@@ -1,0 +1,50 @@
+package com.param.global.unit.dao;
+
+import com.param.global.common.Response;
+import com.param.global.model.IncidentReportRoleMapper;
+import com.param.global.unit.dto.IncidentReportMasterDto;
+import com.param.global.unit.dto.IncidentReportRoleMapperDto;
+import com.param.global.unit.dto.IncidentReportTemplateMapperDto;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+public interface IIncidentReportMasterDao {
+	public Response saveIncidentReportMaster(IncidentReportMasterDto incidentReportMasterDto) throws ApplicationException;
+
+	public Response updateIncidentReportMaster(IncidentReportMasterDto incidentReportMasterDto) throws ApplicationException;
+
+	public Response getIncidentReportMasterById(IncidentReportMasterDto incidentReportMasterDto) throws ApplicationException;
+
+	public Response getIncidentReportMasterList(IncidentReportMasterDto incidentReportMasterDto) throws ApplicationException;
+
+	public Response getTemplateByIncidentReportId(IncidentReportMasterDto incidentReportMasterDto) throws ApplicationException;
+
+	public Response getRoleByIncidentReportId(IncidentReportMasterDto incidentReportMasterDto) throws ApplicationException;
+	
+	public Response checkIncidentReportMasterAvailableByName(IncidentReportMasterDto incidentReportMasterDto) throws ApplicationException;
+	
+	public Response checkIncidentReportMasterAvailableByNameNotId(IncidentReportMasterDto incidentReportMasterDto) throws ApplicationException;
+
+	public Response saveIncidentReportRoleMapper(IncidentReportRoleMapperDto dtoRoleList) throws ApplicationException;
+
+	public Response saveIncidentReportTemplateMapper(IncidentReportTemplateMapperDto dtoTemplateList)throws ApplicationException;
+
+	public Response updateIncidentReportRoleMapper(IncidentReportRoleMapperDto dtoRoleList)throws ApplicationException;
+
+	public Response updateIncidentReportTemplateMapper(IncidentReportTemplateMapperDto dtoTemplateList)throws ApplicationException;
+
+	public Response updateIncidentReportMasterStatus(IncidentReportMasterDto incidentReportMasterDto)throws ApplicationException;
+
+	public Response updateIncidentReportRoleMasterStatus(IncidentReportMasterDto incidentReportMasterDto)throws ApplicationException;
+
+	public Response updateIncidentReportTemplateMasterStatus(IncidentReportMasterDto incidentReportMasterDto)throws ApplicationException;
+
+	public Response getActiveIncidentReportMasterList(IncidentReportMasterDto incidentReportMasterDto)throws ApplicationException;
+
+	public Response getIncidentReportMasterCount(IncidentReportMasterDto incidentReportMasterDto)throws ApplicationException;
+
+	public Response checkIncidentReportTemplateAvailableByTemplateId(IncidentReportMasterDto incidentReportMasterDto)throws ApplicationException;
+
+	public Response checkIncidentReportRoleAvailableByRoleId(IncidentReportMasterDto incidentReportMasterDto)throws ApplicationException;
+
+}

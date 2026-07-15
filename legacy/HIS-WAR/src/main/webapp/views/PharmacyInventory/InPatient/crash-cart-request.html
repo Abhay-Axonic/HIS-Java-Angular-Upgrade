@@ -1,0 +1,511 @@
+<!-- *****************************************************************************************************************************
+												
+****************************************************************************************************************************** -->
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+    <div class="container-fluid his-style">
+        <legend class="main-heading-div commonPatientSearch cursor-pointer">
+			<div class="row" id="storeSelection">
+				<div class="col-lg-10 col-md-9 col-sm-6"></div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set1 pull-right">
+					<span class="heading-name-font">{{nursingStationCookieShow}} </span>
+					<span class="heading-name-font pull-right" title="Change Nursing Station" data-toggle="modal" 
+						ng-click="isWardChanged()">
+						<i class="fa fa-stack-exchange" aria-hidden="true"></i>
+					</span>
+				</div>
+			</div>
+		</legend>
+        <div class="row margin-top10 padding-left-right-set4">
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+                                placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+                                datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+                            <label for="fromDate" class="">Date (From)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                        <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+                                ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"
+                                show-button-bar="false" ng-click="vm.model.OpenToDate()">
+                            <label for="toDate" class="">Date-Till</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container margin-top4">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-files-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <select class="dirty text-input floating-label" ng-model="vm.model.visitType" name="visitType" ng-class="{dirty: vm.model.visitType}"
+                            ng-change="vm.model.ChangeVisitType()" data-ng-options="visitTypeData.type for visitTypeData in vm.model.visitTypeList">
+                            </select>
+                            <label for="visitType">Visit Type</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" name="patientName" id="patientName" class="text-input floating-label" ng-model="vm.model.patientName"
+                                ng-change="vm.model.isPatientNameValid = false" uib-typeahead="patientNames.patientName as patientNames.details for patientNames in vm.model.SearchpatientNames($viewValue)"
+                                typeahead-on-select="vm.model.AddPatientDetails($item); vm.model.search = '';">
+
+                            <label for="patientName">Patient Name</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" name="uhid" ng-model="vm.model.uhid" ng-class="{dirty:vm.model.uhid}" id="" class="text-input floating-label"
+                                uib-typeahead="patientNames.uhid as patientNames.details for patientNames in vm.model.SearchUhid($viewValue)"
+                                typeahead-on-select="vm.model.AddPatientDetails($item); vm.model.search = '';">
+                            <label for="code">UHID</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <select class="dirty text-input floating-label" ng-model="vm.model.visitNumber" name="visitNo" ng-class="{dirty: vm.model.visitNo}"
+                                ng-change="vm.model.isVisitNoValid = false" ng-options="visitNumber.visitNo for visitNumber in vm.model.visitDetails"
+                                ng-if="vm.model.visitType.id == 1">
+                            </select>
+
+                            <input type="text" autocomplete="off" name="visitNumberText" ng-model="vm.model.visitNumberText" ng-class="{dirty:vm.model.visitNumberText}"
+                                class="text-input floating-label" ng-if="vm.model.visitType.id != 1">
+
+                            <label for="status">Visit No</label>
+                            <p ng-if="vm.model.isVisitNoValid" class="errorMsg">Select Visit No</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row margin-top4">
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container margin-top4">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-hospital-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <select class="dirty text-input floating-label" ng-model="vm.model.ward" name="ward" ng-class="{dirty: vm.model.ward}" ng-options="ward.wardName for ward in vm.model.wardList">
+                            </select>
+                            <label for="status">Ward</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container margin-top4">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-building" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <select class="dirty text-input floating-label" ng-model="vm.model.store" name="store" ng-class="{dirty: vm.model.store}"
+                                ng-options="store.store for store in vm.model.storeList">
+                            </select>
+                            <label for="status">Store</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" class="text-input floating-label dirty" ng-model="vm.model.crashCartNo">
+                            <label for="code">Crash Cart No.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1 pull-right text-width-auto">
+                <div class="common-save-button">
+                    <a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" ng-click="vm.model.GetCrashCartRequest()" style="width: auto;">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top4">
+                <div class=" ">
+                    <a href="#/addNewCrashCartRequest">
+                        <input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row padding-left-right-set4">
+        	<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="vm.model.pagination.pageSize='10'" 
+										ng-model="vm.model.pagination.pageSize" 
+										ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+						</div>
+						
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+                <input type="text" autocomplete="off" class="text-search-box" ng-model="vm.model.search" placeholder="Search" style="margin-top: 0px">
+                <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+			  <table id="main-table" class="main-table width140">
+			    <thead class="mainServiceTableCommon">
+			      <tr>
+                    <th class="width8 vertical-top" title="Crash Cart No.">
+                        Crash Cart No.
+                        <div class="float_right" ng-click="sortType = 'crashCartNo'; sortReverse = !sortReverse">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                    </th>
+                    <th class="width8 vertical-top" title="Crash Cart Date">
+                        Crash Cart Date
+                        <div class="float_right" ng-click="sortType = 'crashCartDate'; sortReverse = !sortReverse">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                    </th>
+                    <th class="width10 vertical-top" title="Code Blue Date Time">
+                        Code Blue Date Time
+                        <div class="float_right" ng-click="sortType = 'codeBlueDateTime'; sortReverse = !sortReverse">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                    </th>
+                    <th class="width8 vertical-top" title="Store">
+                        Store
+                        <div class="float_right" ng-click="sortType = 'store'; sortReverse = !sortReverse">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                    </th>
+                    <th class="width8 vertical-top" title="Visit Type">
+                        Visit Type
+                        <div class="float_right" ng-click="sortType = 'visitType'; sortReverse = !sortReverse">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                    </th>
+                    <th class="width8 vertical-top" title=" Visit No">
+                        Visit No
+                        <div class="float_right" ng-click="sortType = 'visitNo'; sortReverse = !sortReverse">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                    </th>
+                    <th class="width6 vertical-top" title="UHID">
+                        UHID
+                        <div class="float_right" ng-click="sortType = 'uhid'; sortReverse = !sortReverse">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                    </th>
+                    <th class="width8 vertical-top" title="Patient Details">
+                        Patient Details
+                        <div class="float_right" ng-click="sortType = 'patientDetail'; sortReverse = !sortReverse">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                    </th>
+                    <th class="width8 vertical-top" title="Doctor Details">
+                        Doctor Details
+                        <div class="float_right" ng-click="sortType = 'doctorDetail'; sortReverse = !sortReverse">
+                          <div>
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                          </div>
+                          <div class="margin-top-8">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                    </th>
+                    <th class="width5 vertical-top" title="Ward">Ward
+                            <div class="float_right" ng-click="sortType = 'ward'; sortReverse = !sortReverse">
+                              <div>
+                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                              </div>
+                              <div class="margin-top-8">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                    </th>
+                    <th class="width5 vertical-top" title="Bed No">Ward Bed No
+                            <div class="float_right" ng-click="sortType = 'bedNo'; sortReverse = !sortReverse">
+                              <div>
+                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                              </div>
+                              <div class="margin-top-8">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                    </th>
+                    <th class="width8 vertical-top" title="Request By">Requestor
+                            <div class="float_right" ng-click="sortType = 'requestedBy'; sortReverse = !sortReverse">
+                              <div>
+                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                              </div>
+                              <div class="margin-top-8">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                    </th>
+                    <th class="width5 vertical-top" title="Status">Status(n)
+                            <div class="float_right" ng-click="sortType = 'status'; sortReverse = !sortReverse">
+                              <div>
+                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                              </div>
+                              <div class="margin-top-8">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                    </th>
+                    <th class="width8 text-center last-col-fixed" title="Action">
+                        Action taken
+                    </th>
+                </tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-if="vm.model.crashCartRequestlist == null || !vm.model.crashCartRequestlist.length">
+                       <td colspan="14">
+                           <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+                       </td>
+                   </tr>
+                   <tr ng-repeat="requestItem in vm.model.pagination.data | filter : vm.model.search |   orderBy:sortType:sortReverse">
+                       <td class="width8" title="{{requestItem.crashCartNo}}">{{requestItem.crashCartNo}}</td>
+                       <td class="width8" title="{{requestItem.crashCartDate | date:'dd/MM/yyyy'}}">{{requestItem.crashCartDate | date:'dd/MM/yyyy'}}</td>
+                       <td class="width10" title="{{requestItem.codeBlueDateTime | date:'dd/MM/yyyy hh:mm a'}}">{{requestItem.codeBlueDateTime | date:'dd/MM/yyyy hh:mm a '}}</td>
+                       <td class="width8" title="{{requestItem.store}}">{{requestItem.store}}</td>
+                       <td class="width8" title="{{requestItem.visitType}}">{{requestItem.visitType}}</td>
+                       <td class="width8" title="{{requestItem.visitNo}}">{{requestItem.visitNo}}</td>
+                       <td class="width6" title="{{requestItem.uhid}}">{{requestItem.uhid}}</td>
+                       <td class="width8" title="{{requestItem.patientDetail}}">{{requestItem.patientDetail}}</td>
+                       <td class="width8" title="{{requestItem.doctorDetail}}">{{requestItem.doctorDetail}}</td>
+                       <td class="width5" title="{{requestItem.wardName}}">{{requestItem.wardName}}</td>
+                       <td class="width5" title="{{requestItem.bedNo}}">{{requestItem.bedNo}}</td>
+                       <td class="width8" title="{{requestItem.requestedBy}}">{{requestItem.requestedBy}}</td>
+                       <td class="width5" title="{{requestItem.status}}">{{requestItem.status}}</td>
+
+                       <td class="text-center cursor-pointer width8 last-col-fixed">
+                           <span>
+                               <a title="Print " ng-click="vm.model.printCrashCartRequestReport(requestItem)">
+                                   <i class="fa fa-print" aria-hidden="true"></i>
+                               </a>
+                           </span>
+                           <span>
+                               <a title="Cancel ">
+                                   <i class="fa fa-ban" aria-hidden="true" ng-class="{disabled: vm.model.isDisable(requestItem)}" ng-click="vm.model.Cancel('Cancel','confirmCancel', requestItem.id)"></i>
+                               </a>
+                           </span>
+                           <span>
+                               <a href ng-click="vm.model.NavigateToDetail(requestItem)">Details</a>
+                           </span>
+                       </td>
+                   </tr>
+			    </tbody>
+			  </table>
+			</div>
+			<div class="row margin-bottom45 center-block">
+						<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+							style="font-size: 14px; cursor: pointer;">
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+							</li>
+							<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+								ng-class="{active:vm.model.pagination.currentPage === page}"><a
+								ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+							</li>
+						</ul>
+					</div>
+					
+		</div>
+    </div>
+</div>
+
+<div id="nursingStationModal"  class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Select Nursing Station
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row padding-top10 padding-bottom10">
+                    <div class="col-md-5 col-lg-5 col-sm-5 padding-left-right-5">
+                        <span>Select Nursing Station</span> 
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-set1">
+                        <select class="dirty" style="width:100%;border-radius: 10px;height: 40px;"  ng-model="departmentNursing" >
+                        <option  value="">Select Nursing Station</option>
+                            <option value="{{departmentNursing}}" ng-repeat="departmentNursing in departmentNursingStationMapperDtoslist">{{departmentNursing.nursingStationDesc}}</option>
+                        </select>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="modal-footer" style="border: none;">
+                <button type="button"  class="btn btn-primary width13" id="otpOk" ng-click="selectsetNursingStation();">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- confirmCancel Start -->
+<div id="confirmCancel" class="modal fade ng-scope in common-small-popup" role="dialog" style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Cancellation
+                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.model.ModalDismiss('confirmCancel')">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 padding-left-right-set">
+                        <div class="row input-container margin-top10">
+                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                <div class="">
+                                    <select name="cancelReason" id="cancelReason" class="text-input floating-label" ng-model="vm.model.cancelReason" ng-class="{dirty: vm.model.cancelReason}"
+                                        ng-change="vm.model.isReasonValid = false">
+                                        <!-- ng-options="cancelReason.reason for cancelReason in vm.model.reasons" -->
+                                        <option value="">Select Reason</option>
+                                        <option ng-repeat="reason in vm.model.reasons" value="{{reason.id}}">{{reason.reason}}</option>
+                                    </select>
+                                    <label for="code">Select Reasons</label>
+                                </div>
+                                <p ng-if="vm.model.isReasonValid" class="errorMsg">Select Reason</p>
+                            </div>
+                        </div>
+                        <div class="row input-container margin-top10">
+                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                <i class="fa fa-sticky-note" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                <div class="">
+                                    <textarea name="cancelNote" rows="4" maxlength="100" id="cancelNote" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+                                        ng-model="vm.model.cancelNote" ng-class="{dirty: vm.model.cancelNote}"></textarea>
+                                    <label for="cancelNote">Note</label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <input type="text" autocomplete="off" id="commonId" /> -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;">
+                <button type="button" ng-disabled="cancelNote == ''" class="btn btn-primary" ng-click="vm.model.CancelItem();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- cancelPurchaseReqest END -->
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".selectedPageName").text("Crash Cart Request");
+        $(".sidebar-nav li").each(function () {
+            $(this).find("a").parents("li").removeClass("active");
+        });
+        $('a[href$="crashCartRequest"]').parents("li").addClass("active");
+        $("#ConsumptionDate").datepicker().datepicker("setDate", new Date());
+        $("#ConsumptionTime").clockpicker({
+
+        });
+    });
+</script>

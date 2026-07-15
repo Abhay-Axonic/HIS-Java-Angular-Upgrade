@@ -1,0 +1,433 @@
+<!-- ******** style start *********** -->
+<style>
+@media (min-width: 768px) and (max-width: 1024px) {
+  .navbar-header img{
+		width: 149px !important;
+	    margin-top: 10px !important;
+	}
+	.navbar-collapse ul.navbar-nav{
+		margin-left: 0px !important;
+	}
+   .user-name-top{
+   		font-size: medium !important;
+   }
+   span.logout_profile{
+   		padding-top: 4px !important;
+   }
+   .custom-sub-tab ul.tabs li.active {
+    background: #fff;
+    border-top: 1px solid #5ab7c8;
+    border-left: 1px solid #5ab7c8;
+    border-right: 1px solid #5ab7c8;
+    height: 30px !important;
+    padding: 10px 0px 6px 0px !important;
+	}
+	.second-level-tab-display-div{
+	   margin-top: -4px !important;
+	}
+	.custom-sub-tab .nav-tabs>li.active>a, .custom-sub-tab .nav-tabs>li.active>a:focus, .custom-sub-tab .nav-tabs>li.active>a:hover{
+		margin-top: -2px;
+    	height: 30px;
+	}
+	.second-level-subtab-display-div-new {
+	    padding: 4px 1px 1px 1px  !important
+	    border: 1px solid #5ab7c8 !important;
+	    background: white  !important;
+	    height: 490px !important;
+	}
+	.text-width-auto .btn{
+		padding: 3px 6px !important;
+	}
+	.btn{
+		font-size: 12px;
+	}
+	
+}
+#wrapper.toggled-2 #page-content-wrapper{
+	background-color: #f6f6f6 !important;
+}
+.container-fluid {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    margin-right: 2px;
+    margin-left: 0px;
+}
+.
+ul.tabs li a {
+    color: white;
+    text-decoration: none;
+}
+.nav-tabs>li>a {
+    margin-right: 0px;
+}
+.nav > li > a {
+    padding: 0px 0px !important;
+}
+ul.tabs {
+    list-style-type: none;
+    margin: 0;
+    /* padding: 0; */
+}
+.nav-tabs {
+    border-bottom: 0px !important;
+}
+ul.tabs li {
+    float: left;
+    font-size: 14px;
+    padding: 5px;
+    margin: 0px;
+    background-color: #59b7c8;
+    width: 100% ;
+    border:1px solid white;
+}
+.custom-sub-tab ul.tabs li.active {
+	height: 30px !important;
+    padding: 6px 0px !important;
+}
+.custom-sub-tab-new ul.tabs li.active
+{
+	background: #fff; /* #ddeeff */
+    border-top: 1px solid #5ab7c8;
+    border-left: 1px solid #5ab7c8;
+    border-right: 1px solid #5ab7c8;
+  	height: 30px !important;
+    padding: 6px 0px !important;
+}
+
+
+.custom-sub-tab-new .nav-tabs>li.active>a,  .custom-sub-tab-new .nav-tabs>li.active>a:focus, .custom-sub-tab-new .nav-tabs>li.active>a:hover
+{
+	color: #5ab7c8 !important;
+    background-color: #fff !important; 
+    border: 0px !important;
+    font-weight: 700;
+   	margin-top: -3px;
+   /*  height: 25px;  */
+}
+
+.second-level-tab-display-div-new {
+    padding: 1px;
+    border: 1px solid #5ab7c8;
+    background: white ;
+    height: 550px;
+}
+.second-level-subtab-display-div-new {
+	    padding:4px 1px 1px 1px  !important;
+	    border: 1px solid #5ab7c8 !important;
+	    background: white  !important;
+	    height: 490px !important;
+}
+.box-shadow-set{
+	box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, .5);
+}
+.padding-top-bottom-set{
+	padding: 10px;
+}
+</style>
+<!-- ******** style end *********** -->
+<!-- ******** page content start *********** -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+     	<div class="row">
+     		<div ng-include="'./views/common/patient-demography-opd.html'"></div>
+     	</div>
+     	<div class="row">
+     		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0">
+     			<div class="row">
+     				<div class="custom-sub-tab-new ">
+						<ul class="tabs nav nav-tabs">
+							<li  ng-class="{ active : isSetFirstTabLevel(1) }" id="" class=" active" style="">
+								<a href="" ng-click="setFirstTabLevel(1)">Progress Note</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(2) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(2)" class="">Complaints</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(3) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(3)" class="">History</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(4) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(4)" class="">Habits</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(5) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(5)" class="">Allergy</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(6) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(6)" class="">Examination</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(7) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(7)" class="">Diagnosis</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(8) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(8)" class="">Orders</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(9) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(9)" class="">Certificate</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(10) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(10)" class="">Observation</a>
+							</li>
+							<li ng-class="{ active : isSetFirstTabLevel(11) }" class="" style="">
+								<a href="" ng-click="setFirstTabLevel(11)" class="">Past Visits</a>
+							</li>
+						</ul>
+					</div>
+     			</div>
+     		</div>
+     		<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set0 ">
+     			<div class="row box-shadow-set">
+					<div ng-show="isSetFirstTabLevel(1) "  class="second-level-tab-display-div-new">
+					tab 1 - Progress Note
+					</div>
+					<div ng-show="isSetFirstTabLevel(2) "  class="second-level-tab-display-div-new">
+					   tab 2 - Complaints
+					</div>
+					<div ng-show="isSetFirstTabLevel(3) "  class="second-level-tab-display-div-new">
+					   tab 3 - History
+					</div>
+					<div ng-show="isSetFirstTabLevel(4) "  class="second-level-tab-display-div-new">
+					   tab 4 - Habits
+					</div>
+					<div ng-show="isSetFirstTabLevel(5) "  class="second-level-tab-display-div-new">
+					   tab 5 - Allergy
+					</div>
+					<div ng-show="isSetFirstTabLevel(6) "  class="second-level-tab-display-div-new">
+					   <!-- tab 6 - Examination start -->
+					   <fieldset class="normalRegistration">
+								<legend class="heading-div">Examination</legend>
+								<div class="row custom-sub-tab">
+									<ul class="tabs nav nav-tabs">
+										<li ng-class="{ active : isSetThirdTabLevel(1) }" class="active width20">
+											<a href="" ng-click="setThirdTabLevel(1)">Vitals</a>
+										</li>
+										<li ng-class="{ active : isSetThirdTabLevel(2) }" class="ng-scope width20">
+											<a href="" ng-click="setThirdTabLevel(2)">General Examination</a>
+										</li>
+										<li ng-class="{ active : isSetThirdTabLevel(3) }" class="ng-scope width20">
+											<a href="" ng-click="setThirdTabLevel(3)">Systemic Examination</a>
+										</li>
+									</ul>
+								</div>
+								<div class="row">
+									<div ng-show="isSetThirdTabLevel(1)" class="second-level-subtab-display-div-new "><!-- Vitals  -->
+										<!-- ************** sub tab - vitals start  **************  -->
+										<div class="row">
+											<div class="row">
+												<div class="col-lg-8 col-md-8  col-sm-8"></div>
+												<div class="col-lg-2 col-md-2 col-sm-2  text-right ng-scope text-width-auto pull-right">
+													<input type="button" name="" ng-click="savePatientVitals()" value="Save" class="btn btn-info">&nbsp;
+												</div>
+												<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 text-width-auto pull-right">
+													<input type="button" name="" value="Refresh" class="btn btn-info" title="" ng-click="refresh()" id="addBtn">&nbsp;
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+													<div class="row box-shadow-set padding-top-bottom-set">
+														<div class="row">
+															<div  class="col-lg-1 col-md-1  col-sm-1 checkbox no-margin margin-top5">
+				                                                <label class="color-white">
+				                                                	<input type="checkbox" ng-model="isPostFacto"  ng-true-value="'Y'" ng-false-value="'N'" placeholder="">
+				                                                </label>
+				                                            </div>
+					                                        <div class="col-lg-3 col-md-4  col-sm-4 padding-left-right-set4  padding-left-right-set0">
+				                                                <div class="row input-container">
+				                                                    <div class="col-lg-2 col-md-3 polymer-icon">
+				                                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				                                                    </div>
+				                                                    <div class="col-lg-10 col-md-9  col-sm-9">
+				                                                        <div class="" >
+				                                                                <input  type="text" autocomplete="off" class="text-input floating-label dirty" 
+				                                                                name="datepicker" id="datepicker"
+				                                                                uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+				                                                                placeholder="DD/MM/YYYY" ng-model="postFactoDate"
+				                                                                model-view-value="true" is-open="datepicker.opened"
+				                                                                datepicker-options="dateOptionsPostFacto" show-button-bar="false"
+				                                                                ng-click="openDatePickerPostFacto()" ng-disabled="isPostFacto=='N'" required   > 
+				                                                            <label for="description" class="">Date</label>
+				                                                        </div>
+				                                                    </div>
+				                                                </div>
+				                                            </div>
+				                                            <div class="col-lg-3 col-md-4  col-sm-4 padding-left-right-set4  padding-left-right-set0">
+				                                                <div class="row input-container">
+				                                                    <div class="col-lg-2 col-md-3 col-sm-3 polymer-icon">
+				                                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				                                                    </div>
+				                                                    <div class="col-lg-10 col-md-9 col-sm-9">
+				                                                        <div class="clockpicker" >
+				                                                        <input  type="text" autocomplete="off" name="description" id="" ng-model="postFactoTime" class="text-input floating-label" ng-disabled="isPostFacto=='N'" ng-change="validateTime()" >
+				                                                        <label for="description" class="LISDynamicLabel">Time</label>
+				                                                        </div>
+				                                                    </div>
+				                                                </div>
+				                                            </div> 
+														</div>
+														<div class="row ">
+															<div
+														class="col-lg-12 col-md-12 col-xs-12 col-sm-12 padding-left-right-set4 "
+														ng-repeat="vitalData in vitalFinalList |orderBy:'vitalOrderOpd':true">
+														<div class="row">
+															<div
+																class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+																<img ng-src="{{vitalData.vitalIconPath}}">
+															</div>
+															<div
+																class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4 ">
+																<span>{{vitalData.vitalName}}</span>
+																<!-- <input type="range" min="0" max="150" value="82" id="weightInput" step="1" oninput="outputUpdate(value)"> -->
+																<input  type="range" min="{{vitalData.minValue}}"
+																	max="{{vitalData.maxValue}}"
+																	ng-model="vitalData.vitalValue" id="weightInput"
+																	ng-if="vitalData.vitalId != 8 && vitalData.vitalId != 16"
+																	step="1" ng-change="calculateBMI();checkValueVital($index)"> <input 
+																	 type="text" autocomplete="off" ng-model="vitalData.vitalValue"
+																	ng-if="vitalData.vitalId == 8 || vitalData.vitalId ==16"
+																	disabled="disabled">
+															</div>
+															<div
+																class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+																<div class="row">
+																	 <!-- <output for="fader"> -->
+																		<div
+																			ng-if="vitalData.vitalId != 8 && vitalData.vitalId != 16 && vitalData.vitalId != 6 && vitalData.vitalId != 2" class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+																			<input id="weightOutput"
+																			class="input-range width40px" type="text" autocomplete="off"
+																			ng-model="vitalData.vitalValue"
+																			 ng-change="calculateBMI();checkValueVital($index)">{{vitalData.unit}}
+																		</div> 
+																		
+																		 <div ng-if="vitalData.vitalId == 6 && vitalData.unit != 'F'" class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+																		 <input id="weightOutput" ng-if="vitalData.unitT != 'F'"
+																			class="input-range width40px" type="text" autocomplete="off"
+																			ng-model="vitalData.vitalValue"
+																			ng-change="calculateBMI();checkValueVital($index)">
+																	     <input id="weightOutput" ng-if="vitalData.unitT == 'F'"
+																			class="input-range width40px" type="text" autocomplete="off"
+																			ng-model="vitalData.vitalValueShow" ng-blur="calculateTemeperature(vitalData.unitT)">
+																			<select  id="weightOutput" class="input-range width40px" ng-model="vitalData.unitT" ng-change="calculateTemeperature(vitalData.unitT)">
+																				<option ng-selected="true" value="C" >{{vitalData.unit}}</option>
+																				<option value="F">F</option>
+																			</select> 
+																		</div>
+																		 <div ng-if="vitalData.vitalId == 6 && vitalData.unit == 'F'" class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+																		 <input id="weightOutput" ng-if="vitalData.unitT != 'C'"
+																			class="input-range width40px" type="text" autocomplete="off"
+																			ng-model="vitalData.vitalValue"
+																			ng-change="calculateBMI();checkValueVital($index)">
+																		 <input id="weightOutput" ng-if="vitalData.unitT == 'C'"
+																			class="input-range width40px" type="text" autocomplete="off"
+																			ng-model="vitalData.vitalValueShow" ng-blur="calculateTemeperature(vitalData.unitT)">
+																		
+																			<select  id="weightOutput" class="input-range width40px" ng-model="vitalData.unitT" ng-change="calculateTemeperature(vitalData.unitT);checkValueVital($index)">
+																		    	<option  ng-selected="true" value="F">{{vitalData.unit}}</option>
+																				<option value="C">&#8451;</option>
+																			</select> 
+																		</div>
+																		
+																		<div ng-if="vitalData.vitalId == 2 " class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+																		 <input id="heigth" ng-if="vitalFlag == false"
+																			class="input-range width40px" type="text" autocomplete="off"
+																			ng-model="vitalData.vitalValue"
+																			ng-change="calculateBMI();checkValueVital($index)">
+																			
+																			<input id="heigth" ng-if="vitalFlag != false" 
+																			class="input-range width40px" type="text" autocomplete="off"
+																			ng-model="vitalData.vitalValueShowHeight" ng-blur="calculateHeight(vitalData.unitT)">
+																			
+																			<select  id="heigth" class="input-range width40px" ng-model="vitalData.unitT" ng-change="calculateHeight(vitalData.unitT);checkValueVital($index)" ng-if="vitalData.unit =='cm'"> 
+																				<option ng-selected="true"  value="{{vitalData.unit}}" ng-value="{{vitalData.unit}}">{{vitalData.unit}}</option>
+																				<option value="inch">inch</option>
+																				<option value="foot">foot</option>
+																			</select> 
+																			<select  id="weightOutput" class="input-range width40px" ng-model="vitalData.unitT" ng-change="calculateHeight(vitalData.unitT);checkValueVital($index)" ng-if="vitalData.unit =='inch'">
+																				<option ng-selected="true" value="inch">{{vitalData.unit}}</option>
+																				<option value="cm">cm</option>
+																				<option value="foot">foot</option>
+																			</select> 
+																			<select  id="weightOutput" class="input-range width40px" ng-model="vitalData.unitT" ng-change="calculateHeight(vitalData.unitT);checkValueVital($index)" ng-if="vitalData.unit =='foot'">
+																				<option ng-selected="true" value="foot">{{vitalData.unit}}</option>
+																				<option value="cm">cm</option>
+																				<option value="inch">inch</option>
+																			</select> 
+																		</div>
+																		
+																		<div
+																			ng-if="vitalData.vitalId == 8 " class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">&nbsp;&nbsp;kg/m<sup>2</sup>
+																			<input id="weightOutput"
+																			class="input-range width40px" type="text" autocomplete="off"
+																			ng-model="vitalData.vitalValue"
+																			style="visibility: hidden">
+																		</div>
+																		 <div
+																			ng-if="vitalData.vitalId == 16" class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">&nbsp;&nbsp;m<sup>2</sup>&nbsp;&nbsp;
+																			<select  id="weightOutput" class="input-range " ng-model="BSA" ng-change="calculateBSA(BSA);checkValueVital($index)" style="width:75px">
+																				<option ng-selected="true" value="Mo">Mosteller</option>
+																				<option value="Du">DuBois & DuBois</option>
+																			</select> 
+																		</div>
+																		<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+																			<input type="button" name="" value="Qualifier" ng-disabled="vitalData.checkQualifier"
+																				class="btn btn-info" title="" data-toggle="modal" data-target="#vitalQualifier" ng-click="getVitalQualifireList(vitalData.vitalId,$index)">&nbsp;
+																		</div>
+																	<!-- </output>  -->
+																</div>
+															</div>
+														</div>
+													</div>
+															<div
+														class="col-lg-4 col-md-4 col-xs-4 col-sm-4 padding-left-right-set4 padding-top10">
+														{{bmiStatus}}</div>
+														</div>
+														
+													</div>
+												</div>
+												<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+													<div class="row">
+													
+													</div>
+												</div>
+											</div>
+											
+										</div>
+										<!-- ************** sub tab - vitals start  **************  -->
+									</div>
+									<div ng-show="isSetThirdTabLevel(2)" class="second-level-subtab-display-div-new "><!-- 2 General Examination -->
+										<!-- ************** sub tab - General Examination start  **************  -->
+										<div class="row">
+										
+										</div>
+										<!-- ************** sub tab - General Examination end  **************  -->
+									</div>
+									<div ng-show="isSetThirdTabLevel(3)" class="second-level-subtab-display-div-new "><!-- 3 Systemic Examination -->
+										<!-- ************** sub tab - Systemic Examination start  **************  -->
+										<div class="row">
+										
+										</div>
+										<!-- ************** sub tab - Systemic Examination end  **************  -->
+									</div>
+								</div>
+						 </fieldset>
+						 <!-- tab 6 - Examination end -->
+					</div>
+					<div ng-show="isSetFirstTabLevel(7) "  class="second-level-tab-display-div-new">
+					   tab 7 - Diagnosis
+					</div>
+					<div ng-show="isSetFirstTabLevel(8) "  class="second-level-tab-display-div-new">
+					   tab 8 - Orders
+					</div>
+					<div ng-show="isSetFirstTabLevel(9) "  class="second-level-tab-display-div-new">
+					   tab 9 - Certificate
+					</div>
+					<div ng-show="isSetFirstTabLevel(10) "  class="second-level-tab-display-div-new">
+					   tab 10 - Observation
+					</div>
+					<div ng-show="isSetFirstTabLevel(11) "  class="second-level-tab-display-div-new">
+					   tab 11 - Past Visits
+					</div>
+				</div>
+     		</div>
+     		
+     	</div>
+    </div>
+</div>
+<!-- ******** page content end *********** -->

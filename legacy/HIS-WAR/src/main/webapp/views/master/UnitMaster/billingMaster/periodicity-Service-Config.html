@@ -1,0 +1,468 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row margin-top4">
+			<form name="periodicityConfigForm" novalidate >
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<label>Visit Type Id<span class="star">*</span></label>
+							<div class="form-group"   show-errors>
+								<select class="text-input floating-label" convert-to-number name="visitTypeId" ng-model="vm.model.periodicity.visitTypeId"  ng-change="getClearData()" required>
+									<option value="3">Day Care</option>
+									<option value="4">ER</option>
+									<option value="2">IP</option>
+									<option value="1">OP</option>
+								</select>
+
+								<p class="help-block" ng-if="periodicityConfigForm.visitTypeId.$error.required">Visit Type is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="form-group"   show-errors>
+								<input type="text" autocomplete="off" name="serviceSearchText" id="" placeholder="Search" class="text-input floating-label" ng-model="vm.model.serviceSearchText" uib-typeahead = "psrv.serviceName + '|' +psrv.serviceCode for psrv in vm.model.searchPServices($viewValue)" typeahead-on-select="vm.model.selectPService($item, $model, $label)" required> 
+								<label>Hospital Service<span class="star">*</span></label>
+								<p class="help-block" ng-if="periodicityConfigForm.serviceSearchText.$error.required">Service is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="form-group"   show-errors>
+							<!-- ng-change="calculatePricePerUnit(vm.model.periodicity)" -->
+								<select class="text-input floating-label" convert-to-number name="measurementUnitId" ng-model="vm.model.periodicity.measurementUnitId" ng-change="calculatePricePerUnit(vm.model.periodicity)" required>
+									<option ng-repeat="unit in vm.model.units" value="{{unit.id}}" ng-if="unit.id != 2">{{unit.name}}</option>
+								</select>
+								<label>Unit of Measurement<span class="star">*</span></label>
+								<p class="help-block" ng-if="periodicityConfigForm.measurementUnitId.$error.required">UOM is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o " aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="form-group"   show-errors>
+							<!--  -->
+								<input type="text" autocomplete="off" class="text-input floating-label" name="duration" ng-model="vm.model.periodicity.duration"  ng-decimal="200" ng-blur="calculatePricePerUnit(vm.model.periodicity)" required/>
+								<label>Duration<span class="star">*</span></label>
+								<p class="help-block" ng-if="periodicityConfigForm.duration.$error.required">Duration is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				 <!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="form-group"   >
+								Rate: {{finalAmt}}
+							</div>
+						</div>
+				</div> -->
+				
+				
+					<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 margin-top8" ng-if="saveBtnFlag">
+					<input type="button" value="Save" ng-click="vm.model.savePeriodicityConfig()" class="btn btn-primary btn-save-box-shadow" >
+				</div>-->
+				<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 margin-top8" >
+					<input type="button" value="Clear" ng-click="vm.model.clearObject()" class="btn btn-primary btn-save-box-shadow fa fa-circle-o">
+				</div> -->
+				
+				<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right margin-top-5 text-width-auto">
+								<div class="width-div-for-patient-reg ">
+									<a href="" ng-click="vm.model.clearObject()" class="btn btn-primary btn-save-box-shadow" title="Clear"><i class="fa fa-eraser" style="font-size:18px" aria-hidden="true"></i></a>	
+								</div>
+							</div> -->
+				
+				
+		      	</form>
+		      
+			</div>
+			<div class="row margin-top4">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set padding-top10">
+					<label class="checkbox-inline"><input type="checkbox" id="configureEquipment" ng-model="configureEquipment" ng-true-value="'Y'" ng-false-value="'N'">Configure Equipment</label>
+				</div>
+				<div ng-show="configureEquipment=='Y'">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label dirty" convert-to-number ng-model="vm.model.periodicity.assetCategoryId" ng-change="getProductCatByAssestCatForEquipment(vm.model.periodicity.assetCategoryId)">
+										<option ng-repeat="assetCat in assetCategoryListEquipment" value="{{assetCat.id}}" >{{assetCat.category}}</option>
+									</select>
+									<label for="code">Asset Category</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label"  convert-to-number ng-model="vm.model.periodicity.productCategoryId" ng-change="getItemList(vm.model.periodicity.productCategoryId)">
+										<option ng-repeat="prodCat in productCategoryEquipmentList" value="{{prodCat.id}}">{{prodCat.category}}</option>
+									</select>
+									<label for="code">Product Category</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					 <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-10">
+								<div class="">
+									<select class="text-input floating-label" convert-to-number ng-model="vm.model.periodicity.equipmentId">
+										<option ng-repeat="info in equpmentList" value="{{info.id}}">{{info.name}}</option>
+									</select>
+									<label>Equipment</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<select class="text-input floating-label" ng-model="vm.model.periodicity.measurementUnitId">
+									<option value="">-</option>
+									<option ng-repeat="unit in vm.model.units" value="{{unit.id}}">{{unit.name}}</option>
+								</select>
+								<label>Unit of Measurement<span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o " aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label" ng-model="vm.model.periodicity.duration" ng-decimal="200"/>
+								<label>Duration<span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-10">	
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-10">
+								<div class="">
+									<select class="text-input floating-label">
+										<option value=""></option>
+										<option value="">Select Type</option>
+									</select>
+									<label>Type<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">	
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-10">
+								<div class="">
+									<select class="text-input floating-label">
+										<option value=""></option>
+										<option value="">Select Equipment</option>
+									</select>
+									<label>Equipment<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> -->
+			<!-- 	<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 margin-top8">
+					<input type="button" value="Save" ng-click="vm.model.savePeriodicityConfig()" class="btn btn-primary btn-save-box-shadow">
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 margin-top8">
+					<input type="button" value="Update" ng-click="vm.model.updatePerConfig()" class="btn btn-primary btn-save-box-shadow">
+				</div> -->
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top5">
+			        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="vm.model.savePeriodicityConfig()" ng-if="saveBtnFlag">
+			        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			      
+			        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" ng-click="vm.model.updatePerConfig()"  ng-if="updateBtnFlag">
+			        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			      </div>
+			</div>
+			<!-- <div class="row">
+				<div class="col-lg-8 col-md-8 col-sm-8"></div>
+				<div class="col-lg-4 col-md-4 col-sm-4">
+					<div class="col-lg-10 col-md-9 col-sm-9">
+						<input type="text" autocomplete="off" class="text-search-box" placeholder="Search">
+						<i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-leftright15 float_right">
+						<div class="width-div-for-patient-reg padding-top4">
+							<a href="" class="btn btn-primary btn-save-box-shadow"
+								title="Save" data-toggle="modal" data-target="#confirmLogout"><i
+								class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			
+			<div class="row">
+			<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="vm.model.pagination.pageSize='10'" 
+										ng-model="vm.model.pagination.pageSize" 
+										ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+						</div>
+			</div>
+		</fieldset>
+		<div class="row margin-top8 padding-left-right-set4 height-table-with-scroll">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered first-checkBox-padding">
+					<!-- mainServiceTable -->
+					<thead class="mainServiceTableCommon">
+						<tr>
+							<th class="width8">Hospital Service
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th>
+							<th class="width8">Visit Type
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th>
+							<!-- <th class="width8">Department
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th>
+							<th class="width8">Sub Department
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th> -->
+							<th class="width6">Unit of Measurement
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th>
+							<th class="width6">Duration
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th>
+							<!-- <th class="width6">Type
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th> -->
+							<!-- <th class="width6">Equipment
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th> -->
+							<th class="width6">Asset Category
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th>
+							<th class="width6">Product Category
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th>
+							<th class="width6">Equipment
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th> 
+							<th class="width5">Status(n)
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th>
+							<th class="width5">Action taken
+								<div class="float_right">
+					                <div>
+					                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+					                </div>
+					                <div class="margin-top-8">
+					                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+					                </div>
+					            </div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="per in vm.model.pagination.data">
+							<td>{{per.serviceName}}</td>
+							<td><div ng-if="per.visitTypeId == 1">OP</div>
+							<div ng-if="per.visitTypeId == 2">IP</div>
+							<div ng-if="per.visitTypeId == 3">Day Care</div>
+							<div ng-if="per.visitTypeId == 4">ER</div></td>
+							<!-- <td>{{per.department}}</td>
+							<td>{{per.subDepartment}}</td> -->
+							<td>{{per.tatTimeName}}</td>
+							<td>{{per.duration}}</td>
+							<!-- <td>-</td> -->
+							<td>{{per.assetCategoryName}}</td> 
+							<td>{{per.productCategoryName}}</td> 
+							<td>{{per.equipmentName}}</td>
+							 <td>
+								<label class="switch">
+									<input type="checkbox" ng-model="per.status" ng-checked="per.status=='A'" ng-true-value="'A'" ng-false-value="'I'" ng-change="vm.model.updatePeriodicityStatus(per.periodicityServiceConfigId,per.status)">
+									<div class="slider round"></div>
+								</label>
+							</td> 
+							<td class="padding-edit-button-table">
+								<a ng-click="vm.model.selectPerConfig(per)">
+									<i class="fa fa-pencil" aria-hidden="true" title="Edit"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="row margin-bottom45 center-block">
+						<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+							style="font-size: 14px; cursor: pointer;">
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+							</li>
+							<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+								ng-class="{active:vm.model.pagination.currentPage === page}"><a
+								ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+							</li>
+						</ul>
+					</div>
+		</div>
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script>
+$(document).ready(function() {
+	 
+	$(".selectedPageName").text("Periodicity Service Configuration");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="periodicityServiceConfig"]').parents("li").addClass("active");
+	
+});
+</script>

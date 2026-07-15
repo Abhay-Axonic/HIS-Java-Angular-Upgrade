@@ -1,0 +1,178 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	
+	<div class="main-heading-div">
+				<div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div>
+			</div>
+	
+	<form name="viewSterilizationPendingIndicatorsForm" novalidate>
+		<div class="row padding-top8">
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+						
+						
+						<select class="text-input floating-label" name="code"
+								ng-model="selectedMachine"
+								 ng-options="data.id as data.machine_name for data in autoClaveList"
+								 ng-disabled="true" >
+								
+								</select>
+																
+								
+							<!-- <select class="text-input floating-label dirty" name="code" ng-model="viewBatchObj.autoclaveName">
+								<option value=""></option>
+							</select> --> <label for="code">Machine</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="padding-top10">
+					<label>Sterilization Type :-</label><span class="margin-left10">{{viewBatchObj.sterilizationTypeDesc}} </span>
+				</div>
+			</div>
+
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+				<div class=" "  >
+					<a href="" class="btn btn-primary btn-save-box-shadow"  ng-class="{disabled: viewBatchObj.status != 'Batch Loaded' }"
+						title="Transfer to Sterilize Zone"  data-toggle="modal" 
+						data-target="#confirmPopupOnSave"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<!-- <div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow"
+						title="Search Kit" data-toggle="modal" data-target="#searchKit">
+						Search Kit</a>
+				</div>
+			</div> -->
+		</div>
+
+		<fieldset class="margin-top10">
+			<legend class="heading-div">Mechanical Indicator</legend>
+		</fieldset>
+		<div class="row padding-top8">
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<input type="number" name="code" id="" class="text-input floating-label dirty" ng-model="viewBatchObj.sterilizationTemperature"> <label for="code">Sterilization Temperature</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<input type="number" name="code" id="" class="text-input floating-label dirty" ng-model="viewBatchObj.pressure"> <label for="code">Pressure</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<h4>Note:</h4><h5 class="padding-left5">Sterilization Temperature and Sterilization Pressure should be equal or greater than the defined temperature and pressure respectively 
+			 for particular Autoclave Machine to ensure kits are sterilized.</h5>  
+			
+			<fieldset class="margin-top5">
+				<legend class="heading-div">Chemical Indicator</legend>
+			</fieldset>
+			<div class="row padding-top8">
+			
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<select class="text-input floating-label" ame="code"  ng-options="sterilizationIndicatorObj as sterilizationIndicatorObj.colorName for sterilizationIndicatorObj in sterilizationColorList"
+							 ng-model="sterilizationColorObj" >
+								</select>
+								<label for="code">Sterilization Color</label>
+								<!-- <p class="help-block" ng-if="autoclaveform.sterilization_color_id.$error.required">Sterilization Color is required</p> -->
+						</div>
+					</div>
+				</div>
+				
+				<!-- <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="viewBatchObj.color"> <label for="code">Color</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				
+				
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10 text-center">
+					<div class="row input-container padding-top10">
+						<input ng-disabled="!( (viewBatchObj.status == 'Batch Loaded') && (viewBatchObj.sterilizationTemperature >= selectedAutoclave.sterilization_temperature) && (viewBatchObj.pressure >= selectedAutoclave.sterilization_pressure) && (sterilizationColorObj.colorId == selectedAutoclave.sterilization_color_id) )" type="checkbox" name="" id="isBiological" class="" ng-model="viewBatchObj.isSterilized" ng-checked="viewBatchObj.isSterilized">
+							<label for="isSterilized" class="checkbox-margin-left-right">Is Sterilized</label>
+					</div>
+				</div>
+				
+				
+			</div>
+			
+			
+			<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+				<div class="row his-style margin-top10 padding-right20">
+					<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+						<a href="#/sterilizationPendingIndicators">
+							<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>			
+		</footer>
+		</form>
+	</div>
+	
+	
+	<!-- Confirmation PopUp To Add worklist -->
+	<div id="confirmPopupOnSave" class="modal fade ng-scope in"
+		role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal"
+							ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>Are you sure you want to save?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+							id="okBtn" ng-click="savePendingIndicators()">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

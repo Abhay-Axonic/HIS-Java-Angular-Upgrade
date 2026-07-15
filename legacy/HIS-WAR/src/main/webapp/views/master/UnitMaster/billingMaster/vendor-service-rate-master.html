@@ -1,0 +1,210 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<!-- <div ng-include="'./views/common-patient-details.html'"></div> -->
+		<fieldset>
+			<!-- <legend class="heading-div">Tariff Master Configuration</legend> -->
+			<div class="row padding-left-right-set4">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							 <label for="code" class="long-text-overflow multi-select-label">Vendors<span class="star">*</span></label>
+									<div class="custom-drop-down-btn"
+									ng-dropdown-multiselect="" options="activeVendorsList"
+									selected-model="selectedVendorsList">
+								</div>
+						
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							 <label for="code" class="long-text-overflow multi-select-label">Payment Entitlement<span class="star">*</span></label>
+									<div class="custom-drop-down-btn"
+									ng-dropdown-multiselect="" options="paymententitlementList"
+									selected-model="selectedPaymententitlementList">
+								</div>
+						
+					</div>
+				</div>
+				</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top5">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<label for="" class="LISDynamicLabel">Patient Type<span class="star">*</span></label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="patientTypeList" selected-model="selectedPatientTypeList">
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4  padding-top5">
+					<div class="row input-container ">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							
+								<div class="">
+								<label class="LISDynamicLabel multi-select-label"> Visit Type<span class="star">*</span></label>
+								<div class="custom-drop-down-btn" ng-dropdown-multiselect=""  events="getBillingBedCategoryDropdown"
+										options="visitTypeListOption" selected-model="selectedVisitType">
+									</div>
+							
+						</div>
+						
+						
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<label for="" class="LISDynamicLabel">Ward Bed Billing Category<span class="star">*</span></label>
+							<!-- 		<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="billingCategoryAdd" selected-model="selectedBillingCategory">
+									</div> -->
+									
+									<div class="custom-drop-down-btn"
+									ng-dropdown-multiselect="" options="bedBillingCategoryList" 
+									selected-model="selectedBedBillingCategoryList"
+									>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div> 
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+					<div class="row padding-top10">
+						<input type="checkbox" name="registrationType" ng-click="clearPackageList()" ng-model="packageWise" ng-true-value="'Y'" ng-false-value="'N'" id="packageWise">
+						<label class="color-black margin-left5" for="packageWise">Package Wise</label>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-top5">
+			<div ng-hide="packageWise=='N'" class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<label for="" class="LISDynamicLabel">Packages<span class="star">*</span></label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect="" ng-click="searchPackagesByCriteria()"
+										options="ehcPackageList" selected-model="selectedPackageList">
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<label for="" class="LISDynamicLabel">Service Description<span class="star">*</span></label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="serviceList" selected-model="selectedServiceList">
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-top5">
+				<div
+					class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set1 pull-right text-width-auto">
+					<div class="common-save-button">
+						<a href="" class="btn btn-primary btn-save-box-shadow"
+							style="width: auto;" ng-click="searchAddedTariffServices()" id="searchBtn"> <i class="fa fa-search"
+							aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+				<div
+					class="col-md-2 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top4">
+					<div class=" ">
+						<a href="#/vendorServiceRateCreation"> <input type="button"
+							value="Add New" class="btn btn-primary btn-save-box-shadow">
+							<!-- data-toggle="modal" data-target="#wasteStoreAddItemModal" -->
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-left-right-set4">
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="serachObject"
+						style="margin-top: 0px"> <i
+						class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div>
+		</fieldset>
+		<div class="row padding-top8 padding-left-right-set4 padding-top4">
+			<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll450">
+				<table class="table table-bordered first-checkBox-padding">
+					<!-- mainServiceTable -->
+					<thead class="mainServiceTableCommon">
+						<tr>
+							<th class="width8">Vendor</th>
+							<th class="width8">Payment Entitlement</th>
+							<th class="width8">Patient Type</th>
+							<th class="width8">Visit Type</th>
+							<th class="width8">Ward Bed Billing Category</th>
+							<th class="width8">Package</th>
+							<th class="width8">Service</th>
+							<th class="width4">Rate</th>
+							<!-- <th class="width5">Stat %</th> -->
+							<th class="width8">Effective Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in allDetailsList | filter:serachObject">
+							<td>{{info.vendorName}}</td>
+							<td>{{info.paymentEntitlementDesc}}</td>
+							<td>{{info.patientTypeDesc}}</td>
+							<td>{{info.visitTypeDesc}}</td>
+							<td>{{info.billingBedCatDesc}}</td>
+							<td>{{info.packageDesc}}</td>
+							<td>{{info.serviceDesc}}</td>
+							<td>{{info.rate}}</td>
+						<!-- 	<td>{{info.statPer}}</td> -->
+							<td>{{info.effectiveDate}}</td>
+						</tr>
+						<tr ng-hide="allDetailsList.length > 0  || allDetailsList == null"> 
+							 <td class="text-center" class="ng-binding" colspan="9"><b>{{msg}}</b></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".selectedPageName").text("Service Tariff Master");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="serviceTariffMaster"]').parents("li").addClass("active");
+	});
+</script>

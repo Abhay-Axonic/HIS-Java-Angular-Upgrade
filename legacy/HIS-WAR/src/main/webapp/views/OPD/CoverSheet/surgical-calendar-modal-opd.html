@@ -1,0 +1,273 @@
+<!-- FAVORITES POPUP -->
+<div id="surgicalCalendar-opd-Modal"
+	class="common-large-popup modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Surgical Calendar
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body fix-height-scroll625">
+				<div
+					class="col-md-12 padding-left-right-set4 padding-top2"><!-- fix-height-scroll500 -->
+					<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">									
+									<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="searchFromDate"
+									model-view-value="true" is-open="popup.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="open()">
+									 
+										<label for="description" class="LISDynamicLabel">From Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+									
+									<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepickerPdd" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="searchToDate"
+									model-view-value="true" is-open="popup1.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="open1()" required>
+									
+										<label for="description" class="LISDynamicLabel">To Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty"> 
+										<label for="description" class="LISDynamicLabel">Month</label>
+									</div>
+								</div>
+							</div>
+						</div> -->
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+							<div class="">
+								<!-- width-div-for-patient-reg pull-left -->
+								<a href="" class="btn btn-primary btn-save-box-shadow text-width-auto" title="Search" ng-click="serachCalennder();">
+								<i class="fa fa-search" style="" aria-hidden="true"></i></a>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-5 col-sm-5 padding-left-right-set4 pull-right" style="padding-top: 20px;">
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+										<div class="row">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+												<div class="color-indiction-green-div"></div>
+											</div>
+											<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set0 long-text-overflow">
+												<span class="color-indication-green-span">Available</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+										<div class="row">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+												<div class="color-indiction-Grey-div"></div>
+											</div>
+											<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set0 long-text-overflow">
+												<span class="color-indication-grey-span">Not Available</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+										<div class="row">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+												<div class="color-indiction-Red-div"></div>
+											</div>
+											<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set0 long-text-overflow">
+												<span class="color-indication-red-span">Booked</span>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+					</div>
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top8">
+	<table class="table table-bordered">
+	<!-- 	<tr >
+			<th class="text-center" colspan="8">
+				<div class="width30">
+					<span class="float_left" ng-click="leftArrowWeeklySlotsFor('L')"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+					<span>{{doctorName}}</span>
+					<span class="float_right" ng-click="leftArrowWeeklySlotsFor('R')"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></span>
+				</div>
+			</th>
+		</tr> -->
+		<tr >
+			<th class="text-center" colspan="8">
+				<div class="width30">
+					<span class="float_left" ng-click="leftArrowWeeklySlots('L')"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+					<span><!-- 08th Jan 18 - 14th Jan 18 -->{{ surgicalCalenderList[0].procedureInDate | date :  " MMMM d, y"}}-{{surgicalCalenderList[6].procedureInDate | date :  " MMMM d, y"}}</span>
+					<span class="float_right" ng-click="leftArrowWeeklySlots('R')"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></span>
+				</div>
+			</th>
+		</tr>
+		<tr>
+			<th class="width6 vertical-top" ng-repeat="weekDate in surgicalCalenderList track by $index" ng-init="parentIndex = $index" style="padding:0px !important;">
+				<div class="padding-left-right-set4">{{ weekDate.procedureInDate | date :  "  d MMM yy" }}</div>
+				<div class="padding-left-right-set4">{{ weekDate.procedureInDate | date :  " EEEE" }}</div> 
+				<table class="table table-bordered">
+					<thead >
+					<div ng-init="dt=listCount - weekDate.surgicalCalendarDetailsDtoList.length">
+						<tr ng-repeat="wkSlots in weekDate.surgicalCalendarDetailsDtoList track by $index" ng-init="childIndex = $index">
+							<!-- <td  class="bg-green cursor-pointer" style="padding:8px !important">
+								<div class="font-size-12 text-center">{{wkSlots.fromTimeString}}</div>
+							</td> -->
+							<td class="bg-green cursor-pointer day-slot-div" ng-if="wkSlots.calenderStatusId == 1" ng-click="bookSlot(weekDate.procedureInDate,parentIndex,childIndex);">
+								<div class="font-size-12 text-center">{{wkSlots.fromTime}}</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" style="margin-right: 4px;color: #212121;" ></i></div>
+							</td>
+							<td class="bg-red cursor-pointer day-slot-div" ng-if="wkSlots.calenderStatusId == 2">
+								<div class="font-size-12 text-center">{{wkSlots.fromTime}}</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" style="margin-right: 4px;color: #212121;" ng-click="bookSlotDetails(wkSlots);"></i></div>
+							</td>
+							<!-- <td ng-if="wkSlots.isBlockedUnblocked == '2' && wkSlots.slotPatientDetailsListsSize >= '2'"  class="bg-orange cursor-pointer day-slot-div"   style="padding:0px !important;" >
+								<div class="font-size-12 text-center">{{wkSlots.fromTimeString}}</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" data-toggle="modal" data-target="#patientDetailsForAppointments" style="margin-right: 4px;color: #212121;" ng-click="getBookSlotDetails(wkSlots)"></i>{{wkSlots.uhidNumber}}</div>
+							</td>
+							<td ng-if="wkSlots.isBlockedUnblocked == '2' && wkSlots.slotPatientDetailsListsSize == '0'"  class="bg-green cursor-pointer day-slot-div"   style="padding:0px !important;" data-toggle="modal" data-target="{{wkSlots.slotPatientDetailsListsSize == '0' ?'#patientSearchForRegistration':''}}" ng-click="getSlotDetailsPopup(wkSlots)" >
+								<div class="font-size-12 text-center">{{wkSlots.fromTimeString}}</div>
+							</td>
+							<td  ng-if="wkSlots.isBlockedUnblocked == '1' && wkSlots.slotPatientDetailsListsSize == '1'" class="bg-grey cursor-pointer day-slot-div"  style="padding:0px !important;" >
+								<div class="font-size-12 text-center">{{wkSlots.fromTimeString}}</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" data-toggle="modal" data-target="#patientDetailsForAppointments" style="margin-right: 4px;color: #212121;" ng-click="getBookSlotDetails(wkSlots)"></i>{{wkSlots.uhidNumber}}</div>
+							</td>
+							<td  ng-if="wkSlots.isBlockedUnblocked == '1' && wkSlots.slotPatientDetailsListsSize == '0'" class="bg-grey cursor-pointer day-slot-div"  style="padding:0px !important;" data-toggle="modal" data-target="{{wkSlots.slotPatientDetailsListsSize == '0' ?'#patientSearchForRegistration':''}}" ng-click="getSlotDetailsPopup(wkSlots)">
+								<div class="font-size-12 text-center">{{wkSlots.fromTimeString}}</div>
+							</td> -->
+						</tr>
+						<tr ng-repeat="n in [] | range:dt">
+							<td class="bg-grey cursor-pointer day-slot-div" >
+								<div class="font-size-12 text-center">--</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" style="margin-right: 4px;color: #212121;"></i>
+								</div>
+							</td>
+						</tr>
+					</div>
+					</thead>
+				</table>
+			</th>
+		</tr>
+		<tr>
+		
+		</tr>
+		
+	</table>
+</div>
+				</div>
+			</div>
+
+			<div class="modal-footer" style="border: none;">
+				<!-- 	<button type="button" data-dismiss="modal" class="btn btn-primary">Ok</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok"   data-dismiss="modal">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<!-- confirmProcedure modal START -->
+
+<div id="confirmProcedure" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal" ng-click="cancel();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to Save?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="saveDetails();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="No" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Yes"  ng-click="saveDetails();" data-dismiss="modal">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- confirmProcedure modal END -->
+
+<!-- opdProcedureDetails modal START -->
+<div id="opdProcedureDetails" class="modal common-small-popup fade ng-scope in" role="dialog" style="background:rgba(0, 0, 0, 0.33);">
+  <div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+   <div class="modal-content">
+    <div class="modal-header">
+     <div class="modal-title patient-details-row">
+      Patient Details
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+     </div>
+    </div>
+    <div class="modal-body">
+     <div class="col-md-12 ">
+      <div class="common-small-popup-body">
+       <div><b>Patient Name</b> <span style=" margin-left: 20px;"><b>:</b> <!-- Johan Hosy, <span>29 Y Male</span> -->{{(info.patientDetails==null)?"-":info.patientDetails}}</span></div>
+       <div><b>UHID</b> <span style="margin-left: 74px;"><b>:</b> {{(info.uhid==null)?"-":info.uhid}}</span></div>
+       <div><b>Procedure Name</b><span style="margin-left: 3px;"><b>:</b> {{(info.procedureName==null)?"-":info.procedureName}}</span></div>
+       <div><b>Status</b><span style="margin-left: 71px;"><b>:</b><!-- P-65, South Extension, Part-2, New Delhi 110049  --></span></div>
+      </div>
+      
+     </div>
+    </div>
+   </div>
+  </div>
+</div>
+<!-- opdProcedureDetails modal END -->
+<script>
+$('#collapseDiv').on('shown.bs.collapse', function () {
+    $(".collapsefa").removeClass("fa-arrow-circle-right").addClass("fa-arrow-circle-down");
+ });
+
+ $('#collapseDiv').on('hidden.bs.collapse', function () {
+    $(".collapsefa").removeClass("fa-arrow-circle-down").addClass("fa-arrow-circle-right");
+ });
+</script>

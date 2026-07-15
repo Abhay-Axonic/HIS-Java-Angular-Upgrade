@@ -1,0 +1,289 @@
+<!-- Page Content -->
+
+<style>
+.highlight td {
+  background-color: #CECECE !important;
+}
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row padding-left-right-set4">
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container padding-top10">
+						<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-11">
+							<div class="">
+									<select class="text-input floating-label" name="visitTypeId" ng-model="tariffId" ng-change="getSelectedValue()" required>
+									<option>-</option>
+									<option ng-repeat="info in tariffList" value="{{info.tariffId}}">{{info.tariffDesc}}</option>
+									</select>
+									<label for="code" class="LISDynamicLabel"> Tariff<span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container padding-top10">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<select class="text-input floating-label" name="speciality" ng-model="selectedSpeacility" ng-change="glablServiceMasterSubSpecialityServices()" required>
+									<option>-</option>
+									<option ng-repeat="info in speacilityList" value="{{info.id}}">{{info.label}}</option>
+									</select>
+									<label for="" class="LISDynamicLabel"> Department <span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container padding-top10">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<select class="text-input floating-label" name="visitTypeId" ng-model="selectedSubSpeciality" ng-change="getSelectedSubSpeciality()" required>
+									<option>-</option>
+									<option ng-repeat="info in subSpecialityList" value="{{info.id}}">{{info.label}}</option>
+									</select>
+									<label for="" class="LISDynamicLabel"> Sub Department <span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top5" style="margin-top: 14px;">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<input type="text" autocomplete="off" name="cabinCode" class="text-input floating-label" style="padding: 2px 0px;"
+									ng-model="searchServiceName">
+                                <label for="" class="LISDynamicLabel"> Service Description</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10" style="    margin-top: 5px;">
+					<div class="row input-container padding-top10">
+						<button href="" class="btn btn-primary btn-save-box-shadow" title="Add" ng-click="applyData()" style="width: 100px;">Add</button>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10" style="    margin-top: 20px;">
+				<div class="row">
+				 <div  class= "">
+				       <a class="cursor-pointer"  ng-click="exportToExcel()">
+					   <i class="fa fa-arrow-circle-down"  style='font-size:35px;color:#2A83F2 !important;' title="Download"></i></a>
+					    <a class="cursor-pointer"  ng-click="readFile()">
+					   <i class="fa fa-arrow-circle-up"  style='font-size:35px;color:#2A83F2 !important;' title="Upload "></i></a>
+				 </div>
+				</div>
+				</div>
+				<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					
+				</div> -->
+				 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" style="    margin-top: 10px;">
+					<div class="row input-container padding-top10">
+					<form action="" method="post" enctype="multipart/form-data">
+					   <input type="file" fileinput="file" name="xlfile" id="xlf" file-model="csvfile" filepreview="filepreview" accept=".csv" validfile
+								multiple progress drag preview >
+						<!--<p ng-show="fileError" style="color:red;">Invalid file format. Allowed file formats are .csv </p>-->
+						<p id="errorMsg" style="color: red;"></p>
+				    </div>
+				    </form>
+				</div> 
+				
+			</div>
+		</fieldset>
+		<div class="row padding-left-right-set4">
+
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class="">
+					<button class="btn btn-info ng-binding" data-toggle="modal" ng-click="AIFunction()" id="smartBtn">Smart Button</button>
+				</div>
+			</div>
+
+		   <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class="">
+					 <a href="" class="btn btn-primary btn-save-box-shadow" title="Clear" data-toggle="modal" ng-click="clearData()"
+									> <i class="fa fa-eraser" style="font-size: 21px" aria-hidden="true"></i></a>
+	      		</div>
+			</div>
+			
+     	    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class="">
+					 <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveGlobalList()"
+					 ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+	      		</div>
+			</div>
+
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class="">
+					<button class="btn btn-info ng-binding" data-toggle="modal" data-target="#RXreprintpopup" id="duplicateServiceBtn">Duplicate Service </button>
+				</div>
+			</div>
+		</div>
+		<div class="row padding-top10 padding-left-right-set4">
+			<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll500">
+				<table class="table table-bordered first-checkBox-padding">
+					<thead class="mainServiceTableCommon">
+						<tr >
+						    <th class="width4">Select All </th>
+						    <th class="width4">Tariff </th>
+							<th class="width4">Service Code </th>
+							<th class="width8">Service Name </th>
+							<th class="width8">Department </th>
+							<th class="width8">Sub Department </th>
+							<th class="width10" ng-repeat="billingCategoryName in billingCategory " style="width: 60px">{{billingCategoryName.label}}</th>
+							<th class="width6">Is Doctor's Share </th>
+							<th class="width6">Is Referral Share </th>
+							<th class="width6">Rate Editable </th>
+							<th class="width6">Is Auto Render </th>
+							<th class="width6">Is Discount </th>
+							<th class="width6">Is Appointable  </th>
+							<th class="width6">Is Quantity Editable </th>
+							<th class="width6">Is Outsource  </th>
+							<th class="width6">Sample Collection </th>
+							<th class="width6">Is Outsource Job  </th>
+							<th class="width6">Is tax applicable  </th>
+							<th class="width6">Is package  </th>
+							<th class="width6">Is procedure   </th>
+							<th class="width6">Is Review Applicable  </th>
+							<th class="width6">Is POC   </th>
+							<th class="width6">Is Applicable for Contract   </th>
+							<th class="width6">Pre Requisite   </th>
+							<th class="width6">Is Panel    </th>
+							<th class="width6">Is Bill of Material   </th>
+							<th class="width6">Is Ward Bed Side   </th>
+							<th class="width6">Is Pacs Required    </th>
+							<th class="width6">Is Periodicity    </th>
+							<th class="width6">Is Cyclic Appointment Applicable </th>
+							
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in selectedServiceListnew"  >
+							<td><input type="checkbox" ng-true-value="true" ng-false-value="false" class="w-100" ng-model="info.selected"></td>
+							<td>{{info.tariffDesc}}</td>
+							<td>{{info.serviceStandardCode}}</td>
+							<td>{{info.serviceStandardName}}</td>
+							<td>{{info.specialityName}}</td>
+							<td>{{info.subSpecialityName}}</td>
+							<td class="width10" ng-repeat="billingCategoryName in info.billingCategory track by $index ">
+							  <input type="text" style="width: 60px" autocomplete="off" class="ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched" numbers-only  ng-model="billingCategoryName.rate[$parent.$index]">
+							</td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isDocReq" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isRefDoctorShare" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isRateEditable" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isAutoRender" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isDiscount" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isAppointable" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isQuantityEditable" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isOutsource" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.sampleCollection"ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isOutsourceJob" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isTaxApplicable" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isPackage" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isProcedure" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isReviewApplicable" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isPoc" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isApplicableForContract" ng-true-value="'Y'" ng-false-value="'N'" ></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.preRequisite" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isPanel" ng-true-value="'Y'" ng-false-value="'N'" ></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.billOfMaterial" ng-true-value="'Y'" ng-false-value="'N'" ></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isBedSide" ng-true-value="'Y'" ng-false-value="'N'" ></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isPacsReq" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isPeriodicity" ng-true-value="'Y'" ng-false-value="'N'"></td>
+							<td><input type="checkbox" autocomplete="off" class="w-100 ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched"  ng-model="info.isCyclicFlag" ng-true-value="'Y'" ng-false-value="'N'" ></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+	</div>
+</div>
+<div id="RXreprintpopup" class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style=" margin-left: -30px;
+    background-size: 215px 83px !important;">
+				<div class="modal-title patient-details-row" style="    margin-left: 13px !important;">
+					Duplicate Service Names List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row ng-scope padding-left-right-10 padding-top8">
+					<ul>
+						<li ng-repeat="item in names">{{ item }}</li>
+					</ul>
+				</div>
+
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary"  ng-click="addProcedureOrder();">Ok</button> -->
+				<div class="row">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" >Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="already_exist" class="modal fade ng-scope in  kiosk-small-modal" role="dialog" style="background:rgba(0, 0, 0, 0.33);">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10 padding-bottom30"><span>{{message}}</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary width40" id="" data-toggle="modal" ng-click="saveUnitServiceTariffMaster()" >Save And Override</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" data-toggle="modal" >OK</button>
+				</div>
+			</div>
+		</div>
+</div>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<!-- ng-file-upload -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ng-file-upload/12.2.13/ng-file-upload.min.js"></script>
+<!-- xlsx -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-file-upload/2.6.1/angular-file-upload.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-file-upload/2.6.1/angular-file-upload.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+<script>
+	document.getElementById("xlf").addEventListener("change", function () {
+        const file = this.files[0];
+        const errorMsg = document.getElementById("errorMsg");
+
+        if (file) {
+            const fileName = file.name;
+            if (!fileName.endsWith(".csv")) {
+                errorMsg.textContent = "Please upload a valid CSV file.";
+                this.value = ""; // Clear the file input
+            } else {
+                errorMsg.textContent = ""; // Clear the error message
+            }
+        }
+    });
+</script>
+
+
+
+ 

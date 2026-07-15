@@ -1,0 +1,500 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<!-- <div ng-include="'./views/common-patient-details.html'"></div> -->
+		<fieldset>
+			<!-- <legend class="heading-div">Service Master</legend> -->
+			<form name="serviceMasterForm" novalidate>
+				<div class="row padding-left-right-set4">
+					<div
+						class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-object-group" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" show-errors>
+									<select class="text-input floating-label" name="specialityId"
+										ng-model="masterObj.specialityId"
+										ng-click="getSubSpecialityBySpecialityId(masterObj.specialityId)"
+										required="required">
+										<option
+											ng-repeat="info in specialityMasterList | orderBy: 'specialityName'"
+											ng-if="info.status='A'" value="{{info.specialityId}}">{{info.specialityName}}
+										</option>
+									</select> <label for="code">Choose Department<span class="star">*</span></label>
+									<p class="help-block"
+										ng-if="serviceMasterForm.specialityId.$error.required">Department
+										is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-object-group" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" show-errors>
+									<select class="text-input floating-label"
+										name="subSpecialityId" ng-model="masterObj.subSpecialityId"
+										required="required">
+										<option ng-repeat="info in subSpecialityMasterList"
+											value="{{info.subSpecialityMasterId}}">{{info.subSpecialityMasterName}}</option>
+									</select> <label for="code">Choose Sub Department<span
+										class="star">*</span></label>
+									<p class="help-block"
+										ng-if="serviceMasterForm.subSpecialityId.$error.required">Sub
+										Department is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+						<div class="row input-container padding-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="serviceCode" id=""
+										ng-model="masterObj.serviceCode"
+										class="text-input floating-label" required="required">
+									<label for="code">Service Code<span class="star">*</span></label>
+									<p class="help-block"
+										ng-if="serviceMasterForm.serviceCode.$error.required">Service
+										Code is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+						<div class="row input-container padding-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-list-alt" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="serviceName" id=""
+										ng-model="masterObj.serviceName"
+										class="text-input floating-label" required="required">
+									<label for="code">Service Name<span class="star">*</span></label>
+									<p class="help-block"
+										ng-if="serviceMasterForm.serviceName.$error.required">Service
+										Name is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-list-alt" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="codificationServiceName" id=""
+										ng-model="masterObj.codificationServiceName"
+										class="text-input floating-label" required="required">
+									<label for="code">Codification Service Name<span
+										class="star">*</span></label>
+									<p class="help-block"
+										ng-if="serviceMasterForm.codificationServiceName.$error.required">Codification
+										Service Name is required</p>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+						<div class="row input-container padding-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group" show-errors>
+									<!-- <select class="text-input floating-label"
+										name="generalLedgerId" ng-model="masterObj.generalLedgerId"
+										required="required">
+										<option ng-repeat="info in ledgerList"
+											value="{{info.generalLedgerId}}">{{info.generalLedgerName}}</option>
+									</select> <label for="code"> General Ledger Code<span
+										class="star">*</span></label>
+									<p class="help-block"
+										ng-if="serviceMasterForm.generalLedgerId.$error.required">General
+										Ledger Code is required</p> -->
+										<input  placeholder="search" ng-blur="clearText()" type="text" autocomplete="off"  
+                                        name="generalLedgerName" class="text-input floating-label"
+                                        ng-model="masterObj.generalLedgerName"
+                                        uib-typeahead="group.generalLedgerName for group in ledgerNameSearch($viewValue)"
+                                        typeahead-on-select="SelectLedgerName($item)"
+                                        ><label for="description" class="">General Ledger Code</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top5" style="width: auto;">
+						<a
+							class="btn btn-primary btn-save-box-shadow ng-scope btn-sm padding-left-right-10 cursor-pointer"
+							title="" data-target="#inventoryDetails_modal" id="inventoryBtn"
+							data-toggle="modal"> <label
+							style="font-size: 13px !important;">Inventory
+								Details</label>
+						</a>
+					</div>
+					
+				</div>
+				<!-- <div class="row padding-left-right-set4">
+					
+				</div> -->
+				<div class="row margin-top10">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 "
+						style="WIDTH: AUTO;">
+						<a
+							class="btn btn-primary btn-save-box-shadow ng-scope btn-sm padding-left-right-10"
+							title="Download" id="sampleFormatBtn"
+							href="./resources/assets/images/icon/service-master-format-file/service-master-format.csv">
+							<label
+							style="font-size: 13px !important;">Sample-Format</label>
+							<i class="fa fa-download" style=""
+							aria-hidden="true"></i>
+						</a>
+						<!--   <label>Click Here For Sample-Format</label> -->
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 margin-left5 padding-left-right-set padding-top10">
+						<!-- <input type="file" fileinput="file" id="csvfile" file-model="doctorImage"  filepreview="filepreview" >  -->
+						<form action="" method="post" enctype="multipart/form-data">
+							<input type="file" fileinput="file" id="csvfile"
+								file-model="csvfile" filepreview="filepreview" accept=".csv" validfile
+								multiple progress drag preview>
+							<p ng-show="fileError" style="color:red;">{{fileError}}</p>
+						</form>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 "
+						style="WIDTH: AUTO; padding-left: 20px !important;">
+						<a
+							class="btn btn-primary btn-save-box-shadow ng-scope btn-sm padding-left-right-10"
+							title="Upload" id="submitbutton" ng-click="uploadfile()"
+							data-toggle="modal"> <i class="fa fa-upload"
+							style="font-size: 16px !important;" aria-hidden="true"></i>
+						</a>
+					</div>
+
+					<div ng-if="failureRecordCount>0"
+						class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 "
+						style="width: auto;">
+						<a
+							class="btn btn-primary btn-save-box-shadow ng-scope btn-sm padding-left-right-10"
+							title="Download" id=""
+							href="./resources/service-master-failed-records.xls"> <!-- href="./resources/assets/images/icon/service-master-format-file/service-master-format.csv" -->
+							<label
+							style="font-size: 13px !important; color: white !important;">Error
+								Records</label> <i class="fa fa-download"
+							style="color: white !important;" aria-hidden="true"></i>
+						</a>
+					</div>
+
+				</div>
+			</form>
+		</fieldset>
+		<div class="row padding-left-right-set4 margin-top4">
+			<div class="row">
+				<div
+					class="col-lg-6 col-md-6 col-sm-7 padding-left-right-set4 padding-top4">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+							<div class="search">
+								<label class="show-entries">Show <select
+									name="DataTables_Table_0_length"
+									aria-controls="DataTables_Table_0"
+									ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+									ng-change="setNoOfRecords();" class="search-popUp-ddl">
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+								</select> entries
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow"
+							title="Save" data-toggle="modal" ng-click="saveServiceMaster()"
+							ng-if="saveBtnFlag"> <i class="fa fa-floppy-o"
+							style="font-size: 21px" aria-hidden="true"></i>
+						</a> <a href="" class="btn btn-primary btn-save-box-shadow"
+							title="Update" data-toggle="modal"
+							ng-click="updateServiceMaster()" ng-if="updateBtnFlag"> <i
+							class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 float_right padding-top2">
+					<input type="text" autocomplete="off" class="text-search-box" ng-model="searchKeyword"
+						placeholder="Search" ng-keyup="serachServiceMaster(searchKeyword)"
+						style="margin-top: 0px"> <i
+						class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div>
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-top10">
+				<table class="table table-bordered ">
+					<tr class="">
+						<th class="width9">Department </th>
+						<th class="width9">Sub Department</th>
+						<th class="width6">Service Code </th>
+						<th class="width14">Service Name </th>
+						<th class="width9">General Ledger Code </th>
+						<th class="width2">status(n) </th>
+						<th class="width2">Inventory Details</th>
+						<th class="width2 text-center">Action taken </th>
+					</tr>
+					<tr
+						ng-repeat="info in serviceList|orderBy:column:reverse">
+						<td>{{info.specialityName}}</td>
+						<td>{{info.subSpecialityName}}</td>
+						<td>{{info.serviceStandardCode}}</td>
+						<td>{{info.serviceStandardName}}</td>
+						<td>{{info.generalLedgerName}}</td>
+						<td><label class="switch"> <input type="checkbox"
+								ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"
+								ng-change="updateStatus(info.serviceMasterId,info.status)">
+								<div class="slider round"></div>
+						</label></td>
+						<td class="text-center"><a> <i class="fa fa-info-circle"
+								aria-hidden="true" title="Inventory Details" data-toggle="modal"
+								data-target="#inventoryDetails_view_modal" ng-click="getInventoryItemList(info.serviceMasterId,false)"></i>
+						</a></td>
+						<td class="padding-edit-button-table text-center"><a> <i
+								class="fa fa-pencil" aria-hidden="true" title="Edit"
+								ng-click="showUpdateBtn(info.serviceMasterId)"> </i>
+						</a></td>
+					</tr>
+					<tr ng-if="serviceList.length==0">
+						<td colspan="11" class="text-center">{{loadingMsg}}</td>
+					</tr>
+				</table>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ************* Inventory details modal start ******************* -->
+<div id="inventoryDetails_modal"
+	class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Inventory Details
+					<button type="button" class="close" data-dismiss="modal" ng-click="clearData();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10">
+					<div
+						class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-object-group" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" class="text-input floating-label dirty"
+										ng-model="itemName" 
+										uib-typeahead="info.detail for info in complete($viewValue)"
+										typeahead-on-select="addMedicationItemList($item, $model, $label,idx)"/>
+									<label for="code">Item Description</label>
+								</div>
+								<!-- <label>Item Description</label>
+								<input type="text" autocomplete="off" name="description" id="brandname"
+										class="w-100" ng-model="country"
+										uib-typeahead="countrydata in filterCountry1 in complete($viewValue)"
+										typeahead-min-length="3"
+										typeahead-on-select="addMedicationItemList($item, $model, $label,idx)"
+										> -->
+
+								<!-- <input type="text" autocomplete="off" name="country" id="country"
+									ng-model="country" ng-keyup="complete(country)"
+									class="form-control" />
+								<ul class="list-group">
+									<li class="list-group-item"
+										ng-repeat="countrydata in filterCountry1"
+										ng-click="fillTextbox(countrydata)">{{countrydata.itemName}}</li>
+								</ul> -->
+
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-object-group" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<!-- <select class="text-input floating-label" name="">
+									<option></option>
+								</select> <label>Item Qty</label> -->
+								<input type="text" autocomplete="off" name="qty" id="qty"
+									ng-model="qty" class="text-input floating-label dirty ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched " numbers-only=""/>
+								<label>Item Qty</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right padding-top10">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Add" ng-click="addInventoryItem();">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+				<div class="row ">
+					<div
+						class="row padding-top4 padding-left-right-set4 fix-height-scroll230">
+						<table class="table table-bordered" id="main-table">
+							<thead>
+								<tr class="">
+									<th class="width9">Item Description</th>
+									<th class="width9">Item Qty</th>
+									<th class="width5">Action taken</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in inventoryItems">
+									<td ng-if="item.status!='I'">{{item.itemName}}</td>
+									<td ng-if="item.status!='I'">{{item.assignQty}}</td>
+									<td  ng-if="item.status!='I'"><a title="Remove" ng-click="removeInventoryItem($index);"><i
+														class="fa fa-times"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="row">
+					<!-- <div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div> -->
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Add" ng-click="addServiceItemMapperList();" data-dismiss="modal">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ************* Inventory details modal end ******************* -->
+<!-- ************* Inventory details view modal start ******************* -->
+<div id="inventoryDetails_view_modal"
+	class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Inventory Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10">
+					<div
+						class="row padding-top10 padding-left-right-set4 fix-height-scroll230">
+						<table class="table table-bordered" id="main-table">
+							<thead>
+								<tr class="">
+									<th class="width9">Item Description</th>
+									<th class="width9">Item Qty</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in savedInventoryItems">
+									<td>{{info.itemName}}</td>
+									<td>{{info.assignQty}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ************* Inventory details view modal end ******************* -->
+<!-- **********message box modal start  ************* -->
+<!-- <div id="message_box_modal" class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					 Error Messages 
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top8 fix-heigh-scroll-200">
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+						<div><label>Message 1</label></div>
+					</div>
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+						<div><label>Message 2</label></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" >Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>  -->
+<modal visible="showModal"></modal>
+
+<!-- **********message box modal end  ************* -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+		$(".selectedPageName").text("Service Master");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="serviceMaster"]').parents("li").addClass("active");
+	});
+</script>
+
+
+

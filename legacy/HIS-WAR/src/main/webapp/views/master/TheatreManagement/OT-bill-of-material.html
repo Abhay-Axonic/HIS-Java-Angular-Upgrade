@@ -1,0 +1,219 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">		
+		<div class="row padding-top0 padding-left-right-set4">
+			<div class="col-md-12 col-sm-12">
+				<div class="row">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10 padding-top10" ng-if="gradeWiseSeviceApplicable == true">
+						
+									<span>
+									 <label class="checkbox-inline padding-top10"> 
+										<input id="radio12" name="radio12" ng-click="checkedFlag(commonObj.gradeSearch,1 )" ng-true-value="true" 
+										ng-false-value="false" ng-checked="commonObj.gradeSearch == true"
+											type="radio"  ng-model="commonObj.gradeSearch" > 
+										Grade</label>
+									</span> 
+									<span> 
+									<label class="checkbox-inline padding-top10">
+										<input id="radio13" name="radio13" ng-click="checkedFlag(commonObj.gradeSearch,2)" ng-true-value="true" ng-false-value="false" 
+										ng-checked="commonObj.procSearch == true"
+											type="radio"  ng-model="commonObj.procSearch" > 
+										Procedure</label>
+									</span>
+											
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="" >
+									<select name="tariffId"  id="" class="text-input floating-label dirty" ng-model="commonObj.tariffId">
+										<option>Select Tariff </option>
+										<option ng-repeat="info in activeTariffList" value="{{info.tariffId}}">{{info.tariffDesc}}</option>
+									</select>
+									<label for="code">Tariff</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="" >
+									<select  name="visitTypeId" id="" class="text-input floating-label dirty" ng-change="getBedCategoryDetails(commonObj.visitTypeId)" ng-model="commonObj.visitTypeId">
+										<option>Select Visit Type</option>
+										<option ng-repeat="info in activeVisitTypeList" value="{{info.visitTypeId}}">{{info.visitTypeName}}</option>
+									</select>
+									<label for="code">Visit Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="" >
+									<select required name="paymentEntitlementId" id="" class="text-input floating-label dirty" ng-model="commonObj.paymentEntitlementId">
+										<option>Select Payment Entitlement</option>
+										<option ng-repeat="info in paymentEntitlementList" value="{{info.paymentEntitlementId}}">{{info.paymentEntitlementDesc}}</option>
+									</select>
+		
+									<label for="code">Payment Entitlement</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="" >
+									<select  name="patientCategoryId" id="" class="text-input floating-label dirty" ng-model="commonObj.patientCategoryId">
+										<option>Select Patient Type</option>
+										<option ng-repeat="info in patientCategoryList" value="{{info.patientCategoryId}}">{{info.patientCategory}}</option>
+									</select>
+									<label for="code">Patient Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+					
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="" ng-if="commonObj.gradeSearch == false">
+									<input type="text" autocomplete="off" name="description" id="procedure"
+										class="text-input floating-label" ng-model="procedure.serviceName"
+										uib-typeahead="procedure.serviceName for procedure in searchprocedure($viewValue)"
+										typeahead-on-select="selectProcedureName($item, $model, $label)" >
+									<label for="description" class="">Procedure<span class="star">*</span></label>
+								</div>
+								<div class="" ng-if="commonObj.gradeSearch == true">
+								<select class="text-input floating-label dirty" id="surgeryGradeId" ng-model="commonObj.surgeryGradeId" >
+									<option ng-repeat="info in gradeList" ng-value="{{info.surgeryGradeId}}" value="{{info.surgeryGradeId}}">{{info.surgeryGrade}}</option>
+								</select>
+									<label for="description" class="">Procedure<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+					<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<label for="">Billing Bed Category<span class="star">*</span></label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="billingBedCatDetailsList" selected-model="selectedBillingBedCatList">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<label for="">Is Bill Of Material Service<span class="star">*</span></label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="isBillOfMaterialDetailsList" selected-model="selectedBillOfMaterialList">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top15">
+						<div class="">
+							<a href="">
+								<input type="button" id="updateBtn" value="Display" class="btn btn-primary btn-save-box-shadow" ng-click="displayData();">
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-left-right-set0 padding-top0">
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll550">
+					  <table id="main-table" class="table table-bordered"><!-- Add this class if you need horizontal scroll "width200" and remove "width100" -->
+					    <thead>
+					      <tr >
+					       <th class="fixed" scope="col"></th>
+					        <th class="fixed" scope="col" ng-repeat="info1 in listBillOfMaterialServices">{{info1.serviceName}}</th>
+					      </tr>
+					    </thead>
+					    <tbody>
+					      <tr  ng-repeat="info in listBedCategory">
+					        <th class="fixed width8" scope="col" >{{info.billingBedDesc}}</th>
+					       <td class="fixed width10" scope="col" ng-repeat="info1 in listBillOfMaterialServices">
+					       		<div ng-repeat="itm in serviceAmtList track by $index">
+					       		<div ng-if="(info1.serviceId == itm.serviceId) && (info.billingBedCategoryId == itm.billingBedCatId)">
+										<input type="text" autocomplete="off" ng-model="itm.amount" ng-blur="getServiceAmt(info.billingBedCategoryId,info1.serviceId,itm.amount,$index);" ng-change="checkMaxInoutAmount($index);" is_number>
+								</div>
+								</div>
+					       	</td>
+					      </tr>
+					    </tbody>
+					  </table>
+					</div>
+				</div>
+				<div class="row padding-top5 float_right">
+					<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+						<div class="">
+							<a href="">
+								<input type="button" value="Print" class="btn btn-primary btn-save-box-shadow" id="updateBtn" >
+							</a>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+						<div class="">
+							<a href="">
+								<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" ng-click="saveBillOfMaterial();">
+							</a>
+						</div>
+					</div>
+					<!-- <div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+						<div class="">
+							<a href="">
+								<input type="button" value="Close" class="btn btn-primary btn-save-box-shadow" >
+							</a>
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("OT Bill Of Material");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="OTbillOfMaterial"]').parents("li").addClass("active");
+});
+</script>

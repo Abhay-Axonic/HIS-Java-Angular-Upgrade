@@ -1,0 +1,384 @@
+<!-- Page Content -->
+<style>
+<!--
+table>tbody>tr.td-bg-red > td
+	{
+		color : #ff0000d6 !important;
+	}
+	table>tbody>tr.td-bg-blue > td
+	{
+		color : #0000ffd6 !important;
+	}
+	table>tbody>tr.td-bg-green > td
+	{
+		color : #008000eb !important;
+	}
+-->
+</style>
+
+
+<div id="page-content-wrapper" style="height:100%; overflow-y:auto ">
+	<div class="container-fluid his-style">
+		
+		<!-- ************* Patient Search Row start*************  -->
+		<!-- <div class="row">
+			<div ng-include="'./views/common/common-patient-search-opd.html'"></div>
+		</div> -->
+		<!-- ************* Patient Search Row start*************  -->
+		
+		<div class="row">
+			<div class="col-md-8 col-sm-8 padding-top8">
+			</div>
+			<div class="col-md-4 col-sm-4">
+				<div class="row">
+				
+					<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4 padding-top10 pull-right">
+						<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword" style="margin-top: 0px">
+							<i class="fa fa-search common-search-text-icon padding-top10" aria-hidden="true"></i>
+					</div>  
+					<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top8 pull-right width12">
+						<div>
+							<a class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" data-target="#confirmLogout">
+								<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+
+
+		<div class="row padding-left-right-set4 table-container padding-top12">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr>
+								<th class="appointment-table-th width18" title="Patient Details" style="padding-left:7% !important">Patient Details</th>
+								<th class="appointment-table-th width12" title="Encounter Details">Encounter Details</th>
+								<!-- <th class="appointment-table-th width5" title="Visit Type">Visit Type</th> -->
+									<th class="appointment-table-th width6" title="Referral info">Medical Consult</th>
+								<th class="appointment-table-th width6" title="Referral info">Referral</th>
+								<th class="appointment-table-th width5">Action taken</th>
+								<th class="appointment-table-th width4">Print</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="table-container-body fix-height-scroll520" style="overflow: overlay !important; background: #fff;">
+					<table class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr ng-repeat="info in allEncounterList|filter:searchKeyword" ng-if="info.modalityId == null || info.modalityId == ''"  ng-class="getClassForColor(info)">
+								<td class="text-center width18">
+									<div class="row patient-details cursor-pointer" id="45#1247#2_new">
+										<div class="col-lg-3 col-sm-12 col-md-3">
+											<div class=""  ng-click="gotoCoverSheet(info)">
+												<img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+											</div>
+										</div>
+										<div class="col-lg-8 col-sm-12 col-md-8">
+											<div class="patient-name">{{info.prefixCode+' '+info.patientName}}
+										</div>
+											<div class="patient-details">
+												<span class="patient-details patient">{{info.age}}/ </span>
+												<span class="patient-details patient">{{info.genderCode}}</span>
+												<!-- <span class="patient-details patient" >||||||
+												<span class="patient-details patient" >info</span> -->
+											</div>
+											<div class="patient">{{info.uhidNumber}}</div>
+										</div>
+									</div>
+								</td>
+								
+								<td class="width12 text-center">
+									<div>{{info.encounterNumber}}</div>
+									<div>{{info.encounterDate | date : "dd/MM/y"}}</div>
+								</td><!-- Encounter Details -->
+								<!-- <td class="width5 text-center">OP</td> -->
+								<td class="text-center width6"><!-- Referral info -->
+									<i class="fa fa-info-circle" aria-hidden="true" ng-click="getConsultationSerives(info)"></i>
+								</td>
+								<td class="text-center width6"><!-- Referral info -->
+									<i class="fa fa-info-circle" aria-hidden="true"  ng-click="getRefralDetails(info)"></i>
+								</td>
+								<td class="text-center width5"><!-- Action -->
+								  <div ng-if="roleId == '3' && roleName=='nurse'">
+									   	<div class="font-size-10 text-center div-word-break cursor-pointer"  ng-click="gotoCoverSheetAssigment(info)">
+											<i class="fa fa-sign-out" style="margin-right: 4px;" ></i>
+										</div>
+								   </div>
+								</td>
+								<td class="text-center width4"><!-- Action -->
+									<a>
+										<i class="fa fa-print" aria-hidden="true" ng-click="printCaseSheet(info);"></i>
+									</a>
+								</td>
+							</tr>	
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- <div class="row margin-top4 padding-left-right-set4 padding-top10">
+			<div>
+				<div class="row table-responsive fix-height-scroll450">
+					<table class="table table-border">
+						<thead>
+							
+						</thead>
+						<tbody>
+							
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div> -->
+		
+	</div>
+</div>
+
+<!-- ************* document upload modal start ************* -->
+<div id="uploadDetails" class="modal common-medium-popup fade ng-scope in" role="dialog">
+	<div class="modal-dialog"> 
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Document Upload Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					<div class="">
+						<div class="row margin-top10" 	ng-repeat = "docObj in encounterDetailsList track by $index">
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-2 col-md-21 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10">
+										<div class="form-group">
+											<select class="text-input floating-label dirty" ng-model="docObj.documentTypeId">
+												<option selected value>Select Document Type</option>
+												<option ng-repeat="docType in documentTypeList" value="{{docType.documentTypeId}}">{{docType.documentTypeName}}</option>
+											</select> 
+											<label for="">Document Type</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<input type="file" name="file{{$index}}" file-model="docObj.file" validfile>
+								<p ng-show="fileError" style="color:red;">{{fileError}}</p>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top4">
+								<a href="" class="btn btn-primary btn-save-box-shadow width50" value="+" ng-click="addImageDetails();">
+									<i class="fa fa-plus" style="" aria-hidden="true"></i>
+								</a>
+								<a href="" class="btn btn-primary btn-save-box-shadow width50" value="-" ng-click="removeImageDetails($index);" ng-if="$index!=0">
+									<i class="fa fa-minus" style="" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" id=""ng-click="uploadPatientImage();">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" >Cancel</button> -->
+				<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="uploadPatientImage();" data-dismiss="modal" >
+							<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ************* document upload modal end ************* -->
+<!-- APPOINTMENT DETAILS POPUP -->
+<div id="detailsForAppointments" class="modal common-small-popup fade ng-scope in" role="dialog">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Appointment Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12 ">
+						<div class="common-small-popup-body">
+							<div><b>Appointment Date:</b> <span style=" margin-left: 20px;"> <!-- Johan Hosy, <span>29 Y Male</span> -->{{appointmentDate}}</span></div>
+							<div><b>Appointment Time: </b> <span style="margin-left: 7px;">{{appointmentFromTimeString}}</span></div>
+							<div><b>Remark: </b><span style="margin-left: 64px;">{{appointmentRemark}}</span></div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+<div id="detailsForReferal" class="modal common-small-popup fade ng-scope in" role="dialog">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Referral Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12 ">
+
+							<div><b>Refer:</b> <span style=" margin-left: 20px;"> <!-- Johan Hosy, <span>29 Y Male</span> -->{{referralTypeName}}</span></div>
+							<div><b>Referral Name: </b> <span style="margin-left: 7px;">Dr. {{referralName}}</span></div>
+							<div><b>Remark: </b><span style="margin-left: 64px;">{{referralRemark}}</span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+<!-- Future Services START -->
+<div id="consultationServiceId" data-backdrop="static"  class="common-medium-popup modal fade ng-scope in" role="dialog" >
+	<div class="modal-dialog"> 
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Consultation Services
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="col-md-12 col-lg-12 padding-left-right-10 padding-bottom10 fix-height-scroll230">
+					<table class="table table-bordered  margin-top8">
+						<tbody>
+							<tr>
+							    <th class="width5 text-center"><span class="">Select</span></th>
+							     <th class="width10 text-center"><span class="">Service Code</span></th>
+							    <th class="width10 text-center"><span class="">Service Name</span></th>
+							    <th class="width10 text-center"><span class="">Specialty</span></th><!-- old name - Department -->
+								<th class="width10 text-center"><span class="">Doctor</span></th>
+								<th class="width10 text-center"><span class="">Time</span></th>
+								<th class="width10 text-center"><span class="">Status</span></th>
+							</tr>
+							<tr ng-repeat="encounter in consultationServiceList track by $index" ng-init="parentIdx = $index">
+							 <td class="text-center vertical-middle"> 
+<!-- 							 data-checklist-model="selectedEncServies" data-checklist-value="encounter" -->
+							 <label class="checkbox-inline">
+                                 <input type="checkbox"   ng-model="encounter.selectServiceFlag" name="enc" id="serviceId_{{parentIdx}}" ng-disabled="encounter.appointmentStatusId!=1">
+                                 <span></span>
+                             </label>
+                             </td>
+							    <td class="text-center">{{encounter.serviceStandardCode}}</td> 
+							    <td class="text-center" id="serviceId_{{encounter.serviceStandardName}}_{{parentIdx}}">{{encounter.serviceStandardName}}</td> 
+							    <td class="text-center"><select class="w-100" style="border-radius: 10px;"   ng-model="encounter.specialityId" ng-change="getDoctorBySpeciality(encounter,$index);" ng-disabled="encounter.appointmentStatusId!=1 || encounter.deptIdTemp>0"  convert-to-number>
+							    <option selected value>-</option>
+											<option ng-repeat="speciality in encounter.specialityList" value="{{speciality.specialityId}}" id="speciality_{{speciality.specialityId}}_{{parentIdx}}">{{speciality.specialityName}}</option>
+							    </select>
+							    </td>
+								<td class="text-center"><select class="w-100" style="border-radius: 10px;"  ng-model="encounter.doctorId"  ng-disabled="encounter.appointmentStatusId!=1">
+								 <option selected value>-</option>
+											<option ng-repeat="doctor in encounter.doctorList" value="{{doctor.doctorId}}" id="doctor_{{doctor.doctorId}}_{{parentIdx}}">{{doctor.doctorName}}</option>
+								</select></td>
+								<td class="text-center"><input type="text" style="border-radius: 10px;"  autocomplete="off" class="w-100" ng-model="encounter.encounterTime" ng-click="getAppointmentPopup(encounter,$index)" readonly ng-disabled="encounter.appointmentStatusId!=1"></td>
+								<td class="text-center">{{getAppointmentStatus(encounter.appointmentStatusId)}}</td> 
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				  <div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="saveAppointmentMaster()">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ******************** time slot modal start ************************ -->
+<div id="time_slot_modal" class="modal fade ng-scope in common-large-popup" data-backdrop="static"  role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+	      <div class="modal-header" style="padding: 0px!important;">
+	        <div class="modal-title patient-details-row">
+	          Time Slot
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	      </div>
+	      <div class="modal-body" style="padding:5px;">
+		        <div class="row fix-height-scroll400">				
+					<div class="row padding-top10">
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" ng-model="slotDate" class="text-input floating-label" readonly> 
+										<label for="description" class="">Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top5">
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1 margin-top2" ng-repeat="info in slotDetailsList" ng-if="info.isBlockedUnblocked == '2' && info.slotPatientDetailsListsSize == '0' && info.originalFromTime > slotCheckTime">
+								<div ng-if="info.isBlockedUnblocked == '2' && info.slotPatientDetailsListsSize == '0'"  class="bg-green cursor-pointer day-slot-div"   style="padding:0px !important;" data-dismiss="modal" ng-click="getSlotDetailsPopup(info)" >
+									<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+								</div>
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set1 margin-top2">
+								<div class="font-size-12 text-center">{{slotMsg}}</div>
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set1 margin-top2" ng-if="slotDetailsList.length > 0 && slotDetailsList[length-1].originalFromTime < slotCheckTime">
+								<div class="font-size-12 text-center">Slots not available</div>
+						</div>
+					</div>
+		        </div>
+	      </div>
+	   <!--   <div class="modal-footer" style="border:none;">
+	     	<div class="col-md-10"></div>
+	     	<div class="col-md-1 padding-left-right-set1 width10">
+		        <button type="button" data-dismiss="modal" class="btn btn-primary">Ok</button>
+		    </div>
+		    <div class="col-md-1 padding-left-right-set1 width10">
+	        	<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+	        </div>
+      </div> -->
+    </div>
+  </div>
+</div>
+<!-- ******************** time slot modal end ************************ -->
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {       
+	
+  $(".selectedPageName").text("Encounter  Queue EHC");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="encounterQueueEHC"]').parents("li").addClass("active");
+});
+
+
+</script>

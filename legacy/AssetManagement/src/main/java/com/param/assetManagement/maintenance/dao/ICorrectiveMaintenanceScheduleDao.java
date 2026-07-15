@@ -1,0 +1,19 @@
+package com.param.assetManagement.maintenance.dao;
+
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceScheduleDto;
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceWorklistDto;
+import com.param.global.common.Response;
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface ICorrectiveMaintenanceScheduleDao {
+
+	Response saveCorrectiveMaintenanceSchedule(CorrectiveMaintenanceScheduleDto correctiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response getCorrectiveMaintenanceScheduleByMultipleCrit(CorrectiveMaintenanceScheduleDto correctiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response getvendorlistByBatchId(CorrectiveMaintenanceWorklistDto correctiveMaintenanceWorklistDto)throws ApplicationException;
+
+	Response getdetailsOfCM(CorrectiveMaintenanceScheduleDto correctiveMaintenanceScheduleDto)throws ApplicationException;
+
+}

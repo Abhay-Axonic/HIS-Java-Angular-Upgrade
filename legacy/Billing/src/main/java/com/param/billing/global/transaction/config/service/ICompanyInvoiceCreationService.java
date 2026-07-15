@@ -1,0 +1,28 @@
+package com.param.billing.global.transaction.config.service;
+
+import com.param.billing.global.transaction.config.dto.CompanyInvoiceCreationReqDto;
+import com.param.billing.global.transaction.config.dto.CompanyInvoiceReminderMasterDto;
+import com.param.billing.global.transaction.config.dto.TCompanyInvoiceCreationReqDto;
+import com.param.billing.global.transaction.dto.CompanyInvoiceSettlementReqDto;
+import com.param.billing.global.transaction.dto.CompanyInvoiceSettlementSearchReqDto;
+import com.param.global.billing.controller.BillingException;
+import com.param.global.common.Response;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface ICompanyInvoiceCreationService {
+	public Response getCompanyInvoiceCreationList(CompanyInvoiceCreationReqDto companyInvoiceCreationReqDto)throws BillingException;
+	public Response getDetailsCompanyInvoiceCreationList(CompanyInvoiceCreationReqDto companyInvoiceCreationReqDto)throws BillingException;
+	public Response saveCompanyInvoiceCreationList(TCompanyInvoiceCreationReqDto reqDto) throws ApplicationException;
+	public Response getcompanyRemainderList(CompanyInvoiceCreationReqDto companyInvoiceCreationReqDto)throws BillingException;
+	public Response saveCompanyReminder(CompanyInvoiceReminderMasterDto reqDto) throws ApplicationException;
+	public Response updateCompanyReminderRemark(CompanyInvoiceReminderMasterDto reqDto) throws ApplicationException;
+	public Response getCompInvoiceForSettlement(CompanyInvoiceSettlementSearchReqDto reqDto)throws BillingException;
+	public Response updateBillStatus(CompanyInvoiceSettlementReqDto dto)throws BillingException;
+	public Response getCompanyInvoiceSettlementDetailsByCompanyInvoiceId(CompanyInvoiceSettlementSearchReqDto reqDto) throws BillingException;
+	public Response getCompInvoiceForSettlementDetails(CompanyInvoiceSettlementSearchReqDto reqDto)throws BillingException;
+	public Response settleCompanyInvoice(CompanyInvoiceSettlementReqDto reqDto)throws BillingException;
+	public Response companyInvoiceCreationListByBillId(CompanyInvoiceCreationReqDto companyInvoiceCreationReqDto)throws BillingException;
+	
+}

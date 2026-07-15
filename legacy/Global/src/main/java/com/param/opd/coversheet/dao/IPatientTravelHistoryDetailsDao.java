@@ -1,0 +1,43 @@
+package com.param.opd.coversheet.dao;
+
+import java.util.List;
+
+import com.param.global.common.Response;
+import com.param.global.dto.CoversheetTemplateMasterDto;
+import com.param.opd.coversheet.dto.PatientTravelHistoryDetailsDto;
+import com.param.opd.coversheet.model.PatientTravelHistoryDetails;
+
+import in.param.common.dao.IGenericDao;
+import in.param.exception.ApplicationException;
+
+public interface IPatientTravelHistoryDetailsDao extends IGenericDao<PatientTravelHistoryDetails, Integer>{
+
+	Response getListOfPatientTravelHistoryDetails(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+
+	Response savePatientTravelHistoryDetails(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+
+	
+	/*ADDED BY JYOTI
+	DATE - 15-05-2018*/
+	public Response getOldPatientTravelHistory(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+	
+	public Response getCurrentPatientTravelHistory(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+	
+	public Response updatePatientTravelHistory(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+	
+	public Response updateSaveNurseReviewedFlag(PatientTravelHistoryDetails patientTravelHistoryDetails)throws ApplicationException;
+	
+	public Response updateStatusEnterInError(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+
+	Response getCurrentPatientTravelHistoryDetailsForCoversheet(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+
+	Response getPatientTravelHistoryForBookView(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+
+	Response updateStatusRemoveTravelHistory(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+
+	Response getPatientTravelHistory(PatientTravelHistoryDetailsDto patientTravelHistoryDetailsDto)throws ApplicationException;
+
+	Response saveCurrentPatientTravelHistoryDetails(List<PatientTravelHistoryDetailsDto> list,CoversheetTemplateMasterDto resDto)throws ApplicationException;
+
+	Response updateCovTempCurrentPatientTravelHistoryDetails(List<PatientTravelHistoryDetailsDto> list, CoversheetTemplateMasterDto coversheetTemplateMasterDto);
+}

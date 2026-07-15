@@ -1,0 +1,325 @@
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="row padding-top10">
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" ng-model="companyContarctObj.paymentEntitlementId" ng-change="getCompanyMasterList(companyContarctObj.paymentEntitlementId)">
+									<option value="">Select Payment Entitlement</option>
+									<option ng-repeat="paymentEntitlement in paymentEntitlementList" value="{{paymentEntitlement.id}}" ng-if="paymentEntitlement.id != 1">{{paymentEntitlement.name}}</option>
+								</select>
+							<label for="code">Payment Entitlement</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" ng-model="companyContarctObj.companyId" ng-change="getAssociateCompanyMasterList(companyContarctObj.companyId)" >
+									<option value="">Select Company/TPA</option>
+									<option ng-repeat="companyMaster in companyMasterList" value="{{companyMaster.id}}" >{{companyMaster.name}}</option>
+								</select>
+							<label for="code">Company/TPA</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-if="companyContarctObj.paymentEntitlementId == 2">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" ng-model="companyContarctObj.associateCompanyId" >
+									<option value="">Select Insurance</option>
+									<option ng-repeat="associateCompanyMaster in associateCompanyMasterList" value="{{associateCompanyMaster.id}}" >{{associateCompanyMaster.name}}</option>
+								</select><label for="code">Insurance</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label" name="gradeId" ng-model="companyContarctObj.gradeId" >
+									<option>Select Grade</option>
+									<option ng-repeat="gradeList in gradeListByAssociateCompanyIdList" value="{{gradeList.contractGradeMasterId}}">{{gradeList.gradeDesc}}</option>
+								</select><label for="code">Grade</label>
+						</div>
+					</div>
+				</div>
+			</div> -->
+		</div>
+		<div class="row">
+			<div class="col-md-6 col-sm-7 padding-left-right-set4 padding-top12">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+							<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto float_right margin-top8">
+				<div class=" ">
+					<a href="#/addNewCompanyContract"> <input type="button"
+						value="Add New" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				
+			</div>
+			
+			<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto float_right margin-top8">
+				<div class=" ">
+				<button class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="getSearchServicesList(companyContarctObj)" > 
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</button>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right margin-top10">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword" ng-keyup="getCompanyContractMasterSearch(searchKeyword);"
+					style="margin-top: 0px"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		
+		<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+			  <table id="main-table" class="main-table width100">
+			    <thead>
+			      <tr>
+					<th class="width3 th-bg">Payment Entitlement</th>
+					<th class="width5 th-bg">Company</th>
+					<th class="width5 th-bg">TPA</th>
+					<th class="width6 th-bg">Contract Name</th>
+					<th class="width3 th-bg">Version</th>
+					<th class="width3 th-bg">Visit Type Name</th>
+					<th class="width3 th-bg">Validity From</th>
+					<th class="width3 th-bg">Validity To</th>
+					<th class="width8 th-bg">Fall Back Tariff</th>
+					<!-- <th class="width8 th-bg">GL Code</th> -->
+					<th class="width3 th-bg text-center" style="z-index:1023">Status(n)</th>
+					<th class="width3 th-bg text-center">Action taken</th>
+					
+				</tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-repeat="comapnyContarct in searchComapnyContarctList|orderBy:column:reverse|filter:searchKeyword">
+					<td class="td-bg ">{{comapnyContarct.paymentEntitlementName}}</td>
+					<td class="td-bg ">{{comapnyContarct.assCompanyName}}</td>
+					<td class="td-bg ">{{comapnyContarct.insuranceName}}</td>
+					<td class="td-bg ">{{comapnyContarct.contractName}}</td>
+					<td class="td-bg">V{{comapnyContarct.versionNo}}&nbsp;&nbsp;<a data-toggle="modal" data-target="#contractDetailsForVersion"  ng-if="comapnyContarct.parentContractId > 0 " ng-click="getParentCompanyContractDetails(comapnyContarct)"><i class="fa fa-info-circle"></i></a></td>
+					<td class="td-bg ">
+					<div ng-if="comapnyContarct.visitTypeId == 1">OP</div>
+					<div ng-if="comapnyContarct.visitTypeId == 2">IP</div>
+					<div ng-if="comapnyContarct.visitTypeId == 3">DC</div>
+					<div ng-if="comapnyContarct.visitTypeId == 4">ER</div>
+					</td>
+					<td class="td-bg ">{{comapnyContarct.validityFrom| date : "dd/MM/y "}}</td>
+					<td class="td-bg ">{{comapnyContarct.validityTo| date : "dd/MM/y "}}</td>
+					<td class="td-bg ">{{comapnyContarct.tariffName}}</td>
+					<!-- <td class="td-bg ">{{comapnyContarct.generalLedgerName}}</td> -->
+					<td class="text-center">
+						<label class="switch" ng-if="comapnyContarct.isVersioning == 'N'"> 
+						<input type="checkbox" ng-model="comapnyContarct.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(comapnyContarct.contractId,comapnyContarct.status)">
+						<div class="slider round"></div>
+						</label>
+					</td>
+					<td class="td-bg text-center">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 padding-left-right-set4">
+								<a ng-click="getCompanyContractDetails(comapnyContarct)"><i class="fa fa-info-circle"></i></a>
+							</div>
+							<div class="col-lg-6 col-md-6 padding-left-right-set4">
+								<a ng-if="comapnyContarct.isVersioning == 'N'" title="Contract Amendment"><i class="fa fa-code-fork" aria-hidden="true" ng-click="showUpdateBtn(comapnyContarct)"></i></a>
+							</div>
+						</div>
+						
+						
+						</td>
+				</tr>
+				<tr ng-if="(searchComapnyContarctList|filter:searchKeyword)=='' || (searchComapnyContarctList|filter:searchKeyword)==null">
+					<td colspan="11"><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+				</tr>
+			    </tbody>
+			    
+			  </table>
+			</div>
+		</div>
+		<div class="row margin-top4 padding-left-right-set4">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				
+					<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		
+	</div>
+</div>
+
+
+
+<div id="contractDetailsForVersion"
+	 class="common-large-popup modal fade"
+	 role="dialog">
+
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<!-- ================= HEADER ================= -->
+			<div class="modal-header">
+				<div class="modal-title" style="    margin-top: 16px !important; ">
+					Old Version Details
+					<button type="button"  style="margin-top: 27px !important;margin-right: 10px;" class="close" data-dismiss="modal">
+						&times;
+					</button>
+				</div>
+
+			</div>
+
+			<!-- ================= BODY ================= -->
+			<div class="modal-body">
+
+				<!-- Search -->
+				<div class="row margin-top4">
+					<div class="col-lg-3 col-md-3 col-sm-3 pull-right">
+						<input type="text" style="border-radius: 10px;height: 36px;margin-right: 42px;float: inline-end;"
+							   class="text-search-box"
+							   placeholder="Search"
+							   ng-model="searchText"
+							   autocomplete="off">
+					</div>
+				</div>
+
+				<fieldset class="normalRegistration sub-fieldset border-none">
+					<div class="row margin-top10">
+						<div class="col-md-12 fix-height-scroll230">
+
+							<table class="table table-bordered">
+
+								<!-- ===== TABLE HEADER ===== -->
+								<thead>
+								<tr>
+									<th class="width3 th-bg">Payment Entitlement</th>
+									<th class="width5 th-bg">Company</th>
+									<th class="width5 th-bg">TPA</th>
+									<th class="width6 th-bg">Contract Name</th>
+									<th class="width3 th-bg">Version</th>
+									<th class="width3 th-bg">Visit Type</th>
+									<th class="width3 th-bg">Validity From</th>
+									<th class="width3 th-bg">Validity To</th>
+									<th class="width8 th-bg">Fall Back Tariff</th>
+									<th class="width3 th-bg text-center">Action</th>
+								</tr>
+								</thead>
+
+								<!-- ===== TABLE BODY ===== -->
+								<tbody>
+								<tr ng-repeat="companyContract in searchComapnyContarctListForVersion | filter:searchText">
+
+									<td>{{companyContract.paymentEntitlementName}}</td>
+									<td>{{companyContract.assCompanyName}}</td>
+									<td>{{companyContract.insuranceName}}</td>
+									<td>{{companyContract.contractName}}</td>
+									<td>V{{companyContract.versionNo}}</td>
+
+									<!-- Visit Type -->
+									<td>
+										{{ companyContract.visitTypeId == 1 ? 'OP' :
+										companyContract.visitTypeId == 2 ? 'IP' :
+										companyContract.visitTypeId == 3 ? 'DC' :
+										companyContract.visitTypeId == 4 ? 'ER' : '-' }}
+									</td>
+
+									<td>{{companyContract.validityFrom | date:'dd/MM/yyyy'}}</td>
+									<td>{{companyContract.validityTo   | date:'dd/MM/yyyy'}}</td>
+									<td>{{companyContract.tariffName}}</td>
+
+									<!-- Action -->
+									<td class="text-center">
+										<a href="javascript:void(0)"
+										   ng-click="getCompanyContractDetailsVersion(companyContract)"
+										   data-dismiss="modal">
+											<i class="fa fa-info-circle"></i>
+										</a>
+									</td>
+
+								</tr>
+								</tbody>
+
+							</table>
+
+						</div>
+					</div>
+				</fieldset>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		/* 
+		 var documentHeight = $(window).height();
+		 var sideBarHeight = documentHeight - 55;
+		 $("#page-content-wrapper").css("height", sideBarHeight + "px"); */
+
+		$(".selectedPageName").text("Company Contract Master");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="companyContractMaster"]').parents("li").addClass("active");
+	});
+</script>

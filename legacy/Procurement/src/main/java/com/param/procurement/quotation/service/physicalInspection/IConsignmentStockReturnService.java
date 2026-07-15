@@ -1,0 +1,34 @@
+package com.param.procurement.quotation.service.physicalInspection;
+
+import java.util.List;
+
+import org.springframework.util.MultiValueMap;
+
+import com.param.common.dto.CommonResponse;
+import com.param.global.service.items.CustomException;
+import com.param.procurement.purchase.dto.goodReceiptNote.GRNResponse;
+import com.param.procurement.quotation.dto.consignmentStockReturn.ConsignmentStockReturnDetailHistory;
+import com.param.procurement.quotation.dto.consignmentStockReturn.ConsignmentStockReturnDetailResponse;
+import com.param.procurement.quotation.dto.consignmentStockReturn.ConsignmentStockReturnDetailSaveRequest;
+import com.param.procurement.quotation.dto.physicalInspection.ConsignmentStockReturnRequest;
+import com.param.procurement.quotation.dto.physicalInspection.ConsignmentStockReturnResponse;
+
+public interface IConsignmentStockReturnService {
+
+	List<ConsignmentStockReturnResponse> getConsignmenStocktList(ConsignmentStockReturnRequest consignmentStockReturnRequest);
+	
+	List<ConsignmentStockReturnDetailSaveRequest> getAllCRGrnDetails(ConsignmentStockReturnRequest consignmentStockReturnRequest);
+	
+	ConsignmentStockReturnDetailSaveRequest getCRGrnDetails(ConsignmentStockReturnRequest consignmentStockReturnRequest);
+	
+	//CommonResponse saveConsignmentStockReturnDetails(ConsignmentStockReturnDetailSaveRequest consignmentStockReturnSaveRequest);
+	CommonResponse saveConsignmentStockReturnDetails(List<ConsignmentStockReturnDetailSaveRequest> consignmentStockReturnSaveRequest);
+	
+	CommonResponse updateConsignmentStockReturnDetails(List<ConsignmentStockReturnDetailResponse> ConsignmentStockReturnDetailResponse) throws CustomException;
+
+	ConsignmentStockReturnDetailResponse getConsignmentStockreturnDetail(ConsignmentStockReturnRequest consignmentStockReturnRequest);
+	
+	CommonResponse saveConsignmentStockReturn(List<ConsignmentStockReturnRequest> consignmentStockReturnRequests) throws CustomException;
+	
+	List<ConsignmentStockReturnDetailHistory> getConsignmentStockreturnDetailHistory(ConsignmentStockReturnDetailHistory consignmentStockReturnDetailHistory);
+} 

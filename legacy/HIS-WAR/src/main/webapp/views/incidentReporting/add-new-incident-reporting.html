@@ -1,0 +1,551 @@
+<style>
+.modal {
+	background-color: transparent !important;
+	margin-left: inherit !important;
+	width: -webkit-fill-available !important;
+	height: inherit !important;
+	margin-top: inherit !important;
+	padding-right: 0 !important;
+}
+
+.readOnlyTemp{
+pointer-events: none;
+}
+
+	.popover-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+</style>
+<link rel="stylesheet" type="text/css" href="resources/assets/css/template/drag-drop.css"/>
+
+<div id="page-content-wrapper" style="overflow-x: hidden;">
+	<div class="container-fluid his-style">
+	<div ng-if="incidentTypeId == 1 && incidentReportingMapperId == null">
+	     <div ng-include="'./views/common/common-patient-search-opd-without-counter.html'" class="ng-scope" style=""></div>
+	</div>
+	<div ng-if="incidentTypeId == 1 ">
+	    <div class="row searched-patient-details-row" style="height:90px !important;">
+					<!-- Static Data -->
+					<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+						<div class="row">
+							<div class="span-font padding-left-right-set4 text-width-auto">
+								<span class="profile_pic"> 
+									<img ng-if="patientDetails.genderCode =='M'" alt="" src="resources/assets/images/tempImages/m.jpg" class="img-circle" style="width: 30px; height: 30px; margin-bottom: 0px;" >
+									<img ng-if="patientDetails.genderCode =='F'" ng-src="resources/assets/images/tempImages/patient.png" class="img-circle" style="width: 30px; height: 30px; margin-bottom: 0px;" >
+									<!--  data-toggle="modal" data-target="#patientDetailsModal" -->
+								</span>
+								<span ng-if="patientDetails.patientName" class="margin-left10 padding-right5 font-weight600"> {{patientDetails.patientName}}</span>
+<!--								<span class="margin-left10 font-weight600">Wt: {{patientDetails.weight+''+patientDetails.vitalUnit}}</span>-->
+								<span ng-if="patientDetails.uhIdNumber" class="margin-left10 padding-right5 font-weight600">UHID:  {{patientDetails.uhIdNumber}}</span>
+								<span ng-if="patientDetails.visitDate" class="margin-left10 padding-right5 font-weight600" ng-if="patientDetails.visitDate != undefined">Visit Date:  {{patientDetails.visitDate | date : dateFormat}}</span>
+								<span ng-if="patientDetails.visitTime" class="margin-left10 padding-right5 font-weight600" ng-if="patientDetails.visitDate != undefined">Visit Time:  {{patientDetails.visitTime}}</span>
+								<!-- <span class="margin-left10"><span class="padding-right5 font-weight600">DOB:</span> {{patientDetails.birthDate}}</span> -->
+								
+								
+							</div>
+							<div class=" col-lg-2 col-md-2 col-sm-8 padding-left-right-set4 text-width-auto" style="margin-left: -41px !important; padding: 1px 0px 0px 714px!important;">
+					<span class="margin-left10 bed-mang-box-icon" ng-show="allergyFlag">
+  <img src="resources/assets/images/icon/bed/allergy.png" title="Allergies" alt="Allergy" style="width:44px" class="popper" ng-mouseenter="showPopover = true" ng-mouseleave="showPopover = false">
+  <div class="popper-content" ng-show="showPopover" ng-click="$event.stopPropagation()">
+    <div class="popover-box">
+      <div ng-repeat="info in activeAllergyListForIcon">{{info.allergyDesc}}</div>
+		<!-- Add more information as needed -->
+    </div>
+  </div>
+</span>
+
+
+								<span class="margin-left10 bed-mang-box-icon" ng-if="patientDetails.medicoLegalId > 0" title="MLC Details">
+									<a  data-toggle="modal" data-target="#medicolegalModal" ng-click="getMedicolegalDetails()" title="MLC Details">
+										<img src="resources/assets/images/icon/bed/medicoLegal.png" title="Medicolegal" alt="MedicoLegal" style="width:20px" class="popper" ></a><!-- data-toggle="popover" data-trigger="hover" -->
+									<div class="popper-content hide">
+										<div>list</div>
+									</div>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2" ng-if="patientDetails.videoCallUrl != null && patientDetails.videoCallUrl != undefined ">
+						<div id="videooCal"class="video_call" style="float: right;margin: 11px;font-size: 20px;padding-top: 5px;color: #59b7c8;">
+							<!-- <a ng-click="sndMeetingInvite1234()"> <span class="glyphicon glyphicon-facetime-video" title="Video / Voice Call"></span></a> -->
+							<a fancybox target ="_blank"  href="{{patientDetails.videoCallUrl}}"> <span class="glyphicon glyphicon-facetime-video" title="Video / Voice Call"></span></a>
+						</div>
+					</div>
+				</div>
+	</div>
+		
+		<div class="row">
+		
+		 <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+				<div class="row input-container">
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<label for="code">Type of Incident</label>
+					<div id="mediaType" class="customRadioBtn">
+						<span> <input id="billDiscount" name="discount"
+							type="radio" value="1" val="yes"
+							ng-model="incidentTypeId" checked="checked">
+							<label for="billDiscount"
+							ng-click="set('1');clearEditorValue()">Patient</label>
+						</span> <span> <input id="groupDiscount" name="discount"
+							type="radio" value="2"
+							ng-model="incidentTypeId"> <label
+							for="groupDiscount" ng-click="set('2');clearEditorValue()">Department</label>
+						</span>
+					</div>
+					</div>
+				</div>
+			</div> 
+			
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-calendar" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input  type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="incidentReportingDate"
+									model-view-value="true" is-open="datepickerDate.opened"
+									datepicker-options="dateOptionDate" show-button-bar="false"
+									ng-click="openDatePickerDate()" required    > 
+							<label for="description" class="">Date </label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-calendar" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="clockpicker" ng-init="initClockPicker();">
+							<input
+									type="text"
+									autocomplete="off"
+									class="text-input floating-label dirty"
+									name="startTime"
+									ng-readonly="true"
+									id="time"
+									ng-model="incidentReportingDateTime"
+									required>
+							<label for="description" class="">Time </label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+								<select class="text-input floating-label dirty" id="specialityId" ng-model="specialityId">
+									<option value=""></option>
+								<option ng-repeat="info in specialityMasterList" ng-value="{{info.specialityId}}" value="{{info.specialityId}}">{{info.specialityName}}</option>
+							</select>
+								 <label for="code">Department</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							
+							<select class="text-input floating-label dirty" id="icpcsystem" ng-model="incidentCategoryId">
+								<option value=""></option>
+								<option ng-repeat="info in incidentCategoryMasterList" ng-value="{{info.incidentCategoryId}}" value="{{info.incidentCategoryId}}">{{info.incidentCategoryDesc}}</option>
+							</select>
+							 <label for="code">Category</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select ng-model="obj2" class="text-input floating-label dirty" ng-change="getRoleMappedToIncidentReport(obj2)"
+													ng-options="x as x.incidentReportDesc for x in getActiveIncidentReportList track by x.incidentReportId"
+													class="form-control" ng-required="true">
+								<option value=""></option>
+												</select>
+							 <label for="code">Incident</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		</div>
+		<div class="row">
+		
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+						<select class="text-input floating-label dirty" id="icpcsystem" ng-model="roleId"  ng-change="getRolewiseUsers(roleId)">
+							<option value=""></option>
+							<option ng-repeat="info in getActiveRoleList" ng-value="{{info.id}}" value="{{info.id}}">{{info.label}}</option>
+							</select>
+							<label> Role</label>
+							<!-- <div class="custom-drop-down-btn" ng-dropdown-multiselect="" options="getActiveRoleList" 
+							selected-model="selectedRoleList" ng-click="clicked('selectedRoleList');getUserList();" selected-model="selectedRoleList"></div> -->
+						</div>
+					</div>
+					
+				</div>
+			</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+						   <select class="text-input floating-label dirty" id="icpcsystem" ng-model="incidentUserId">
+							   <option ng-repeat="info in getRoleWiseUsersList" ng-value="{{info.userId}}" value="{{info.userId}}">{{info.userName}}</option>
+							</select>
+								<label for="" class="">user</label>
+								<!-- <div class="custom-drop-down-btn" ng-dropdown-multiselect="" options="getActiveUserList" 
+							     selected-model="selectedRoleList" ng-click="clicked('selectedRoleList')" selected-model="selectedRoleList"></div> -->
+							</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" id="icpcsystem" ng-model="reportingTemplateId"  ng-change="addTemplate(reportingTemplateId)">
+								<option ng-repeat="info in incidentReportTemplateMapperList" ng-value="{{info.templateId}}" value="{{info.templateId}}">{{info.title}}</option>
+							</select>
+							 <label for="code">Reporting Template</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+		 		<div class="row input-container padding-top2">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							 <button class="btn btn-info " title="View Template" ng-click="getTemplateList(22);" ng-disabled="!reportingTemplateId">
+                                  <i class="fa fa-h-square" aria-hidden="true" style="width: 30px !important;"></i>
+                              </button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+                                        
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set padding-top15">
+				<div class="col-lg-6 col-sm-6 col-12">
+					<input type="file" id="f" multiple=""
+						   file-model="file" filepreview="filepreview"
+						   validfile >
+					<p ng-show="fileError" style="color:red;">{{fileError}}</p>
+				</div>
+			</div>
+
+			<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set5 padding-top10">
+           <div class="padding-top10 margin-top12 common-save-button">
+              <a class="btn btn-primary btn-save-box-shadow ng-scope btn-sm padding-left-right-10" title="Upload" id="submitbutton" ng-click="vm.model.uploadDoccument(vm.model.requestType)" data-toggle="modal"> <i class="fa fa-upload" style="font-size: 16px !important;" aria-hidden="true"></i>
+			  </a>
+          </div>
+        </div> -->
+		</div>
+		<div class="row">
+			<div class="row">
+				<div class="modal-body"  style="overflow-y: scroll !important; max-height:600px; padding-bottom:15px !important;" ng-show="templateFormatId==1">
+				<div style="padding:4px 8px !important; background-color: white !important;">
+					<div id="htmlContent" class="row">
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12 col-md-12"ng-show="templateFormatId==2 || templateFormatId==3">
+                   <textarea ck-editor ng-model="value"></textarea>
+                              
+			  </div>
+			</div>
+	
+		</div>
+		<div class="row his-style margin-top10">
+			<div class="col-lg-1 col-md-1 col-sm-2 text-right">
+				<label>Remark:</label>
+			</div>
+			<div class="col-lg-9 col-md-9 col-sm-6 padding-left-right8">
+				<textarea rows="1" ng-model="incidentRemark" class="form-control"></textarea>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+				<div class="">
+					<input type="button" value="Save" ng-click="saveIncidentReporting()"
+						class="btn btn-primary btn-save-box-shadow">
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+				<a href="#/incidentReporting">
+					<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="abscondedPatientPopUp" class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Selected patient have absconded previous visit, do you want to continue ?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="No" ng-click="cancelAbscondedPatient()" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Yes" data-dismiss="modal"  ng-click="creatingEncounterForAbscondedPatient()">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="addviewTemplateModal11" class="modal fade ng-scope in common-medium-popup" role="dialog" style="background-color: transparent !important;">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Template
+					<button type="button" class="close"  ng-click="cancelTemplateViewModel()" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body"  style="overflow-y: scroll !important; max-height:500px; padding-bottom:15px !important;">
+				<div style="padding:4px 8px !important; background-color: white !important;" ng-show="template.templateFormatId == 1">
+					<div id="htmlContent1" ng-class="(saveTrasactionFlag==false && updateTrasactionFlag==false)?'readOnlyTemp':''" class="row" >
+					
+					</div>
+				</div>
+				<div class="row margin-top10 padding-left-right-set4" ng-show="template.templateFormatId == 2">
+					<div class="col-lg-12 col-md-12" >
+				       <textarea contenteditable="true" spellcheck="true"  name="editor" id="editor"  rows="10" cols="50" ck-editor ng-model="editorData"></textarea>
+					</div>
+				</div>
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top8 " ng-show="template.templateFormatId == 4">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="">
+								<th class="" style="width:2% !important;" ng-click="openInputBoxForTableName()">
+								<span ng-show = "ForTableName == false">{{tableName}}</span>
+								<span ng-show = "ForTableName == true"> <input type="text" name="selectedForSave" ng-model="tableName" ng-blur="closeTableName()" ></span>
+								  
+								</th>
+								<th class="width8" ng-repeat="info in columnHeaderList track by $index"  ng-click="openInputBox(info)">
+								 <span ng-if="info.inputbox == false"> {{info.columnName}}</span>
+								 <span  ng-if="info.inputbox == true"><input type="text" name="selectedForSave"ng-model="info.columnName" ng-change="pushColumnName(info.coulmnId ,info.columnName)"  ng-blur="closeRowAndColumn()"></span>
+							     
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="" ng-repeat="info1 in rowList track by $index"  value="bloodGroupId">
+								<th class="" style="width:2% !important;" ng-click="openInputBoxForRow(info1)">
+									<span ng-show = "info1.inputbox == false">{{info1.rowName}}</span>
+									<span ng-show = "info1.inputbox == true">  <input type="text" name="selectedForSave" ng-model="info1.rowName" ng-change="pushRowName(info1.rowId ,info1.rowName)"  ng-blur="closeRowAndColumn()"></span>
+								</th>
+								<td class="text-center" ng-repeat="item in columnList track by $index" >
+									<div ng-repeat="test in savedEditedList" >
+										<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+										  <textarea type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+									       style="border-radius:0px !important;padding: 0 !important;" 
+									       name="selectedForSave" ng-model="test.inputValue"></textarea>
+										</div>
+									</div>
+									<div ng-if="(savedEditedList.length == undefined)|| (savedEditedList.length == 0)">
+									       <textarea type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+									       style="border-radius:0px !important;padding: 0 !important;" name="selectedForSave" ng-model="inputValue" 
+									       ng-blur="getCurrentStatus(inputValue,item.coulmnId,item.columnName,info1.rowId,info1.rowName);"></textarea>
+							       </div>	
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;" ng-if="saveTrasactionFlag">
+				<button type="button" class="btn btn-primary" id="" data-dismiss="modal" ng-if="template.templateTypeId!=4 && template.templateTypeId!=17"
+				 ng-click="saveTemplateTransaction();">Save</button>
+				 <button type="button" ng-if="template.templateTypeId==4  || template.templateTypeId==17 " class="btn btn-primary" id=""
+                      data-dismiss="modal" ng-click="addTemplateFun();">Add</button> 
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="addviewTemplateModal"
+	class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body"
+				style="overflow-y: scroll !important; max-height: 600px; padding-bottom: 15px !important;">
+				<div
+					style="padding: 4px 8px !important; background-color: white !important;">
+					<div id="htmlContent3" class="row"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;" ng-if="saveTrasactionFlag">
+				<!-- <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveTemplateTransaction();">Save</button> -->
+				 <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" data-dismiss="modal" ng-click="saveTemplateTransaction();">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="viewtemplateModal" data-backdrop="static"
+	class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog" style="margin-top: 30px !important;width: 565px !important;">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Template History
+					<button type="button" class="close" data-dismiss="modal" ng-click="clearSearchFilter()">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row his-style">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 float_right margin-top5 padding-bottom5">
+						<input type="text" autocomplete="off" class="text-search-box dirty"
+							placeholder="Search" style="margin-top: 0px" ng-model="searchKeywordComplaint"> <i
+							class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+				<div
+					class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+									    <th class="width2"><span class=""></span></th>
+										<th class="width10"><span class="">Template</span></th>
+										<th class="width7"><span class="">Date</span></th>
+										<th class="width7 text-center"><span class="">Action taken</span></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body fix-height-scroll230"
+							style="overflow: overlay;">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody style="overflow: auto !important;">
+									<tr class="ng-scope" style=""
+										ng-repeat="templateT in templateTransactionList |orderBy:column:reverse|filter:searchKeywordComplaint">
+										<td class="width2"><input type="checkbox" ng-model="templateT.printReport"></td>
+										<td class="width10" title="{{templateT.title}}">{{templateT.title}}</td>
+										<td class="width7"  title="{{templateT.createdDate}}">{{templateT.createdDate}}</td>
+										<td class="width7 text-center" >
+											<a class="cursor-pointer" ng-if="templateT.templateUrl != null" ng-href="{{templateT.templateUrl}}" target="_blank"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+											<a class="cursor-pointer" ng-click="viewTemplate(templateT);">View</a> <!-- data-target="#addviewTemplateModal" -->
+											<a class="cursor-pointer" ng-click="printTemp(templateT);"><i class="fa fa-print" aria-hidden="true"></i></a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr
+									ng-if="(templateTransactionList|filter:searchKeywordComplaint)=='' || (templateTransactionList|filter:searchKeywordComplaint)==null">
+									<td><p
+											style="text-align: center; margin-top: 0px !important; margin-bottom: 1px !important;">No
+											Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" data-dismiss="modal" ng-click="clearSearchFilter()">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$('.popper').popover({
+        placement: 'bottom',
+        container: 'body',
+        html: true,
+        content: function () {
+            return $(this).next('.popper-content').html();
+        }
+    });
+    $(".IPDdiv").hide();
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+CKEDITOR.replace('editor');
+// added newly bcoz it was giving error as 'editor instance "editor" is already attached to the provided element' , so below line is added  start
+var editor = CKEDITOR.instances["editor"];
+if (editor) { editor.destroy(true); }
+// end
+    CKEDITOR.config.width="99.9%";
+    CKEDITOR.config.height="300px"
+
+
+
+</script>
+

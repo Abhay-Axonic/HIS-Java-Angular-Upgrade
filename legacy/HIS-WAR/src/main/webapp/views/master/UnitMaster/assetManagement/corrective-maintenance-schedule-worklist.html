@@ -1,0 +1,410 @@
+
+
+<div id="page-content-wrapper" >
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- row 1 -->
+			<div class="row">
+				
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									 <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="fromDatepicker" id="fromDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="fromDate"
+											model-view-value="true" is-open="fromDatepicker.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openFromDatePicker()"  required >
+									<label for="code">Date (From)</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="toDatepicker" id="toDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="toDate"
+											model-view-value="true" is-open="toDatepicker.opened"
+											datepicker-options="toDateOptions" show-button-bar="false"
+											ng-click="openToDatePicker()" >
+									<label for="description" class="LISDynamicLabel">Date-Till</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="storeId"  convert-to-number>
+										<option value="0">All</option>
+										<option ng-repeat="info in storeList" value="{{info.storeId}}">{{info.storeName}}</option>
+								</select> 
+								<label for="description" class="LISDynamicLabel">Department</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="requestCriticalityId"  convert-to-number>
+									<option value="0">All</option>
+									<option value="1">Normal</option>
+									<option value="2">Urgent</option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Request Critaclity</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="statusId"  convert-to-number>
+									<option value="0">All</option>
+									<option value="3">Assigned</option>
+									<option value="2">Completed</option>
+									<option value="7">Reopen</option>
+									<option value="4">Work In Progress</option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Status(n) </label>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="getCorectiveMaintenanceWorklist();getSchedulingList();">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- //row 1 -->
+		</fieldset>
+		<div class="row">
+		
+		<div class="col-lg-8 col-md-8 col-sm-8">
+					<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="pagination.pageSize='10'" 
+								ng-model="pagination.pageSize" 
+								ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				</div>
+				
+			<div class="col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top5">
+				<div class="">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" data-target="#confirmLogout">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword">
+				<i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-lg-12 col-md-12 ">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width6">
+								 Request No
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6" >
+								Request Date
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6">
+								Asset Code
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width8">
+								Asset Name
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width8">
+								Request Criticality  
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width7">
+								Requestor
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6">
+								    Completion Details
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6">
+								   Schedule Date 
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6">
+								   Schedule Time 
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6">
+								   Employee Name
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6">
+								   Completion Date 
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width8">Reopen Request No</th>
+							<th class="width3">
+								Status(n)
+							</th>
+							<th class="width3">
+								Action taken
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in pagination.data | filter:searchKeyword">
+							<td  ng-style="setColor(info.referenceId)">{{info.callLogNumber}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.requestDateTime}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.assetCode}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.assetName}}</td>
+							<td  ng-style="setColor(info.referenceId)">
+								<div ng-if="info.requestCriticalityId == 1">Normal</div>
+								<div ng-if="info.requestCriticalityId == 2">Urgent</div>
+							</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.requestedByName}}</td>
+							<td class="padding-edit-button-table"  ng-style="setColor(info.referenceId)">
+								<div class=" text-center" ng-if="info.complete">
+									<a><i class="fa fa-info-circle" aria-hidden="true" title="Completion Details" data-toggle="modal" data-target="#completionDetailsModal" ng-click="getCurrentIndex($index,2);"></i></a>
+								</div>
+								<div class=" text-center" ng-if="!info.complete">
+									-
+								</div>
+							</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.scheduleDate}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.scheduleTime}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.userName}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.completionDate}}</td>
+							<td ng-style="setColor(info.referenceId)">
+								<div ng-if="info.referenceLogNumber!=null">{{info.referenceLogNumber}}</div>
+								<div ng-if="info.referenceLogNumber==null">-</div>
+							</td>
+							<td  ng-style="setColor(info.referenceId)">
+								<div ng-if="info.maintenanceWorklistStatusId == 1">Requested</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 2">Completed</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 3">Assigned</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 4">Work In Progress</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 5">Pending</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 6">Cancelled</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 7">Reopen</div>
+							</td>
+							<td ng-click="getCorrectiveMaintenanceDetails(info)" ng-style="setColor(info.referenceId)"><a><i class="fa fa-eye"></i></a></td>
+							<!-- <td>
+								<a href="#/detailsCorrectiveMaintenanceScheduleWorklist">Details</a>
+							</td> -->
+						</tr>
+						
+						<tr ng-repeat="info in corectiveMaintenanceWorklist | filter:searchKeyword">
+							<td  ng-style="setColor(info.referenceId)">{{info.callLogNumber}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.requestDateTime}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.assetCode}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.assetName}}</td>
+							<td  ng-style="setColor(info.referenceId)">
+								<div ng-if="info.requestCriticalityId == 1">Normal</div>
+								<div ng-if="info.requestCriticalityId == 2">Urgent</div>
+							</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.requestedByName}}</td>
+							<td class="padding-edit-button-table"  ng-style="setColor(info.referenceId)">
+								<div class=" text-center" ng-if="info.complete">
+									<a><i class="fa fa-info-circle" aria-hidden="true" title="Completion Details" data-toggle="modal" data-target="#completionDetailsModal" ng-click="getCurrentIndex($index,1);"></i></a>
+								</div>
+								<div class=" text-center" ng-if="!info.complete">
+									-
+								</div>
+							</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.scheduleDate}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.scheduleTime}}</td>
+							<td  ng-style="setColor(info.referenceId)">{{info.userName}}</td>
+							<td  ng-style="setColor(info.referenceId)">-</td>
+							<td ng-style="setColor(info.referenceId)">
+								<div ng-if="info.referenceLogNumber!=null">{{info.referenceLogNumber}}</div>
+								<div ng-if="info.referenceLogNumber==null">-</div>
+							</td>
+							<td  ng-style="setColor(info.referenceId)">
+								<div ng-if="info.maintenanceWorklistStatusId == 1">Requested</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 2">Completed</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 3">Assigned</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 4">Work In Progress</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 5">Pending</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 6">Cancelled</div>
+								<div ng-if="info.maintenanceWorklistStatusId == 7">Reopen</div>
+							</td>
+							<td ng-click="getCorrectiveMaintenanceDetails(info)" ng-style="setColor(info.referenceId)"><a><i class="fa fa-eye"></i></a></td>
+							<!-- <td>
+								<a href="#/detailsCorrectiveMaintenanceScheduleWorklist">Details</a>
+							</td> -->
+						</tr>
+						
+					</tbody>
+				</table> 
+			</div>
+			<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+		</div>
+	</div>
+</div>
+<!-- completion details modal start -->
+<div id="completionDetailsModal" class="modal fade ng-scope in common-medium-popup" data-backdrop="static"  role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Completion Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<!--  row start -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 padding-left-right-set4 common-table-height-250 margin-top4" id="">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr class="table-th-bg">
+									<th class="width8">
+										Completion Date
+									</th> 
+									<th class="width8">
+										Completion Time
+									</th> 
+									<th class="width70">
+										Remark
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<input type="text" autocomplete="off" class="select-box" placeholder="dd/mm/yyyy"   ng-model="completionObj.completionDate" ng-disabled="true">
+									</td>
+									<td>
+										<input type="text" autocomplete="off" class="select-box"  ng-model="completionObj.completionTime" ng-disabled="true">
+									</td>
+									<td><textarea rows="2" ng-model="completionObj.completionRemak" ng-disabled="true"></textarea></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="pull-left">
+					<input type="checkbox" id="completeChk" ng-model="completionObj.isComplete" ng-disabled="true">
+					<label for="completeChk" class="margin-left5">Complete</label>
+				</div>
+				<div class="pull-right">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- completion details modal end -->
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Corrective Maintenance Schedule Worklist");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="correctiveMaintenanceScheduleWorklist"]').parents("li").addClass("active");
+});
+</script>

@@ -1,0 +1,1342 @@
+<div id="page-content-wrapper" style="height:100%; overflow-y:auto;padding-bottom: 0% !important;">
+    <div class="container-fluid his-style">
+        <fieldset class="" style="margin-top:5px !important">
+
+
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-11">
+                            <div class="">
+                                <select class="text-input floating-label"  ng-model="deposit.franchiseUnitId">
+                                    <option value={{unit.unitId}} ng-value="unit.unitId"  ng-repeat="unit in unitList">{{unit.unitName}}</option>
+                                </select> <label for="code">Deposit Against Unit</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-11 ">
+                            <div class="">
+                                <input allow-decimal-numbers ng-decimal="200" type="text" autocomplete="off"  name="description" id="" ng-model="deposit.amount" ng-change="calculateDueAmount()"  class="text-input floating-label">
+                                <label for="description" class="LISDynamicLabel">Deposit Amount</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-11 ">
+                            <div class="">
+                                <input type="text" autocomplete="off"  name="description" id="" ng-model="deposit.remarks" class="text-input floating-label">
+                                <label for="description" class="LISDynamicLabel">Remarks</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-11 ">
+                            <div class=" ">
+                                <a href=""  data-toggle="modal" data-target="#digitalSignaturePopup" class="btn btn-primary btn-save-box-shadow" style="width: 143px;" title="Back">Digital Signature</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-2 padding-top10 padding-left-right-set4 float_right width4">
+                    <div class=" ">
+
+                        <a href="" class="btn btn-primary btn-save-box-shadow"
+                           title="Save" ng-click="showPaymentCollection();"><i
+                                class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+            <fieldset class="normalRegistration sub-fieldset border-none margin-top4">
+                <legend class="sub-legend border-bottom-none">Deposit Details</legend>
+
+            </fieldset>
+            <div class="row margin-top10">
+                <!--************* Date div start ***************-->
+                <div class="col-lg-3 col-md-2 col-sm-2 padding-left-right-set4">
+                    <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+                        <div class="row input-container test-master-sample">
+                            <div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+                                <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-10 col-sm-11 col-md-10 ">
+                                <div class="">
+                                    <input type="text" autocomplete="off"  autocomplete="on" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" press-enter="searchDeposit()"
+                                           placeholder="DD/MM/YYYY" ng-model="fromDate" model-view-value="true" is-open="datepickerFrom.opened" datepicker-options="dateOptionsSearch"
+                                           show-button-bar="false"	ng-click="openDatePickerFromDate()"
+                                           onkeydown="event.preventDefault()"  required>
+                                    <label for="" class="LISDynamicLabel">Date (From)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+                        <div class="row input-container test-master-sample">
+                            <div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+                                <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-10 col-sm-11 col-md-10 ">
+                                <div class="">
+                                    <input type="text" autocomplete="off"  class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" press-enter="searchDeposit()"
+                                           placeholder="DD/MM/YYYY" ng-model="toDate" model-view-value="true" is-open="datepickerTo.opened" datepicker-options="dateOptionsToDate"
+                                           show-button-bar="false"	ng-click="openDatePickerToDate()"
+                                           onkeydown="event.preventDefault()" required>
+                                    <label for="" class="LISDynamicLabel">Date-Till</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--************* Date div end ***************-->
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+                    <div class="row input-container">
+                        <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-11 ">
+                            <div class="">
+                                <select class="text-input floating-label" ng-model="depositSearch.unitId">
+                                    <option value={{unit.unitId}} ng-value="unit.unitId"  ng-repeat="unit in unitList">{{unit.unitName}}</option>
+                                </select>
+                                <label for="description" class="LISDynamicLabel">Deposit Against Unit</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto pull-right">
+                    <div class="common-save-button" style="padding-top:  0px;">
+                        <a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" ng-click="searchDeposit()" style="width: auto;">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 float_right">
+                    <input type="text" autocomplete="off"  class="text-search-box" ng-model="depositSearchAll" ng-change="searchOverAllInDeposit();" placeholder="Search" style="margin-top:0px">
+                    <i class="fa fa-search common-search-text-icon"  aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5 text-width-auto pull-right">
+                    <div class="search">
+                        <label class="show-entries">Show
+                            <select ng-init="vm.model.pagination.pageSize='10'"
+                                    ng-model="vm.model.pagination.pageSize"
+                                    ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select> records
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-top0 padding-left-right-set4">
+                <div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll500">
+                    <table id="main-table" class="main-table width100">
+                        <thead>
+                        <tr class="">
+                            <th class=" vertical-top" title="Deposit No.">
+                                Deposit No.
+                            </th>
+                            <th class=" vertical-top" title="Deposit Date">
+                                Deposit Date
+                                <div class="float_right" ng-click="sortType = 'selectedBatch'; sortReverse = !sortReverse">
+                                    <div>
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="margin-top-8">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="vertical-top" title="Unit Name">
+                                Unit Name
+                            </th>
+                           <th class="width6 vertical-top" title="Payment Mode">
+                                Payment Mode
+                            </th>
+                            <th class="width6 vertical-top" title="Deposit Amount">
+                                Deposit Amount
+                            </th>
+                            <th class="width6 vertical-top" title="Consumed Amount">
+                                Consumed Amount
+                            </th>
+                            <!--<th class="width6 vertical-top" title="Refund Amount">
+                                Refund Amt
+                            </th>-->
+                            <th class="width6 vertical-top" title="Balance Amount">
+                                Total Balance Amount
+                            </th>
+                            <th class="vertical-top" title="Collected By">
+                                Collected By
+                            </th>
+                            <!--<th class=" vertical-top" title="PanCard Details">
+                                PanCard Details
+                            </th>
+                            <th class="vertical-top" title="Action">
+                                Action
+                            </th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="deposit in depositSearchList">
+                            <td class="">{{deposit.frDepositNo}}</td>
+                            <td class="">{{getDateByFormat(deposit.frDepositDate,true)}}</td>
+                            <td class="">{{deposit.unitName}}</td>
+                            <td class=" text-center">
+                                <i class="fa fa-info-circle" aria-hidden="true" ng-click="getDepositDetails(deposit.frDepositId);"></i>
+                            </td>
+                            <td class="text-right">{{parseFloatNum(deposit.amount)}}</td>
+                            <td class=" text-right"><a class="cursor-pointer" ng-click="getDepositConsumption(deposit.depositMasterId);">{{parseFloatNum(deposit.consumedDeposit)}}</a></td>
+                            <!--<td class="text-right">{{parseFloatNum(deposit.refundAmount)}}</td>-->
+                            <td class="text-right">{{parseFloatNum(deposit.availableDeposit)}}</td>
+                            <td class="">{{deposit.createdBy}}</td>
+                           <!-- <td class=" text-center"><a title="Print" ng-click="getPandCard(deposit.frDepositId);"><i class="fa fa-print"></i></a></td>
+                            <td class=" text-center"><a title="Print" ng-click="rePrintDepositSlip(deposit);"><i class="fa fa-print"></i></a></td>-->
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr class="font-W600">
+                            <td class=" border-right-none"></td>
+                            <td class="border-left-none border-right-none"></td>
+                            <td class="border-left-none border-right-none"></td>
+                            <td class="border-left-none text-right" title="Total" style="border-left: 0px !important;">Total </td>
+                            <td class=" text-right" title=" 0.00" style="text-align: right;" class="ng-binding">
+                                {{parseFloatNum(depositSearchDtls.totalDepositAmount)}}
+                            </td>
+                            <td class=" text-right" title=" 0.00" style="text-align: right;" class="ng-binding">
+                                {{parseFloatNum(depositSearchDtls.totalConsumedDepositAmount)}}
+                            </td>
+<!--                            <td class=" text-right"> {{parseFloatNum(depositSearchDtls.totalRefundAmount)}} </td>-->
+                            <td class=" text-right" title=" 0.00" style="text-align: right;" class="ng-binding"> {{parseFloatNum(depositSearchDtls.totalBalanceAmount)}}
+                            </td>
+                            <td class=" border-right-none"></td>
+                            <!--<td class=" border-right-none"></td>-->
+                            <!--<td class="border-left-none"></td>-->
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="row padding-top5">
+                <div class="col-md-12 col-lg-12 table-responsive padding-left-right-set4">
+                    <div class="row margin-bottom45 center-block">
+                        <ul  class="pagination table-list"
+                             style="font-size: 14px; cursor: pointer;margin: 5px !important;"> <!-- ng-if="vm.model.pagination.totalPages > 1" -->
+                            <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+                                    ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+                            </li>
+                            <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+                                    ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+                            </li>
+                            <li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+                                ng-class="{active:vm.model.pagination.currentPage === page}"><a
+                                    ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+                                <a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+                            </li>
+                            <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+                                <a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <!-- <footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right15">
+                <div class="row padding-left-right15">
+                    <div class="col-lg-11 col-md-11 col-sm-10"></div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+                            <div class=" ">
+                                <a href="#/bedManagement" class="btn btn-primary btn-save-box-shadow" title="Back">Back</a>
+                            </div>
+                        </div>
+                    </div>
+            </footer> -->
+</div>
+<!-- consumedLinkModal START -->
+<div id="consumedLinkModal" class="modal fade ng-scope in" role="dialog">
+    <div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+        <div class="modal-content">
+            <div class="modal-header padding-zero">
+                <div class="modal-title patient-details-row">
+                    Consumption Details
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row padding-top4">
+                    <div
+                            class="col-md-12 col-lg-12 headerHeight padding-left-right-set4">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th class="width15"><span class="">Against Bill No.</span></th>
+                                <th class="width15"><span class="">Bill Date</span></th>
+                                <th class="width15"><span class="">Visit Type</span></th>
+                                <th class="width15"><span class="">Visit No.</span></th>
+                                <th class="width15"><span class="">Visit Date</span></th>
+                                <th class="width15"><span class="">Consumed  Deposit</span></th>
+
+                            </tr>
+                            <tr ng-repeat = "consumption in depositConsumptionList">
+                                <td>{{consumption.billNo}}</td>
+                                <td>{{consumption.billDate}}</td>
+                                <!--<td class="">{{getDateByFormat(consumption.billDate)}}</td>-->
+                                <td>
+                                    <!-- 										{{consumption.visitTypeId==1 ? 'OP' : 'IP'}} -->
+                                    <div ng-if="consumption.visitTypeId==1">OP</div>
+                                    <div ng-if="consumption.visitTypeId==2">IP</div>
+                                    <div ng-if="consumption.visitTypeId==3">DC</div>
+                                    <div ng-if="consumption.visitTypeId==4">ER</div>
+                                </td>
+                                <td>{{consumption.visitNo}}</td>
+                                <td>{{consumption.visitDate}}</td>
+                                <td>{{consumption.amount}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;">
+                <button type="button" data-dismiss="modal" class="btn btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- consumedLinkModal END -->
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<!-- ***************** COLLECT PAYMENT POPUP start ***************** -->
+<div id="collectPaymentModal" class="common-large-popup modal fade ng-scope in" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Collect Payment
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body row">
+                <div class="row height400-table-with-scroll">
+                    <fieldset class="normalRegistration sub-fieldset padding-left-right-set4">
+                        <legend class="heading-div">Payment Mode</legend>
+                        <div class="row margin-top4">
+                            <div class="col-lg-10 col-md-10 col-sm-10 schedulerTabs">
+                                <ul class="tabs nav nav-tabs">
+                                    <li ng-class="{ active : isSetFirstTabLevel(1) }">
+                                        <a href ng-click="setFirstTabLevel(1);setPaymentModeId(1)">Cash</a>
+                                    </li>
+                                    <li ng-class="{ active : isSetFirstTabLevel(2) }">
+                                        <a href ng-click="setFirstTabLevel(2);setPaymentModeId(2)">Cheque</a>
+                                    </li>
+                                    <li ng-class="{ active : isSetFirstTabLevel(3) }">
+                                        <a href ng-click="setFirstTabLevel(3);setPaymentModeId(3)">Card</a>
+                                    </li>
+                                    <!-- 	 <li ng-class="{ active : isSetFirstTabLevel(4) }">
+                                            <a href ng-click="setFirstTabLevel(4);setPaymentModeId(4)">Debit Card</a>
+                                        </li> -->
+                                    <li ng-class="{ active : isSetFirstTabLevel(5) }" ng-if = "mpesaRequired != null && mpesaRequired == true">
+                                        <a href ng-click="setFirstTabLevel(5);setPaymentModeId(5)">Mpesa</a>
+                                    </li>
+                                    <li ng-class="{ active : isSetFirstTabLevel(6) }" >
+                                        <a href ng-click="setFirstTabLevel(6);setPaymentModeId(6)">Loyalty Card</a>
+                                    </li>
+                                    <li ng-class="{ active : isSetFirstTabLevel(8) }" >
+                                        <a href ng-click="setFirstTabLevel(8);setPaymentModeId(8)">E - Transfer</a>
+                                    </li>
+                                    <li ng-class="{ active : isSetFirstTabLevel(10) }">
+                                        <a href ng-click="setFirstTabLevel(10);setPaymentModeId(12)">Payment Gateway</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 float-right">
+                                <div class="width-div-for-patient-reg "  ng-if = "paymentDetails.paymentModeId != 5 && paymentDetails.paymentModeId != 12 ">
+                                    <a href="" style="width:40px" class="btn btn-primary btn-save-box-shadow" value="+"  ng-click="addPaymentDetails()" title="+" >+</a>	<!-- ng-click="addPaymentDetails()" ng-hide="addBtnId"-->
+                                </div>
+                                <div class="width-div-for-patient-reg "  ng-if = "paymentDetails.paymentModeId == 5 && mpesaRigths == true &&  paymentDetails.paymentModeId != 12 ">
+                                    <a href="" style="width:40px" class="btn btn-primary btn-save-box-shadow"  value="+" ng-click="addPaymentDetails()" title="+" >+</a>	<!-- ng-click="addPaymentDetails()" ng-hide="addBtnId"-->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <!-- CONTENT FOR FIRST TAB start-->
+                            <div ng-show="isSetFirstTabLevel(1)">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" class="text-input floating-label"  ng-model="paymentDetails.cashAmount" is-number><!--  ng-model="paymentDetailsObj.amount" -->
+                                                    <label for="description" class="">Amount</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- CONTENT FOR FIRST TAB end-->
+
+                            <!-- CONTENT FOR 2nd TAB start-->
+                            <div ng-show="isSetFirstTabLevel(2)">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <select class="text-input floating-label" ng-model="paymentDetails.bankId">
+                                                        <option value={{bank.bankId}} ng-value="bank.bankId"  ng-repeat="bank in bankList">{{bank.bankName}}</option>
+                                                    </select> <label for="code">Bank Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <select class="text-input floating-label" ng-model="paymentDetails.hospitalAccountId">
+                                                        <option value={{hBank.id}}   ng-value="hBank.id"  ng-repeat="hBank in hospitalBankList">{{hBank.name}}</option>
+                                                    </select> <label for="code">Hospital Account</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off" name="description" ng-model="paymentDetails.chequeNumber" class="text-input floating-label" numbers-only><!-- ng-model="paymentDetailsObj.checkNumber" -->
+                                                    <label for="description" class="">Cheque Number</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  onkeydown="event.preventDefault()" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                                                           placeholder="DD/MM/YYYY" ng-model="paymentDetails.chequeDate" model-view-value="true" is-open="datepickercheque.opened" datepicker-options="chequedDateOptions"
+                                                           show-button-bar="false"	ng-click="openDatePickerCheque()" required>
+                                                    <label for="description" class="">Cheque Date</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" id=""  ng-model="paymentDetails.chequeAmount" class="text-input floating-label" is-number ><!-- ng-model="paymentDetailsObj.amount" -->
+                                                    <label for="description" class="">Amount</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- CONTENT FOR 2nd TAB end-->
+                            <!-- CONTENT FOR 3rd TAB start-->
+                            <div ng-show="isSetFirstTabLevel(3)">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" id=""  chars="letters"   ng-model="paymentDetails.credCardHolderName" class="text-input floating-label"  > <!-- ng-model="paymentDetailsObj.cardHolderName" -->
+                                                    <label for="description" class="">Card Holder Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <select class="text-input floating-label"   ng-model="paymentDetails.credCardTypeId" convert-to-number>
+                                                        <option value="{{card.cardTypeId}}" ng-repeat="card in cardTypeList">{{card.cardTypeName}}</option>
+                                                    </select> <label for="code">Card Type</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description"   id=""  ng-model="paymentDetails.credAmount" class="text-input floating-label" ng-disabled = "pinpadAmounFlag" is-number> <!-- ng-model="paymentDetailsObj.amount" -->
+                                                    <label for="description" class="">Amount</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off" name="description" id=""  ng-model="paymentDetails.credCardNumber" class="text-input floating-label"  numbers-only>
+                                                    <label for="description" class="">Card Number</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off" name="description" id="" ng-model="paymentDetails.transactionNo" class="text-input floating-label"  >
+                                                    <label for="description" class="">Transaction No.</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  onkeydown="event.preventDefault()" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                                                           placeholder="DD/MM/YYYY" ng-model="paymentDetails.credExpiryDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptionsDob"
+                                                           show-button-bar="false"	ng-click="openDatePicker()" required>
+                                                    <!-- <input type="text" autocomplete="off"  name="description" id="" ng-model="paymentDetails.credExpiryDate" class="text-input floating-label"> --> <!-- ng-model="paymentDetailsObj.expiryDate" -->
+                                                    <label for="description" class="">Expiry Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon" ng-if="isPinPadRequired == 'Y' && registeredPinPadDevice == 'POS Machine'">
+													<i class="fa fa-stop-circle-o" aria-hidden="true" ></i>
+												</div>
+												<div class="col-lg-5 col-sm-5 col-md-5" style="padding-left: 0px !important; padding-right: 0px !important;" ng-if="isPinPadRequired == 'Y' && registeredPinPadDevice == 'POS Machine'">
+													<div class="">
+														<select class="text-input floating-label"   ng-model="objPosMachine.deviceName" convert-to-number ng-change="selectedDevice(objPosMachine)"><!-- style="width: 173px;" -->
+															 <option value="{{pos.deviceName}}" ng-repeat="pos in pOSMachineList">{{pos.deviceName}}</option> 
+														</select> <label for="code">Device</label>
+													</div>
+												</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                      <div class="row input-container">
+											<div class="col-lg-4 col-sm-4 col-md-4" style="text-align: center;" ng-if="isPinPadRequired == 'Y' && registeredPinPadDevice == 'POS Machine'">
+												<div class="" >
+														<label>Sale</label><!-- style="margin: 0px 0px 0px 122px;" -->
+													<input type="radio" autocomplete="off" name="description" ng-click="getFlagSale()"
+														id="" ng-model="objPosMachine.isSale" value="isSale" ng-disabled="flagForSMSpay == true || flagForBharatQr == true"
+														ng-checked="objPosMachine.isSale == true"
+														class="text-input floating-label"> 
+													<!-- style="margin: 0px 0px 0px 123px;"  -->
+												</div>
+												
+											</div>
+											<div class="col-lg-4 col-sm-4 col-md-4" style="text-align: center;" ng-if="isPinPadRequired == 'Y' && registeredPinPadDevice == 'POS Machine'">
+												<div class="" >
+														<label>QR Code</label> 
+														<input type="radio" autocomplete="off" name="description"
+														id="" ng-checked="objPosMachine.isBharatQr == true" value="isBharatQr"
+														ng-model="objPosMachine.isBharatQr" ng-click="getFlagBharatQr()"
+														ng-disabled="flagForSMSpay == true || flagForSale == true"
+														class="text-input floating-label"><!-- style="margin: 0px 0px 0px 189px" -->
+												</div>
+											</div>
+											<div class="col-lg-4 col-sm-4 col-md-4" style="text-align: center;">
+												<div class="" ng-if="isPinPadRequired == 'Y' && registeredPinPadDevice == 'POS Machine'">
+														<label>SMS pay</label> 
+														<input type="radio" autocomplete="off" name="description"
+														id="" ng-checked="objPosMachine.isSMSpay == true" value="isSMSpay"
+														ng-model="objPosMachine.isSMSpay" ng-click="getFlagSMSpay()"
+														ng-disabled="flagForSale == true || flagForBharatQr == true"
+														class="text-input floating-label"><!-- style="margin: 0px 0px 0px 189px" -->
+												</div>
+											</div>
+											<div class="col-lg-4 col-sm-4 col-md-4" style="text-align: center;margin-top: -40px !important;
+   												 margin-left: 243px !important;">
+												<div class="" ng-if="isPinPadRequired == 'Y' && registeredPinPadDevice == 'POS Machine'">
+														<input numbers-only maxlength = "10" type="text" autocomplete="off" name="description"
+														id="" ng-model="objPosMachine.mobileNumberForPOS" 
+														ng-if="flagForSMSpay == true"
+														class="text-input floating-label">
+												</div>
+											</div>
+										</div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" style="margin-left: 243px !important;">
+									<div class="col-lg-4 col-sm-4 col-md-4" ng-if="isPinPadRequired == 'Y' && registeredPinPadDevice == 'POS Machine'"style="margin-left: 58px !important;">
+													<button type="button" class="btn btn-primary"
+														 ng-click="sendRequestForPOSMachine()">Send Request</button><!-- style="margin: 0px 0px 0px 240px" -->
+											</div>
+											<div class="col-lg-4 col-sm-4 col-md-4" ng-if="isPinPadRequired == 'Y'">
+													<button type="button" class="btn btn-primary"
+														 ng-click="checkValidatePinPad()"
+														style="margin-left: 15px !important;">Validate</button><!-- style="margin: 0px 0px 0px 240px" -->
+											</div>
+											
+										<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set8 text-right" ng-if="isPinPadRequired == 'Y'" style="margin-left: -58px !important;">
+										<div class="common-save-button" style="padding-top: 0px;">
+											<a href="" class="btn btn-primary btn-save-box-shadow"
+												style="width: auto;" ng-click="clearCardFields();" title="Clear">
+												<i class="fa fa-eraser" aria-hidden="true"></i>
+											</a>
+										</div>
+									</div>
+									</div>
+                                   <!--  <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set8 padding-top10 ng-scope pull-right" ng-if="isPinPadRequired == 'Y'" style="text-align: end;">
+                                        <div class="common-save-button" style="padding-top: 0px; ">margin: 0px 0px 0px 300px;
+                                            <a href="" class="btn btn-primary btn-save-box-shadow"
+                                               style="width: auto;" ng-click="clearCardFields();" title="Clear">
+                                                <i class="fa fa-eraser" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <!-- CONTENT FOR 3rd TAB end-->
+                            <!-- CONTENT FOR 4th TAB start-->
+                            <div ng-show="isSetFirstTabLevel(4)">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" id="" ng-model="paymentDetails.debCardHolderName" class="text-input floating-label" ><!--  ng-model="paymentDetailsObj.cardHolderName" -->
+                                                    <label for="description" class="">Card Holder Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <select class="text-input floating-label" ng-model="paymentDetails.debCardTypeId"><!-- ng-model="paymentDetailsObj.cardTypeId" -->
+                                                        <option value="{{card.cardTypeId}}" ng-repeat="card in cardTypeList">{{card.cardTypeName}}</option>
+                                                    </select> <label for="code">Card Type</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" id=""  ng-model="paymentDetails.debAmount" class="text-input floating-label" is-number>
+                                                    <label for="description" class="">Amount</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" id="" ng-model="paymentDetails.debCardNumber" class="text-input floating-label" numbers-only> <!-- ng-model="paymentDetailsObj.cardNo" -->
+                                                    <label for="description" class="">Card Number</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  onkeydown="event.preventDefault()" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                                                           placeholder="DD/MM/YYYY" ng-model="paymentDetails.debExpiryDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptionsDob"
+                                                           show-button-bar="false"	ng-click="openDatePicker()" required>
+                                                    <!-- <input type="text" autocomplete="off"  name="description" id="" ng-model="paymentDetails.debExpiryDate" class="text-input floating-label" > --><!-- ng-model="paymentDetailsObj.expiryDate" -->
+                                                    <label for="description" class="">Expiry Date</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- CONTENT FOR 4th TAB end-->
+
+                            <!-- CONTENT FOR 5th TAB start-->
+                            <div ng-show="isSetFirstTabLevel(5)">
+                                <div class="row">
+                                    <div
+                                            class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description"
+                                                           class="text-input floating-label"
+                                                           ng-model="transactionId"> <label
+                                                        for="description" class="">Transaction ID</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                            class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description"
+                                                           class="text-input floating-label" ng-decimal="200"
+                                                           ng-model="mobileNo"> <label
+                                                        for="description" class="">Mobile Number</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                            class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description"
+                                                           class="text-input floating-label" ng-decimal="200"
+                                                           ng-model="mpesaAmount" ng-disabled = "skipMpesaValidation"> <label
+                                                        for="description" class="" >Amount</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 padding-left-right-set8 padding-top10">
+                                        <div class="">
+                                            <a href="">
+                                                <input type="button" value="Check" class="btn btn-primary btn-save-box-shadow" ng-decimal="200" ng-model="paymentDetails.checkboxStatus"  ng-click="checkmpesaDetails()">
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1 col-sm-1 padding-left-right-set8 padding-top10">
+                                        <div class="">
+                                            <a href="">
+                                                <input type="button" value="Payment Req" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#paymentReqModal">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 padding-left-right-set8 padding-top10">
+                                        <div class="">
+                                            <a href="">
+                                                <input type="button" value="Validate" class="btn btn-primary btn-save-box-shadow" ng-click="validateSTKPushPayment()">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set8 padding-top10 ">
+                                        <div class="common-save-button" style="padding-top: 0px;">
+                                            <a href="" class="btn btn-primary btn-save-box-shadow"
+                                               style="width: auto;" ng-click="clearMpesaFields();" title="Clear">
+                                                <i class="fa fa-eraser" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- CONTENT FOR 5th TAB end-->
+                            <!-- CONTENT FOR 6th Loylti Card TAB start-->
+                            <div ng-show="isSetFirstTabLevel(6)">
+                                <div class="row" ng-form="loyaltyCardForm">
+                                    <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11">
+                                                <div class="form-group">
+                                                    <input type="text" autocomplete="off"  name="description" id="" class="text-input floating-label dirty" ng-model="paymentDetails.loyaltyCardNo" ng-blur="getLoyaltyCardByNo(paymentDetails.loyaltyCardNo);"  is-number  maxlength="16">
+                                                    <label for="description" class="LISDynamicLabel">Card No.</label>
+                                                    <!-- <p class="help-block" ng-if="loyaltyCardForm.loyaltyCardNo.$error.maxlength">Maximum 16 digits are allowed.</p> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" id="" class="text-input floating-label dirty" ng-model="paymentDetails.cardBalAmount"  disabled="disabled" >
+                                                    <label for="description" class="LISDynamicLabel">Available Balance</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11">
+                                                <div class="form-group" show-errors>
+                                                    <input type="text" autocomplete="off"  name="loyaltyCardAmt" id="" class="text-input floating-label dirty" ng-model="paymentDetails.loyaltyCardAmt"  ng-blur="checkAmt(paymentDetails.loyaltyCardAmt);" min="1" is-number ng-disabled="send">
+                                                    <label for="description" class="LISDynamicLabel">Amount</label>
+                                                    <!-- <p class="help-block" ng-if="loyaltyCardForm.loyaltyCardAmt.$error.$valid">Amount should not be 0.</p> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+                                        <div class=" ">
+                                            <!-- <a href="" class="btn btn-primary btn-save-box-shadow" title="Generate OTP" ng-click="sendOTP('N');" ng-disabled="loyaltyCardForm.$invalid && loyaltyCardForm.loyaltyCardAmt.$invalid">Generate OTP</a> -->
+                                            <button class="btn btn-primary btn-save-box-shadow" title="Generate OTP" ng-click="sendOTP('N');" ng-disabled="loyaltyCardForm.loyaltyCardAmt.$invalid || !paymentDetails.cardBalAmount>0|| send">Generate OTP</button>
+                                            <!-- data-toggle="modal" data-target="#confirmLogout" -->
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+                                        <button class="btn btn-primary btn-save-box-shadow" id="sendBtn" ng-click="reSendOTP('Y');" ng-disabled="!send">Resend OTP</button>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11" >
+                                                <div class="form-group" show-errors>
+                                                    <input type="text" autocomplete="off"  name="lcotp" id="" class="text-input floating-label dirty" ng-model="paymentDetails.otp" ng-minlength="6" numbers_only required>
+                                                    <label for="description" class="LISDynamicLabel">OTP Number</label>
+                                                </div>
+                                                <!-- <p class="help-block" ng-if="loyaltyCardForm.lcotp.$error.required">Please Enter otp Number.</p> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10">
+                                        <div class=" ">
+                                            <button class="btn btn-primary" title="clear" ng-click="clearLoylty();">Clear</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10">
+                                        <div class=" ">
+                                            <button class="btn btn-primary btn-save-box-shadow" title="Validate" ng-click="validateOtp();" ng-disabled="loyaltyCardForm.lcotp.$error.required">Validate</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- CONTENT FOR 6th TAB Loylti Card End-->
+
+                            <!-- CONTENT FOR 8th TAB start-->
+                            <div ng-show="isSetFirstTabLevel(8)">
+                                <div class="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11">
+                                                <div class="">
+                                                    <select ng-model="eTransferObj.transactionobj" class="text-input floating-label" ng-options="x as x.name for x in transactionTypesList track by x.id" class="form-control"
+                                                            ng-required="true">
+                                                    </select>
+                                                    <label for="code">Transaction Type</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11">
+                                                <div class="">
+                                                    <select class="text-input floating-label dirty" ng-model="eTransferObj.transBankId">
+                                                        <!-- <option value="-">-</option> -->
+                                                        <option value={{bank.bankId}} ng-value="bank.bankId"  ng-repeat="bank in bankList">{{bank.bankName}}</option>
+                                                    </select> <label for="code">Bank Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  allow-pattern="(\d|[a-z])"  name="description" id="" ng-model="eTransferObj.transactionNo" class="text-input floating-label dirty">
+                                                    <label for="description" class="LISDynamicLabel">Transaction No.</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  onkeydown="event.preventDefault()" name="description" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY"  model-view-value="true"  ng-model="eTransferObj.transTransactionDate" class="text-input floating-label dirty"
+                                                           is-open="datepicker.opened" datepicker-options="dateOptionsTrancs" show-button-bar="false"	ng-click="openDatePicker()">
+                                                    <label for="description" class="LISDynamicLabel">Transaction Date</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" id="" is-number ng-model="eTransferObj.transferAmount" class="text-input floating-label dirty">
+                                                    <label for="description" class="LISDynamicLabel">Amount</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- CONTENT FOR 8th TAB END-->
+
+
+                            <!-- CONTENT FOR 10th TAB start-->
+                            <div ng-show="isSetFirstTabLevel(10)">
+
+                                <div class="row">
+                                    <div
+                                            class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description"
+                                                           class="text-input floating-label" ng-decimal="200"
+                                                           ng-model="razorMobileNo"> <label
+                                                        for="description" class="">Mobile Number</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                            class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description"
+                                                           class="text-input floating-label" ng-decimal="200"
+                                                           ng-model="razorAmount"> <label
+                                                        for="description" class="" >Amount</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 padding-left-right-set8 padding-top10">
+
+                                        <div class="" ng-if="payGatewayProviderId == 1">
+                                            <a href="">
+                                                <input type="button" value="Send Link" class="btn btn-primary btn-save-box-shadow" ng-decimal="200" ng-click= "sendPaymentLink()">
+                                            </a>
+                                        </div>
+
+                                        <div class="" ng-if="payGatewayProviderId == 2">
+                                            <a href="">
+                                                <input type="button" value="Send Link" class="btn btn-primary btn-save-box-shadow" ng-decimal="200" ng-click= "sendPaymentLinkCCAvenue()">
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 padding-left-right-set8 padding-top10">
+
+                                        <div class="" ng-if="payGatewayProviderId == 1">
+                                            <a href="">
+                                                <input type="button" value="Validate" class="btn btn-primary btn-save-box-shadow" ng-decimal="200" ng-click= "validateRazerPay()">
+                                            </a>
+                                        </div>
+
+                                        <div class="" ng-if="payGatewayProviderId == 2">
+                                            <a href="">
+                                                <input type="button" value="Validate" class="btn btn-primary btn-save-box-shadow" ng-decimal="200" ng-click= "validateRazerPayCCAvenue()">
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 padding-left-right-set8 padding-top10">
+
+                                        <div class="" ng-if="payGatewayProviderId == 1">
+                                            <a href="">
+                                                <input type="button" value="Pay" class="btn btn-primary btn-save-box-shadow" ng-decimal="200" ng-click= "PayByRazorPayment()">
+                                            </a>
+                                        </div>
+
+                                        <div class="" ng-if="payGatewayProviderId == 2">
+                                            <a href="">
+                                                <input type="button" value="Pay" class="btn btn-primary btn-save-box-shadow" ng-decimal="200" ng-click= "PayByRazorPaymentCCAvenue()">
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- CONTENT FOR 10th TAB end-->
+
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 headerHeight fix-height-scroll230">
+                                    <table class="table table-bordered  margin-top8">
+                                        <tr>
+                                            <th class="width15 vertical-top">
+                                                <span class="">Payment Mode</span>
+                                            </th>
+                                            <th class="width15 vertical-top">
+                                                <span class="">Bank Name</span>
+                                            </th>
+                                            <th class="width15 vertical-top">
+                                                Cheque No./Card No./Transaction No.
+                                            </th>
+                                            <th class="width15 vertical-top">
+                                                Cheque Date/Expiry Date
+                                            </th>
+                                            <th class="width15 vertical-top">
+                                                Transaction Type
+                                            </th>
+                                            <th class="width15 vertical-top">
+                                                Total Amount
+                                            </th>
+                                            <th class="width5 vertical-top">
+                                                Action
+                                            </th>
+                                        </tr>
+                                        <tr ng-repeat="payment in listPaymentDetails">
+                                            <td>{{payment.paymentModeId == 1 ? 'Cash' : payment.paymentModeId == 2 ? 'Cheque' :  payment.paymentModeId == 3 ? 'Card' : payment.paymentModeId == 4 ? 'Debit Card' : payment.paymentModeId == 5 ? 'M-Pesa' : payment.paymentModeId == 6 ? 'Loyalty Card': payment.paymentModeId == 8 ? 'E-Transfer':payment.paymentModeId == 12 ? 'Payment Gatway':'-'}}</td>
+                                            <td>{{(payment.paymentModeId == 2 || payment.paymentModeId == 5 || payment.paymentModeId == 8 ) && payment.bankName != '' ? payment.bankName : '-'}}</td>
+<!--                                             <td>{{(payment.paymentModeId == 2 && payment.chequeNumber != '') ? payment.chequeNumber : (payment.paymentModeId == 3 && (payment.cardNo != '' || payment.transactionNo != "")) ? payment.cardNo + ' || '+ payment.transactionNo : (payment.paymentModeId == 4 && payment.cardNo != '') ? payment.cardNo : (payment.paymentModeId == 5 && payment.transactionNo != '') ? payment.transactionNo :(payment.paymentModeId == 6 && payment.cardNo != '')? payment.cardNo :((payment.paymentModeId == 8 || payment.paymentModeId == 12) && payment.transactionNo != '')?payment.transactionNo:'-' }}</td> -->
+                                            <td>{{(payment.paymentModeId == 2 && payment.chequeNumber != '') ? payment.chequeNumber : (payment.paymentModeId == 3 && (payment.cardNo != '' || payment.transactionNo != "")) ? 
+											(payment.creditDebitCardType!= null && payment.creditDebitCardType!= "" ? payment.creditDebitCardType + ' || ':"")
+											+ (payment.cardNo!= null && payment.cardNo!= "" ? payment.cardNo + ' || ':"")+ (payment.transactionNo!= null && payment.transactionNo!= "" ? payment.transactionNo + ' || ':"") + (payment.transactionTypeName!= null && payment.transactionTypeName!= "" ? payment.transactionTypeName:""): (payment.paymentModeId == 4 && payment.cardNo != '') ? payment.cardNo : (payment.paymentModeId == 5 && payment.transactionNo != '') ? payment.transactionNo :(payment.paymentModeId == 6 && payment.cardNo != '')? payment.cardNo :((payment.paymentModeId == 8 || payment.paymentModeId == 12) && payment.transactionNo != '')?payment.transactionNo:'-' }}</td>
+                                            <td>{{(payment.paymentModeId == 2)?(payment.chequeDate):((payment.paymentModeId == 3)?(payment.expiryDate):"-")}}</td>
+                                            <td>{{payment.transactionType}}</td>
+                                            <td class="text-right">{{payment.amount}}</td>
+                                            <td>
+                                                <i class="fa fa-times" aria-hidden="true" ng-click="removePaymentDetails($index)"></i>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td  class="text-right">
+                                            Total Amount
+                                        </td>
+                                        <td>
+                                            {{parseFloatNum(tatalAmount)}}
+                                        </td>
+                                        <td  class="text-right">
+                                            Due Amount
+                                        </td>
+                                        <td>
+                                            {{dueAmount}}
+                                        </td>
+                                        <td class="text-right"></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" id="" onkeypress="return /[A-Z-a-z]/i.test(event.key)" ng-model="deposit.receivedFrom" class="text-input floating-label"> <!--  ng-model="amountReceivedFrom" -->
+                                                    <label for="description" class="">Amount Receive From</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                        <div class="row input-container">
+                                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                <div class="">
+                                                    <input type="text" autocomplete="off"  name="description" id="" ng-model="deposit.identificationNo" class="text-input floating-label"><!--   ng-model="identificaitonNo" -->
+                                                    <label for="description" class="">Identification No..</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10">
+                                        <div class=" " >
+                                            <button  style="width:100%" class="btn btn-primary btn-save-box-shadow" title="Save" ng-disabled="listPaymentDetails.length==0 && btnDisabled == true" ng-click="saveDeposit();">Settle</button>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 float_right padding-top10">
+                                        <input type="radio" name="registrationType"><span class="margin-left5">Transfer To Active Deposit</span>
+                                    </div> -->
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***************** COLLECT PAYMENT POPUP  *****************-->
+<!-- ***************** Payment Mode  Start *****************-->
+<div id="payment_mode_Modal_deposit" class="common-medium-popup modal fade ng-scope in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Payment Mode
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body row">
+                <div class="row height400-table-with-scroll">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 padding-left-right-set4">
+                            <table class="table table-bordered  margin-top8">
+                                <tr>
+                                    <th class="width15">
+                                        <span class="">Payment Mode</span>
+                                    </th>
+                                    <th class="width15">
+                                        <span class="">Bank Name</span>
+                                    </th>
+                                    <th class="width15">
+                                        Cheque No/Card No
+                                    </th>
+                                    <th class="width15">
+                                        Total Amount
+                                    </th>
+                                </tr>
+                                <tr ng-repeat="depositDetails in depositDetailsList track by $index">
+                                    <td>{{depositDetails.paymentMode}}</td>
+                                    <td>{{depositDetails.bankName==null?'-':depositDetails.bankName}}</td>
+                                    <td>{{(depositDetails.chequeNumber==null)?(depositDetails.cardNo==null)?'-':depositDetails.cardNo:depositDetails.chequeNumber}}</td>
+                                    <td class="text-right">{{depositDetails.totalAmount}}</td>
+                                </tr>
+                            </table>
+                            <table class="table table-bordered">
+                                <tr ng-if="(depositDetailsList|filter:searchKeyword)=='' || (depositDetailsList|filter:searchKeyword)==null">
+                                    <td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***************** Payment Mode End *****************-->
+
+<!-- paymentReqModal START -->
+<div id="paymentReqModal" class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);"">
+<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+    <div class="modal-content">
+        <div class="modal-header padding-zero" style="padding:0px;">
+            <div class="modal-title patient-details-row">
+                Payment Request
+                <button type="button" class="close" ng-click="cancelPaymentReqModal()">&times;</button>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="row padding-top10 padding-bottom10 padding-left-right-set">
+                <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-md-10">
+                            <div class="">
+                                <input type="number" name="" id="" ng-model="validateMpesaAmount"class="text-input floating-label dirty">
+                                <label for="" class="LISDynamicLabel">Amount: &nbsp;</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top15"><label>Amount :&nbsp;</label><span>-{{dueAmount}}</span></div> -->
+                <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0 padding-top10">
+                    <div class="row input-container">
+                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-2 col-sm-10 col-md-10">
+                            <div class="">
+                                <input type="text" name="" id="" ng-model="countryCallingCode" class="text-input floating-label dirty" numbers-only>
+                                <label for="" class="LISDynamicLabel">Code</label>&nbsp;
+                            </div>
+                        </div>
+                        <div  class="col-lg-1 col-sm-10 col-md-10"></div>
+                        <div class="col-lg-7 col-sm-10 col-md-10">
+                            <div class="">
+                                <input type="number" name="" id="" ng-model="mobileNumber"class="text-input floating-label dirty">
+                                <label for="" class="LISDynamicLabel">Mobile Number</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer padding-top10" style="border:none;">
+            <button type="button" class="btn btn-primary" id="" ng-click="mpesaPaymentRequest();">Ok</button>
+            <button type="button"class="btn btn-primary" id="" ng-click="cancelPaymentReqModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+</div>
+<!-- paymentReqModal END -->
+
+<div id="uploadpanCardDetails" class="modal common-medium-popup fade ng-scope in"  data-backdrop="static" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Document Upload Details
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row padding-bottom10 padding-top10">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="fix-height-scroll230 padding-top10" style="overflow:overlay !important;">
+                            <table class="table table-striped table-bordered" id="documentUpload">
+                                <thead>
+                                <tr>
+                                    <th class="UHID-width"> Document Upload (Allowed uploads *.txt, *.pdf, *.docx, *.doc)</th>
+                                    <th class="status">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <input type="file" id="fileId" file-model="file" accept="application/msword,text/plain, application/pdf,image/png,image/jpeg" validfile> <!-- file-model="docObj.file" -->
+                                            <p ng-show="fileError" style="color:red;">{{fileError}}</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="">
+                                            <button class="btn btn-primary btn-save-box-shadow  width10" title="Save"
+                                                    ng-click="addDeposit();" data-ng-class="{disabled: !saveBtnDisabledDoc}">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-include="'./views/master/UnitMaster/billingMaster/common/digitalSignaturePopup.html'" ></div>
+
+
+
+
+
+
+

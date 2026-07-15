@@ -1,0 +1,501 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	<form name="commonform" novalidate>
+		<div class="row padding-top15">
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="form-group" show-errors>
+							<input type="text" autocomplete="off" ng-model="trustObj.trustName" name="trustName" id="trustName"
+								class="text-input floating-label" required> <label for=""
+								class="LISDynamicLabel">Trust Name<span class="star">*</span></label>
+								<p class="help-block" ng-if="commonform.trustName.$error.required">Trust Name is
+								required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="form-group" show-errors>
+							<input type="text" autocomplete="off"  name="trustAddress"  ng-model="trustObj.trustAddress" id="trustAddress"
+								class="text-input floating-label" required> <label for=""
+								class="LISDynamicLabel">Trust Address<span class="star">*</span></label>
+								<p class="help-block" ng-if="commonform.trustAddress.$error.required">Address is
+								required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors>
+							<select class="text-input floating-label" name="countryId" ng-model="trustObj.countryId" convert-to-number ng-change="getStateByCountry(trustObj.countryId)" required>
+								<option></option>
+								<option ng-repeat="info in countryList" value="{{info.countryId}}">{{info.countryName}}</option>
+							</select> <label for="code">Country<span class="star">*</span></label>
+								<p class="help-block" ng-if="commonform.countryId.$error.required">Country is
+								required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors>
+							<select class="text-input floating-label" name="stateId" ng-model="trustObj.stateId" convert-to-number ng-change="getDistrictByState(trustObj.stateId)" required>
+								<option></option>
+								<option ng-repeat="info in stateList" value="{{info.stateId}}">{{info.stateName}}</option>
+							</select> <label for="code">State<span class="star">*</span></label>
+							<p class="help-block" ng-if="commonform.stateId.$error.required">State is
+								required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors="">
+							<select class="text-input floating-label" name="districtId" ng-model="trustObj.districtId" convert-to-number ng-change="getCityByDistrict(trustObj.districtId)" required >
+								<option></option>
+								<option ng-repeat="info in districtList"  value="{{info.districtId}}">{{info.districtName}}</option>
+							</select> <label for="code">District<span class="star">*</span></label>
+							<p class="help-block" ng-if="commonform.districtId.$error.required">District is required</p>
+								
+						</div>
+					</div>
+				</div>
+			</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors="">
+							<select class="text-input floating-label" name="cityId" ng-model="trustObj.cityId"  convert-to-number ng-change="getAreaByCity(trustObj.cityId)" required>
+								<option></option>
+								<option ng-repeat="info in cityList" value="{{info.cityId}}">{{info.cityName}}</option>
+							</select> <label for="code">City<span class="star">*</span></label>
+								<p class="help-block" ng-if="commonform.districtId.$error.required">City is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<div class="row padding-top15">
+		
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group" show-errors>
+							<select class="text-input floating-label" name="areaId" ng-model="trustObj.areaId"  ng-change="setPostCode(trustObj.areaId,0)"  convert-to-number required>
+								<option></option>
+								<option ng-repeat="info in areaList" value="{{info.areaId}}">{{info.areaName}}</option>
+							</select> <label for="code">Area<span class="star">*</span></label>
+							<p class="help-block" ng-if="commonform.areaId.$error.required">Area is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="text" autocomplete="off" ng-model="trustObj.zipCode" name="zipCode" id ="zipCode" class="text-input floating-label">
+							<label for="description" class="">Zip Code</label>
+								
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off"  ng-model="trustObj.contactPersonName"  name="contactPersonName" id="contactPersonName"
+								class="text-input floating-label"> <label for=""
+								class="LISDynamicLabel">Contact Person Name</label>
+								<p class="help-block" ng-if="commonform.contactPersonName.$error.required">Name is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off" ng-model="trustObj.contactPersonEmail" name="contactPersonEmail" id="contactPersonEmail"
+								class="text-input floating-label"> <label for=""
+								class="LISDynamicLabel">Contact Person Email Address</label>
+								<p class="help-block" ng-if="commonform.contactPersonEmail.$error.required">Email is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 ">
+				<div class="row input-container ">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="form-group" show-errors>
+							<input numbers-only type="text" autocomplete="off" ng-model="trustObj.phoneNo" name="phoneNo" id="phoneNo"
+								class="text-input floating-label" required> <label for=""
+								class="LISDynamicLabel">Phone No.<span class="star">*</span></label>
+								<p class="help-block" ng-if="commonform.phoneNo.$error.required">Phone No. is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 ">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-11">
+							<div class="">
+								<input numbers-only type="text" autocomplete="off" ng-model="trustObj.cellNo" name="cellNo" id="cellNo"
+									class="text-input floating-label dirty"> <label for=""
+									class="LISDynamicLabel">Cell No.</label>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+		<div class="row padding-top10">
+			
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container ">
+						<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-11">
+							<div class="form-group" show-errors="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty"
+							 name="validFrom" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+							placeholder="DD/MM/YYYY" ng-model="trustObj.validFrom"
+							model-view-value="true" is-open="datepicker.opened"
+							datepicker-options="dateOptions" 
+							show-button-bar="false"	ng-click="openDatePicker()" required>
+								<label for="description" class="">Valid From<span class="star">*</span></label>
+								<p class="help-block" ng-if="commonform.validFrom.$error.required">Valid From is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container ">
+						<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-11">
+							<div class="form-group" show-errors="">
+								<select class="text-input floating-label" name="patientCategoryId" ng-model="trustObj.patientCategoryId" required>
+								<option ng-repeat="infoCat in patientCategoryList" ng-value="{{infoCat.patientCategoryId}}" value="{{infoCat.patientCategoryId}}" >{{infoCat.patientCategory}}</option>
+							</select>  <label for="code">Patient Category<span class="star">*</span></label>
+							<p class="help-block" ng-if="commonform.patientCategoryId.$error.required">Patient Category is required</p>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4  ">
+					<div class="row input-container ">
+						<div class="col-lg-1 col-sm-1 col-md-1  ddp-padding-top text-center">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<label for="" ng-model="trustObj.visitTypeId"class="LISDynamicLabel multi-select-label">Visit Type</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="visitTypeList" selected-model="selectedVisitType">
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+			<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0 padding-top10">
+					<div class="row input-container padding-top2">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="form-group" show-errors="">
+								<select class="text-input floating-label" name="patientCategoryId" ng-model="trustObj.patientCategoryId" required>
+								<option ng-repeat="infoCat in patientCategoryList" ng-value="{{infoCat.patientCategoryId}}" value="{{infoCat.patientCategoryId}}" >{{infoCat.patientCategory}}</option>
+							</select>  <label for="code">Patient Category<span class="star">*</span></label>
+							<p class="help-block" ng-if="commonform.patientCategoryId.$error.required">Patient Category is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-11">
+							<div class="">
+								<label for="" ng-model="trustObj.visitTypeId"class="LISDynamicLabel">Visit Type</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="visitTypeList" selected-model="selectedVisitType">
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div> -->
+				<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10 padding-top10">
+				<div class="row input-container ">
+						<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-11">
+							<div class="form-group">
+								<select class="text-input floating-label" name="patientTypeId" ng-model="trustObj.patientTypeId" >
+								<option ng-repeat="infoCat in patientTypeList" ng-value="{{infoCat.patientTypeId}}" value="{{infoCat.patientTypeId}}" >{{infoCat.description}}</option>
+							</select>  <label for="code">Patient Class</label>
+							<p class="help-block" ng-if="commonform.patientTypeId.$error.required">Patient Class is required</p>
+							</div>
+						</div>
+					</div>
+			</div> -->
+			<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" ng-model="trustObj.disease" name="disease" id="disease"
+								class="text-input floating-label"> <label for=""
+								class="LISDynamicLabel">Disease</label>
+								<p class="help-block" ng-if="commonform.disease.$error.required">Disease is required</p>
+						</div>
+					</div>
+				</div>
+			</div> -->
+		
+			<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="form-group" show-errors>
+							<input type="text" autocomplete="off" numbers-only ng-model="trustObj.maxLimitPerPerson" name="maxLimitPerPerson" id="maxLimitPerPerson"
+								class="text-input floating-label" required> <label for=""
+								class="LISDynamicLabel">Maximum Limit Per Person<span class="star">*</span></label>
+								<p class="help-block" ng-if="commonform.maxLimitPerPerson.$error.required">Maximum Limit Per Person is required</p>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			
+		</div>
+		<div class="row padding-top15">
+		
+		
+			<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set padding-top10">
+						<div class="checkbox">
+							<label class="common-lable-color-set">
+							<input type="checkbox"  ng-model="trustObj.isCompanyContract" ng-true-value="'Y'" ng-false-value="'N'">Is Company Contract</label>
+						</div>
+					</div> -->
+			</div>
+		</form>
+		<div class="row padding-top15">
+				<div class="col-md-6 col-sm-7 padding-left-right-set4">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+										ng-change="setNoOfRecords();" class="search-popUp-ddl">
+											<option value="10">10</option>   	
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries
+									</label>
+								</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+			        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveTrust()" ng-if="saveBtnFlag">
+			        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			        
+			        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="update()" ng-if="updateBtnFlag">
+			        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			      </div>
+			      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+			        <input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty search-popUp-ddl" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+			        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			      </div>
+			</div>
+			<!-- <div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class="width-div-for-patient-reg ">
+					<a href="" data-toggle="modal" ng-click="saveTrust()" class="btn btn-primary btn-save-box-shadow"
+						title="Save"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty"
+					placeholder="Search" style="margin-top: 0px"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div> -->
+		</div>
+		
+	<div class="row padding-left-right-set4 margin-top10">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="" scope="col">Trust Name</th>
+							<th scope="col">Trust Address</th>
+							<th scope="col">Contact Person Name</th>
+							<th scope="col">Contact Person Email Address</th>
+							<th scope="col">Phone No.</th>
+							<th scope="col">Cell No.</th>
+							<th scope="col">Valid From</th>
+							<th scope="col">Visit Type</th>
+							<th scope="col" class="text-center">Status(n)</th>
+							<th scope="col" class="text-center">Action taken</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in commonList|orderBy:column:reverse|filter:searchKeyword">
+							<td >{{info.trustName}}</td>
+							<td>{{info.trustAddress}}</td>
+							<td>{{info.contactPersonName}}</td>
+							<td>{{info.contactPersonEmail}}</td>
+							<td>{{info.phoneNo}}</td>
+							<td>{{info.cellNo}}</td>
+							<td>{{info.startDate | date: 'dd/MM/yyyy'}}</td>
+							<td  class="width3 text-center"><a data-toggle="modal" data-target="#fieldDetailsModal">
+							<i class="fa fa-info-circle" aria-hidden="true" ng-class="{disabled: info.trustStatus=='I'}" ng-click="showFieldList(info.trustId)" ></i>
+							</a></td>
+							<td><label class="switch"> <input type="checkbox"
+									ng-model="info.trustStatus" ng-checked="info.trustStatus=='A'"
+									ng-true-value="'A'" ng-false-value="'I'"
+									ng-change="updateStatus(info.trustId,info.trustStatus)">
+									<div class="slider round"></div>
+							</label></td>
+							<td class="text-center"><a><i class="fa fa-pencil"
+									aria-hidden="true" ng-click="showUpdateBtn(info.trustId)" ng-class="{disabled: info.trustStatus=='I'}"></i></a></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="row margin-bottom45 sss">
+						<ul ng-if="pager.pages.length" class="pagination table-list"
+							style="font-size: 14px;">
+							<li ng-class="{disabled:pager.currentPage === 1}"><a
+								ng-click="setPage(1,'true')">First</a></li>
+							<li ng-class="{disabled:pager.currentPage === 1}"><a
+								ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+							<li ng-repeat="page in pager.pages"
+								ng-class="{active:pager.currentPage === page}"><a
+								ng-click="setPage(page,'true')">{{page}}</a></li>
+							<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+								<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+							</li>
+							<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+								<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+							</li>
+						</ul>
+					</div>
+			</div>
+		</div>
+	</div>
+
+<!-- ********** fieldDetailsModal POPUP start **********  -->
+<div id="fieldDetailsModal" class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Visit Type Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row serachedPatientList padding-left-right-set4">
+					<div class="col-md-12 col-lg-12  fix-height-scroll230">
+						<table class="table table-bordered  margin-top4">
+							<thead>
+								<tr>
+							 		<th><span class="">Sr No.</span></th>
+									<th><span class="">Visit Type</span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in fieldMasterList track by $index">
+									<td>{{$index+1}}</td>
+									<td>{{info.visitTypeCode}}</td>
+									
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ********** fieldDetailsModal POPUP End **********  -->
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Trust Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="trustMaster"]').parents("li").addClass("active");
+});
+</script>

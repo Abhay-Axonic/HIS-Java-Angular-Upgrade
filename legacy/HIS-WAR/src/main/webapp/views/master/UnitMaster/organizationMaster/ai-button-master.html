@@ -1,0 +1,388 @@
+
+
+<link rel="stylesheet" type="text/css"
+      href="resources/assets/css/template/drag-drop.css" />
+<style>
+    .card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 10px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
+.card-body{
+margin-left:6px;
+}
+
+label {
+   color: #3F77CF;
+}
+.custom-drop-down-btn-set-vital button.custom-drop-down-btn:focus{
+    width :auto !important;
+}
+.table-container-nowrapping table td, .table-container-nowrapping table th{
+    white-space: inherit !important;
+    text-overflow: clip !important;
+}
+
+/***************** overlap class for drag-drop.css file*********************/
+.modal {
+    background-color: transparent !important;
+    margin-left: inherit !important;
+    width: -webkit-fill-available !important;
+    height: inherit !important;
+    margin-top: inherit !important;
+    padding-right: 0 !important;
+}
+/***************** *********************/
+.customRadioBtnS input[type="radio"]+label {
+    cursor: pointer;
+    padding: 4px 10px;
+    border: 1px solid #ccc;
+    background: #efefef;
+    color: #aaa;
+    /* border-radius: 3px; */
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0);
+    margin-right: -4px;
+    margin-top: 5px;
+}
+
+.drop-down-shadow {
+    padding: 10px 0px 10px 30px;
+    box-shadow: 1px 2px 7px 3px rgba(0, 0, 0, 0.4)
+}
+
+.width60 {
+    width: 60%;
+}
+
+.marginTop5 {
+    margin-top: 5px
+}
+
+.customRadioBtnS input[type="radio"] {
+    display: none;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/*  .customRadioBtnS input[type="radio"]:checked + label {
+    background: #f5f5a6;
+    border: 1px solid #afa6a6;
+    color: #171717;
+} */
+.margin-right05 {
+    margin-right: 5px !important;
+}
+
+ul.tabs li {
+    margin-right: 3px !important;
+}
+
+.readOnlyTemp{
+pointer-events: none;
+}
+.height-auto{
+    height: auto !important;
+}
+
+
+table>tbody>tr.td-bg-red > td
+    {
+        color : #ff0000 !important;
+    }
+#page-content-wrapper{
+    height: auto !important;
+    padding-bottom: 0% !important;
+}
+
+    #select
+    {
+     border-radius: 5px;
+    }
+
+    .panel{
+      background-color: #d8c9c9 !important;
+    }
+
+</style>
+
+
+<div id="page-content-wrapper" >
+    <div class="container-fluid his-style" >
+        <fieldset>
+            <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input  name="description" id="" press-enter="searchLabel()" ng-model="buttonLabel" style="margin-top: 33px;" class="text-input floating-label dirty">
+                            <label for="description" class="LISDynamicLabel">Button Label</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <textarea name="description" id="" press-enter="searchSystem()" ng-model="systemPrompt" style="margin-top:15px" class="text-input floating-label dirty"></textarea>
+                            <label for="description" class="LISDynamicLabel">System Prompt</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <textarea name="description" id="" press-enter="searchUser()" ng-model="userPrompt" style="margin-top:15px" class="text-input floating-label dirty"></textarea>
+                            <label for="description" class="LISDynamicLabel">User Prompt</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+
+
+            <div class="row margin-top10">
+                <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 text-width-auto">
+                    <i style="font-size: xx-large;" class="fa fa-thin fa-gear" ng-click="getConfig() "></i>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                    <a href="" class="btn btn-primary btn-save-box-shadow"  ng-disabled="editFlag==false" ng-click="editFlag && updateButtonMaster()" title="Update" data-toggle="modal">
+                        Update</a>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                    <a href="" class="btn btn-primary btn-save-box-shadow" ng-disabled="editFlag==true" ng-click="!editFlag && saveButtonMaster()" title="Save" data-toggle="modal">
+                        Save</a>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                    <a href="" class="btn btn-primary btn-save-box-shadow" ng-click="clearFields()" title="Clear" data-toggle="modal">
+                        Clear</a>
+                </div>
+            </div>
+
+            <div class="row margin-top10">
+                <div class="row margin-top10">
+                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+                        <input  class="text-search-box" ng-model="searchBillFilter" placeholder="Search" title="" style="margin-top:0px">
+                        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="row padding-top10 padding-left-right-set4 margin-top5">
+                    <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+                        <div class="form-group">
+                            <div  id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll440">
+                                <table id="main-table" class="main-table width100">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center width8">Label</th>
+                                        <th class="text-center width6">System Prompt</th>
+                                        <th class="text-center width5">User Prompt</th>
+                                        <th class="text-center width6">Status</th>
+                                        <th class="text-center width7">AI Configuration</th>
+                                        <th class="text-center width6">User Action</th>
+                                    </tr>
+                                    </thead>
+                                    <div>
+                                        <tbody>
+                                        <tr ng-repeat="button in buttonData |filter:searchByLabel">
+                                            <!-- <td class="role-id" value="{button.buttonId}"><i class='i-role-id' value="{button.buttonId}">{{$index+1}}</i></td> -->
+                                            <td class="role-desc">{{button.label}}</td>
+                                            <td class="role-desc text-center"><a ng-click="getSystemPromptInfo(button.systemPrompt)"><i title="System Prompt" class="fa fa-info-circle" aria-hidden="true"></i></a></td>
+                                            <td class="role-desc text-center"><a ng-click="getUserPromptInfo(button.userPrompt)"><i title="User Prompt" class="fa fa-info-circle" aria-hidden="true"></i></a></td>
+                                            <td><div ng-if="button.tabId<42" class="text-center">
+                                                <label class="switch">
+                                                    <input type="checkbox" ng-model="button.isStatus" ng-change="statusChanged(button.buttonId,button.isStatus)" disabled>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                                <div ng-if="button.tabId>43" class="text-center">
+                                                    <label class="switch">
+                                                        <input  type="checkbox" ng-model="button.isStatus" ng-change="statusChanged(button.buttonId,button.isStatus)">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="role-desc text-center"><a ng-click="AIInfo(button.jsonObject)"><i title="AI Configuration" class="fa fa-info-circle" aria-hidden="true"></i></a></td>
+                                            <td class="text-center"><a ng-click="editButtonMaster(button.buttonId,button.label,button.systemPrompt,button.userPrompt,button.tabId,button.jsonObject,button.isStatus)"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                                        </tr>
+                                        </tbody>
+                                    </div>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+
+
+
+    </div>
+
+    <div id="aiButtonConfig" class="modal fade ng-scope in common-small-popup" role="dialog" style="margin-left: 20px !important;z-index:1300 !important;background: rgba(0, 0, 0, 0.34);">
+        <div class="modal-dialog" style="width: 60% !important;">
+            <div class="modal-content">
+                <div class="modal-header padding-zero">
+                    <div class="modal-title patient-details-row">
+                        AI Configuration
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="margin-left10">
+                        <div class="row margin-top10">
+                            <div class="col-md-7">
+                                <input  ng-model="url" type="text" style="width: 500px;border-radius: 10px;margin-bottom: 17px;height: 40px;">
+                            </div>
+
+                            <div class="col-md-2 float_right">
+                                <button type="button" ng-click="closePopUp()" class="btn btn-primary width50" >Add</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="fixed-thead-tfoot-scroll fix-height-scroll440">
+                                <table id="main-table" class="main-table width100">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center width5">Sr No.</th>
+                                        <th class="text-center width20">Key</th>
+                                        <th class="text-center width20">Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="(key, value) in model">
+                                        <td>{{$index+1}}</td>
+										<td>{{key}}</td>
+										<td  style="width:490px !important"><input ng-disabled="key=='System_prompt' || key=='User_Prompt' || key=='Input_from_application' " type="text" style="border:none;width:100%"ng-model="model[key]"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal fade" id="AIConfigInfo" style="margin-left: 15px !important;">
+    <div class="pop-up-searchBox">
+      <div class="modal-content" style="padding: 0px 0px 5px 0px;">
+          <div class="modal-header">
+              <div class="modal-title patient-details-row">
+                  AI Configuration
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+          </div>
+        <div class="modal-body row" style="margin-top: 1px !important;">
+	        	<div class="row" >
+	        	<div class="col-md-12">
+		        	<div class="col-md-6 col-sm-3 col-xs-3 "  >
+		        		<label for="tabs" class="uk-form-label"></label>
+						  <input type="text" id="" class="" style="width: 100% !important;border: 1px solid #625e5e;border-radius: 5px;" ng-model="url">
+		            </div>   
+		            <!-- <div class="col-md-6 col-sm-4 col-xs-4"   style="text-align: right;padding-top: 112px;">
+		            	<input type="button" id="" value="Add" ng-click="closePopUp()" class="btn btn-primary">
+		            </div> -->      
+		        	
+				</div>	
+				<input type="hidden" id="userRoleMapperRoleId">
+				</div>
+			</div>
+			<div class="row">
+                <div class="fixed-thead-tfoot-scroll fix-height-scroll440">
+                    <table class="table table-bordered table-striped scrolldown" id="roleListByUserTable" style="margin-top: 10px;">
+                        <thead>
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Key</th>
+                            <th style="border:none">Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr  ng-repeat="(key, value) in model">
+                            <td>{{$index+1}}</td>
+                            <td>{{key}}</td>
+                            <td>{{value}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+				</div>
+		</div>
+	</div> 
+</div>	
+<div class="modal fade" id="systemPromptInfo" style="margin-left: 15px !important;">
+    <div class="pop-up-searchBox">
+      <div class="modal-content" style="padding: 0px 0px 5px 0px;">
+          <div class="modal-header">
+              <div class="modal-title patient-details-row">
+                  System Prompt
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+          </div>
+        <div class="modal-body row" style="margin-top: 1px !important;" >
+	        	<div class="row" >
+	        	<div class="col-md-12">
+		        	<div class="col-md-12 col-sm-3 col-xs-3 "  >
+						  {{systemPromptInfo}}
+		            </div>   
+				</div>	
+				</div>
+			</div>
+		</div>
+	</div> 
+</div>
+<div class="modal fade" id="userPromptInfo" style="margin-left: 15px !important;">
+    <div class="pop-up-searchBox">
+      <div class="modal-content" style="padding: 0px 0px 5px 0px;">
+          <div class="modal-header">
+              <div class="modal-title patient-details-row">
+                  User Prompt
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+          </div>
+        <div class="modal-body row" style="margin-top: 1px !important;">
+	        	<div class="row" >
+	        	<div class="col-md-12">
+		        	<div class="col-md-12 col-sm-3 col-xs-3 "  >
+						  {{userPromptInfo}}
+		            </div>   
+				</div>	
+				</div>
+			</div>
+		</div>
+	</div> 
+</div>	
+</div>
+
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

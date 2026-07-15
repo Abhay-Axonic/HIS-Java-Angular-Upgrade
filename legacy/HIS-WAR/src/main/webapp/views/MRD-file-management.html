@@ -1,0 +1,753 @@
+<style>
+
+table>tbody>tr.td-bg-red > td
+{
+	color : red !important;
+
+}
+table>tbody>tr.td-bg-green > td
+{
+	color : green !important;
+
+}
+table>tbody>tr.td-bg-black > td
+{
+	color : black !important;
+
+}
+table>tbody>tr.td-bg-blue > td
+{
+	color : blue !important;
+
+}
+.fixed-thead-tfoot-scroll table{
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0px !important;
+}
+<style>
+.fixed-thead-tfoot-scroll table{
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0px !important;
+}
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div ng-include="'./views/common-counter-with-patientsearch.html'"></div>
+		<fieldset class="margin-bottom-fieldset" style="margin-bottom : 0%;">
+			<!--  <legend class="heading-div">Patient Search</legend> -->
+			<div class="row patienttSearchResult" ng-show="patientSerachHideAndShow">
+				<form name="patientRegSearchFilter">
+					<div class="row">
+						<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="registrationNumber"    ng-model="patientSearchObj.uhIdNumber" id="" class="text-input floating-label" press-enter="searchPatient(patientSearchObj)" required>
+										<label for="description" class="LISDynamicLabel">UHID</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="" show-errors>
+										<input type="text" autocomplete="off" name="description"  ng-model="patientSearchObj.patientName" id="" class="text-input floating-label" press-enter="searchPatient(patientSearchObj)">
+										<label for="description" class="LISDynamicLabel">Patient Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+								<div class="row input-container padding-top2">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+										<i class="fa fa-venus-mars" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10 ">
+										<div class="">
+											<select class="text-input floating-label dirty" ng-model="patientSearchObj.genderId" press-enter="searchPatient(patientSearchObj)">
+												<option></option>
+												<option ng-repeat="sex in sexMasterList" value="{{sex.id}}">{{sex.desc}}</option>
+											</select> <label for="code">Gender</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-mobile" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="description" id="" onkeypress="return /[0-9-+]/i.test(event.key)" class="text-input floating-label"  ng-model="patientSearchObj.mobileNo" press-enter="searchPatient(patientSearchObj)"> <label for="description" class="">Mobile No.</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0 dynamicLabelForEmployeeText">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10 ">
+										<div class="">
+											<!-- <input type="text" autocomplete="off" name="description" id="datepickerSearch" class="text-input floating-label" ng-model="patientSearchObj.birthDate" press-enter="searchPatient(patientSearchObj)"> <label for="description" class="">Birth Dateeee</label> -->
+
+											<input type="text" autocomplete="off" class="text-input floating-label dirty"    ng-readonly="true"
+												   name="datepicker" id="datepickerSearch"
+												   uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+												   placeholder="DD/MM/YYYY" ng-model="patientSearchObj.birthDate"
+												   model-view-value="true" is-open="datepickerSearch.opened"
+												   datepicker-options="dateOptionsSearch"  show-button-bar="false"
+												   ng-click="openDatePickerSearch()" press-enter="searchPatient(patientSearchObj)" >
+											<label for="description" class="">Birth Date</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+								<div class="row input-container padding-top2">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+										<i class="fa fa-address-book" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10">
+										<div class="">
+											<select class="text-input floating-label dirty" ng-model="patientSearchObj.identificationTypeId" name="identificationTypeId" >
+												<option></option>
+												<option ng-repeat="id in identificationTypeList" value="{{id.identificationId}}">{{id.identificationName}}</option>
+											</select> <label for="code">Identification Type</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0  padding-top10 dynamicLabelForEmployeeText">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-address-card-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label text-input-identification-no"  ng-model="patientSearchObj.identificationNo"  press-enter="searchPatient(patientSearchObj)"> <label for="description" class="">Identification No..</label>
+									</div>
+								</div>
+								<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right">
+									<div class="width-div-for-patient-reg " style="padding-bottom :5px; width :37px !important;">
+										<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="searchPatient(patientSearchObj)">
+										<i class="fa fa-search" aria-hidden="true" style="font-size:16px !important"></i></a>
+									</div>
+								</div> -->
+							</div>
+						</div>
+
+<!--						<div class="width-div-for-patient-reg  position-icon-reg margin-right10" >&lt;!&ndash; position-icon &ndash;&gt;-->
+<!--							<a href="#/patientRegistration"  class="float_right" title="Patient Registration" style="color: #e8373b;">-->
+<!--								<i class="fa fa-universal-access" style="font-size:26px" aria-hidden="true"></i>-->
+<!--							</a>-->
+<!--						</div>-->
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4  padding-top10 text-width-auto"><!-- float_right -->
+							<div class="width-div-for-patient-reg ">
+								<a href="" id="searchBtn" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="searchPatient(patientSearchObj)">
+									<i class="fa fa-search" style="font-size: 17px" aria-hidden="true"></i></a>
+							</div>
+						</div>
+<!--						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4  padding-top10 text-width-auto">&lt;!&ndash; float_right &ndash;&gt;-->
+<!--							<div class="width-div-for-patient-reg ">-->
+<!--								<a href="" class="btn btn-primary btn-save-box-shadow" title="Fingerprint" ng-click="thumbSearch();">-->
+<!--									<i class="fa fa-podcast" style="font-size: 17px" aria-hidden="true"></i></a>-->
+<!--							</div>-->
+<!--						</div>-->
+
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4  padding-top10 text-width-auto"><!-- float_right -->
+							<div class="width-div-for-patient-reg ">
+								<a href="" class="btn btn-primary btn-save-box-shadow" title="clearFields" ng-click="clearFields();">
+									<i class="fa fa-eraser"  style="font-size: 17px" aria-hidden="true"></i></a>
+							</div>
+						</div>
+
+
+
+					</div>
+				</form>
+				<fieldset class="normalRegistration sub-fieldset border-none padding-top4">
+					<!-- <legend class="sub-legend border-bottom-none">List</legend> -->
+					<div class="row serachedPatientList">
+						<div class="col-md-12 col-lg-12">
+
+							<div class="row padding-top0 padding-left-right-set0">
+								<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll126">
+									<table id="main-table" class="main-table width100">
+										<thead>
+										<tr>
+											<th class="width1">
+											</th>
+											<th class="width10">
+												<span class="">UHID</span>
+											</th>
+											<th class="width18">
+												<span class="">Patient's Name</span>
+											</th>
+											<th class="width5">
+												Gender
+											</th>
+											<th class="width15">
+												Mobile No.
+											</th>
+											<th class="date-column">
+												Birth Date
+											</th>
+											<th class="width15">
+												Identification Type
+											</th>
+											<th class="width15">
+												Identification No..
+											</th>
+											<th class="date-column">
+												Registration Date
+											</th>
+											<!-- <th class="width12">
+														Loyalty Card
+											</th> -->
+										</tr>
+										</thead>
+										<tbody>
+										<tr class="cursor-pointer" ng-repeat="patient in patientList">
+											<td>
+												<input type="radio" name="patient-list-radio" ng-click="getPatientDetailsByIndex($index)" id="patientSelectRadioCommon_{{$index}}">
+											</td>
+											<td>
+												{{patient.uhIdNumber}}
+											</td>
+											<td style="word-break: break-word;">
+												{{patient.patientName}}
+											</td>
+											<td>
+												{{patient.genderName}}
+											</td>
+											<td>
+												{{patient.mobileNo}}
+											</td>
+											<td>{{getDateByFormat(patient.birthDate,false)}}
+
+											</td><!-- {{patient.birthDateNew | date :  dateFormat }} -->
+											<td>
+												{{patient.identificationName}}
+											</td>
+											<td>
+												{{patient.identificationNo}}
+											</td>
+											<td>{{getDateByFormat(patient.createdDate,false)}}
+
+											</td>
+											<!-- <td>
+												{{patient.loyaltycardNo==null?"-":patient.loyaltycardNo}}
+											</td> -->
+
+										</tr>
+										<tr class="cursor-pointer" ng-show="patientList.length>0" >
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;">
+												<b ><a ng-click="loadMoreData()">View Next</a></b>
+											</td>
+
+
+											<!-- <td>
+												{{patient.loyaltycardNo==null?"-":patient.loyaltycardNo}}
+											</td> -->
+										</tr>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="">
+				<div class="row searched-patient-details-row" style="cursor: auto;">
+					<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+							<span class="profile_pic">
+								<img alt="" ng-src="{{(patientDetails.patientProfile!=null&&patientDetails.patientProfile!='')?patientDetails.patientProfile:(patientDetails.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" class="img-circle" style="width:30px">
+							</span>
+						<span class="margin-left10" ng-if="patientDetails.patientName != undefined"><b class="padding-right5font-weight600">Patient Name :</b>{{patientDetails.patientName}} {{patientDetails.age}} </span>
+						<span class="margin-left10" ng-if="patientDetails.uhIdNumber != undefined"><b class="padding-right5font-weight600">UHID No :</b> {{patientDetails.uhIdNumber}} </span><!-- UHID	: -->
+						<span class="margin-left10" ng-if="patientDetails.doctorName != undefined"><b class="padding-right5font-weight600">Doctor :</b>{{patientDetails.doctorName}}</span>
+						<span class="margin-left10" ng-if="patientDetails.fileSequenceNumber != null"><b class="padding-right5 font-weight600">File number:</b> {{patientDetails.fileSequenceNumber}} </span>
+						<span class="margin-left10" ng-if="patientDetails.createdDate != undefined"><b class="padding-right5 font-weight600">Registration Date:</b> {{getDateByFormat(patientDetails.createdDate,false)}} </span>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+<!--		<div ng-include="'./views/common-counter-with-patientsearch.html'"></div>-->
+
+		<div class="row">
+			<!-- Custom Radio Btn -->
+			<div class="col-md-2 padding-left-right-set4 " >
+				<div id="mediaType" class="row uk-input-group customRadioBtn">
+					<span>
+							<input id="opd_rdoBtn" name="opd_ipd_ER_DCrdoBtn" type="radio"  ng-value="1" ng-model="visitTypeId" checked="checked" class="otherRegistrationType trigger" ng-click="changeVisitType();">
+							<label for="opd_rdoBtn">OPD</label>
+					</span>
+					<span>
+							<input id="ipd_rdoBtn" name="opd_ipd_ER_DCrdoBtn" type="radio"  ng-value="2" ng-model="visitTypeId" class="otherRegistrationType trigger" ng-click="changeVisitType();">
+							<label for="ipd_rdoBtn">IPD</label>
+					</span>
+					<span>
+							<input id="ER_rdoBtn" name="opd_ipd_ER_DCrdoBtn" type="radio"   ng-value="4" ng-model="visitTypeId" class="otherRegistrationType trigger" ng-click="changeVisitType();">
+							<label for="ER_rdoBtn">ER</label>
+					</span>
+					<span>
+							<input id="DC_rdoBtn" name="opd_ipd_ER_DCrdoBtn" type="radio"  ng-value="3" ng-model="visitTypeId"  class="otherRegistrationType trigger" ng-click="changeVisitType();">
+							<label for="DC_rdoBtn">DC</label>
+					</span>
+				</div>
+
+			</div>
+
+			<div class="col-md-2 padding-left-right-set4" >
+				<div >
+					<label for="" style="margin-top: 5px">Visit Number<span class="star">*</span></label>
+					<select class="text-input floating-label dirty ng-pristine ng-valid ng-empty ng-touched" name="visitNumber" ng-model="visitId" style="">
+						<option value="">Select Visit Number</option>
+						<option ng-repeat="info in encounterList" value="{{info.visitId}}">{{info.visitNo}}</option>
+					</select>
+					<p class="help-block" ng-if="patientObj.encounterId.$error.required">Visit Number is required</p>
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li  ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="width12 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1); filterList(1);" ng-model="tabNo" ng-value="1">Allocated</a>
+					</li>
+					<li  ng-class="{ active : isSetFirstTabLevel(2) }" class="width12" style="">
+						<a href="" ng-click="setFirstTabLevel(2); filterList(2);" class="" ng-model="tabNo" ng-value="2">Requested</a>
+					</li>
+					<li  ng-class="{ active : isSetFirstTabLevel(3) }" class="width12" style="">
+						<a href="" ng-click="setFirstTabLevel(3); filterList(3);" class="" ng-model="tabNo" ng-value="3">Issued</a>
+					</li>
+					<li  ng-class="{ active : isSetFirstTabLevel(4) }" class="width12" style="">
+						<a href="" ng-click="setFirstTabLevel(4); filterList(4);" class="" ng-model="tabNo" ng-value="4">Discard</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1) "  class="second-level-tab-display-div"><!-- ****** tab1 - Allocated start ********* -->
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<select class="text-input floating-label" name="" ng-model="rackId">
+										<option value="">Select Rack</option>
+										<option ng-repeat="info in activeRackList"  value="{{info.rackId}}">{{info.rackDescription}}</option>
+									</select>
+									<label for="code">Rack<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<select class="text-input floating-label" name="" ng-model="rowId">
+										<option value="">Select Row</option>
+										<option ng-repeat="info in activeRows"  value="{{info.rowId}}">{{info.rowDescription}}</option>
+									</select>
+									<label for="code">Row<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<select class="text-input floating-label" name="" ng-model="boxId">
+										<option value="">Select Box</option>
+										<option ng-repeat="info in activeBoxList"  value="{{info.boxId}}">{{info.boxDescription}}</option>
+									</select>
+									<label for="code">Box<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<input type="text" class="text-input floating-label dirty" ng-model="fileNo">
+									<label>File No<span class="star">*</span></label>
+								</div>
+								<!--								<p class="help-block" ng-if="patientSearchObj.encounterId.$error.required">File Number is required</p>-->
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-9 col-md-9 col-sm-9">
+							<div ng-include="'./views/common/common-index-for-indication-of-status-MRD.html'" class="padding-top4"></div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto" ng-if="isMrdUser == true" ng-click="saveMrd(patientInfo)">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Save">
+								<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+							</a>
+						</div>
+						<div class="col-md-2"></div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 text-width-auto" style="margin-left: 20px" ng-if="isMrdUser == true"><!-- float_right -->
+								<a href="" class="btn btn-primary btn-save-box-shadow" title="Clear" ng-click="clear();">
+									<i class="fa fa-eraser"  style="font-size: 17px;" aria-hidden="true"></i></a>
+						</div>
+					</div>
+					<div class="row padding-top5 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll120">
+							<table id="main-table" class="main-table width100">
+								<thead>
+								<tr>
+									<th class="width10" title="Allocation No">Allocation No</th>
+									<th class="width10" title="Admission Number/Encounter Number">Admission Number/Encounter Number</th>
+									<th class="width10" title="Rack">Rack</th>
+									<th class="width10" title="Row">Row</th>
+									<th class="width10" title="Box">Box</th>
+									<th class="width10" title="OP/IP/File No">OP/IP/File No</th>
+									<th class="width10" title="Status">status(n)</th>
+									<th class="width10" title="Admission Date">Admission Date</th>
+									<th class="width10" title="Discharge Date">Hospital Discharge Date</th>
+									<th class="width10" title="Action">Action taken</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat = "info in globalList" ng-class="getRowClass(info);">
+									<td title="{{info.allocationNumber}}">{{info.allocationNumber}}</td>
+									<td title="{{info.admissionEncounterNumber}}">{{info.admissionEncounterNumber}}</td>
+									<td title="{{info.rackDescription}}">{{info.rackDescription}}</td>
+									<td title="{{info.rowDescription}}">{{info.rowDescription}}</td>
+									<td title="{{info.boxDescription}}">{{info.boxDescription}}</td>
+									<td title="{{info.fileNo}}">{{info.fileNo}}</td>
+									<td title="{{info.fileStatus}}">{{info.fileStatus}}</td>
+									<td title="{{info.admissionEncounterDate}}">{{info.admissionEncounterDate}}</td>
+									<td title="{{info.dischargeDate}}">{{info.dischargeDate}}</td>
+									<td>
+										<div style="text-align: center;" ng-if="isMrdUser == true">
+											<a>
+												<i ng-class="{ 'disabled': info.fileStatus !== 'Available' }" class="fa fa-pencil" ng-click="updateFileAllocation(info)"></i>
+											</a>
+										</div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div><!-- ****** tab1 - end ********* -->
+				<div ng-show="isSetFirstTabLevel(2) "  class="second-level-tab-display-div"><!-- ****** tab2 - Requested start ********* -->
+					<div class="row">
+						<div class="col-lg-9 col-md-9 col-sm-9">
+							<div ng-include="'./views/common/common-index-for-indication-of-status-MRD.html'" class="padding-top4"></div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto" ng-if="isMrdUser == true" ng-click = "acceptRequest();">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Approve Request">
+								<i ng-disabled="saveBtnFlag" class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+							</a>
+						</div>
+						<div class="col-md-2 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+							<a><input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow" ng-click="ShowModalPopup();" title="Add New Request"></a>
+						</div>
+					</div>
+					<div class="row padding-top5 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll120">
+							<table id="main-table" class="main-table width100">
+								<thead>
+								<tr>
+									<th class="width2 text-center vertical-middle">
+										<input ng-disabled ="isMrdUser == false" type="checkbox" ng-model="selectRequests" ng-click="selectAllRequests();" />
+									</th>
+									<th class="width10" title="Request No">Request No</th>
+									<th class="width10" title="Date"> Date</th>
+									<th class="width10" title="OP/IP/File No">OP/IP/File No</th>
+									<th class="width10" title="Status">status(n)</th>
+									<th class="width10" title="Requested By">Requestor</th>
+<!--									<th class="width10" title="Accepted By"> Accepted By</th>-->
+									<th class="width10" title="Admission Date">Admission Date</th>
+									<th class="width10" title="Discharge Date">Hospital Discharge Date</th>
+									<th class="width10" title="Action">Action taken</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat = "info in globalList" ng-class="getRowClass(info);">
+									<td class="width2 text-center">
+										<input ng-disabled ="info.fileStatus !== 'Requested' || isMrdUser == false" type="checkbox" ng-model="info.isSelected" ng-click="selectRequest(info);" />
+									</td>
+									<td title="{{info.requestedNo}}">{{info.requestedNo}}</td>
+									<td title="{{info.createdDate}}">{{info.createdDate}}</td>
+									<td title="{{info.fileNo}}">{{info.fileNo}}</td>
+									<td title="{{info.fileStatus}}">{{info.fileStatus}}</td>
+									<td title="{{info.requestedBy}}">{{info.requestedBy}}</td>
+<!--									<td title="{{info.acceptedBy}}">{{info.acceptedBy}}</td>-->
+									<td title="{{info.admissionEncounterDate}}">{{info.admissionEncounterDate}}</td>
+									<td title="{{info.dischargeDate}}">{{info.dischargeDate}}</td>
+									<td style="text-align: center; display: flex; align-items: center; justify-content: center;">
+										<a>
+											<i ng-class="{ 'disabled': info.fileStatus !== 'Requested'}" title="Cancel" class="fa fa-ban" aria-hidden="true" ng-click="cancelFileRequest(info)"></i>
+										</a>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div><!-- ****** tab2 -end ********* -->
+				<div ng-show="isSetFirstTabLevel(3) "  class="second-level-tab-display-div"><!-- ****** tab3 - Issue start ********* -->
+					<div class="row">
+						<div class="row">
+							<div class="col-lg-9 col-md-9 col-sm-9">
+								<div ng-include="'./views/common/common-index-for-indication-of-status-MRD.html'" class="padding-top4"></div>
+							</div>
+							<!--						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">-->
+							<!--							<a href="" class="btn btn-primary btn-save-box-shadow" title="Save">-->
+							<!--								<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>-->
+							<!--							</a>-->
+							<!--						</div>-->
+
+						</div>
+						<div class="row padding-top5 padding-left-right-set4">
+							<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll120">
+								<table id="main-table" class="main-table width100">
+									<thead>
+									<tr>
+										<th class="width10" title="Issue No">Issuance No</th>
+										<th class="width10" title="Request No">Request No</th>
+										<th class="width10" title="Date"> Date</th>
+										<th class="width10" title="OP/IP/File No">OP/IP/File No</th>
+										<th class="width10" title="Status">status(n)</th>
+										<th class="width10" title="Requested By">Requestor</th>
+										<th class="width10" title="Accepted By"> Accepted By</th>
+										<th class="width10" title="Admission Date">Admission Date</th>
+										<th class="width10" title="Discharge Date">Hospital Discharge Date</th>
+										<th class="width10" title="Action">Action taken</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr ng-repeat = "info in globalList" ng-class="getRowClass(info);">
+										<td title="{{info.issuedNo}}">{{info.issuedNo}}</td>
+										<td title="{{info.requestedNo}}">{{info.requestedNo}}</td>
+										<td title="{{info.createdDate}}">{{info.createdDate}}</td>
+										<td title="{{info.fileNo}}">{{info.fileNo}}</td>
+										<td title="{{info.fileStatus}}">{{info.fileStatus}}</td>
+										<td title="{{info.requestedBy}}">{{info.requestedBy}}</td>
+										<td title="{{info.acceptedBy}}">{{info.acceptedBy}}</td>
+										<td title="{{info.admissionEncounterDate}}">{{info.admissionEncounterDate}}</td>
+										<td title="{{info.dischargeDate}}">{{info.dischargeDate}}</td>
+										<td style="text-align: center;">
+											<a style="display: flex; justify-content: center;">
+												<i ng-class="{ 'disabled': info.fileStatus !== 'Issued' || isMrdUser == false}" class="fa fa-rotate-left" title="Return" ng-click="returnFile(info);" style="padding-right:10px;"></i>
+												<i ng-class="{ 'disabled': info.fileStatus === 'Discarded' || isMrdUser == false}" class="fa fa-trash" title="Discard" ng-click="discardFile(info);"></i>
+											</a>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!-- ****** tab3 -end ********* -->
+				<div ng-show="isSetFirstTabLevel(4) "  class="second-level-tab-display-div"><!-- ****** tab4 - Discard start ********* -->
+					<div class="row">
+
+						<div class="row">
+							<div class="col-lg-9 col-md-9 col-sm-9">
+								<div ng-include="'./views/common/common-index-for-indication-of-status-MRD.html'" class="padding-top4"></div>
+							</div>
+							<!--						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">-->
+							<!--							<a href="" class="btn btn-primary btn-save-box-shadow" title="Save">-->
+							<!--								<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>-->
+							<!--							</a>-->
+							<!--						</div>-->
+
+						</div>
+						<div class="row padding-top5 padding-left-right-set4">
+							<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll120">
+								<table id="main-table" class="main-table width100">
+									<thead>
+									<tr>
+										<th class="width10" title="Issue No">Issuance No</th>
+										<th class="width10" title="Request No">Request No</th>
+										<th class="width10" title="Date"> Date</th>
+										<!--										<th class="width10"> User</th>-->
+										<th class="width10" title="OP/IP/File No">OP/IP/File No</th>
+										<th class="width10" title="Status">status(n)</th>
+										<th class="width10" title="Requested By">Requestor</th>
+										<th class="width10" title="Accepted By"> Accepted By</th>
+										<th class="width10" title="Admission Date">Admission Date</th>
+										<th class="width10" title="Discharge Date">Hospital Discharge Date</th>
+<!--										<th class="width10" title="Action">Action taken</th>-->
+									</tr>
+									</thead>
+									<tbody>
+									<tr ng-repeat = "info in globalList" ng-class="getRowClass(info);">
+										<td title="{{info.issuedNo}}">{{info.issuedNo}}</td>
+										<td title="{{info.requestedNo}}">{{info.requestedNo}}</td>
+										<td title="{{info.createdDate}}">{{info.createdDate}}</td>
+										<td title="{{info.fileNo}}">{{info.fileNo}}</td>
+										<td title="{{info.fileStatus}}">{{info.fileStatus}}</td>
+										<td title="{{info.requestedBy}}">{{info.requestedBy}}</td>
+										<td title="{{info.acceptedBy}}">{{info.acceptedBy}}</td>
+										<td title="{{info.admissionEncounterDate}}">{{info.admissionEncounterDate}}</td>
+										<td title="{{info.dischargeDate}}">{{info.dischargeDate}}</td>
+<!--										<td style="text-align: center;">-->
+<!--											<a style="display: flex; justify-content: center;">-->
+<!--&lt;!&ndash;												<i ng-class="{ 'disabled': info.fileStatus !== 'Issued' || isMrdUser == false }" class="fa fa-rotate-left" title="Return" ng-click="returnFile(info);" style="padding-right:10px;"></i>&ndash;&gt;-->
+<!--												<i ng-class="{ 'disabled': info.fileStatus === 'Discarded' || isMrdUser == false }" class="fa fa-trash" title="Discard" ng-click="discardFile(info);"></i>-->
+<!--											</a>-->
+<!--										</td>-->
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+					</div>
+				</div><!-- ****** tab4 -end ********* -->
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--ADD NEW MRD REQUEST MODAL-->
+<div id="getFilesList" class="modal fade ng-scope in common-large-popup" role="dialog" data-backdrop="static" >
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					ADD FILE REQUEST
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll">
+				<fieldset class="get-request-row">
+					<div class="row padding-top10 padding-left-right-set4">
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<div class="table-container-header">
+										<table class="table table-bordered first-checkBox-padding">
+											<thead class="mainServiceTableCommon">
+											<tr>
+												<!--												<th class="width2 text-center vertical-middle">-->
+												<!--													<input type="checkbox" ng-model="selectRequests" ng-click="selectAllRequests();" />-->
+												<!--												</th>-->
+												<th class="width2 text-center vertical-middle">
+													<input type="checkbox" ng-model="selectAllFilesFlag" ng-click="selectAllFiles();" />
+												</th>
+												<th class="width10" title="Allocation No">Allocation No</th>
+												<th class="width10" title="Admission Number/Encounter Number">Admission Number/Encounter Number</th>
+												<th class="width6" title="Rack">Rack</th>
+												<th class="width6" title="Row">Row</th>
+												<th class="width6" title="Box">Box</th>
+												<th class="width10" title="OP/IP/File No">OP/IP/File No</th>
+												<th class="width10" title="Status">status(n)</th>
+												<!--												<th class="width10">Action taken</th>-->
+											</tr>
+											</thead>
+											<tbody>
+											<tr ng-if="activeFilesList == null || !activeFilesList.length>0">
+												<td colspan="8">
+													<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+												</td>
+											</tr>
+											<tr ng-repeat="detail in activeFilesList">
+												<td class="width2 text-center vertical-middle">
+													<input type="checkbox" ng-model="detail.isSelected" ng-click="selectFile(detail);" />
+												</td>
+												<td class="width10" title="{{detail.allocationNumber}}">{{detail.allocationNumber}}</td>
+												<td class="width10" title="{{detail.admissionEncounterNumber}}">{{detail.admissionEncounterNumber}}</td>
+												<td class="width6" title="{{detail.rackDescription}}">{{detail.rackDescription}}</td>
+												<td class="width6" title="{{detail.rowDescription}}">{{detail.rowDescription}}</td>
+												<td class="width6" title="{{detail.boxDescription}}">{{detail.boxDescription}}</td>
+												<td class="width10" title="{{detail.fileNo}}">{{detail.fileNo}}</td>
+												<td class="width10" title="{{detail.fileStatus}}">{{detail.fileStatus}}</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-lg-10 col-sm-10 col-md-10"></div>
+					<div class="col-lg-1 col-sm-1 col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input ng-disabled="disableSaveRequestBtn" type="button" id="saveBtn" style="width: 119px;" value="Save Request" class="btn btn-primary btn-save-box-shadow" ng-click="SaveRequest(detail);">
+						</div>
+					</div>
+					<div class="col-lg-1 col-sm-1 col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Cancel" id="cancelBtn" class="btn btn-primary btn-save-box-shadow" data-dismiss="modal" ng-click="CancelItems();">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$(".patienttSearchResult").show();
+        var documentHeight = $(window).height();
+        var sideBarHeight = documentHeight - 55;
+        $("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+        $(".selectedPageName").text("MRD File Management");
+        $(".sidebar-nav li").each(function() {
+            $(this).find("a").parents("li").removeClass("active");
+        });
+        $('a[href$="accessControl"]').parents("li").addClass("active");
+    });
+
+	$(document).on('click', '.commonPatientSearch', function(){
+		//alert()
+		$(this).closest(".patienttSearchResult").toggle();
+	});
+</script>

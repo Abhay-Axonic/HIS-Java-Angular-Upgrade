@@ -1,0 +1,314 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-left-right-set4 ">
+			<div class=""><!-- second-level-tab-display-div -->
+				<fieldset class="main-fieldset">
+					<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+								
+								<div class="form-group">
+										<!-- <select class="text-input floating-label dirty">
+											<option></option>
+											<option ng-repeat="info in bloodBankMasterList" ng-value="{{info.bloodBankId}}" value="{{info.bloodBankId}}"> {{info.bloodBankDesc}}</option>
+										</select> -->
+										<select ng-model="detailsObj.bloodBankObj" class="text-input floating-label"
+											ng-options="info4 as info4.bloodBankDesc for info4 in bloodBankMasterList track by info4.bloodBankId"
+											class="form-control" 
+											ng-required="true">
+										</select>
+										<label class="long-text-overflow">Blood Bank Name</label>
+									</div>
+								</div>
+							</div>
+						</div> 
+						<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-8 col-sm-7 col-md-7 padding-left-right-set4">
+									<div class="form-group">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" ng-model="loanInObj.shortName">
+										<label class="long-text-overflow">Short Name</label>
+									</div>
+								</div>
+								<!-- <div class="col-lg-3 col-sm-3 col-md-3 padding-left-right-set4 padding-top10">
+									<div class="form-group">
+										<label class="long-text-overflow">Sales</label>
+									</div>
+								</div> -->
+							</div>
+						</div> 
+						
+						<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+							 <div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="form-group">
+										<input type="text" autocomplete="off"  class="text-input floating-label dirty" ng-model="loanInObj.bloodUnit"/>
+										<label class="long-text-overflow">Blood Unit</label>
+									</div>
+								</div> 
+							</div>
+						</div>   -->
+					
+						
+					</div>	
+					<div class="row margin-top8">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="form-group">
+										<select ng-model="detailsObj.bloodGroupObj" class="text-input floating-label"
+										ng-options="info as info.bloodGroupDesc for info in bloodGroupList track by info.bloodGroupId"
+										class="form-control" 
+										ng-required="true">
+									</select>
+									<label for="description" class="LISDynamicLabel">Blood Group</label>
+									</div>
+								</div>
+							</div>
+						</div> 
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="form-group">
+										<select ng-model="detailsObj.componentObj" class="text-input floating-label"
+											ng-options="info9 as info9.bloodComponentDesc for info9 in componentList track by info9.bloodComponentId"
+											class="form-control" 
+											ng-required="true" ng-change="getexpiryDate(detailsObj.componentObj);">
+										</select>
+										<label class="long-text-overflow">Blood Component Name</label>
+									</div>
+								</div>
+							</div>
+						</div> 
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="form-group">
+										<div class="form-group">
+											<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="expiryDatepicker" id="expiryDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="loanInObj.expiryDate"
+											model-view-value="true" is-open="expiryDatepicker.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openExpiryDatepicker()"  required>
+											<label class="long-text-overflow">Blood Bag Expiry</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="form-group">
+										<input type="text" autocomplete="off"  class="text-input floating-label dirty" ng-model="loanInObj.bloodBagNo"/>
+										<label class="long-text-overflow">Blood Bag No</label>
+									</div>
+								</div>
+							</div>
+						</div>  
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="form-group">
+										<input type="text" autocomplete="off"  class="text-input floating-label dirty" ng-model="loanInObj.segmentNumber"/>
+										<label class="long-text-overflow">Segment No</label>
+									</div>
+								</div>
+							</div>
+						</div> 
+					</div>
+					<div class="row margin-top8">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="form-group">
+										<input type="text" autocomplete="off"  class="text-input floating-label dirty" ng-model="loanInObj.batchNo"/>
+										<label class="long-text-overflow">Batch No</label>
+									</div>
+								</div>
+							</div>
+						</div> 
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="form-group">
+										<!-- <select class="text-input floating-label dirty " ng-model="" required >
+												 <option>-</option>
+								 				<option ng-repeat="info in bloodBagTypeList" ng-value="{{info.bloodBagTypeId}}" value="{{info.bloodBagTypeId}}"> {{info.bloodBagTypeDesc}}</option>
+											  </select> --> 
+											  <select ng-model="detailsObj.bloodBagTypeObj" class="text-input floating-label"
+													ng-options="info2 as info2.bloodBagTypeDesc for info2 in bloodBagTypeList track by info2.bloodBagTypeId"
+													class="form-control" 
+													ng-required="true">
+											  </select>
+										<label for="code">Blood Bag Type</label>
+									</div>
+								</div>
+							</div>
+						</div> 
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="form-group">
+									
+									<select ng-model="detailsObj.bloodBagCapacityObj" class="text-input floating-label"
+										ng-options="info1 as info1.bloodBagCapacityDesc for info1 in bloodBagCapacityMasterList track by info1.bloodBagCapacityId"
+										class="form-control" 
+										ng-required="true">
+									</select>
+									<label for="description" class="LISDynamicLabel">Bag Capacity (ml)</label>
+									</div>
+								</div>
+							</div>
+						</div> 
+						<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set2 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10" style=" margin-left: 40px; margin-top: -19px;">
+									<div class="form-group">
+										<input type="checkbox" ng-model="loanInObj.tTDCheck" ng-true-value="true"
+											ng-false-value="false" ng-checked="loanInObj.tTDCheck == true" /> <label
+											for="code">TTD Check</label>
+									</div>
+								</div>
+							</div>
+						</div> 
+						
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-top8  padding-left-right-10">
+							<button class="padding-left-right-10 btn btn-primary btn-save-box-shadow text-width-auto" ng-click="addBloodBagList();" style="margin-left: 51px;">Add</button>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="margin-top4">
+					<!-- <legend class="main-heading-div">List Blood Bags</legend> -->
+					<div class="row padding-top4">
+						<div class="table-container ">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width2 text-center">
+												<input type="checkbox"/>
+											</th>
+											<th class="width8"> Blood Bank Name </th>
+											<th class="width8">Short Name(Sales)</th>
+											<th class="width6"> Blood Bag No </th>
+											<!-- <th class="width8"> Blood Unit </th> -->
+											<th class="width8"> Blood Bag Expiry </th>
+											<th class="width6"> Sagment No</th>
+											<th class="width8"> Batch No </th>
+											<th class="width8">Blood Group</th>
+											<th class="width8">Bag Capacity </th>
+											<th class="width8">Blood Bag Type </th>
+											<th class="width6">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class=" fix-height-scroll510"> <!-- table-container-body fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="info6 in loanInList">
+											<td class="width2 text-center">
+												<input type="checkbox" ng-model="info6.isSelected" ng-true-value="true" ng-false-value="false" ng-click="changeStatus($index,info6.isSelected);">
+											</td>
+											<td class="width8">{{info6.bloodBankDesc}}</td>
+											<td class="width8">{{info6.shortName}} </td>
+											<td class="width6">{{info6.bloodBagNo}} </td>
+											<!-- <td class="width8">{{info6.bloodUnit}} </td> -->
+											<td class="width8">{{info6.expiryDate}} </td>
+											<td class="width6">{{info6.segmentNumber}} </td>
+											<td class="width8">{{info6.batchNo}}</td>
+											<td class="width8">{{info6.bloodGroupDesc}} </td>
+											<td class="width8">{{info6.bloodBagCapacityDesc}}</td>
+											<td class="width8">{{info6.bloodBagTypeDesc}}</td>
+											<td class="width6">
+												<a ng-click="removeLoanInDetails($index)">
+													<i class="fa fa-times" aria-hidden="true"></i>
+												</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<!-- end border div -->
+		</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-right20">
+				<div class="col-lg-10 col-md-8 col-sm-8 padding-left-right-set4"></div>
+				<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 text-width-auto pull-right">
+					<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" ng-click="saveLoanInDetails();">
+				</div>
+				<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set1 text-width-auto pull-right">
+					<a href="#/loanInBloodBank">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+/* 	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55; */
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Add New Loan In");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="addNewLoanInBloodBank"]').parents("li").addClass("active");
+});
+ $(document).on('click','.heading-div', function(){
+	 //alert();
+	$(this).next(".serachedPatientList").toggle();
+});
+
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

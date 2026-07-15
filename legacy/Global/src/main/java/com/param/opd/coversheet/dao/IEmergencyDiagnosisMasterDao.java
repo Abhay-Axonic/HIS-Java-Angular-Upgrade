@@ -1,0 +1,28 @@
+package com.param.opd.coversheet.dao;
+
+import com.param.global.common.Response;
+import com.param.opd.coversheet.dto.EmergencyDiagnosisMasterDto;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+public interface IEmergencyDiagnosisMasterDao {
+
+	public Response saveEmergencyDiagnosisMaster(EmergencyDiagnosisMasterDto dto)throws ApplicationException;
+
+	public Response getListOfEmergencyDiagnosisMaster(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	public Response updateEmergencyDiagnosisMasterStatus(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	public Response getEmergencyDiagnosisMasterById(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	public Response updateEmergencyDiagnosisMaster(EmergencyDiagnosisMasterDto dto)throws ApplicationException;
+
+	public Response getEmergencyDiagnosisMasterCount(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	public Response checkEmergencyDiagnosisMasterAvailable(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	public Response getActiveEmergencyDiagnosis(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto)throws ApplicationException;
+
+	public Response getDataForDoorToNiddle(EmergencyDiagnosisMasterDto emergencyDiagnosisMasterDto);
+
+}

@@ -1,0 +1,22 @@
+pwd
+ls -la
+echo ÏNSIDE
+rm -rf ~/.m2/repository/xml-apis/
+mv -f ./his-maven-jars/*  ~/.m2/repository
+echo "his-maven-jars contents:"
+ls -la ./his-maven-jars || true
+cd ~/.m2/repository
+ls -la
+
+
+
+echo "after mv, check target artifact(s):"
+ls -la ~/.m2/repository/xml-apis || true
+find ~/.m2/repository/xml-apis -type f -maxdepth 4 -exec ls -l {} \; -exec stat -c '%n %s %y' {} \; -exec sha1sum {} \;
+
+# fail fast if any jar is zero bytes
+if find ~/.m2/repository -name '*.jar' -size 0 | grep -q .; then
+  echo "ERROR: zero-byte jar detected in ~/.m2/repository"; 
+  find ~/.m2/repository -name '*.jar' -size 0 -ls;
+  exit 2;
+fi

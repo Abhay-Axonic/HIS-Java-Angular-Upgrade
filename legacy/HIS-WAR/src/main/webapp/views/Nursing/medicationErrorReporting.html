@@ -1,0 +1,246 @@
+<style>
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+      border-radius: 10px;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    .container {
+      padding: 2px 16px;
+    }
+    .card-body{
+    margin-left:6px;
+    }
+    .labelName{
+    color:#212325;
+    }
+</style>
+
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <div class="padding-top4" ng-include="'./views/common/nutritional-patient-search.html'" style="margin-top:-5px"></div>
+        <div class="padding-top8 padding-left-right-set4" ng-include="'./views/common/nabh-patient-demography-info.html'"></div>
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+                <div class="card" style="margin-left: 5px;margin-right: 5px">
+                    <form name="medicationErrorReporting" novalidate ng-submit="submitForm()">
+                            <div class="row">
+                            <div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 padding-top10" >
+                                <label class="labelName"><b>Details of report:(optional)</b></label><br>
+                                <label class="labelName">Name:</label><br>
+                                <label class="labelName">Designation:</label>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+                                <div class="row input-container">
+                                    <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-10 col-sm-10 col-md-10">
+                                        <div class="">
+                                            <input type="text" autocomplete="off"  class="text-input floating-label dirty" name="datepickerDOB" id="datepickerDOB"
+                                            uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                                            placeholder="DD/MM/YYYY" ng-model="datepickerDOB"
+                                            model-view-value="true" is-open="datepickerDOBOpen.opened"
+                                            datepicker-options="dateOptions" show-button-bar="false"
+                                            ng-click="openDatePickerDOB()" ng-blur="calculateAge()" ng-disabled="fieldDisabled" required>
+                                            <label for="description" class=""><b>Date of Event:</b></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row input-container" style="margin-top:10px">
+                                    <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                        <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-10 col-sm-10 col-md-10">
+                                        <div class="clockpicker">
+                                            <input type="text" autocomplete="off" name="timeEvent"  placeholder="HH:MM" readonly ng-model="formData.timeEvent" class="text-input floating-label" ng-init="initClockPicker()">
+                                            <label for="description" class=""><b>Time of Event:</b></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-3 col-md-3 ">
+                                <label class="labelName"><b>Location of event:</b></label><br>
+                                <label class="labelName" style="padding: 5px">Ward</label> <input type="radio" name="patient-list-radio1" ng-click="ward($index)">
+                                <label class="labelName" style="padding: 5px">OPD</label> <input type="radio" name="patient-list-radio1" ng-click="opd($index)">
+                                <label class="labelName" style="padding: 5px">Pharmacy</label> <input type="radio" name="patient-list-radio1" ng-click="pharmacy($index)">
+                                <label class="labelName" style="padding: 5px">Others</label> <input type="radio" name="patient-list-radio1" ng-click="other($index)">
+                            </div>
+
+                            <div class="col-lg-4 col-sm-4 col-md-4 ">
+                                <label class="labelName"><b>Type of error:</b></label><br>
+                                <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Prescribing</label>
+                                <input type="checkbox" name="patient-list-radio2" ng-click="dispensing($index)"><label class="labelName" style="padding: 5px">Dispensing</label>
+                                <input type="checkbox" name="patient-list-radio2" ng-click="administration($index)"><label class="labelName" style="padding: 5px">Administration</label>
+                                <input type="checkbox" name="patient-list-radio2" ng-click="otherSpecify($index)"><label class="labelName" style="padding: 5px">Others (specify)</label>
+                            </div>
+                            <div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4">
+                                <label class="labelName"><b>Patient details:</b></label><br>
+                                <label class="labelName">Age(in years):</label>
+                                <label class="labelName" style="margin-left:100px">Gender:</label><br>
+                                <label class="labelName">Diagnosis:</label><br>
+                            </div>
+                            </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12 col-md-12 padding-left-right-set4 padding-top10" >
+                            <label class="labelName"><b>Description of the event: (how did the event occur and how was it detected?)</b></label><br>
+                            <textarea class="form-control" name="w3review" rows="4" cols="50"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                    <div class="col-lg-10 col-sm-10 col-md-10 padding-left-right-set4 padding-top10" >
+                        <label class="labelName"><b>Details of medicines involved in the event:</b></label><br>
+                        <div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll60">
+                            <table id="main-table" class="main-table width100 ">
+                                <thead>
+                                <tr>
+                                    <th class="width1 text-center">S.No</th>
+                                    <th class="width5">Dosage Form</th>
+                                    <th  class="width5">Generic Name</th>
+                                    <th class="width5">Strength Frequency</th>
+                                    <th  class="width5">Frequency</th>
+                                    <th  class="width5">Action taken</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr >
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <div class="">
+                                            <button ng-click="addImageDetails();" value="+" class="btn btn-info" style="width: 36px">
+                                                <b>+</b>
+                                            </button>
+                                            <button class="btn btn-info" style="width:36px" value="-" ng-click="removeImageDetails($index);" ng-if="$index!=0"><b>-</b></button>
+                                            &nbsp;&nbsp;
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 padding-top10" >
+                        <label class="labelName"><b>Did the error reach the patient?</b></label><br>
+                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Yes</label>
+                        <input type="checkbox" name="patient-list-radio2" ng-click="dispensing($index)"><label class="labelName" style="padding: 5px">No</label>
+                    </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-md-6 padding-left-right-set4 padding-top10" >
+                            <div class="card">
+                                <label class="labelName"><b>Possible causes & contributing factors:</b></label><br>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6 col-md-6">
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Lack of knowledge/ experience</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Illegible prescription</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Look alike/sound alike medication</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Wrong labeling/instruction</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Use of abbreviations</label><br>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6 col-md-6">
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Unavailable patient Information</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Peak hour</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Miscommunication</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Failure to adhere to work procedure</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Others</label><br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-md-6 padding-left-right-set4 padding-top10">
+                            <div class="card">
+                                <label class="labelName"><b>Outcome of the event:</b></label><br>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6 col-md-6">
+                                        <label class="labelName"><b>No error</b></label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">A.Events have potential to cause error</label><br>
+                                        <label class="labelName"><b>Error, harm</b></label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">B.Error did not reach patient</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">C.No harm</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">D.No harm but requires monitoring</label><br>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6 col-md-6">
+                                        <label class="labelName"><b>Error, harm</b></label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">E.Temporary harm requiring treatment</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">F.Temporary harm requiring hospitalization</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">G.Permanent harm</label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">H.Near death event</label><br>
+                                        <label class="labelName"><b>Error, harm</b></label><br>
+                                        <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">I.Death</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="row">
+                                <div class="col-lg-10 col-sm-10 col-md-10 padding-left-right-set4 padding-top10" >
+                                    <div class="row">
+                                        <label class="labelName"><b>Intervention done:</b></label><br>
+                                        <div class="col-lg-4 col-sm-4 col-md-4">
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Administered antidote</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Education/training provided</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Informed staff who made error</label><br>
+                                        </div>
+                                        <div class="col-lg-4 col-sm-4 col-md-4">
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Changed to correct drug/dose/frequency</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Communication process improved</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Policy/procedure changed / instituted</label><br>
+                                        </div>
+                                        <div class="col-lg-4 col-sm-4 col-md-4">
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">No action needed</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Others (specify)</label><br>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 10px">
+
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveRack()">
+                                    Disable</a>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <button type="submit" href="" ng-disabled="nutritionalAssessment.$invalid" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" >
+                                    <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveRack()">
+                                    Draft</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

@@ -1,0 +1,812 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style>
+/*********   SDGlobal logo body start **************/
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	/* background-image: url("resources/assets/images/logo/small size login.jpg"); */
+	/* CliniVantage LOGO*/
+	/* background-image: url("resources/assets/images/logo/login_screen.jpg"); */
+	/* SDGlobal LOGO*/
+	/* background-image: url("resources/assets/images/logo/medCareLogin.png"); */
+	/* background-repeat: no-repeat; */
+	/* background-size: 1380px 679px; */
+}
+/*********   SDGlobal logo body end *************/
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	/* background-image: url("resources/assets/images/logo/small size login.jpg"); */
+	/* CliniVantage LOGO*/
+	background: #fefefe;
+	/* Acadis LOGO*/
+	/* background: url("resources/assets/images/logo/Client/ACADIS_login_screen.jpg")no-repeat center center fixed;  */
+	/* UCC LOGO*/
+	/* background: url("resources/assets/images/logo/Client/UCC_login_screen1.jpg") no-repeat center center fixed; */
+	/*MP SHAH LOGO*/
+	/*background: url("resources/assets/images/logo/Client/MpShah_login_screen.jpg") no-repeat center center fixed; */
+	/* Medwin LOGO*/
+	/* background: url("resources/assets/images/logo/Medwin login screen.jpg")no-repeat center center fixed; */
+	background-size: 85%; /* contain */
+	background-position: top;
+	background-repeat: no-repeat;
+}
+
+.main-heading {
+	text-align: center;
+	/* padding: 34px; */
+	font-size: 32px;
+	color: #5ab7c8;
+	font-family: Eras Demi ITC;
+	margin-top: 98px;
+	margin-bottom: 13px;
+}
+
+.sub-heading {
+	text-align: center;
+	color: gray;
+	padding: 54px;
+	text-align: center;
+	color: gray;
+}
+
+.sub-heading span {
+	
+}
+
+.margin-top {
+	/* margin-top: 10px */
+	
+}
+
+.width-100 {
+	width: 100%
+}
+
+.padding-top {
+	padding-top: 35px;
+	position: fixed;
+}
+
+.margin {
+	margin-right: 30px;
+	margin-left: 30px;
+	margin-top: 10px;
+	width: -webkit-fill-available;
+}
+
+.box-contain {
+	background-color: #e6e7e9;
+	/* color: white; */
+	box-shadow: 0px 1px 10px;
+	padding: 3px;
+}
+
+.inner-addon {
+	position: relative;
+}
+
+/* style icon */
+.inner-addon .fa {
+	position: absolute;
+	padding: 6px;
+	pointer-events: none;
+	/* padding-right: 10px; */
+	margin: 3px;
+	color: grey;
+}
+
+/* align icon */
+.left-addon .fa {
+	left: 0px;
+}
+
+.right-addon .fa {
+	right: 0px;
+	border-left: 1px solid #a9a6a6;
+}
+
+/* add padding  */
+.left-addon input {
+	padding-left: 30px;
+}
+
+.right-addon input {
+	padding: 3px 15px 3px 15px !important;
+	height: 40px !important;
+	border-radius: 13px !important;
+}
+
+.error {
+	font-size: 13px !important;
+	color: red;
+}
+
+.ddp-unit-set {
+	height: 30px;
+	border-radius: 4px;
+}
+
+.logintopmargin {
+	margin-top: 103px;
+}
+
+.preloader {
+	/* background: url("resources/assets/images/logo/loader1.gif") no-repeat center center; */
+	background: url("resources/assets/images/logo/clinivantage_loader.gif")
+		no-repeat center center;
+	position: absolute;
+	top: -20px;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1024;
+	cursor: wait;
+}
+
+@media ( min-width : 768px) and (max-width: 1024px) {
+	.main-heading {
+		font-size: 18px;
+		margin-top: 3px;
+		/* border: 1px solid red; */
+		margin-bottom: 0px;
+	}
+	.margin {
+		margin-top: 5px;
+	}
+	.box-contain {
+		padding: 0px;
+	}
+	.form-control {
+		height: 30px;
+	}
+	.footerIcon {
+		right: 156px !important;
+	}
+}
+
+.dashboard-footer {
+	background-color: transparent;
+}
+
+.footerIcon {
+	z-index: 10000000;
+	position: fixed;
+	right: 10px; /* 178px */
+	bottom: 6px;
+	width: 200px;
+	height: 90px;
+	padding: 12px; /* border-radius: 100%; */
+	box-sizing: border-box;
+}
+
+.footerIconCopy {
+	z-index: 10000000;
+	position: fixed;
+	bottom: -30px;
+	height: 90px;
+	padding: 12px; /* border-radius: 100%; */
+	box-sizing: border-box;
+	width: 28%;
+	font-size: 12px;
+}
+
+@media ( min-width : 800px) and (max-width: 1280px) {
+	.main-heading {
+		font-size: 26px;
+		margin-top: 10px;
+	}
+}
+
+
+
+#wrapper {
+	padding-right: 60px;
+	padding-left: 60px;
+	width: auto;
+	margin: 0px 35px 0px 35px !important;
+}
+
+.m-t-15 {
+	margin-top: 15px;
+}
+
+.powerdby {
+	font-size: 13px;
+	padding: 0px !important;
+	margin: 0px 0px 6px 0px !important;
+	color: #393939;
+}
+
+.powerdclini {
+	font-size: 15px;
+	padding: 0px !important;
+	margin: 0px !important;
+	font-weight: 700;
+	color: #393939;
+}
+
+.MRRbg {
+	background: #064797;
+	height: 645px;
+	margin: 45px 0px 0px 0px !important;
+	border-radius: 70px;
+}
+
+.InnerMRRbg {
+	background: #ebedec;
+	margin: 0px 10px 10px 10px;
+	height: 235px;
+	border-radius: 25px;
+	box-shadow: 0 1px #fff inset, 0 0 8px #1f1f1f;
+}
+
+.m-t-50 label {
+	text-transform: uppercase;
+}
+
+.form-adjust {
+	margin-top: 35px;
+}
+
+.form-adjust .form-group {
+	margin-bottom: 20px !important;
+}
+
+.new-forgot {
+	text-decoration: none;
+	color: white;
+	cursor: pointer;
+	text-transform: uppercase;
+	font-size: 15px;
+	font-weight: 100 !important;
+}
+
+.m-t-50 {
+	margin-top: 35px;
+	padding: 0px 10px 0px 10px;
+}
+
+.m-t-50 .form-group {
+	margin-bottom: 30px;
+}
+
+.new-remember {
+	color: white !important;
+	cursor: pointer !important;
+	text-transform: uppercase;
+	font-size: 15px;
+	font-weight: 100 !important;
+}
+
+.font-size-a {
+	font-size: 15px;
+	color: #fff !important;
+	text-decoration: none !important;
+}
+
+a.font-size-a:hover {
+	color: #dddddd !important;
+}
+
+label.font-size-a:hover {
+	color: #ddd !important;
+}
+
+.form-animate-checkbox .checkbox:before {
+	border: 2px solid white !important;
+	margin-bottom: -1px !important;
+	margin-top: -1px !important;
+	margin-left: -1px !important;
+	background: #064797 !important;
+}
+
+.hospital-name p {
+	text-align: center;
+	font-size: 20px;
+	text-transform: uppercase;
+	color: #fff;
+	margin: 43px 10px -20px 10px !important;
+}
+
+.hospital-logo {
+	text-align: center;
+	height: 145px;
+	margin: 65px 20px 20px 6px;
+}
+
+.hospital-logo img {
+	text-align: center;
+	font-size: 20px;
+	text-transform: uppercase;
+	color: #fff;
+	margin: 0px 0px 0px 0px !important;
+	width: 100%;
+	height: 100%;
+	background: #fefefe;
+	padding: 15px;
+}
+
+.select-box {
+	padding: 3px 15px 3px 15px !important;
+	height: 40px !important;
+	border-radius: 13px !important;
+}
+
+.ma-le-35 {
+	margin-left: 112px;
+}
+
+.m-r-65 {
+	margin-right: 65px;
+}
+
+.m-l-65 {
+	margin-left: 65px;
+}
+/************Login Button**************/
+.button-anon-pen {
+	width: 150px;
+	background-image: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
+	text-align: center;
+	margin: 0 auto;
+	position: relative;
+	color: #fff;
+	text-decoration: none;
+	display: block;
+	font-weight: normal;
+	border-radius: 6px;
+	overflow: hidden;
+	padding: 0px;
+	border: none;
+}
+
+.button-anon-pen:hover {
+	-webkit-animation: play 1.6s ease-in infinite;
+	color: white;
+	text-decoration: none;
+}
+
+.button-anon-pen span {
+	padding: 8px 0;
+	font-size: 15px;
+	display: block;
+	margin: 4px; background : #064797; border-radius : 5px;
+	background-image: linear-gradient(115deg, #031b39, #002d65, #064797, #023471, #033169);
+	} button .button-anon-pen {
+	border: none;
+	background: #064797;
+	border-radius: 5px;
+}
+
+@-webkit-keyframes play { 
+0% {background-position: 0px;
+}
+20% {background-position: -110px;    
+}
+35% {background-position: -180px;    
+}
+50% {background-position: -210px;   
+}
+80% {background-position: -350px;    
+}
+100% {background-position: -390px;    
+}
+}
+
+/************Login Button**************/
+@media (min-width: 1920px) {
+	.MRRbg {
+		height: 855px;
+	}
+}
+
+
+</style>
+</head>
+<body>
+	<div class="row">
+		<div id="logintopmargin">
+			<div class="MRRbg">
+				<div class="col-lg-12">
+					<div class="hospital-logo">
+						<img ng-src="resources/assets/images/logo/hospital_logo.png" class=""
+							alt="Hospital logo" style="">
+					</div>
+				</div>
+				<div class="col-lg-12">
+					<div class="hospital-name">
+						<p>HOSPITAL MANAGEMENT SYSTEM</p>
+					</div>
+				</div>
+				<div class="col-lg-10 col-lg-offset-1 ma-le-35">
+					<div class="InnerMRRbg">
+						<form id="loginform" class="m-t-50"
+							ng-submit="loginform.$valid && login()" role="form"
+							name="loginform">
+							<div class="row">
+								<div class=" m-t-50">
+									<div class="col-lg-6">
+										<div class="form-group m-r-65">
+											<label for="inputdefault">User Name</label>
+											<div class="inner-addon hideIcon right-addon">
+												<input class="form-control" id="userName" name="userName"
+													type="text" autocomplete="off" ng-maxlength="50"
+													placeholder="User Name" ng-model="userName"
+													ng-blur="getUnitByUserCredentials()"
+													style="border: 2px solid #064797;" required> <span
+													ng-show="submitted && loginform.userName.$error.required"
+													class="alert-danger">User name is required.</span><span
+													ng-show="submitted && loginform.userName.$error.maxlength"
+													class="alert-danger">User name is too long.</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="form-group m-l-65">
+											<label for="inputdefault">Password</label>
+											<div class="inner-addon hideIcon right-addon">
+												<input type="password" name="password"
+													placeholder="Password" id="password" ng-minlength="3"
+													ng-maxlength="20" class="form-control" ng-model="password"
+													ng-blur="getUnitByUserCredentials()" required
+													style="border: 2px solid #9341af;" /> <span
+													ng-show="submitted && loginform.password.$error.required"
+													class="alert-danger">Password is Required.</span><span
+													ng-show="submitted && loginform.password.$error.minlength"
+													class="alert-danger">Password is too short.</span><span
+													ng-show="submitted && loginform.password.$error.maxlength"
+													class="alert-danger">Password is too long.</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="form-group m-r-65">
+											<label for="inputdefault">Organization</label>
+											<div class="inner-addon right-addon">
+												<select name="organizationId" id="organizationId"
+													ng-disabled="disableOrgList" convert-to-number
+													class="select-box" ng-model="organizationId"
+													ng-change="getUnitByUserCredentials()" required
+													style="border: 2px solid #2a8037;">
+													<option value="">Select Organization</option>
+													<option ng-repeat="info in organizationList"
+														value="{{info.organizationId}}">{{info.organizationName}}</option>
+													<!-- <option ng-repeat="info in organizationList" value="{{info.organizationId}}">{{info.organizationName}}</option>  ng-change="getUnit(organizationId);" -->
+												</select> <span
+													ng-show="submitted && loginform.organizationId.$error.required"
+													class="alert-danger">Organization is Required.</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="form-group m-l-65">
+											<label for="inputdefault">Unit</label>
+											<div class="inner-addon right-addon">
+												<select name="unitId" id="unitId" convert-to-number
+													ng-model="unitId" class="select-box" required
+													style="border: 2px solid #f4981d;">
+													<option value="">Select Unit</option>
+													<!-- <option value="1">Pune</option> -->
+													<option ng-repeat="info in unitList"
+														value="{{info.unitId}}">{{info.unitName}}</option>
+												</select> <span
+													ng-show="submitted && loginform.unitId.$error.required"
+													class="alert-danger">Unit is Required.</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-12">
+									<div
+										style="text-align: center; margin: -5px 0px 0px 0px !important;">
+										<button type="submit" ng-click="submitted=true"
+											class="button-anon-pen">
+											<span>LOGIN</span>
+										</button>
+										<!-- <input type="submit" ng-click="submitted=true"
+											class="btn btn-primary btn-md" value="Login" /> -->
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="col-lg-12">
+					<div class="row">
+						<div class="col-lg-3 col-lg-offset-3">
+							<div class="uk-input-group checkbox_align margin">
+								<span class="form-animate-checkbox new-remember"><input
+									type="checkbox" id="Remember_me" class="checkbox"> <label
+									for="Remember_me" class="font-size-a">Remember me</label></span>
+							</div>
+						</div>
+						<div class="col-lg-3">
+							<div class="uk-input-group checkbox_align margin">
+								<span class="text-right cursor-pointer pull-right new-forgot">
+									<a class="font-size-a" ng-click="showForgetPasswordModal();">Forgot
+										Password</a>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div
+			class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center m-t-15">
+			<h1 class="text-center powerdby">POWERED BY</h1>
+			<h1 class="text-center powerdclini">CLINIVANTAGE HEALTHCARE
+				TECHNOLOGIES</h1> <b style="font-size:12px;float: right;margin-right: 113px;margin-top: -20px;">Ver:HIS-2.14</b>   
+		</div>
+	</div>
+
+
+
+
+	<!-- ****** Forgot Password modal -1 start ******** -->
+	<div id="forgotPasswordModal"
+		class="modal fade ng-scope in common-small-popup" role="dialog"
+		data-backdrop="static"
+		style="background-color: transparent !important;">
+		<form role="form" name="forgetPassworedForm" novalidate>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header padding-zero" style="padding: 0px;">
+						<div class="modal-title patient-details-row">
+							Forgot Password
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+					</div>
+					<div class="modal-body" style="padding: 10px 0px !important">
+						<div class="row padding-left-right-set4 ">
+							<div>
+								<!-- class="row email-id-block" -->
+								<div class="row ">
+									<div class="margin form-group" show-errors>
+										<label for="inputdefault">Email ID</label>
+										<div class="inner-addon right-addon">
+											<i class="fa fa-envelope" aria-hidden="true"></i> <input
+												class="form-control" type="text" autocomplete="off"
+												ng-maxlength="50" name="emailId" ng-model="emailId"
+												placeholder="Enter Email ID" ng-blur="getUnitName();"
+												required>
+											<!-- <span ng-if="forgetPassworedForm.emailId.$error.required" class="alert-danger">Email is Required.</span> -->
+											<p class="help-block"
+												ng-if="forgetPassworedForm.emailId.$error.required">Email
+												is required</p>
+										</div>
+									</div>
+									<!-- <div class="margin form-group" show-errors>
+								<label for="inputdefault">Unit Name</label>
+								<div class="inner-addon right-addon" >
+		      						<select class="form-control"  ng-model="unitId" ng-change="getUserObj(unitId);" name="unitId" required>
+		      						<option>-</option>
+		      					 	<option  ng-repeat="info in unitList" value="{{info.unitId}}">{{info.unitName}}</option>
+		      						</select>
+		      						<span ng-if="forgetPassworedForm.unitId.$error.required" class="alert-danger">Please select Unit Name.</span>
+		      						<p class="help-block" ng-if="forgetPassworedForm.unitId.$error.required">Unit Name is required</p>
+								</div>
+							</div> -->
+								</div>
+
+
+								<div class="row ">
+									<div
+										class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10 margin-top10">
+										<div class="row input-container">
+											<div class="col-lg-12 col-sm-12 col-md-12 text-center">
+												<a id="genertaeOTPLink" ng-click="getOTP()"
+													class="cursor-pointer">Generate OTP</a>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- ******* Forgot Password -1 modal end ******** -->
+
+	<!-- ******* Forgot Password modal -2  start ******** -->
+	<div id="forgotPasswordModal_enterOTP"
+		class="modal fade ng-scope in common-small-popup" role="dialog"
+		data-backdrop="static"
+		style="background-color: transparent !important;">
+		<form role="form" name="forgot_password_confirmPwd_form1" novalidate>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header padding-zero" style="padding: 0px;">
+						<div class="modal-title patient-details-row">
+							Forgot Password
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+					</div>
+					<div class="modal-body" style="padding: 10px 0px !important">
+						<div class="row padding-left-right-set4 ">
+
+							<div class="row">
+								<!-- enter-OTP-block -->
+								<div class="row ">
+									<div class="margin">
+										<label for="inputdefault">Enter OTP</label>
+										<div class="form-group" show-errors>
+											<input class="form-control" type="text" autocomplete="off"
+												ng-maxlength="4" name="otp" ng-model="otp"
+												placeholder="Enter OTP" required>
+											<p class="help-block"
+												ng-if="forgot_password_confirmPwd_form1.otp.$error.required">OTP
+												is required</p>
+										</div>
+									</div>
+
+									<div class="row ">
+										<div class="col-lg-5 col-md-5 col-sm-5"></div>
+										<div
+											class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<input type="button" value="Submit"
+												ng-click="OTPVerification()" class="btn btn-primary btn-md"
+												style="width: 100%;" id="submit_otp_btnID">
+										</div>
+										<div class="col-lg-5 col-md-5 col-sm-5 "></div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- ******* Forgot Password modal -2  end ******** -->
+
+	<!-- ******* Forgot Password modal -3  start ******** -->
+<!-- 	<div id="forgotPasswordModal_newPassword"
+		class="modal fade ng-scope in common-small-popup"
+		data-backdrop="static" role="dialog"
+		style="background-color: transparent !important;">
+		<form role="form name=" forgot_password_confirmPwd_form2" novalidate>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header padding-zero" style="padding: 0px;">
+						<div class="modal-title patient-details-row">
+							Forgot Password
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+					</div>
+					<div class="modal-body" style="padding: 10px 0px !important">
+						<div class="row padding-left-right-set4 ">
+
+							<div class="row">
+								new-password-block
+								<div class="row ">
+									<div class="margin form-group" show-errors>
+										<label for="inputdefault">New Password</label>
+										<div class="inner-addon right-addon">
+											<i class="fa fa-mobile" aria-hidden="true"></i> <input
+												class="form-control" type="password" ng-minlength="3"
+												ng-maxlength="20" name="password3" ng-model="password3"
+												placeholder="Enter New Password" required>
+											<p class="help-block"
+												ng-if="forgot_password_confirmPwd_form2.password3.$error.required">New
+												Password is required</p>
+										</div>
+									</div>
+								</div>
+
+								<div class="row ">
+									<div class="margin form-group" show-errors>
+										<label for="inputdefault">Confirm Password</label>
+										<div class="inner-addon right-addon">
+											<i class="fa fa-mobile" aria-hidden="true"></i> <input
+												class="form-control" type="password" ng-minlength="3"
+												ng-maxlength="20" name="confirmPassword1"
+												ng-model="confirmPassword1"
+												placeholder="Re-enter New Password"
+												match-password="password3" required>
+											<div ng-if="forgot_password_confirmPwd_form2.confirmPassword1.$error.required && !forgot_password_confirmPwd_form2.confirmPassword1.$error.matchPassword">
+											<span
+												ng-show="forgot_password_confirmPwd_form2.confirmPassword1.$error.required && !forgot_password_confirmPwd_form2.confirmPassword1.$error.matchPassword"
+												class="alert-danger">New Password is Required</span>
+											 <p class="help-block" ng-if="forgot_password_confirmPwd_form2.confirmPassword1.$error.required">New Password is required</p>
+											<span
+												ng-show="forgot_password_confirmPwd_form2.confirmPassword1.$error.required && !forgot_password_confirmPwd_form2.confirmPassword1.$error.matchPassword"
+												class="alert-danger">Confirm Password didn't match</span>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row ">
+									<div class="col-lg-5 col-md-5 col-sm-5"></div>
+									<div
+										class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										ng-click="submitted=true"
+										<input type="Submit" value="Submit"
+											class="btn btn-primary btn-md" style="width: 100%;"
+											ng-click="forgotPassword()" id="">
+									</div>
+									<div class="col-lg-5 col-md-5 col-sm-5 "></div>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</form>
+	</div> -->
+	<div id="loginContinuePopUp"
+		class="modal fade ng-scope in common-small-popup" role="dialog"
+		data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span> You will be logged out from previous system , do you
+							want to continue ?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+						id="saveBtn" ng-click="continueLogin()">Ok</button>
+					<button type="button" id="cancelBtn" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ******** Forgot Password modal end ********* -->
+	<!-- ******* Forgot Password modal -3  end ******** -->
+	<script>
+		$(document).ready(function() {
+			$("#genertaeOTPLink").click(function() {
+				$(".enter-OTP-block").show();
+				$(".email-id-block").hide();
+			});
+			$("#submit_btnID").click(function() {
+				$(".enter-OTP-block").show();
+				$(".email-id-block").hide();
+			});
+			$("#submit_otp_btnID").click(function() {
+				$(".new-password-block").show();
+				$(".enter-OTP-block").hide();
+			});
+
+		});
+
+		$(".hideIcon input").focus(function() {
+			$(".footerIcon").hide();
+			//return false;
+		});
+
+		$(".hideIcon input").blur(function() {
+			$(".footerIcon").show();
+
+		});
+	</script>
+</body>
+</html>

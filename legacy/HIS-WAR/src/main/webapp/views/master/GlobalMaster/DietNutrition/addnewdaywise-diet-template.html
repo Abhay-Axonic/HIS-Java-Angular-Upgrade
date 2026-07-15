@@ -1,0 +1,375 @@
+<style>
+.th-border-none{
+    border-top: 1px solid transparent !important;
+    border-left: 1px solid transparent !important;
+}
+.editDishicon{
+	    position: unset;
+    top: 0px;
+    right: 0;
+    left: 0;
+    /* width: 0; */
+    height: 0;
+}
+.fa-pencil-square-o{
+	font-size:12px !important;
+}
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+		 <form name="daywiseDietForm" novalidate >
+			<!-- <legend class="heading-div">Day Wise Diet Template</legend> -->
+			<div class="row padding-top10 padding-left-right-set4">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-th" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group" show-errors>
+								<select class="text-input floating-label" name="code"
+								 ng-model="selectedDietTypeId" ng-options="diet.dietTypeId as diet.dietTypeDescription for diet in dietList"
+								 ng-disabled="editTemplate" required>
+								</select> <label for="code">Diet Type</label>
+							<p class="help-block" ng-if="daywiseDietForm.dietTypeMasterId.$error.required">Diet Type is required</p> 
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-3 col-md-4 col-sm-3 padding-left-right-set padding-top10">
+					<div class="row input-container border-set-type">
+					
+						 <div class="" ng-repeat="data in mealMasterPreferenceList">
+						<input type="checkbox" name="FixedAssestRadioB" id="FixedAssestRadioB" class="" value="data.dietPrefId" 
+						ng-model="data.isChecked" ng-change="changedValue(data,$index)" > 
+					
+						<span>{{data.mealPreferenceDesc}}</span>
+						</div>
+						
+					</div>
+				</div>
+				<div class="col-md-3 col-sm-3"></div>
+				
+			
+							
+				<div class="row margin-top10 padding-left-right-set1">
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="#/daywiseDietTemplate" class="btn btn-primary btn-save-box-shadow btn-padding" id="backBtn">Back</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-1  float_right">
+				<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveMealMaster()"
+								ng-if="saveBtnFlag"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			</div>
+		</div>
+				
+				
+				
+			</div>
+			</form>
+		</fieldset>
+		<modal visible="showModal"></modal>
+		<div class="row padding-left-right-set4 padding-top10">
+			<div class="col-md-12  col-sm-12">
+				<table class="table table-bordered" id="AddDish">
+					<tr>
+						<th class="th-border-none"></th>
+						<th scope="col" class="text-uppercase text-center width13 vertical-middle">
+						Monday
+						</th>
+						<th scope="col" class="text-uppercase text-center width13 vertical-middle">
+						Tuesday
+						</th>
+						<th scope="col" class="text-uppercase text-center width13 vertical-middle">
+						Wednesday
+						</th>
+						<th scope="col" class="text-uppercase text-center width13 vertical-middle">
+						Thursday
+						</th>
+						<th scope="col" class="text-uppercase text-center width13 vertical-middle">
+						Friday
+						</th>
+						<th scope="col" class="text-uppercase text-center width13 vertical-middle">
+						Saturday
+						</th>
+						<th scope="col" class="text-uppercase text-center width13 vertical-middle">
+						Sunday
+						</th>
+					</tr>
+					<tr ng-repeat="data in mealMasterList">
+						<th scope="row" class="text-uppercase text-center">{{data.mealName}}</th>
+						<td class="text-center padding-zero" > 
+						<div ng-repeat="meal in data.mealsList[0].dishList">
+							<!-- Dish: --><span>{{meal.dishDescription}}</span>
+							<!-- Quantity: --><span>{{meal.quantity}}</span>
+						</div>
+						<div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" 
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[0].dishList,0,$index)">
+								</i>
+								</div>
+							</div>
+						
+						</td>
+						<td class="text-center padding-zero"> 
+						<div  ng-repeat="meal in data.mealsList[1].dishList">
+							<span>{{meal.dishDescription}}</span>
+							<span>{{meal.quantity}}</span>
+							</div>
+						<div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" 
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[1].dishList,1,$index)">
+								</i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero"> 
+							<div  ng-repeat="meal in data.mealsList[2].dishList">
+							<span>{{meal.dishDescription}}</span>
+							<span>{{meal.quantity}}</span>
+							</div>
+						 <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" 
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[2].dishList,2,$index)">
+								</i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero">
+						<div  ng-repeat="meal in data.mealsList[3].dishList">
+							<span>{{meal.dishDescription}}</span>
+							<span>{{meal.quantity}}</span>
+							</div>
+						  <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" 
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[3].dishList,3,$index)"></i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero">
+						<div  ng-repeat="meal in data.mealsList[4].dishList">
+							<span>{{meal.dishDescription}}</span>
+							<span>{{meal.quantity}}</span>
+							</div>
+						 <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" 
+								data-toggle="modal" data-target="#editDietTemplate"  ng-click="selectMeal(data.mealsList[4].dishList,4,$index)"></i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero">
+						<div  ng-repeat="meal in data.mealsList[5].dishList">
+							<span>{{meal.dishDescription}}</span>
+							<span>{{meal.quantity}}</span>
+							</div> 
+						   <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" 
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[5].dishList,5,$index)"></i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero" >
+								<div  ng-repeat="meal in data.mealsList[6].dishList">
+							<span>{{meal.dishDescription}}</span>
+							<span>{{meal.quantity}}</span>
+							</div> 
+						   <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" 
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[6].dishList,6,$index)"></i>
+								</div>
+							</div>
+						</td> 
+					</tr>
+				
+					<tfoot>
+						<tr class="table-th-bg ">
+							<th class="text-uppercase text-center">Total Nutrition</th>
+							<td>
+							<div ng-repeat="info in dayWiseNutritionalList[0].nutritionList">
+							{{info.name}}
+							{{info.value}}
+							{{info.uomName}}
+							</div>
+							</td>
+							<td>
+							<div ng-repeat="info in dayWiseNutritionalList[1].nutritionList">
+							{{info.name}}
+							{{info.value}}
+							{{info.uomName}}
+							</div>
+							</td>
+							<td>
+							<div ng-repeat="info in dayWiseNutritionalList[2].nutritionList">
+							{{info.name}}
+							{{info.value}}
+							{{info.uomName}}
+							</div>
+							</td>
+							<td>
+							<div ng-repeat="info in dayWiseNutritionalList[3].nutritionList">
+							{{info.name}}
+							{{info.value}}
+							{{info.uomName}}
+							</div>
+							</td>
+							<td>
+							<div ng-repeat="info in dayWiseNutritionalList[4].nutritionList">
+							{{info.name}}
+							{{info.value}}
+							{{info.uomName}}
+							</div>
+							</td>
+							<td>
+							<div ng-repeat="info in dayWiseNutritionalList[5].nutritionList">
+							{{info.name}}
+							{{info.value}}
+							{{info.uomName}}
+							</div>
+							</td>
+							<td>
+							<div ng-repeat="info in dayWiseNutritionalList[6].nutritionList">
+							{{info.name}}
+							{{info.value}}
+							{{info.uomName}}
+							</div>
+							</td>
+						
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Edit Diet Template Start -->
+<div id="editDietTemplate"
+	class="modal fade ng-scope common-popup-header-content in"
+	role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Edit Diet Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+			
+			
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon float-right">
+					
+                    <a href="" class="btn btn-primary btn-save-box-shadow" id="updateBtn" title="copy" ng-click="copySelectedMeal()"
+                     ng-disabled="!copyFromDay" style="margin-left: 100%;width:262%">
+						Copy</a>                   
+						</div>
+						
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							 <div class="">
+								<select class="text-input floating-label dirty" name="code" ng-model="copyFromDay">
+									<option value=""></option>
+									<option value="monday">MONDAY</option>
+									<option  value="tuesday">TUESDAY</option>
+									<option value="wednesday">WEDNESDAY</option>
+									<option value="thursday">THURSDAY</option>
+									<option value="friday">FRIDAY</option>
+									<option value="saturday">SATURDAY</option>
+									<option value="sunday">SUNDAY</option>
+									
+								</select> 
+								<label for="code">Copy From</label>
+							</div> 
+						</div>
+					</div>
+				</div>
+				</div>
+			
+			
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10" id="">
+						<table class="table">
+							<tbody>
+								<tr>
+									<th class="width15">Dish</th>
+									<th class="width15">Qty</th>
+									<th class="width15">Action</th>
+								</tr>
+					
+								<tr ng-repeat="meal in selectedMeal">
+									<td><select class="border-dropdown" ng-model="meal"
+									 ng-change="onChangeDish(this, $index)" 
+									 ng-options="dish as dish.dishDescription for dish in dishMasterList track by dish.dishId">
+											
+									</select></td>
+									<td><input type="number" placeholder="" ng-model="selectedMeal[$index].quantity"
+										class="table-input-text-width w-100"></td>
+									
+									<td>
+										<input type="button" name="" id="refranceRangeAgeGroup1" value="+" ng-click="add($index)" class="btn btn-info add-dynamic-row" style="padding: 0 2px !important;">
+										<input type="button" name="" id="refranceRangeAgeGroup2" value="-" ng-click="remove($index+1)" class="btn btn-info add-dynamic-row" style="padding: 0 2px !important;">
+									</td>
+								</tr>
+								</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+								<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveDishDetails()">Save</button>
+							</div>
+		</div>
+	</div>
+</div>
+<!-- Edit Diet Template -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+		$(".selectedPageName").text("Day Wise Diet Template ");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="daywiseDietTemplate"]').parents("li").addClass("active");
+	});
+	function addDishRow() {
+		//alert();
+		var n = document.getElementById("AddDishQty").rows.length;
+		var id = Number(n);
+		//alert(id);
+		var test =
+
+		'<tr>'
+				+'<td class=""><select class="border-dropdown"><option value="">Select Dish</option></select></td>'
+				+'<td class=""><input type="text" autocomplete="off" class="w-100" placeholder="Qty"></td>'
+				+'<td class="">'
+				+ '<input type="button" name="" id="addr" value="+" onclick="addDishRow()" class="btn btn-info add-dynamic-row addbtn" style="padding: 0 2px;">&nbsp;'
+				+ '<input type="button" name="" id="delrow" value="-" onclick="delRow(this)" class="btn btn-info addbtn" style="padding: 0 4px;">'
+				+ '</td>'
+				+ '</tr>';
+
+		$("#AddDishQty").append(test);
+
+	}
+
+	function delRow(r) {
+		var i = r.parentNode.parentNode.rowIndex;
+		document.getElementById("AddDishQty").deleteRow(i);
+	}
+</script>

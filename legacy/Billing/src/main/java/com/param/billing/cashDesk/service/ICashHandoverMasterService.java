@@ -1,0 +1,26 @@
+package com.param.billing.cashDesk.service;
+
+import javax.transaction.Transactional;
+
+import com.param.billing.cashDesk.dto.CashHandoverDetailsDto;
+import com.param.billing.cashDesk.dto.DenominationMasterDto;
+import com.param.global.common.Response;
+import com.param.global.dto.DenominationDetailsMasterDto;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+@Transactional
+public interface ICashHandoverMasterService {
+
+	Response saveCashHandoverMaster(CashHandoverDetailsDto cashHandoverDetailsDto)throws ApplicationException;
+	Response getListOfDenominations(DenominationMasterDto denominationMasterDto)throws ApplicationException;
+	//Response validateUser(CashHandoverDetailsDto cashHandoverDetailsDto)throws ApplicationException;
+//	Response saveDenominationmaster(List<DenominationDetailsMasterDto> denominationDetailsMasterDto)throws ApplicationException;
+	Response getListOfDenominationDetails(DenominationDetailsMasterDto denominationDetailsMasterDto)throws ApplicationException;
+	Response getcashOpeningTransactionList(CashHandoverDetailsDto cashHandoverDetailsDto)throws ApplicationException;
+	Response updateStatusToComplete(CashHandoverDetailsDto cashHandoverDetailsDto)throws ApplicationException;
+	Response saveCashInOut(CashHandoverDetailsDto cashHandoverDetailsDto)throws ApplicationException;
+	Response inActiveAndActiveEntry(CashHandoverDetailsDto cashHandoverDetailsDto)throws ApplicationException;
+	Response getcashInOutList(CashHandoverDetailsDto cashHandoverDetailsDto)throws ApplicationException;
+	Response getUserInhandCash(CashHandoverDetailsDto cashHandoverDetailsDto)throws ApplicationException;
+}

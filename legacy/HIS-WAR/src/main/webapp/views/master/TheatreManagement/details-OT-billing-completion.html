@@ -1,0 +1,3884 @@
+<!-- Page Content -->
+
+<head>
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" /> -->
+<script src="resources/assets/js/jquery-clockpicker.min.js"></script>
+<style>
+.font-weight100 {
+	font-weight: 100;
+}
+
+.styled-html {
+	margin-right: 0px !important;
+}
+
+#htmlContent {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+}
+</style>
+</head>
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+
+
+		<!-- ******* Show only for "ADD NEW" btn redirection start -->
+		<div
+			ng-include="'./views/common/common-patient-search-appointment-schdule.html'"
+			ng-if="showEmergencyflag == false"></div>
+		<!-- ******* Show only for "ADD NEW" btn redirection end -->
+
+		<!-- ******* Show only for "Details" btn redirection start -->
+		<!-- 	<div ng-include="'./views/common/common-patient-details.html'"></div> -->
+		<div ng-include="'./views/common/patient-demography-opd.html'"></div>
+		<!-- ******* Show only for "Details" btn redirection end -->
+
+		<div class="row" ng-hide="showEmergencyflag == false">
+			<div class="row">
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+					<span class="margin-left10"><b class="padding-right10 ">CPT
+							Code: <span class="font-weight100">{{vm.model.order.cptCode}}</span>
+					</b><label></label></span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+					<span class="margin-left10"><b class="padding-right10 ">Procedure:<span
+							class="font-weight100">{{common.procedureName}}</span>
+					</b><label></label></span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+					<span class="margin-left10"><b class="padding-right10 ">Procedure
+							Type: <span class="font-weight100">{{common.procedureType}}</span>
+					</b><label></label></span>
+				</div>
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+					<span class="margin-left10"><b class="padding-right10 ">OT Type :</b><label></label></span>
+					</div> -->
+			</div>
+			<div class="row">
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+					<span class="margin-left10"><b class="padding-right10 ">Order
+							Date: <span class="font-weight100">{{newOrderDateTime}}</span>
+					</b><label></label></span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+					<span class="margin-left10"><b class="padding-right10 ">Prefer
+							Date: <span class="font-weight100">{{newStrScheduleDate}}</span>
+					</b><label></label></span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+					<span class="margin-left10"><b class="padding-right10 ">Duration
+							(mins): <span class="font-weight100">{{common.totalDuration}}</span>
+					</b><label></label></span>
+				</div>
+			</div>
+		</div>
+
+		<div class="row custom-sub-tab padding-left-right-set4">
+			<ul class="tabs nav nav-tabs">
+				<li ng-class="{ active : isSetFirstTabLevel(13) }" id="" class=" ">
+					<!--  added on 4-DEC-2019 for "ADD NEW" button --> <a href=""
+					ng-click="setFirstTabLevel(13)">OT Details</a>
+				</li>
+
+				<li ng-class="{ active : isSetFirstTabLevel(1) }"
+					id="procedure-details" class="width10"><a href=""
+					ng-click="setFirstTabLevel(1)">Procedure Details</a></li>
+				<li ng-class="{ active : isSetFirstTabLevel(10) }" id=""
+					class="width10" ng-if="userOtTabs.procedureDetails"><a href=""
+					ng-click="setFirstTabLevel(10)">Bill Of Material</a></li>
+				<!-- <li ng-class="{ active : isSetFirstTabLevel(8) }" class="" id="time-sheet">
+					<a href="" ng-click="setFirstTabLevel(8)">Bill Of Material</a>  Rename as "Doctor Charges" on 11-DEC-2019 for "ADD NEW" button
+				</li> -->
+				<li ng-class="{ active : isSetFirstTabLevel(5) }" id="service"
+					ng-if="userOtTabs.service"><a href=""
+					ng-click="setFirstTabLevel(5)">Service</a></li>
+				<li ng-class="{ active : isSetFirstTabLevel(3) }" id="equipment"
+					ng-if="userOtTabs.equipment">
+					<!--  actived  on 4-DEC-2019 for "ADD NEW" button --> <a href=""
+					ng-click="setFirstTabLevel(3)">Equipment</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(4) }" id="inventory"
+					ng-if="userOtTabs.inventry"><a href=""
+					ng-click="setFirstTabLevel(4); selectStoreFromCoockies()">Inventory</a>
+				</li>
+
+
+				<!-- <li ng-class="{ active : isSetFirstTabLevel(2) }" id="staff">
+					<a href="" ng-click="setFirstTabLevel(2)">Staff</a>
+				</li> -->
+
+				<li ng-class="{ active : isSetFirstTabLevel(7) }" id="CSSD"
+					ng-if="userOtTabs.cssdKit">
+					<!--  actived  on 4-DEC-2019 for "ADD NEW" button --> <a href=""
+					ng-click="setFirstTabLevel(7)">CSSD Kit</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(9) }"
+					ng-if="userOtTabs.notes">
+					<!--  Added on 12-DEC-2019 for "ADD NEW" button --> <a href=""
+					ng-click="setFirstTabLevel(9)">Notes</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(6) }" id="time-sheet"
+					ng-if="userOtTabs.timeSheet">
+					<!--  it should be at last on 4-DEC-2019 for "ADD NEW" button --> <a
+					href="" ng-click="setFirstTabLevel(6)">Time Sheet</a>
+				</li>
+			</ul>
+		</div>
+		<div class="row padding-left-right-set4">
+			<!-- Procedure Details Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(1)"
+				class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select ng-model="vm.model.procDtls.specialityId"
+										class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty"
+										ng-class="{disabled: saveFlag == true}">
+										<option value="" selected="selected">-</option>
+										<option value="{{spc.specialityId}}"
+											ng-value="spc.specialityId"
+											ng-repeat="spc in vm.model.specialityList">{{spc.specialityName}}</option>
+									</select> <label for="code">Specialty</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select ng-model="vm.model.procDtls.procedureTypeId"
+										class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty"
+										ng-class="{disabled: saveFlag == true}">
+										<option value="" selected="selected">-</option>
+										<option value="{{prcType.procedureTypeId}}"
+											ng-value="prcType.procedureTypeId"
+											ng-repeat="prcType in vm.model.procedureTypes">{{prcType.procedureTypeName}}
+										</option>
+									</select> <label for="code">Procedure Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description"
+										class="text-input floating-label dirty"
+										ng-model="vm.model.procDtls.service"
+										uib-typeahead="psrv.serviceName + '|' +psrv.serviceCode for psrv in vm.model.searchProcServices($viewValue)"
+										typeahead-on-select="vm.model.selectProcService($item, $model, $label)"
+										ng-class="{disabled: saveFlag  == true }" /> <label for="code">Actual
+										Procedure Performed</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow"
+								ng-click="vm.model.addProcedureDetails();" title="Add"
+								ng-class="{disabled: saveFlag  == true}"> Add </a>
+						</div>
+					</div>
+				</div>
+
+				<div class="row padding-top10 padding-left-right-set4">
+					<div id="fixed-thead-tfoot-scroll"
+						class="fixed-thead-tfoot-scroll fix-height-scroll230">
+						<table id="main-table" class="main-table width100">
+							<thead class="mainServiceTableCommon">
+								<tr>
+									<!-- <th class="width1 text-center" title="Select All"><input type="checkbox">
+								</th> -->
+									<th class="width10">Specialty</th>
+									<th class="width10">Procedure Type</th>
+									<th class="width10">Actual Procedure Performed</th>
+									<th class="width5 text-center">Procedure Sequence</th>
+									<th class="width5 text-center"
+										ng-if="gradeWiseSeviceApplicable == true">Grade</th>
+									<th class="width5">Amount</th>
+									<th class="width5 text-center">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- <!-- <tr ng-repeat="proc in vm.model.procedureDetails"> -->
+								<!-- <tr>
+								<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+								<td class="width10 vertical-middle">{{common.procedureDetailstype}}</td>
+								<td class="width10 vertical-middle">{{common.procedureDetailsspeciality}}</td>
+								<td class="width10 vertical-middle">{{common.procedureDetailsactualProcedure}}</td>
+								<td class="width5 text-center">
+									<label class="switch vertical-middle">
+										<input type="checkbox" ng-model="proc.isPrimarySecondary" ng-init="proc.isPrimarySecondary = (proc.isPrimarySecondary == 'Y' ? 'Y' : 'N')"
+										 ng-true-value="'Y'" ng-false-value="'N'">
+										<div class="slider round"></div>
+									</label>
+								</td>
+								<td class="width5 vertical-middle"><input type="text" autocomplete="off" ng-decimal="200" ng-init="proc.rate = parseFloatNum(proc.rate)"
+									 readonly ng-model="proc.rate" class="w-100"></td>
+								<td class="width5 text-center vertical-middle"><a title="Remove" ng-click="vm.model.procedureDetails.splice($index,1);vm.model.resetCurrentProcedures()"><i
+										 class="fa fa-times"></i></a></td>
+							</tr> -->
+								<tr
+									ng-repeat="proc in vm.model.procedureDetails track by $index"
+									ng-init="parentIndex=$index">
+									<!-- <td class="width1 text-center vertical-middle" ng-if="proc.status!='I'"><input type="checkbox"></td> -->
+									<td class=" vertical-middle" ng-if="proc.status!='I'">{{proc.speciality}}</td>
+									<td class=" vertical-middle" ng-if="proc.status!='I'">{{proc.procedureType}}</td>
+									<td class=" vertical-middle" ng-if="proc.status!='I'">{{proc.serviceName}}</td>
+									<td class=" text-center" ng-if="proc.status!='I'"><select
+										class="text-input floating-label" id="ProcedureSequence"
+										ng-model="proc.procedureSequence"
+										ng-change="changeProcedureSequence(parentIndex,2)"
+										ng-class="{disabled: saveFlag  == true }">
+											<option ng-repeat="info in procedureSequenceList "
+												ng-value="info.id" value="{{info.id}}">{{info.sequenceName}}</option>
+									</select></td>
+
+									<!-- <td class=" text-center" ng-if="proc.status!='I'">
+									<div ng-if="proc.isPrimarySecondary == 'Y'">Y</div>
+									<div ng-if="proc.isPrimarySecondary != 'Y'">N</div>
+								</td> -->
+
+									<!-- 
+										<label class="switch vertical-middle">
+										<input type="checkbox" ng-model="proc.isPrimarySecondary"
+											ng-init="proc.isPrimarySecondary = (proc.isPrimarySecondary == 'Y' ? 'Y' : 'N')"
+											ng-true-value="'Y'" ng-false-value="'N'"> 
+											<div class="slider round"></div>
+									</label>
+											-->
+									<td class=" text-center"
+										ng-if="proc.status!='I' && gradeWiseSeviceApplicable == true">
+										<select class="text-input floating-label" id="surgeryGradeId"
+										ng-model="proc.surgeryGradeId"
+										ng-change="changeGradeWiseProcedureRate(proc, $index)">
+											<option value="0"></option>
+											<option ng-repeat="info in gradeList "
+												ng-value="{{info.surgeryGradeId}}"
+												value="{{info.surgeryGradeId}}">{{info.surgeryGrade}}</option>
+									</select>
+									</td>
+									<td class=" vertical-middle" ng-if="proc.status!='I'"><input
+										type="text" autocomplete="off" ng-decimal="200"
+										ng-init="proc.rate = parseFloatNum(proc.rate)" readonly
+										ng-model="proc.rate" class="w-100"
+										ng-class="{disabled: saveFlag  == true}"></td>
+
+									<td class=" text-center vertical-middle"
+										ng-if="proc.status!='I'"><a title="Remove"
+										ng-click="removeProcedure($index);vm.model.resetCurrentProcedures()">
+											<i class="fa fa-times"
+											ng-class="{disabled: saveFlag  == true}"></i>
+									</a></td>
+									<!-- ng-click="vm.model.procedureDetails.splice($index,1);vm.model.resetCurrentProcedures()" -->
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+			<!-- Procedure Details Tab Content END-->
+
+			<!-- Equipment Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(3)"
+				class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select ng-model="equipmentObj.equipmentTypeObj"
+										class="text-input floating-label"
+										ng-options="x as x.category for x in equipmentTypeList track by x.id"
+										class="form-control"
+										ng-change="getEquipmentNamesByEquipmentId(equipmentObj.equipmentTypeObj)"
+										ng-required="true" ng-class="{disabled: saveFlag  == true}">
+									</select> <label for="code">Equipment Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select ng-model="equipmentObj.equipmentNameObj"
+										class="text-input floating-label"
+										ng-options="x as x.itemName for x in equipmentNameList track by x.id"
+										class="form-control" ng-required="true"
+										ng-class="{disabled: saveFlag  == true}">
+									</select> <label for="code">Equipment</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4  padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off"
+										class="text-input floating-label dirty" name="fromDate"
+										id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+										placeholder="DD/MM/YYYY" ng-model="equipmentObj.fromDate"
+										model-view-value="true" is-open="vm.model.fromDateOpened"
+										datepicker-options="vm.model.fromDateOptions"
+										show-button-bar="false" ng-click="vm.model.OpenFromDate()"
+										ng-change="getFromDate()"
+										ng-class="{disabled: saveFlag  == true}"> <label
+										for="fromDate" class="">From Date</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+									<input type="text" autocomplete="off" name="description" id=""
+										ng-model="equipmentObj.fromTime"
+										class="text-input floating-label" ng-init="initClockPicker()"
+										ng-class="{disabled: saveFlag  == true}" /> <label
+										for="description" class="LISDynamicLabel">From Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div
+						class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4  padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off"
+										onkeydown="event.preventDefault()"
+										class="text-input floating-label dirty" name="fromDate"
+										id="toDate" uib-datepicker-popup="dd/MM/yyyy"
+										placeholder="DD/MM/YYYY" ng-model="equipmentObj.toDate"
+										model-view-value="true" is-open="vm.model.toDateOpened"
+										datepicker-options="vm.model.toDateOptions"
+										show-button-bar="false" ng-click="vm.model.OpenToDate()"
+										ng-class="{disabled: saveFlag  == true}"> <label
+										for="ToDate" class="">To Date</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div
+						class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+									<input type="text" autocomplete="off" name="description" id=""
+										ng-model="equipmentObj.toTime"
+										class="text-input floating-label" ng-init="initClockPicker()"
+										ng-class="{disabled: saveFlag  == true}" /> <label
+										for="description" class="LISDynamicLabel">To Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add"
+								ng-click="addEquipmentDetails();"
+								ng-class="{disabled: saveFlag  == true}"> Add </a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<!-- <th class="width1 text-center" title="Select All"><input type="checkbox">
+											</th> -->
+											<th class="width10 vertical-middle">Equipment Type</th>
+											<th class="width10 vertical-middle">Equipment</th>
+											<th class="width5 vertical-middle">From Date</th>
+											<th class="width5 vertical-middle">From Time</th>
+											<th class="width5 vertical-middle">To Date</th>
+											<th class="width5 vertical-middle">To Time</th>
+											<th class="width10 vertical-middle">Procedure</th>
+											<th class="width5 vertical-middle">Amount</th>
+											<th class="width5 text-center vertical-middle">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230"
+								style="overflow-y: overlay;">
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="info in equipmentDetailsList">
+											<!-- <td class="width1 text-center vertical-middle" ng-if="info.status!='I'"><input type="checkbox" ng-model="info.checkValue"></td> -->
+											<td class="width10 vertical-middle" ng-if="info.status!='I'">{{info.equipmentTypeName}}</td>
+											<td class="width10 vertical-middle" ng-if="info.status!='I'">{{info.equipmentName}}</td>
+											<td class="width5 vertical-middle" ng-if="info.status!='I'">{{info.fromDate}}</td>
+											<td class="width5 vertical-middle" ng-if="info.status!='I'">{{info.fromTime}}</td>
+											<td class="width5 vertical-middle" ng-if="info.status!='I'">{{info.toDate}}</td>
+											<td class="width5 vertical-middle" ng-if="info.status!='I'">{{info.toTime}}</td>
+											<td class="width10 vertical-middle" ng-if="info.status!='I'">
+												<select class="w-100" ng-model="info.procedureOrderId"
+												ng-disabled="info.isEditable==null"
+												ng-class="{disabled: saveFlag  == true}">
+													<option>-</option>
+													<option value="{{cp.procedureId}}"
+														ng-value="cp.procedureId"
+														ng-repeat="cp in vm.model.currentProcedures">{{cp.procedure}}</option>
+											</select>
+											</td>
+											<td class="width5 vertical-middle" ng-if="info.status!='I'"
+												ng-class="{disabled: saveFlag  == true}">{{info.amount}}</td>
+											<td class="width5 text-center vertical-middle"
+												ng-if="info.status!='I'"><a title="Remove"
+												ng-click="removeEquipmentDetails($index);"
+												ng-class="{disabled: saveFlag  == true}"><i
+													class="fa fa-times"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Equipment Tab Content END-->
+
+			<!-- Inventory Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(4)"
+				class="second-level-tab-display-div">
+				<div class="row">
+					<div
+						class="col-lg-9 col-md-9 col-sm-9 custom-sub-tab padding-left-right-set4">
+						<ul class="tabs nav nav-tabs">
+							<li ng-class="{ active : isSetSecondTabLevel(1) }"
+								id="Medications" class="active;vm.model.active =1"
+								ng-if="userOtTabs.medication"><a href=""
+								ng-click="setSecondTabLevel(1); vm.model.active = 1;vm.model.cleartable()">Medications</a>
+							</li>
+							<li ng-class="{ active : isSetSecondTabLevel(4) }" id="Implants"
+								class="vm.model.active = 4" ng-if="userOtTabs.implant"><a
+								href=""
+								ng-click="setSecondTabLevel(4); vm.model.active = 4;vm.model.cleartable()">Implants</a>
+							</li>
+							<li ng-class="{ active : isSetSecondTabLevel(3) }"
+								id="MedicalGas" class="vm.model.active = 3"
+								ng-if="userOtTabs.medicalGas"><a href=""
+								ng-click="setSecondTabLevel(3);vm.model.active = 3;">Medical
+									Gas</a></li>
+						</ul>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="margin-left10 padding-top5">
+							<b class="padding-right10 ">OT Store Name:<span
+								class="font-weight100 ng-binding"></span>
+							</b><label>{{storeName}}</label>
+						</div>
+					</div>
+				</div>
+				<!-- Medications Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(1)"
+					class="second-level-tab-display-div" ng-if="userOtTabs.medication">
+					<div class="row">
+						<div
+							class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+							<label class="switch"> <input type="checkbox"
+								ng-true-value="'Y'" ng-false-value="'N'"
+								ng-model="medicationObj.isItemOrKit"
+								class="ng-pristine ng-untouched ng-valid ng-empty"
+								ng-click="selectItemOrKit(medicationObj.isItemOrKit)"
+								ng-class="{disabled: saveFlag  == true}">
+								<div class="slider round"></div>
+							</label>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12">
+							Item/Kit</div>
+					</div>
+					<div class="row margin-top10">
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<div ng-if="medicationObj.isItemOrKit=='Y'">
+											<input type="text" autocomplete="off"
+												class="text-input floating-label" tabindex="3"
+												placeholder="Search"
+												uib-typeahead="group.kitName  for group in getListByName($viewValue)"
+												typeahead-editable="false"
+												typeahead-on-select="selectMedication($item, $model, $label);"
+												name="groupName" ng-model="medicationObj.kitName"
+												ng-class="{disabled: saveFlag  == true}"> <label
+												for="description" class="LISDynamicLabel">Medication
+												Kit</label>
+										</div>
+										<div ng-if="medicationObj.isItemOrKit!='Y'">
+											<input type="text" autocomplete="off" name="item-name"
+												id="item-name" class="text-input floating-label"
+												ng-model="vm.model.search"
+												uib-typeahead="items.details for items in vm.model.SearchItems($viewValue)"
+												typeahead-on-select="vm.model.AddItemToBill($item, $model, $label); vm.model.search = '';"
+												ng-class="{disabled: saveFlag  == true}"> <label
+												for="code">Item Name</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add">
+								Add
+							</a>
+						</div>
+					</div> -->
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width5" title="Item Code">Item Code</th>
+												<th class="width6" title="Item Name">Item Name</th>
+												<th class="width4" title="Batch No.">Batch No.</th>
+												<th class="width4" title="UOM Type">UOM Type</th>
+												<th class="width4" title="UOM Unit">UOM Unit</th>
+												<th class="width5" title="Booked Qty">Booked Qty</th>
+												<th class="width5" title="Expiry Date">Expiry Date</th>
+												<th class="width4" title="Used Qty">Used Qty</th>
+												<th class="width5" title="Stock Available">Stock
+													Available</th>
+												<th class="width6" title="Remaining Qty">Remaining Qty</th>
+												<th class="width4" title="MRP">MRP</th>
+												<th class="width5" title="Total Amount">Total Amt</th>
+												<th class="width5" title="Concession">Concession</th>
+												<th class="width4" title="Tax %">Tax %</th>
+												<th class="width4" title="Tax">Tax</th>
+												<th class="width5" title="Net Amount">Net Amt</th>
+												<th class="width5">Action</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230"
+									style="overflow-y: overlay;">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr
+												data-ng-repeat="item in vm.model.medicationItems track by $index">
+												<td class="width5 vertical-middle">{{item.itemCode}}</td>
+												<td class="width6 vertical-middle">{{item.itemName}}</td>
+												<td class="width4 vertical-middle">
+													<div ng-if="(item.batch==null)" title="{{item.batchNo}}">{{item.batchNo}}</div>
+													<div ng-if="(item.batch!=null)">
+														<select class="w-100" ng-model="item.selectedBatch"
+															ng-change="vm.model.BatchChange($index, item, item.selectedBatch);batchExpiryMsgShow(item); validateUniqueBatchAndUom(item,1);validateUsedQty($index,1);"
+															data-ng-options="batch.batchDetails for batch in item.batch"
+															title="{{item.selectedBatch.batchDetails}}"
+															ng-blur="validateBatch(item)"
+															ng-disabled="item.issueDetailsBatchMpprId!=null"
+															ng-class="{disabled: saveFlag  == true}">
+														</select>
+													</div>
+												</td>
+												<td class="width4 vertical-middle">
+													<!-- <div ng-if="item.selectedUom==null">{{item.uomType}}</div> -->
+													<div>
+														<select ng-model="item.selectedUom" class="w-100"
+															ng-change="vm.model.UomChange($index,item, item.selectedUom);vm.model.ValidateUniqueBatchAndUom(item,1);validateUsedQty($index,1);"
+															data-ng-class="{'tableError': item.isUOMValid ,'disabled': saveFlag  == true || item.issueDetailsBatchMpprId!=null}"
+															ng-options="uom.uomDetails for uom in item.selectedBatch.uom"
+															title="{{item.selectedUom.uomDetails}}"
+															ng-blur="validateUOM(item)">
+															<option>Select UOM</option>
+														</select>
+													</div>
+												</td>
+												<td class="width4 vertical-middle">
+													<div ng-if="item.selectedUom==null">
+														<span ng-if="item.receivedQtyCon!=''">({{item.receivedQtyCon}})
+															= </span><br /> <span> {{item.receivedQtyCalculation}}
+															{{item.uomUnitData}}</span>
+													</div>
+													<div ng-if="item.selectedUom!=null">
+														<span ng-if="item.receivedQtyCon!=''">({{item.receivedQtyCon}})
+															= </span><br /> <span> {{item.receivedQtyCalculation}}
+															{{item.uomUnitData}}</span>
+													</div>
+												</td>
+												<td class="width5 vertical-middle">
+													<div>
+														<input type="text" autocomplete="off"
+															ng-model="item.bookedQty" class="w-100"
+															disabled="disabled">
+													</div>
+												</td>
+												<td class="width5 vertical-middle">
+													<div ng-if="item.selectedBatch==null">
+														{{item.expiryDate |date:'MMM-yyyy'}}</div>
+													<div ng-if="item.selectedBatch!=null">
+														{{item.selectedBatch.expiry | date:'MMM-yyyy'}}</div>
+												</td>
+												<td class="width4 vertical-middle">
+													<!-- vm.model.AllocateQuantity($index, vm.model.medicationItems,false) -->
+													<input type="text" autocomplete="off"
+													ng-model="item.usedQty"
+													ng-blur="vm.model.Calculate(item, vm.model.medicationItems);batchExpiryMsgShow(item);validateUsedQty($index,1);calculateReceivedQty(item)"
+													class="w-100" ng-class="{disabled: saveFlag  == true}"
+													numbers-only> <!-- <div ng-if="item.newQty != undefined"><input type="text" autocomplete="off" ng-model="item.newQty" ng-blur="vm.model.Calculate(item, vm.model.medicationItems);" class="w-100"></div>
+													<div ng-if="item.newQty == undefined"><input type="text" autocomplete="off" ng-model="item.usedQty" ng-blur="vm.model.Calculate(item, vm.model.medicationItems);" class="w-100"></div> -->
+												</td>
+												<td class="width5 vertical-middle">
+													<div ng-if="item.newAvailableStockQuantity != undefined">{{item.newAvailableStockQuantity}}</div>
+													<div ng-if="item.newAvailableStockQuantity == undefined">{{item.availableStockQuantity}}</div>
+												</td>
+												<td class="width6 vertical-middle">
+													<div ng-if="item.newQty != undefined">
+														{{item.remainingQty= (((item.bookedQty) ||0) -
+														((item.newQty) ||0))>0?(((item.bookedQty) ||0) -
+														((item.usedQty) ||0)):0}}</div>
+													<div ng-if="item.newQty == undefined">
+														{{item.remainingQty= (((item.bookedQty) ||0) -
+														((item.usedQty) ||0))>0?(((item.bookedQty) ||0) -
+														((item.usedQty) ||0)):0}}</div>
+												</td>
+												<td class="width4 vertical-middle">
+													<div ng-if="item.selectedBatch==null">{{item.mrp}}</div>
+													<div ng-if="item.selectedBatch!=null">{{item.usedQty>0?item.selectedBatch.rate:0}}
+													</div>
+												</td>
+												<td class="width5 vertical-middle">
+													<div>
+														<div ng-if="item.selectedBatch==null">{{item.totalAmount=
+															(((item.usedQty || 0)*(item.mrp ||0))) | number:2}}</div>
+														<div ng-if="item.selectedBatch!=null">{{item.totalAmount=
+															(((item.usedQty || 0)*(item.selectedBatch.rate ||0))) |
+															number:2}}</div>
+													</div>
+												</td>
+												<td class="width5">{{ item.patientClassPercentage ?
+													item.patientClassPercentage : 0 | number:2}} /
+													{{vm.model.Currency}} {{ item.patientClassAmount ?
+													item.patientClassAmount : 0 | number:2}}</td>
+												<td class="width4">{{item.taxPercent}}</td>
+												<td class="width4">{{(isNaN(item.taxAmount) ||
+													item.taxAmount == undefined)?0:item.taxAmount | number:2}}
+												</td>
+												<td class="width5">{{item.netAmount | number:2}}</td>
+												<td class="width5"
+													ng-class="{disabled: item.issueDetailsBatchMpprId!=null}">
+													<input type="button" name="" title="Add" id="addr"
+													value="+" ng-click="addItem($index, item,1);"
+													class="btn btn-info add-dynamic-row"
+													style="padding: 0px 4px !important; margin-left: -2px;"
+													ng-class="{disabled: saveFlag  == true || item.batch.length<=1}" />
+
+													<input type="button" value="-"
+													ng-click="vm.model.ConfirmRemoveMedication(item, $index);"
+													class="btn btn-info add-dynamic-row"
+													style="padding: 0px 4px !important; margin-left: 5px;"
+													ng-class="{disabled: saveFlag  == true}" title="Remove" />
+													<span name="" title="LASA"
+													style="padding: 2px 4px !important;" ng-show="item.isLasa">
+														<img alt=""
+														src="resources/assets/images/icon/capsulePill.png"
+														class="" style="width: 23px">
+												</span> <!-- <a ng-click="vm.model.ConfirmRemoveMedication(item, $index)" ng-class="{disabled: saveFlag  == true}">
+														<i class="fa fa-times" title="Remove"></i>
+													</a>
+ -->
+												</td>
+
+											</tr>
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<!-- Medications Tab Content END  -->
+
+				<!-- Implants Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(4)"
+					class="second-level-tab-display-div">
+					<div class="row">
+						<div
+							class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+							<label class="switch"> <input type="checkbox"
+								ng-true-value="'Y'" ng-false-value="'N'"
+								ng-model="implantObj.isItemOrKit"
+								class="ng-pristine ng-untouched ng-valid ng-empty"
+								ng-click="selectItemOrKit(implantObj.isItemOrKit)"
+								ng-class="{disabled: saveFlag  == true}">
+								<div class="slider round"></div>
+							</label>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12">
+							Item/Kit</div>
+					</div>
+					<div class="row margin-top10">
+
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<!-- <div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off"  name="item-name" id="item-name"
+												class="text-input floating-label" ng-model="vm.model.search" 
+												uib-typeahead="items.details for items in vm.model.SearchItemsImp($viewValue)"
+												typeahead-on-select="vm.model.AddItemToBill($item, $model, $label); vm.model.search = '';">
+											<label for="code">Item Name</label>
+										</div>
+									</div> -->
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<div ng-if="implantObj.isItemOrKit=='Y'">
+											<input type="text" autocomplete="off"
+												class="text-input floating-label" tabindex="3"
+												placeholder="Search"
+												uib-typeahead="group.kitName  for group in getImplantListByName($viewValue)"
+												typeahead-editable="false"
+												typeahead-on-select="selectImplant($item, $model, $label);"
+												name="groupName" ng-model="implantObj.kitName"> <label
+												for="description" class="LISDynamicLabel"
+												ng-class="{disabled: saveFlag  == true}">Implant Kit</label>
+										</div>
+										<div ng-if="implantObj.isItemOrKit!='Y'">
+											<input type="text" autocomplete="off" name="item-name"
+												id="item-name" class="text-input floating-label"
+												ng-model="vm.model.search"
+												uib-typeahead="items.details for items in vm.model.SearchItems($viewValue)"
+												typeahead-on-select="vm.model.AddItemToBill($item, $model, $label); vm.model.search = '';"
+												ng-class="{disabled: saveFlag  == true}"> <label
+												for="code">Item Name</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width5" title="Item Code">Item Code</th>
+												<th class="width6" title="Item Name">Item Name</th>
+												<th class="width4" title="Batch No.">Batch No.</th>
+												<th class="width4" title="UOM Type">UOM Type</th>
+												<th class="width4" title="UOM Unit">UOM Unit</th>
+												<th class="width5" title="Booked Qty">Booked Qty</th>
+												<th class="width5" title="Expiry Date">Expiry Date</th>
+												<!-- 													<th class="width6">Issue Qty</th>
+-->
+												<th class="width4" title="Used Qty">Used Qty</th>
+												<th class="width4" title="Stock Available">Stock
+													Available</th>
+												<th class="width6" title="Remaining Qty">Remaining Qty</th>
+												<th class="width4" title="MRP">MRP</th>
+												<th class="width5" title="Total Amount">Total Amt</th>
+												<th class="width5" title="Concession">Concession</th>
+												<th class="width4" title="Tax %">Tax %</th>
+												<th class="width4" title="Tax">Tax</th>
+												<th class="width5" title="Net Amount">Net Amt</th>
+												<th class="width3">Action</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230"
+									style="overflow-y: overlay;">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr data-ng-repeat="item in vm.model.implantItems">
+												<td class="width5 vertical-middle">{{item.itemCode}}</td>
+												<td class="width6 vertical-middle">{{item.itemName}}</td>
+												<td class="width4 vertical-middle">
+													<div ng-if="(item.batch==null)">{{item.batchNo}}</div>
+													<div ng-if="(item.batch!=null)">
+														<select class="w-100" ng-model="item.selectedBatch"
+															ng-change="vm.model.BatchChange($index, item, item.selectedBatch);batchExpiryMsgShow(item); validateUniqueBatchAndUom(item,2);validateUsedQty($index,0);"
+															data-ng-options="batch.batchDetails for batch in item.batch"
+															title="{{item.selectedBatch.batchDetails}}"
+															ng-blur="validateBatch(item)"
+															ng-disabled="item.issueDetailsBatchMpprId!=null"
+															ng-class="{disabled: saveFlag  == true}">
+														</select>
+													</div>
+												</td>
+												<td class="width4 vertical-middle">{{item.uomType
+													?item.uomType:'-' }}</td>
+												<td class="width4 vertical-middle">{{item.uomUnit
+													?item.uomUnit: '-'}}</td>
+												<!-- <td class="width6 vertical-middle">{{item.bookedQty}}</td> -->
+												<td class="width5 vertical-middle"><input type="text"
+													autocomplete="off" ng-model="item.bookedQty" class="w-100"
+													disabled="disabled"></td>
+
+												<td class="width5 vertical-middle">
+													{{item.selectedBatch.expiry | date:'MMM-yyyy'}}</td>
+												<!-- <td class="width6 vertical-middle">{{item.issuedQty}}</td> -->
+												<td class="width4 vertical-middle">
+													<!-- vm.model.AllocateQuantity($index, vm.model.implantItems,true) -->
+													<input type="text" autocomplete="off"
+													ng-model="item.usedQty"
+													ng-blur="vm.model.Calculate(item, vm.model.implantItems);validateUsedQty($index,0);"
+													class="w-100" ng-class="{disabled: saveFlag  == true}"
+													numbers-only>
+												</td>
+												<td class="width4 vertical-middle">
+													{{item.availableStockQuantity}}</td>
+												<td class="width6 vertical-middle">
+													{{item.remainingQty= (((item.bookedQty) ||0) -
+													((item.usedQty) ||0))>0?(((item.bookedQty) ||0) -
+													((item.usedQty) ||0)):0}}</td>
+												<!-- 	<td class="width5 vertical-middle">{{item.selectedBatch.rate}}</td> -->
+												<td class="width4 vertical-middle">
+													<div ng-if="item.selectedBatch==null">{{item.mrp}}</div>
+													<div ng-if="item.selectedBatch!=null">{{item.usedQty>0?item.selectedBatch.rate:0}}</div>
+												</td>
+												<td class="width5 vertical-middle">{{item.totalAmount=
+													(((item.usedQty || 0)*(item.selectedBatch.rate ||0))) |
+													number:2}}</td>
+												<td class="width5">{{ item.patientClassPercentage ?
+													item.patientClassPercentage : 0 | number:2}} /
+													{{vm.model.Currency}} {{ item.patientClassAmount ?
+													item.patientClassAmount : 0 | number:2}}</td>
+												<td class="width4">{{item.taxName}}</td>
+												<td class="width4">{{item.taxPercent}}</td>
+												<td class="width5">{{item.netAmount | number:2}}</td>
+												<td class="width3"
+													ng-class="{disabled: item.issueDetailsBatchMpprId!=null}">
+													<input type="button" name="" title="Add" id="addr"
+													value="+" ng-click="addItem($index, item,2);"
+													class="btn btn-info add-dynamic-row"
+													style="padding: 0px 4px !important; margin-left: -2px;"
+													ng-class="{disabled: saveFlag  == true || item.batch.length<=1}" />
+
+													<input type="button" value="-"
+													ng-click="vm.model.ConfirmRemoveImplant(item,$index);"
+													class="btn btn-info add-dynamic-row"
+													style="padding: 0px 4px !important; margin-left: 5px;"
+													ng-class="{disabled: saveFlag  == true}" title="Remove" />
+
+													<!-- <a ng-click="vm.model.ConfirmRemoveImplant(item,$index)" ng-class="{disabled: saveFlag  == true}">
+															<i class="fa fa-times" title="Remove"></i>
+														</a> -->
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Implants Tab Content END  -->
+
+				<!-- Consumables Tab Content START  -->
+				<!-- <div ng-show="isSetSecondTabLevel(2)" class="second-level-tab-display-div">
+					<div class="row">
+						<div
+							class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+							<label class="switch">
+								<input type="checkbox" class="">
+								<div class="slider round"></div>
+							</label>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12">
+							Item/Kit
+						</div>
+					</div>
+					<div class="row margin-top10">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off"  name="item-name" id="item-name"
+											class="text-input floating-label" ng-model="vm.model.search"
+											uib-typeahead="items.details for items in vm.model.SearchItems($viewValue)"
+											typeahead-on-select="vm.model.AddItemToBill(vm.model.walkInSale, $item, $model, $label); vm.model.search = '';">
+										<label for="code">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+							<div class=" ">
+								<a class="btn btn-primary btn-save-box-shadow" title="Add">
+									Add
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width6">Item Code</th>
+												<th class="width6">Item Name</th>
+												<th class="width6">Batch No.</th>
+												<th class="width6">UOM Type</th>
+												<th class="width6">UOM Unit</th>
+												<th class="width6">Booked Qty</th>
+												<th class="width6">Expiry Date</th>
+												<th class="width6">Used Qty</th>
+												<th class="width5">MRP</th>
+												<th class="width5">Total Amount</th>
+												<th class="width4">Action</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr data-ng-repeat="item in vm.model.consumableItems">
+												<td class="width6 vertical-middle">{{item.itemCode}}</td>
+												<td class="width6 vertical-middle">{{item.itemName}}</td>
+												<td class="width6 vertical-middle"><select class="w-100" ng-model="item.selectedBatch" ng-focus="item.prevBatch = item.selectedBatch"
+													 ng-change="vm.model.BatchChange($index, item, item.selectedBatch); vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isBatchValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isBatchValid}" data-ng-options="batch.batchDetails for batch in item.batch"
+													 ng-blur="vm.model.ValidateBatch(item)">
+													</select></td>
+												<td class="width6 vertical-middle">
+													<select ng-model="item.selectedUom" class="w-100" ng-focus="item.prevUom = item.selectedUom" ng-change="vm.model.UomChange($index, vm.model.walkInSale, item.selectedUom);vm.model.ValidateUniqueBatchAndUom(item); item.isItemValid = false; item.isUOMValid = false"
+													 data-ng-class="{tableError: item.isUOMValid}" ng-options="uom.uomDetails for uom in item.uom" ng-blur="vm.model.ValidateUOM(item)">
+													</select>
+												</td>
+												<td class="width6 vertical-middle">{{item.selectedUom.uomUnit}}</td>
+												<td class="width6 vertical-middle">{{item.bookedQuantity}}</td>
+
+												<td class="width6 vertical-middle">{{item.selectedBatch.expiry | date:'MMM-yyyy'}}</td>
+												<td class="width6 vertical-middle"><input type="text" autocomplete="off" ng-model="item.usedQty" class="w-100"></td>
+												<td class="width5 vertical-middle">{{item.selectedBatch.rate}}</td>
+												<td class="width5 vertical-middle"> {{item.totalAmount= (((item.usedQty ||
+													0)*(item.selectedBatch.rate ||0))) | number:2}}</td>
+											</tr>
+											<tr ng-repeat="item in vm.model.consumableItems">
+												<td class="width6 vertical-middle">{{item.itemCode}}</td>
+												<td class="width6 vertical-middle">{{item.itemName}}</td>
+												<td class="width6 vertical-middle">
+													<div ng-if="(item.batch==null)">{{item.batchNo}}</div>
+													<div ng-if="(item.batch!=null)">
+														<select class="w-100" ng-model="item.selectedBatch"
+															ng-change="vm.model.BatchChange($index, item, item.selectedBatch); vm.model.ValidateUniqueBatchAndUom(item);"
+															data-ng-options="batch.batchDetails for batch in item.batch"
+															ng-blur="vm.model.ValidateBatch(item)">
+														</select>
+													</div>
+												</td>
+												<td class="width6 vertical-middle">
+													<div ng-if="item.selectedUom==null">{{item.uomType}}</div>
+													<div ng-if="item.selectedUom!=null">
+														<select ng-model="item.selectedUom" class="w-100"
+															ng-change="vm.model.UomChange($index, vm.model.walkInSale, item.selectedUom);vm.model.ValidateUniqueBatchAndUom(item);"
+															data-ng-class="{tableError: item.isUOMValid}"
+															ng-options="uom.uomDetails for uom in item.uom"
+															ng-blur="vm.model.ValidateUOM(item)">
+														</select>
+													</div>
+												</td>
+												<td class="width6 vertical-middle">
+													<div ng-if="item.selectedUom==null">{{item.uomUnit}}</div>
+													<div ng-if="item.selectedUom!=null">{{item.selectedUom.uomUnit}}
+													</div>
+												</td>
+												<td class="width6 vertical-middle">
+													<div ng-if="item.issuedQty!=null">{{item.issuedQty}}</div>
+													<div ng-if="item.bookedQuantity!=null">{{item.bookedQuantity}}</div>
+													<div ng-if="item.issuedQty==null"><input type="text" autocomplete="off"
+															ng-model="item.bookedQty" class="w-100"></div>
+												</td>
+												<td class="width6 vertical-middle">
+													<div ng-if="item.selectedBatch==null">
+														{{item.expiryDate |date:'MMM-yyyy'}}</div>
+													<div ng-if="item.selectedBatch!=null">
+														{{item.selectedBatch.expiry | date:'MMM-yyyy'}}</div>
+												</td>
+												<td class="width6 vertical-middle"><input type="text" autocomplete="off"
+														ng-model="item.usedQty" class="w-100"></td>
+												<td class="width5 vertical-middle">
+													<div ng-if="item.selectedBatch==null">{{item.mrp}}</div>
+													<div ng-if="item.selectedBatch!=null">{{item.selectedBatch.rate}}
+													</div>
+												</td>
+												<td class="width5 vertical-middle">
+													<div ng-if="item.selectedBatch==null">{{item.totalAmount=
+													(((item.usedQty || 0)*(item.mrp ||0))) | number:2}}</div>
+													<div ng-if="item.selectedBatch!=null">{{item.totalAmount= (((item.usedQty ||
+													0)*(item.selectedBatch.rate ||0))) | number:2}}</div>
+												</td>
+												<td class="width4">
+													<a ng-click="vm.model.ConfirmRemove(item)">
+														<i class="fa fa-times" title="Remove"></i>
+													</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				<!-- Consumables Tab Content END  -->
+
+				<!-- Medical Gas Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(3)"
+					class="second-level-tab-display-div">
+					<!-- <div class="row padding-left-right-set4 margin-top10">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<select class="text-input floating-label" convert-to-number ng-model="vm.model.periodicityServ.visitTypeId" ng-disabled="true">
+												<option value=""></option>
+												<option value="2">IP</option>
+												<option value="3">Day Care</option>
+												<option value="4">ER</option>
+										</select>
+										<label for="patientName">Visit Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off"  class="text-input floating-label" ng-model="vm.model.periodicityServ.patientName" uib-typeahead = "pat.patientName for pat in vm.model.searchPatient($viewValue)" typeahead-on-select="vm.model.selectPatient($item, $model, $label)" ng-disabled="true">
+										<label for="">Patient Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label" readonly ng-model="vm.model.periodicityServ.uhidNumber" ng-disabled="true">
+										<label for="code">UHID</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-hospital-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label" readonly ng-model="vm.model.periodicityServ.wardName" ng-disabled="true">
+										<label>Ward</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-bed " aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class=" text-input floating-label" readonly ng-model="vm.model.periodicityServ.bedNumber" ng-disabled="true">
+										<label>Bed</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa  fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class=" text-input floating-label" readonly ng-model="vm.model.periodicityServ.admissionNumber" ng-disabled="true">
+										<label>Visit No</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<div class="row padding-left-right-set4 margin-top10">
+						<div
+							class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa  fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label"
+											ng-model="vm.model.periodicityServ.serviceName"
+											uib-typeahead="psrv.serviceName + '|' +psrv.serviceCode for psrv in searchPServices($viewValue)"
+											typeahead-on-select="selectPService($item, $model, $label)"
+											ng-class="{disabled: saveFlag  == true}" /> <label>Service</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- 	<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" >
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-10">
+								<div class="">
+									<select class="text-input floating-label" convert-to-number ng-model="vm.model.periodicityServ.equipmentId" >
+										<option value="">Select Equipment</option>
+										<option ng-repeat="info in searchItemList" value="{{info.itemId}}">{{info.itemName}}</option>
+									</select>
+									<label>Equipment</label>
+								</div>
+							</div>
+						</div>
+					</div>  -->
+						<div
+							class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4  padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="fromDate"
+											id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+											placeholder="DD/MM/YYYY"
+											ng-model="vm.model.periodicityServ.fromDate"
+											model-view-value="true" is-open="vm.model.fromDateOpened"
+											datepicker-options="vm.model.fromDateOptions"
+											show-button-bar="false" ng-click="vm.model.OpenFromDate()"
+											ng-change="getFromDate()"
+											ng-class="{disabled: saveFlag  == true}"> <label
+											for="fromDate" class="">From Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4  padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="clockpicker">
+										<input type="text" autocomplete="off" name="description" id=""
+											placeholder="HH:MM" readonly
+											ng-model="vm.model.periodicityServ.fromTime"
+											class="text-input floating-label"
+											ng-init="vm.model.initClockPicker()"
+											ng-class="{disabled: saveFlag  == true}"> <label
+											for="description" class="">From Time</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4  padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="fromDate"
+											id="toDate" uib-datepicker-popup="dd/MM/yyyy"
+											placeholder="DD/MM/YYYY"
+											ng-model="vm.model.periodicityServ.toDate"
+											model-view-value="true" is-open="vm.model.toDateOpened"
+											datepicker-options="vm.model.toDateOptions"
+											show-button-bar="false" ng-click="vm.model.OpenToDate()"
+											ng-class="{disabled: saveFlag  == true}"> <label
+											for="ToDate" class="">To Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
+						<div
+							class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4  padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="clockpicker">
+										<input type="text" autocomplete="off" name="description" id=""
+											placeholder="HH:MM" readonly
+											ng-model="vm.model.periodicityServ.toTime"
+											class="text-input floating-label"
+											ng-init="vm.model.initClockPicker()"
+											ng-class="{disabled: saveFlag  == true}"> <label
+											for="description" class="">To Time</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 margin-top10 float-right width-auto">
+						<input type="button" value="Save" ng-click="vm.model.orderPeriodicityService()" class="btn btn-primary btn-save-box-shadow">
+					<a href="" class="btn btn-primary btn-save-box-shadow padding-leftright12 width-auto" title="Save"  ng-click="vm.model.orderPeriodicityService()">
+		        		<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					</div> -->
+						<div
+							class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 margin-top10 float-right width-auto">
+							<!-- <input type="button" value="Add" ng-click="vm.model.addPeriodicityServOrder(vm.model.periodicityServ)" class="btn btn-primary btn-save-box-shadow"> -->
+							<a href="" style="width: 40px"
+								class="btn btn-primary btn-save-box-shadow"
+								ng-click="addPeriodicityServOrder(vm.model.periodicityServ)"
+								title="Add" ng-class="{disabled: saveFlag  == true}"><i
+								class="fa fa-plus" style="font-size: 14px;" aria-hidden="true"></i></a>
+						</div>
+					</div>
+
+					<!-- table start-->
+					<div class="table-container padding-left-right-set4 ">
+						<div class="table-container-header">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered margin-top10">
+								<thead>
+									<tr class="">
+										<!-- 	<th class="width8">Order No 
+										<div class="float_right">
+							                <div>
+							                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+							                </div>
+							                <div class="margin-top-8">
+							                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+							                </div>
+							            </div>
+									</th> -->
+										<th class="width8">Service <!-- <div class="float_right">
+							                <div>
+							                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+							                </div>
+							                <div class="margin-top-8">
+							                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+							                </div>
+							            </div> -->
+										</th>
+										<!-- <th class="width8">Equipment
+										<div class="float_right">
+							                <div>
+							                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+							                </div>
+							                <div class="margin-top-8">
+							                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+							                </div>
+							            </div>
+									</th>
+ -->
+										<th class="width8">From Date Time <!-- <div class="float_right">
+							                <div>
+							                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+							                </div>
+							                <div class="margin-top-8">
+							                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+							                </div>
+							            </div> -->
+										</th>
+										<th class="width8">To Date Time <!-- <div class="float_right">
+							                <div>
+							                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+							                </div>
+							                <div class="margin-top-8">
+							                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+							                </div>
+							            </div> -->
+										</th>
+										<!-- <th class="width6">UOM
+										<div class="float_right">
+							                <div>
+							                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+							                </div>
+							                <div class="margin-top-8">
+							                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+							                </div>
+							            </div>
+									</th>
+									<th class="width4">Status
+										<div class="float_right">
+							                <div>
+							                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+							                </div>
+							                <div class="margin-top-8">
+							                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+							                </div>
+							            </div>
+									</th> -->
+										<th class="width5 vertical-middle" title="Action">Action
+											<!-- <div class="float_right">
+							                <div>
+							                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+							                </div>
+							                <div class="margin-top-8">
+							                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+							                </div>
+							            </div> -->
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="pserv in vm.model.periodicityServOrdersList">
+										<!-- <td>{{pserv.orderNo}}</td> -->
+										<td ng-if="pserv.status!='I'">{{pserv.serviceName}}</td>
+										<!-- <td>{{pserv.equipmentName}}</td> -->
+										<td ng-if="pserv.status!='I'">{{pserv.fromDateString + '
+											- ' + pserv.fromTime}}</td>
+										<td ng-if="pserv.status!='I'">{{pserv.toDateString + ' -
+											' + (pserv.toTime != null ? pserv.toTime : '')}}</td>
+										<td class="padding-edit-button-table"
+											ng-if="pserv.status!='I'"><a> <i
+												ng-if="pserv.periodicityServiceOrderId == null"
+												class="fa fa-times" aria-hidden="true"
+												ng-click="removePeriodicityServOrder($index)" title="Cancel"
+												ng-class="{disabled: saveFlag  == true}"></i>
+										</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<!-- table end-->
+
+					<!-- <div class="row margin-top10"> start medical gas -  tab contents 
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id=""
+											class="text-input floating-label dirty">
+										<label for="description" class="LISDynamicLabel">Service Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id=""
+											class="text-input floating-label dirty">
+										<label for="code">Service</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id=""
+											class="text-input floating-label dirty">
+										<label for="description" class="LISDynamicLabel">From Time</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id=""
+											class="text-input floating-label dirty">
+										<label for="description" class="LISDynamicLabel">From Time</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+							<div class=" ">
+								<a class="btn btn-primary btn-save-box-shadow" title="Add">
+									Add
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width1 text-center" title="Select All"><input
+														type="checkbox"></th>
+												<th class="width6">Service Code</th>
+												<th class="width6">Service</th>
+												<th class="width3">From Time</th>
+												<th class="width3">To Time</th>
+												<th class="width5">MRP</th>
+												<th class="width5">Total Amount</th>
+												<td class="width4">Action</td>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr>
+												<td class="width1 text-center vertical-middle"><input type="checkbox">
+												</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width3 vertical-middle">-</td>
+												<td class="width3 vertical-middle">-</td>
+												<td class="width5 vertical-middle"><input type="text" autocomplete="off" class="w-100">
+												</td>
+												<td class="width5 vertical-middle"><input type="text" autocomplete="off" class="w-100">
+												</td>
+												<td class="width4">
+													<a ng-click="vm.model.ConfirmRemove(item)">
+														<i class="fa fa-times" title="Remove"></i>
+													</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div> Old medical gas tab contents end -->
+				</div>
+				<!-- Medical Gas Tab Content END  -->
+
+			</div>
+			<!-- Inventory Tab Content END-->
+
+			<!-- Service Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(5)"
+				class="second-level-tab-display-div">
+				<fieldset class="normalRegistration">
+					<legend class="heading-div">Added Services</legend>
+					<div class="row padding-top0 padding-left-right-set0">
+						<div id="fixed-thead-tfoot-scroll"
+							class="fixed-thead-tfoot-scroll fix-height-scroll230">
+							<table id="main-table" class="main-table width100">
+								<thead>
+									<tr>
+										<th class="width10"><span class="">Date</span></th>
+										<th class="width10"><span class="">Specialty</span></th>
+										<th class="width10"><span class="">Service</span></th>
+										<th class="width10"><span class="">Is Panel</span></th>
+										<th class="width8"><span class="">Status</span></th>
+										<th class="width5 text-center"><span class="">Action</span></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="investigation in currentEncounterOrderLists">
+										<td>{{investigation.createdDate}}</td>
+										<td>{{investigation.specialityName}}</td>
+										<td>{{investigation.serviceStandardName}}</td>
+										<td>{{(investigation.isPanel=='N')?"-":investigation.isPanel}}</td>
+										<td>
+											<div ng-if="investigation.orderStatus=='A'">{{(investigation.statusName==null)?((investigation.serviceRendered==1)?"Completed":"Pending"):investigation.statusName}}</div>
+											<div ng-if="investigation.orderStatus=='I'">Cancelled</div>
+										</td>
+										<td class="text-center">
+											<div ng-if="investigation.orderStatus=='A'">
+
+												<a id="labTestResId" title="Print "
+													ng-if="investigation.isPanel=='N' && checkReport(investigation,$index,1)"
+													ng-click="rePrintInvestigation(investigation,$index,1)"><i
+													class="fa fa-print"></i></a>&nbsp; <a id="labTestResId"
+													title="Re Print"
+													ng-if="investigation.isPanel=='N' && checkReport(investigation,$index,0)"
+													ng-click="rePrintInvestigation(investigation,$index,0)"><i
+													class="fa fa-files-o"></i></a>&nbsp; <a class="cursor-pointer"
+													ng-if="investigation.isPanel=='Y'"
+													ng-click="getInvestigationDetails(investigation);">Details</a>
+												<a id="labTestResId" title="View Outsource Service Report"
+													ng-if="investigation.sampleStatusId==37"
+													ng-click="getOutsourceServiceReport(investigation);"><i
+													class="fa fa-info-circle"></i></a>&nbsp;
+												<!-- <a
+													ng-if="(investigation.serviceRendered == 0 &&  investigation.serviceIsBilled == 0)">
+													<i class="fa fa-times" aria-hidden="true"
+													ng-click="getDataForCancelOrder(investigation)"
+													data-toggle="modal" data-target="#updateDoctorPopup"
+													style="font-size: 20px; color: #f0793a"> </i>
+												</a> -->
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="normalRegistration">
+					<legend class="heading-div">Add New Services</legend>
+					<div class="row margin-top10">
+						<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select ng-model="vm.model.serv.specialityId" 
+										class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty"
+										ng-change="getSelectedSpecialityID(vm.model.serv.specialityId)" ng-class="{disabled: saveFlag  == true}">
+										<option value="" selected="selected">-</option>
+										<option value="{{spc.specialityId}}" ng-value="spc.specialityId"
+											ng-repeat="spc in vm.model.specialityList">{{spc.specialityName}}</option>
+									</select>
+									<label for="code">Specialty</label>
+								</div>
+							</div>
+						</div>
+					</div> -->
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description"
+											ng-model="vm.model.serv.service" typeahead-min-length="2"
+											uib-typeahead="serviceMaster.serviceStandardName + '|' +serviceMaster.serviceStandardCode for serviceMaster in vm.model.searchServices($viewValue)"
+											typeahead-on-select="vm.model.selectService($item, $model, $label)"
+											class="text-input floating-label dirty"
+											ng-class="{disabled: saveFlag  == true}">
+										<!--  <input type="text" autocomplete="off" name="description" ng-model="vm.model.serv.service" uib-typeahead="psrv.serviceName + '|' +psrv.serviceCode for psrv in vm.model.searchServices($viewValue)"
+									 typeahead-on-select="vm.model.selectService($item, $model, $label)" class="text-input floating-label dirty">-->
+										<label for="code">Service</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+							<div class=" ">
+								<a class="btn btn-primary btn-save-box-shadow" title="Add"
+									ng-click="vm.model.addService()"
+									ng-class="{disabled: saveFlag  == true}"> Add </a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top5">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<!-- <th class="width1 text-center" title="Select All"><input type="checkbox">
+											</th> -->
+												<th class="width10">Specialty</th>
+												<th class="width10">Service</th>
+												<th class="width10">Procedure</th>
+												<th class="width5">Amount</th>
+												<th class="width5 text-center">Action</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230"
+									style="overflow-y: overlay;">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr ng-repeat="srv in vm.model.serviceDetails">
+												<!-- <td class="width1 text-center vertical-middle" ng-if="srv.status!='I'"><input type="checkbox"></td> -->
+												<td class="width10 vertical-middle" ng-if="srv.status!='I'">{{srv.speciality}}</td>
+												<td class="width10 vertical-middle" ng-if="srv.status!='I'">{{srv.serviceName}}</td>
+												<td class="width10 vertical-middle" ng-if="srv.status!='I'">
+													<select class="w-100" ng-model="srv.procedureId"
+													ng-change="selectProcedure(srv,$index)"
+													ng-disabled="srv.isEditable == null"
+													ng-class="{disabled: saveFlag  == true}">
+														<option>-</option>
+														<option value="{{cp.procedureId}}"
+															ng-value="cp.procedureId"
+															ng-repeat="cp in vm.model.currentProcedures">{{cp.procedure}}</option>
+												</select>
+
+												</td>
+												<td class="width5 vertical-middle" ng-if="srv.status!='I'"><input
+													type="text" autocomplete="off" ng-model="srv.rate"
+													ng-disabled="srv.isEditable == null"
+													ng-init="srv.rate = parseFloatNum(srv.rate)" class="w-100"
+													ng-class="{disabled: saveFlag  == true}"></td>
+												<td class="width5 text-center vertical-middle"
+													ng-if="srv.status!='I'"><a title="Remove"
+													ng-click="removeService($index)"
+													ng-class="{disabled: saveFlag  == true}">
+														<!-- ng-click="vm.model.serviceDetails.splice($index,1)" -->
+														<i class="fa fa-times"></i>
+												</a></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<!-- Service Tab Content END-->
+
+			<!-- TimeSheet Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(6)"
+				class="second-level-tab-display-div"
+				style="overflow: -webkit-paged-y;">
+				<div class="row padding-top8">
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<label for="code">Wheel-in Time</label>
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9">
+								<div class="">
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<!-- <input type="text" autocomplete="off" name="code"
+										class="text-input floating-label dirty" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.wheelInTime" 
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.wheelInTime = getFormattedDate(vm.model.timeSheet.wheelInTime,true)" ng-class="{disabled: saveFlag  == true}" /> -->
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="code" id=""
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="vm.model.timeSheet.wheelInTime"
+											model-view-value="true"
+											is-open="otDatepickerWheelInDatePicker.opened"
+											datepicker-options="otDatepickerWheelInDateOptions"
+											show-button-bar="false"
+											ng-click="otDatepickerWheelInDatePicker1()"
+											ng-class="{disabled: saveFlag  == true}">
+									</div>
+									<div class="col-lg-1 col-sm-1 col-md-1"></div>
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description"
+												id="" placeholder="HH:mm" class="text-input floating-label"
+												ng-model="vm.model.timeSheet.wheelInTime1"
+												onkeydown="event.preventDefault()"
+												ng-class="{disabled: saveFlag  == true}">
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<label for="code">Table-on Time</label>
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9">
+								<div class="">
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<!-- <input type="text" autocomplete="off" name="code" id="" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.tableOnTime" 
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.tableOnTime = getFormattedDate(vm.model.timeSheet.tableOnTime,true)"
+										class="text-input floating-label dirty" ng-class="{disabled: saveFlag  == true}">  -->
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="code" id=""
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="vm.model.timeSheet.tableOnTime"
+											model-view-value="true" is-open="tableOnDatePicker.opened"
+											datepicker-options="tableOnDatePickerOptions"
+											show-button-bar="false" ng-click="tableOnDatePicker()"
+											ng-class="{disabled: saveFlag  == true}">
+									</div>
+									<div class="col-lg-1 col-sm-1 col-md-1"></div>
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description"
+												id="" placeholder="HH:mm" class="text-input floating-label"
+												ng-model="vm.model.timeSheet.tableOnTime1"
+												onkeydown="event.preventDefault()"
+												ng-class="{disabled: saveFlag  == true}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<label for="code">Anesthesia Time</label>
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9">
+								<div class="">
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<!-- <input type="text" autocomplete="off" name="code" id="" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.anesthesiaTime" 
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.anesthesiaTime = getFormattedDate(vm.model.timeSheet.anesthesiaTime,true)"
+										class="text-input floating-label dirty" ng-class="{disabled: saveFlag  == true}"> -->
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="code" id=""
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="vm.model.timeSheet.anesthesiaTime"
+											model-view-value="true" is-open="anesthesiaDatePicker.opened"
+											datepicker-options="anesthesiaDateOptions"
+											show-button-bar="false" ng-click="anesthesiaDatePicker()"
+											ng-class="{disabled: saveFlag  == true}">
+									</div>
+									<div class="col-lg-1 col-sm-1 col-md-1"></div>
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description"
+												id="" placeholder="HH:mm" class="text-input floating-label"
+												ng-model="vm.model.timeSheet.anesthesiaTime1"
+												onkeydown="event.preventDefault()"
+												ng-class="{disabled: saveFlag  == true}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<label for="code">Procedure Start Time </label>
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9">
+								<div class="">
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<!-- <input type="text" autocomplete="off" name="code" id="" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.procedureStartTime"  
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.procedureStartTime = getFormattedDate(vm.model.timeSheet.procedureStartTime,true)"
+										class="text-input floating-label dirty" ng-class="{disabled: saveFlag  == true}"> -->
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="code" id=""
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="vm.model.timeSheet.procedureStartTime"
+											model-view-value="true"
+											is-open="procedureStartDatePicker.opened"
+											datepicker-options="procedureStartDatePickerOptions"
+											show-button-bar="false" ng-click="procedureStartDatePicker()"
+											ng-class="{disabled: saveFlag  == true}">
+									</div>
+									<div class="col-lg-1 col-sm-1 col-md-1"></div>
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description"
+												id="" placeholder="HH:mm" class="text-input floating-label"
+												ng-model="vm.model.timeSheet.procedureStartTime1"
+												onkeydown="event.preventDefault()"
+												ng-class="{disabled: saveFlag  == true}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<label for="code">Procedure End Time </label>
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9">
+								<div class="">
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<!-- <input type="text" autocomplete="off" name="code" id="" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.procedureEndTime"  
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.procedureEndTime = getFormattedDate(vm.model.timeSheet.procedureEndTime,true)"
+										class="text-input floating-label dirty" ng-class="{disabled: saveFlag  == true}"> -->
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="code" id=""
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="vm.model.timeSheet.procedureEndTime"
+											model-view-value="true"
+											is-open="procedureEndDatePicker.opened"
+											datepicker-options="procedureEndDatePickerOptions"
+											show-button-bar="false" ng-click="procedureEndDatePicker()"
+											ng-class="{disabled: saveFlag  == true}">
+									</div>
+									<div class="col-lg-1 col-sm-1 col-md-1"></div>
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description"
+												id="" placeholder="HH:mm" class="text-input floating-label"
+												ng-model="vm.model.timeSheet.procedureEndTime1"
+												onkeydown="event.preventDefault()"
+												ng-class="{disabled: saveFlag  == true}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<label for="code">Table-out Time</label>
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9">
+								<div class="">
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<!-- <input type="text" autocomplete="off" name="code" id="" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.tableOutTime"  
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.tableOutTime = getFormattedDate(vm.model.timeSheet.tableOutTime,true)"
+										class="text-input floating-label dirty" ng-class="{disabled: saveFlag  == true}"> -->
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="code" id=""
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="vm.model.timeSheet.tableOutTime"
+											model-view-value="true" is-open="tableOutDatePicker.opened"
+											datepicker-options="tableOutDatePickerOptions"
+											show-button-bar="false" ng-click="tableOutDatePicker()"
+											ng-class="{disabled: saveFlag  == true}">
+									</div>
+									<div class="col-lg-1 col-sm-1 col-md-1"></div>
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description"
+												id="" placeholder="HH:mm" class="text-input floating-label"
+												ng-model="vm.model.timeSheet.tableOutTime1"
+												onkeydown="event.preventDefault()"
+												ng-class="{disabled: saveFlag  == true}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<label for="description" class="">Wheel-out Time</label>
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9">
+								<div class="">
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<!-- <input type="text" autocomplete="off" name="code" id="" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.wheelOutTime"  
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.wheelOutTime = getFormattedDate(vm.model.timeSheet.wheelOutTime,true)"
+										class="text-input floating-label dirty" ng-class="{disabled: saveFlag  == true}"> -->
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="code" id=""
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="vm.model.timeSheet.wheelOutTime"
+											model-view-value="true" is-open="wheelOutDatePicker.opened"
+											datepicker-options="wheelOutDateOptions"
+											show-button-bar="false" ng-click="wheelOutDatePicker()"
+											ng-class="{disabled: saveFlag  == true}">
+									</div>
+									<div class="col-lg-1 col-sm-1 col-md-1"></div>
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description"
+												id="" placeholder="HH:mm" class="text-input floating-label"
+												ng-model="vm.model.timeSheet.wheelOutTime1"
+												onkeydown="event.preventDefault()"
+												ng-class="{disabled: saveFlag  == true}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<label for="code">Schedule Discharge</label>
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9">
+								<div class="">
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<!-- <input type="text" autocomplete="off" name="code" id="" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.scheduleDischarge"  
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.wheelOutTime = getFormattedDate(vm.model.timeSheet.wheelOutTime,true)"
+										class="text-input floating-label dirty" ng-class="{disabled: saveFlag  == true}">  
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="code" id=""
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="vm.model.timeSheet.scheduleDischarge"
+											model-view-value="true"
+											is-open="scheduleDischargeDatePicker.opened"
+											datepicker-options="scheduleDischargeDateOptions"
+											show-button-bar="false"
+											ng-click="scheduleDischargeDatePicker()"
+											ng-class="{disabled: saveFlag  == true}">
+									</div>
+									<div class="col-lg-1 col-sm-1 col-md-1"></div>
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description"
+												id="" placeholder="HH:mm" class="text-input floating-label"
+												ng-model="vm.model.timeSheet.scheduleDischarge1"
+												onkeydown="event.preventDefault()"
+												ng-class="{disabled: saveFlag  == true}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>-->
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<label for="code">Actual Discharge Date</label>
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-9 col-md-9">
+								<div class="">
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<!-- <input type="text" autocomplete="off" name="code" id="" datetime-picker
+										date-format="dd-MM-yyyy HH:mm:ss" hour="23" minute="59"
+										ng-model="vm.model.timeSheet.actualDischarge"  
+										onkeydown="event.preventDefault()"
+										ng-change="vm.model.timeSheet.actualDischarge = getFormattedDate(vm.model.timeSheet.actualDischarge,true)"
+										class="text-input floating-label dirty" ng-class="{disabled: saveFlag  == true}"> -->
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="code" id=""
+											uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+											ng-model="vm.model.timeSheet.actualDischarge"
+											model-view-value="true"
+											is-open="actualDischargeDatePicker.opened"
+											datepicker-options="actualDischargeDateOptions"
+											show-button-bar="false"
+											ng-click="actualDischargeDatePicker()"
+											ng-class="{disabled: saveFlag  == true}">
+									</div>
+									<div class="col-lg-1 col-sm-1 col-md-1"></div>
+									<div class="col-lg-4 col-sm-4 col-md-4">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description"
+												id="" placeholder="HH:mm" class="text-input floating-label"
+												ng-model="vm.model.timeSheet.actualDischarge1"
+												onkeydown="event.preventDefault()"
+												ng-class="{disabled: saveFlag  == true}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Doctor New Content START -->
+			<div ng-show="isSetFirstTabLevel(10)"
+				class="second-level-tab-display-div">
+				<div class="row ">
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select ng-model="vm.model.docCharge"
+										class="text-input floating-label"
+										ng-options="x as x.serviceName for x in billOfMaterialServicesList track by x.serviceId"
+										class="form-control" ng-required="true"
+										ng-class="{disabled: saveFlag  == true}">
+									</select>
+									<!-- 	<select class="text-input floating-label" name="roleId"
+													ng-model="vm.model.docCharge.serviceId" required>
+													<option>Select Service</option>
+													<option ng-repeat="info in billOfMaterialServicesList"
+														value="{{info.serviceId}}">{{info.serviceName}}</option>
+												</select>
+			 -->
+									<label for="code">OT Service Name</label>
+									<!-- Old name Role , rename on 12.dec.2019 -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"
+						ng-hide="vm.model.docCharge.isRefDoctorShare=='N'">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group">
+									<select ng-model="vm.model.docCharge.specialityObj"
+										class="text-input floating-label"
+										ng-change="vm.model.getDoctorBySpeciality(vm.model.docCharge.specialityObj.specialityId)"
+										ng-options="x as x.specialityName for x in vm.model.doctorSpecialityList track by x.specialityId"
+										class="form-control" ng-required="true"
+										ng-class="{disabled: saveFlag  == true}">
+									</select>
+									<!-- <select class="text-input floating-label" name="specialityId"
+													ng-model="vm.model.docCharge.specialityId"
+													ng-change="vm.model.getDoctorBySpeciality(vm.model.docCharge.specialityId)"
+													required>
+													<option>Select Specialty</option>
+													<option ng-repeat="info in vm.model.doctorSpecialityList"
+														ng-if="info.isClinicalSpeciality =='Y'" value="{{info.specialityId}}">
+														{{info.specialityName}}</option>
+												</select> -->
+									<label for="code">Doctor Specialty</label>
+									<!-- <p class="help-block" ng-if="docShareform.specialityId.$error.required">Specialty is required</p> -->
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"
+						ng-hide="vm.model.docCharge.isRefDoctorShare=='N'">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group">
+									<select ng-model="vm.model.docCharge.doctorObj"
+										class="text-input floating-label"
+										ng-options="x as x.firstName+'
+														'+x.lastName for x in vm.model.doctorList track by x.doctorId"
+										class="form-control" ng-required="true"
+										ng-class="{disabled: saveFlag  == true}">
+									</select>
+
+									<!-- 				<select class="text-input floating-label" name="doctorId"
+													ng-model="vm.model.docCharge.doctorObj" required>
+													<option>Select Doctor Name</option>
+													<option ng-repeat="info in vm.model.doctorList" value="{{info.doctorId}}">{{info.firstName+'
+														'+info.lastName}}</option>
+												</select>
+								 -->
+									<label for="code">Doctor Name</label>
+									<!-- <p class="help-block" ng-if="docShareform.doctorId.$error.required">Doctor is required</p> -->
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div
+						class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add"
+								ng-click="addBillOfMaterialDetails()"
+								ng-class="{disabled: saveFlag  == true}"> <!-- ng-click="addDoctorCharges()" -->
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="container-fluid">
+						<div class="table-container  padding-top5">
+							<div class="table-container-header">
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<!-- <th class="width1 text-center" title="Select All"><input type="checkbox">
+														</th> -->
+											<th class="width10">OT Service Name</th>
+											<!-- old name "Role" -->
+											<th class="width10">Specialty</th>
+											<th class="width10">Doctor</th>
+											<th class="width10">Procedure</th>
+											<th class="width5">Amount</th>
+											<th class="width5 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body" style="overflow-y: overlay;">
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="info in prodedures.billOfresList">
+											<!-- <td class="width1 text-center vertical-middle" ng-if="info.status!='I'"><input type="checkbox"></td> -->
+											<td class="width10 vertical-middle">{{info.serviceName}}</td>
+											<td class="width10 vertical-middle"><select
+												class="w-100" ng-model="info.specilityId"
+												ng-change="getDoctorBySpecialityInGrid(info.specilityId,$index)"
+												ng-disabled="info.billOfMaterialId==null"
+												ng-hide="info.isRefDoctorShare=='N'"
+												ng-class="{disabled: saveFlag  == true}">
+													<option ng-repeat="info1 in info.specilityList"
+														ng-if="info1.isClinicalSpeciality =='Y'"
+														value="{{info1.specialityId}}"
+														ng-value="info1.specialityId">
+														{{info1.specialityName}}</option>
+											</select></td>
+											<td class="width10 vertical-middle"><select
+												class="w-100" ng-model="info.doctorId"
+												ng-disabled="info.billOfMaterialId==null"
+												ng-hide="info.isRefDoctorShare=='N'"
+												ng-class="{disabled: saveFlag  == true}">
+													<option ng-repeat="info2 in info.doctorList"
+														value="{{info2.doctorId}}" ng-value="info2.doctorId">{{info2.firstName+'
+														'+info2.lastName}}</option>
+											</select></td>
+											<td class="width10 vertical-middle"><select
+												class="w-100" ng-model="info.procedureId"
+												ng-disabled="info.billOfMaterialId!=null"
+												ng-class="{disabled: saveFlag  == true}">
+													<!-- ng-change="getBillOfMaterialServiceAmount(info,$index);" -->
+													<option value="{{cp.procedureId}}"
+														ng-value="cp.procedureId"
+														ng-repeat="cp in vm.model.currentProcedures">{{cp.procedure}}
+													</option>
+											</select></td>
+											<td class="width5 vertical-middle"><input type="text"
+												autocomplete="off" ng-model="info.amount" class="w-100"
+												ng-disabled="info.billOfMaterialId!=null"
+												ng-class="{disabled: saveFlag  == true}"></td>
+											<td class="width5 text-center vertical-middle"
+												ng-class="{disabled: info.isEditable==false || saveFlag  == true}">
+												<a title="Remove"
+												ng-click="removeBillOfMaterialDetails($index);"> <!-- ng-click="vm.model.doctorCharges.splice($index,1)" -->
+													<i class="fa fa-times"></i></a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Doctor New Content END -->
+			<!-- Doctor Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(8)"
+				class="second-level-tab-display-div">
+				<div class="row">
+					<div class="row custom-sub-tab">
+						<ul class="tabs nav nav-tabs">
+							<li ng-class="{ active : isSetSecondTabLevel(21) }"
+								class="active"><a href="" ng-click="setSecondTabLevel(21)">Doctor</a>
+							</li>
+							<li ng-class="{ active : isSetSecondTabLevel(22) }" class="">
+								<a href="" ng-click="setSecondTabLevel(22)">Employee</a>
+							</li>
+						</ul>
+					</div>
+					<div class="row">
+						<!--********* sub tab 1 Doctor start ********* -->
+						<div ng-show="isSetSecondTabLevel(21)"
+							class="second-level-tab-display-div">
+							<div class="row ">
+								<div
+									class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="vm.model.docCharge"
+													class="text-input floating-label"
+													ng-options="x as x.serviceName for x in billOfMaterialServicesList track by x.serviceId"
+													class="form-control" ng-required="true"
+													ng-class="{disabled: saveFlag  == true}">
+												</select>
+												<!-- 	<select class="text-input floating-label" name="roleId"
+													ng-model="vm.model.docCharge.serviceId" required>
+													<option>Select Service</option>
+													<option ng-repeat="info in billOfMaterialServicesList"
+														value="{{info.serviceId}}">{{info.serviceName}}</option>
+												</select>
+			 -->
+												<label for="code">OT Service Name</label>
+												<!-- Old name Role , rename on 12.dec.2019 -->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"
+									ng-hide="vm.model.docCharge.isRefDoctorShare=='N'">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group">
+												<select ng-model="vm.model.docCharge.specialityObj"
+													class="text-input floating-label"
+													ng-change="vm.model.getDoctorBySpeciality(vm.model.docCharge.specialityObj.specialityId)"
+													ng-options="x as x.specialityName for x in vm.model.doctorSpecialityList track by x.specialityId"
+													class="form-control" ng-required="true"
+													ng-class="{disabled: saveFlag  == true}">
+												</select>
+												<!-- <select class="text-input floating-label" name="specialityId"
+													ng-model="vm.model.docCharge.specialityId"
+													ng-change="vm.model.getDoctorBySpeciality(vm.model.docCharge.specialityId)"
+													required>
+													<option>Select Specialty</option>
+													<option ng-repeat="info in vm.model.doctorSpecialityList"
+														ng-if="info.isClinicalSpeciality =='Y'" value="{{info.specialityId}}">
+														{{info.specialityName}}</option>
+												</select> -->
+												<label for="code">Doctor Specialty</label>
+												<!-- <p class="help-block" ng-if="docShareform.specialityId.$error.required">Specialty is required</p> -->
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div
+									class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"
+									ng-hide="vm.model.docCharge.isRefDoctorShare=='N'">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group">
+												<select ng-model="vm.model.docCharge.doctorObj"
+													class="text-input floating-label"
+													ng-options="x as x.firstName+'
+														'+x.lastName for x in vm.model.doctorList track by x.doctorId"
+													class="form-control" ng-required="true"
+													ng-class="{disabled: saveFlag  == true}">
+												</select>
+
+												<!-- 				<select class="text-input floating-label" name="doctorId"
+													ng-model="vm.model.docCharge.doctorObj" required>
+													<option>Select Doctor Name</option>
+													<option ng-repeat="info in vm.model.doctorList" value="{{info.doctorId}}">{{info.firstName+'
+														'+info.lastName}}</option>
+												</select>
+								 -->
+												<label for="code">Doctor Name</label>
+												<!-- <p class="help-block" ng-if="docShareform.doctorId.$error.required">Doctor is required</p> -->
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div
+									class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+									<div class=" ">
+										<a class="btn btn-primary btn-save-box-shadow" title="Add"
+											ng-click="addBillOfMaterialDetails()"
+											ng-class="{disabled: saveFlag  == true}"> <!-- ng-click="addDoctorCharges()" -->
+											Add
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="container-fluid">
+									<div class="table-container  padding-top5">
+										<div class="table-container-header">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<thead class="mainServiceTableCommon">
+													<tr>
+														<!-- <th class="width1 text-center" title="Select All"><input type="checkbox">
+														</th> -->
+														<th class="width10">OT Service Name</th>
+														<!-- old name "Role" -->
+														<th class="width10">Specilty</th>
+														<th class="width10">Doctor</th>
+														<th class="width10">Procedure</th>
+														<th class="width5">Amount</th>
+														<th class="width5 text-center">Action</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="table-container-body" style="overflow-y: overlay;">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<tbody>
+													<!-- <tr ng-repeat="drCharges in vm.model.doctorCharges"> -->
+													<!-- <tr>
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">{{common.doctorRole}}</td>
+											<td class="width10 vertical-middle">{{common.doctorName}}</td>
+											<td class="width10 vertical-middle">
+												<select class="w-100" ng-model="drCharges.serviceId" ng-change="getRate(drCharges,$index)">
+													<option value="" selected>-</option>
+													<option value="{{common.serviceId}}" ng-value="common.serviceId">{{common.procedureName}}</option>
+												</select>
+											</td>
+											<td class="width5 vertical-middle"><input type="text" autocomplete="off" ng-model="drCharges.rate" readonly ng-init="drCharges.rate = parseFloatNum(drCharges.rate)"
+												 class="w-100"></td>
+											<td class="width5 text-center vertical-middle"><a title="Remove" ng-click="vm.model.doctorCharges.splice($index,1)"><i
+													 class="fa fa-times"></i></a></td>
+										</tr> -->
+													<!-- 	<tr ng-repeat="info in prodedures.billOfresList">
+													<td class="width1 text-center vertical-middle" ng-if="info.status!='I'"><input type="checkbox"></td>
+													<td class="width10 vertical-middle" ng-if="info.status!='I'">{{info.serviceName}}</td>
+													<td class="width10 vertical-middle" ng-if="info.status!='I'">
+														<select class="w-100" ng-model="info.specilityId"
+													        ng-change="getDoctorBySpecialityInGrid(info.specilityId,$index)" ng-disabled="info.billOfMaterialId==null" ng-hide="info.isRefDoctorShare=='N'" ng-class="{disabled: saveFlag  == true}">
+															<option ng-repeat="info1 in info.specilityList"  ng-if="info1.isClinicalSpeciality =='Y'" value="{{info1.specialityId}}" ng-value="info1.specialityId">
+																{{info1.specialityName}}
+															</option>
+														</select>
+													</td>
+													<td class="width10 vertical-middle" ng-if="info.status!='I'">
+														<select class="w-100" ng-model="info.doctorId" ng-disabled="info.billOfMaterialId==null" ng-hide="info.isRefDoctorShare=='N'" ng-class="{disabled: saveFlag  == true}">
+																<option ng-repeat="info2 in info.doctorList" value="{{info2.doctorId}}" ng-value="info2.doctorId">{{info2.firstName+' '+info2.lastName}}</option>
+														</select>
+													</td>
+													<td class="width10 vertical-middle" ng-if="info.status!='I'">
+														<select class="w-100" ng-model="info.procedureId" ng-disabled="info.billOfMaterialId!=null" ng-class="{disabled: saveFlag  == true}">ng-change="getBillOfMaterialServiceAmount(info,$index);"
+															<option value="{{cp.procedureId}}" ng-value = "cp.procedureId"
+																ng-repeat="cp in vm.model.currentProcedures">{{cp.procedure}}
+															</option>
+														</select>
+													</td>
+													<td class="width5 vertical-middle" ng-if="info.status!='I'">
+														<input type="text" autocomplete="off"  ng-model="info.amount" class="w-100" ng-disabled="info.billOfMaterialId!=null" ng-class="{disabled: saveFlag  == true}">
+													</td>
+													<td class="width5 text-center vertical-middle" ng-if="info.status!='I'">
+														<a title="Remove" ng-click="removeBillOfMaterialDetails($index);" ng-class="{disabled: saveFlag  == true}"> ng-click="vm.model.doctorCharges.splice($index,1)"
+														<i class="fa fa-times"></i></a>
+													</td>
+													</tr> -->
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--********* sub tab 1 Doctor end *********  -->
+						<!-- ********* sub tab 2 Employee start  *********  -->
+						<div ng-show="isSetSecondTabLevel(22)"
+							class="second-level-tab-display-div">
+							<div class="row ">
+								<div class="container-fluid">
+									<div class="table-container ">
+										<div class="table-container-header">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<thead class="mainServiceTableCommon">
+													<tr>
+														<!-- <th class="width1 text-center" title="Select All"><input type="checkbox"></th> -->
+														<th class="width10">Employee Name</th>
+														<th class="width10">Procedure Name</th>
+														<!-- <th class="width5 text-center">Action</th> -->
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="table-container-body fix-height-scroll230"
+											style="overflow-y: overlay;">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<tbody>
+													<tr>
+														<!-- <td class="width1 text-center vertical-middle"><input type="checkbox"></td> -->
+														<td class="width10 vertical-middle"></td>
+														<td class="width10 vertical-middle"></td>
+														<!-- <td class="width5 text-center vertical-middle">
+															<a title="Remove"><i class="fa fa-times"></i></a>
+														</td> -->
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- ********* sub tab 2 Employee end  *********  -->
+					</div>
+				</div>
+			</div>
+			<!-- Doctor Tab Content END-->
+
+			<!-- CSSD KIT Tab Content START-->
+			<!--  ADDED  on 4-DEC-2019 for "ADD NEW" button -->
+			<div ng-show="isSetFirstTabLevel(7)"
+				class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="row ">
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="item-name"
+											id="item-name" class="text-input floating-label"
+											ng-model="vm.model.search"
+											uib-typeahead="items.kitName for items in getCSSDKit($viewValue)"
+											typeahead-on-select="selectKit($item, $model, $label);"
+											ng-class="{disabled: saveFlag  == true}"> <label
+											for="">CSSD Kit Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width6">Kit Code</th>
+												<th class="width6">Kit Name</th>
+												<th class="width6">Batch No.</th>
+												<th class="width6">Expiry Date</th>
+												<th class="width6">Used Qty</th>
+												<th class="width4">Action</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230"
+									style="overflow-y: overlay;">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr ng-repeat="info in CssdKitList">
+												<td class="width6 vertical-middle">{{info.kitCode}}</td>
+												<td class="width6 vertical-middle">{{info.kitName}}</td>
+												<td class="width6 vertical-middle"><select
+													class="w-100" ng-model="info.kitTransitionNo"
+													ng-change="getExpiryDate(info.kitTransitionNo,$index);"
+													ng-class="{disabled: saveFlag  == true}">
+														<option value="{{batch.kitTransitionNo}}"
+															ng-value="batch.kitTransitionNo"
+															ng-repeat="batch in info.batchList">{{batch.batchNumber}}
+														</option>
+												</select></td>
+												<td class="width6 vertical-middle">{{info.kitExpiryDate}}</td>
+												<td class="width6 vertical-middle"><input type="text"
+													autocomplete="off" class="w-100" value="1"
+													ng-class="{disabled: saveFlag  == true}"></td>
+												<td class="width4"><a> <i class="fa fa-times"
+														title="Remove" ng-click="removeCssdKit(info,$index);"
+														ng-class="{disabled: saveFlag  == true}"></i>
+												</a></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- CSSD KIT Content END-->
+			<!-- OT details Tab Content START-->
+			<!--  ADDED  on 4-DEC-2019 for "ADD NEW" button -->
+			<div ng-show="isSetFirstTabLevel(13)"
+				class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="row">
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10"
+							ng-if="encounterCount>0">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select ng-model="encounterObj"
+											class="text-input floating-label"
+											ng-options="x as x.encounterNumber for x in encounterList track by x.encounterId"
+											class="form-control" ng-required="true"
+											ng-change="getEncounterDetailsByEncounterId(encounterObj);"
+											ng-disabled="common.proceduerStatusId!=undefined && common.proceduerStatusId!=3"
+											ng-class="{disabled: saveFlag  == true}">
+										</select><label for="code">Encounter List</label>
+										<!-- <select class="text-input floating-label dirty" ng-model="otDetalsObj.encounterId"   ng-change="getEncounterDetailsByEncounterId(otDetalsObj.encounterId);" ng-disabled="visitTypeId!=1">
+											<option>-</option>
+											<option value="{{enc.encounterId}}" ng-value="enc.encounterId" 
+											ng-repeat="enc in encounterList">{{enc.encounterNumber}}</option>
+										</select> 
+										<label>Encounter List</label> -->
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label dirty"
+											ng-model="otDetalsObj.billingBedCategoryId"
+											ng-change="changeRateByBillingBedCat(otDetalsObj.billingBedCategoryId);"
+											ng-disabled="visitTypeId==1"
+											ng-class="{disabled: saveFlag  == true}">
+											<option value="">-</option>
+											<option value="{{bed.billingBedCategoryId}}"
+												ng-value="bed.billingBedCategoryId"
+												ng-repeat="bed in listBedCategory">{{bed.billingBedDesc}}</option>
+										</select> <label>Billing Bed Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty" name="otDateOptions"
+											id="" uib-datepicker-popup="dd/MM/yyyy"
+											placeholder="DD/MM/YYYY" ng-model="otDetalsObj.otDate"
+											model-view-value="true" is-open="otDatepicker.opened"
+											datepicker-options="otDatepickerDateOptions"
+											show-button-bar="false" ng-click="openOtDatepicker()"
+											ng-class="{disabled: saveFlag  == true}"
+											ng-change="assignToTimesheet();"> <label
+											for="description" class="">Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-clock-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="clockpicker">
+										<input type="text" autocomplete="off" name="description" id=""
+											class="text-input floating-label"
+											ng-model="otDetalsObj.totalHrs"
+											onkeydown="event.preventDefault()"
+											ng-class="{disabled: saveFlag  == true}"> <label
+											for="description" class="">Total Hrs</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<label class="checkbox-inline"> <input type="checkbox"
+								value="" ng-model="otDetalsObj.otEmergancyFlow"
+								ng-disabled="saveFlag  == true">Emergency
+							</label>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10"
+							ng-show="isTransferToWard">
+							<label class="checkbox-inline"> <input type="checkbox"
+								value="" ng-model="otToWardTransfer"
+								ng-disabled="otTransferStatus==8 || saveFlag  == true ">Transfer
+								from OT to Ward
+							</label>
+						</div>
+
+					</div>
+					<div class="row margin-top10">
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id=""
+											class="text-input floating-label"
+											ng-model="otDetalsObj.otSheetNo" ng-disabled="true"
+											ng-class="{disabled: saveFlag  == true}"> <label
+											for="description" class="">OT Sheet No</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label dirty"
+											ng-model="otDetalsObj.otTableId"
+											ng-class="{disabled: saveFlag  == true}">
+											<option>-</option>
+											<option value="{{table.operationTableId}}"
+												ng-value="table.operationTableId"
+												ng-repeat="table in otTable">{{table.tableName}}</option>
+										</select> <label for="description" class="">OT Table</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label dirty"
+											ng-model="otDetalsObj.anesthesiaTypeId"
+											ng-class="{disabled: saveFlag  == true}">
+											<option value="">-</option>
+											<option value="{{anes.anesthesiaTypeId}}"
+												ng-value="anes.anesthesiaTypeId"
+												ng-repeat="anes in anesthesiaTypes">{{anes.anesthesiaTypeName}}</option>
+										</select> <label for="description" class="">Anaesthesia Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row margin-top10">
+						<div
+							class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top12">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 text-align-left ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i> <label
+										for="" class="padding-left-right-set4">Remarks</label>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 ">
+									<div class="">
+										<textarea name="" type="text" autocomplete="off" id=""
+											rows="2" cols="50" ng-model="otDetalsObj.remark"
+											ng-class="{disabled: saveFlag  == true}"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<!-- OT details Tab Content END-->
+			<!-- Notes Tab Content START-->
+			<!--  ADDED  on 12-DEC-2019 for "ADD NEW" button -->
+			<div ng-show="isSetFirstTabLevel(9)"
+				class="second-level-tab-display-div">
+				<div class="row margin-top4 custom-sub-tab">
+					<ul class="tabs nav nav-tabs">
+						<!-- <li ng-class="{ active : isSetSecondTabLevel(31) }"
+							class="active width10" ng-if="userOtTabs.anesthesiaNotes"><a
+							href="" ng-click="setSecondTabLevel(31);">Anesthesia Notes</a></li>
+						<li ng-class="{ active : isSetSecondTabLevel(32) }"
+							class="width10" ng-if="userOtTabs.surgeryNotes"><a href=""
+							ng-click="setSecondTabLevel(32);getNoteType(2);">Surgery
+								Notes</a></li> -->
+						<li ng-class="{ active : isSetSecondTabLevel(33) }"
+							class="width10" ng-if="userOtTabs.dischargeNotes"><a href=""
+							ng-click="setSecondTabLevel(33);getNoteType(3);">Discharge
+								Notes</a></li>
+						<li ng-class="{ active : isSetSecondTabLevel(34) }"
+							class="width10" ng-if="userOtTabs.followUpNotes"><a href=""
+							ng-click="setSecondTabLevel(34);getNoteType(4);">Follow-up
+								Notes</a></li>
+					</ul>
+				</div>
+				<div class="row">
+					<div ng-show="isSetSecondTabLevel(31)"
+						class="second-level-tab-display-div"
+						ng-if="userOtTabs.anesthesiaNotes">
+						<!-- Sub tab - Anesthesia Notes start -->
+						<!-- Anesthesia Notes Tab Content START-->
+						<!--  ADDED  on 4-DEC-2019 for "ADD NEW" button -->
+						<div class="row">
+							<!-- ng-show="isSetFirstTabLevel(9)" class="second-level-tab-display-div" -->
+							<div class="row margin-top10">
+								<div class="row padding-top5">
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="">
+													<select ng-model="ckObj" class="text-input floating-label"
+														ng-options="x as x.description for x in noteTypeList track by x.noteMasterId"
+														class="form-control" ng-required="true"
+														ng-change="selectNoteAnes(ckObj);"
+														ng-class="{disabled: saveFlag  == true}">
+													</select><label for="code">Anesthesia Notes</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+										<div class="">
+											<a href=""> <input ng-if="ckObj.templateFormatId == 2"
+												type="button" value="Add"
+												class="btn btn-primary btn-save-box-shadow"
+												data-toggle="modal" data-target="#addNotesModal"
+												ng-disabled="addBtn"
+												ng-class="{disabled: saveFlag  == true}"> <input
+												ng-if="ckObj.templateFormatId == 3" type="button"
+												value="Add" class="btn btn-primary btn-save-box-shadow"
+												data-toggle="modal" data-target="#addtemplateModalComplaint"
+												ng-disabled="addBtn"
+												ng-class="{disabled: saveFlag  == true}">
+											</a>
+										</div>
+									</div>
+								</div>
+								<div
+									class="row padding-left-right-set4 table-container padding-top5">
+									<div class="table-container">
+										<div class="table-container-header">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<thead>
+													<tr>
+														<th class="width2">Anesthesia Notes</th>
+														<th class="width1"></th>
+														<th class="width1 text-center" ng-if="!infoObj.isView">Action</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="table-container-body fix-height-scroll240"
+											style="overflow: overlay;">
+											<!-- fix-height-scroll230, background: #fff; -->
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<tbody>
+													<tr ng-repeat="info in prodedures.oTCompletionNoteList"
+														ng-if="info.noteTypeId==1 && info.status=='A'">
+														<td class="width2">{{info.description}}</td>
+														<td class="width1 text-center">
+															<div
+																ng-if="info.templateFormatId == null || info.templateFormatId == 2">
+																<a class="" title="Info" data-toggle="modal"
+																	data-target="#addNotesModal1"
+																	ng-click="showNote(info,$index);"><i
+																	class="fa fa-info-circle"></i></a>
+															</div>
+															<div ng-if="info.templateFormatId == 3">
+																<a class="" title="Info" data-toggle="modal"
+																	data-target="#addtemplateModalViewAddedList"
+																	ng-click="getTemplateListForList(info,$index);"><i
+																	class="fa fa-info-circle"></i></a>
+															</div>
+
+														</td>
+														<td class="width1 text-center" ng-if="!infoObj.isView">
+															<a class="" title="Remove"><i class="fa fa-times"
+																ng-click="removeNote($index);"
+																ng-class="{disabled: saveFlag  == true}"></i></a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Anesthesia Notes Tab Content END-->
+					</div>
+					<!-- Sub tab - Anesthesia Notes end -->
+					<div ng-show="isSetSecondTabLevel(32)"
+						class="second-level-tab-display-div">
+						<!-- Sub tab - Surgery Notes start  -->
+						<!-- Surgery Notes Tab Content START-->
+						<!--  ADDED  on 4-DEC-2019 for "ADD NEW" button -->
+						<div class="row">
+							<div class="row margin-top10">
+								<div class="row padding-top5">
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="">
+													<select ng-model="ckObj" class="text-input floating-label"
+														ng-options="x as x.description for x in noteTypeList track by x.noteMasterId"
+														class="form-control" ng-required="true"
+														ng-change="selectNote(note);"
+														ng-class="{disabled: saveFlag  == true}">
+													</select> <label for="code">Surgery Notes</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+										<div class="">
+											<a href=""> <input ng-if="ckObj.templateFormatId == 2"
+												type="button" value="Add"
+												class="btn btn-primary btn-save-box-shadow"
+												data-toggle="modal" data-target="#addNotesModal"
+												ng-disabled="addBtn"
+												ng-class="{disabled: saveFlag  == true}"> <input
+												ng-if="ckObj.templateFormatId == 3" type="button"
+												value="Add" class="btn btn-primary btn-save-box-shadow"
+												data-toggle="modal" data-target="#addtemplateModalComplaint"
+												ng-disabled="addBtn"
+												ng-class="{disabled: saveFlag  == true}">
+											</a>
+										</div>
+									</div>
+								</div>
+								<div
+									class="row padding-left-right-set4 table-container padding-top5">
+									<div class="table-container">
+										<div class="table-container-header">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<thead>
+													<tr>
+														<th class="width2">Surgery Notes</th>
+														<th class="width1"></th>
+														<th class="width1 text-center" ng-if="!infoObj.isView">Action</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="table-container-body fix-height-scroll240"
+											style="overflow: overlay;">
+											<!-- fix-height-scroll230, background: #fff; -->
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<tbody>
+													<tr ng-repeat="info in prodedures.oTCompletionNoteList"
+														ng-if="info.noteTypeId==2 && info.status=='A'">
+														<td class="width2">{{info.description}}</td>
+														<td class="width1 text-center">
+															<div
+																ng-if="info.templateFormatId == null || info.templateFormatId == 2">
+																<a class="" title="Info" data-toggle="modal"
+																	data-target="#addNotesModal1"
+																	ng-click="showNote(info,$index);"><i
+																	class="fa fa-info-circle"></i></a>
+															</div>
+															<div ng-if="info.templateFormatId == 3">
+																<a class="" title="Info" data-toggle="modal"
+																	data-target="#addtemplateModalViewAddedList"
+																	ng-click="getTemplateListForList(info,$index);"><i
+																	class="fa fa-info-circle"></i></a>
+															</div>
+
+														</td>
+														<td class="width1 text-center" ng-if="!infoObj.isView">
+															<a class="" title="Remove"><i class="fa fa-times"
+																ng-click="removeNote($index);"
+																ng-class="{disabled: saveFlag  == true}"></i></a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Surgery Notes Tab Content END-->
+					</div>
+					<!-- Sub tab - Surgery Notes end  -->
+					<div ng-show="isSetSecondTabLevel(33)"
+						class="second-level-tab-display-div">
+						<!-- Sub tab - Discharge Notes start  -->
+						<!-- Discharge Notes Tab Content START-->
+						<!--  ADDED  on 4-DEC-2019 for "ADD NEW" button -->
+						<div class="row">
+							<div class="row margin-top10">
+								<div class="row padding-top5">
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="">
+													<select ng-model="ckObj" class="text-input floating-label"
+														ng-options="x as x.description for x in noteTypeList track by x.noteMasterId"
+														class="form-control" ng-required="true"
+														ng-change="selectNote(note);"
+														ng-class="{disabled: saveFlag  == true}">
+													</select> <label for="code">Discharge Notes</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+										<div class="">
+											<a href=""> <input ng-if="ckObj.templateFormatId == 2"
+												type="button" value="Add"
+												class="btn btn-primary btn-save-box-shadow"
+												data-toggle="modal" data-target="#addNotesModal"
+												ng-disabled="addBtn"
+												ng-class="{disabled: saveFlag  == true}"> <input
+												ng-if="ckObj.templateFormatId == 3" type="button"
+												value="Add" class="btn btn-primary btn-save-box-shadow"
+												data-toggle="modal" data-target="#addtemplateModalComplaint"
+												ng-disabled="addBtn"
+												ng-class="{disabled: saveFlag  == true}">
+											</a>
+										</div>
+									</div>
+								</div>
+								<div
+									class="row padding-left-right-set4 table-container padding-top5">
+									<div class="table-container">
+										<div class="table-container-header">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<thead>
+													<tr>
+														<th class="width2">Discharge Notes</th>
+														<th class="width1"></th>
+														<th class="width1 text-center" ng-if="!infoObj.isView">Action</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="table-container-body fix-height-scroll240"
+											style="overflow: overlay;">
+											<!-- fix-height-scroll230, background: #fff; -->
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<tbody>
+													<tr ng-repeat="info in prodedures.oTCompletionNoteList"
+														ng-if="info.noteTypeId==3 && info.status=='A'">
+														<td class="width2">{{info.description}}</td>
+														<td class="width1 text-center">
+															<div
+																ng-if="info.templateFormatId == null || info.templateFormatId == 2">
+																<a class="" title="Info" data-toggle="modal"
+																	data-target="#addNotesModal1"
+																	ng-click="showNote(info,$index);"><i
+																	class="fa fa-info-circle"></i></a>
+															</div>
+															<div ng-if="info.templateFormatId == 3">
+																<a class="" title="Info" data-toggle="modal"
+																	data-target="#addtemplateModalViewAddedList"
+																	ng-click="getTemplateListForList(info,$index);"><i
+																	class="fa fa-info-circle"></i></a>
+															</div>
+														</td>
+														<td class="width1 text-center" ng-if="!infoObj.isView">
+															<a class="" title="Remove"><i class="fa fa-times"
+																ng-click="removeNote($index);"
+																ng-class="{disabled: saveFlag  == true}"></i></a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Discharge Notes Tab Content END-->
+					</div>
+					<!--  Sub tab - Discharge Notes end  -->
+					<div ng-show="isSetSecondTabLevel(34)"
+						class="second-level-tab-display-div">
+						<!-- Sub tab - Follow-up Notes start -->
+						<!-- Follow-up Notes Tab Content START-->
+						<!--  ADDED  on 4-DEC-2019 for "ADD NEW" button -->
+						<div class="row">
+							<div class="row margin-top10">
+								<div class="row padding-top5">
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="">
+													<select ng-model="ckObj" class="text-input floating-label"
+														ng-options="x as x.description for x in noteTypeList track by x.noteMasterId"
+														class="form-control" ng-required="true"
+														ng-change="selectNote(note);"
+														ng-class="{disabled: saveFlag  == true}">
+													</select> <label for="code">Follow-up Notes</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+										<div class="">
+											<a href=""> <input ng-if="ckObj.templateFormatId == 2"
+												type="button" value="Add"
+												class="btn btn-primary btn-save-box-shadow"
+												data-toggle="modal" data-target="#addNotesModal"
+												ng-disabled="addBtn"
+												ng-class="{disabled: saveFlag  == true}"> <input
+												ng-if="ckObj.templateFormatId == 3" type="button"
+												value="Add" class="btn btn-primary btn-save-box-shadow"
+												data-toggle="modal" data-target="#addtemplateModalComplaint"
+												ng-disabled="addBtn"
+												ng-class="{disabled: saveFlag  == true}">
+											</a>
+										</div>
+									</div>
+								</div>
+								<div
+									class="row padding-left-right-set4 table-container padding-top5">
+									<div class="table-container">
+										<div class="table-container-header">
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<thead>
+													<tr>
+														<th class="width2">FollowUp Notes</th>
+														<th class="width1"></th>
+														<th class="width1 text-center" ng-if="!infoObj.isView">Action</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="table-container-body fix-height-scroll240"
+											style="overflow: overlay;">
+											<!-- fix-height-scroll230, background: #fff; -->
+											<table
+												class="table table-striped table-hover table-condensed table-bordered">
+												<tbody>
+													<tr ng-repeat="info in prodedures.oTCompletionNoteList"
+														ng-if="info.noteTypeId==4 && info.status=='A'">
+														<td class="width2">{{info.description}}</td>
+														<td class="width1 text-center">
+															<div
+																ng-if="info.templateFormatId == null || info.templateFormatId == 2">
+																<a class="" title="Info" data-toggle="modal"
+																	data-target="#addNotesModal1"
+																	ng-click="showNote(info,$index);"><i
+																	class="fa fa-info-circle"></i></a>
+															</div>
+															<div ng-if="info.templateFormatId == 3">
+																<a class="" title="Info" data-toggle="modal"
+																	data-target="#addtemplateModalViewAddedList"
+																	ng-click="getTemplateListForList(info,$index);"><i
+																	class="fa fa-info-circle"></i></a>
+															</div>
+
+														</td>
+														<td class="width1 text-center" ng-if="!infoObj.isView">
+															<a class="" title="Remove"><i class="fa fa-times"
+																ng-click="removeNote($index);"
+																ng-class="{disabled: saveFlag  == true}"></i></a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Follow-up Notes Tab Content END-->
+					</div>
+					<!-- Sub tab - Follow-up Notes end -->
+				</div>
+			</div>
+			<!-- OT details Tab Content END-->
+		</div>
+		<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+			<div class="row his-style margin-top10">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class="">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							title="Back" ng-click="goToBack();"> <i
+							class="fa fa-arrow-circle-o-left" style="font-size: 18px"
+							aria-hidden="true"></i></a>
+					</div>
+				</div>
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class="">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							title="Save" ng-click="confirmLasa()"
+							data-ng-class="{'disabled': saveFlag} "> <i
+							class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 padding-left-right-set4 pull-right vertical-middle padding-top10 text-center">
+					<label class="checkbox-inline vertical-middle"> <input
+						type="checkbox" ng-model="vm.model.isCompleted"
+						ng-true-value="'Y'" ng-click="openConfirmPopUp()"
+						ng-false-value="'N'" ng-disabled="saveFlag  == true"><span></span>Mark
+						as Completed
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- KitDetailsModal Start -->
+<div id="KitDetailsModal"
+	class="common-large-popup modal fade ng-scope in common-medium-popup"
+	role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-10">
+					<table class="table table-bordered  margin-top8">
+						<thead>
+							<tr>
+								<th class="width15">Instrument Name</th>
+								<th class="width15">Instrument Code</th>
+								<th class="width5">Qty</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td></td>
+								<td></td>
+								<td><input type="number" class="w-100"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" id="">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i>
+						</button>
+					</div>
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Save" data-dismiss="modal">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="confirmRemoveMedication" class="modal fade ng-scope in"
+	role="dialog">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to remove item?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" class="btn btn-primary" ng-click="vm.model.RemoveMedicationItem()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="No" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i>
+						</button>
+					</div>
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Yes" ng-click="vm.model.RemoveMedicationItem()"
+							data-dismiss="modal">
+							<i class="fa fa-check" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="confirmRemoveImplant" class="modal fade ng-scope in"
+	role="dialog">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to remove item?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- 	<button type="button" class="btn btn-primary" ng-click="vm.model.RemoveImplantItem()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="No" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i>
+						</button>
+					</div>
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Yes" ng-click="vm.model.RemoveImplantItem()"
+							data-dismiss="modal">
+							<i class="fa fa-check" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- KitDetails END -->
+<!--  NotesModal START -->
+<div id="addNotesModal1" class="modal fade ng-scope in" role="dialog"
+	data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Notes
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row  padding-left-right-10">
+					<div class="row margin-top10">
+						<div id="formeo-editor"></div>
+						<div id="myHtml" class="render-form" style="display: none"></div>
+					</div>
+					<div class="col-lg-12 col-md-12">
+						<textarea name="editor" type="text" autocomplete="off" id="editor"
+							rows="10" cols="50" ng-model="ckValueShow" ck-editor
+							ng-disabled="editFalg || saveFlag"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="addeditsNote();" ng-disabled="addBtn">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i>
+						</button>
+					</div>
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Save" ng-click="addeditsNote();"
+							ng-disabled="addBtn || saveFlag" data-dismiss="modal">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- NotesModal END -->
+<!--  addNotesModal START -->
+<div id="addNotesModal" class="modal fade ng-scope in" role="dialog"
+	data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Notes
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row  padding-left-right-10">
+					<div class="row margin-top10">
+						<div id="formeo-editor"></div>
+						<div id="myHtml" class="render-form" style="display: none"></div>
+					</div>
+					<div class="col-lg-12 col-md-12">
+						<textarea name="editor" type="text" autocomplete="off" id="editor"
+							rows="10" cols="50" ng-model="ckValue" ck-editor
+							ng-disabled="editFalg"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="addNote();" ng-disabled="addBtn">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i>
+						</button>
+					</div>
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Save" ng-click="addNote();" data-dismiss="modal">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- addNotesModal END -->
+
+
+<!-- panelDetailsModal START -->
+<div id="panelDetailsModal"
+	class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal"
+						ng-click="cancel();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div
+					class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width10">Service Name</th>
+										<!-- 										<th class="width10">Service Code</th> -->
+										<th class="width10">Status</th>
+										<th class="width10 text-center">Print Report</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;">
+							<!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="details in inveDetails track by $index">
+										<td class="width10">{{details.serviceStandardName}}</td>
+										<!-- 										<td class="width10">{{details.serviceStandardCode}}</td> -->
+										<td class="width10">{{(details.statusName==null)?"Pending":details.statusName}}</td>
+										<td class="width10 text-center"><a id="labTestResId"
+											title="Print" ng-if="checkReport(details,$index,1)"
+											ng-click="rePrintInvestigation(details,$index,1)"><iclass
+													="fafa-print">
+												</i></a>&nbsp; <a id="labTestResId" title="Re-Print"
+											ng-if="checkReport(details,$index,0)"
+											ng-click="rePrintInvestigation(details,$index,0)"><i
+												class="fa fa-print"></i></a>&nbsp;</td>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary"  id="" ng-click="saveDetails();">Ok</button> -->
+				<div class="row">
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Ok" ng-click="saveDetails();" data-dismiss="modal">
+							<i class="fa fa-check" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- panelDetailsModal END -->
+<!-- outSourceServiceModal START -->
+<div id="outSourceServiceModal"
+	class="modal fade ng-scope in common-medium-popup"
+	data-backdrop="static" role="dialog">
+	<div class="modal-dialog">
+		<form name="uploadForm" novalidate>
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Outsource Service Report
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+
+				<div class="modal-body">
+					<div class="row">
+						<div
+							class="row margin-top10 common-sub-table padding-left-right-set4">
+							<table class="table table-striped table-bordered">
+								<thead>
+									<tr>
+
+										<th class="test-name-width">Document Type</th>
+										<th class="test-name-width">Document Upload Name</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="documentObj in patientDocumentList">
+										<td>
+											<div>{{documentObj.documentName}}</div>
+										</td>
+										<td>
+											<div>
+												<a fancybox ng-click="openImage($index)">View</a>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table class="table table-bordered">
+								<tr ng-if="patientDocumentList.length==0">
+									<td><p
+											style="text-align: center; margin-top: 0px !important; margin-bottom: 1px !important;">No
+											Records Found</p></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Ok</button>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+
+
+<div id="addtemplateModalComplaint" data-backdrop="static"
+	class="modal fade ng-scope in common-medium-popup" role="dialog"
+	style="margin-left: 10%; width: 80%; height: 100%; margin-top: 4%; padding-right: 0 !important; background-color: transparent !important; position: absolute;">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body fix-height-scroll230">
+				<div class="row">
+					<div
+						class="row padding-left-right-set4 table-container padding-top8">
+						{{ckValuetitle}}</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" class="btn btn-primary" ng-click="addTemplate();">View</button> -->
+				<div class="row">
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="View" ng-click="addTemplate();">
+							<i class="fa fa-eye" aria-hidden="true"></i>
+						</button>
+					</div>
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100"
+							title="Add" data-dismiss="modal" ng-click="getTemplateList();">
+							Add</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div id="addtemplateModalViewAddedList" data-backdrop="static"
+	class="modal fade ng-scope in common-medium-popup" role="dialog"
+	style="margin-left: 10%; width: 80%; height: 100%; margin-top: 4%; padding-right: 0 !important; background-color: transparent !important; position: absolute;">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body fix-height-scroll230">
+				<div class="row">
+					<div class="row his-style"></div>
+					<div
+						class="row padding-left-right-set4 table-container padding-top8">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width10"><span class="">Template</span></th>
+											<th class="width7"><span class="">Date</span></th>
+											<th class="width3 text-center"><span class="">Action</span></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230"
+								style="overflow: overlay;">
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody style="overflow: auto !important;">
+										<tr class="ng-scope" style=""
+											ng-repeat="templateT in templateTransactionList |orderBy:column:reverse|filter:searchKeywordComplaint">
+											<td class="width10" title="{{templateT.title}}">{{templateT.title}}</td>
+											<td class="width7" title="{{templateT.createdDate}}">{{templateT.createdDate}}</td>
+											<td class="width3 text-center"><a
+												class="cursor-pointer" ng-if="templateT.templateUrl != null"
+												ng-href="{{templateT.templateUrl}}" target="_blank"
+												ng-click="dismissModal()"
+												ng-class="{disabled: saveFlag  == true }"> <i
+													class="fa fa-pencil" aria-hidden="true"></i></a> <a
+												class="cursor-pointer" ng-click="viewTemplate(templateT);">View</a>
+												<a class="cursor-pointer" ng-click="printTemp(templateT);"><i
+													class="fa fa-print" aria-hidden="true"></i></a> <!-- data-target="#addviewTemplateModal" -->
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table class="table table-bordered">
+									<tr
+										ng-if="(templateTransactionList|filter:searchKeywordComplaint)=='' || (templateTransactionList|filter:searchKeywordComplaint)==null">
+										<td><p
+												style="text-align: center; margin-top: 0px !important; margin-bottom: 1px !important;">No
+												Records Found</p></td>
+									</tr>
+								</table>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="addviewTemplateModal" data-backdrop="static"
+	class="modal fade ng-scope in common-medium-popup" role="dialog"
+	style="background-color: transparent !important;">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body"
+				style="overflow-y: scroll !important; max-height: 500px; padding-bottom: 15px !important;">
+				<div
+					style="padding: 4px 8px !important; background-color: white !important;">
+					<div id="htmlContent" class="row"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;"
+				ng-if="updateTrasactionFlag">
+				<!-- <button type="button" class="btn btn-primary" id="" data-dismiss="modal" ng-click="saveTemplateTransaction();">Update</button> -->
+				<div
+					class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+					<button class="btn btn-primary btn-save-box-shadow  width100"
+						title="Save" data-dismiss="modal"
+						ng-click="saveTemplateTransaction();">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- outSourceServiceModal END -->
+
+<!--  confirmSave modal start -->
+
+<div id="confirmSave" class="modal fade ng-scope in" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" id="popupClose" class="close"
+						data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>List contains LASA drugs. Are you sure you want to
+						Save?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							id="popupClose" title="No" data-dismiss="modal"> <i
+							class="fa fa-times" style="font-size: 18px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							title="Yes" ng-click="vm.model.saveProcedureOrders(); "
+							data-dismiss="modal"> <i class="fa fa-check-circle"
+							style="font-size: 18px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--  confirmSave modal end -->
+
+
+<!-- confirmSave start -->
+<div id="confirmSaveProcedure" class="modal fade ng-scope in"
+	role="dialog">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal"
+						ng-click="closeConfirmationPopUp();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>{{confirmMessage}}</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100"
+							title="No" data-dismiss="modal"
+							ng-click="closeConfirmationPopUp();"> <i class="fa fa-times"
+							style="font-size: 18px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+				<div
+					class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" data-dismiss="modal"
+							class="btn btn-primary btn-save-box-shadow width100" title="Yes">
+							<i class="fa fa-check-circle" style="font-size: 18px"
+							aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- confirmSave END -->
+<script src="resources/assets/js/common/page-height.js"></script>

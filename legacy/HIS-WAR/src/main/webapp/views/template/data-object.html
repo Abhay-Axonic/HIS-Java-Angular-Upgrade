@@ -1,0 +1,869 @@
+<style type="text/css">
+#dynamicHtmlContent .textbox{
+	width:auto;
+}
+</style>
+<!-- Template -->
+<link rel="stylesheet" type="text/css" href="resources/assets/css/template/drag-drop.css"/>
+<div id="page-content-wrapper">
+<section>
+<div class="row padding-left-right-set4">
+<div class="col-md-4">
+<div class="form-group">
+    <label for="inputdefault">Data Object</label>
+    <input class="form-control" id="inputdefault" placeholder="Title" ng-model="vm.model.dataObject.title" type="text" autocomplete="off">
+  </div>
+ </div>
+</div>  
+</section>
+<section>
+	<div class="w3-container">
+	<div id="sticky-anchor"></div>
+  <div class="w3-accordion bg-lightgrey w3-card-4 w3-third w3-margin-top" id="sticky" >
+  	<div>
+  		<button type="button" onclick="animation('text')" class="w3-btn-block w3-left-align w3-teal">
+      		Text
+    	</button>
+	    <div id="text" class="w3-container w3-accordion-content w3-animate-left">
+	      	<div id="textbox" draggable="true" ondragstart="drag(event)" class="source-data col-md-12 txtbox" style="margin-top:10px;">
+				<form class="w3-container padding-bottom cursor-move bg-white">
+						<span style="float:right"><i id="i-textbox-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+							<label for="" class="textLabel">TextBox Label</label>
+							<input class="w3-input textPlaceholder" type="text" autocomplete="off" placeholder="">
+					</form>
+			</div>
+			<div id="textarea" draggable="true" ondragstart="drag(event)" class="source-data col-md-12 textarea">
+				<form class="w3-container padding-bottom bg-white">
+					<span style="float:right"><i id="i-textarea-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+					<label class="w3-label textareaLabel">Textarea Label</label>
+					<textarea class="w3-input w3-border textareaPlaceholder" placeholder='Enter Text' style="resize:none"></textarea>
+				</form>
+			</div>			
+	    </div>
+  	</div>
+    <div class="w3-margin-top">
+    	 <button type="button" onclick="animation('header')" class="w3-btn-block w3-left-align w3-teal">
+     		Header
+    	</button>
+	    <div id="header" class="w3-accordion-content w3-animate-left">
+	     	<div id="header1" class="w3-container bg-white w3-center col-md-12 source-data headercol" draggable="true" ondragstart="drag(event)">
+				<span style="float:right">
+					<i id="i-heading-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>
+					&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+				<div class="HeaderContent">
+						Heading
+				</div>
+			</div>
+	    </div>
+    </div>
+    <div class="w3-margin-top">
+    	 <button type="button" onclick="animation('fieldSet')" class="w3-btn-block w3-left-align w3-teal">
+     		FieldSet
+    	</button>
+	    <div id="fieldSet" class="w3-accordion-content w3-animate-left source-data col-md-12 fieldsetcol" draggable="true" ondragstart="drag(event)" style="margin-bottom: 10px;">
+				<fieldset class="w3-container  field">
+				<span class="edit-del"><i id="i-fieldset-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;
+				<i class="fa fa-trash-o" aria-hidden="true"></i></span> 
+				<legend class="scheduler-border legend">Legend</legend>
+				</fieldset>
+	    </div>
+    </div>
+    <div class="w3-margin-top ">
+    	 <button type="button" onclick="animation('checkBox')" class="w3-btn-block w3-left-align w3-teal">
+     		Check Box
+    	</button>
+	    <div id="checkBox" class="w3-accordion-content w3-animate-left">
+	    	<div class="w3-card-4">
+				<div id="chk2" class="w3-container bg-white w3-center col-md-12 heading-text-align-left source-data checkboxcol" draggable="true" ondragstart="drag(event)">
+					<span style="float:right"><i id="i-checkbox-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+					<div class="chkOptionDiv">
+					  <input id="checkbox" value="checkbox" class="w3-check" type="checkbox">
+					  <label class="" for="checkbox">CheckBox1</label>
+					</div>
+				</div>
+			</div>
+			
+			<div class="w3-card-4 ">
+				<div id="chk1" class="w3-container bg-white w3-center col-md-12 heading-text-align-left source-data checkboxcol1" draggable="true" ondragstart="drag(event)">
+					<span style="float:right"><i id="i-dyna-chk-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+					<label>Check box Label</label><br/>
+					<div class="chkOptionDiv">
+						<input id="checkbox" value="checkbox" class="w3-check" type="checkbox">
+						<label class="w3-validate" for="checkbox1">Checkbox1</label>
+					</div>
+					
+				</div>
+			</div>
+	    </div>
+    </div>
+    <div class="w3-margin-top">
+    	 <button type="button" onclick="animation('radio')" class="w3-btn-block w3-left-align w3-teal">
+     		Radio
+    	</button>
+	    <div id="radio" class="w3-accordion-content w3-animate-left">
+	    	<div class="w3-card-4 ">
+				<div id="radio1" class="w3-container bg-white w3-center col-md-12 heading-text-align-left source-data radiocol" draggable="true" ondragstart="drag(event)">
+					<span style="float:right"><i id="i-radio-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+					<label>Label for Radio</label><br/>
+					<div class="radioOptionDiv">
+						<input class="w3-radio" type="radio" value="">
+						<label class="w3-validate">Radio</label>
+					</div>
+					
+				</div>
+			</div>
+	    </div>
+    </div>
+     <div class="w3-margin-top">
+    	 <button type="button" onclick="animation('dropDown')" class="w3-btn-block w3-left-align w3-teal">
+     		Dropdown
+    	</button>
+	    <div id="dropDown" class="w3-accordion-content w3-animate-left">
+	     	<div class="w3-card-4">
+				<div id="select1" class="w3-container bg-white w3-center padding-bottom col-md-12 heading-text-align-left source-data dropdowncol" draggable="true" ondragstart="drag(event)">
+					 <span style="float:right"><i id="i-select-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+						<label>Label for Select</label><br/>
+					 <select class="w3-select padding-top" name="option">
+					  <option value="" disabled selected>Choose your option</option>
+					  <option value="1">Option 1</option>
+					  <option value="2">Option 2</option>
+					  <option value="3">Option 3</option>
+					</select>
+				</div>
+			</div> 
+	    </div>
+    </div>
+     <!-- <div class="w3-margin-top">
+    	 <button onclick="animation('fieldset')" class="w3-btn-block w3-left-align w3-teal">
+     		Fieldset
+    	</button>
+	    <div id="fieldset1" class="w3-accordion-content w3-animate-left">
+	     	<div class="w3-card-4">
+			    <form>
+				 <fieldset>
+				  <legend>Personalia:</legend>
+				  Name: <input type="text" autocomplete="off"><br>
+				  Email: <input type="text" autocomplete="off"><br>
+				  Date of birth: <input type="text" autocomplete="off">
+				 </fieldset>
+				</form>
+			</div> 
+	    </div>
+    </div> -->
+    <div class="w3-margin-top">
+    	 <button type="button" onclick="animation('Table')" class="w3-btn-block w3-left-align w3-teal">
+     		Table
+    	</button>
+	    <div id="Table" class="w3-accordion-content w3-animate-left">
+	     	<div id="tableDiv" class="w3-card-4 source-data container-fluid w3-padding-bottom tabelcol" draggable="true" ondragstart="drag(event)">
+			   <span style="float:right"><i id="i-table-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+			   <label class="tableLabel">Table Label:</label>
+			   <table id="tableId" class="table-tag">
+			   		<tr>
+			   			<td class="table-td">Column1</td>
+			   			<td class="table-td">Column2</td>
+			   			<td class="table-td">Column3</td>
+			   			<td class="table-td">Column4</td>
+			   		</tr>
+			   </table>
+			</div> 
+	    </div>
+    </div>
+    
+     <div class="w3-margin-top">
+    	 <button type="button" onclick="animation('Calendar')" class="w3-btn-block w3-left-align w3-teal">
+     		Calendar
+    	</button>
+	    <div id="Calendar" class="w3-accordion-content w3-animate-left">
+	     	<div id="calendarDiv" class=" source-data container-fluid w3-padding-bottom col-md-12 calendarcol" draggable="true" ondragstart="drag(event)">
+			   <span style="float:right"><i id="i-calendar-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+					   <label class="calendarLabel">Date Label:</label>
+					   <input type="date" class="w3-input textPlaceholder"/>
+			</div> 
+	    </div>
+    </div>
+    
+    
+    <!-- <div class="w3-margin-top">
+    	 <button onclick="animation('Image')" class="w3-btn-block w3-left-align w3-teal">
+     		Image
+    	</button>
+	    <div id="Image" class="w3-accordion-content w3-animate-left">
+	     	<div id="ImageDiv" class="w3-card-4 source-data" draggable="true" ondragstart="drag(event)">
+			   <span style="float:right"><i id="i-table-edit" class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i></span>
+			   <lable class="tableLabel">Image Lable:</lable>
+			   <p>
+		   		<label>Drawing tool: 
+				   <select id="dtool">
+				        <option value="line">Line</option>
+				        <option value="rect">Rectangle</option>
+				        <option value="pencil">Pencil</option>
+				   </select>
+			   	</label>
+				</p>
+			    <form id="form1" runat="server">
+			        <input type='file' id="imgInp" class="file-upload"/>
+			        <canvas id="imageView" class="imgClass" src="#" width='400px' height='400px' alt="your image" />
+			    </form>
+			    <div id="container">
+			      <canvas id="imageView" width="400" height="300">
+			        <p>Unfortunately, your browser is currently unsupported by our web
+			        application.  We are sorry for the inconvenience. Please use one of the
+			        supported browsers listed below, or draw the image you want using an
+			        offline tool.</p>
+			        <p>Supported browsers: <a href="http://www.opera.com">Opera</a>, <a
+			          href="http://www.mozilla.com">Firefox</a>, <a
+			          href="http://www.apple.com/safari">Safari</a>, and <a
+			          href="http://www.konqueror.org">Konqueror</a>.</p>
+			      </canvas>
+			    </div>
+			</div> 
+	    </div>
+    </div> -->
+    
+    
+    
+  </div>
+  <div class="w3-rest">
+  	<div class="w3-card-4 card-margin" id="dropContainer">
+		<div class="bg-white ">
+			<button type="button" class="w3-btn-block w3-left-align w3-teal">Droped Content</button>
+		</div>
+		<div contenteditable="true" spellcheck="true" id="dynamicHtmlContent" class="bg-lightgrey w3-container panel-height right-panel" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+		<!-- <div style="float: right;margin-top: -38px;margin-right: 3px;">
+		<button type="button" class="btn btn-primary" ng-click="compileObject()">Compile</button>
+		</div> -->
+	</div> 
+  </div>
+</div>
+
+<!-- TEXT BOX EDIT MODAL -->
+<div class="modal fade" id="textbox-modal" tabindex="-1" role="dialog">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Text Box
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+					<form style="background-color:white" class="padding-bottom " id="textBoxModal">
+						<input id="DynamicdivId" type="hidden" ></input>
+						<div>
+						<label class="w3-label">TextBox Label</label>
+						<input id="textboxLabel" name="textboxLabel" class="w3-input" type="text" autocomplete="off" ng-change="vm.model.setName(vm.model.textbox.label,vm.model.textbox);vm.model.textbox.placeHolder = vm.model.textbox.label" ng-model="vm.model.textbox.label">
+						</div>
+						<div>
+						<label class="w3-label">TextBox Name</label>
+						<input id="textboxName" name="textboxName" ng-model="vm.model.textbox.name" class="w3-input" type="text" autocomplete="off" >
+						</div>
+						<!-- <div>
+						<label class="w3-label">TextBox Object</label>
+						<input id="textboxNg-Model" class="w3-input" type="text" autocomplete="off">
+						</div> -->
+						<div>
+						<label class="w3-label">TextBox Placeholder</label>
+						<!-- <input id="textboxPlaceholder" class="form-control textPlaceholder" type="text" autocomplete="off" /> -->
+						<input id="textboxPlaceholder" ng-model="vm.model.textbox.placeHolder" class="w3-input" type="text" autocomplete="off">
+						</div>
+						<br>
+						<div>
+							<select class="w3-select padding-top" name="textboxColumn" id="textbox-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div style="float:right">
+						<!-- <input id="btn-editTextboxDiv" type="button" value="Edit" />
+						<input class="btn" data-dismiss="modal" aria-hidden="true" value="Cancel"/> -->
+                		<button type="submit" id="btn-editTextboxDiv"  class="btn btn-primary">Save changes</button>
+                		<button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>
+						</div>
+						</div>
+					</form>
+	</div>
+</div>
+
+<!-- TEXT AREA EDIT MODAL -->
+<div class="modal fade" id="textarea-modal" tabindex="-1" role="dialog">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Textarea
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+					<form style="background-color:white" class="w3-container padding-top3 padding-bottom "  id="textAreaModal">
+						<input id="DynamictextareadivId" class="w3-input" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Textarea Label</label>
+							<input id="textareaLabel" name="textareaLabel" class="w3-input" type="text" autocomplete="off" ng-change="vm.model.setName(vm.model.textarea.label,vm.model.textarea);vm.model.textarea.placeHolder = vm.model.textarea.label" ng-model="vm.model.textarea.label"></input>
+						</div>
+						<div>
+							<label class="w3-label">Textarea Name</label>
+							<input id="textareaName" name="textareaName" class="w3-input" type="text" autocomplete="off" ng-model="vm.model.textarea.name"></input>
+						</div>
+						<!-- <div>
+							<label class="w3-label">Textarea Object</label>
+							<input id="textareaNg-model" class="w3-input" type="text" autocomplete="off"></input>
+						</div> -->
+						<div>
+							<label class="w3-label">TextBox Placeholder</label>
+							<input id="textareaPlaceholder" ng-model="vm.model.textarea.placeHolder" class="w3-input" type="text" autocomplete="off" ></index>
+						</div>
+						<br>
+						<div>
+							<select class="w3-select padding-top" name="textareaColumn" id="textarea-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div style="float:right">
+							<button type="submit"  id="btn-editTextareaDiv" class="btn btn-primary" value="Edit">Save changes</button>
+							<button type="button"   data-dismiss="modal" class="btn btn-primary" value="Cancel">Cancel</button>
+						</div>
+						</div>
+					</form>
+	</div>
+</div>
+
+
+<!-- HEADING EDIT MODAL -->
+<div class="modal fade" id="heading-modal" tabindex="-1" role="dialog">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Heading
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+					<form style="background-color:white" class="w3-container padding-top3 padding-bottom " id="headingModal">
+						<input id="DynamicHeadingdivId" class="w3-input" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Heading Contents</label>
+							<input id="heading-content" name="headLabel" class="w3-input" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+						<div class="">
+						<label class="w3-label padding-top3">Heading Class</label>
+						<!-- <input id="textboxLabel" class="w3-input" type="text" autocomplete="off" ></input> -->
+						<select class="w3-select padding-top" id="heading-class">
+							<option value="header1">H1</option>
+							<option value="header2">H2</option>
+							<option value="header3">H3</option>
+							<option value="header4">H4</option>
+							<option value="header5">H5</option>
+						</select>
+						</div>
+						</div>
+						<div>
+						<div class="">
+						<label class="w3-label padding-top">Heading alignment</label>
+						<!-- <input id="textboxPlaceholder" class="w3-input" type="text" autocomplete="off" ></index> -->
+						<select class="w3-select padding-top" id="heading-align-class">
+							<option value="heading-text-align-left">Left</option>
+							<option value="heading-text-align-center">Center</option>
+						</select>
+						</div>
+						</div>
+						<div>
+							<select class="w3-select padding-top" name="headColumn" id="heading-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div style="float:right">
+						<button type="submit" id="btn-editHeadingDiv"  class="btn btn-primary" value="Edit">Save changes</button>
+						<button type="button"  class="btn btn-primary" data-dismiss="modal" value="Cancel">Cancel</button>
+						</div>
+						</div>
+					</form>
+	</div>
+</div>
+<!-- CHECKBOX EDIT MODAL -->
+<div class="modal fade" id="checkbox-modal" tabindex="-1" role="dialog">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Checkbox
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+					<form style="background-color:white" class="w3-container padding-top3 padding-bottom " id="checkBoxModal">
+						<input id="DynamicCheckboxdivId" class="w3-input" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Checkbox Label</label>
+							<input id="checkboxLabel" name="checkBoxLabel" ng-change="vm.model.setName(vm.model.checkbox.label,vm.model.checkbox);vm.model.checkbox.placeHolder = vm.model.checkbox.label" ng-model="vm.model.checkbox.label" class="w3-input" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+							<label class="w3-label">Checkbox Name</label>
+							<input id="checkboxName" name="checkBoxName" ng-model="vm.model.checkbox.name" class="w3-input" type="text" autocomplete="off" ></input>
+						</div>
+						<!-- <div>
+							<label class="w3-label">Checkbox Object</label>
+							<input id="checkboxNg-model" class="w3-input" type="text" autocomplete="off"></input>
+						</div> -->
+						<div>
+							<label class="w3-label">Checkbox Value</label>
+							<input id="checkboxValue" name="checkBoxValue" ng-model="vm.model.checkbox.value" class="w3-input" type="text" autocomplete="off" ></index>
+						</div>
+						
+						<div>
+							<select class="w3-select padding-top" name="checkBoxColumn" id="chk-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div style="float:right">
+							<button type="submit" id="btn-editCheckboxDiv" class="btn btn-primary" value="Edit">Save changes</button>
+							<button type="button"   data-dismiss="modal" class="btn btn-primary" value="Cancel">Cancel</button>
+						</div>
+						</div>
+					</form>
+	</div>
+</div>
+
+<!-- DYNAMIC CHECKBOX EDIT MODAL -->
+<div class="modal fade" id="dynamic-chk-modal" tabindex="-1" role="dialog" style="overflow-y: scroll !important;">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Checkbox
+	</div>
+	<div class="w3-container w3-center textbox-div" >
+					<form style="background-color:white" class="w3-container padding-top3 padding-bottom" id="dynamicChkModal">
+						<input id="DynamicChkdivId" class="form-control"  type="hidden" ></input>
+						<div>
+							<label class="w3-label">Checkbox Label</label>
+							<input id="DynaChkLabel" name="DynaChkLabel" class="w3-input" type="text" autocomplete="off" ng-change="vm.model.setName(vm.model.dynamicCheckbox.label,vm.model.dynamicCheckbox);vm.model.dynamicCheckbox.placeHolder = vm.model.dynamicCheckbox.label" ng-model="vm.model.dynamicCheckbox.label"></input>
+						</div>
+						<div>
+							<label class="w3-label">Checkbox Name</label>
+							<input id="DynaChkName" name="DynaChkName" class="w3-input" type="text" autocomplete="off" ng-model="vm.model.dynamicCheckbox.name"></input>
+						</div>
+						<div>
+						<div class="row">
+						<div class="col-md-8" style="padding-left: 0px">
+							<!-- <label class="w3-label">Radio Object</label>
+							<input id="radioNg-model" class="w3-input" type="text" autocomplete="off"></input> -->
+						</div>
+						<div class="col-md-4">
+							<!-- <label class="w3-label" style="margin-top: 20px;">Is Dynamic
+							<input id="isDynamicCheckbox" class="" type="checkbox"></input>
+							</label> -->
+						</div>	
+						</div>
+						</div>
+						<div class="option" id="dia-check-firstdiv">		
+							<div class="row">
+							<div class="col-md-10 padding0" >
+							<label class="w3-label">CheckBox option</label>
+							<input  class="checkbox-option w3-input" type="text" autocomplete="off" ></input>
+							</div>
+							<div class="col-md-2 w3-padding-16">
+								<span class="pull-right"><button type="button"  class="btn btn-primary Addcheckbox">+</button> </span>
+							</div>
+							</div>
+							</div>
+					<div class="Addedcheckbox">
+						
+					</div>
+
+					<div>
+							<select class="w3-select padding-top" name="chkColumn" id="dynachk-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+							<div style="float: right">
+								<button type="submit" id="btn-editDynaChkDiv" class="btn btn-primary"  value="Edit" >Save changes</button> 
+								<button type="button" class="btn btn-primary"  data-dismiss="modal" value="Cancel">Cancel</button>
+							</div>
+						</div>
+					</form>
+	</div>
+</div>
+
+
+<!-- RADIO EDIT MODAL -->
+<div class="modal fade" id="radio-modal" tabindex="-1" role="dialog" style="overflow-y: scroll !important;">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Radio
+	</div>
+	<div class="w3-container w3-center textbox-div" >
+					<form style="background-color:white" class="w3-container padding-top3 padding-bottom" id="radioModal">
+						<input id="DynamicRadiodivId" class="form-control"  type="hidden" ></input>
+						<div>
+							<label class="w3-label">Radio Label</label>
+							<input id="radioLabel" name="radioLabel" class="w3-input" type="text" autocomplete="off" ng-change="vm.model.setName(vm.model.radio.label,vm.model.radio);vm.model.radio.placeHolder = vm.model.radio.label" ng-model="vm.model.radio.label"></input>
+						</div>
+						<div>
+							<label class="w3-label">Radio Name</label>
+							<input id="radioName" name="radioName" class="w3-input" type="text" autocomplete="off" ng-model="vm.model.radio.name" ></input>
+						</div>
+						<div>
+						<div class="row">
+						<div class="col-md-8" style="padding-left: 0px">
+							<!-- <label class="w3-label">Radio Object</label>
+							<input id="radioNg-model" class="w3-input" type="text" autocomplete="off"></input> -->
+						</div>
+						<div class="col-md-4">
+							<!-- <label class="w3-label" style="margin-top: 20px;">Is Dynamic
+							<input id="isDynamicRadio" class="" type="checkbox"></input>
+							</label> -->
+						</div>	
+						</div>
+						</div>
+						<div class="option" id="radiofirstdiv">		
+							<div class="row">
+							<div class="col-md-10 padding0" >
+							<label class="w3-label">Radio option</label>
+							<input  class="radio-option w3-input" type="text" autocomplete="off"></input>
+							</div>
+							<div class="col-md-2 w3-padding-16">
+								<span class="pull-right"><button type="button"  class="btn btn-primary Addradio">+</button> </span>
+							</div>
+							</div>
+							</div>
+					<div class="Addedradio">
+						
+					</div>
+
+					<div>
+							<select class="w3-select padding-top" name="radioColumn" id="radio-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+							<div style="float: right">
+								<button type="submit" id="btn-editRadioDiv" class="btn btn-primary"  value="Edit" >Save changes</button> 
+								<button type="button" class="btn btn-primary"  data-dismiss="modal" value="Cancel">Cancel</button>
+							</div>
+						</div>
+					</form>
+	</div>
+</div>
+
+<!-- SELECT EDIT MODAL -->
+<div class="modal fade" id="select-modal" tabindex="-1" role="dialog" style="overflow-y:scroll !important">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Select
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+					<form style="background-color:white" class="w3-container padding-top3 padding-bottom " id="selectModal">
+						<input id="DynamicSelectdivId" class="w3-input" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Select Label</label>
+							<input id="selectLabel" name="selectLabel" class="w3-input" type="text" autocomplete="off" ng-change="vm.model.setName(vm.model.selectBox.label,vm.model.selectBox);vm.model.selectBox.placeHolder = vm.model.selectBox.label" ng-model="vm.model.selectBox.label"></input>
+						</div>
+						<div>
+							<label class="w3-label">Select Name</label>
+							<input id="selectName" name="selectName" class="w3-input" type="text" autocomplete="off" ng-model="vm.model.selectBox.name" ></input>
+						</div>
+						<div class="row">
+						<div class="col-md-8" style="padding-left: 0px">
+							<!-- <label class="w3-label">Select Object</label>
+							<input id="selectNg-model" class="w3-input" type="text" autocomplete="off"></input> -->
+						</div>
+						<div class="col-md-4">
+							<!-- <label class="w3-label" style="margin-top: 20px;">Is Dynamic
+							<input id="isDynamicSelect" class="" type="checkbox"></input>	
+							</label> -->
+						</div>	
+						</div>
+						<div id="selectOptions" class="option">
+						<div class="row">
+							<div class="col-md-10 padding0">
+							<label class="w3-label">Select option</label>
+							<input  class="select-option w3-input" type="text" autocomplete="off" ></input>
+							</div>
+							<div class="col-md-2 w3-padding-16">
+							<span class="pull-right"><button type="button" id="addDropDown" class="btn btn-primary">+</button> </span>
+							</div>
+						</div>
+						</div>
+						
+						<div>
+							<select class="w3-select padding-top" name="selectColumn" id="select-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						
+						<div class="padd_top_bottom">
+						<div style="float:right">
+							<button id="btn-editSelectDiv" class="btn btn-primary" type="submit" value="Edit" >Save changes</button>
+							<button  type="button" class="btn btn-primary" data-dismiss="modal" value="Cancel">Cancel</button>
+						</div>
+						</div>
+					</form>
+	</div>
+</div>
+
+<!-- SELECT EDIT MODAL -->
+<div class="modal fade" id="table-modal" tabindex="-1" role="dialog" >
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Table
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+					<form style="background-color:white" class="w3-container padding-bottom " id="tableModal">
+						<input id="DynamicTabledivId" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Table Label</label>
+							<input id="tableLabel"  class="w3-input" type="text" autocomplete="off" ng-model="vm.model.table.label" ng-change="vm.model.setName(vm.model.table.label,vm.model.table);vm.model.table.placeHolder = vm.model.table.label"></input>
+						</div>
+						<div>
+							<label class="w3-label">Table Name</label>
+							<input id="tableName" ng-model="vm.model.table.name" class="w3-input" type="text" autocomplete="off" ></input>
+						</div>
+						<div>
+							<label class="w3-label">Number of row</label>
+							<input  class="noRow w3-input" type="text" autocomplete="off" ></index>
+						</div>
+						<div>
+							<label class="w3-label">Number of column</label>
+							<input  class="noCol w3-input" type="text" autocomplete="off" ></index>
+						</div>
+						<div>
+							<select class="w3-select padding-top" id="table-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div style="float:right">
+							<button class="btn btn-primary" id="btn-editTableDiv" type="submit" value="Edit">Save changes</button>
+							<button class="btn btn-primary" type="button" data-dismiss="modal" value="Cancel">Cancel</button>
+						</div>
+						</div>
+					</form>
+	</div>
+</div>
+
+<!-- FieldSet Modal -->
+<div class="modal fade" id="fieldset-modal" tabindex="-1" role="dialog" >
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Fieldset
+	</div>
+	<div class="w3-container w3-center textbox-div" >
+					<form style="background-color:white" class="w3-container padding-top3 padding-bottom">
+						<input id="DynamicfiledsetDivId" class="form-control"  type="hidden" ></input>
+						<div>
+							<label class="w3-label">Legend Label</label>
+							<input id="legendLabel" class="w3-input" name="" type="text" autocomplete="off"></input>
+						</div>
+
+						<div>
+							<select class="w3-select padding-top" name="radioColumn" id="fieldset-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+							<div class="pull-right padding_bottom10">
+								<button type="submit" id="btn-editFieldsetDiv" class="btn btn-primary"  value="Edit" >Save changes</button> 
+								<button type="button" class="btn btn-primary dismiss"  data-dismiss="modal" value="Cancel">Cancel</button>
+							</div>
+						</div>
+					</form>
+	</div>
+</div>
+
+<!-- TEXT BOX EDIT MODAL -->
+<div class="modal fade" id="calendar-modal" tabindex="-1" role="dialog">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Text Box
+	</div>
+	<div class="w3-container  w3-center calendar-div" >
+					<form style="background-color:white" class="padding-bottom " id="calendarModal">
+						<input id="DynamicCalendarDivId" type="hidden" ></input>
+						<div>
+						<label class="w3-label">Calendar Label</label>
+						<input id="calendarLabel" name="calendarLabel" class="w3-input" type="text" autocomplete="off" ng-change="onCalendarLableChange()" ng-model="calendarLbl">
+						</div>
+						<div>
+						<label class="w3-label">Calendar Name</label>
+						<input id="calendarName" name="calendarName" ng-model="calendarName" ng-change=" calendarName= validateSpclChar(calendarName)" class="w3-input" type="text" autocomplete="off">
+						</div>
+						<br>
+						<div>
+							<select class="w3-select padding-top" name="calendarColumn" id="calendar-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div style="float:right">
+						<!-- <input id="btn-editTextboxDiv" type="button" value="Edit" />
+						<input class="btn" data-dismiss="modal" aria-hidden="true" value="Cancel"/> -->
+                		<button type="submit" id="btn-editCalendarDiv"  class="btn btn-primary">Save changes</button>
+                		<button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>
+						</div>
+						</div>
+					</form>
+	</div>
+</div>
+
+
+	</section>
+			<div class="row padd_top_bottom">
+				<div class="col-md-12 col-sm-12">
+					<div class="submit-button" >
+						<input type="submit" ng-if="saveBtnFlag==true" value="Save" class="btn btn-primary" ng-click="vm.model.saveDataObject()" id="submitBtn">
+						<input type="submit" ng-if="saveBtnFlag==false" value="Update" class="btn btn-primary" ng-click="vm.model.updateDataObject()" id="submitBtn">
+					</div>
+				</div>
+			</div>
+  
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+/* function showEditOption(){
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+} */
+function animation(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+function sticky_relocate() {
+    var window_top = $(window).scrollTop();
+    var div_top = $('#sticky-anchor').offset().top - 50;
+    if (window_top > div_top) {
+        $('#sticky').addClass('stick');
+        $('#sticky-anchor').height($('#sticky').outerHeight());
+        $('#dropContainer').removeClass("container-onstick").addClass("container-onstick");
+    } else {
+        $('#sticky').removeClass('stick');
+        $('#sticky-anchor').height(0);
+        $('#dropContainer').removeClass("container-onstick");
+    }
+}
+
+
+	/* $(document).on('click', ".txtbox", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+
+	$(document).on('click', ".textarea", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+
+	$(document).on('click', ".checkboxcol1", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+
+	$(document).on('click', ".headercol", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+
+	$(document).on('click', ".fieldsetcol", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+
+	$(document).on('click', ".checkboxcol", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+
+	$(document).on('click', ".radiocol", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+
+	$(document).on('click', ".dropdowncol", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+
+	 $(document).on('dblclick', ".tabelcol", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+  
+	$(document).on('click', ".calendarcol", function () {
+	$(this).find('.fa-trash-o').toggle();
+	$(this).find('.fa-pencil-square-o').toggle();
+	});
+ */
+ $(".Addradio").click(function () {
+	  $(".Addedradio").append('<div class="row divaddedradio">'
+			  +'<div class="col-md-12">'
+				+'<div class="col-md-10">'
+				+'<label class="w3-label">Radio option</label>'
+				+'<input class="radio-option w3-input" type="text" autocomplete="off">'
+			+'</div>'
+			+'<div class="col-md-2 w3-padding-16">'
+				+'<span class="pull-right removeradio"><button type="button" class="btn btn-primary">-</button> </span>'
+			+'</div>'
+			+'</div>');
+	});
+	
+$(".Addcheckbox").click(function () {
+	  $(".Addedcheckbox").append('<div class="row divaddedradio">'
+			  +'<div class="col-md-12">'
+				+'<div class="col-md-10">'
+				+'<label class="w3-label">Checkbox option</label>'
+				+'<input class="checkbox-option w3-input" type="text" autocomplete="off">'
+			+'</div>'
+			+'<div class="col-md-2 w3-padding-16">'
+				+'<span class="pull-right removeradio"><button type="button" class="btn btn-primary">-</button> </span>'
+			+'</div>'
+			+'</div>');
+	});
+	
+
+
+$(document).on('click','.removeradio',function() {
+	 $(this).parents().closest('.divaddedradio').remove();
+}); 
+
+
+$('#addDropDown').click(function(){
+	var opt = "<div class='row addedDropDown'>"
+				+ "<div class='col-md-10 padding0'>"
+				+ "<label class='w3-label'>Select option</label>"
+				+ "<input  class='select-option w3-input' type='text' ></input>"
+				+ "</div>"
+				+ "<div class='col-md-2 w3-padding-16'>"
+				+ "<span class='pull-right'><button type='button' class='btn btn-primary removeDropDown'>-</button> </span>"
+				+ "</div>"
+				+ "</div>";
+	$('#selectOptions').append(opt);
+				
+});
+
+$(document).on('click','.removeDropDown',function() {
+	 $(this).parents().closest('.addedDropDown').remove();
+}); 
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Data Object");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="dataObject"]').parents("li").addClass("active");
+});
+</script>  

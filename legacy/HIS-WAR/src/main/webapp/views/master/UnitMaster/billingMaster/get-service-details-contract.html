@@ -1,0 +1,72 @@
+<div class="row common-popup-height-350">
+<div class="row his-style" >
+<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right margin-top5">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search " ng-model="searchServiceFilter" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+	</div>
+	<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="width1 text-center media-middle ">
+					<input
+						type="checkbox" ng-model="selectAllSev"
+						ng-click="selectAllServices(selectAllSev)"
+						class="ng-pristine ng-untouched ng-valid ng-empty"></th>
+					<th class="width10">Group
+						<div class="float_right">
+							<div>
+								<i class="fa fa-caret-up" aria-hidden="true"></i>
+							</div>
+							<div class="margin-top-8">
+								<i class="fa fa-caret-down" aria-hidden="true"></i>
+							</div>
+						</div>
+					</th>
+					<th class="width10">Sub Group
+						<div class="float_right">
+							<div>
+								<i class="fa fa-caret-up" aria-hidden="true"></i>
+							</div>
+							<div class="margin-top-8">
+								<i class="fa fa-caret-down" aria-hidden="true"></i>
+							</div>
+						</div>
+					</th>
+					<th class="width10">Service Code
+						<div class="float_right">
+							<div>
+								<i class="fa fa-caret-up" aria-hidden="true"></i>
+							</div>
+							<div class="margin-top-8">
+								<i class="fa fa-caret-down" aria-hidden="true"></i>
+							</div>
+						</div>
+					</th>
+					<th class="width10">Service Description
+						<div class="float_right">
+							<div>
+								<i class="fa fa-caret-up" aria-hidden="true"></i>
+							</div>
+							<div class="margin-top-8">
+								<i class="fa fa-caret-down" aria-hidden="true"></i>
+							</div>
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- ngRepeat: datum in vm.model.storeDataList | filter:search -->
+				<tr ng-repeat="serv in searchServiceList|filter:searchServiceFilter">
+				<td><input	type="checkbox" ng-model="serv.isSelected" class="ng-pristine ng-untouched ng-valid ng-empty"></td>
+				<td>{{serv.specialityDesc}}</td>
+				<td>{{serv.subSpecialityDesc}}</td>
+				<td>{{serv.serviceCode}}</td>
+				<td>{{serv.serviceDesc}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- **************** Get service modal EHC pakcage end ****************  -->

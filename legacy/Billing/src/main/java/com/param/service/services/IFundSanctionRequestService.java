@@ -1,0 +1,39 @@
+package com.param.service.services;
+
+import in.param.exception.ApplicationException;
+import com.param.global.common.Response;
+import com.param.opd.encounter.dto.FundSanctionRequestDocumentDto;
+import com.param.service.dto.BillFundSanctionDetailsDto;
+import com.param.service.dto.FundSanctionAcceptanceRequestDto;
+import com.param.service.dto.FundSanctionRequestDto;
+
+@SuppressWarnings("rawtypes")
+public interface IFundSanctionRequestService  {
+
+	Response saveFundSanctionRequest(FundSanctionRequestDto fundSanctionRequestDto)throws ApplicationException;
+
+	Response fundSanctionRequestByPatientId(FundSanctionRequestDto fundSanctionRequestDto)throws ApplicationException;
+
+	Response fundSanctionRequestDocument(FundSanctionRequestDocumentDto fundSanctionRequestDocumentDto)throws ApplicationException;
+
+	Response getDocumentsByFundSanctionRequestId(FundSanctionRequestDocumentDto fundSanctionRequestDocumentDto)throws ApplicationException;
+
+	Response saveApprovalRequest(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response getAllPendingVirtualAcceptance(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response getInflowAcceptedRequest(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response getVirtualRequestPayments(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response getAllFundApprovalRequestByPatient(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response saveBillFundDetails(BillFundSanctionDetailsDto billFundSanctionDetailsDto)throws ApplicationException;
+
+	Response getBillFundDetailsByBillMasterId(BillFundSanctionDetailsDto billFundSanctionDetailsDto)throws ApplicationException;
+
+
+
+
+
+}

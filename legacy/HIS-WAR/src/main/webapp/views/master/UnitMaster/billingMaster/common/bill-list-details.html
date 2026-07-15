@@ -1,0 +1,135 @@
+
+<!-- BILL LIST VIEW POPUP -->
+<div id="billListDetails" class="common-large-popup modal fade ng-scope in his-style" role="dialog" data-keyboard="false" data-backdrop="static" style="overflow: scroll;">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Bill Details
+						<button type="button" class="close" data-dismiss="modal" ng-click="closePopup()">&times;</button>
+					</div>
+				</div>
+				
+				<!-- demography -->
+				<div class="row searched-patient-details-row">
+					<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+						<span class="profile_pic"> 
+						<img alt="" ng-src="{{(billDetailsPatientInfo.imagePath!=null&&billDetailsPatientInfo.imagePath!='')?billDetailsPatientInfo.imagePath:(billDetailsPatientInfo.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" class="img-circle" style="width:30px;height:30px">
+						</span>
+						<span class="margin-left10">{{billDetailsPatientInfo.patientName}}/{{billDetailsPatientInfo.ageString}} </span>
+						<span class="margin-left10"><span class="padding-right5 font-weight600">UHID:</span> {{billDetailsPatientInfo.uhidNumber}}</span>
+						<span class="margin-left10"><span class="padding-right5 font-weight600">DOB:</span> {{billDetailsPatientInfo.birthDate}}</span>
+					</div>
+					
+				</div>
+				<!-- end demography -->
+<!--				<div class="modal-body row " style="overflow-y: auto;">&lt;!&ndash; fix-height-scroll550 &ndash;&gt;-->
+				<div class="row" style="position: relative"><!-- fix-height-scroll550 -->
+					 <div class="col-md-12">
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										 <div class="">
+											<select class="text-input floating-label"  convert-to-number ng-model="payeeId" ng-change="changePayee(payeeId)">
+												<option>-</option>
+												<option ng-repeat="payee in payeeList" value="{{payee.payeeId}}" >{{payee.companyDesc}}</option>
+											</select> <label for="code">Payer</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row margin-top8">
+									<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 custom-sub-tab">
+										<ul class="tabs nav nav-tabs">
+											<li ng-class="{ active : isSetFirstTabLevel(1) }" class="active width25" ><a href="" ng-click="setFirstTabLevel(1);" ng-href="#/billList/serviceDetails">Service Details</a></li>
+											<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width25"><a href="" ng-click="setFirstTabLevel(2);" ng-href="#/billList/packageDetails">Package Details</a></li>
+											<!-- <li ng-class="{ active : isSetFirstTabLevel(3) }" class="width25"  ng-if="visitTypeId==1">
+											 <div ng-click="setFirstTabLevel(3);">
+												<div ng-if="isPreOrPostBilling=='N' && visitTypeId==1">
+													<a ng-click="getPendingServicesByEncounterId()" ng-href="#/billList/groupDetails">Pending Services</a>
+												</div>
+								 				<div  ng-if="isPreOrPostBilling=='Y' && visitTypeId==1">
+													<a ng-click="getAutoRenderedServicesByPatient()" ng-href="#/billList/groupDetailsPrePost">Pending Services</a>
+												</div>
+											 </div>
+											</li> -->
+											<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width25"  ng-click="setFirstTabLevel(3);" ng-if="isPreOrPostBilling=='N' && visitTypeId==1">
+											<a ng-click="getPendingServicesByEncounterId()" ng-href="#/billList/groupDetails">Pending Services</a>
+											<div  title="Pending Services Count" ng-if="pendingCountN > 0" class="div-circle-doc div-circle-doc-bg-pending ng-binding" style="margin-left:83%;margin-top: -22px;font-size: 12px; ;  height:21px; width:26px; background-color: #ff0000;"  ><strong>{{pendingCountN}}</strong></div>
+											</li>
+											 <li ng-class="{ active : isSetFirstTabLevel(3) }" class="width25"  ng-click="setFirstTabLevel(3);" ng-if="isPreOrPostBilling=='Y' && visitTypeId==1">
+											 <a ng-click="getAutoRenderedServicesByPatient()" ng-href="#/billList/groupDetailsPrePost">Pending Services</a>
+											 <div  title="Pending Services Count" ng-if="pendingCountY > 0" class="div-circle-doc div-circle-doc-bg-pending ng-binding" style="margin-left:83%;margin-top: -22px;font-size: 12px;   height:21px; width:26px; background-color: #ff0000;"  ><strong>{{pendingCountY}}</strong></div>
+											 </li>
+											
+											
+										</ul>
+									</div>
+								<!-- <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 ">
+									<div class="tab-btn-primary">
+										<a class="btn btn-primary btn-save-box-shadow" ng-href="#/billList/serviceDetails">Service Details</a>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 ">
+									<div class="tab-btn-primary">
+										<a class="btn btn-primary btn-save-box-shadow" ng-href="#/billList/packageDetails">Package Details</a>
+									</div>
+								</div> -->
+									
+								<!-- ****** tab contents row start ****** -->
+								<!-- <div class="row">
+									*** service details tab - start ****
+										<div class="row padding-left-right-set4">
+											<div ng-show="isSetFirstTabLevel(1) "  class="second-level-tab-display-div">
+												<div class="row his-style">
+													<a class="btn btn-primary btn-save-box-shadow" ng-href="#/billList/serviceDetails">Service Details</a>
+												</div>
+											</div>
+										</div>
+									*** service details tab - end ****
+									
+									*** package details tab - start ****
+										<div class="row padding-left-right-set4">
+											<div ng-show="isSetFirstTabLevel(2) "  class="second-level-tab-display-div">
+												<div class="row his-style">
+													<a class="btn btn-primary btn-save-box-shadow" ng-href="#/billList/packageDetails">Package Details</a>
+												</div>
+											</div>
+										</div>
+									*** package details tab - end ****
+									
+									*** pending details tab - start ****
+										<div class="row padding-left-right-set4">
+											<div ng-show="isSetFirstTabLevel(3) "  class="second-level-tab-display-div">
+												<div class="row his-style">
+												
+												</div>
+											</div>
+										</div>
+									*** pending details tab - end ****
+									
+								</div>  -->
+								<!-- ****** tab contents row end ****** -->
+								
+								<!-- <div class="col-lg-4 col-md-4 col-lg-4 padding-left-right-set4">
+									<input type="text" autocomplete="off" class="text-search-box" placeholder="Search"  ng-model="searchAddedService" style="margin-top:0px">
+									<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+								</div> -->
+						</div>
+						 <div class="" ui-view="">
+			
+						</div>
+					</div> 
+				</div>
+			</div>
+		</div>
+</div>
+<div ng-include="'./views/common/collect-payment-modal.html'" ></div>
+
+
+

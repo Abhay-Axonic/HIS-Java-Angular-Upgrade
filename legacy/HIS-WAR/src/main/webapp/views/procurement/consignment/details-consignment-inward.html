@@ -1,0 +1,281 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="row margin-top10">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"><b class="padding-right10">Inward No. :</b>
+					<label>{{vm.model.consignInwardRequestsDetails.inwardNo ? vm.model.consignInwardRequestsDetails.inwardNo : '-'}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"><b class="padding-right10">Inward Date:</b>
+					<label>
+						{{vm.model.consignInwardRequestsDetails.inwardDate ? vm.model.consignInwardRequestsDetails.inwardDate : '-' |
+						date:'dd/MM/yyyy' : 'UTC'}}
+					</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"><b class="padding-right10">Store:</b>
+					<label>{{vm.model.consignInwardRequestsDetails.storeName ? vm.model.consignInwardRequestsDetails.storeName : '-'}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"><b class="padding-right10"> Vendor:</b>
+					<label>{{vm.model.consignInwardRequestsDetails.vendorName ? vm.model.consignInwardRequestsDetails.vendorName :
+						'-'}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row margin-top10">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"><b class="padding-right10">Inward By:</b>
+					<label>{{vm.model.consignInwardRequestsDetails.inWardBy ? vm.model.consignInwardRequestsDetails.inWardBy : '-'}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 padding-top4 padding-top10 height500-table-with-scroll">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered first-checkBox-padding">
+					<thead class="mainServiceTableCommon">
+						<tr>
+							<th class="width7">
+								Item Code
+								<div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">
+								Item Name
+								<div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width4">
+								UOM
+								<div class="float_right" ng-click="sortType = 'uomType'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width7">
+								UOM Unit
+								<div class="float_right" ng-click="sortType = 'uomUnit'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width6">
+								Batch No
+								<div class="float_right" ng-click="sortType = 'batchNo'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width7">
+								Expiry Date
+								<div class="float_right" ng-click="sortType = 'expiryDate'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5">
+								Qty
+								<div class="float_right" ng-click="sortType = 'quantity'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5">
+								COP
+								<div class="float_right" ng-click="sortType = 'cop'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5">
+								Tax %
+								<div class="float_right" ng-click="sortType = 'taxPercentage'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width6">
+								Total Amount
+								<div class="float_right" ng-click="sortType = 'totalAmount'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5">
+								Discount
+								<div class="float_right" ng-click="sortType = 'totalDiscount'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width6">
+								Tax Amount
+								<div class="float_right" ng-click="sortType = 'totalTaxAmount'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width6">
+								Net Amount
+								<div class="float_right" ng-click="sortType = 'totalNetAmount'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">
+								LCOP Amount
+								<div class="float_right" ng-click="sortType = 'lcopAmount'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">
+								Remarks
+								<div class="float_right" ng-click="sortType = 'remark'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in vm.model.consignInwardRequestsDetails.item | orderBy:sortType:sortReverse">
+							<td class="width7">{{item.itemCode}}</td>
+							<td class="width8">{{item.itemName}}</td>
+							<td class="width5">{{item.uomType}}</td>
+							<td class="width7">{{item.uomUnit}}</td>
+							<td class="width6">{{item.batchNo}}</td>
+							<td class="width7">{{item.expiryDate | date:'dd/MM/yyyy'}}</td>
+							<td class="width8">{{item.quantity}}</td>
+							<td class="width5"> {{vm.model.Currency}} {{item.cop}}</td>
+							<td class="width7">{{item.taxPercentage}}</td>
+							<td class="width6">{{vm.model.Currency}} {{ item.totalAmount | number:2}}</td>
+							<td class="width6">{{vm.model.Currency}} {{ item.totalDiscount | number:2}}</td>
+							<td class="width6">{{vm.model.Currency}} {{ item.totalTaxAmount | number:2}} </td>
+							<td class="width6">{{vm.model.Currency}} {{ item.totalNetAmount | number:2}}</td>
+							<td class="width8">{{vm.model.Currency}} {{item.lcop | number:2}}</td>
+							<td class="width6">{{ item.remark | number:2}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					<table class="table table-bordered first-checkBox-padding">
+						<tfoot>
+							<tr>
+								<th class="text-right">Total Amount </th>
+								<th>{{vm.model.Currency}} {{(vm.model.totalAmount = (vm.model.consignInwardRequestsDetails.item |
+									sumByColumn: 'totalAmount') || 0) | number:2}}</th>
+								<th>Discount</th>
+								<th>{{vm.model.Currency}} {{(vm.model.totalDiscount = (vm.model.consignInwardRequestsDetails.item |
+									sumByColumn: 'totalDiscount') || 0) | number:2}}</th>
+								<th>Tax Amount</th>
+								<th>{{vm.model.Currency}} {{(vm.model.totalTaxAmount = (vm.model.consignInwardRequestsDetails.item |
+									sumByColumn: 'totalTaxAmount') || 0) | number:2}}</th>
+								<th>Net Amount</th>
+								<th>{{vm.model.Currency}} {{(vm.model.totalNetAmount = (vm.model.consignInwardRequestsDetails.item |
+									sumByColumn: 'totalNetAmount') || 0) | number:2}}</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-1 col-md-1 col-sm-2 text-right">
+					<label>Remark:</label>
+				</div>
+				<div class="col-lg-10 col-md-10 col-sm-8 padding-left-right8">
+					<textarea rows="1" ng-model="vm.model.consignInwardRequestsDetails.remark" class="form-control" readonly></textarea>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+					<a href="#/consignmentInward">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$(".selectedPageName").text("Consignment Inward");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="detailsConsignmentInward"]').parents("li").addClass("active");
+	});
+</script>

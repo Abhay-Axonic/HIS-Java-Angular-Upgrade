@@ -1,0 +1,23 @@
+package com.param.global.dao;
+
+import com.param.global.common.Response;
+import com.param.global.dto.AdvisedDateAppointmentDto;
+import com.param.opd.coversheet.dto.PrescriptionDto;
+
+import in.param.exception.ApplicationException;
+
+public interface IAdvisedDateAppointmentDao {
+
+	Response saveAdvisedDateAppointment(AdvisedDateAppointmentDto advisedDateAppointmentDto)throws ApplicationException;
+
+	Response getAdvisedDateAppointmentList(AdvisedDateAppointmentDto advisedDateAppointmentDto)throws ApplicationException;
+
+	Response getAdvisedDateAppointmentListCount(AdvisedDateAppointmentDto advisedDateAppointmentDto)throws ApplicationException;
+
+	Response checkAppointmentAvailable(AdvisedDateAppointmentDto advisedDateAppointmentDto)throws ApplicationException;
+
+	Response updateAdvisedDateAppointment(AdvisedDateAppointmentDto advisedDateAppointmentDto)throws ApplicationException;
+
+	Response updateCancelStatusInAdvisedAppointment(PrescriptionDto medicationDTOs)throws ApplicationException;
+
+}

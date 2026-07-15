@@ -1,0 +1,59 @@
+package com.param.procurement.workOrder.dao.workOrderCreation;
+
+
+import in.param.exception.ApplicationException;
+
+import com.param.global.common.Response;
+import com.param.global.pharmacy.dto.WorkOrderApprovalSettlementDto;
+import com.param.global.pharmacy.dto.WorkOrderCreationApprovalDto;
+import com.param.global.pharmacy.dto.WorkOrderCreationRequestDocumentDto;
+import com.param.global.pharmacy.dto.WorkOrderCreationRequestDto;
+@SuppressWarnings("rawtypes")
+public interface INewWorkOrderCreationDao {
+
+
+	Response saveCreationRequest(WorkOrderCreationRequestDto requestDto)throws ApplicationException;
+
+	Response workorderRequestDocument(WorkOrderCreationRequestDocumentDto requestDocumentDto)throws ApplicationException;
+
+	Response getCreationRequestList(WorkOrderCreationRequestDto requestDto)throws ApplicationException;
+
+	Response getCreationRequestDetailsbyId(WorkOrderCreationRequestDto requestDto)throws ApplicationException;
+
+	Response requestChangeToPending(WorkOrderCreationRequestDto requestDto)throws ApplicationException;
+
+	Response requestChangeToCancel(WorkOrderCreationRequestDto requestDto)throws ApplicationException;
+
+//	Response requestChangeToReject(WorkOrderCreationRequestDto requestDto)throws ApplicationException;
+
+	Response worequestChangeToReject(WorkOrderCreationRequestDto requestDto)throws ApplicationException;
+
+	Response getCreationApprovalDetailsbyId(WorkOrderCreationApprovalDto apptovalDto)throws ApplicationException;
+
+	Response saveCreationApprovalDetails(WorkOrderCreationApprovalDto apptovalDto)throws ApplicationException;
+
+	Response requestChangeToApproved(WorkOrderCreationRequestDto requestDto)throws ApplicationException;
+
+	Response getRequestApprovalList(WorkOrderCreationApprovalDto requestDto)throws ApplicationException;
+
+	Response saveWorkOrderSettle(WorkOrderApprovalSettlementDto requestDto)throws ApplicationException;
+
+	Response getRequestSettledList(WorkOrderApprovalSettlementDto requestDto)throws ApplicationException;
+
+	Response getRequestSettledListDetails(WorkOrderApprovalSettlementDto requestDto)throws ApplicationException;
+
+	Response saveCreationCompletionDetails(WorkOrderCreationApprovalDto apptovalDto);
+
+	Response getCreationApprovalDetailsbyIdEdit(WorkOrderCreationApprovalDto apptovalDto);
+
+	Response getCreationRequestListCompletion(WorkOrderCreationRequestDto requestDto);
+
+	Response requestChangeToApprovedCompletion(WorkOrderCreationRequestDto requestDto);
+
+	Response getWOCompletedTransaction(WorkOrderCreationApprovalDto apptovalDto);
+
+	Response getCreationApprovalDetailsbyIdSettlement(WorkOrderCreationApprovalDto apptovalDto);
+
+
+    Response updateorder(WorkOrderCreationApprovalDto apptovalDto);
+}

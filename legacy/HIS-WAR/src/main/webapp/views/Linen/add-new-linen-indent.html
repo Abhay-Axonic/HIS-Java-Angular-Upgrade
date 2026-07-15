@@ -1,0 +1,379 @@
+<div id="page-content-wrapper" class="ng-scope">
+  <div class="container-fluid his-style">
+    <fieldset class="main-fieldset">
+      <!-- <legend class="heading-div">Add New Store Indent</legend> -->
+      <div class="row margin-top10">
+        <div class="col-lg-2 col-md-1 col-sm-2 padding-left-right-set4 width7">
+          <label for="isMainStoreCheckbox" style="font-size: 12px; color:black;">Main Store </label>
+          <label class="switch switch-small">
+            <input type="checkbox" class="switchInput" ng-disabled="!!vm.model.indentId" ng-model="vm.model.isMainStore" name="isMainStoreCheckbox"
+              ng-change="vm.model.IsMainStore(vm.model.isMainStore)">
+            <div class="slider round slider-small"></div>
+          </label>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-3 padding-left-right-set4 padding-top10">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="row input-container">
+
+              <div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+                <i class="fa fa-tasks" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-11 col-sm-11 col-md-10">
+                <div class="">
+                  <select name="fromStore" id="fromStore" ng-disabled="!!vm.model.indentId" class="text-input floating-label dirty" ng-change="vm.model.searchStoreIndentData=[]"
+                    ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"> </select>
+                  <label for="code">Requesting Store</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="row input-container">
+              <div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+                <i class="fa fa-tasks" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-11 col-sm-11 col-md-10">
+                <div class="">
+                  <select name="toStore" id="toStore" ng-disabled="!!vm.model.indentId" class="text-input floating-label dirty" ng-change="vm.model.searchStoreIndentData=[]"
+                    ng-model="vm.model.toStore" data-ng-options="toStore.store for toStore in vm.model.toStores"> </select>
+                  <label for="code">Issuing Store</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 padding-left-right-set padding-top10">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="row input-container">
+              <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                <i class="fa fa-tasks" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-10 col-sm-10 col-md-10">
+                <div class="">
+                  <select name="priority" id="priority" class="text-input floating-label dirty" ng-model="vm.model.priority" data-ng-options="priority.priority for priority in vm.model.priorities">
+                  </select>
+                  <label for="code">Priority</label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="checkbox">
+              <label class="common-lable-color-set">
+
+                <button type="button" ng-disabled="vm.model.fromStore.id != '' && !vm.model.toStore.id != ''" data-dismiss="modal" class="btn btn-primary"
+                  style="margin-top: -9px;     width: 140%!important;" id="addBtn" ng-click="vm.model.GetItemList();">Add Item</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-1 padding-left-right-set4 text-width-auto padding-top10">
+
+        </div>
+        <div class="col-lg-3 col-md-2 col-sm-3 padding-left-right-set4 padding-top10 pull-right">
+          <div class="row input-container">
+            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </div>
+            <div class="col-lg-11 col-sm-11 col-md-11">
+              <div class="">
+                <input type="text" autocomplete="off" name="code" id="" ng-model="searchLinenIndent" class="text-input floating-label">
+                <label for="code">Search Item</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  fixed asset table start -->
+      <div class="row" id="fixeAssetRowId">
+        <div class="col-lg-12 col-md-12 padding-top10">
+          <table class="table table-bordered">
+            <thead>
+              <tr class="table-th-bg">
+                <th colspan="13" class="font-weight700">Linen Details</th>
+              </tr>
+              <tr>
+                <th class="width8">Linen Code
+                  <div class="float_right">
+                    <div>
+                      <i class="fa fa-caret-up" aria-hidden="true"></i>
+                    </div>
+                    <div class="margin-top-8">
+                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </th>
+                <th class="width8">Linen Name
+                  <div class="float_right">
+                    <div>
+                      <i class="fa fa-caret-up" aria-hidden="true"></i>
+                    </div>
+                    <div class="margin-top-8">
+                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </th>
+                <th class="width7">Stock Available
+                  <div class="float_right">
+                    <div>
+                      <i class="fa fa-caret-up" aria-hidden="true"></i>
+                    </div>
+                    <div class="margin-top-8">
+                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </th>
+                <th class="width7">Stock in Transit
+                  <div class="float_right">
+                    <div>
+                      <i class="fa fa-caret-up" aria-hidden="true"></i>
+                    </div>
+                    <div class="margin-top-8">
+                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </th>
+                <th class="width5">Indent quantity
+                  <div class="float_right">
+                    <div>
+                      <i class="fa fa-caret-up" aria-hidden="true"></i>
+                    </div>
+                    <div class="margin-top-8">
+                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </th>
+                <th class="width5">Specification
+                  <div class="float_right">
+                    <div>
+                      <i class="fa fa-caret-up" aria-hidden="true"></i>
+                    </div>
+                    <div class="margin-top-8">
+                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </th>
+                <th class="width3">Action taken
+                 
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in vm.model.ItemDetailList | filter: searchLinenIndent ">
+                <td>{{item.itemCode}}</td>
+                <td>{{item.itemName}}</td>
+                <td>{{item.stockAvailable}}</td>
+                <td>{{item.stockInTransit}}</td>
+                <td class="vertical-middle">
+                  <input type="text" autocomplete="off" class="w-100" max="{{item.stockAvailable}}" numbers-only ng-model="item.quantity" value="">
+                </td>
+                <td class="vertical-middle">
+                    <input type="text" autocomplete="off" class="w-100" max="{{item.stockAvailable}}" ng-model="item.specification" value="">
+                  </td>
+                <td>
+                  <a ng-click="vm.model.removeRowData(item)">
+                    <i class="fa fa-times"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- fixed asset table end -->
+    </fieldset>
+
+    <footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+      <div class="row his-style margin-top10 padding-right20">
+        <div class="col-md-1 text-right">
+          <label>Remark:</label>
+        </div>
+        <div class="col-md-9 padding-left-right8">
+          <textarea row="1" ng-model="vm.model.remark" class="form-control"></textarea>
+        </div>
+        <div class="col-md-1 padding-left0px-right6px">
+          <div class="">
+            <!-- common-save-button -->
+            <input type="button" value="Save" ng-click="vm.model.SaveLinenIndent();" class="btn btn-primary btn-save-box-shadow">
+          </div>
+        </div>
+        <div class="col-lg-1 col-md-1 padding-left-right-set4">
+          <a href="#/linenIndent">
+            <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+<div id="addNewItemWasteStore" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Add Item List
+          <button type="button" ng-click="" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body height-table-with-scroll	">
+        <fieldset>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+              <div class="row input-container">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                  <i class="fa fa-tasks" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11">
+                  <div class="">
+                    <select name="assetCategory" id="assetCategory" class="text-input floating-label dirty" data-ng-options="category.category for category in vm.model.assetCategories"
+                      ng-model="vm.model.assetCategory" ng-change="vm.model.GetProductCategoryList(vm.model.assetCategory.id)">
+                    </select>
+
+                    <label for="code">Asset Category</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+              <div class="row input-container">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                  <i class="fa fa-tasks" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11">
+                  <div class="">
+                    <select name="productCategory" id="productCategory" class="text-input floating-label dirty" data-ng-options="category.category for category in vm.model.productCategories"
+                      ng-model="vm.model.productCategory">
+                    </select>
+
+                    <label for="code">Product Category</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+              <div class="row input-container">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                  <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                  <div class="">
+                    <input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="search.itemCode">
+                    <label for="description" class="LISDynamicLabel">Item Code</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+              <div class="row input-container">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                  <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                  <div class="">
+                    <input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="search.itemName">
+                    <label for="description" class="LISDynamicLabel">Item Name</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style">
+              <div class="common-save-button">
+                <a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" style="width: auto;" ng-click="vm.model.searchNewItem()">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row common-popup-height-350">
+            <div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th class="width1 text-center media-middle ">
+                      <input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" />
+                    </th>
+                    <th class="width10">Asset Category
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width10">Product Category
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width10">Item Code
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width10">Item Name
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="item in vm.model.searchNewItemList | filter : search ">
+                    <td class="text-center">
+                      <input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItem(item)" />
+                    </td>
+                    <!-- ng-change="vm.model.CheckBoxVal(result)" ng-true-value="1" ng-false-value="0" -->
+                    <td>{{item.assetCategory}}</td>
+                    <td>{{item.productCategory}}</td>
+                    <td>{{item.itemCode}}</td>
+                    <td>{{item.itemName}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <div class="modal-footer">
+        <div class="row his-style">
+          <div class="col-md-11"></div>
+          <div class="col-md-1 padding-left0px-right6px">
+            <div class="common-save-button">
+              <input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-disabled="!vm.model.isItemChecked" ng-click="vm.model.AddItems()"
+                data-dismiss="modal">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("linen Indent");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="linenIndent"]').parents("li").addClass("active");
+});
+
+
+</script>

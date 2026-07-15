@@ -1,0 +1,1233 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="ng-scope" ng-include="'./views/common/patient-demography-opd.html'" style=""></div>
+		<!-- <div class="row">
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Patient Name
+				 :</b><label></label></span>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">UHID
+				 :</b><label></label></span>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Age
+				 :</b><label></label></span>
+			</div>
+		</div> -->
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">CPT Code
+				 :</b><label></label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Procedure
+				 :</b><label></label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Procedure Type
+				 :</b><label></label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">OT Type
+				 :</b><label></label></span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Order Date
+				 :</b><label></label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Prefer Date (s)
+				 :</b><label></label></span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+				<span class="margin-left10"><b class="padding-right10 ">Duration (mins)
+				 :</b><label></label></span>
+			</div>
+		</div>
+		<div class="row custom-sub-tab padding-left-right-set4">
+			<ul class="tabs nav nav-tabs">
+				<li ng-class="{ active : isSetFirstTabLevel(1) }" id="procedure-details" class="active width13">
+					<a href="" ng-click="setFirstTabLevel(1)">Procedure Details</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(8) }" id="Operation-Theater" class="width13">
+					<a href="" ng-click="setFirstTabLevel(8)">Operation Theatre</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(2) }" id="staff">
+					<a href="" ng-click="setFirstTabLevel(2)">Resource</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(3) }" id="equipment">
+					<a href="" ng-click="setFirstTabLevel(3)">Equipment</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(4) }" id="inventory">
+					<a href="" ng-click="setFirstTabLevel(4)">Inventory</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(5) }" id="service">
+					<a href="" ng-click="setFirstTabLevel(5)">Service</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(6) }" id="time-sheet">
+					<a href="" ng-click="setFirstTabLevel(6)">Time Sheet</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(7) }" id="CSSD">
+					<a href="" ng-click="setFirstTabLevel(7)">CSSD</a>
+				</li>
+			</ul>
+		</div>
+		<div class="row padding-left-right-set4">
+			<!-- Procedure Details Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+	
+									<label for="code">Specialty</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+	
+									<label for="code">Procedure Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Actual Procedure Performed</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add">
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+											<th class="width10">Specialty</th>
+											<th class="width10">Procedure Type</th>
+											<th class="width10">Actual Procedure Performed</th>
+											<th class="width5 text-center">Primary</th>
+											<th class="width5 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr>
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width5 text-center">
+												<label class="switch vertical-middle"> 
+													<input type="checkbox">
+													<div class="slider round"></div>
+												</label>
+											</td>
+											<td class="width5 text-center vertical-middle"><a title="Remove"><i class="fa fa-times"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Procedure Details Tab Content END-->
+			
+			<!-- Resource Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div">
+				
+				<div class="row custom-sub-tab padding-left-right-set4">
+					<ul class="tabs nav nav-tabs">
+						<li ng-class="{ active : isSetThirdTabLevel(1) }" id="" class="width13 active" style="">
+							<a href="" ng-click="setThirdTabLevel(1)">Doctor</a>
+						</li>
+						<li ng-class="{ active : isSetThirdTabLevel(2) }" id="" class="width13">
+							<a href="" ng-click="setThirdTabLevel(2)">Staff</a>
+						</li>
+					</ul>
+				</div>
+				<div class="row padding-left-right-set4">
+					<div ng-show="isSetThirdTabLevel(1)" class="second-level-tab-display-div" style="">
+						<div class="row margin-top10">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+			
+											<label for="code">Role</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+			
+											<label for="code">Doctor</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+								<div class=" ">
+									<a class="btn btn-primary btn-save-box-shadow" title="Add">
+										Add
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="row padding-top10">
+							<div class="container-fluid">
+								<div class="table-container padding-left-right-set4 padding-top5">
+									<div class="table-container-header">
+										<table class="table table-striped table-hover table-condensed table-bordered">
+											<thead class="mainServiceTableCommon">
+												<tr>
+													<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+													<th class="width10">Role</th>
+													<th class="width10">Doctor</th>
+													<th class="width10">Procedure</th>
+													<th class="width5 text-center">Action</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+										<table class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr>
+													<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+													<td class="width10 vertical-middle">-</td>
+													<td class="width10 vertical-middle">-</td>
+													<td class="width10 vertical-middle"><select class="w-100"><option value=""></option> </select></td>
+													<td class="width5 text-center vertical-middle"><a title="Remove"><i class="fa fa-times"></i></a></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+					<div class="padding-left-right-set4">
+					<div ng-show="isSetThirdTabLevel(2)" class="second-level-tab-display-div" style="">
+						<div class="row margin-top10">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+			
+											<label for="code">Role</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+			
+											<label for="code">Staff</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+								<div class=" ">
+									<a class="btn btn-primary btn-save-box-shadow" title="Add">
+										Add
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="row padding-top10">
+							<div class="container-fluid">
+								<div class="table-container padding-left-right-set4 padding-top5">
+									<div class="table-container-header">
+										<table class="table table-striped table-hover table-condensed table-bordered">
+											<thead class="mainServiceTableCommon">
+												<tr>
+													<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+													<th class="width10">Staff Role</th>
+													<th class="width10">Staff Name</th>
+													<th class="width10">Procedure</th>
+													<th class="width5 text-center">Action</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+										<table class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr>
+													<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+													<td class="width10 vertical-middle">-</td>
+													<td class="width10 vertical-middle">-</td>
+													<td class="width10 vertical-middle"><select class="w-100"><option value=""></option> </select></td>
+													<td class="width5 text-center vertical-middle"><a title="Remove"><i class="fa fa-times"></i></a></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<!-- Resource Tab Content END-->
+			
+			<!-- Equipment Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+	
+									<label for="code">Equipment Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Equipment</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty"> 
+									<label for="description" class="LISDynamicLabel">From Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty"> 
+									<label for="description" class="LISDynamicLabel">To Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add">
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+											<th class="width10">Equipment Type</th>
+											<th class="width10">Equipment</th>
+											<th class="width5">From Time</th>
+											<th class="width5">To Time</th>
+											<th class="width10">Procedure</th>
+											<th class="width5 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr>
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width5 vertical-middle">-</td>
+											<td class="width5 vertical-middle">-</td>
+											<td class="width10 vertical-middle"><select class="w-100"><option value=""></option> </select></td>
+											<td class="width5 text-center vertical-middle"><a title="Remove"><i class="fa fa-times"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Equipment Tab Content END-->
+			
+			<!-- Inventory Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(4)" class="second-level-tab-display-div">
+				<div class="row custom-sub-tab padding-left-right-set4">
+					<ul class="tabs nav nav-tabs">
+						<li ng-class="{ active : isSetSecondTabLevel(1) }" id="Medications" class="active" style="">
+							<a href="" ng-click="setSecondTabLevel(1)">Medications</a>
+						</li>
+						<li ng-class="{ active : isSetSecondTabLevel(2) }" id="Consumables" class="" style="">
+							<a href="" ng-click="setSecondTabLevel(2)">Consumables</a>
+						</li>
+						<li ng-class="{ active : isSetSecondTabLevel(3) }" id="MedicalGas" class="" style="">
+							<a href="" ng-click="setSecondTabLevel(3)">Medical Gas</a>
+						</li>
+						<li ng-class="{ active : isSetSecondTabLevel(4) }" id="Implants" class="" style="">
+							<a href="" ng-click="setSecondTabLevel(4)">Implants</a>
+						</li>
+					</ul>
+				</div>
+				<!-- Medications Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(1)" class="second-level-tab-display-div" style="">
+					<div class="row">
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+								<label class="switch"> 
+									<input type="checkbox" class="">
+									<div class="slider round"></div>
+								</label>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12">
+								Item/Kit
+							</div>
+					</div>
+					<div class="row margin-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+	
+									<label for="code">Inventory Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Item Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add">
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+											<th class="width6">Inventory Type</th>
+											<th class="width6">Code</th>
+											<th class="width6">Name</th>
+											<th class="width6">Booked Qty</th>
+											<th class="width6">Batch No.</th>
+											<th class="width6">Expiry Date</th>
+											<th class="width6">Used Qty</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr>
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width6 vertical-middle">-</td>
+											<td class="width6 vertical-middle">-</td>
+											<td class="width6 vertical-middle">-</td>
+											<td class="width6 vertical-middle">-</td>
+											<td class="width6 vertical-middle">-</td>
+											<td class="width6 vertical-middle">-</td>
+											<td class="width6 vertical-middle"><input type="text" autocomplete="off" class="w-100"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				<!-- Medications Tab Content END  -->
+				
+				<!-- Consumables Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(2)" class="second-level-tab-display-div" style="">
+					<div class="row">
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+								<label class="switch"> 
+									<input type="checkbox" class="">
+									<div class="slider round"></div>
+								</label>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12">
+								Item/Kit
+							</div>
+					</div>
+					<div class="row margin-top10">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+		
+										<label for="code">Inventory Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+										<label for="code">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+							<div class=" ">
+								<a class="btn btn-primary btn-save-box-shadow" title="Add">
+									Add
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+												<th class="width6">Inventory Type</th>
+												<th class="width6">Code</th>
+												<th class="width6">Name</th>
+												<th class="width6">Booked Qty</th>
+												<th class="width6">Batch No.</th>
+												<th class="width6">Expiry Date</th>
+												<th class="width6">Used Qty</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr>
+												<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle"><input type="text" autocomplete="off" class="w-100"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Consumables Tab Content END  -->
+				
+				<!-- Medical Gas Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(3)" class="second-level-tab-display-div" style="">
+					<div class="row margin-top10">
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty"> 
+										<label for="description" class="LISDynamicLabel">Service Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+										<label for="code">Service</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty"> 
+										<label for="description" class="LISDynamicLabel">From Time</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty"> 
+										<label for="description" class="LISDynamicLabel">From Time</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+							<div class=" ">
+								<a class="btn btn-primary btn-save-box-shadow" title="Add">
+									Add
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+												<th class="width6">Service Code</th>
+												<th class="width6">Service</th>
+												<th class="width3">From Time</th>
+												<th class="width3">To Time</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr>
+												<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width3 vertical-middle">-</td>
+												<td class="width3 vertical-middle">-</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Medical Gas Tab Content END  -->
+				
+				<!-- Implants Tab Content START  -->
+				<div ng-show="isSetSecondTabLevel(4)" class="second-level-tab-display-div" style="">
+					<div class="row">
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+								<label class="switch"> 
+									<input type="checkbox" class="">
+									<div class="slider round"></div>
+								</label>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12">
+								Item/Kit
+							</div>
+					</div>
+					<div class="row margin-top10">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+		
+										<label for="code">Inventory Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">		
+										<label for="code">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+							<div class=" ">
+								<a class="btn btn-primary btn-save-box-shadow" title="Add">
+									Add
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top10">
+						<div class="container-fluid">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+												<th class="width8">Inventory Type</th>
+												<th class="width6">Code</th>
+												<th class="width8">Name</th>
+												<th class="width6">Batch No.</th>
+												<th class="width8">Expiry Date</th>
+												<th class="width5">Issued Qty</th>
+												<th class="width6">Remaining Qty</th>
+												<th class="width5">Used Qty</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr>
+												<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+												<td class="width8 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width8 vertical-middle">-</td>
+												<td class="width6 vertical-middle">-</td>
+												<td class="width8 vertical-middle">-</td>
+												<td class="width5 vertical-middle">-</td>
+												<td class="width6 vertical-middle"><input type="number" class="w-100"></td>
+												<td class="width5 vertical-middle"><input type="text" autocomplete="off" class="w-100"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Implants Tab Content END  -->
+				
+			</div>
+			<!-- Inventory Tab Content END-->
+			
+			<!-- Service Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(5)" class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+	
+									<label for="code">Service Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Service</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add">
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+											<th class="width10">Service Type</th>
+											<th class="width10"> Service</th>
+											<th class="width10">Procedure</th>
+											<th class="width5 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr>
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width10 vertical-middle"><select class="w-100"><option value=""></option> </select></td>
+											<td class="width5 text-center vertical-middle"><a title="Remove"><i class="fa fa-times"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Service Tab Content END-->
+			
+			<!-- TimeSheet Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(6)" class="second-level-tab-display-div" style="">
+				<div class="row padding-top8">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Wheel-in Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Table-on Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Anesthesia Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+					<div class="row">
+							<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-width-auto">
+								<b>Procedure &nbsp;:</b>
+							</div> -->
+							<!-- <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<label class="long-text-overflow">-</label>
+							</div> -->
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-clock-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+											<label for="code">Procedure Start Time </label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-clock-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+											<label for="code">Procedure End Time </label>
+										</div>
+									</div>
+								</div>
+							</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Table-out Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Wheel-out Time</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Schedule Discharge</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty">
+									<label for="code">Actual Discharge</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- TimeSheet Tab Content END-->
+			
+			<!-- CSSD Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(7)" class="second-level-tab-display-div">
+				<div class="row padding-top8">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty"> <label for="code">Search Kit</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-1 padding-left-right-set4 padding-top4">
+						<div class="common-save-button"> 
+							 <a href="" class="btn btn-primary btn-save-box-shadow text-width-auto pull-left"> 
+							 	<i class="fa fa-search" aria-hidden="true"></i> 
+							 </a> 
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center vertical-middle"><input type="checkbox"></th>
+											<th class="width10">Kit Code</th>
+											<th class="width10">Kit Name</th>
+											<th class="width10">Wrapper Name</th>
+											<th class="width8">Formation Date</th>
+											<th class="width8">Expiry Date</th>
+											<th class="width1"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr>
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width8 vertical-middle">-</td>
+											<td class="width8 vertical-middle">-</td>
+											<td class="width1 text-center vertical-middle">
+												<a data-toggle="modal" data-target="#KitDetailsModal"><i class="fa fa-info-circle"></i></a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- CSSD Tab Content END-->
+			
+			<!-- OT Tab Content START-->
+			<div ng-show="isSetFirstTabLevel(8)" class="second-level-tab-display-div">
+				<div class="row margin-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+									<label for="code">Operation Theatre</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select name="" id="" class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores"><option value="?" selected="selected"></option></select>
+									<label for="code">Operation Table</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 pull-right text-width-auto padding-top4">
+						<div class=" ">
+							<a class="btn btn-primary btn-save-box-shadow" title="Add">
+								Add
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="container-fluid">
+						<div class="table-container padding-left-right-set4 padding-top5">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead class="mainServiceTableCommon">
+										<tr>
+											<th class="width1 text-center" title="Select All"><input type="checkbox"></th>
+											<th class="width10">Operation Theatre</th>
+											<th class="width10">Operation Table</th>
+											<th class="width3 text-center">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow-y: overlay;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr>
+											<td class="width1 text-center vertical-middle"><input type="checkbox"></td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width10 vertical-middle">-</td>
+											<td class="width3 text-center vertical-middle"><a title="Remove"><i class="fa fa-times"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- OT Tab Content END-->
+		</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+					<a href="#/OTCompletion">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+					<a>
+						<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<div class="col-lg-2 col-md-2 padding-left-right-set4 pull-right vertical-middle padding-top10 text-center">
+					<label class="checkbox-inline vertical-middle"><input type="checkbox" value="">Mark as Completed</label>
+				</div>	
+			</div>			
+		</footer>
+	</div>
+</div>
+
+<!-- KitDetailsModal Start -->
+		<div id="KitDetailsModal" class="common-large-popup modal fade ng-scope in common-medium-popup" role="dialog">
+			<div class="modal-dialog">
+				<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="modal-title patient-details-row">
+							Details
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="row padding-left-right-10">
+							<table class="table table-bordered  margin-top8">
+								<thead>
+									<tr>
+										<th class="width15">Instrument Name</th>
+										<th class="width15">Instrument Code</th>
+										<th class="width5">Qty</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td></td>
+										<td></td>
+										<td><input type="number" class="w-100"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="modal-footer" style="border:none;">
+						<button type="button" data-dismiss="modal" class="btn btn-primary" id="saveBtn">Save</button>
+						<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- KitDetails END -->

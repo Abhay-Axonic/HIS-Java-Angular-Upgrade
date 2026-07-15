@@ -1,0 +1,627 @@
+<!-- /********************************************************************************************************************************************
+Procurement - Work Order - Work Order request main page  
+Created by - Pranita Patil
+
+Created Date - 07-Dec-2017 
+/********************************************************************************************************************************************/ -->
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row margin-top10">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" id="" class="text-input floating-label" uib-datepicker-popup="dd/MM/yyyy"
+									placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true"
+									is-open="vm.model.fromDateOpened" datepicker-options="vm.model.fromDateOptions"
+									show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+								<label for="fromDate">From Date</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10 ">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label" uib-datepicker-popup="dd/MM/yyyy"
+									placeholder="DD/MM/YYYY" ng-model="vm.model.toDate" model-view-value="true"
+									is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions" show-button-bar="false"
+									ng-click="vm.model.OpenToDate()">
+								<label for="toDate" class="LISDynamicLabel">To Date</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="vm.model.store"
+									data-ng-options="store.store for store in vm.model.storeList"></select>
+								<label for="store" class="LISDynamicLabel">Store</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" ng-model="vm.model.vendorName" class="text-input floating-label"
+									uib-typeahead="vendorNames.detail for vendorNames in vm.model.SearchVendorNames($viewValue)"
+									typeahead-on-select="vm.model.AddVendorName($item); vm.model.search = '';">
+								<label for="code">Vendor</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10">
+							<select ng-model="vm.model.contractType" class="text-input floating-label"
+								data-ng-options="code.description for code in vm.model.contractTypes"></select>
+							<label for="contractType">Contract Type</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4" style="">
+					<div class="row input-container">
+							<div class="col-lg-3 col-sm-3 col-md-3 text-center">
+								<div class="common-save-button">
+									<a href="" ng-click="vm.model.GetWorkOrderList()" class="btn btn-primary btn-save-box-shadow"
+										style="width: auto;">
+										<i class="fa fa-search" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-6 col-sm-6 col-md-6">
+								<div class="common-save-button">
+									<a href="" ng-click="vm.model.NavigateToAddNew()" style="width: auto">
+										<input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow text-width-auto">
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-3 col-sm-3 col-md-3">
+								<div class="common-save-button">
+									<a href="" class="btn btn-primary btn-save-box-shadow" title="Save"
+										ng-class="{disabled: !vm.model.SelectedRequestIds.length}" data-toggle="modal"
+										ng-click="vm.model.ValidateAndUpdate('Update', 'confirmSave', {})">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+					</div>
+				</div>
+
+			</div>
+		</fieldset>
+		<div class="row margin-top4">
+			<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-10">
+						<div class="">
+							<select ng-model="vm.model.requestType" class="text-input floating-label"
+								data-ng-options="dt.description for dt in vm.model.requestTypes"></select>
+							<label for="code">Workorder Against</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off" ng-model="vm.model.workOrderNo" class="text-input floating-label">
+							<label for="code">Workorder Number</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-10 col-md-10">
+						<div class="">
+							<select ng-model="vm.model.status" class="text-input floating-label dirty" data-ng-options="status.status for status in vm.model.statuses"></select>
+							<label for="status" class="LISDynamicLabel">Status</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 float_right">
+				<div class="search float_right">
+					<label class="show-entries">Show
+						<select ng-init="vm.model.pagination.pageSize='10'" ng-model="vm.model.pagination.pageSize"
+							ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+							<option value="10">10</option>
+							<option value="25">25</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select> records
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="row margin-top4">
+			<div class="col-md-12 col-lg-12 col-sm-8">
+				<fieldset>
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<table class="table table-bordered first-checkBox-padding">
+								<thead>
+									<tr>
+										<th class="width1 text-center">
+											<input type="checkbox" ng-click="vm.model.SelectAllOrders()" ng-model="vm.model.selectAllRows"
+												ng-disabled="!vm.model.workOrders || vm.model.workOrders == false" />
+										</th>
+										<th class="width6">
+											WO No
+											<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'reqNo', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">
+											WO Date
+											<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'reqDate', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Store
+											<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'store', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">
+											Vendor
+											<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'vendorName', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Contract Type
+											<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'contractType', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											WO Against
+											<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'woAgainst', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width12">
+											Remarks
+											<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'remarks', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Added By
+											<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'addedBy', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width5">
+											Status
+											<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'status', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Action
+										</th>
+									</tr>
+								</thead>
+							</table>
+							<div class="table-container-body" style="height: 400px; overflow-y: scroll;">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="workOrder in vm.model.pagination.data">
+											<td class="width1 text-center">
+												<input type="checkbox" ng-model="workOrder.isSelected"
+													ng-click="vm.model.SelectWorkOrder(workOrder)" ng-disabled="vm.model.isDisable(workOrder)" />
+											</td>
+											<td class="width6" title="{{workOrder.reqNo}}">{{workOrder.reqNo}}</td>
+											<td class="width7" title="{{workOrder.reqDate | date: 'dd/MM/yyyy'}}">{{workOrder.reqDate |
+										date:
+										'dd/MM/yyyy'}}</td>
+											<td class="width8" title="{{workOrder.store}}">{{workOrder.store}}</td>
+											<td class="width10" title="{{workOrder.vendorName}}">{{workOrder.vendorName}}</td>
+											<td class="width8" title="{{workOrder.contractType}}">{{workOrder.contractType}}
+											</td>
+											<td class="width8" title="{{workOrder.woAgainst}}">{{workOrder.woAgainst}}</td>
+											<td class="width12" title="{{workOrder.remarks}}">{{workOrder.remarks}}</td>
+											<td class="width8" title="{{workOrder.addedBy}}">{{workOrder.addedBy}}</td>
+											<td class="width5" title="{{workOrder.status}}">{{workOrder.status}}</td>
+											<td class="width8">
+												<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+													<a title="Edit" ng-click="vm.model.NavigateToEdit(workOrder)"
+														ng-class="{disabled: vm.model.isDisable(workOrder)}">
+														<i class="fa fa-pencil" aria-hidden="true"></i></a>
+												</div>
+												<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+													<a title="Print" ng-click="vm.model.printWorkOrderCreationReport(workOrder)"><i class="fa fa-print" aria-hidden="true"></i></a>
+												</div>
+												<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+													<a title="Cancel" ng-class="{disabled: vm.model.isDisable(workOrder)}"
+														ng-click="vm.model.ValidateAndUpdate('Cancel', 'cancelWO', workOrder); vm.model.PopulateReasonDropdown()">
+														<i class="fa fa-ban" aria-hidden="true" data-toggle="modal"
+															data-target="#confirmCancel"></i></a>
+												</div>
+												<div class="col-lg-6 col-md-6 padding-left-right-set4 text-right">
+													<a class="cursor-pointer" ng-click="vm.model.NavigateToDetails(workOrder)">Details</a>
+												</div>
+											</td>
+										</tr>
+										<tr ng-if="!vm.model.pagination.data || vm.model.pagination.data == false">
+											<td class="text-center" colspan="11">
+												<p>No Record Found</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row margin-bottom45 center-block">
+							<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+								style="font-size: 14px; cursor: pointer;">
+								<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+									ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+								</li>
+								<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+									ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+								</li>
+								<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+									ng-class="{active:vm.model.pagination.currentPage === page}"><a
+									ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+								</li>
+								<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+									<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+								</li>
+								<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+									<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+								</li>
+							</ul>
+						</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="cancelWO" class="modal fade ng-scope in common-small-popup" role="dialog"
+	style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Cancellation
+					<button type="button" class="close" ng-click="vm.model.ModalDismiss('cancelWO')">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<select ng-model="vm.model.cancelReason" ng-change="vm.model.isReasonValid = false"
+									class="text-input floating-label">
+									<option ng-repeat="reason in vm.model.cancelReasons" value="{{reason.id}}">{{reason.reason}}</option>
+								</select>
+								<label for="cancelReason">Select Reasons</label>
+								<p ng-if="vm.model.isReasonValid" class="errorMsg">Select Reason</p>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<textarea ng-model="vm.model.rejectNote" maxlength="100" rows="4"
+									class="text-input floating-label"></textarea>
+								<label for="rejectNote">Note</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" class="btn btn-primary" ng-click="vm.model.UpdateWorkOrder()">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="confirmSave" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" ng-click="vm.model.ModalDismiss('confirmSave')">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to Save?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" class="btn btn-primary" ng-click="vm.model.UpdateWorkOrder()">Ok</button>
+				<button type="button" ng-click="vm.model.ModalDismiss('confirmSave')" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- details modal start -->
+<div id="wasteStoreDetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-popup-height-350 padding-top10 padding-left-right-set4">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Item Code
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th>Item Name
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th>Purchase No
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th>Purchase Date
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th>Vendor
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th title="Vendor Invoice Date">Invoice Date
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th>COP
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width5">Qty
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width5">Bonus Qty
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width8">Amount At COP
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width8">Discount Amount
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width8">Consignment
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>10001</td>
+									<td>X Ray Machine Maintenance</td>
+									<td>PO111</td>
+									<td>03/01/2018</td>
+									<td>Hamamatsu Photonics UK Ltd</td>
+									<td>03/01/2018</td>
+									<td>3150</td>
+									<td>1</td>
+									<td>0</td>
+									<td>3150</td>
+									<td>-</td>
+									<td>Y</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- details modal end -->
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".selectedPageName").text("Work Order Creation");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		/*************************** rejection radio button function*********************************/
+		$(".add-new-item-row").hide();
+		$(".get-request-row").hide();
+		$('a[href$="quotationSendToVendor"]').parents("li").addClass("active");
+		$(".addNewItemRadioBtnClass").change(function () {
+			if ($(this).is(":checked")) {
+				$(".add-new-item-row").show('slow');
+				$(".get-request-row").hide('slow');
+			}
+		});
+		$(".getRequestListBtnClass").change(function () {
+			if ($(this).is(":checked")) {
+				$(".add-new-item-row").hide('slow');
+				$(".get-request-row").show('slow');
+			}
+		});
+		$(".addNewItemRadioBtnClass").change(function () {
+			if ($(this).is(":checked")) {
+				$("#getRequestWasteStore").modal();
+			}
+		});
+	});
+	/*************************** add button function start*********************************/
+	$(".table-th-bg").click(function () {
+		/* alert(); */
+		$(this).next().find(".selectedServicesList").toggle();
+	});
+
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

@@ -1,0 +1,58 @@
+<div class="second-level-tab-display-div">
+<div class="row padding-left-right-set4 margin-top10">
+	<div class="row">
+		
+		
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right padding-bottom10">
+			<input  class="text-search-box"
+				ng-model="searchGroupPrePostFilter" placeholder="Search"
+				title="Search" style="margin-top: 0px"> <i
+				class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+		</div>
+	</div>
+
+	<div class="col-md-12 fix-height-scroll450">
+						<table class="table table-bordered">
+							<tr class="table-th-bg">
+								
+								<th class="width4">
+									Date
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width10">
+									Service
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width10">
+									Sub Department
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width8">
+									Status
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+							</tr>
+							<tr ng-repeat="info in pendingServiceListPrePost | filter:searchGroupPrePostFilter " ng-if="info.status == 'A' && !(info.isPackage==false && info.packageTypeId==1)">
+								<td><div>{{info.orderDateString}}</div></td>
+								<td><div>{{info.serviceStandardName}}</div></td>
+								<td><div>{{info.subSpecialityName}}</div></td>
+								<td><div>Pending</div></td>
+							</tr>
+							
+							
+						</table>
+					</div>
+				</div>	
+</div>				

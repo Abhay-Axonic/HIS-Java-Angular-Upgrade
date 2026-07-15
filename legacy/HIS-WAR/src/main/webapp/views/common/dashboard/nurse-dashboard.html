@@ -1,0 +1,537 @@
+<style>
+#wrapper.toggled-2 #page-content-wrapper
+{
+	background-color: #f6f6f6 !important;
+}
+.padding-right5
+{
+	padding-right:5px;
+}
+.panel
+{
+	margin-bottom:5px !important;
+}
+.container-fluid {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    margin-right: 0px !important;
+    margin-left: 0px !important; 
+}
+<!--  d-card-content -->
+.d-card {
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.d-card .panel-body .card-height {
+	height: 113px;
+}
+
+.padding-left-right-8 {
+	padding-left: 8px !important;
+	padding-right: 8px !important;
+}
+.padding-left-right-5 {
+	padding-left: 5px !important;
+	padding-right: 5px !important;
+}
+.padding-left-right-0 {
+	padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+.d-card .panel-title a 
+{
+	color: #337ab7;
+}
+.d-card .panel-default>.panel-heading {
+    color: #333;
+    background-color: #ffffff;
+    border-color: #d0d0d0;
+}
+.d-card .panel-title img
+{
+	height: 30px;
+}
+.d-card .panel-body
+{
+	background-color: #ffffff;
+}
+<!--  d-card-content -->
+.d-card-content {
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+.d-card-content .panel-title a
+{
+	color: #337ab7;
+}
+.d-card-content .panel-default>.panel-heading {
+    color: #333;
+    background-color: #ffffff;
+    border-color: #d0d0d0;
+}
+.d-card-content .panel-title img
+{
+	height: 30px;
+}
+.d-card-content .panel-body .card-height {
+	height: 480px;
+}
+.d-card-content .panel-body
+{
+	background-color: #ffffff;
+}
+<!--  d-card-small -->
+.d-card-small {
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+.d-card-small .panel-body .card-height {
+    height: 90px;
+}
+.d-card-small .panel-body
+{
+	background-color: #ffffff;
+	border-radius: 4px;
+}
+.d-card-small .panel
+{
+    margin-bottom: 5px;
+}
+.d-card-small img
+{
+	height:60px;
+}
+.d-card-small h3
+{
+
+}
+body
+{
+	overflow:hidden;
+	background-color: #f6f6f6 !important;
+}
+.padding-right0
+{
+	padding-right:0px !important;
+}
+
+.ql-card .fa
+{
+	font-size: 40px !important;
+    padding: 10px;
+<!--    color: #2e6ea2;-->
+}
+.ql-card h4
+{
+	color: #2e6ea2;
+	margin-left:0px !important
+}
+.ql-card .card-height:hover
+{
+	background: #e1ebf2;
+    border-radius: 4px;
+}
+/* .ql-card .panel-body:hover
+{
+	border: 1px solid #e1ebf2;
+} */
+.fa-stop-circle-o
+{
+	color:#fb6617;
+}
+	.fa-stop-circle-o {
+    color: #FFB800;
+}
+
+i{
+ color:#FFB800;
+}
+
+.fa-stop-circle-o{
+  color:#ffb800 !important;
+}
+
+.panel-default {
+ border-color: #fff !important;
+}
+
+.container-fluid{
+	  background-color: #FEF3F2;
+}
+.panel-heading{
+      border-radius: 10px 10px 0px 0px;
+	}
+#border-R{
+   border-radius: 15px 15px 15px 15px;
+}
+.panel-body{
+   border-radius: 15px 15px 15px 15px;
+}
+.panel-title{
+       font-weight: bold;
+}
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-top5" style="padding-right: 10px;padding-left: 10px;">
+			<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-0" style="height: 102px;">
+				 <div class="d-card padding-left5">
+					 <div class="panel-body">
+						 <div class="col-md-1">
+							 <img alt="Home" src="resources/assets/images/icon/dashboard/hospital.png" style="height: 44px;">
+						 </div>
+						 <div class="col-md-2">
+							 <span  style="font-style:italic;"> <b >Welcome</b></span><br>
+							 <span> <b style="font-size: 17px;" >{{getUnitNameForTop()}}</b></span>
+						 </div>
+						 <div class="col-md-4"
+							  style="display: flex;    gap: 5px;">
+
+							 <img
+									 alt="Triage Nurse" title="Virtual Nurse"
+									 src="resources/assets/images/icon/dashboard/Triage_Nurse.png"
+									 style="height: 71px; width: auto; display: block; cursor:pointer;    margin-top: 3px;"
+									 ng-click="openTriageNurse()"
+							 />
+
+							 <img
+									 alt="Triage Receptionist" title="Virtual Secretary"
+									 src="resources/assets/images/icon/dashboard/Triage_Receptionist.png"
+									 style="height: 76px; width: auto; display: block; cursor:pointer;"
+									 ng-click="openTriageReceptionist()"
+							 />
+
+							 <a href="https://axonmd.axonichealth.co.in/" target="_blank" rel="noopener noreferrer">
+								 <img
+										 alt="Smart OPD"
+										 title="Smart OPD"
+										 src="resources/assets/images/icon/dashboard/smart-opd.png"
+										 style="height: 76px; width: auto; display: block; cursor:pointer;"
+								 />
+							 </a>
+
+						 </div>
+						 <div class="col-md-5">
+							 <img id="doctorImage" src="resources/assets/images/icon/dashboard/Final_HomePage.gif" style="margin-top: -20px;height: 93px; float: inline-end;">
+						 </div>
+					 </div>
+				 </div>
+			</div>
+			<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-0" style="margin-top: 8px;">
+				<div class="d-card padding-left5">
+					<div class="panel panel-default" id="border-R">
+					  <div class="panel-heading" style="    border-color: #fff;">
+					    <h3 class="panel-title" style="color:#00003B;">Quick Links<a href="#/nurseDashboardInfo"><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+					  </div>
+					  <div class="panel-body" style="height: 89px;">
+					    <div class="row">
+					    	<div class="card-height col-lg-12 col-md-12 col-sm-12 padding-top4" style="margin-top: -12px;">
+					    		<div class="col-lg-3 col-md-3 col-sm-3 text-center ql-card" ng-if="checkAccess(1)">
+					    			<div class="d-card-small cursor-pointer padding-left-right-5">
+										<div class="panel panel-default">
+										  <div class="panel-body padding5">
+										    <div class="row">
+										    	<div class="card-height" style="margin-top: -26px;">
+										    		<div class="text-center">
+										    			<a ng-click="click(1)"><img alt="Home" src="resources/assets/images/icon/dashboard/OPD_Img.png" title="OPD" class="cursor-pointer"></a>
+										    			<h4>OPD</h4>
+										    		</div>
+										    	</div>
+										    </div>
+										  </div>
+										</div>
+									</div>
+					    		</div>
+					    		<div class="col-lg-3 col-md-3 col-sm-3 text-center ql-card"  ng-if="checkAccess(26)">
+					    			<div class="d-card-small cursor-pointer padding-left-right-5">
+										<div class="panel panel-default">
+										  <div class="panel-body padding5">
+										    <div class="row">
+										    	<div class="card-height" style="margin-top: -26px;">
+										    		<div class="text-center">
+
+										    			<a ng-click="click(2)">
+<!-- 										    			<i class="fa fa-user-secret" aria-hidden="true"></i> -->
+<!--										    					<img alt="Home" src="resources/assets/images/icon/dashboard/temp/IPD.png" title="IPD" class="cursor-pointer">-->
+															<img alt="Home" src="resources/assets/images/icon/dashboard/Home_IPD.png" title="IPD" class="cursor-pointer">
+										    			</a>
+										    			<h4>IPD</h4>
+										    		</div>
+										    	</div>
+										    </div>
+										  </div>
+										</div>
+									</div>
+					    		</div>
+					    		<div class="col-lg-3 col-md-3 col-sm-3 text-center ql-card" ng-if="checkAccess(243)">
+					    			<div class="d-card-small cursor-pointer padding-left-right-5">
+										<div class="panel panel-default">
+										  <div class="panel-body padding5">
+										    <div class="row">
+										    	<div class="card-height" style="margin-top: -26px;">
+										    		<div class="text-center">
+										    			<a ng-click="click(4)"><img alt="Home" src="resources/assets/images/icon/dashboard/Home_img.png" title="EHR" class="cursor-pointer"></a>
+										    			<h4>EHR</h4>
+										    		</div>
+										    	</div>
+										    </div>
+										  </div>
+										</div>
+									</div>
+					    		</div>
+					    		<div class="col-lg-3 col-md-3 col-sm-3 text-center ql-card" ng-if="checkAccess(44)">
+					    			<div class="d-card-small cursor-pointer padding-left-right-5">
+										<div class="panel panel-default">
+										  <div class="panel-body padding5">
+										    <div class="row">
+										    	<div class="card-height" style="margin-top: -26px;">
+										    		<div class="text-center">
+										    			<a ng-click="click(5)"><img alt="Home" src="resources/assets/images/icon/dashboard/Home_Nursing.png" title="Nursing" class="cursor-pointer"></a>
+										    			<h4>Nursing</h4>
+										    		</div>
+										    	</div>
+										    </div>
+										  </div>
+										</div>
+									</div>
+					    		</div>
+
+					    	</div>
+					    </div>
+					  </div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-0" style="margin-top: -100px;padding-left: 7px !important;">
+				<div class="d-card padding-left5">
+					<div class="panel panel-default" id="border-R">
+						<div class="panel-heading">
+							<h3 class="panel-title" style="color:#00003B;">Operations<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="text-center" style="height: 550px;">
+									<img alt="Home" src="resources/assets/images/icon/dashboard/Expanded.png" title="Operations" class="cursor-pointer" style="width:370px">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="padding-right: 10px;padding-left: 10px;">
+			<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-0" style="margin-top: -376px;">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-0">
+					<div class="d-card padding-left5 padding-right5">
+						<div class="panel panel-default" id="border-R">
+							<div class="panel-heading">
+								<h3 class="panel-title" style="color:#00003B;">Finance<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+							</div>
+							<div class="panel-body" style="height: 136px;">
+								<div class="row">
+									<div class="card-height text-center">
+										<img alt="Home" src="resources/assets/images/icon/dashboard/finace.png" title="Finance" class="cursor-pointer" style="margin-top: -15px;width: 412px;">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-0">
+					<div class="d-card padding-left5 padding-right5">
+						<div class="panel panel-default" id="border-R">
+							<div class="panel-heading">
+								<h3 class="panel-title">Administration<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+							</div>
+							<div class="panel-body" style="height: 136px;">
+								<div class="row">
+									<div class="card-height text-center">
+										<img alt="Home" src="resources/assets/images/icon/dashboard/admi.jpg" title="Administration" class="cursor-pointer" style="margin-top: -15px;;width: 412px;">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="padding-right: 10px;padding-left: 10px;">
+			<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-0" style="margin-top: -186px;">
+			<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-0" style="padding-right: 7px !important;">
+				<div class="d-card padding-left5">
+					<div class="panel panel-default" id="border-R">
+						<div class="panel-heading">
+							<h3 class="panel-title">Task<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+						</div>
+						<div class="panel-body" style="height: 136px;">
+							<div class="row">
+								<div class="card-height text-center">
+									<img alt="Home" src="resources/assets/images/icon/dashboard/task.png" title="Task" class="cursor-pointer" style="margin-top: -14px;width: 412px;">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-0">
+				<div class="d-card padding-left5 padding-right5">
+					<div class="panel panel-default" id="border-R">
+						<div class="panel-heading">
+							<h3 class="panel-title">Notifications<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+						</div>
+						<div class="panel-body" style="height: 136px;">
+							<div class="row">
+								<div class="card-height text-center">
+									<img alt="Home" src="resources/assets/images/icon/dashboard/notification.jpg" title="Notifications" class="cursor-pointer" style="margin-top: -15px;width: 421px;margin-left: -60px;">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- For Nursing Station Popup -->
+<div id="nursingStationModal" data-backdrop="static"  class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row" style="margin-left: 18px;">
+					Select Nursing Station
+					<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10 padding-bottom10">
+					<div class="col-md-5 col-lg-5 col-sm-5 padding-left-right-5">
+						<span>Select Nursing Station</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-set1">
+						<select class="dirty select-box" style="width:100%;border-radius: 10px;height: 40px;"  ng-model="departmentNursing" >
+						<option value="">Select Nursing Station</option>
+							<option value="{{departmentNursing}}" ng-repeat="departmentNursing in departmentNursingStationMapperDtoslist">{{departmentNursing.nursingStationDesc}}</option>
+						</select>
+					</div>
+					
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button"  class="btn btn-primary width13" id="otpOk" ng-click="selectsetNursingStation();">Ok</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" id="otpOk" ng-click="selectsetNursingStation();">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Nursing Station Popup -->
+
+<!-- counterDetailsModal START -->
+<div id="counterDetailsModal" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Counter Details
+					<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10 row padding-top10">
+					<div class="col-md-3 col-lg-3 col-sm-3">
+						<span>Select Counter</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6">
+						<select class="dirty" style="width:100%" ng-change="selectCounter(counterMstObj);" ng-model="counterMstObj" >
+						<option selected value>Select Counter</option>
+							<option value="{{counter}}" ng-repeat="counter in counterList">{{counter.name}}</option>
+						</select>
+					</div>				
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" class="btn btn-primary width13" id="otpOk" ng-click="confirmCounter();">Ok</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" id="otpOk" ng-click="confirmCounter();">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="iframForTriage"
+	 class="modal fade common-large-popup"
+	 role="dialog"
+	 data-keyboard="false"
+	 data-backdrop="static">
+
+	<div class="modal-dialog modal-xl"
+		 style="
+            height: 77% !important;
+            position: fixed;
+            top: 39%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+            width: 90%;
+            max-width: 1200px;
+         ">
+
+		<div class="modal-content">
+
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					{{TriageHeader}}
+					<button type="button"
+							class="close"
+							ng-click="closeTriage();"
+							data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+
+			<div class="modal-body"
+				 style="
+                    padding: 0;
+                    height: 90vh;
+                    overflow: hidden;
+                 ">
+
+				<!-- IFRAME -->
+				<iframe ng-if="showIframe"
+						ng-src="{{iframeUrl}}"
+						style="width:100%; height:100%; border:none;"
+						allow="microphone; camera; autoplay; clipboard-read; clipboard-write"
+						allowfullscreen>
+				</iframe>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<!-- counterDetailsModal END -->
+<script type="text/javascript">
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Dashboard - Nurse");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="dashboard"]').parents("li").addClass("active");
+});
+</script>

@@ -1,0 +1,214 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-top5">
+		
+				<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+				</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" ng-model="searchKeyword"   style="margin-top:0px">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top10">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width10">Role Name
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Status(n)
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8 text-center">View User
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8 text-center">Role
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in pagination.data | filter:searchKeyword track by $index">
+							<td>{{info.roleName}}</td>
+							<td class="text-center">
+								<label class="switch vertical-middle">
+									<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateRoleStatus(info.roleId,info.status)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<td class="text-center">
+								<a title="View User" data-toggle="modal" data-target="#viewUserModule" ng-click="getUserDetails(info)">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</a>
+							</td>
+							<td class="text-center">
+								<a data-toggle="modal" data-target="#viewRoleModal"><i class="fa fa-info-circle"></i></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+		</div>
+	</div>
+</div>
+
+<!-- ************** View User module start ************* --> 
+<div id="viewUserModule" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					 View User
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 height400-table-with-scroll padding-top10 padding-left-right-set4" id="">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width8">User Id
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width8">User Name
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width8 text-center">Action
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in userList">
+									<td>{{info.userId}}</td>
+									<td>{{info.userName}}</td>
+									<td class="text-center">
+										<a title="Delete" ng-click="updateUserStatus(info.userRoleMpprId)">
+											<i class="fa fa-trash" aria-hidden="true"></i>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ************** View User module end ************* -->
+<!-- ************** View Privilege module start ************* --> 
+<!-- <div id="viewPrivilegeModule" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					 View Privilege
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					Tree Structure
+				</div>
+			</div>
+		</div>
+	</div>
+</div> -->
+<!-- ************** View Privilege module end ************* -->
+<div ng-include="'./views/common/add-view-role.html'"></div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("Role Management");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="roleManagement"]').parents("li").addClass("active");
+});
+</script>

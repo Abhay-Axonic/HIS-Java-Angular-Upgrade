@@ -1,0 +1,1153 @@
+
+
+<link rel="stylesheet" type="text/css"
+      href="resources/assets/css/template/drag-drop.css" />
+<style>
+    .card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 10px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
+.card-body{
+margin-left:6px;
+}
+
+.custom-drop-down-btn-set-vital button.custom-drop-down-btn:focus{
+    width :auto !important;
+}
+.table-container-nowrapping table td, .table-container-nowrapping table th{
+    white-space: inherit !important;
+    text-overflow: clip !important;
+}
+/***************** overlap class for drag-drop.css file*********************/
+.modal {
+    background-color: transparent !important;
+    margin-left: inherit !important;
+    width: -webkit-fill-available !important;
+    height: inherit !important;
+    margin-top: inherit !important;
+    padding-right: 0 !important;
+}
+/***************** *********************/
+.customRadioBtnS input[type="radio"]+label {
+    cursor: pointer;
+    padding: 4px 10px;
+    border: 1px solid #ccc;
+    background: #efefef;
+    color: #aaa;
+    /* border-radius: 3px; */
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0);
+    margin-right: -4px;
+    margin-top: 5px;
+}
+
+.drop-down-shadow {
+    padding: 10px 0px 10px 30px;
+    box-shadow: 1px 2px 7px 3px rgba(0, 0, 0, 0.4)
+}
+
+.width60 {
+    width: 60%;
+}
+
+.marginTop5 {
+    margin-top: 5px
+}
+
+.customRadioBtnS input[type="radio"] {
+    display: none;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/*  .customRadioBtnS input[type="radio"]:checked + label {
+    background: #f5f5a6;
+    border: 1px solid #afa6a6;
+    color: #171717;
+} */
+.margin-right05 {
+    margin-right: 5px !important;
+}
+
+ul.tabs li {
+    margin-right: 3px !important;
+}
+
+.readOnlyTemp{
+pointer-events: none;
+}
+.height-auto{
+    height: auto !important;
+}
+
+
+table>tbody>tr.td-bg-red > td
+    {
+        color : #ff0000 !important;
+    }
+#page-content-wrapper{
+    height: auto !important;
+    padding-bottom: 0% !important;
+}
+</style>
+
+
+<div id="page-content-wrapper" >
+    <div class="container-fluid his-style" style="height: 600px;">
+        <div class="padding-top4" ng-include="'./views/common/nutritional-patient-search.html'" style="margin-top:-5px"></div>
+        <div class="padding-top8 padding-left-right-set4" ng-include="'./views/common/nabh-patient-demography-info.html'"></div>
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+                <div class="row">
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+                        <div class="row margin-top8">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <fieldset class="normalRegistration">
+                                    <legend class="heading-div">Trend</legend>
+                                    <div class="row">
+                                        <div
+                                                class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top12">
+                                            <div class="row input-container">
+                                                <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                                    <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="col-lg-10 col-sm-10 col-md-10 ">
+                                                    <div class="">
+                                                        <!-- <input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" value=""> -->
+                                                        <input type="text" autocomplete="off"
+                                                               class="text-input floating-label dirty"
+                                                               name="datepicker" id="datepicker"
+                                                               uib-datepicker-popup="dd/MM/yyyy"
+                                                               ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+                                                               ng-model="datepickerFromDate"
+                                                               model-view-value="true"
+                                                               is-open="datepickerFromDate.opened"
+                                                               datepicker-options="dateOptionsTrend"
+                                                               show-button-bar="false"
+                                                               ng-click="openDatePickerFromDate()" ng-change="setDateTodate()"> <label
+                                                            for="description" class="">Date (From)</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                                class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top12">
+                                            <div class="row input-container">
+                                                <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                                    <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="col-lg-10 col-sm-10 col-md-10 ">
+                                                    <div class="">
+                                                        <!-- <input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" value=""> -->
+                                                        <input type="text" autocomplete="off"
+                                                               class="text-input floating-label dirty"
+                                                               name="datepicker" id="datepicker"
+                                                               uib-datepicker-popup="dd/MM/yyyy"
+                                                               ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+                                                               ng-model="datepickerToDate" model-view-value="true"
+                                                               is-open="datepickerToDate.opened"
+                                                               datepicker-options="dateOptionsTodateTrend"
+                                                               show-button-bar="false"
+                                                               ng-click="openDatePickerToDate()"> <label
+                                                            for="description" class="">Date-Till</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                                class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top0">
+                                            <div class="row input-container margin-top2">
+                                                <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="col-lg-10 col-sm-10 col-md-10">
+                                                    <div class="">
+                                                        </select> <label for="code">Vital observation </label>
+                                                        <div class="form-group">
+                                                            <div class="custom-drop-down-btn custom-drop-down-btn-set-vital" ng-dropdown-multiselect="" ng-click=""
+                                                                 options="vitalListMultiselect" selected-model="selectedVital">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                                class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                                            <div class="common-save-button">
+                                                <a id="searchbutton"
+                                                   style="padding: 4px 8px !important;"
+                                                   ng-click="searchVitalByDates();setForthTabLevel(11)"
+                                                   class="btn btn-primary btn-save-box-shadow text-width-auto">
+                                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div
+                                                class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10 custom-sub-tab">
+                                            <div
+                                                    class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 " style="margin-left: 500px;margin-top: -45px;">
+                                                <div class=" ">
+                                                    <a data-toggle="modal" id="updateBtn"
+                                                       ng-click="checkMedicationList()"
+                                                       class="btn btn-primary btn-save-box-shadow"
+                                                       title="Active Medications"> Active Medication </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                        </div>
+
+                        <div ng-include="'./views/OPD/CoverSheet/medication-active-details-ipd.html'"></div>
+
+                        <!-- ******** Table and Graphical content row start ******** -->
+                        <div class="row margin-top4">
+                            <!-- ********tab 0 Table contet row start ******** -->
+                            <div id="SaveVital" ng-show="isSetForthTabLevel(14)"
+                                 class="second-level-tab-display-div" >
+                                <div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0">
+                                        <div class="row input-container margin-top2">
+                                            <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-lg-10 col-sm-10 col-md-10">
+                                                <div class="">
+                                                    <select class="text-input floating-label"
+                                                            ng-model="printVitalId">
+                                                        <option value="0">Select All</option>
+                                                        <option ng-repeat="info in vitalsListForPrint"
+                                                                value="{{info.vitalId}}">{{info.vitalName}}</option>
+                                                    </select> <label for="code">Vitals</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                            class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top20">
+                                        <div class="common-save-button">
+                                            <a id=""
+                                               style="padding: 4px 8px !important;"
+                                               ng-click="printVitalGraph()"
+                                               class="btn btn-primary btn-save-box-shadow text-width-auto">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <iframe name="my_iframe" id="myIframe" height="500px" width="100%"></iframe>
+
+                            </div>
+                            <!-- ********tab 0 Table contet row end ******** -->
+
+                            <!-- ******** Table and Graphical content row start ******** -->
+                            <div class="row margin-top4">
+                                <!-- ********tab 1 Table contet row start ******** -->
+
+                                <!-- ********tab 1 Table contet row end ******** -->
+
+                                <!-- ********tab 2 Table contet row start ******** -->
+                                <div id="Graphtoshow" ng-if="forthTabLevel==12"  class="second-level-tab-display-div" >
+                                    <!-- ng-show="isSetForthTabLevel(12) -->
+                                    <div class="row">
+                                        <div
+                                                class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll430 border margin-top0 padding-left-right-10 padding-left0">
+                                            <!-- <img src="resources/assets/images/tempImages/pdf.jpg"> -->
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
+
+                                                <div ng-if="myChartForSearch == false">
+                                                    <canvas id="myChart" height="200" width="300"></canvas>
+                                                </div>
+                                                <div ng-if="myChartForSearch == true">
+                                                    <canvas id="myChartForSearch" height="200" width="300"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="row margin-top10 common-sub-table padding-left-right-set4" style="height:400%" ng-show="searcVitalsList.length > 0  || patientViatalList.length > 0">
+                        <div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll440" >
+                            <table id="main-table" class="main-table width120" ng-show="myChartForSearch == false">
+                                <thead>
+                                <tr>
+                                    <th class=" text-center width20 fixed">Vital Name(Unit)</th>
+                                    <th class="" ng-repeat = "date in vitalDateList">{{date.createdTime}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat ="name in vitalsList">
+                                    <th class="text-center width20 fixed" style="background-color: #2e6ea2;color: white !important;">{{name.vitalName}}({{name.unit}})</th>
+                                    <td ng-repeat ="dates in vitalDateList">
+                                        <div ng-repeat ="saved in vitalsListTest">
+                                            <div ng-if="dates.createdTime == saved.sortedDateTime && name.vitalId == saved.vitalId">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 text-center" ng-if="saved.value != '0'">
+                                                    {{saved.value}}
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 text-center" ng-if="saved.value == '0'">
+                                                    -
+                                                </div>
+                                                <div class="col-lg-1 col-md-1 col-sm-1" ng-if="isVitalQualifierVisible=='Y'">
+                                                    <a data-toggle="modal" data-target="#vitalListOfQualifiers"
+                                                       title="Show qualifier" ng-click="getListOfQualifiersForPopUp(saved)">
+                                                        <i class="fa fa-info-circle" style="color: cornflowerblue"></i></a>
+                                                </div>
+                                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                                    <a data-toggle="modal" data-target="#vitalEnteredInError"
+                                                       title="Entered in error" ng-click="cancelVital(saved)">
+                                                        <i class="fa fa-exclamation-triangle" style="color: gray;"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <table id="main-table" class="main-table width120" ng-show="myChartForSearch == true" ng-show="searcVitalsList.length > 0  || patientViatalList.length > 0">
+                                <thead>
+                                <tr>
+                                    <th class=" text-center width20 fixed">Vital Name(Unit)</th>
+                                    <th class="" ng-repeat = "date in vitalDateList">{{date.createdTime3}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat ="name in vitalsListSearch">
+                                    <th class="text-center width20 fixed" style="background-color: #2e6ea2;color: white !important;">{{name.vitalName}}({{name.unit}})</th>
+                                    <td ng-repeat ="dates in vitalDateListSearch">
+                                        <div ng-repeat ="saved in vitalsListTestSearch">
+                                            <div ng-if="dates.createdTime == saved.sortedDateTime && name.vitalId == saved.vitalId">
+                                                <div  class="col-lg-6 col-md-6 col-sm-6 text-center" ng-if="saved.value != '0'">
+                                                    {{saved.value}}
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 text-center" ng-if="saved.value == '0'">
+                                                    -
+                                                </div>
+                                                <div class="col-lg-1 col-md-1 col-sm-1" ng-if="isVitalQualifierVisible=='Y'">
+                                                    <a data-toggle="modal" data-target="#vitalListOfQualifiers"
+                                                       title="Show qualifier" ng-click="getListOfQualifiersForPopUp(saved)">
+                                                        <i class="fa fa-info-circle" style="color: cornflowerblue"></i></a>
+                                                </div>
+                                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                                    <a data-toggle="modal" data-target="#vitalEnteredInError"
+                                                       title="Entered in error" ng-click="cancelVital(saved)">
+                                                        <i class="fa fa-exclamation-triangle" style="color: gray;"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ****************medication history table end ************************* -->
+                <div class="row margin-top8">
+
+                </div>
+                <div class="row table-container patientDetails">
+                    <div class="col-md-9 col-lg-9 fixed-thead-tfoot-scroll fix-height-scroll72" id="fixed-thead-tfoot-scroll">
+                        <table id="main-table" class=" main-table  margin-top5" > <!-- class="table table-bordered" -->
+                            <thead>
+                            <tr>
+                                <th class="width6"><span class="">Speciality</span>
+                                </th>
+                                <th class="width6"><span class="">Doctor</span></th>
+                                <th class="width6"><span class="">Surgery Order</span></th>
+
+                            </tr>
+                            </thead>	<tbody>
+                            <tr ng-repeat="info in SurgeryFromServiceList">
+                                <td>{{info.specialityName}}</td>
+                                <td>{{info.doctorName}}</td>
+                                <td>{{info.serviceStandardName}}<!-- 2 Times a day -->
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+<!--             medication End-->
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top12">
+                        Previous Surgeries
+                        <input type="radio" name="previousSurgery" ng-model="previousSurgery" value ="1"> Yes
+                        <input type="radio" name="previousSurgery" ng-model="previousSurgery"  value ="0"> No
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top12">
+                        <span ng-disabled="previousSurgery !== '1'" >Surgery : </span>
+                        <input type="text" autocomplete="off"  class="" ng-model="previousSurgeryDesc" ng-disabled="previousSurgery !== '1'" style="border-radius: 10px;height: 38px;">
+                    </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-sm-4">
+                      <div class="card" style="margin-top: 20px">
+                          <div class="card-body">
+                              <h4 ><b>Cardiovascular Disease</b></h4>
+                              <div class="form-group" style="width: 90%;height: 181px;">
+                                  <div class="row">
+                                      <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox0" ng-click="prescribingCheckbox(0)">
+					    			      <label for="Remember_me">Chest Pain/Tightness / Pressure / Heart Attack</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox1" ng-click="prescribingCheckbox(1)">
+					    			      <label for="Remember_me">Irregular Heart Beats</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox2" ng-click="prescribingCheckbox(2)">
+					    			      <label for="Remember_me">Pacemaker / Defibrillator</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox3" ng-click="prescribingCheckbox(3)">
+					    			      <label for="Remember_me">Problem with circulation</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox4" ng-click="prescribingCheckbox(4)">
+					    			      <label for="Remember_me">Blood clot in legs  or lungs</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox5" ng-click="prescribingCheckbox(5)">
+					    			      <label for="Remember_me">High Blood Pressure</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox6" ng-click="prescribingCheckbox(6)">
+					    			      <label for="Remember_me">Other</label></span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                    <div class="col-sm-4">
+                        <div class="card" style="margin-top: 20px">
+                            <div class="card-body">
+                                <h4 ><b>Respiratory Disease</b></h4>
+                                <div class="form-group" style="width: 90%;height: 181px;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox7" ng-click="prescribingCheckbox(7)">
+					    			      <label for="Remember_me">Smoking</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox8" ng-click="prescribingCheckbox(8)">
+					    			      <label for="Remember_me">Asthma</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox9" ng-click="prescribingCheckbox(9)">
+					    			      <label for="Remember_me">Emphysema / Bronchitis</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox10" ng-click="prescribingCheckbox(10)">
+					    			      <label for="Remember_me">Shortness of breath at rest</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox11" ng-click="prescribingCheckbox(11)">
+					    			      <label for="Remember_me">URTI with in 2 weeks</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox12" ng-click="prescribingCheckbox(12)">
+					    			      <label for="Remember_me">Sleep apnea</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox13" ng-click="prescribingCheckbox(13)">
+					    			      <label for="Remember_me">Use of CPAP </label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox14" ng-click="prescribingCheckbox(14)">
+					    			      <label for="Remember_me">Other</label></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card" style="margin-top: 20px">
+                            <div class="card-body">
+                                <h4 ><b>Neurological Disorder</b></h4>
+                                <div class="form-group" style="width: 90%;height: 181px;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox20" ng-click="prescribingCheckbox(20)">
+					    			      <label for="Remember_me">Storke</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox21" ng-click="prescribingCheckbox(21)">
+					    			      <label for="Remember_me">Seizure</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox22" ng-click="prescribingCheckbox(22)">
+					    			      <label for="Remember_me">Back / Neck problems</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox23" ng-click="prescribingCheckbox(23)">
+					    			      <label for="Remember_me">Physical restrictions  / limitations</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox24" ng-click="prescribingCheckbox(24)">
+					    			      <label for="Remember_me">Forgetfulness, memmory loss, confusion</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox25" ng-click="prescribingCheckbox(25)">
+					    			      <label for="Remember_me">Multiple sclerosis / muscular dystrophy</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox26" ng-click="prescribingCheckbox(26)">
+					    			      <label for="Remember_me">Nerve / Spinal cord injury </label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox27" ng-click="prescribingCheckbox(27)">
+					    			      <label for="Remember_me">Neuropathy </label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox28" ng-click="prescribingCheckbox(28)">
+					    			      <label for="Remember_me">Other </label></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="card" style="margin-top: 20px">
+                            <div class="card-body">
+                                <h4 ><b>Anesthesia Related Information</b></h4>
+                                <div class="form-group" style="width: 90%">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox15" ng-click="prescribingCheckbox(15)">
+					    			      <label for="Remember_me">Anesthsia within one year</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox16" ng-click="prescribingCheckbox(16)">
+					    			      <label for="Remember_me">History of difficult intubation</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox17" ng-click="prescribingCheckbox(17)">
+					    			      <label for="Remember_me">Adverse reaction to anesthesia</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox18" ng-click="prescribingCheckbox(18)">
+					    			      <label for="Remember_me">Relative with Malignant Hyperthemia</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox19" ng-click="prescribingCheckbox(19)">
+					    			      <label for="Remember_me">Nausea or vomitting after anesthesia</label></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card" style="margin-top: 20px">
+                            <div class="card-body">
+                                <h4 ><b>Kidney / Bladder / Prostate Disorder</b></h4>
+                                <div class="form-group" style="width: 90%;height: 101px;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox29" ng-click="prescribingCheckbox(29)">
+					    			      <label for="Remember_me">Inability to urinate after anesthesia</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox30" ng-click="prescribingCheckbox(30)">
+					    			      <label for="Remember_me">Dialysis</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox31" ng-click="prescribingCheckbox(31)">
+					    			      <label for="Remember_me">Any prostate related issues </label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox32" ng-click="prescribingCheckbox(32)">
+					    			      <label for="Remember_me">Other</label></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card" style="margin-top: 20px">
+                            <div class="card-body">
+                                <h4 ><b>Blood Disorders </b></h4>
+                                <div class="form-group" style="width: 100%">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox36" ng-click="prescribingCheckbox(36)">
+					    			      <label for="Remember_me">Abnormal bleeding tendency or taking blood thinners</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox37" ng-click="prescribingCheckbox(37)">
+					    			      <label for="Remember_me">Sickle cell disease </label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox38" ng-click="prescribingCheckbox(38)">
+					    			      <label for="Remember_me">History of blood transfusions</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox39" ng-click="prescribingCheckbox(39)">
+					    			      <label for="Remember_me">Religious or other objections to blood transfusions</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+<!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox40" ng-click="prescribingCheckbox(40)">
+					    			      <label for="Remember_me">HIV Positive / AIDS</label></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="card" style="margin-top: 20px">
+                            <div class="card-body">
+                                <h4 ><b></b></h4>
+                                <div class="form-group" style="width: 148%;">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Eye Disorders / Galucoma / Retinal detachment </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox45" ng-click="prescribingCheckbox(45)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Ear Disorder / Ringing in Ears / Hearing loss </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox46" ng-click="prescribingCheckbox(46)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Psychiatric Disorders  </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox47" ng-click="prescribingCheckbox(47)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Thyroid problem </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox48" ng-click="prescribingCheckbox(48)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Diabetes </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox49" ng-click="prescribingCheckbox(49)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Cancer / Chemotherapy / Radiation therapy </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox50" ng-click="prescribingCheckbox(50)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Other illness or disease </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox51" ng-click="prescribingCheckbox(51)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="col-sm-4">
+                        <div class="card" style="margin-top: 20px">
+                            <div class="card-body">
+                                <h4 ><b>Investigations Performed </b></h4>
+                                <div class="form-group" style="width: 112%;    height: 129px;">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Liver Function Test</label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox52" ng-click="prescribingCheckbox(52)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Kidney Function Test </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox53" ng-click="prescribingCheckbox(53)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">ECG </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox54" ng-click="prescribingCheckbox(54)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">ECHO </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox55" ng-click="prescribingCheckbox(55)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">Stress Test </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox56" ng-click="prescribingCheckbox(56)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <span class="form-animate-checkbox">
+					    			      <label for="Remember_me">X Ray Chest </label></span>
+                                        </div>
+                                        <div class="col-sm-3">
+<!--                                            <span class="form-animate-checkbox">-->
+<!--                                                <input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox57" ng-click="prescribingCheckbox(57)">
+					    			      <label for="Remember_me">Yes</label></span>
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="col-sm-4">
+                        <div class="card" style="margin-top: 20px">
+                            <div class="card-body">
+                                <h4 ><b>ASA Classification</b></h4>
+                                <div class="form-group" style="width: 93%;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox" style="display : flex">
+<!--                                                <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox62" ng-click="prescribingCheckbox(62)">-->
+					    			            <input type="radio" id="Remember_me4" name="classRadioClassification" ng-model="selectedClassification" value="62" class="radio" style="margin-right:10px;">
+                                                <label for="Remember_me4">ASA I - Normal Health</label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox" style="display : flex">
+<!--                                                <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox63" ng-click="prescribingCheckbox(63)">-->
+                                                <input type="radio" id="Remember_me5" name="classRadioClassification" ng-model="selectedClassification" value="63" class="radio" style="margin-right:10px;">
+                                                <label for="Remember_me5">ASA II - Mild Systemic Disease </label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox" style="display : flex">
+<!--                                                <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox64" ng-click="prescribingCheckbox(64)">-->
+					    			             <input type="radio" id="Remember_me6" name="classRadioClassification" ng-model="selectedClassification" value="64" class="radio" style="margin-right:10px;">
+                                                <label for="Remember_me6">ASA III - Severe Systemic Disease </label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox" style="display : flex">
+<!--                                                <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox65" ng-click="prescribingCheckbox(65)">-->
+					    			            <input type="radio" id="Remember_me7" name="classRadioClassification" ng-model="selectedClassification" value="65" class="radio" style="margin-right:10px;">
+                                                <label for="Remember_me7">ASA IV - Severe Systemic Disease that is constant threat to life</label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox" style="display : flex">
+<!--                                                <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox66" ng-click="prescribingCheckbox(66)">-->
+                                                <input type="radio" id="Remember_me8" name="classRadioClassification" ng-model="selectedClassification" value="66" class="radio" style="margin-right:10px;">
+                                                <label for="Remember_me8">ASA V - Moribund, not expected to survive with surgery</label></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                            <span class="form-animate-checkbox" style="display : flex">
+<!--                                                <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox67" ng-click="prescribingCheckbox(67)">-->
+					    			            <input type="radio" id="Remember_me9" name="classRadioClassification" ng-model="selectedClassification" value="67" class="radio" style="margin-right:10px;">
+                                                <label for="Remember_me9">ASA VI - Declared brain dead</label></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="card" style="margin-top: 20px">
+                          <div class="card-body">
+                              <h4 ><b>Gastro - Intestinal Disease</b></h4>
+                              <div class="form-group" style="width: 90%;height: 100px;">
+                                  <div class="row">
+                                      <div class="col-sm-12">
+                                          <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox33" ng-click="prescribingCheckbox(33)">
+					    			      <label for="Remember_me">Liver disease (Jaundice / Hepatitis)</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+                                          <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox34" ng-click="prescribingCheckbox(34)">
+					    			      <label for="Remember_me">Hiatal hernia / Reflux / Heart burn</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+                                          <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox35" ng-click="prescribingCheckbox(35)">
+					    			      <label for="Remember_me">Other</label></span>
+                                      </div>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="card" style="margin-top: 20px">
+                          <div class="card-body">
+                              <h4 ><b>Dental Examination</b></h4>
+                              <div class="form-group" style="width: 90%;height: 100px;">
+                                  <div class="row">
+                                      <div class="col-sm-12">
+                                          <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox41" ng-click="prescribingCheckbox(41)">
+					    			      <label for="Remember_me">Dentures</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+                                          <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox42" ng-click="prescribingCheckbox(42)">
+					    			      <label for="Remember_me">Caps / Crowns</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+                                          <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox43" ng-click="prescribingCheckbox(43)">
+					    			      <label for="Remember_me">Overbite</label></span>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-12">
+                                          <!--                                          <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                          <span class="form-animate-checkbox"><input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox44" ng-click="prescribingCheckbox(44)">
+					    			      <label for="Remember_me">Loose tooth</label></span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="card" style="margin-top: 20px">
+                          <div class="card-body">
+                              <h4 ><b>Anesthesia Plan</b></h4>
+                              <table class="table">
+                                  <tbody>
+                                  <tr ng-repeat="info in listAnesthesiaTypeMaster">
+                                      <td>
+                                          <input type="radio" name="info.anesthesiaTypeName" ng-model="selectedAnesthesiaTypeName" ng-value="info.anesthesiaTypeName"
+                                                 ng-click="selectAnesthesiaPlan(info.anesthesiaTypeName)" ng-checked="selectedAnesthesiaTypeName === info.anesthesiaTypeName"/>
+                                          {{info.anesthesiaTypeName}}
+                                      </td>
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="card" style="margin-top: 20px">
+                            <div class="card-body">
+                                <h4 ><b>Intubation Assessment </b></h4>
+                                <div class="form-group" style="width: 90%">
+                                    <div class="row">
+                                       <div class="col-md-3">
+                                          <div >
+                                              <img src="resources/assets/images/logo/class1.jpg" class="" style="height: 245px"><br>
+<!--                                              <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                              <span class="form-animate-checkbox" style="display : flex">
+<!--                                                  <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox58" ng-click="prescribingCheckbox(58)">-->
+                                                  <input type="radio" id="Remember_me" name="classRadio" ng-model="selectedAnesthesia" value="58" class="radio" style="margin: 0px 10px 0px 30px;">
+					    			               <label for="Remember_me">Grade I</label></span>
+                                          </div>
+                                       </div>
+                                        <div class="col-md-3">
+                                          <div >
+                                              <img src="resources/assets/images/logo/class2.jpg" class="" style="height: 210px; margin-top: 32px"><br>
+<!--                                              <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                              <span class="form-animate-checkbox" style="display : flex">
+<!--                                                  <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox59" ng-click="prescribingCheckbox(59)">-->
+                                                  <input type="radio" id="Remember_me1" name="classRadio" ng-model="selectedAnesthesia" value="59" class="radio" style="margin: 0px 10px 0px 30px;">
+					    			               <label for="Remember_me1">Grade II</label></span>
+                                          </div>
+                                       </div>
+                                        <div class="col-md-3">
+                                          <div >
+                                              <img src="resources/assets/images/logo/class3.jpg" class="" style="height: 210px;margin-top: 32px"><br>
+<!--                                              <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                              <span class="form-animate-checkbox" style="display : flex">
+<!--                                                  <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox60" ng-click="prescribingCheckbox(60)">-->
+                                                  <input type="radio" id="Remember_me2" name="classRadio" ng-model="selectedAnesthesia" value="60" class="radio" style="margin: 0px 10px 0px 30px;">
+					    			               <label for="Remember_me2">Grade III</label></span>
+                                          </div>
+                                       </div>
+                                        <div class="col-md-3">
+                                          <div >
+                                              <img src="resources/assets/images/logo/class4.jpg" class="" style="height: 210px;margin-top: 32px"><br>
+<!--                                              <span class="form-animate-checkbox"><input type="checkbox" id="Remember_me" class="checkbox">-->
+                                              <span class="form-animate-checkbox" style="display : flex">
+<!--                                                  <input type="checkbox" class="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'" value=""  ng-model="checkBox61" ng-click="prescribingCheckbox(61)">-->
+					    			              <input type="radio" id="Remember_me3" name="classRadio" ng-model="selectedAnesthesia" value="61" class="radio" style="margin: 0px 10px 0px 30px;">
+					    			               <label for="Remember_me3">Grade IV</label></span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <button type="submit" href="" ng-disabled="assessmentSelectedList.length<21" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveAnesthesiaAssessment('N')">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto" >
+                        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveAnesthesiaAssessment('Y')">
+                            Draft</a>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

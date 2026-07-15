@@ -1,0 +1,196 @@
+package com.param.entity.model.pharmacy;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+import com.param.entity.model.base.BaseEntity;
+import com.param.entity.model.inventory.Batch;
+import com.param.entity.model.master.Status;
+import com.param.entity.model.master.UomType;
+import com.param.entity.model.master.UomUnit;
+
+import java.sql.Timestamp;
+
+@Entity(name="AssignPickerDetail")
+@Table(name="t_assign_picker_detail",schema="pharmacy")
+public class AssignPickerDetail extends BaseEntity implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(unique=true, nullable=false)
+	private Integer id;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="batch_id")
+	private Batch batch;
+
+	@Column(name="issue_quantity")
+	private Integer issueQuantity;
+	
+	@Column(name="picked_quantity")
+	private Integer pickedQuantity;
+	
+	@Column(name="parent_assign_picker_id")
+	private Integer parentAssignPickerId;
+
+	public Integer getPickedQuantity() {
+		return pickedQuantity;
+	}
+
+	public void setPickedQuantity(Integer pickedQuantity) {
+		this.pickedQuantity = pickedQuantity;
+	}
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="prescription_detail_id")
+	private PrescriptionDetail prescriptionDetail;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="uom_type_id")
+	private UomType uomType;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="uom_unit_id")
+	private UomUnit uomUnit;
+
+	//bi-directional many-to-one association to AssignPicker
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="assign_picker_id")
+	private AssignPicker assignPicker;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="status_id")
+	private Status status;
+
+	public AssignPickerDetail() {
+	}
+
+	/*public void updateAssignPickerDetail(Batch batch, UomType uomType, UomUnit uomUnit, Integer issueQuantity,
+			Status status) {
+		this.batch = batch;
+		this.uomType = uomType;
+		this.uomUnit = uomUnit;
+		this.issueQuantity = issueQuantity;
+		this.status = status;
+	}*/
+	public void updateAssignPickerDetail(Batch batch, UomType uomType, UomUnit uomUnit, Integer issueQuantity,
+			Status status) {
+		this.batch = batch;
+		this.uomType = uomType;
+		this.uomUnit = uomUnit;
+		this.issueQuantity = issueQuantity;
+		this.status = status;
+		this.pickedQuantity=issueQuantity;
+	}
+	
+	public void updateAssignPickerDetailForSubstitute(Batch batch, UomType uomType, UomUnit uomUnit, Integer issueQuantity,
+			Status status) {
+		this.batch = batch;
+		this.uomType = uomType;
+		this.uomUnit = uomUnit;
+		//this.issueQuantity = issueQuantity;
+		this.status = status;
+		this.pickedQuantity=issueQuantity;
+	}
+
+	public AssignPickerDetail(PrescriptionDetail prescriptionDetail, Status status) {
+		super();
+		this.prescriptionDetail = prescriptionDetail;
+		this.status = status;
+	}
+
+	public AssignPickerDetail(Integer id) {
+		super();
+		this.id = id;
+	}
+
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getIssueQuantity() {
+		return this.issueQuantity;
+	}
+
+	public void setIssueQuantity(Integer issueQuantity) {
+		this.issueQuantity = issueQuantity;
+	}
+
+	public Batch getBatch() {
+		return batch;
+	}
+
+	public void setBatch(Batch batch) {
+		this.batch = batch;
+	}
+
+	public PrescriptionDetail getPrescriptionDetail() {
+		return prescriptionDetail;
+	}
+
+	public void setPrescriptionDetail(PrescriptionDetail prescriptionDetail) {
+		this.prescriptionDetail = prescriptionDetail;
+	}
+
+	public UomType getUomType() {
+		return uomType;
+	}
+
+	public void setUomType(UomType uomType) {
+		this.uomType = uomType;
+	}
+
+	public UomUnit getUomUnit() {
+		return uomUnit;
+	}
+
+	public void setUomUnit(UomUnit uomUnit) {
+		this.uomUnit = uomUnit;
+	}
+
+	public AssignPicker getAssignPicker() {
+		return assignPicker;
+	}
+
+	public void setAssignPicker(AssignPicker assignPicker) {
+		this.assignPicker = assignPicker;
+	}
+
+	public void setUpdatedDate(Timestamp updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public AssignPicker getTAssignPicker() {
+		return this.assignPicker;
+	}
+
+	public void setTAssignPicker(AssignPicker assignPicker) {
+		this.assignPicker = assignPicker;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public Integer getParentAssignPickerId() {
+		return parentAssignPickerId;
+	}
+
+	public void setParentAssignPickerId(Integer parentAssignPickerId) {
+		this.parentAssignPickerId = parentAssignPickerId;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+}

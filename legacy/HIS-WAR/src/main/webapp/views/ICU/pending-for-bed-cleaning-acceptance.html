@@ -1,0 +1,328 @@
+		<!-- Page Content -->
+		<div id="page-content-wrapper">
+			<div class="container-fluid his-style">
+			<div class="row bed-management margin-top10">
+         	<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-building" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="code" ng-model="bedsearch.floorId" ng-change="getBedById('floor')">
+										<option  ng-value = "0" value="0">Select Floor</option>
+										<option ng-repeat="info in activeFloorList" value="{{info.floorId}}">{{info.floorName}}</option>
+										</select>		
+										<label for="code"> Floor</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-hospital-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="code" ng-model="bedsearch.wardId" ng-change="getBedById('ward')">
+										<option  ng-value = "0" value="0">Select Ward</option>
+										<option ng-repeat="info in wardList" value="{{info.wardId}}">{{info.wardName}}</option>
+										</select>		
+										<label for="code">Choose Ward</label>
+									</div>
+								</div>
+							</div>
+						</div>
+            		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-hospital-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="code" ng-model="bedsearch.nursingStationId" >
+										<option  ng-value = "0" value="0">Select Nursing Station</option>
+										<option ng-repeat="info in nursingStationList" value="{{info.nursingStationId}}">{{info.nursingStationDesc}}</option>
+										</select>		
+										<label for="code">Choose Nursing Station</label>
+									</div>
+								</div>
+							</div>
+						</div>
+            		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-bed" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" name="code" ng-model="bedsearch.bedCategoryId" >
+										<option  ng-value = "0" value="0">Select Bed Category</option>
+										<option ng-repeat="info in bedCategoryList" value="{{info.bedCategoryId}}">{{info.bedCategoryDesc}}</option>
+										</select>		
+										<label for="code">Choose Ward Bed Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+			<div class="col-lg-1 col-md-1 col-sm-1 pull-left">
+          		<div class="width40 ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="bedSearchByMultipleCriteria()">
+					<i class="fa fa-search" style="font-size: 15px" aria-hidden="true"></i></a>
+				</div>
+           	</div>
+        </div>
+			<!-- 	<div class="row searched-patient-details-row">
+						<div class="col-md-11 col-sm-11 col-xs-11 ">
+							<span class="profile_pic margin-left10"> 
+								<img alt="" src="resources/assets/images/tempImages/m.jpg" class="img-circle" style="width:30px">
+							</span> 
+							<span class="margin-left10">John Deo 26/M </span>
+							<span class="margin-left10"><b class="padding-right5 ">UHID	:</b> Pune-769</span>
+							<span class="margin-left10"><b class="padding-right10 ">WARD NO :</b> W1112</span>
+							<span class="margin-left10"><b class="padding-right10 ">BED NO :</b> BM129091</span>
+							<span class="margin-left10">Dr. Suresh Pathak</span>
+						</div>
+					</div>
+            	
+            	<div class="row">
+            		<div class="col-md-8"></div>
+					<div class="col-md-3">
+						<div>
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="width-div-for-patient-reg ">
+							<a href="" data-toggle="modal" data-target="#confirmLogout" class="btn btn-primary btn-save-box-shadow" title="Save"><i class="fa fa-floppy-o" style="font-size:21px" aria-hidden="true"></i></a>	
+						</div>
+					</div>
+				</div> -->
+            	
+            	
+            	<div class="row padding-left-right-10 padding-top8">
+					<div class="col-lg-9 col-md-9 col-sm-9">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3"
+								style="padding-right: 0px;">
+								<div class="search">
+								<label class="show-entries">Show 
+								<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+									ng-init="noOfRecordsPerPage='10'" ng-model="pagination.pageSize"
+									ng-change="setTotalPages(pagination)" class="search-popUp-ddl">
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+								</select> entries 
+								</label>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0">
+					        <input type="text" autocomplete="off" class="text-search-box search-popUp-ddl" ng-change="searchProduct(housekeepingList, pagination)" placeholder="Search" style="margin-top:0px" ng-model="pagination.search">
+					        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					  </div>
+				</div>
+						
+            	
+				<div class="row padding-left-right-10 margin-top10">
+					<div class="col-md-12">
+						<table class="table table-bordered  ">
+							<tr class="">
+								<th class="width10">
+									Floor
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<!-- <th class="width12">
+									Nursing Station
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th> -->
+								<th class="width10">
+									Ward Bed No.
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width12">
+									Assigned (to)
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width10"> 
+									Action taken
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								
+							</tr>
+							<tr ng-repeat="info in housekeepingBedList | orderBy:'priorityId':false ">
+								<td class="{{info.priorityId == 1 ? 'urgent-text':''}}">
+									<div>{{info.floorName}}</div>
+								</td>
+								<!-- <td class="{{info.priorityId == 1 ? 'urgent-text':''}}">
+									<div>{{info.nursingStationDesc}}</div>
+								</td> -->
+								<td class="{{info.priorityId == 1 ? 'urgent-text':''}}">
+									<div>{{info.bedNumber}}</div>
+								</td>
+								<td class="{{info.priorityId == 1 ? 'urgent-text':''}}">
+									<div>{{info.userName}}</div>
+								</td>
+								<td class="{{info.priorityId == 1 ? 'urgent-text':''}}">
+									<div class="row">
+								<input type="radio" name="radioBtnForHouseKeeping{{$index}}" class="radioAccepted" ng-click="toggleSelectionAccept(info)"    data-toggle="modal" data-target="#commonNoteAcc" ><span>Accept</span>
+								<input type="radio" name="radioBtnForHouseKeeping{{$index}}" class="radioRejected" ng-click="toggleSelectionAccept(info)" data-toggle="modal" data-target="#accepatReject"><span>Reject</span>
+							</div>
+								</td>
+							</tr>
+							
+							
+						</table>
+					</div>
+					<div class="row margin-bottom45 sss">
+							<ul ng-if="pager.pages.length" class="pagination table-list"
+								style="font-size: 14px;">
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(1,'true')">First</a></li>
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+								<li ng-repeat="page in pager.pages"
+									ng-class="{active:pager.currentPage === page}"><a
+									ng-click="setPage(page,'true')">{{page}}</a></li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+								</li>
+							</ul>
+						</div>
+				</div>
+  			</div>
+		</div>
+		
+		
+<div id="accepatReject" data-backdrop="static"  class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Rejection
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" title="Reason Type -'House Keeping'" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label dirty"  id="rejectReasonIdDrpDN" name="code" ng-model="rejectReasonId">
+											<option value="">Select Reason</option>
+											<option ng-repeat="info in reasonList" ng-if="info.reasonTypeId == 11" value="{{info.reasonMasterId}}"  >{{info.reasonDesc}}</option>
+											</select>		
+											<label for="code">Select Reasons</label>
+										</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-sticky-note" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<textarea name="code" rows="4" id="noteRejectDrpDN"
+													class="text-input floating-label" ng-model="noteReject"></textarea>
+												<label for="code">Note</label>
+											</div>
+										</div>
+									</div>
+									<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" class="btn btn-primary" id="saveBtn" ng-click="saveAcceptReject()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- COMMON NOTE POPUP -->
+<div id="commonNoteAcc" class="modal fade ng-scope in common-small-popup" role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Note
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row serachedPatientList">
+					<div class="col-md-12 col-lg-12 padding-left-right-set4 fix-height-scroll230">
+						<div>
+							Note <textarea rows="3" cols="6" id="noteTransfer" ng-model="noteTransfer"></textarea>
+						</div>
+						<div class=" float_right">
+							<a href="" ng-click="saveAcceptance()" class="btn btn-primary btn-save-box-shadow" title="Save">
+							Save
+							</a>	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+		     <modal visible="showModal"></modal>	
+		 <!-- <div ng-include="'./views/common/accept-reject.html'"></div> -->
+  <div ng-include="'./views/common/note-save.html'"></div>  
+	
+<script type="text/javascript">
+
+$( document ).ready(function() {
+	
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+ 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+	
+	$('.clockpicker').clockpicker();
+	$(".medication-text-box").hide();
+	$( ".radioRejected" ).change(function() {
+		if ($(this).is(":checked"))
+		{
+			$(this).closest(".row").siblings(".medication-text-box").show();
+		}
+	});
+	$( ".radioAccepted" ).change(function() {
+		if ($(this).is(":checked"))
+		{
+			$(this).closest(".row").siblings(".medication-text-box").hide();
+		}
+	});
+	$(".selectedPageName").text("Cleaned Bed Acceptance");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="cleanedBedAccept"]').parents("li").addClass("active");
+});
+</script>

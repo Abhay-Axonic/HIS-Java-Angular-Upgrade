@@ -1,0 +1,149 @@
+	
+				<div class="row margin-top5 his-style padding-left-right-set1">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="submitRequest()"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+						</div>
+					</div>
+					<div class="col-md-5">
+		            	<div class="row">
+							<div class="col-lg-4 col-md-4 padding-top8">
+								<div class="search">
+									<label class="show-entries">Show <select
+										name="DataTables_Table_0_length"
+										aria-controls="DataTables_Table_0"
+										ng-init="initiateReqPerPageRecords='10'" ng-model="initiateReqPerPageRecords"
+										ng-change="initiateReqSetNoOfRecords(initiateReqPerPageRecords);" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries
+									</label>
+								</div>
+							</div>
+						</div>
+            		</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+						<!-- <input type="text" autocomplete="off" class="text-search-box" style="margin-top: 0px" ng-model="groupName" placeholder="Search"
+                       uib-typeahead="group.patientName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                       typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  required/> -->
+							 <input type="text" autocomplete="off" class="text-search-box" ng-change="searchData(searchFilter);" style="margin-top: 0px" ng-model="searchFilter" placeholder="Search"
+                         style="margin-top: 0px"/> 
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+				
+				<div class="row padding-top5 padding-left-right-set4">
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+					  <table id="main-table" class="main-table width100">
+					    <thead>
+					      <tr class="">
+							<th class="width1"></th>
+<!-- 								<th class="width7"> -->
+<!-- 									UHID -->
+<!-- 								</th> -->
+								<th class="patient-doc-details-width">
+									Patient Details
+								</th>
+								<th class="width6">
+									Ward
+								</th>
+								<th class="width6">
+									From Bed No.
+								</th>
+								<th class="width10">
+									To Bed No.
+								</th>
+								<th class="width10">
+									Required Billing Bed Category.
+								</th>
+								<th class="test-name-width">
+									Reason for Bed Transfer <!-- Reason --> 
+								</th>
+								<th class="test-name-width">
+									Note for Ward Transfer <!-- Note -->
+								</th>
+							</tr>
+					    </thead>
+					    <tbody>
+					      <tr  ng-repeat="info in listOfAdmittedPatientInitiatList | filter:searchFilter" ng-if="info.transferStatusId == '1' || info.transferStatusId == '5' || info.transferStatusId == '9'">
+							<td><input type="radio" name="radioName" value="info.admissionId" ng-model="admittedPatient" ng-click="selectPatient(info)"/>
+								<td class="text-center width15">
+									<div class="row patient-details" id="45#1247#2_new" >
+										<div class="col-lg-3 col-sm-12 col-md-3">
+											<div class="" >
+												<img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+											</div>
+										</div>
+										<div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+											<div class="patient-name">{{info.prefixDesc+' '+info.patientFullName}}
+										</div>
+											<div class="patient-details">
+												<span class="patient-details patient">{{info.ageStr}}/ </span>
+												<span class="patient-details patient">{{info.genderCode}}</span>
+											</div>
+											<div class="patient">{{info.uhidnumber}}</div>
+										</div>
+									</div>
+								</td>
+							<td>{{info.wardName}}</td>
+							<td>{{info.bedNumber}}</td>
+							<td>
+								<select class="select-box" ng-model="info.toBedId" ng-disabled="info.selectedPatient" ng-change = "changeBillingBedCatId($index ,info.toBedId );">
+									<option>Select Bed No.</option>
+									<option ng-repeat="bedList in bedListByWard" value="{{bedList.bedId}}">{{bedList.bedNumber}}</option>
+								</select>
+							</td>
+							
+							<td>
+								<select class="select-box" ng-model="info.billingBedCategoryId" ng-disabled="info.selectedPatient">
+									<option>Select Billing Bed Category.</option>
+									<option ng-repeat="bedC in billingBedList" value="{{bedC.billingBedCategoryId}}"  ng-value="{{bedC.billingBedCategoryId}}">{{bedC.billingBedDesc}}</option>
+								</select>
+							</td>
+							
+							<td title="Reason Type -'Transfer'"><select class="select-box"  ng-model="info.reasonId" ng-disabled="info.selectedPatient">
+									<option value="">Select Reason</option>
+									<option ng-repeat="reason in reasonList" ng-if="reason.reasonTypeId == 9" value="{{reason.reasonMasterId}}">{{reason.reasonDesc}}</option>
+								</select></td>
+							<td><input  ng-model="info.remark" class="w-100" type="text" autocomplete="off"  ng-disabled="info.disable"></td>
+						</tr>
+					    </tbody>
+					  </table>
+					</div>
+				</div>
+				    	<div class="row padding-left-right-set4 margin-top8" id="tableOne">
+					<div class="col-md-12">
+						<!-- table one for report entry -->
+						<!--// table one for report entry -->
+					</div>
+
+	<div class="row margin-bottom45 sss">
+		<ul ng-if="initiateReqPager.pages.length"
+			class="pagination table-list" style="font-size: 14px;">
+			<li ng-class="{disabled: initiateReqPager.currentPage === 1}"><a
+				ng-click="setInitiateReqPage(1, true, initiateReqPager)">First</a></li>
+			<li ng-class="{disabled: initiateReqPager.currentPage === 1}"><a
+				ng-click="setInitiateReqPage(initiateReqPager.currentPage - 1, true, initiateReqPager)">Previous</a>
+			</li>
+			<li ng-repeat="initiateReqPage in initiateReqPager.pages"
+				ng-class="{active: initiateReqPager.currentPage === initiateReqPage}">
+				<a
+				ng-click="setInitiateReqPage(initiateReqPage, true, initiateReqPager)">{{initiateReqPage}}</a>
+			</li>
+			<li
+				ng-class="{disabled: initiateReqPager.currentPage === initiateReqPager.totalPages}">
+				<a
+				ng-click="setInitiateReqPage(initiateReqPager.currentPage + 1, true, initiateReqPager)">Next</a>
+			</li>
+			<li
+				ng-class="{disabled: initiateReqPager.currentPage === initiateReqPager.totalPages}">
+				<a
+				ng-click="setInitiateReqPage(initiateReqPager.totalPages, true, initiateReqPager)">Last</a>
+			</li>
+		</ul>
+	</div>
+
+</div>
+				

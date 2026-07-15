@@ -1,0 +1,441 @@
+ <style>
+     /* Custom CSS */
+      .container {
+        max-width: 900px;
+        width: 100%;
+        padding: 15px;
+      }
+
+      .rating-table {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .rating-table th,
+      .rating-table td {
+        text-align: center;
+        vertical-align: middle;
+        padding: 10px;
+      }
+
+      .stars label {
+        cursor: pointer;
+        font-size: 30px;
+        color: #ccc;
+      }
+
+      .stars input[type="radio"] {
+        display: none;
+      }
+
+      .stars input[type="radio"]:checked ~ label::before {
+        color: #f1c40f;
+      }
+
+      .trClass {
+        height: 70px;
+      }
+
+      .tdAsc {
+        text-align: left;
+        font-weight: bold;
+        font-size: 15px;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 15px;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 10px;
+        }
+
+        .rating-table th,
+        .rating-table td {
+          font-size: 14px;
+          padding: 5px;
+        }
+
+        .stars label {
+          font-size: 20px;
+        }
+
+        h3 {
+          font-size: 1.5rem;
+        }
+
+        .tdAsc {
+          font-size: 14px;
+        }
+
+        .btn {
+          padding: 15px;
+        }
+      }
+
+       .stars {
+          display: inline-block;
+          font-size: 24px;
+      }
+
+      .stars input {
+          display: none;
+      }
+
+      .stars label {
+          float: right;
+          cursor: pointer;
+          color: #ccc;
+      }
+
+      .stars label:before {
+          content: '\2605';
+          margin: 5px;
+      }
+
+      .stars input:checked ~ label {
+          color: #ffc107;
+      }
+    </style>
+
+
+
+<div class="container mt-5" >
+       <div class="row justify-content-center">
+          <div class="col-lg-6 col-md-8 col-sm-12 text-center">
+               <img src="resources/assets/images/logo/axonicIcon.png" style="width: 300px !important;margin-left: 96px;">
+         </div>
+      </div>
+    <h2 class="mb-4 text-center">In Patient Feedback Form</h2>
+    <h3 class="mb-4 text-center text-success" ng-show="isAlreadyFilledUp==true">Thank you for taking the time to give us your valuable feedback 🙂</h3>
+    <form ng-show="isAlreadyFilledUp==false">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <label><b style="font-size: 15px;background: beige;">Please rate your experience with the following aspects related to our front office</b></label>
+                    </div>
+                </div>
+            </div>
+
+            <table class="rating-table">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Very Good</th>
+                    <th>Good</th>
+                    <th>Fair</th>
+                    <th>Poor</th>
+                    <th>Very Poor</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="tdAsc">Polite, Friendly and helpful</td>
+                    <td> <input type="radio" name="politeFriendlyHelpful" ng-model="politeFriendlyHelpful" value ="0" ng-checked="politeFriendlyHelpful === 0" ng-change="politeFriendlyHelpfulFun(politeFriendlyHelpful)"></td>
+                    <td><input type="radio" name="politeFriendlyHelpful" ng-model="politeFriendlyHelpful" value ="1" ng-checked="politeFriendlyHelpful === 1" ng-change="politeFriendlyHelpfulFun(politeFriendlyHelpful)"></td>
+                    <td><input type="radio" name="politeFriendlyHelpful" ng-model="politeFriendlyHelpful" value ="2" ng-checked="politeFriendlyHelpful === 2" ng-change="politeFriendlyHelpfulFun(politeFriendlyHelpful)"></td>
+                    <td><input type="radio" name="politeFriendlyHelpful" ng-model="politeFriendlyHelpful" value ="3" ng-checked="politeFriendlyHelpful === 3" ng-change="politeFriendlyHelpfulFun(politeFriendlyHelpful)"></td>
+                    <td><input type="radio" name="politeFriendlyHelpful" ng-model="politeFriendlyHelpful" value ="4" ng-checked="politeFriendlyHelpful === 4" ng-change="politeFriendlyHelpfulFun(politeFriendlyHelpful)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Explanation of admission, Room, Facility and Tarrif</td>
+                    <td> <input type="radio" name="admissionExplanation" ng-model="admissionExplanation" value ="0" ng-checked="admissionExplanation === 0" ng-change="admissionExplanationFun(admissionExplanation)"></td>
+                    <td><input type="radio" name="admissionExplanation" ng-model="admissionExplanation" value ="1" ng-checked="admissionExplanation === 1" ng-change="admissionExplanationFun(admissionExplanation)"></td>
+                    <td><input type="radio" name="admissionExplanation" ng-model="admissionExplanation" value ="2" ng-checked="admissionExplanation === 2" ng-change="admissionExplanationFun(admissionExplanation)"></td>
+                    <td><input type="radio" name="admissionExplanation" ng-model="admissionExplanation" value ="3" ng-checked="admissionExplanation === 3" ng-change="admissionExplanationFun(admissionExplanation)"></td>
+                    <td><input type="radio" name="admissionExplanation" ng-model="admissionExplanation" value ="4" ng-checked="admissionExplanation === 4" ng-change="admissionExplanationFun(admissionExplanation)"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <label><b style="font-size: 15px;background: beige;">Please rate your experience with the following aspects related to our Nursing</b></label>
+                    </div>
+                </div>
+            </div>
+            <table class="rating-table" style="margin-top: 10px;">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Very Good</th>
+                    <th>Good</th>
+                    <th>Fair</th>
+                    <th>Poor</th>
+                    <th>Very Poor</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="tdAsc">Receiving on admission</td>
+                    <td> <input type="radio" name="admissionReceiving" ng-model="admissionReceiving" value ="0" ng-checked="admissionReceiving === 0" ng-change="admissionReceivingFun(admissionReceiving)"></td>
+                    <td><input type="radio" name="admissionReceiving" ng-model="admissionReceiving" value ="1" ng-checked="admissionReceiving === 1" ng-change="admissionReceivingFun(admissionReceiving)"></td>
+                    <td><input type="radio" name="admissionReceiving" ng-model="admissionReceiving" value ="2" ng-checked="admissionReceiving === 2" ng-change="admissionReceivingFun(admissionReceiving)"></td>
+                    <td><input type="radio" name="admissionReceiving" ng-model="admissionReceiving" value ="3" ng-checked="admissionReceiving === 3" ng-change="admissionReceivingFun(admissionReceiving)"></td>
+                    <td><input type="radio" name="admissionReceiving" ng-model="admissionReceiving" value ="4" ng-checked="admissionReceiving === 4" ng-change="admissionReceivingFun(admissionReceiving)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Response / attentiveness to your queries</td>
+                    <td> <input type="radio" name="attentivenessResponse" ng-model="attentivenessResponse" value ="0" ng-checked="attentivenessResponse === 0" ng-change="attentivenessResponseFun(attentivenessResponse)"></td>
+                    <td><input type="radio" name="attentivenessResponse" ng-model="attentivenessResponse" value ="1" ng-checked="attentivenessResponse === 1" ng-change="attentivenessResponseFun(attentivenessResponse)"></td>
+                    <td><input type="radio" name="attentivenessResponse" ng-model="attentivenessResponse" value ="2" ng-checked="attentivenessResponse === 2" ng-change="attentivenessResponseFun(attentivenessResponse)"></td>
+                    <td><input type="radio" name="attentivenessResponse" ng-model="attentivenessResponse" value ="3" ng-checked="attentivenessResponse === 3" ng-change="attentivenessResponseFun(attentivenessResponse)"></td>
+                    <td><input type="radio" name="attentivenessResponse" ng-model="attentivenessResponse" value ="4" ng-checked="attentivenessResponse === 4" ng-change="attentivenessResponseFun(attentivenessResponse)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Timely Medication</td>
+                    <td> <input type="radio" name="medicationTimely" ng-model="medicationTimely" value ="0" ng-checked="medicationTimely === 0" ng-change="medicationTimelyFun(medicationTimely)"></td>
+                    <td><input type="radio" name="medicationTimely" ng-model="medicationTimely" value ="1" ng-checked="medicationTimely === 1" ng-change="medicationTimelyFun(medicationTimely)"></td>
+                    <td><input type="radio" name="medicationTimely" ng-model="medicationTimely" value ="2" ng-checked="medicationTimely === 2" ng-change="medicationTimelyFun(medicationTimely)"></td>
+                    <td><input type="radio" name="medicationTimely" ng-model="medicationTimely" value ="3" ng-checked="medicationTimely === 3" ng-change="medicationTimelyFun(medicationTimely)"></td>
+                    <td><input type="radio" name="medicationTimely" ng-model="medicationTimely" value ="4" ng-checked="medicationTimely === 4" ng-change="medicationTimelyFun(medicationTimely)"></td>
+                </tr>
+
+                <tr class="trClass">
+                    <td class="tdAsc">Clarity on communication</td>
+                    <td> <input type="radio" name="communicationClarity" ng-model="communicationClarity" value ="0" ng-checked="communicationClarity === 0" ng-change="communicationClarityFun(communicationClarity)"></td>
+                    <td><input type="radio" name="communicationClarity" ng-model="communicationClarity" value ="1" ng-checked="communicationClarity === 1" ng-change="communicationClarityFun(communicationClarity)"></td>
+                    <td><input type="radio" name="communicationClarity" ng-model="communicationClarity" value ="2" ng-checked="communicationClarity === 2" ng-change="communicationClarityFun(communicationClarity)"></td>
+                    <td><input type="radio" name="communicationClarity" ng-model="communicationClarity" value ="3" ng-checked="communicationClarity === 3" ng-change="communicationClarityFun(communicationClarity)"></td>
+                    <td><input type="radio" name="communicationClarity" ng-model="communicationClarity" value ="4" ng-checked="communicationClarity === 4" ng-change="communicationClarityFun(communicationClarity)"></td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <label><b style="font-size: 15px;background: beige;">Please rate your experience with the following aspects related to our House Keeping </b></label>
+                    </div>
+                </div>
+            </div>
+            <table class="rating-table" style="margin-top: 10px;">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Very Good</th>
+                    <th>Good</th>
+                    <th>Fair</th>
+                    <th>Poor</th>
+                    <th>Very Poor</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="tdAsc">Cleanliness of Room / Toilet</td>
+                    <td><input type="radio" name="roomCleanliness" ng-model="roomCleanliness" value ="0" ng-checked="roomCleanliness === 0" ng-change="roomCleanlinessFun(roomCleanliness)"></td>
+                    <td><input type="radio" name="roomCleanliness" ng-model="roomCleanliness" value ="1" ng-checked="roomCleanliness === 1" ng-change="roomCleanlinessFun(roomCleanliness)"></td>
+                    <td><input type="radio" name="roomCleanliness" ng-model="roomCleanliness" value ="2" ng-checked="roomCleanliness === 2" ng-change="roomCleanlinessFun(roomCleanliness)"></td>
+                    <td><input type="radio" name="roomCleanliness" ng-model="roomCleanliness" value ="3" ng-checked="roomCleanliness === 3" ng-change="roomCleanlinessFun(roomCleanliness)"></td>
+                    <td><input type="radio" name="roomCleanliness" ng-model="roomCleanliness" value ="4" ng-checked="roomCleanliness === 4" ng-change="roomCleanlinessFun(roomCleanliness)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Prompt service delivery</td>
+                    <td><input type="radio" name="servicePrompt" ng-model="servicePrompt" value ="0" ng-checked="servicePrompt === 0" ng-change="servicePromptFun(servicePrompt)"></td>
+                    <td><input type="radio" name="servicePrompt" ng-model="servicePrompt" value ="1" ng-checked="servicePrompt === 1" ng-change="servicePromptFun(servicePrompt)"></td>
+                    <td><input type="radio" name="servicePrompt" ng-model="servicePrompt" value ="2" ng-checked="servicePrompt === 2" ng-change="servicePromptFun(servicePrompt)"></td>
+                    <td><input type="radio" name="servicePrompt" ng-model="servicePrompt" value ="3" ng-checked="servicePrompt === 3" ng-change="servicePromptFun(servicePrompt)"></td>
+                    <td><input type="radio" name="servicePrompt" ng-model="servicePrompt" value ="4" ng-checked="servicePrompt === 4" ng-change="servicePromptFun(servicePrompt)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Polite, Friendly and helpful</td>
+                    <td><input type="radio" name="friendlyPolite" ng-model="friendlyPolite" value ="0" ng-checked="friendlyPolite === 0" ng-change="friendlyPoliteFun(friendlyPolite)"></td>
+                    <td><input type="radio" name="friendlyPolite" ng-model="friendlyPolite" value ="1" ng-checked="friendlyPolite === 1" ng-change="friendlyPoliteFun(friendlyPolite)"></td>
+                    <td><input type="radio" name="friendlyPolite" ng-model="friendlyPolite" value ="2" ng-checked="friendlyPolite === 2" ng-change="friendlyPoliteFun(friendlyPolite)"></td>
+                    <td><input type="radio" name="friendlyPolite" ng-model="friendlyPolite" value ="3" ng-checked="friendlyPolite === 3" ng-change="friendlyPoliteFun(friendlyPolite)"></td>
+                    <td><input type="radio" name="friendlyPolite" ng-model="friendlyPolite" value ="4" ng-checked="friendlyPolite === 4" ng-change="friendlyPoliteFun(friendlyPolite)"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <label><b style="font-size: 15px;background: beige;">Please rate your experience with the following aspects related to Doctors  </b></label>
+                    </div>
+                </div>
+            </div>
+            <table class="rating-table" style="margin-top: 10px;">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Very Good</th>
+                    <th>Good</th>
+                    <th>Fair</th>
+                    <th>Poor</th>
+                    <th>Very Poor</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="tdAsc">Proper explanation of condition and treatment</td>
+                    <td><input type="radio" name="conditionExplanation" ng-model="conditionExplanation" value ="0" ng-checked="conditionExplanation === 0" ng-change="conditionExplanationFun(conditionExplanation)"></td>
+                    <td><input type="radio" name="conditionExplanation" ng-model="conditionExplanation" value ="1" ng-checked="conditionExplanation === 1" ng-change="conditionExplanationFun(conditionExplanation)"></td>
+                    <td><input type="radio" name="conditionExplanation" ng-model="conditionExplanation" value ="2" ng-checked="conditionExplanation === 2" ng-change="conditionExplanationFun(conditionExplanation)"></td>
+                    <td><input type="radio" name="conditionExplanation" ng-model="conditionExplanation" value ="3" ng-checked="conditionExplanation === 3" ng-change="conditionExplanationFun(conditionExplanation)"></td>
+                    <td><input type="radio" name="conditionExplanation" ng-model="conditionExplanation" value ="4" ng-checked="conditionExplanation === 4" ng-change="conditionExplanationFun(conditionExplanation)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Courteous and concerned</td>
+                    <td><input type="radio" name="concernedCourteous" ng-model="concernedCourteous" value ="0" ng-checked="concernedCourteous === 0" ng-change="concernedCourteousFun(concernedCourteous)"></td>
+                    <td><input type="radio" name="concernedCourteous" ng-model="concernedCourteous" value ="1" ng-checked="concernedCourteous === 1" ng-change="concernedCourteousFun(concernedCourteous)"></td>
+                    <td><input type="radio" name="concernedCourteous" ng-model="concernedCourteous" value ="2" ng-checked="concernedCourteous === 2" ng-change="concernedCourteousFun(concernedCourteous)"></td>
+                    <td><input type="radio" name="concernedCourteous" ng-model="concernedCourteous" value ="3" ng-checked="concernedCourteous === 3" ng-change="concernedCourteousFun(concernedCourteous)"></td>
+                    <td><input type="radio" name="concernedCourteous" ng-model="concernedCourteous" value ="4" ng-checked="concernedCourteous === 4" ng-change="concernedCourteousFun(concernedCourteous)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Counselling on approximate cost of treatment</td>
+                    <td><input type="radio" name="approximateCounselling" ng-model="approximateCounselling" value ="0" ng-checked="approximateCounselling === 0" ng-change="approximateCounsellingFun(approximateCounselling)"></td>
+                    <td><input type="radio" name="approximateCounselling" ng-model="approximateCounselling" value ="1" ng-checked="approximateCounselling === 1" ng-change="approximateCounsellingFun(approximateCounselling)"></td>
+                    <td><input type="radio" name="approximateCounselling" ng-model="approximateCounselling" value ="2" ng-checked="approximateCounselling === 2" ng-change="approximateCounsellingFun(approximateCounselling)"></td>
+                    <td><input type="radio" name="approximateCounselling" ng-model="approximateCounselling" value ="3" ng-checked="approximateCounselling === 3" ng-change="approximateCounsellingFun(approximateCounselling)"></td>
+                    <td><input type="radio" name="approximateCounselling" ng-model="approximateCounselling" value ="4" ng-checked="approximateCounselling === 4" ng-change="approximateCounsellingFun(approximateCounselling)"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <label><b style="font-size: 15px;background: beige;">Please rate your experience with the following aspects related to Dietary </b></label>
+                    </div>
+                </div>
+            </div>
+            <table class="rating-table" style="margin-top: 10px;">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Very Good</th>
+                    <th>Good</th>
+                    <th>Fair</th>
+                    <th>Poor</th>
+                    <th>Very Poor</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="tdAsc">Food quality</td>
+                    <td><input type="radio" name="qualityFood" ng-model="qualityFood" value ="0" ng-checked="qualityFood === 0" ng-change="qualityFoodFun(qualityFood)"></td>
+                    <td><input type="radio" name="qualityFood" ng-model="qualityFood" value ="1" ng-checked="qualityFood === 1" ng-change="qualityFoodFun(qualityFood)"></td>
+                    <td><input type="radio" name="qualityFood" ng-model="qualityFood" value ="2" ng-checked="qualityFood === 2" ng-change="qualityFoodFun(qualityFood)"></td>
+                    <td><input type="radio" name="qualityFood" ng-model="qualityFood" value ="3" ng-checked="qualityFood === 3" ng-change="qualityFoodFun(qualityFood)"></td>
+                    <td><input type="radio" name="qualityFood" ng-model="qualityFood" value ="4" ng-checked="qualityFood === 4" ng-change="qualityFoodFun(qualityFood)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">On time service</td>
+                    <td><input type="radio" name="serviceOnTime" ng-model="serviceOnTime" value ="0" ng-checked="serviceOnTime === 0" ng-change="serviceOnTimeFun(serviceOnTime)"></td>
+                    <td><input type="radio" name="serviceOnTime" ng-model="serviceOnTime" value ="1" ng-checked="serviceOnTime === 1" ng-change="serviceOnTimeFun(serviceOnTime)"></td>
+                    <td><input type="radio" name="serviceOnTime" ng-model="serviceOnTime" value ="2" ng-checked="serviceOnTime === 2" ng-change="serviceOnTimeFun(serviceOnTime)"></td>
+                    <td><input type="radio" name="serviceOnTime" ng-model="serviceOnTime" value ="3" ng-checked="serviceOnTime === 3" ng-change="serviceOnTimeFun(serviceOnTime)"></td>
+                    <td><input type="radio" name="serviceOnTime" ng-model="serviceOnTime" value ="4" ng-checked="serviceOnTime === 4" ng-change="serviceOnTimeFun(serviceOnTime)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Diet Counselling</td>
+                    <td><input type="radio" name="counsellingDiet" ng-model="counsellingDiet" value ="0" ng-checked="counsellingDiet === 0" ng-change="counsellingDietFun(counsellingDiet)"></td>
+                    <td><input type="radio" name="counsellingDiet" ng-model="counsellingDiet" value ="1" ng-checked="counsellingDiet === 1" ng-change="counsellingDietFun(counsellingDiet)"></td>
+                    <td><input type="radio" name="counsellingDiet" ng-model="counsellingDiet" value ="2" ng-checked="counsellingDiet === 2" ng-change="counsellingDietFun(counsellingDiet)"></td>
+                    <td><input type="radio" name="counsellingDiet" ng-model="counsellingDiet" value ="3" ng-checked="counsellingDiet === 3" ng-change="counsellingDietFun(counsellingDiet)"></td>
+                    <td><input type="radio" name="counsellingDiet" ng-model="counsellingDiet" value ="4" ng-checked="counsellingDiet === 4" ng-change="counsellingDietFun(counsellingDiet)"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <label><b style="font-size: 15px;background: beige;">Please rate your experience with the following aspects related to Discharge and Billing </b></label>
+                    </div>
+                </div>
+            </div>
+            <table class="rating-table" style="margin-top: 10px;">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Very Good</th>
+                    <th>Good</th>
+                    <th>Fair</th>
+                    <th>Poor</th>
+                    <th>Very Poor</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="tdAsc">Clear instructions for medications</td>
+                    <td><input type="radio" name="instructionsClear" ng-model="instructionsClear" value ="0" ng-checked="instructionsClear === 0" ng-change="instructionsClearFun(instructionsClear)"></td>
+                    <td><input type="radio" name="instructionsClear" ng-model="instructionsClear" value ="1" ng-checked="instructionsClear === 1" ng-change="instructionsClearFun(instructionsClear)"></td>
+                    <td><input type="radio" name="instructionsClear" ng-model="instructionsClear" value ="2" ng-checked="instructionsClear === 2" ng-change="instructionsClearFun(instructionsClear)"></td>
+                    <td><input type="radio" name="instructionsClear" ng-model="instructionsClear" value ="3" ng-checked="instructionsClear === 3" ng-change="instructionsClearFun(instructionsClear)"></td>
+                    <td><input type="radio" name="instructionsClear" ng-model="instructionsClear" value ="4" ng-checked="instructionsClear === 4" ng-change="instructionsClearFun(instructionsClear)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Explanation and clarification on billing</td>
+                    <td><input type="radio" name="clarificationExplanation" ng-model="clarificationExplanation" value ="0" ng-checked="clarificationExplanation === 0" ng-change="clarificationExplanationFun(clarificationExplanation)"></td>
+                    <td><input type="radio" name="clarificationExplanation" ng-model="clarificationExplanation" value ="1" ng-checked="clarificationExplanation === 1" ng-change="clarificationExplanationFun(clarificationExplanation)"></td>
+                    <td><input type="radio" name="clarificationExplanation" ng-model="clarificationExplanation" value ="2" ng-checked="clarificationExplanation === 2" ng-change="clarificationExplanationFun(clarificationExplanation)"></td>
+                    <td><input type="radio" name="clarificationExplanation" ng-model="clarificationExplanation" value ="3" ng-checked="clarificationExplanation === 3" ng-change="clarificationExplanationFun(clarificationExplanation)"></td>
+                    <td><input type="radio" name="clarificationExplanation" ng-model="clarificationExplanation" value ="4" ng-checked="clarificationExplanation === 4" ng-change="clarificationExplanationFun(clarificationExplanation)"></td>
+                </tr>
+                <tr class="trClass">
+                    <td class="tdAsc">Time taken for completing billing</td>
+                    <td><input type="radio" name="billingCompleting" ng-model="billingCompleting" value ="0" ng-checked="billingCompleting === 0" ng-change="billingCompletingFun(billingCompleting)"></td>
+                    <td><input type="radio" name="billingCompleting" ng-model="billingCompleting" value ="1" ng-checked="billingCompleting === 1" ng-change="billingCompletingFun(billingCompleting)"></td>
+                    <td><input type="radio" name="billingCompleting" ng-model="billingCompleting" value ="2" ng-checked="billingCompleting === 2" ng-change="billingCompletingFun(billingCompleting)"></td>
+                    <td><input type="radio" name="billingCompleting" ng-model="billingCompleting" value ="3" ng-checked="billingCompleting === 3" ng-change="billingCompletingFun(billingCompleting)"></td>
+                    <td><input type="radio" name="billingCompleting" ng-model="billingCompleting" value ="4" ng-checked="billingCompleting === 4" ng-change="billingCompletingFun(billingCompleting)"></td>
+                </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+
+        <!-- Overall Rating -->
+        <div class="form-group">
+            <label for="overall-cleanliness" style="font-size: large;">Please rate the overall cleanliness</label>
+            <div class="stars" onclick="selectStar(event, 'cleanliness')">
+                <input type="radio" id="clean-star5" name="overall-cleanliness" value="4" ng-model="cleanlinessRating" ng-checked="cleanlinessRating === 0" ng-change="cleanlinessRatingFun(cleanlinessRating)"><label for="clean-star5"></label>
+                <input type="radio" id="clean-star4" name="overall-cleanliness" value="3" ng-model="cleanlinessRating" ng-checked="cleanlinessRating === 1" ng-change="cleanlinessRatingFun(cleanlinessRating)"><label for="clean-star4"></label>
+                <input type="radio" id="clean-star3" name="overall-cleanliness" value="2" ng-model="cleanlinessRating" ng-checked="cleanlinessRating === 2" ng-change="cleanlinessRatingFun(cleanlinessRating)"><label for="clean-star3"></label>
+                <input type="radio" id="clean-star2" name="overall-cleanliness" value="1" ng-model="cleanlinessRating" ng-checked="cleanlinessRating === 3" ng-change="cleanlinessRatingFun(cleanlinessRating)"><label for="clean-star2"></label>
+                <input type="radio" id="clean-star1" name="overall-cleanliness" value="0" ng-model="cleanlinessRating" ng-checked="cleanlinessRating === 4" ng-change="cleanlinessRatingFun(cleanlinessRating)"><label for="clean-star1"></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="overall-experience" style="font-size: large;">Please rate your overall experience</label>
+            <div class="stars" onclick="selectStar(event, 'experience')">
+                <input type="radio" id="exp-star5" name="overall-experience" value="4" ng-model="experienceRating" ng-checked="experienceRating === 0" ng-change="experienceRatingFun(experienceRating)"><label for="exp-star5"></label>
+                <input type="radio" id="exp-star4" name="overall-experience" value="3" ng-model="experienceRating" ng-checked="experienceRating === 1" ng-change="experienceRatingFun(experienceRating)"><label for="exp-star4"></label>
+                <input type="radio" id="exp-star3" name="overall-experience" value="2" ng-model="experienceRating" ng-checked="experienceRating === 2" ng-change="experienceRatingFun(experienceRating)"><label for="exp-star3"></label>
+                <input type="radio" id="exp-star2" name="overall-experience" value="1" ng-model="experienceRating" ng-checked="experienceRating === 3" ng-change="experienceRatingFun(experienceRating)"><label for="exp-star2"></label>
+                <input type="radio" id="exp-star1" name="overall-experience" value="0" ng-model="experienceRating" ng-checked="experienceRating === 4" ng-change="experienceRatingFun(experienceRating)"><label for="exp-star1"></label>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="form-group">
+<!--            <label for="suggestions" style="font-size: large;">Suggestions:</label>-->
+            <textarea class="form-control" style="font-size: large;" id="suggestions" rows="5" ng-model="suggestions" ng-change="suggestionsFun(suggestions)" placeholder="Any suggestions you would like to give"></textarea>
+        </div>
+
+        <button type="submit" style="margin-top:30px;margin-bottom: 20px;" class="btn btn-primary" ng-click="submitForm()" ng-disabled="isAlreadyFilledUp==true">Submit</button>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+

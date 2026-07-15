@@ -1,0 +1,2647 @@
+<style>
+/*checkbox and search button */
+/* .custom-width{
+	width:520% !important;
+} */
+/*height set for div*/
+.unit-appointment-scheduling-div{
+border: 1px solid #d2d2d2;
+    background-color: white;
+    height: 44px;
+    padding: 5px;
+    border-radius: 10px;
+}
+.btn-group, .btn-group-vertical{
+  width: 100% !important;
+}
+.multiselect-parent .dropdown-toggle {
+ /*  width: 270px; */
+  width: 74% !important;
+}
+
+.multiselect-parent .dropdown-menu {
+ /*  width: 270px; */
+ width: 74% !important;
+}
+
+.multiselect-parent .dropdown-menu-day{
+  width: 175px !important;
+  height:auto !important
+}
+.vivek1 {
+  width: 90px;
+}
+.btn-default1{
+background-color :#ddeeff !important;
+}
+.width100{
+	width:100% !important;
+}
+	.btn-group .btn {
+    border: none !important;
+    border-radius: 0px !important;
+}
+
+	.select-box {
+    border: none !important;
+}
+</style>
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+		<div class="row ">
+			<ul class="tabs nav nav-tabs">
+			
+				<li ng-class="{ active : isSetFirstTabLevel(1) }" id="case-sheet"  class="padding-left-right-set width-auto"><!-- width: 183px; -->
+					<a href ng-click="setFirstTabLevel(1);init()">Doctor Scheduling</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(4) }" id="specialty" class="padding-left-right-set width-auto"><!--style="width: 183px;" -->
+					<a href ng-click="setFirstTabLevel(4);init();$scope.initDoctorSlotList()">Specialty Scheduling</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(2) }" id="complaints" class="padding-left-right-set width-auto"><!-- style="width: 160px;" -->
+					<a href ng-click="setFirstTabLevel(2);init()">Modality Scheduling</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(3) }" id="History" class="padding-left-right-set width-auto"><!-- style="width: 150px;" -->
+					<a href ng-click="setFirstTabLevel(3);init()">EHC Scheduling</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(5) }" id="History" class="padding-left-right-set width-auto"><!-- style="width: 160px;" -->
+					<a href ng-click="setFirstTabLevel(5);init()">OT Scheduling</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(6) }" id="History" class="padding-left-right-set width-auto"><!-- style="width: 183px;" -->
+					<a href ng-click="setFirstTabLevel(6);init()">Equipment Scheduling</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(7) }" id="" class="padding-left-right-set width-auto"><!-- style="width: 183px;" -->
+					<a href ng-click="setFirstTabLevel(7);init()">OT User Scheduling</a>
+				</li>
+				<li ng-class="{ active : isSetFirstTabLevel(8) }" id="complaints" class="padding-left-right-set width-auto"><!-- style="width: 183px;" -->
+					<a href ng-click="setFirstTabLevel(8);init()">Hemodialysis Scheduling</a>
+				</li>
+			</ul>
+			<div class="row">
+			<!-- FOR SPECIALTY -->
+			
+			<div ng-show="isSetFirstTabLevel(4)">
+					<fieldset class="normalRegistration sub-fieldset main-fieldset">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">
+						Specialty Scheduling
+						</legend>
+						<div class="row margin-top5">
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Specialty<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<div class="unit-appointment-scheduling-div">
+										<div>
+											<div ng-dropdown-multiselect="" options="example14dataSpecialty"
+												selected-model="example14modelSpecialty" 
+												extra-settings="example14settingsSpecialty" ></div>
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div ng-repeat="data in dataList" class="padding-top10">
+						<div class="row margin-top10" style="border-bottom: solid 1px;"><!-- override-col-2 -->
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"   class="text-input floating-label dirty"
+													name="datepicker" id="datepicker"
+													uib-datepicker-popup="dd/MM/yyyy" 
+													placeholder="DD/MM/YYYY" ng-model="data.fromDate" onkeydown="event.preventDefault()"
+													model-view-value="true" is-open="fromDate.opened[$index]"
+													datepicker-options="dateOptionsfromDate1" show-button-bar="false"
+													ng-click="openDatePicker($index)">  
+												<label for="description" class="">Date (From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"   class="text-input floating-label dirty"
+													name="datepicker" id="datepicker"
+													uib-datepicker-popup="dd/MM/yyyy" 
+													placeholder="DD/MM/YYYY" ng-model="data.toDate" onkeydown="event.preventDefault()"
+													model-view-value="true" is-open="toDate.opened[$index]"
+													datepicker-options="dateOptions" show-button-bar="false"
+													ng-click="openDatePickerTo($index)">   
+												<label for="description" class="">Date-Till<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="unit-appointment-scheduling-div">
+												<!-- <label for="code">Day</label> -->
+												<div ng-dropdown-multiselect-day="" 
+											        options="example8data" 
+											        selected-model="data.example8model" 
+											        extra-settings="example8settings">
+											      </div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description"  id="" ng-model="data.fromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description"  id="" ng-model="data.toTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(Till)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  name="description" id=""  ng-model="data.timePerSlot" class="text-input floating-label"> 
+												<label for="description" class="">Time Per Slot(Min)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4">
+								<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 ">
+									<a class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#breakTimeModal" ng-click="addBreakTime()">
+										<i class="fa fa-clock-o" style="color:white" aria-hidden="true"></i>
+									</a>
+								</div> -->
+								
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;" type="button" name="" id="addr" ng-click="add($index)" value="+"  class="btn btn-info">&nbsp;
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="remove($index+1)" class="btn btn-info">&nbsp;&nbsp;
+								</div>
+							</div>
+							
+						<div class="row margin-top10" ng-repeat="breakList in data.breakTimeList">
+							<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"  name="description"  id="" ng-model="breakList.breakFromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+											<label for="description" class="">Break From Time</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"   name="description"  id="" ng-model="breakList.breakToTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+											<label for="description" class="">Break  Time (-Till)  </label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width3">
+									<input style="width:100%;" type="button" name="" value="+" ng-click="addBreak($parent.$index,$index+1)"  class="btn btn-info">&nbsp;
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width3">
+								<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="removeBreak($parent.$index,$index+1)"  class="btn btn-info">&nbsp;&nbsp;
+							</div>
+						</div>
+					
+					
+						</div>
+						
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right width4">
+								<div class=" ">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										title="Save" ng-click="saveSpecialtySlots()">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+								</div>
+							</div>
+							<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box" placeholder="Search" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div> -->
+						</div> 
+						<div class="row padding-left-right-set1 margin-top8 his-style">
+							<div class="col-lg-2 col-md-3 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+										ng-change="setNoOfRecords();" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries 
+									</label>
+								</div>
+							</div>
+							<!-- <div class="col-lg-3 col-md-3 pull-right">
+								 style="top: -11px;"
+								<div class="ssearch">
+									<span class="fa fa-search icon-size search-icon-for-search"></span> 
+									<input placeholder="Search" ng-model="searchKeyword" class="search-popUp-ddl">
+								</div>
+							</div> -->
+							
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box dirty" placeholder="Search" ng-model="searchKeyword" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+							
+						</div>
+				
+						<div class="row margin-top4">
+								<div class="col-md-12 col-lg-12  OPDBillService table-responsive padding-left-right-set4">
+									<table class="table table-bordered OPDBillService common-tbody-scroll">
+										<thead>
+											<tr>
+												<th class="width12">
+													 <span class="">Speciality</span>
+												</th>
+												<!-- <th class="width6">
+													Doctor
+												</th> -->
+												<!-- <th class="width6">
+													Date
+												</th>
+												<th class="width6">
+													Day
+												</th> -->
+												<th class="width3">
+													Action taken
+												</th>
+											</tr>
+										</thead>
+										<tbody class="scrollable">
+											<tr ng-repeat="info in doctorSlotList | filter:searchKeyword">
+												<td>{{info.specialityName}}
+												</td>
+												<!-- <td>{{info.doctorName}}
+												</td> -->
+												<!-- <td>{{info.appointmentDate}}
+												</td>
+												<td>{{info.day}}
+												</td> -->
+												<td>
+													<a data-toggle="modal" data-target="#timeSlotDetailsModal" ng-click="getSlots(info.doctorId,info.specialityId,info.doctorName,info.specialityName,1)">Details</a>
+													<a ng-click="deactivateSlots(info)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;" ></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+						</div>
+						<div class="row margin-bottom45 sss">
+							<ul ng-if="pager.pages.length" class="pagination table-list"
+								style="font-size: 14px;">
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(1,'true')">First</a></li>
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+								<li ng-repeat="page in pager.pages"
+									ng-class="{active:pager.currentPage === page}"><a
+									ng-click="setPage(page,'true')">{{page}}</a></li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+								</li>
+							</ul>
+						</div>
+					</fieldset>
+				</div>
+				
+			<!-- END FOR SPECIALTY -->
+				<div ng-show="isSetFirstTabLevel(1)">
+					<fieldset class="normalRegistration sub-fieldset main-fieldset">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">
+						Doctor Scheduling
+						</legend>
+						<div class="row margin-top5">
+						
+							 <div class="col-md-4 col-xs-4 col-sm-4">
+									<div class="row">
+										<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+											Clinical Unit<span class="star">*</span>
+										</div>
+										<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+											<div class="unit-appointment-scheduling-div">
+											 <select name = "unitId" id="unitId" convert-to-number ng-model="unitId" class="select-box"  ng-change="init()"required >
+	                            					<option value="">Select Unit</option>
+	                            					<!-- <option value="1">Pune</option> -->
+	                            					<option ng-repeat="info in unitList" value="{{info.unitId}}">{{info.unitName}}</option>
+		                                  </select>
+											</div>
+										</div>
+									</div>
+								</div>
+							
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Specialty<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<div class="unit-appointment-scheduling-div">
+										<div>
+											<div ng-dropdown-multiselect="" options="example14data"
+												selected-model="example14model"
+												extra-settings="example14settings" ng-click="clicked('doctor')"></div>
+											<!--events="myEvents"  <pre>Selected Model: {{example14model}} | json</pre> -->
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Doctor<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<div class="unit-appointment-scheduling-div">
+										<div>
+											<div ng-dropdown-multiselect="" options="example14dataDoctor"
+												selected-model="example14modelDoctor" 
+												extra-settings="example14settings" ng-click="clickedDoctor()"></div>
+											<!-- <pre>Selected Model: {{example14model}} | json</pre> -->
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							  <!-- <div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Unit<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<div class="unit-appointment-scheduling-div">
+										<div>
+											<div ng-dropdown-multiselect="" options="finalUnitList"
+												selected-model="example14modelUnit" 
+												extra-settings="example14settings"></div>
+										</div>
+										</div>
+									</div>
+								</div>
+							</div> -->
+
+							<!-- <div>
+								<div ng-dropdown-multiselect="" options="example14data"
+									selected-model="example14model" checkboxes="true"
+									extra-settings="example14settings"></div>
+								<pre>Selected Model: {{example14model}} | json</pre>
+							</div> -->
+
+						</div>
+						<div ng-repeat="data in dataList" class="padding-top10">
+						
+						<div class="row margin-top10" style="border-bottom: solid 1px;"><!-- override-col-2 -->
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+													name="datepicker" id="datepicker"
+													uib-datepicker-popup="dd/MM/yyyy" 
+													placeholder="DD/MM/YYYY" ng-model="data.fromDate" onkeydown="event.preventDefault()"
+													model-view-value="true" is-open="fromDate.opened[$index]"
+													datepicker-options="dateOptionsfromDate2" show-button-bar="false"
+													ng-click="openDatePicker($index)">  
+												<label for="description" class="">Date (From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="data.toDate" onkeydown="event.preventDefault()"
+									model-view-value="true" is-open="toDate.opened[$index]"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerTo($index)">   
+												<label for="description" class="">Date-Till<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="unit-appointment-scheduling-div">
+												<!-- <label for="code">Day</label> -->
+												<div ng-dropdown-multiselect-day="" 
+											        options="example8data" 
+											        selected-model="data.example8model" 
+											        extra-settings="example8settings">
+											      </div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.fromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.toTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(Till)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.timePerSlot" class="text-input floating-label"> 
+												<label for="description" class="">Time Per Slot(Min)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4">
+								<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 ">
+									<a class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#breakTimeModal" ng-click="addBreakTime()">
+										<i class="fa fa-clock-o" style="color:white" aria-hidden="true"></i>
+									</a>
+								</div> -->
+								
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;" type="button" name="" id="addr" ng-click="add($index)" value="+"  class="btn btn-info">&nbsp;
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="remove($index+1)" class="btn btn-info">&nbsp;&nbsp;
+								</div>
+							</div>
+							
+						<div class="row margin-top10" ng-repeat="breakList in data.breakTimeList">
+							<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"  name="description" id="" ng-model="breakList.breakFromTime"  class="text-input floating-label" ng-init="initClockPicker()">
+											<label for="description" class="">Break From Time</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"  name="description" id="" ng-model="breakList.breakToTime"  class="text-input floating-label" ng-init="initClockPicker()">
+											<label for="description" class="">Break  Time (-Till)  </label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width3">
+									<input style="width:100%;" type="button" name="" value="+" ng-click="addBreak($parent.$index,$index+1)"  class="btn btn-info">&nbsp;
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width3">
+								<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="removeBreak($parent.$index,$index+1)"  class="btn btn-info">&nbsp;&nbsp;
+							</div>
+						</div>
+					
+					
+						</div>
+						
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right width4">
+								<div class=" ">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										title="Save" ng-click="saveSlots()">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+								</div>
+							</div>
+							<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box" placeholder="Search" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div> -->
+						</div> 
+						<div class="row padding-left-right-set1 margin-top8">
+							<!-- <div class="col-lg-2 col-md-2">
+								 style="top: -11px;"
+								<div class="ssearch">
+									<span class="fa fa-search icon-size search-icon-for-search"></span> 
+									<input placeholder="Search" ng-model="searchKeyword" class="search-popUp-ddl">
+								</div>
+							</div> -->
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box dirty" placeholder="Search" ng-model="searchKeyword" ng-change="searchSchedulingUnitMaster(searchKeyword)" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-2 col-md-3 padding-left-right-set4" style="padding-right: 0px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+										ng-change="setNoOfRecords();" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries 
+									</label>
+								</div>
+							</div>
+						</div>
+				
+						<div class="row margin-top4">
+								<div class="col-md-12 col-lg-12  OPDBillService table-responsive padding-left-right-set4">
+									<table class="table table-bordered OPDBillService common-tbody-scroll">
+										<thead>
+											<tr>
+												<th class="width6">
+													Doctor
+												</th>
+												<th class="width6">
+													 <span class="">Speciality</span>
+												</th>
+												<th class="width6">
+													<span class="">Last Active Date</span>
+												</th>
+											    <th class="width6">
+													Clinical Unit 
+												</th>
+												<!-- <-- <th class="width6">
+													Day
+												</th> --> 
+												<th class="width3">
+													Action taken
+												</th>
+											</tr>
+										</thead>
+										<tbody class="scrollable">
+											<tr ng-repeat="info in doctorSlotList">
+												
+												<td>{{info.doctorName}}
+												</td>
+												<td>{{info.specialityName}}
+												</td>
+												<td>{{info.lastSlotDate}}
+												</td>
+												<td>{{info.unitName}}
+												</td>
+<!--												<td>{{info.day}}-->
+<!--												</td>-->
+												<td>
+													<a data-toggle="modal" data-target="#timeSlotDetailsModal" ng-click="getSlotsDoctorShedule(info.doctorId,info.specialityId,info.doctorName,info.specialityName,1,info.unitId)">Details</a>
+													<a ng-click="deactivateSlots(info)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;" ></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+								</div>
+						</div>
+					</fieldset>
+				</div>
+				<div ng-show="isSetFirstTabLevel(2)" >
+					<fieldset class="normalRegistration sub-fieldset main-fieldset">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">
+							Modality Scheduling
+						</legend>
+						<div class="row margin-top5">
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Speciality<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<div class="unit-appointment-scheduling-div">
+											<div>
+											<div ng-dropdown-multiselect="" options="example14ModalityTypeData"
+												selected-model="example14ModalityType" 
+												extra-settings="example14settings" ng-click="clicked('speciality')"></div>
+											<!--events="myEvents"  <pre>Selected Model: {{example14model}} | json</pre> -->
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-3 col-sm-3 col-xs-3 padding-left-right-set4">
+										Sub Speciality<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<div class="unit-appointment-scheduling-div">
+											<div>
+											<div ng-dropdown-multiselect="" options="example14dataSubSpeciality"
+												selected-model="example14SubSpeciality"
+												extra-settings="example14settings" ng-click="clicked('modality')"></div>
+											<!--events="myEvents"  <pre>Selected Model: {{example14model}} | json</pre> -->
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Modality<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4 ">
+										<div class="unit-appointment-scheduling-div">
+											<div class="">
+											<div ng-dropdown-multiselect="" options="example14dataModality"
+												selected-model="example14modelModality"
+												extra-settings="example14settings"></div>
+											<!-- <pre>Selected Model: {{example14model}} | json</pre> -->
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div ng-repeat="data in dataList" class="padding-top10">
+						
+						<div class="row margin-top10" style="border-bottom: solid 1px;"><!-- override-col-2 -->
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="data.fromDate" onkeydown="event.preventDefault()"
+									model-view-value="true" is-open="fromDate.opened[$index]"
+									datepicker-options="dateOptionsfromDate3" show-button-bar="false"
+									ng-click="openDatePicker($index)">  
+												<label for="description" class="">Date (From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="data.toDate" onkeydown="event.preventDefault()"
+									model-view-value="true" is-open="toDate.opened[$index]"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerTo($index)">   
+												<label for="description" class="">Date-Till<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="unit-appointment-scheduling-div">
+												<!-- <label for="code">Day</label> -->
+												<div ng-dropdown-multiselect-day="" 
+											        options="example8data" 
+											        selected-model="data.example8model" 
+											        extra-settings="example8settings">
+											      </div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<select class="text-input floating-label dirty" ng-model="data.visitTypeId">
+												   <option value="3">Day Care</option>
+												    <option value="4">ER</option>
+												    <option value="2">IP</option>
+												    <option value="1">OP</option>
+												</select>
+												<label for="code">Visit Type<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.fromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.toTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(Till)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-8 col-md-8 col-sm-8">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.timePerSlot" class="text-input floating-label"> 
+												<label for="description" class="">Time Per Slot(Min)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;" type="button" name="" id="addr" ng-click="add($index)" value="+"  class="btn btn-info">&nbsp;
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="remove($index+1)" class="btn btn-info">&nbsp;&nbsp;
+								</div>
+							</div>
+							
+						<div class="row margin-top10" ng-repeat="breakList in data.breakTimeList">
+							<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"  name="description" id="" ng-model="breakList.breakFromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+											<label for="description" class="">Break From Time</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"  name="description" id="" ng-model="breakList.breakToTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+											<label for="description" class="">Break  Time (-Till)  </label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width3">
+									<input style="width:100%;" type="button" name="" value="+" ng-click="addBreak($parent.$index,$index+1)"  class="btn btn-info">&nbsp;
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width3">
+								<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="removeBreak($parent.$index,$index+1)"  class="btn btn-info">&nbsp;&nbsp;
+							</div>
+						</div>
+					
+					
+						</div>
+						
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right width4">
+								<div class=" ">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										title="Save" ng-click="saveModalitySlots()">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row padding-left-right-set1 margin-top8">
+							<div class="col-lg-2 col-md-3 padding-left-right-set4" style="padding-right: 0px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+										ng-change="setNoOfRecords();" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries 
+									</label>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box dirty" placeholder="Search" ng-model="searchKeywordModulity" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+					
+				</div>
+				
+						<div class="row margin-top4">
+								<div class="col-md-12 col-lg-12  OPDBillService table-responsive padding-left-right-set4">
+									<table class="table table-bordered OPDBillService common-tbody-scroll">
+										<thead>
+											<tr>
+											<th class="width12">
+													 <span class="">Speciality</span>
+												</th>
+												<th class="width12">
+													 <span class="">Sub Speciality</span>
+												</th>
+												<th class="width6">
+													Modality
+												</th>
+												<!-- <th class="width6">
+													Date
+												</th>
+												<th class="width6">
+													Day
+												</th> -->
+												<th class="width3">
+													Action taken
+												</th>
+											</tr>
+										</thead>
+										<tbody class="scrollable">
+
+											<tr ng-repeat="info in doctorSlotList  | filter:searchKeywordModulity">
+											    <td>{{info.specialityName}}
+												</td>
+												<td>{{info.subSpecialityName}}
+												</td>
+												<td>{{info.modalityDesc}}
+												</td>
+												<!-- <td>{{info.appointmentDate}}
+												</td>
+												<td>{{info.day}}
+												</td> -->
+												<td>
+													<a data-toggle="modal" data-target="#timeSlotDetailsModal" ng-click="getSlotsForModality(info.modalityId,info.subSpecialityId,info.specialityId,info.modalityNameinfo.subSpecialityName)">Details</a>
+													<a ng-click="deactivateSlots(info)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;" ></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									
+										<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+								</div>
+						</div>
+					</fieldset>
+				</div>
+				<div ng-show="isSetFirstTabLevel(3)">
+					<fieldset class="normalRegistration sub-fieldset main-fieldset">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">
+							EHC Scheduling
+						</legend>
+					
+						<div  ng-repeat="data in dataList" class="row">
+							<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+										
+												<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="data.fromDate" onkeydown="event.preventDefault()"
+									model-view-value="true" is-open="fromDate.opened[$index]"
+									datepicker-options="dateOptionsfromDate4" show-button-bar="false"
+									ng-click="openDatePicker($index)">  
+											<label for="description" class="">Date (From)<span class="star">*</span></label>
+											
+											<p class="help-block" ng-if="appointmnetSchedulingMasterForm.datepicker.$error.required">Date (From) is required</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="data.toDate" onkeydown="event.preventDefault()"
+									model-view-value="true" is-open="toDate.opened[$index]"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerTo($index)">  
+											<label for="description" class="">Date-Till<span class="star">*</span></label>
+											<p class="help-block" ng-if="appointmnetSchedulingMasterForm.datepicker.$error.required">Date-Till is required</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="unit-appointment-scheduling-div">
+											<div ng-dropdown-multiselect-day="" 
+											        options="example8data" 
+											        selected-model="data.example8model" 
+											        extra-settings="example8settings">
+											      </div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off"  name="noOfSlots" ng-model="data.noOfSlots" id="" class="text-input floating-label "> 
+											<label for="description" class="">No Of Slots<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-1 col-lg-1 margin-top10">
+								<div class="col-lg-6 col-md-6 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;" type="button" name="" id="addr" ng-click="add($index)" value="+"  class="btn btn-info">&nbsp;
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="remove($index+1)" class="btn btn-info">&nbsp;&nbsp;
+								</div>
+							</div>
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right width4">
+								<div class=" ">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										title="Save" ng-click="saveEchSlots()">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+								</div>
+							</div>
+							<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box" placeholder="Search" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div> -->
+						</div>
+						
+						<div class="row padding-left-right-set1 margin-top8">
+							<div class="col-lg-2 col-md-3 padding-left-right-set4" style="padding-right: 0px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+										ng-change="setNoOfRecords();" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries 
+									</label>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box dirty" placeholder="Search" ng-model="searchKeywordEHC" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+							
+						</div>
+				
+						<div class="row margin-top4">
+								<div class="col-md-12 col-lg-12  OPDBillService table-responsive padding-left-right-set4">
+									<table class="table table-bordered OPDBillService common-tbody-scroll">
+										<thead>
+											<tr>
+												<th class="width6">
+													Date
+												</th>
+												<th class="width6">
+													Day
+												</th>
+												<th class="width3">
+													Action taken
+												</th>
+											</tr>
+										</thead>
+										<tbody class="scrollable">
+
+											<tr  ng-repeat="info in doctorSlotList  | filter:searchKeywordEHC">
+												<td>{{info.appointmentDate}}</td>
+												<td>{{info.day}}</td>
+												<td>
+													<a data-toggle="modal" data-target="#detailsECH" ng-click="getSlotDetailsForECH(info)">Details</a>
+													<a ng-click="deactivateSlots(info)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;"></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+								</div>
+						</div>
+					</fieldset>
+				</div>
+				<div ng-show="isSetFirstTabLevel(5)">
+					<fieldset class="normalRegistration sub-fieldset main-fieldset">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">
+						OT Scheduling
+						</legend>
+						<div class="row margin-top5">
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Theatre<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<select ng-model="theatreObj" class="text-input floating-label"
+										ng-options="x as x.theatreName for x in operationTheatreList track by x.operationTheatreId"
+										ng-change="getOperationTheatreList(theatreObj.operationTheatreId);"
+										class="form-control" 
+										ng-required="true">
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Table<span class="star">*</span>
+									</div>
+									
+									<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<div class="custom-drop-down-btn" ng-dropdown-multiselect="" 
+												ng-click="clickedOt();"
+												options="operationTableList" selected-model="selectedTableList">
+												</div>
+											</div>
+										</div>
+								</div>
+							</div>
+
+						</div>
+						<div ng-repeat="data in otDataList" class="padding-top10">
+						
+						<div class="row margin-top10" style="border-bottom: solid 1px;"><!-- override-col-2 -->
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+													<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+														name="datepicker" id="datepicker"
+														uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+														ng-model="data.fromDate" model-view-value="true" onkeydown="event.preventDefault()"
+														is-open="fromDate.opened[$index]"
+														datepicker-options="dateOptionsfromDate5" show-button-bar="false"
+														ng-click="openOTFromDatePicker($index)"> 
+												<label for="description" class="">Date (From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+													<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+														name="datepicker" id="datepicker"
+														uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+														ng-model="data.toDate" model-view-value="true" onkeydown="event.preventDefault()"
+														is-open="toDate.opened[$index]"
+														datepicker-options="dateOptions" show-button-bar="false"
+														ng-click="openOTToDattePicker($index)"> 
+													<label for="description" class="">Date-Till<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="unit-appointment-scheduling-div">
+												<div ng-dropdown-multiselect-day="" 
+											        options="example8data" 
+											        ng-click="clickedOnDaysList($index);"
+											        selected-model="data.example8model" 
+											        extra-settings="example8settings">
+											      </div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.fromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.toTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(Till)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.switchOverTime" class="text-input floating-label" numbers-only> 
+												<label for="description" class="">Switch Over Time(Min)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4">
+								
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;" type="button" name="" id="addr" ng-click="addOTTime($index)" value="+"  class="btn btn-info">&nbsp;
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="removeOTTime($index+1)" class="btn btn-info">&nbsp;&nbsp;
+								</div>
+							</div>
+						</div>
+						
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right width4">
+								<div class=" ">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										title="Save" ng-click="saveOtScheduling();">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+								</div>
+							</div>
+						</div> 
+						<div class="row padding-left-right-set1 margin-top8">
+ 							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box dirty" placeholder="Search" ng-model="searchKeywordOT" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-2 col-md-3" style="padding-right: 0px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordForOT='10'" ng-model="noOfRecordForOT"
+										ng-change="setNoOfRecordsOfOTScheduling();" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries 
+									</label>
+								</div>
+							</div>
+						</div>
+				
+						<div class="row margin-top4">
+								<div class="col-md-12 col-lg-12  OPDBillService table-responsive padding-left-right-set4">
+									<table class="table table-bordered OPDBillService common-tbody-scroll">
+										<thead>
+											<tr>
+												<th class="width12">
+													 <span class="">Theatre</span>
+												</th>
+												<th class="width6">
+													Table
+												</th>
+												<th class="width6">
+													Date
+												</th>
+												<th class="width6">
+													Time(From)
+												</th>
+												<th class="width6">
+													Time(Till)
+												</th>
+												<th class="width6">
+													Switch Over Time
+												</th>
+												<th class="width6">
+													Day
+												</th>
+												<th class="width3">
+													Status
+												</th>
+											</tr>
+										</thead>
+										<tbody class="scrollable">
+											<tr ng-repeat="info in otSchedulingList | filter:searchKeywordOT">
+												<td>{{info.theatreName}}
+												</td>
+												<td>{{info.tableName}}
+												</td>
+												<td>{{info.otDate}}
+												</td>
+												<td>{{info.fromTime}}</td>
+												<td>{{info.toTime}}</td>
+												<td>{{info.switchOverTime}}</td>
+												<td>
+													<div ng-if="info.dayId==1">Monday</div>
+													<div ng-if="info.dayId==2">Tuesday</div>
+													<div ng-if="info.dayId==3">Wednesday</div>
+													<div ng-if="info.dayId==4">Thursday</div>
+													<div ng-if="info.dayId==5">Friday</div>
+													<div ng-if="info.dayId==6">Saturday</div>
+													<div ng-if="info.dayId==7">Sunday</div>
+												</td>
+												<td>
+													<label class="switch vertical-middle"> 
+													<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatusOT(info.otSchedulingId ,info.status)">
+													<div class="slider round"> </div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="row margin-bottom45 sss">
+										<ul ng-if="otPager.pages.length" class="pagination table-list"
+											style="font-size: 14px;">
+											<li ng-class="{disabled:otPager.currentPage === 1}"><a
+												ng-click="setPageForOT(1,'true')">First</a></li>
+											<li ng-class="{disabled:otPager.currentPage === 1}"><a
+												ng-click="setPageForOT(otPager.currentPage - 1,'true')">Previous</a></li>
+											<li ng-repeat="infoPage in otPager.pages"
+												ng-class="{active:otPager.currentPage === infoPage}"><a
+												ng-click="setPageForOT(infoPage,'true')">{{infoPage}}</a></li>
+											<li ng-class="{disabled:otPager.currentPage === otPager.totalPages}">
+												<a ng-click="setPageForOT(otPager.currentPage + 1,'true')">Next</a>
+											</li>
+											<li ng-class="{disabled:otPager.currentPage === otPager.totalPages}">
+												<a ng-click="setPageForOT(otPager.totalPages,'true')">Last</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+						</div>
+					</fieldset>
+					</div>
+					
+					<div ng-show="isSetFirstTabLevel(6)">
+					<fieldset class="normalRegistration sub-fieldset main-fieldset">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">
+						Equipment Scheduling
+						</legend>
+						<div class="row margin-top5">
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Type<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<div>
+											<select ng-model="equipmentTypeObj" class="text-input floating-label"
+												ng-options="x as x.category for x in equipmentTypeList track by x.id"
+												class="form-control" 
+												ng-change="getEquipmentNamesByEquipmentId(equipmentTypeObj.id)"
+												ng-required="true">
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-3 col-sm-3 col-xs-3 padding-left-right-set4">
+										Equipment <span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<div>
+											<div class="custom-drop-down-btn" ng-dropdown-multiselect="" 
+												ng-click="clickedOnEquipment();"
+												options="equipmentList" selected-model="selectedEquipmentList">
+												</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div ng-repeat="data in otEquipmentList" class="padding-top10">
+						
+						<div class="row margin-top10" style="border-bottom: solid 1px;"><!-- override-col-2 -->
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+													<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+														name="datepicker" id="datepicker"
+														uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+														ng-model="data.fromDate" model-view-value="true" onkeydown="event.preventDefault()"
+														is-open="fromDate.opened[$index]"
+														datepicker-options="dateOptionsfromDate6" show-button-bar="false"
+														ng-click="openEquipFromDatePicker($index)"> 
+														<label for="description" class="">Date (From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+													<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+														name="datepicker" id="datepicker"
+														uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+														ng-model="data.toDate" model-view-value="true" onkeydown="event.preventDefault()"
+														is-open="toDate.opened[$index]"
+														datepicker-options="dateOptions" show-button-bar="false"
+														ng-click="openEquipToDattePicker($index)"> 
+														<label for="description" class="">Date-Till<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="unit-appointment-scheduling-div">
+												<div ng-dropdown-multiselect-day="" 
+											        options="example8data" 
+											        ng-click="clickedOnEquipDaysList($index);"
+											        selected-model="data.example8model" 
+											        extra-settings="example8settings">
+											      </div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.fromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.toTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(Till)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4">
+									
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;" type="button" name="" id="addr" ng-click="addEquipTime($index)" value="+"  class="btn btn-info">&nbsp;
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="removeEquipTime($index+1)" class="btn btn-info">&nbsp;&nbsp;
+								</div>
+							</div>
+							
+						</div>
+						
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right width4">
+								<div class=" ">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										title="Save" ng-click="saveOtEquipment()">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+								</div>
+							</div>
+						</div> 
+						<div class="row padding-left-right-set1 margin-top8">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box dirty" placeholder="Search" ng-model="searchKeywordeEqip" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-2 col-md-3 padding-left-right-set4" style="padding-right: 0px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfEquipRecordsPerPage='10'" ng-model="noOfEquipRecordsPerPage"
+										ng-change="setNoOfRecordsOfOTEquipScheduling();" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries 
+									</label>
+								</div>
+							</div>
+						</div>
+				
+						<div class="row margin-top4">
+								<div class="col-md-12 col-lg-12  OPDBillService table-responsive padding-left-right-set4">
+									<table class="table table-bordered OPDBillService common-tbody-scroll">
+										<thead>
+											<tr>
+												<th class="width12">
+													 <span class="">Type</span>
+												</th>
+												<th class="width6">
+													Equipment
+												</th>
+												<th class="width6">
+													Date
+												</th>
+												<th class="width6">
+													Day
+												</th>
+												<th class="width3">
+													Action taken
+												</th>
+											</tr>
+										</thead>
+										<tbody class="scrollable">
+											<tr ng-repeat="info in otEquipmentdataList | filter:searchKeywordeEqip">
+												<td>{{info.assetCategory}}
+												</td>
+												<td>{{info.itemName}}
+												</td>
+												<td>{{info.equipmentSchedulingDate}}
+												</td>
+												<td>
+													<div ng-if="info.dayId==1">Monday</div>
+													<div ng-if="info.dayId==2">Tuesday</div>
+													<div ng-if="info.dayId==3">Wednesday</div>
+													<div ng-if="info.dayId==4">Thursday</div>
+													<div ng-if="info.dayId==5">Friday</div>
+													<div ng-if="info.dayId==6">Saturday</div>
+													<div ng-if="info.dayId==7">Sunday</div>
+												</td>
+												<td>
+													<label class="switch vertical-middle"> 
+													<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateEquipStatus(info.equipmentSchedulingId ,info.status)">
+													<div class="slider round"> </div>
+										
+													</label>
+												
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="row margin-bottom45 sss">
+										<ul ng-if="equipmentPager.pages.length" class="pagination table-list"
+											style="font-size: 14px;">
+											<li ng-class="{disabled:equipmentPager.currentPage === 1}"><a
+												ng-click="setPageForOTEquip(1,'true')">First</a></li>
+											<li ng-class="{disabled:equipmentPager.currentPage === 1}"><a
+												ng-click="setPageForOTEquip(equipmentPager.currentPage - 1,'true')">Previous</a></li>
+											<li ng-repeat="page in equipmentPager.pages"
+												ng-class="{active:equipmentPager.currentPage === page}"><a
+												ng-click="setPageForOTEquip(page,'true')">{{page}}</a></li>
+											<li ng-class="{disabled:equipmentPager.currentPage === equipmentPager.totalPages}">
+												<a ng-click="setPageForOTEquip(equipmentPager.currentPage + 1,'true')">Next</a>
+											</li>
+											<li ng-class="{disabled:equipmentPager.currentPage === equipmentPager.totalPages}">
+												<a ng-click="setPageForOTEquip(equipmentPager.totalPages,'true')">Last</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+						</div>
+					</fieldset>
+					</div>
+					<div ng-show="isSetFirstTabLevel(7)">
+					<fieldset class="normalRegistration sub-fieldset main-fieldset">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer">
+						OT User Scheduling
+						</legend>
+						<div class="row margin-top5">
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										OT Role<span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<select ng-model="roleObj" class="text-input floating-label"
+										ng-options="x as x.roleName for x in otimsRoleList track by x.roleId"
+										ng-change="getStaffListByRoleId(roleObj.roleId);"
+										class="form-control" 
+										ng-required="true">
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										OT User<span class="star">*</span>
+									</div>
+									
+									<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<div class="custom-drop-down-btn" ng-dropdown-multiselect="" 
+												ng-click="selectOtStaff();"
+												options="staffList" selected-model="selectedStaffList">
+												</div>
+											</div>
+										</div>
+								</div>
+							</div>
+
+						</div>
+						<div ng-repeat="data in otStaffTimeList" class="padding-top10">
+						
+						<div class="row margin-top10" style="border-bottom: solid 1px;"><!-- override-col-2 -->
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+													<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+														name="datepicker" id="datepicker"
+														uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+														ng-model="data.fromDate" model-view-value="true" onkeydown="event.preventDefault()"
+														is-open="fromDate.opened[$index]"
+														datepicker-options="dateOptionsfromDate7" show-button-bar="false"
+														ng-click="openStaffFromDatePicker($index)"> 
+													<label for="description" class="">Date (From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+													<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+														name="datepicker" id="datepicker"
+														uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+														ng-model="data.toDate" model-view-value="true" onkeydown="event.preventDefault()"
+														is-open="toDate.opened[$index]"
+														datepicker-options="dateOptions" show-button-bar="false"
+														ng-click="openStaffToDattePicker($index)"> 
+												<label for="description" class="">Date-Till<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="unit-appointment-scheduling-div">
+												<!-- <label for="code">Day</label> -->
+												<div ng-dropdown-multiselect-day="" 
+											        options="example8data" 
+											        ng-click="clickedOnStaffDaysList($index);"
+											        selected-model="data.example8model" 
+											        extra-settings="example8settings">
+											      </div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.fromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.toTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(Till)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.switchOverTime" class="text-input floating-label" numbers-only> 
+												<label for="description" class="">Switch Over Time(Min)</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4">
+								
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;" type="button" name="" id="addr" ng-click="addStaffTimeDetails($index)" value="+"  class="btn btn-info">&nbsp;
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="removeStaffTimeDetails($index+1)" class="btn btn-info">&nbsp;&nbsp;
+								</div>
+							</div>
+							
+						</div>
+						
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right width4">
+								<div class=" ">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										title="Save" ng-click="saveOtStaffScheduling();">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+								</div>
+							</div>
+						
+						</div> 
+						<div class="row padding-left-right-set1 margin-top8">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+							<input type="text" autocomplete="off"  class="text-search-box dirty" placeholder="Search" ng-model="searchKeywordOTUsershe" style="margin-top:0px">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-2 col-md-3 padding-left-right-set4" style="padding-right: 0px;">
+							<div class="search">
+								<label class="show-entries">Show 
+								<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+									ng-init="OTUserRecordsPerPage='10'" ng-model="OTUserRecordsPerPage"
+									ng-change="setNoOfRecordsOfOTStaffScheduling();" class="search-popUp-ddl">
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+								</select> entries 
+								</label>
+							</div>
+						</div>
+					</div>
+				<div class="row margin-top4">
+								<div class="col-md-12 col-lg-12  OPDBillService table-responsive padding-left-right-set4">
+									<table class="table table-bordered OPDBillService common-tbody-scroll">
+										<thead>
+											<tr>
+												<th class="width12">
+													 <span class="">OT Role</span>
+												</th>
+												<th class="width6">
+													OT User
+												</th>
+												<th class="width6">
+													Date
+												</th>
+												<th class="width6">
+													Time(From)
+												</th>
+												<th class="width6">
+													Time(Till)
+												</th>
+												<th class="width6">
+													Switch Over Time
+												</th>
+												<th class="width6">
+													Day
+												</th>
+												<th class="width3">
+													Status
+												</th>
+											</tr>
+										</thead>
+										<tbody class="scrollable">
+											<tr ng-repeat="info in otStaffSchedulingList | filter:searchKeywordOTUsershe">
+												<td>{{info.roleName}}
+												</td>
+												<td>{{info.userName}}
+												</td>
+												<td>{{info.staffSchedulingDate}}
+												</td>
+												<td>{{info.fromTime}}</td>
+												<td>{{info.toTime}}</td>
+												<td>{{info.switchOverTime}}</td>
+												<td>
+													<div ng-if="info.dayId==1">Monday</div>
+													<div ng-if="info.dayId==2">Tuesday</div>
+													<div ng-if="info.dayId==3">Wednesday</div>
+													<div ng-if="info.dayId==4">Thursday</div>
+													<div ng-if="info.dayId==5">Friday</div>
+													<div ng-if="info.dayId==6">Saturday</div>
+													<div ng-if="info.dayId==7">Sunday</div>
+												</td>
+												<td>
+													<label class="switch vertical-middle"> 
+													<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateOTStaffStatus(info.staffSchedulingId ,info.status)">
+													<div class="slider round"> </div>
+										
+													</label>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="row margin-bottom45 sss">
+										<ul ng-if="OTUserPager.pages.length" class="pagination table-list"
+											style="font-size: 14px;">
+											<li ng-class="{disabled:OTUserPager.currentPage === 1}"><a
+												ng-click="setPageForOTStaff(1,'true')">First</a></li>
+											<li ng-class="{disabled:OTUserPager.currentPage === 1}"><a
+												ng-click="setPageForOTStaff(OTUserPager.currentPage - 1,'true')">Previous</a></li>
+											<li ng-repeat="page in OTUserPager.pages"
+												ng-class="{active:OTUserPager.currentPage === page}"><a
+												ng-click="setPageForOTStaff(page,'true')">{{page}}</a></li>
+											<li ng-class="{disabled:OTUserPager.currentPage === OTUserPager.totalPages}">
+												<a ng-click="setPageForOTStaff(OTUserPager.currentPage + 1,'true')">Next</a>
+											</li>
+											<li ng-class="{disabled:OTUserPager.currentPage === OTUserPager.totalPages}">
+												<a ng-click="setPageForOTStaff(OTUserPager.totalPages,'true')">Last</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+						</div>
+					</fieldset>
+					</div>
+					<div ng-show="isSetFirstTabLevel(8)" >
+					<fieldset class="normalRegistration sub-fieldset main-fieldset">
+						<legend class="main-heading-div commonPatientSearch cursor-pointer" ng-click="hemodialysisfun()">
+							Hemodialysis Scheduling
+						</legend>
+						<div class="row margin-top5">
+							<div class="col-md-4 col-xs-4 col-sm-4">
+								<div class="row">
+									<div class="col-md-2 col-sm-2 col-xs-2 padding-left-right-set4">
+										Dialysis Chair <span class="star">*</span>
+									</div>
+									<div class="col-md-8 col-sm-8 col-xs-8 padding-left-right-set4">
+										<select class="text-input floating-label" name="ItemId" ng-model="itemId" >
+											<option ng-repeat="info in chairList" value="{{info.bedId}}" ng-value="{{info.bedId}}">{{info.bedNumber}}</option>
+										</select> 
+									</div>
+								</div>
+							</div>
+							
+						</div>
+						
+						<div ng-repeat="data in dataList" class="padding-top10">
+						
+						<div class="row margin-top10" style="border-bottom: solid 1px;"><!-- override-col-2 -->
+							<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="data.fromDate" onkeydown="event.preventDefault()"
+									model-view-value="true" is-open="fromDate.opened[$index]"
+									datepicker-options="dateOptionsfromDate8" show-button-bar="false"
+									ng-click="openDatePicker($index)">  
+												<label for="description" class="">Date (From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-11 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" 
+									placeholder="DD/MM/YYYY" ng-model="data.toDate" onkeydown="event.preventDefault()"
+									model-view-value="true" is-open="toDate.opened[$index]"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerTo($index)">   
+												<label for="description" class="">Date-Till<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="unit-appointment-scheduling-div">
+												<!-- <label for="code">Day</label> -->
+												<div ng-dropdown-multiselect-day="" 
+											        options="example8data" 
+											        selected-model="data.example8model" 
+											        extra-settings="example8settings">
+											      </div>
+											</div>
+										</div>
+									</div>
+								<!-- <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<select class="text-input floating-label dirty" ng-model="data.visitTypeId">
+												    <option value="1">OP</option>
+												    <option value="2">IP</option>
+												    <option value="3">Day Care</option>
+												    <option value="4">ER</option>
+												</select>
+												<label for="code">Visit Type<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div> -->
+								
+							</div>
+							 <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-8 col-md-8 col-sm-8">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.noOfSlots" class="text-input floating-label"> 
+												<label for="description" class="">No Of Slots<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;border: 1px solid #2A83F2 !important;background-color: #EBF4FF !important;color:#2A83F2 !important;" type="button" name="" id="addr" ng-click="add($index)" value="+"  class="btn btn-info">&nbsp;
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="remove($index+1)" class="btn btn-info">&nbsp;&nbsp;
+								</div>
+							</div>
+							<!-- <div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.fromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(From)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+									<div class="row input-container test-master-sample">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10 ">
+											<div class="clockpicker">
+												<input type="text" autocomplete="off"  name="description" id="" ng-model="data.toTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+												<label for="description" class="">Time(Till)<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</div> -->
+						
+							
+						<!-- <div class="row margin-top10" ng-repeat="breakList in data.breakTimeList">
+							<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"  name="description" id="" ng-model="breakList.breakFromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+											<label for="description" class="">Break Time(From)<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"  name="description" id="" ng-model="breakList.breakToTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+											<label for="description" class="">Break  Time (-Till)  <span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width3">
+									<input style="width:100%;" type="button" name="" value="+" ng-click="addBreak($parent.$index,$index+1)"  class="btn btn-info">&nbsp;
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width3">
+								<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="removeBreak($parent.$index,$index+1)"  class="btn btn-info">&nbsp;&nbsp;
+							</div>
+						</div> -->
+					
+					
+						</div>
+						
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right width4">
+								<div class=" ">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										title="Save" ng-click="saveNephrologySlots()">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row padding-left-right-set1 margin-top8">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+								<input type="text" autocomplete="off"  class="text-search-box dirty" placeholder="Search" ng-model="searchKeywordHemoD" style="margin-top:0px">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-2 col-md-3 padding-left-right-set4" style="padding-right: 0px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+										ng-change="setNoOfRecordsOFHemo();" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries 
+									</label>
+								</div>
+							</div>
+						</div>
+				
+						<div class="row margin-top4">
+								<div class="col-md-12 col-lg-12  OPDBillService table-responsive padding-left-right-set4">
+									<table class="table table-bordered OPDBillService common-tbody-scroll">
+										<thead>
+											<tr>
+											<th class="width6">
+													 <span class="">Speciality</span>
+												</th>
+												<th class="width6">
+													Date
+												</th>
+												<th class="width6">
+													Day
+												</th>
+												<th class="width6">
+													Dialysis Chair
+												</th>
+												<th class="width3">
+													Action taken
+												</th>
+											</tr>
+										</thead>
+										<tbody class="scrollable">
+											<tr ng-repeat="info in hemodialysisSlotList|filter:searchKeywordHemoD">
+												<td>{{info.specialityName}}
+												</td>
+												<td>{{info.appointmentDate}}
+												</td>
+												<td>{{info.day}}
+												</td>
+												<td>{{info.bedName}}
+												</td>
+												<td>
+													<a data-toggle="modal" data-target="#detailsECH" ng-click="getSlotDetailsForHemodailysis(info)">Details</a>
+													<a ng-click="deactivateSlots(info)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;"></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									
+										<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPageOfHemo(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPageOfHemo(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPageOfHemo(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPageOfHemo(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPageOfHemo(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+								</div>
+						</div>
+					</fieldset>
+				</div>
+				
+			</div>
+		</div>	
+	</div>
+</div>
+
+
+
+<!-- OTP POPUP -->
+<div id="details" class="modal fade ng-scope in common-small-popup" role="dialog" style="padding-left: 17px;">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body row">
+				<div class="col-md-12 padding-left-right-set4 margin-top5 headerHeight1">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="width10">Date</th>
+								<th class="width10">Time(From)</th>
+								<th class="width10">Time(Till)</th>
+								<th class="width5">Action taken</th>
+							</tr>
+							<tr ng-repeat="info in slotDetailsList">
+								<td>{{info.appointmentDate}}</td>
+								<td>{{info.fromTimeString}}</td>
+								<td>{{info.toTimeString}}</td>
+								<!-- <td><i class="fa fa-pencil margin-left5" title="Edit" style="font-size: 18px;color: #f0793a;"></i></td> -->
+								<td><label class="switch"> 
+							<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info.slotId,info.status,$index)">
+							<div class="slider round"></div>
+							</label></td>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="otpOk">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- OTP POPUP -->
+<div id="detailsECH" class="modal fade ng-scope in common-small-popup" role="dialog" style="padding-left: 17px;">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body row">
+				<div class="col-md-12 padding-left-right-set4 margin-top5 headerHeight1">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+							<th class="width10">S.No</th>
+								<!-- <th class="width10">Date</th> -->
+								<th class="width5">Action taken</th>
+							</tr>
+							<tr ng-repeat="info in slotDetailsList">
+							<td>{{$index+1}}</td>
+								<!-- <td>{{info.appointmentDate}}</td> -->
+								<td><label class="switch"> 
+							<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info.slotId,info.status,$index)">
+							<div class="slider round"></div>
+							</label></td>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="otpOk">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- break time modal start -->
+<div id="breakTimeModal" class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Add Break Time
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body ">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set4 margin-top5 test-master-table-div">
+						<div class="row margin-top10" ng-repeat="breakList in breakTimeList">
+							<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"  name="description" id="" ng-model="breakList.breakFromTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+											<label for="description" class="">Break From Time</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off"  name="description" id="" ng-model="breakList.breakToTime" class="text-input floating-label" ng-init="initClockPicker()"> 
+											<label for="description" class="">Break  Time (-Till)  </label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+									<input style="width:100%;" type="button" name="" value="+" ng-click="addBreak($index)"  class="btn btn-info">&nbsp;
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+								<input style="width:100%;" type="button" name="" id="" value="-"  ng-click="removeBreak()"  class="btn btn-info">&nbsp;&nbsp;
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			 <div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="saveBreakTime()" id="">Save</button>
+			</div> 
+		</div>
+	</div>
+</div>
+<!-- break time modal end -->
+<!-- ******* time slot modal start ******* -->
+<div id="timeSlotDetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog" >
+	<div class="modal-dialog"> 
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+				 Time Slot Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body ">
+				<div class="row">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+							<div class="custom-sub-tab padding-left-right-set4 ">
+								<ul class="tabs nav nav-tabs">
+									<li ng-class="{ active : isSetThirdTabLevel(1) }" class="width15 active" style="">
+										<a href="" ng-click="setThirdTabLevel(1)">Year</a>
+									</li>
+									<li ng-class="{ active : isSetThirdTabLevel(2) }" class="width15" style="">
+										<a href="" ng-click="setThirdTabLevel(2)" class="">Month</a>
+									</li>
+									<li ng-class="{ active : isSetThirdTabLevel(3) }" class="width15" style="">
+										<a href="" ng-click="setThirdTabLevel(3)" class="">Week</a>
+									</li>
+<!-- 									<li ng-class="{ active : isSetThirdTabLevel(4) }" class="width15" style=""> -->
+<!-- 										<a href="" ng-click="setThirdTabLevel(4)" class="">Day</a> -->
+<!-- 									</li> -->
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4" style="padding-top: 8px;">
+							<div class="row">
+								<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 flo"></div>
+								<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+									<div class="row">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+											<div class="color-indiction-green-div"></div>
+										</div>
+										<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set0 long-text-overflow">
+											<span class="color-indication-green-span">Slot available</span>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+									<div class="row">
+										<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0">
+											<div class="color-indiction-orange-div"></div>
+										</div>
+										<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set4">
+											<span class="color-indication-orange-span">Slot available for over booking</span>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+									<div class="row">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+											<div class="color-indiction-Grey-div"></div>
+										</div>
+										<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set0">
+											<span class="color-indication-grey-span">Slot Blocked</span>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+									<div class="row">
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+											<div class="color-indiction-Red-div"></div>
+										</div>
+										<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set0">
+											<span class="color-indication-red-span">Slot not available</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 dayWiseSlot "><!-- fix-height-scroll500 -->
+						<div ng-show="isSetThirdTabLevel(1)" class="second-level-tab-display-div" style="">
+							<div ng-include="'./views/AppointmentScheduling/year-slot-details.html'"></div>
+						</div>
+						<div ng-show="isSetThirdTabLevel(2)" class="second-level-tab-display-div" style="">
+							 <div ng-include="'./views/AppointmentScheduling/month-slot-details.html'"></div> 
+						</div>
+						<div ng-show="isSetThirdTabLevel(3)" class="second-level-tab-display-div" style="">
+							<div ng-include="'./views/AppointmentScheduling/week-slot-details.html'"></div>
+						</div>
+<!-- 						<div ng-show="isSetThirdTabLevel(4)" class="second-level-tab-display-div" style=""> -->
+<!-- 							<div ng-include="'./views/AppointmentScheduling/day-slot-details.html'"></div> -->
+<!-- 						</div> -->
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ******* time slot modal end ******* -->
+<div id="details_timeslot" class="modal fade ng-scope in" role="dialog" style="padding-left: 17px;">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body row">
+				<div class="col-md-12 padding-left-right-set4 margin-top5 headerHeight1">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="width10">Date</th>
+								<th class="width10">Time(From)</th>
+								<th class="width10">Time(Till)</th>
+								<th class="width5">Action taken</th>
+							</tr>
+							<tr ng-repeat="info in slotDetailsList">
+								<td>{{info.appointmentDate}}</td>
+								<td>{{info.fromTimeString}}</td>
+								<td>{{info.toTimeString}}</td>
+								<!-- <td><i class="fa fa-pencil margin-left5" title="Edit" style="font-size: 18px;color: #f0793a;"></i></td> -->
+								<td><label class="switch"> 
+							<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info.slotId,info.status,$index)">
+							<div class="slider round"></div>
+							</label></td>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="otpOk" ng-click = "getWeekWiseSlots(weekIdForRefresh);">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+
+
+<div id="confirmPopupSlot" class="modal fade ng-scope in  common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+				</div>
+				<div class="modal-body">
+					<!-- <div class="col-md-12 ">
+						<div class="common-small-popup-body">
+							<div><b>Are you sure you want to continue?</b> <span style=" margin-left: 20px;">: Johan Hosy, <span>29 Y Male</span>{{tokenNumber}}</span></div>
+						</div>
+						
+					</div> -->
+					<div class="margin-left10 padding-bottom30"><span>Are you sure you want to Continue?</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="saveToPatientByAppointmentToEncounter()">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" data-dismiss="modal" ng-click="PopupOkBtn()" >
+							<i class="fa fa-check" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<div id="already_exist" class="modal fade ng-scope " role="dialog" style="">
+		<div class="modal-dialog" style="width: 38% !important;"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+					</div>
+				</div>
+				<div class="modal-body" style="font-size:15px">
+					<div class="margin-left10 padding-bottom30"><span>{{message}}</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary width40" id="saveBtn" data-toggle="modal" ng-hide="hideOverride" ng-click="saveAndOverride()">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn" data-toggle="modal" >Cancel</button>
+				</div>
+			</div>
+		</div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {       
+   
+	
+  $(".selectedPageName").text("Appointment Scheduling");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="appointmentSchedulingUnitMaster"]').parents("li").addClass("active");
+	
+	$(".fancybox").fancybox({
+		'width': 600, // or whatever
+		'height': 320,
+		'type': 'iframe'
+	});
+	
+	 
+	
+});
+
+</script>

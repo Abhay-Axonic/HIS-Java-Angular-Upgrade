@@ -1,0 +1,454 @@
+<div id="page-content-wrapper" ng-form="worklistForReportEntryForm">
+	<div class="container-fluid his-style">
+<div class="row">
+        <!--  <div class="ng-scope" ng-include="'./views/common/patient-demography-opd.html'"></div> -->
+          <div class="row patient-details-row">
+				<div class="col-md-11 col-sm-11 col-xs-11 ">
+					<span class="profile_pic margin-left10"> <img
+							alt="Lab Result"
+							ng-src="{{ (labResultMasterList[0].imagePath != null && labResultMasterList[0].imagePath != '')
+                ? labResultMasterList[0].imagePath
+                : (labResultMasterList[0].genderId == 2
+                    ? 'resources/assets/images/tempImages/patient.png'
+                    : 'resources/assets/images/tempImages/m.jpg') }}"
+							class="img-circle"
+							style="width:30px; height:30px">
+					</span> <span class="margin-left10">{{labResultMasterList[0].patientDetails}} </span> <span
+						class="margin-left10"><b class="padding-right5 ">UHID 
+							:</b> {{labResultMasterList[0].uhid}}</span> <!-- <span class="margin-left10"><b
+						class="padding-right10 ">Priority : </b> {{labResultMasterList[0].priorityName}}</span> --> <span
+						class="margin-left10">{{labResultMasterList[0].doctorDetails}} </span>
+				</div>
+						<div class="col-lg-5 col-md-4 col-sm-6 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<select class="text-input floating-label " name="" ng-model="pathologiestId">
+									<option value="0" >Select </option>
+									<option ng-repeat="pathuser in  userListByRoleType " value="{{pathuser.userId}}" >{{pathuser.empName}}</option>
+								</select>
+								<label for="description" class="">Pathologiest  Name</label>
+							</div>
+						</div>
+					</div>
+				</div> 
+			</div>
+</div>	
+
+	<div ng-repeat = "valiObj in reportEntryDetailsList track by $index" ng-init="testIndex=$index">	
+		<div class="row padding-left-right-set4 padding-top5">
+			<div class="table-container-header padding-left-right-set4">
+				<table class="table table-striped table-hover table-condensed table-bordered">
+					<thead>
+						<tr class="worklist-test-name cursor-pointer">
+							<th class="width10 border-right-none">
+								<input type="checkbox" class="margin-right10" ng-model="valiObj.isSelected"/>
+								<span class="margin-right10">Profile Name : {{valiObj.panelCode}}</span>
+								<span></span>
+							</th>
+							<th class="width10 border-right-none"><!-- <span class="margin-right10"><input type="checkbox" ng-model="valiObj.isOnHoldParameter"  ng-true-value=true  ng-false-value=false ng-click="checkFlagOnHold(valiObj)"></span>
+                                            <span class="margin-right10">Is On Hold Parameter</span> --></th>
+							<th class="width10 border-right-none"></th>
+						</tr>
+						<tr class="">
+							<th class="border-right-none">
+								<span class="margin-right10">Test Name : {{valiObj.testDesc}} </span>
+								<span></span>
+							</th>
+							<th class="border-right-none">
+								<span class="margin-right10">Test Code :  {{valiObj.testCode}}</span>
+								<span></span>
+							</th>
+							<th class="border-right-none">
+								<span class="margin-right10">Sample Id :  {{valiObj.sampleNo}}</span>
+								<span></span>
+							</th>
+						</tr>
+						
+					</thead>
+				</table>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4">
+			<div class="table-container padding-left-right-set4">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr class="table-th-bg cursor-pointer">
+								<th class="width8 vertical-middle">Parameter Name</th>
+								<th class="width8 vertical-middle">Technique Name</th>
+								<th class="width8 vertical-middle">First Finding</th>
+								<th class="width8 vertical-middle">First Finding Description</th>
+								<th class="width8 vertical-middle">Validation Finding</th>
+								<th class="width8 vertical-middle">Validation Finding Description</th>
+								<th class="width8 vertical-middle">Result</th>
+								<th class="width8 vertical-middle">Validation Enter By</th>
+								<th class="width8 vertical-middle">Validation Enter Date</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="table-container-body">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody class="table-th-bg cursor-pointer">
+							<!-- <td colspan="10">
+								<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+							</td> -->
+						</tbody>
+						<tbody>
+							<tr class="table-th-bg" ng-repeat= " info in valiObj.validateList track by $index"  ng-if="valiObj.isSelected">
+								<td class="width8" title="">{{info.parameterName}}</td>
+								<td class="width8" title="">{{info.techniqueName}}</td>
+								<td class="width8" title="">{{info.firstFinding}}</td>
+								<td class="width8" title="">{{info.firstFindingDesc}}</td>
+								<td class="width8" title="">{{info.secondFinding}}</td>
+								<td class="width8" title="">{{info.secondFindingDesc}}</td>
+								<td class="width8" title="">
+									<div class="text-right col-lg-10 col-md-12" style="padding-right: 11px !important;">
+										<input type="text" autocomplete="off"  class="w-100" ng-model="info.findingResult" required="required">
+									</div>
+									<div ng-class="{disabled: info.listHelpValueMaster == null || info.listHelpValueMaster.length == 0 || info.listHelpValueMaster == undefined}">
+										<i class="fa fa-info-circle" aria-hidden="true" title="Help Values Information" ng-click="showHelpValue(info,testIndex,$index);"></i>
+									</div> 
+								</td>
+								<td class="width8" title="">{{info.resultValidatedUser}}</td>
+								<td class="width8" title="">{{info.resultValidatedDate}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="table-container-footer">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tfoot>
+							<tr>
+								<td class="width6">Remarks</td>
+								<td colspan="">
+                                    <div class="form-group" >
+                                        <textarea type="text" autocomplete="off" row="2" ng-model="valiObj.findingResultDesc" style="color: black;"></textarea>
+                                    </div>
+                                </td>
+							</tr>
+							<tr>
+                                <td class="width6">Internal note</td>
+								<td colspan="">
+                                    <div class="form-group" >
+                                        <textarea type="text" autocomplete="off" row="2" ng-model="valiObj.internalNotes" style="color: black;"></textarea>
+                                    </div>
+                                </td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div> 
+		
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-right20">
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 text-width-auto pull-right">
+					<a >
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow" ng-click="backButton();">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 text-width-auto pull-right">
+					<a>
+						<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" ng-click="saveReportRelease(false,true);">
+					</a>
+				</div>
+					<div class="col-lg-1 col-md-1 padding-left-right-set4 float-right" ng-show="sampleRecollectionFlag">
+						<a> <input type="button" value="Recollect"
+							class="btn btn-primary btn-save-box-shadow"
+							ng-click="showRejecPopup(inpatilst.isAcceptOrReject,$index);"
+							ng-disabled="disableRecollectBtn">
+						</a>
+					</div>
+					<div class="col-lg-1 col-md-1 padding-left-right-set4 float-right">
+						<a> <input type="button" value="Retest"
+							class="btn btn-primary btn-save-box-shadow"
+							ng-click="retestSampleFromRelease();"
+							ng-disabled="disableRecollectBtn">
+						</a>
+					</div>
+					<div class="col-lg-2 col-md-2 padding-left-right-set4 text-width-auto pull-right" ng-if="releaseCount > 0">
+					<input type="button" value="Provisional Release" class="btn btn-primary btn-save-box-shadow"  ng-click="saveReportRelease(true,true);">
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 text-width-auto pull-right" ng-if="nextRecordList.length>0">
+					<a>
+						<input type="button" value="Release & Next" class="btn btn-primary btn-save-box-shadow"  ng-disabled="saveOrNextButton"  ng-click="loadNextRecord();">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto pull-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" id="updateBtn" title="Print Preview" data-dismiss="modal" ng-click="printReports(1);">
+						<i class="fa fa-print" aria-hidden="true"></i> </button>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 text-width-auto float-right" >
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Upload Document" ng-click="getUploadedDocuments();">
+							<i class="fa fa-upload" aria-hidden="true"></i> </button>
+				</div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 text-width-auto pull-right">
+					<a>
+						<input type="button" value="Full View" id="updateBtn" class="btn btn-primary btn-save-box-shadow"  ng-click="fullView();">
+					</a>
+				</div>
+			</div>
+		</footer>
+		</div>
+	</div>
+</div>
+<!-- uploadDocumentModal START -->
+<div id="uploadDocumentModal" class="modal fade ng-scope in common-medium-popup" data-backdrop="static" role="dialog">
+	<div class="modal-dialog">
+	<form name="uploadForm" novalidate>
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Upload Document
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-sub-table padding-left-right-10 padding-top4 fix-height-scroll230">
+						<table class="table table-striped table-bordered" id="documentUpload">
+							<thead>
+								<tr>
+									<th class="test-name-width">Test Name</th>
+									<th class="test-name-width">Document Upload(Allowed uploads *.png, *.jpg, *.gif,*.jpeg)</th>
+									<th class="status">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="docObj in labReportDocumentDtlsList track by $index">
+									<td>
+										<div>
+												<select name="testList" id=""
+													class="text-input floating-label dirty"
+													ng-options="x as x.testDesc for x in reportEntryDetailsList track by x.testId"
+													ng-model="docObj.testObj">
+												</select> 
+												
+										</div>
+									</td>
+									<td>
+										<div>
+											<input type="file" name="file{{$index}}"  id="file11"  file-model="docObj.file" accept="image/png, image/gif, image/jpeg" validfile>
+											<p ng-show="fileError" style="color:red;">{{fileError}}</p>
+										</div>
+									</td>
+									<td>
+										<div class="">
+											<button ng-click="addImageDetails($index);" class="btn btn-info" style="width: 36px">
+												<b>+</b>
+											</button>
+											<button class="btn btn-info" style="width:36px" value="-" ng-click="removeImageDetails($index);" ng-if="$index!=0"><b>-</b></button>
+											&nbsp;&nbsp;
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="row margin-top10 common-sub-table padding-left-right-set4">
+					<table class="table table-striped table-bordered">
+						<thead>
+								<tr>
+									
+									<th class="test-name-width">Test Name</th>
+									<th class="test-name-width">Document Upload Name</th>
+									<th class="test-name-width">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat = "documentObj in labReportDocumentDtlsSavedList|orderBy:column:reverse track by $index">
+									<td>
+										<div>
+										  {{documentObj.testDesc}}
+										</div>
+									</td>
+									<td>
+										<div>
+										  {{documentObj.fileName}}
+										</div>
+									</td>
+									<td>
+										<div>
+										<a fancybox target ="_blank" href="{{documentObj.filePath}}"">View</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+					</table>
+					<table class="table table-bordered">
+						 <tr ng-if="(labReportDocumentDtlsSavedList)=='' || (labReportDocumentDtlsSavedList)==null">
+							<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+						</tr>
+					</table>
+				</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border: none;">
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="uploadDoc();">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+		</form>
+		
+	</div>
+</div>
+<!-- uploadDocumentModal END -->
+<!-- <div id="accptRejInPatient" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index: 1300 !important" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		width: 25% !important;margin: 200px 0 0 510px !important;
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Rejection
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" name="code"
+										ng-model="sampleRejectReasonId">
+										<option selected value>Please Select Reason</option>
+										<option ng-repeat="rej in rejectionList"
+											value="{{rej.reasonMasterId}}" ng-if="rej.reasonTypeId == 5">{{rej.reasonDesc}}</option>
+									</select>
+										<label for="code">Select Reasons</label>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="code" rows="4" id=""
+										class="text-input floating-label"
+										ng-model="sampleRejectReason"></textarea>
+									<label for="code">Note</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="" ng-click="saveRejectDetails();">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="" ng-click="cancelRejectDetails();">cancel</button>
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal"  ng-click="cancelRejectDetails();">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" data-dismiss="modal" ng-click="recollectSampleFromReportRelease();">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> -->
+<!-- Modal -->
+  <div id="accptRejInPatient"  class="modal fade ng-scope in common-small-popup"  data-backdrop="static" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.34);">
+    <div class="modal-dialog" style="width: 400px !important;">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+					Rejection
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+        </div>
+       <div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" name="code"
+										ng-model="sampleRejectReasonId">
+										<option selected value>Please Select Reason</option>
+										<option ng-repeat="rej in rejectionList"
+											value="{{rej.reasonMasterId}}" ng-if="rej.reasonTypeId == 5">{{rej.reasonDesc}}</option>
+									</select>
+									<!-- 	<label for="code">Select Reasons</label> -->
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="code" rows="4" id=""
+										class="text-input floating-label"
+										ng-model="sampleRejectReason"></textarea>
+									<label for="code">Note</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+        <div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary"id="" ng-click="saveRejectDetails();">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="" ng-click="cancelRejectDetails();">cancel</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal"  ng-click="cancelRejectDetails();">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save"  data-dismiss="modal"  ng-click="recollectSampleFromReportRelease();">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+      </div>
+
+    </div>
+  </div>
+<div ng-include="'./views/common/help-value.html'"></div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Details Report Release");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="detailsReportRelease"]').parents("li").addClass("active");
+});
+</script>			

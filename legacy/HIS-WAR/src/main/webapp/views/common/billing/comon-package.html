@@ -1,0 +1,1335 @@
+<!-- <div style="border-top: 2px solid black" ng-repeat="packDtls in packageDetailsList">
+							<table
+								class="table table-bordered OPDBillService common-tbody-scroll">
+								<thead>
+									<tr>
+										<th class="width10"><span class="">Order No.</span></th>
+										<th class="width10"><span class="">Order Date</span></th>
+										<th class="width15"><span class="">Package Name</span></th>
+										<th class="width15">Package Amount</th>
+										<th class="width15">Net Payable</th>
+										<th class="width15">Order By</th>
+										<th class="width15">Order On</th>
+									</tr>
+								</thead>
+								<tbody class="scrollable">
+									<tr ng-init="pack = packDtls.mPackageMasterDto">
+										<td>-</td>
+										<td>-</td>
+										<td>{{pack.packageName}}</td>
+										<td>{{pack.packagePrice}}</td>
+										<td>{{pack.packagePrice}}</td>
+										<td>-</td>
+										<td>-</td>
+									</tr>
+									<tr>
+										<td colspan="7">
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<th colspan="7">Services & Items</th>
+													</tr>
+													<tr>
+														<th class="width10"><span class="">Service Code</span>
+														</th>
+														<th class="width15"><span class="">Service Description</span></th>
+														<th class="width10"><span class="">Item Code</span></th>
+														<th class="width15"><span class="">Item Name</span></th>
+														<th class="width15"><span class="">Package Qty</span></th>
+														<th class="width15">Consumed Qty</th>
+														<th class="width15">Balance Qty</th>
+														<th class="width15">Details</th>
+													</tr>
+												</thead>	
+												<tbody>	
+													<tr ng-repeat="serv in packDtls.listTPackageServicesDetailsDto" ng-if="packDtls.listTPackageServicesDetailsDto.length > 0">
+														<td>{{serv.serviceCode==null ? '-' : serv.serviceCode}}</td>
+														<td>{{serv.serviceName==null ? '-' : serv.serviceName}}</td>
+														<td>{{serv.itemCode==null ? '-' : serv.itemCode}}</td>
+														<td>{{serv.itemName==null ? '-' : serv.itemName}}</td>
+														<td>{{serv.numberToBeUse}}</td>
+														<td>0</td>
+														<td>{{serv.numberToBeUse}}</td>
+														<td><a href="" data-toggle="modal"
+															data-target="#packageDetailsForIPD">View</a></td>
+													</tr>
+													<tr ng-repeat="serv in packDtls.listTPackageIncExcDetailsDto" ng-if="packDtls.listTPackageIncExcDetailsDto.length > 0">
+														<td>{{serv.serviceCode==null ? '-' : serv.serviceCode}}</td>
+														<td>{{serv.serviceName==null ? '-' : serv.serviceName}}</td>
+														<td>{{serv.itemCode==null ? '-' : serv.itemCode}}</td>
+														<td>{{serv.itemName==null ? '-' : serv.itemName}}</td>
+														<td>-</td>
+														<td>-</td>
+														<td>-</td>
+														<td><a href="" data-toggle="modal"
+															data-target="#packageDetailsForIPD">View</a></td>
+													</tr>
+												</tbody>
+											</table>
+											<table class="table table-bordered" ng-if="packDtls.listTPackageGroupWiseCapDetailsDto.length > 0">
+												<thead>
+													<tr>
+														<th colspan="7">Group</th>
+													</tr>
+													<tr>
+														<th class="width10"><span class="">Group Name</span>
+														</th>
+														<th class="width10"><span class="">Sub Group Name</span>
+														</th>
+														<th class="width15"><span class="">Group CAP Amount</span>
+														</th>
+														<th class="width15"><span class="">Sub Group CAP Amount</span>
+														</th>
+														<th class="width15">Consumed CAP Amount</th>
+														<th class="width15">Balance CAP Amount</th>
+														<th class="width15">Details</th>
+													</tr>
+												</thead>	
+												<tbody>	
+													<tr ng-repeat="capdtls in packDtls.listTPackageGroupWiseCapDetailsDto" ng-if="capdtls.isServiceItem == 1">
+														<td>{{capdtls.groupName}}</td>
+														<td>{{capdtls.subGroupName}}</td>
+														<td>{{capdtls.departmentCapAmount != null ? parseFloatNum(capdtls.departmentCapAmount) : '-'}}</td>
+														<td>{{capdtls.subDepartmentCapAmount != null ? parseFloatNum(capdtls.subDepartmentCapAmount) : '-'}}</td>
+														<td>-</td>
+														<td>{{capdtls.departmentCapAmount != null ? parseFloatNum(capdtls.departmentCapAmount) : parseFloatNum(capdtls.subDepartmentCapAmount)}}</td>
+														<td><a href="" data-toggle="modal"
+															data-target="#packageDetailsForIPD">View</a></td>
+													</tr>
+												</tbody>
+											</table>
+											
+											<table class="table table-bordered" ng-if="packDtls.listTPackageGroupWiseCapDetailsDto.length > 0">
+												<thead>
+													<tr>
+														<th colspan="7">Product Category</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td class="width10"><span class="">Product Category</span>
+														</td>
+														<td class="width15"><span class="">Product Category CAP Amount</span>
+														</td>
+														<td class="width15">Consumed CAP Amount</td>
+														<td class="width15">Balance CAP Amount</td>
+														<td class="width15">Details</td>
+													</tr>
+													<tr ng-repeat="capdtls in packDtls.listTPackageGroupWiseCapDetailsDto" ng-if="capdtls.isServiceItem == 2">
+														<td>{{capdtls.productCategory}}</td>
+														<td>{{parseFloatNum(capdtls.productCateroyCapAmount)}}</td>
+														<td>-</td>
+														<td>{{capdtls.productCateroyCapAmount != null ? parseFloatNum(capdtls.productCateroyCapAmount) : parseFloatNum(capdtls.productCateroyCapAmount)}}</td>
+														<td><a href="" data-toggle="modal"
+															data-target="#packageDetailsForIPD">View</a></td>
+													</tr>
+												</tbody>
+											</table>
+											
+										</td>
+									</tr>
+								</tbody>
+							</table>
+</div>
+
+Consumed Package Details Start
+<div style="border-top: 2px solid black" ng-repeat="activePack in (isExists(vm.model.activePackagesList) ? activePackagesList : vm.model.activePackagesList)">
+<div style="border-top: 2px solid black" ng-repeat="activePack in activePackagesList">
+							<table
+								class="table table-bordered OPDBillService common-tbody-scroll">
+								<thead>
+									<tr>
+										<th class="width10"><span class="">Order No.</span></th>
+										<th class="width10"><span class="">Order Date</span></th>
+										<th class="width15"><span class="">Package Name</span></th>
+										<th class="width15">Package Amount</th>
+										<th class="width15">Net Payable</th>
+										<th class="width15">Order By</th>
+									</tr>
+								</thead>
+								<tbody class="scrollable">
+									<tr >
+										<td>{{activePack.orderNo}}</td>
+										<td>{{activePack.orderDate}}</td>
+										<td>{{activePack.packageName}}</td>
+										<td>{{activePack.packagePrice}}</td>
+										<td>{{activePack.packagePrice}}</td>
+										<td>{{activePack.orderBy}}</td>
+									</tr>
+									<tr>
+										<td colspan="6">
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<th colspan="8">Services & Items</th>
+													</tr>
+													<tr>
+														<th class="width10"><span class="">Service Code</span>
+														</th>
+														<th class="width15"><span class="">Service Description</span></th>
+														<th class="width10"><span class="">Item Code</span>
+														</th>
+														<th class="width10"><span class="">Item Name</span>
+														</th>
+														<th class="width15"><span class="">Package Qty</span></th>
+														<th class="width15">Consumed Qty</th>
+														<th class="width15">Balance Qty</th>
+														<th class="width10 text-center">Details</th>
+													</tr>
+												</thead>
+												<tbody>	
+													<tr ng-repeat="serv in activePack.listPackageConsumptionServiceDetailDto">
+														<td>{{(serv.serviceCode==null)?"-":serv.serviceCode}}</td>
+														<td>{{(serv.serviceStandardName==null)?"-":serv.serviceStandardName}}</td>
+														<td>{{(serv.itemCode==null)?"-":serv.itemCode}}</td>
+														<td>{{(serv.itemName==null)?"-":serv.itemName}}</td>
+														<td>{{serv.packageQuantity}}</td>
+														<td>{{(serv.packageQuantity - serv.balanceQuantity)}}</td>
+														<td>{{serv.balanceQuantity}}</td>
+														<td class="text-center">
+															<a href="" data-toggle="modal" ng-click="getServiceConsumptionDetailsId(serv.packageConsumptionServiceDetailId);" data-target="#packageDetails">View</a>
+														</td>
+													</tr>
+													<tr ng-repeat="serv in activePack.listTPackageIncExcDetailsDto" ng-if="activePack.listTPackageIncExcDetailsDto.length > 0">
+														<td>{{serv.serviceCode==null ? '-' : serv.serviceCode}}</td>
+														<td>{{serv.serviceStandardName==null ? '-' : serv.serviceStandardName}}</td>
+														<td>{{serv.itemCode==null ? '-' : serv.itemCode}}</td>
+														<td>{{serv.itemName==null ? '-' : serv.itemName}}</td>
+														<td>-</td>
+														<td>-</td>
+														<td>-</td>
+														<td class="text-center">
+															<a href="" data-toggle="modal" ng-click="getServiceInclusionServiceDetails(serv.packageIncExcId);" data-target="#packageDetails">View</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											
+											<table class="table table-bordered" ng-if="packDtls.listTPackageGroupWiseCapDetailsDto.length > 0">
+												<thead>
+													<tr>
+														<th colspan="7">Group</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td class="width10"><span class="">Group Name</span>
+														</td>
+														<td class="width10"><span class="">Sub Group Name</span>
+														</td>
+														<td class="width15"><span class="">Group CAP Amount</span>
+														</td>
+														<td class="width15"><span class="">Sub Group CAP Amount</span>
+														</td>
+														<td class="width15">Consumed CAP Amount</td>
+														<td class="width15">Balance CAP Amount</td>
+														<td class="width15">Details</td>
+													</tr>
+													<tr ng-repeat="capdtls in packDtls.listTPackageGroupWiseCapDetailsDto" ng-if="capdtls.isServiceItem == 1">
+														<td>{{capdtls.groupName}}</td>
+														<td>{{capdtls.subGroupName}}</td>
+														<td>{{capdtls.departmentCapAmount != null ? parseFloatNum(capdtls.departmentCapAmount) : '-'}}</td>
+														<td>{{capdtls.subDepartmentCapAmount != null ? parseFloatNum(capdtls.subDepartmentCapAmount) : '-'}}</td>
+														<td>-</td>
+														<td>{{capdtls.departmentCapAmount != null ? parseFloatNum(capdtls.departmentCapAmount) : parseFloatNum(capdtls.subDepartmentCapAmount)}}</td>
+														<td><a href="" data-toggle="modal"
+															data-target="#packageDetailsForIPD">View</a></td>
+													</tr>
+												</tbody>
+											</table>
+											
+											<table class="table table-bordered" ng-if="packDtls.listTPackageGroupWiseCapDetailsDto.length > 0">
+												<thead>
+													<tr>
+														<th colspan="5">Product Category</th>
+													</tr>
+													<tr>
+														<th class="width10"><span class="">Product Category</span>
+														</th>
+														<th class="width15"><span class="">Product Category CAP Amount</span>
+														</th>
+														<th class="width15">Consumed CAP Amount</th>
+														<th class="width15">Balance CAP Amount</th>
+														<th class="width15">Details</th>
+													</tr>
+													</thead>
+												<tbody>	
+													<tr ng-repeat="capdtls in packDtls.listTPackageGroupWiseCapDetailsDto" ng-if="capdtls.isServiceItem == 2">
+														<td>{{capdtls.productCategory}}</td>
+														<td>{{parseFloatNum(capdtls.productCateroyCapAmount)}}</td>
+														<td>-</td>
+														<td>{{capdtls.productCateroyCapAmount != null ? parseFloatNum(capdtls.productCateroyCapAmount) : parseFloatNum(capdtls.productCateroyCapAmount)}}</td>
+														<td><a href="" data-toggle="modal"
+															data-target="#packageDetailsForIPD">View</a></td>
+													</tr>
+												</tbody>
+											</table>
+											
+										</td>
+									</tr>
+									<tr ng-if="activePack.listOrderedInclusionExclusionServices.length > 0">
+										<td colspan="6">
+											<table class="table table-bordered">
+												<thead>
+											<tr>
+														<th colspan="8">Ordered Exclusion Services</th>
+													</tr>
+													<tr>
+														<th class="width10"><span class="">Service Code</span>
+														</th>
+														<th class="width15"><span class="">Service Description</span></th>
+														<th class="width10"><span class="">Item Code</span>
+														</th>
+														<th class="width10"><span class="">Item Name</span>
+														</th>
+														<th class="width15"><span class="">	</span></th>
+													</tr>
+												</thead>
+												<tbody>	
+													<tr ng-repeat="serv in activePack.listOrderedInclusionExclusionServices" ng-if="activePack.listOrderedInclusionExclusionServices.length > 0">
+														<td>{{serv.serviceCode==null ? '-' : serv.serviceCode}}</td>
+														<td>{{serv.serviceStandardName==null ? '-' : serv.serviceStandardName}}</td>
+														<td>{{serv.itemCode==null ? '-' : serv.itemCode}}</td>
+														<td>{{serv.itemName==null ? '-' : serv.itemName}}</td>
+														<td>{{(serv.isOrdCanceled=='Y')?"Ordered":"Canceled"}}</td>
+													</tr>	
+												</tbody>
+											</table>
+											
+										</td>
+									</tr>
+								</tbody>
+							</table>
+</div> 
+Consumed Package Details End
+packageDetails Modal START
+<div id="packageDetails" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1051; background: #000000b8 !important;">
+	<div class="modal-dialog"> width: 25% !important;margin: 200px 0 0 510px !important;
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal" ng-click="cancel();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10">
+					<div class="row padding-left-right-set4 table-container padding-top8">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width4">Sr No.</th>
+											<th class="width10">Available Qty</th>
+											<th class="width10">Balanced Qty</th>
+											<th class="width10">Created By</th>
+											<th class="width10">Created Date</th>
+											<th class="width10">Status</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll230" style="overflow: overlay;"> fix-height-scroll230, background: #fff;
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat="info in serviceConsumptionDetailsList">
+											<td class="width4">{{($index+1)}}</td>
+											<td class="width10">{{info.packageQuantity}}</td>
+											<td class="width10">{{info.balancePackageQuantity}}</td>
+											<td class="width10">{{info.empName}}</td>
+											<td class="width10">{{info.createdDate}}</td>
+											<td class="width10">{{info.isOrderedCancelled==1 ? "Ordered" : "Cancel" }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary width6" id="" ng-click="saveDetails();">Ok</button>
+			</div>
+		</div>
+	</div>
+</div> -->
+<!-- packageDetails Modal END -->
+
+
+
+
+<!-- Package Order Screen Admitted Patient List -->
+<!-- <div id="packageOrder" class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="background:rgba(0, 0, 0, 0.33);"  data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="width: 415px !important; margin: 161px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Package Order
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+								<div class="row padding-top10">
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="">
+													<input type="text" autocomplete="off" name="description" id=""
+													placeholder="Search"
+													uib-typeahead=" pack.serviceStandardName for pack in searchPackages($viewValue) | limitTo:10"
+													typeahead-editable="false"
+													typeahead-on-select="selectPackageService($item, $model, $label)"
+													ng-model="serviceName"
+													class="text-input floating-label" > 
+													<label for="description" class="">Package</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-12 col-md-12 col-sm-12 padding-left-right-10 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<input type="text" autocomplete="off" name="description" id=""
+													placeholder="Search"
+													uib-typeahead=" pack.serviceStandardName for pack in searchPackages($viewValue) | limitTo:10"
+													typeahead-editable="false"
+													typeahead-on-select="selectPackageService($item, $model, $label)"
+													ng-model="serviceName"
+													class="text-input floating-label" > <label for="">Package</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row padding-top10 padding-left-right-10 padding-bottom10">
+									<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+									  <table id="main-table" class="main-table width100">
+									    <thead>
+									      <tr>
+												<th class="width10"><span class="">Package</span></th>
+												<th class="width1 text-center"><span class=""></span></th>
+											</tr>
+									    </thead>
+									    <tbody>
+									      <tr ng-repeat="info in listPackageOrder">
+											<td>{{info.packageName}}</td>
+											<td class="text-center"><a class="cursor-pointer"
+												ng-click="getPackagesDetails(info.packageId)"> <i
+													class="fa fa-info-circle"></i>
+											</a></td>
+											</tr>
+											<tr ng-if="(listPackageOrder)=='' || (listPackageOrder)==null ">
+												<td colspan="2"><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+											</tr>
+									    </tbody>
+									  </table>
+									</div>
+								</div>
+				             	<div class="modal-footer padding-top10" style="border:none;">
+									<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="savepackage();">Save</button>
+									<button type="button" data-dismiss="modal" class="btn btn-primary" id="">Cancel</button>
+								</div>        
+			   </div>
+		</div>
+	</div>
+</div>
+Package Order Screen Details ipd Coversheet and Admitted Patient List
+
+<div id="packageDetailsIP" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="background: #00000085 !important;">
+	<div class="modal-dialog"> width: 25% !important;margin: 200px 0 0 510px !important;
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Package Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div style="border-top: 2px solid black" ng-repeat="activePack in activePackagesListByPatient">
+					<table
+						class="table table-bordered OPDBillService common-tbody-scroll">
+						<thead>
+							<tr>
+								<th class="width10"><span class="">Order No.</span></th>
+								<th class="width10"><span class="">Order Date</span></th>
+								<th class="width15"><span class="">Package Name</span></th>
+								<th class="width15">Package Amount</th>
+								<th class="width15">Net Payable</th>
+								<th class="width15">Order By</th>
+							</tr>
+						</thead>
+						<tbody class="scrollable">
+							<tr >
+								<td>{{activePack.orderNo}}</td>
+								<td>{{activePack.orderDate}}</td>
+								<td>{{activePack.packageName}}</td>
+								<td>{{activePack.packagePrice}}</td>
+								<td>{{activePack.packagePrice}}</td>
+								<td>{{activePack.orderBy}}</td>
+							</tr>
+							<tr>
+								<td colspan="6">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="8">Services & Items</th>
+											</tr>
+											<tr>
+												<th class="width10"><span class="">Service Code</span>
+												</th>
+												<th class="width15"><span class="">Service Description</span></th>
+												<th class="width10"><span class="">Item Code</span>
+												</th>
+												<th class="width10"><span class="">Item Name</span>
+												</th>
+												<th class="width15"><span class="">Package Qty</span></th>
+												<th class="width15">Consumed Qty</th>
+												<th class="width15">Balance Qty</th>
+												<th class="width10 text-center">Details</th>
+											</tr>
+										</thead>
+										<tbody>	
+											<tr ng-repeat="serv in activePack.listPackageConsumptionServiceDetailDto">
+												<td>{{(serv.serviceCode==null)?"-":serv.serviceCode}}</td>
+												<td>{{(serv.serviceStandardName==null)?"-":serv.serviceStandardName}}</td>
+												<td>{{(serv.itemCode==null)?"-":serv.itemCode}}</td>
+												<td>{{(serv.itemName==null)?"-":serv.itemName}}</td>
+												<td>{{serv.packageQuantity}}</td>
+												<td>{{(serv.packageQuantity - serv.balanceQuantity)}}</td>
+												<td>{{serv.balanceQuantity}}</td>
+												<td class="text-center">
+													<a href="" data-toggle="modal" ng-click="getServiceConsumptionDetailsId(serv.packageConsumptionServiceDetailId);" data-target="#packageDetails">View</a>
+												</td>
+											</tr>
+											<tr ng-repeat="serv in activePack.listTPackageIncExcDetailsDto" ng-if="activePack.listTPackageIncExcDetailsDto.length > 0">
+												<td>{{serv.serviceCode==null ? '-' : serv.serviceCode}}</td>
+												<td>{{serv.serviceStandardName==null ? '-' : serv.serviceStandardName}}</td>
+												<td>{{serv.itemCode==null ? '-' : serv.itemCode}}</td>
+												<td>{{serv.itemName==null ? '-' : serv.itemName}}</td>
+												<td>-</td>
+												<td>-</td>
+												<td>-</td>
+												<td class="text-center">
+													<a href="" data-toggle="modal" ng-click="getServiceInclusionServiceDetails(serv.packageIncExcId);" data-target="#packageDetails">View</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									
+									<table class="table table-bordered" ng-if="packDtls.listTPackageGroupWiseCapDetailsDto.length > 0">
+										<thead>
+											<tr>
+												<th colspan="7">Group</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="width10"><span class="">Group Name</span>
+												</td>
+												<td class="width10"><span class="">Sub Group Name</span>
+												</td>
+												<td class="width15"><span class="">Group CAP Amount</span>
+												</td>
+												<td class="width15"><span class="">Sub Group CAP Amount</span>
+												</td>
+												<td class="width15">Consumed CAP Amount</td>
+												<td class="width15">Balance CAP Amount</td>
+												<td class="width15">Details</td>
+											</tr>
+											<tr ng-repeat="capdtls in packDtls.listTPackageGroupWiseCapDetailsDto" ng-if="capdtls.isServiceItem == 1">
+												<td>{{capdtls.groupName}}</td>
+												<td>{{capdtls.subGroupName}}</td>
+												<td>{{capdtls.departmentCapAmount != null ? parseFloatNum(capdtls.departmentCapAmount) : '-'}}</td>
+												<td>{{capdtls.subDepartmentCapAmount != null ? parseFloatNum(capdtls.subDepartmentCapAmount) : '-'}}</td>
+												<td>-</td>
+												<td>{{capdtls.departmentCapAmount != null ? parseFloatNum(capdtls.departmentCapAmount) : parseFloatNum(capdtls.subDepartmentCapAmount)}}</td>
+												<td><a href="" data-toggle="modal"
+													data-target="#packageDetailsForIPD">View</a></td>
+											</tr>
+										</tbody>
+									</table>
+									
+									<table class="table table-bordered" ng-if="packDtls.listTPackageGroupWiseCapDetailsDto.length > 0">
+										<thead>
+											<tr>
+												<th colspan="5">Product Category</th>
+											</tr>
+											<tr>
+												<th class="width10"><span class="">Product Category</span>
+												</th>
+												<th class="width15"><span class="">Product Category CAP Amount</span>
+												</th>
+												<th class="width15">Consumed CAP Amount</th>
+												<th class="width15">Balance CAP Amount</th>
+												<th class="width15">Details</th>
+											</tr>
+											</thead>
+										<tbody>	
+											<tr ng-repeat="capdtls in packDtls.listTPackageGroupWiseCapDetailsDto" ng-if="capdtls.isServiceItem == 2">
+												<td>{{capdtls.productCategory}}</td>
+												<td>{{parseFloatNum(capdtls.productCateroyCapAmount)}}</td>
+												<td>-</td>
+												<td>{{capdtls.productCateroyCapAmount != null ? parseFloatNum(capdtls.productCateroyCapAmount) : parseFloatNum(capdtls.productCateroyCapAmount)}}</td>
+												<td><a href="" data-toggle="modal"
+													data-target="#packageDetailsForIPD">View</a></td>
+											</tr>
+										</tbody>
+									</table>
+									
+								</td>
+							</tr>
+							<tr ng-if="activePack.listOrderedInclusionExclusionServices.length > 0">
+								<td colspan="6">
+									<table class="table table-bordered">
+										<thead>
+									<tr>
+												<th colspan="8">Ordered Exclusion Services</th>
+											</tr>
+											<tr>
+												<th class="width10"><span class="">Service Code</span>
+												</th>
+												<th class="width15"><span class="">Service Description</span></th>
+												<th class="width10"><span class="">Item Code</span>
+												</th>
+												<th class="width10"><span class="">Item Name</span>
+												</th>
+												<th class="width15"><span class="">	</span></th>
+											</tr>
+										</thead>
+										<tbody>	
+											<tr ng-repeat="serv in activePack.listOrderedInclusionExclusionServices" ng-if="activePack.listOrderedInclusionExclusionServices.length > 0">
+												<td>{{serv.serviceCode==null ? '-' : serv.serviceCode}}</td>
+												<td>{{serv.serviceStandardName==null ? '-' : serv.serviceStandardName}}</td>
+												<td>{{serv.itemCode==null ? '-' : serv.itemCode}}</td>
+												<td>{{serv.itemName==null ? '-' : serv.itemName}}</td>
+												<td>{{(serv.isOrdCanceled=='Y')?"Ordered":"Canceled"}}</td>
+											</tr>	
+										</tbody>
+									</table>
+									
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer padding-top10" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="savepackage();">Ok</button>
+			</div> 
+		</div>
+	</div>
+</div> -->
+<!-- commonPackageDetailsPopup START -->
+<div id="commonPackageDetailsPopup" class="modal fade ng-scope in " role="dialog" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Package Details
+						<button type="button" class="close" data-dismiss="modal" ng-click="setPackageOrderTabActive()">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-top10 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+						  <table id="main-table" class="main-table width100">
+						    <thead>
+						      <tr>
+						        <th class="width6">Order No.</th>
+						        <th class="width8">Order Date</th>
+						        <th class="width8">Package Applicable Date</th>
+						        <th class="width12">Package Name</th>
+						        <th class="width8">Package Amt</th>
+						        <th class="width10">Net Payable</th>
+						        <th class="width10">Order By</th>
+						        <th class="width2 text-center"></th>
+						      </tr>
+						    </thead>
+						    <tbody>
+						      <tr ng-repeat="info in listPackageOrder track by $index">
+						        <td>{{info.orderNo}}</td>
+						       <td class="">{{info.orderDateNew | date:dateFormat}}</td>
+						       <!--  <td>{{info.orderDateNew | date : dateFormat}}</td> -->
+						        <td><span ng-if="visitTypeId == 1 && isPackageApplicableDateEditable!='Y'">{{info.packageApplicableDateNew | date:dateFormat}}</span>
+						        <span ng-if="visitTypeId != 1 && isPackageApplicableDateEditable=='Y'"> <input type="text" autocomplete="off" class="text-input floating-label dirty" 
+															name="datepickerRe" id="datepickerRe"
+															uib-datepicker-popup="dd/MM/yyyy" 
+															placeholder="DD/MM/YYYY" ng-model="info.packageApplicableDateDt"
+															model-view-value="true" is-open="packageApplicableDateDt[$index].opened"
+															datepicker-options="dateOptionsRendering" show-button-bar="false"
+															ng-click="datepickerApplicableDateCom($index)" ng-blur="checkDatePack(info,$index)" ng-disabled="info.isForceClose==0 || info.isIntermediateBill=='Y'" ></span>
+						        </td>
+						        <td>{{info.packageName}}</td>
+						        <td>{{info.packagePrice}}</td>
+						        <td>{{info.packagePrice}}</td>
+						        <td>{{info.userName}}</td>
+						        <td class="text-center">
+						        	<a ng-click="getPackagesDetails(info.packageId,info.packageConsumptionMasterId)">
+						        		<i class="fa fa-info-circle"></i>
+						        	</a>
+						        </td>
+						      </tr>
+						    </tbody>
+						  </table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width10" id="" ng-click="setPackageOrderTabActive()">Ok</button> -->
+					 <div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok" ng-click="setPackageOrderTabActive()" data-dismiss="modal" >
+							<i class="fa fa-check" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- commonPackageDetailsPopup END -->
+<!-- packageServiceDetailsPopup START -->
+<div id="packageServiceDetailsPopup" class="modal fade ng-scope in " role="dialog" style="padding-left: 0px !important;background: rgba(0, 0, 0, 0.33);" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Services Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<!-- EHC Package &Multi Visit Package  -->
+						<div class="row" ng-if="packageDetailsResponse.mPackageMasterDto.packageTypeId==5">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+								<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set1 text-width-auto text-left">
+									<span class=""><b class="">Validity(Days) &nbsp;: </b></span>
+								</div>
+								<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set0">
+									&nbsp;<span class="">{{packageDetailsResponse.mPackageMasterDto.validityPeriodIndays}}</span>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+								<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set1 text-width-auto text-left">
+									<span class=""><b class="">No. of Encounters &nbsp;:</b></span>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0">
+									&nbsp;<span class="">{{packageDetailsResponse.mPackageMasterDto.noOfEncounters}} </span>
+								</div>
+							</div>
+						</div>
+						<div class="row" ng-if="packageDetailsResponse.mPackageMasterDto.packageTypeId==5 || packageDetailsResponse.mPackageMasterDto.packageTypeId==1">
+							<div class="custom-sub-tab padding-left-right-set4 ">
+								<ul class="tabs nav nav-tabs">
+									<li ng-class="{ active : isSetFirstTabLevel(101) }" id="nor" class="width10 active" style="">
+										<a href="" ng-click="setFirstTabLevel(101)">Services</a>
+									</li>
+									<li ng-class="{ active : isSetFirstTabLevel(102) }" class="width10" style="" ng-if="packageDetailsResponse.mPackageMasterDto.packageTypeId==5">
+										<a href="" ng-click="setFirstTabLevel(102)" class="">Items</a>
+									</li>
+								</ul>
+							</div>
+							<div class="row padding-left-right-set4">
+								<div ng-show="isSetFirstTabLevel(101)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set0">
+										<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+										  <table id="main-table" class="main-table width100">
+										    <thead>
+												<tr>
+													<th class="width10">Service Code</th>
+													<th class="width15">Service Description</th>
+													<th class="width10">Rate</th>
+													<th class="width10">Package Qty</th>
+													<th class="width10">Consumed Qty</th>
+													<th class="width10">Balance Qty</th>
+												</tr>
+											</thead>
+										    <tbody>	
+												<tr ng-repeat="serviceDtls in packageDetailsResponse.listTPackageServicesDetailsDto" ng-if="serviceDtls.isServiceItem==1">
+													<td>{{serviceDtls.serviceCode}}</td>
+													<td>{{serviceDtls.serviceName}}  <div ng-if="serviceDtls.specialityId == consultationSpecialityId">-{{serviceDtls.specialityName}}</div> </td>
+													<td>{{serviceDtls.servicePrice}}</td>
+													<td>{{serviceDtls.packageQuantity}}</td> 
+													<td>{{serviceDtls.consumedQty}}</td>
+<!-- 													<td>{{serviceDtls.packageQuantity-serviceDtls.balancePackageQuantity}}</td> -->
+													<td>{{serviceDtls.balancePackageQuantity}}</td>
+												</tr>
+											</tbody>
+										  </table>
+										</div>
+									</div>
+								</div>
+								<div ng-show="isSetFirstTabLevel(102)" class="second-level-tab-display-div" style="">
+									<div class="row padding-left-right-set0">
+										<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+										  <table id="main-table" class="main-table width100">
+										    <thead>
+												<tr>
+													<th class="width10">Item Code</th>
+													<th class="width15">Item Name</th>
+													<th class="width15">Package Qty</th>
+													<th class="width15">Package Amt</th>
+													<th class="width15">Consumed Qty</th>
+													<th class="width15">Consumed Amt</th>
+													<th class="width15">Balance Qty</th>
+													<th class="width15">Balance Amt</th>
+												</tr>
+											</thead>
+										    <tbody>	
+												<tr ng-repeat="itemDtls in packageDetailsResponse.listTPackageServicesDetailsDto" ng-if="itemDtls.isServiceItem==2">
+													<td>{{itemDtls.itemCode}}</td>
+													<td>{{itemDtls.itemName}}</td>
+													<td>{{itemDtls.packageQuantity}}</td>
+													<td>{{itemDtls.servicePrice}}</td>
+<!-- 													<td>{{itemDtls.packageQuantity-itemDtls.balancePackageQuantity}}</td> -->
+													<td>{{itemDtls.consumedQty}}</td>
+<!-- 													<td>{{itemDtls.servicePrice - itemDtls.availableCap}}</td> -->
+													<td>{{parseFloatNum(itemDtls.consumedAmt) | number : 2}}</td>
+													<td>{{itemDtls.balancePackageQuantity}}</td>
+													<td>{{parseFloatNum(itemDtls.availableCap)  | number : 2}}</td>
+												</tr>
+											</tbody>
+										  </table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					<!-- EHC Package &Multi Visit Package  -->
+					<!-- Package with CAP START -->
+					<div class="row"   ng-if="packageDetailsResponse.mPackageMasterDto.packageTypeId==3">
+						<div class="custom-sub-tab padding-left-right-set4 ">
+							<ul class="tabs nav nav-tabs">
+								<li ng-class="{ active : isSetFirstTabLevel(201) }" id="" class="width15 active" style="">
+									<a href="" ng-click="setFirstTabLevel(201)">Service Details</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(202) }" class="width15" style="">
+									<a href="" ng-click="setFirstTabLevel(202);setSecondTabLevel(206)" class="">Group Wise CAP</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(203) }" class="width15" style="">
+									<a href="" ng-click="setFirstTabLevel(203)" class="">Bed Category</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(204) }" class="width18" style="">
+									<a href="" ng-click="setFirstTabLevel(204)" class="">Consumable Details</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(205) }" class="width25" style="">
+									<a href="" ng-click="setFirstTabLevel(205);setSecondTabLevel(208)" class="">Consumable Wise Amount</a>
+								</li>
+							</ul>
+						</div>
+						<div class="row padding-left-right-set4">
+							<div ng-show="isSetFirstTabLevel(201)" class="second-level-tab-display-div" style="">
+								<div class="row padding-left-right-set0">
+									<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+									  <table id="main-table" class="main-table width100">
+									    <thead>
+											<tr>
+												<th class="width10">Service Code</th>
+												<th class="width15">Service Description</th>
+												<th class="width10">CAP Amt</th>
+												<th class="width10">Consumed Amt</th>
+												<th class="width10">Balance Amt</th>
+											</tr>
+										</thead>
+									    <tbody>	
+											<tr ng-repeat="serDtls in packageDetailsResponse.listTPackageServicesDetailsDto" ng-if="serDtls.isServiceItem==1 && serDtls.isGroupwiseExlusion==null">
+												<td>{{serDtls.serviceCode}}</td>
+												<td>{{serDtls.serviceName}}</td>
+												<td>{{serDtls.servicePrice}}</td>
+												<td>{{serDtls.consumedAmt | number : 2}}</td>
+												<td>{{serDtls.availableCap | number : 2}}</td>
+											</tr>
+										</tbody>
+									  </table>
+									</div>
+								</div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(202)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<div class="custom-sub-tab padding-left-right-set4 ">
+										<ul class="tabs nav nav-tabs">
+											<li ng-class="{ active : isSetSecondTabLevel(206) }" id="" class="width15 active" style="">
+												<a href="" ng-click="setSecondTabLevel(206)">Group Details</a>
+											</li>
+											<li ng-class="{ active : isSetSecondTabLevel(207) }" class="width15" style="">
+												<a href="" ng-click="setSecondTabLevel(207)" class="">Exclusion</a>
+											</li>
+										</ul>
+									</div>
+									<div class="row padding-left-right-set4">
+										<div ng-show="isSetSecondTabLevel(206)" class="second-level-tab-display-div" style="">
+											<div class="row padding-top0 padding-left-right-set4">
+												<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll320">
+												  <table id="main-table" class="main-table width100">
+												    <thead>
+												      <tr>
+												        <th class="width15">Group / Sub Group</th>
+												        <th class="width10">CAP Amt</th>
+												        <th class="width10">Consumed CAP</th>
+												        <th class="width10">Balance CAP</th>
+												      </tr>
+												    </thead>
+												    <tbody>
+												      <tr ng-repeat="grpDtls in packageDetailsResponse.listTPackageGroupWiseCapDetailsDto" ng-if="grpDtls.isServiceItem==1" >
+												        <td>{{grpDtls.groupName}} {{grpDtls.subGroupName==null ? '' :'/'}} {{grpDtls.subGroupName}} </td>
+												        <td>{{grpDtls.capAmount}}</td>
+												        <td>{{grpDtls.consumedAmt}}</td>
+												        <td>{{grpDtls.availableCap}}</td>
+												      </tr>
+												    </tbody>
+												  </table>
+												</div>
+											</div>
+										</div>
+										<div ng-show="isSetSecondTabLevel(207)" class="second-level-tab-display-div" style="">
+											<div class="row padding-top0 padding-left-right-set4">
+												<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll320">
+												  <table id="main-table" class="main-table width100">
+												    <thead>
+												      <tr>
+												        <th class="width5">Service Code</th>
+														<th class="width10">Service Description</th>
+												      </tr>
+												    </thead>
+												    <tbody>
+												      <tr ng-repeat="serDtls in packageDetailsResponse.listTPackageServicesDetailsDto" ng-if="serDtls.isServiceItem==1 && serDtls.isGroupwiseExlusion==0">
+												        <td>{{serDtls.serviceCode}}</td>
+												        <td>{{serDtls.serviceName}}</td>
+												      </tr>
+												    </tbody>
+												  </table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(203)" class="second-level-tab-display-div" style="">
+								<div class="row padding-top0 padding-left-right-set4">
+									<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+									  <table id="main-table" class="main-table width100">
+									    <thead>
+									      <tr>
+									        <th class="width10">Bed Category</th>
+											<th class="width15">Applicable Days</th>
+<!-- 											<th class="width15">Consumed Days</th> -->
+<!-- 											<th class="width15">Balance Days</th> -->
+									      </tr>
+									    </thead>
+									    <tbody>
+									      <tr ng-repeat="bedDtls in packageDetailsResponse.listTPackageBedCategoryDetailDto" >
+									        <td>{{bedDtls.bedCategoryDesc}}</td>
+									        <td>{{bedDtls.applicableDays}}</td>
+<!-- 									        <td>-</td> -->
+<!-- 									        <td>-</td> -->
+									      </tr>
+									    </tbody>
+									  </table>
+									</div>
+								</div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(204)" class="second-level-tab-display-div" style="">
+								<div class="row padding-top0 padding-left-right-set4">
+									<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+									  <table id="main-table" class="main-table width100">
+									    <thead>
+									      <tr>
+									        <th class="width10">Item Code</th>
+											<th class="width10">Item Name</th>
+											<th class="width15">Package Qty</th>
+											<th class="width15">Package Amt</th>
+											<th class="width15">Consumed Qty</th>
+											<th class="width15">Consumed Amt</th>
+											<th class="width15">Balance Qty</th>
+											<th class="width15">Balance Amt</th>
+									      </tr>
+									    </thead>
+									    <tbody>
+									      <tr ng-repeat="itemDtls in packageDetailsResponse.listTPackageServicesDetailsDto" ng-if="itemDtls.isServiceItem==2 && itemDtls.isGroupwiseExlusion==null">
+									        <td>{{itemDtls.itemCode}}</td>
+									        <td>{{itemDtls.itemName}}</td>
+									        <td>{{itemDtls.packageQuantity}}</td>
+									        <td>{{itemDtls.servicePrice}}</td>
+<!-- 									        <td>{{itemDtls.packageQuantity-itemDtls.balancePackageQuantity}}</td> -->
+												<td>{{itemDtls.consumedQty}}</td>
+<!-- 									        <td>{{itemDtls.servicePrice - itemDtls.availableCap}}</td> -->
+											<td>{{parseFloatNum(itemDtls.consumedAmt) | number : 2}}</td>
+									        <td>{{itemDtls.balancePackageQuantity}}</td>
+									        <td>{{parseFloatNum(itemDtls.availableCap) | number : 2}}</td>
+									      </tr>
+									    </tbody>
+									  </table>
+									</div>
+								</div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(205)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<div class="custom-sub-tab padding-left-right-set4 ">
+										<ul class="tabs nav nav-tabs">
+											<li ng-class="{ active : isSetSecondTabLevel(208) }" id="nor" class="width15 active" style="">
+												<a href="" ng-click="setSecondTabLevel(208)">Product Details</a>
+											</li>
+											<!-- <li ng-class="{ active : isSetSecondTabLevel(209) }" class="width15" style="">
+												<a href="" ng-click="setSecondTabLevel(209)" class="">Inclusion</a>
+											</li> -->
+											<li ng-class="{ active : isSetSecondTabLevel(210) }" class="width10" style="">
+												<a href="" ng-click="setSecondTabLevel(210)" class="">Exclusion</a>
+											</li>
+										</ul>
+									</div>
+									<div class="row padding-left-right-set4">
+										<div ng-show="isSetSecondTabLevel(208)" class="second-level-tab-display-div" style="">
+											<div class="row padding-top0 padding-left-right-set4">
+												<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll320">
+												  <table id="main-table" class="main-table width100">
+												    <thead>
+												      <tr>
+												        <th class="width10">Product Category</th>
+														<th class="width15">Package Qty</th>
+														<th class="width15">Package Amt</th>
+														<th class="width15">Consumed Qty</th>
+														<th class="width15">Consumed Amt</th>
+														<th class="width15">Balance Qty</th>
+														<th class="width15">Balance Amt</th>
+												      </tr>
+												    </thead>
+												    <tbody>
+												      <tr ng-repeat="grpDtls in packageDetailsResponse.listTPackageGroupWiseCapDetailsDto" ng-if="grpDtls.isServiceItem==2">
+												        <td>{{grpDtls.productCategory}}</td>
+												        <td>{{grpDtls.packageQty}}</td>
+												        <td>{{grpDtls.capAmount}}</td>
+												        <td>{{grpDtls.consumedQty}}</td>
+<!-- 												        <td>{{grpDtls.packageQty - grpDtls.quantity}}</td> -->
+<!-- 												        <td>{{grpDtls.capAmount-grpDtls.availableCap}}</td> -->
+														<td>{{parseFloatNum(grpDtls.consumedAmt) | number : 2}}</td>
+												        <td>{{grpDtls.quantity}}</td>
+												        <td>{{parseFloatNum(grpDtls.availableCap) | number : 2}}</td>
+												      </tr>
+												    </tbody>
+												  </table>
+												</div>
+											</div>
+										</div>
+										<!-- <div ng-show="isSetSecondTabLevel(209)" class="second-level-tab-display-div" style="">
+											<div class="row padding-top0 padding-left-right-set4">
+												<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll320">
+												  <table id="main-table" class="main-table width100">
+												    <thead>
+												      <tr>
+												        <th class="width5">Service Code</th>
+														<th class="width10">Service Description</th>
+												      </tr>
+												    </thead>
+												    <tbody>
+												      <tr>
+												        <td></td>
+												        <td></td>
+												      </tr>
+												    </tbody>
+												  </table>
+												</div>
+											</div>
+										</div> -->
+										<div ng-show="isSetSecondTabLevel(210)" class="second-level-tab-display-div" style="">
+											<div class="row padding-top0 padding-left-right-set4">
+												<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll320">
+												  <table id="main-table" class="main-table width100">
+												    <thead>
+												      <tr>
+												        <th class="width5">Item Code</th>
+														<th class="width15">Item Name</th>
+												      </tr>
+												    </thead>
+												    <tbody>
+												      <tr ng-repeat="itemDtls in packageDetailsResponse.listTPackageServicesDetailsDto" ng-if="itemDtls.isServiceItem==2 && itemDtls.isGroupwiseExlusion==0">
+												        <td>{{itemDtls.itemCode}}</td>
+												        <td>{{itemDtls.itemName}}</td>
+												      </tr>
+												    </tbody>
+												  </table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Package with CAP END -->
+					<!-- All Inclusive Package START  -->
+					<div class="row" ng-if="packageDetailsResponse.mPackageMasterDto.packageTypeId==4">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top8">
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set1 text-width-auto text-left">
+								<span class=""><b class="">Validity(Days) &nbsp;: </b></span>
+							</div>
+							<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set0">
+								&nbsp;<span class="">{{packageDetailsResponse.mPackageMasterDto.validityPeriodIndays}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row"  ng-if="packageDetailsResponse.mPackageMasterDto.packageTypeId==4">
+						<div class="custom-sub-tab padding-left-right-set4 ">
+							<ul class="tabs nav nav-tabs">
+								<li ng-class="{ active : isSetFirstTabLevel(301) }" id="" class="width20 active" style="">
+									<a href="" ng-click="setFirstTabLevel(301)">Group Wise Exclusion</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(302) }" class="width25" style="">
+									<a href="" ng-click="setFirstTabLevel(302)" class="">Service Wise Exclusion</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(303) }" class="width20" style="">
+									<a href="" ng-click="setFirstTabLevel(303)" class="">Item Wise Exclusion</a>
+								</li>
+							</ul>
+						</div>
+						<div class="row padding-left-right-set4">
+							<div ng-show="isSetFirstTabLevel(301)" class="second-level-tab-display-div" style="">
+								<div class="row padding-left-right-set4">
+									<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+									  <table id="main-table" class="main-table width100">
+									    <thead>
+									      <tr>
+									        <th class="width5">Group / Sub Group</th>
+									      </tr>
+									    </thead>
+									    <tbody>
+									      <tr  ng-repeat="grpDtls in packageDetailsResponse.listTPackageServicesDetailsDto" ng-if="grpDtls.isGroupwiseExlusion==2">
+									        <td>{{grpDtls.specialityName}} {{grpDtls.subSpecialityName==null ? '' : '/'}} {{grpDtls.subSpecialityName}}</td>
+									      </tr>
+									    </tbody>
+									  </table>
+									</div>
+								</div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(302)" class="second-level-tab-display-div" style="">
+								<div class="row padding-left-right-set4">
+									<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+									  <table id="main-table" class="main-table width100">
+									    <thead>
+									      <tr>
+									        <th class="width5">Service Code</th>
+									        <th class="width15">Service Name</th>
+									      </tr>
+									    </thead>
+									    <tbody>
+									      <tr ng-repeat="servDtls in packageDetailsResponse.listTPackageServicesDetailsDto" ng-if="servDtls.isGroupwiseExlusion==1">
+									        <td>{{servDtls.serviceCode}}</td>
+									        <td>{{servDtls.serviceName}}</td>
+									      </tr>
+									    </tbody>
+									  </table>
+									</div>
+								</div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(303)" class="second-level-tab-display-div" style="">
+								<div class="row padding-left-right-set4">
+									<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+									  <table id="main-table" class="main-table width100">
+									    <thead>
+									      <tr>
+									        <th class="width5">Item Code</th>
+									        <th class="width15">Item Name</th>
+									      </tr>
+									    </thead>
+									    <tbody>
+									      <tr ng-repeat="itemDtls in packageDetailsResponse.listTPackageServicesDetailsDto" ng-if="itemDtls.isGroupwiseExlusion==0">
+									        <td>{{itemDtls.itemCode}}</td>
+									        <td>{{itemDtls.itemName}}</td>
+									      </tr>
+									    </tbody>
+									  </table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- All Inclusive Package END -->
+					
+					<!-- Either Or Package START -->
+					<div class="row" ng-if="packageDetailsResponse.mPackageMasterDto.packageTypeId==2">
+						<div class="custom-sub-tab padding-left-right-set4 ">
+							<ul class="tabs nav nav-tabs">
+								<li ng-class="{ active : isSetFirstTabLevel(401) }" id="" class="width25 active" style="">
+									<a href="" ng-click="setFirstTabLevel(401)">Package Group Wise Details</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(402) }" class="width20" style="">
+									<a href="" ng-click="setFirstTabLevel(402)" class="">Service Wise Details</a>
+								</li>
+							</ul>
+						</div>
+						<div class="row padding-left-right-set4">
+							<div ng-show="isSetFirstTabLevel(401)" class="second-level-tab-display-div" style="">
+								<div class="row padding-top10 padding-left-right-set4">
+									<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+									  <table id="main-table" class="main-table width100">
+									    <thead>
+									      <tr>
+									        <th class="width10">Group Name</th>
+									        <th class="width10">Package Qty</th>
+									        <th class="width10">Package Amt</th>
+									        <th class="width10">Consumed Qty</th>
+									        <th class="width10">Consumed Amt</th>
+									        <th class="width10">Balanced Qty</th>
+									        <th class="width10">Balanced Amt</th>
+									      </tr>
+									    </thead>
+									    <tbody>
+									      <tr ng-repeat="grpDtls in packageDetailsResponse.listTPackageEitherorGroupDetailsDto">
+									        <td>{{grpDtls.packageGroupName}}</td>
+											<td>{{grpDtls.packageQuantity}} &nbsp;
+												<span>
+													<a class="pull-right">
+														<i class="fa fa-info-circle" data-toggle="modal" ng-click="getGroupServiceDetails(grpDtls.listTPackageServicesDetailsDto)" aria-hidden="true"></i>
+													</a>
+												</span>
+											</td><!-- data-target="#qtyDetailsModal" -->
+											<td>{{grpDtls.groupPrice}}</td>
+									        <td>{{grpDtls.consumedQty | number : 2}}</td>
+									        <td>-</td>
+									        <td>{{grpDtls.balanceQuantity | number : 2}}</td>
+									        <td>-</td>
+									      </tr>
+									    </tbody>
+									  </table>
+									</div>
+								</div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(402)" class="second-level-tab-display-div" style="">
+								<div class="row padding-top10 padding-left-right-set4">
+									<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+									  <table id="main-table" class="main-table width100">
+									    <thead>
+									      <tr>
+									        <th class="width10">Service Name</th>
+									        <th class="width10">Package Qty</th>
+									        <th class="width10">Package Amt</th>
+									        <th class="width10">Consumed Qty</th>
+									        <th class="width10">Consumed Amt</th>
+									        <th class="width10">Balanced Qty</th>
+									        <th class="width10">Balanced Amt</th>
+									      </tr>
+									    </thead>
+									    <tbody>
+									      <tr  ng-repeat="serviceDtls in packageDetailsResponse.listTPackageServicesDetailsDto">
+									        <td>{{serviceDtls.serviceName}}</td>
+											<td>{{serviceDtls.packageQuantity}}</td>
+											<td>{{serviceDtls.servicePrice}}</td>
+											<td>{{serviceDtls.consumedQty }}</td>
+<!-- 									        <td>{{serviceDtls.packageQuantity-serviceDtls.balancePackageQuantity}}</td> -->
+<!-- 									        <td>{{serviceDtls.servicePrice-serviceDtls.availableCap}}</td> -->
+											<td>{{parseFloatNum(serviceDtls.consumedAmt) | number : 2}}</td>
+									        <td>{{serviceDtls.balancePackageQuantity}}</td>
+									        <td>{{parseFloatNum(serviceDtls.availableCap) | number : 2}}</td>
+									      </tr>
+									    </tbody>
+									  </table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Either Or Package END -->
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width10" id="">Ok</button> -->
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok"  data-dismiss="modal">
+							<i class="fa fa-check" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- packageServiceDetailsPopup END -->
+<div id="qtyDetailsModal" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1400 !important;background: rgba(0, 0, 0, 0.33);">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Group Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-top5 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+						  <table id="main-table" class="main-table width100">
+						    <thead>
+						      <tr>
+						        <th class="width5">Service Name</th>
+						        <th class="width5">Rate</th>
+						      </tr>
+						    </thead>
+						    <tbody>
+						      <tr ng-repeat="serviceDtls in eoGroupServiceDtls">
+						        <td>{{serviceDtls.serviceName}}</td>
+						        <td>{{serviceDtls.servicePrice}}</td>
+						      </tr>
+						    </tbody>
+						  </table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width15 pull-right" id="">Ok</button> -->
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Ok"  data-dismiss="modal">
+							<i class="fa fa-check" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- packageForceAdd START -->
+<div id="packageForceAdd" class="modal fade ng-scope in " role="dialog" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Package Details
+						<button type="button" class="close" data-dismiss="modal" >&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-top10 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+						  <table id="main-table" class="main-table width100">
+						    <thead>
+						      <tr>
+						        <th class="width10">Order No.</th>
+						        <th class="width10">Order Date</th>
+						        <th class="width10">Package Name</th>
+						        <th class="width2 text-center"></th>
+						      </tr>
+						    </thead>
+						    <tbody>
+						      <tr ng-repeat="info in listPackageOrder" ng-if="info.isForceClose==1">
+						        <td>{{info.orderNo}}</td>
+						        <td>{{info.orderDate}}</td>
+						        <td>{{info.packageName}}</td>
+						        <td class="text-center">
+						        	<a ng-click="addToPackage(info);">
+						        		<i class="glyphicon glyphicon-plus"></i>
+						        	</a>
+						        </td>
+						      </tr>
+						    </tbody>
+						  </table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- packageForceAdd END -->

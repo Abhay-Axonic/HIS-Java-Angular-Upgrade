@@ -1,0 +1,154 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset class="" style="margin-top:-5px !important">
+			<div ng-include="'./views/common/patient-search-billing.html'"></div>
+			<!-- <div ng-include="'./views/common/patient-demography-cyclic.html'"></div> -->
+		<div ng-include="'./views/common/patient-demography-cyclic.html'"></div>
+		</fieldset>
+		<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-calendar-plus-o " aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+									<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+											name="datepickerFrom" id="datepickerFrom"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="searchObj.fromDate"
+											model-view-value="true" is-open="datepickerFrom.opened"
+											datepicker-options="dateOptionsFrom" show-button-bar="false" onkeydown="event.preventDefault()"
+											ng-click="openDatepickerFrom()"> 
+							<label for="description" class="LISDynamicLabel">Date (From)</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+											name="datepickerFrom" id="datepickerFrom"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="searchObj.toDate"
+											model-view-value="true" is-open="datepickerTo.opened"
+											datepicker-options="dateOptionsTo" show-button-bar="false"
+											ng-click="openDatepickerTo()"> 
+							<label for="description" class="LISDynamicLabel">Date-Till</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-files-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label" ng-model="searchObj.visitTypeId" convert-to-number>
+								<option value="">-</option>
+								<option  value="3">Day Care</option>
+								<option  value="4">ER</option>
+								<option  value="2">IP</option>
+								<option value="1">OP</option>
+							</select> <label for="code">Visit Type</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-files-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label" ng-model="searchObj.serviceId" >
+								<option ng-repeat="info in servicesListForCyclic" ng-value="info.serviceMasterId" value="{{info.serviceMasterId}}">{{info.serviceStandardName}}</option>
+							</select>
+							<label for="code">Hospital Service</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right4 padding-top10 width5 text-center">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" ng-click="getScheduledPatientList();" title="Search" style="width:60% !important;">
+						<i class="fa fa-search" style="font-size: 16px" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+				
+		<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+			  <table id="main-table" class="main-table width100">
+			    <thead>
+			      <tr>
+			      	  <th class="fixed text-center" scope="col"><input type="checkbox" class=""  ng-model="allSelected" ng-true-value="'Y'" ng-false-value="'N'" ng-click="selectDeselectCheckbox();"></th>
+				      <th class="fixed" scope="col">Bill Date</th>
+				      <th scope="col" style="z-index:1033 !important">Bill No.</th>
+				      <!-- <th scope="col">UHID</th> -->
+				      <th scope="col">Patient Details</th>
+				      <th scope="col" class="width10">Service Name</th> 
+				      <th scope="col" class="width10">Scheduled Date</th>
+				      <th scope="col" class="width5">Scheduled Time</th>
+				      <th scope="col" class="width10">Doctor Specialty</th>
+				      <th scope="col" class="width10">Doctor</th>
+			      </tr>
+			    </thead>
+			    <tbody>
+			    <tr ng-if="scheduledAppointmentList.length==0" ><td class="text-center" colspan="10">{{loadingMsg}}</td></tr>
+			      <tr ng-repeat="appointment in scheduledAppointmentList track by $index">
+			        <td class="fixed text-center vertical-middle"><input type="checkbox" ng-model="appointment.isSelected" ng-true-value="'Y'" ng-false-value="'N'" class=""></td>
+			        <td class="fixed vertical-middle">{{appointment.billDate}}</td>
+			        <td class="fixed  vertical-middle" style="z-index:1023 !important">{{appointment.billNumber}}</td>
+			        <!-- <td class="vertical-middle">{{appointment.uhidNumber}}</td> -->
+			        <td class="vertical-middle">{{appointment.uhidNumber}} {{appointment.patientName}}</td>
+			        <td class="vertical-middle">{{appointment.serviceStandardName}}</td>
+			        <td><input type="date" ng-model="appointment.appointmentDate" ngMin="{{date | date:'dd-MM-yyyy'}}"  class="w-100"> </td><!-- ng-blur="checkDate(appointment.appointmentDate,$index);" -->
+			        <td><input type="time" ng-model="appointment.appointmentTime"  class="w-100"> </td>
+			        <td class="vertical-middle"> 
+			             <select class="w-100" ng-model="appointment.specialityId" ng-init=" appointment.specialityId > 0 ? getDoctorBySpeciality(appointment.specialityId,$index) : ''" ng-change="getDoctorBySpeciality(appointment.specialityId,$index)" convert-to-number>
+											<option ng-repeat="info in specialityList"  value="{{info.specialityId}}" >{{info.specialityName}}</option>
+			        	</select>
+			        </td>
+			        <td class="vertical-middle">
+			        <select class="w-100" ng-model="appointment.doctorId" convert-to-number>{{appointment.doctorId}}
+						<option ng-repeat="doctor in appointment.doctorList" value="{{doctor.doctorId}}" >{{doctor.doctorName}}</option>
+					</select>
+			        </td>
+			      </tr>
+			    </tbody>
+			  </table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right padding-top10">
+				<div class="">
+					<a href="">
+						<input type="button" id="updateBtn" value="Process" ng-click="rescheduleCyclicServiceAppointment();" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="scheduledWorklist"]').parents("li").addClass("active");
+});
+</script>

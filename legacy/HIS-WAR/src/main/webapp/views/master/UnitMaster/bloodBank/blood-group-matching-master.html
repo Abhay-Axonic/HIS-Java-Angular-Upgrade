@@ -1,0 +1,630 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<legend class="heading-div">Blood Group Matching Master</legend>
+			<div class="row margin-top10">
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group" >
+								<select  class="text-input floating-label"  ng-model="comObj.compId" ng-change="getBloodGroupMatchingList(comObj.compId )">
+									<option></option>
+									<option ng-value="com.bloodComponentId" ng-repeat="com in componentList" >{{com.bloodComponentDesc}}</option>
+								</select>
+								<label for="code">Component<span class="star">*</span></label>
+							</div>
+							
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<br><br>
+			<br>
+			<div class="row margin-top10">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top8 ">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="">
+								<th class="width8">Recipient</th>
+								<th class="width8" ng-repeat="info in bloodGroupList" value="bloodGroupId">{{info.bloodGroupDesc}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="" ng-repeat="info1 in bloodGroupList"  value="bloodGroupId">
+								<th class="width8">{{info1.bloodGroupDesc}}</th>
+								<td class="text-center" ng-repeat="info in bloodGroupList">
+								
+									<div ng-repeat="itm in newList">
+										<div ng-if="(info1.bloodGroupId == itm.donorBloodGroupId) && (info.bloodGroupId == itm.recipientBloodGroupId) && (itm.availability==1)">
+										 <input type="checkbox" name="selectedForSave" 
+   													 ng-model="itm.checkValue" 
+   													 ng-true-value="1" 
+   													 ng-false-value="0" 
+   													 ng-click="itm.checkValue==1 ? itm.checkValue=0:itm.checkValue=1"
+  													ng-change="getCurrentStatus(itm.checkValue,info1.bloodGroupId, info.bloodGroupId);" > 	
+										</div>
+											
+										<div ng-if="(info1.bloodGroupId == itm.donorBloodGroupId) && (info.bloodGroupId == itm.recipientBloodGroupId) && (itm.availability==0)">
+										 <input type="checkbox" name="selectedForSave" 
+													ng-init="checkValue" 
+   													 ng-model="checkValue" 
+   													 ng-true-value="1" 
+   													 ng-false-value="0" 
+  													  ng-checked="false" 
+													ng-change="getCurrentStatus(checkValue,info1.bloodGroupId, info.bloodGroupId);"> 	
+										</div>	
+									</div>
+									
+									
+										<div ng-if="(newList.length==0) || (newList.length==undefined) ">
+										 <input type="checkbox" name="selectedForSave" 
+													ng-init="checkValue = status" 
+   													 ng-model="checkValue" 
+   													 ng-true-value="1" 
+   													 ng-false-value="0" 
+  													  ng-checked="false" 
+													ng-change="getCurrentStatus(checkValue,info1.bloodGroupId, info.bloodGroupId);" > 	
+										</div>	
+									
+								</td>
+						
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</fieldset>
+		<div class="row margin-top10 padding-left-right-10">
+			<div class="col-lg-11 col-md-11 col-sm-10 padding-left-right-set4">
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true" ng-click="saveBloodGroupMatchingList();"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	<!-- 	<div class="row">
+		
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top8 ">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width50">Component Name</th>
+							<th class="width50">Details</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Component Name</td>
+							<td>
+								<a data-toggle="modal" data-target="#viewTableModal">View</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div> -->
+	</div>
+</div> 
+<!-- *******view  modal start*********** -->
+<div id="viewTableModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					 View
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top8 padding-bottom5">
+					<table class="table table-bordered padding-bottom5">
+						<thead>
+							<tr class="">
+								<th class="width8">Recipient</th>
+								<th class="width8">O Positive</th>
+								<th class="width8">O Negative</th>
+								<th class="width8">A Positive</th>
+								<th class="width8">A Negative</th>
+								<th class="width8">B Positive</th>
+								<th class="width8">B Negative</th>
+								<th class="width8">AB Positive</th>
+								<th class="width8">AB Negative</th>
+								<th class="width8">A2 Positive</th>
+								<th class="width8">A2 Negative</th>
+								<th class="width8">A2B Positive</th>
+								<th class="width8">A2B Negative</th>	
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="">
+								<th class="width8">O Positive</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">O Negative</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">A Positive</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">A Negative</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">B Positive</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">B Negative</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">AB Positive</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">AB Negative</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">A2 Positive</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">A2 Negative</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">A2B Positive</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+							<tr class="">
+								<th class="width8">A2B Negative</th>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									Yes
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>
+								<td class="text-center">
+									No
+								</td>	
+								<td class="text-center">
+									No
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- *********view modal end ********* -->
+<script>
+	$(".selectedPageName").text("Blood Group Matching Master");/*  blood bank master  - module */
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="bloodGroupMatchingMaster"]').parents("li").addClass("active");
+</script>

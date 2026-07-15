@@ -1,0 +1,233 @@
+package com.param.global.dto;
+
+public class ServiceForPackageReqDto {
+	private Integer orgId;
+	private Integer unitId;
+	private Integer groupId;
+	private Integer subGroupId;
+	private String serviceCode;
+	private String serviceDescription;
+	private Integer tariffId;
+	private Integer paymentEntitlementId;
+
+	private Integer packageMasterId;
+	private Integer serviceId;
+	private Integer age;
+	private Integer sexId;
+	private Integer packagetypeId;
+	private Character isDoctorRequired;
+	private Integer visitTypeId;
+	private String paymentEntitlement;
+	private Integer patientTypeId;
+	private String patientType;
+	private String visitTypeName;
+	private Integer billingBedCategoryId;
+	private String billingBedCategory;
+	private Integer isInclusiveService;
+	private Integer isServiceItem;
+	private MPackageMasterDto mPackageMasterDto;
+	private Character isRefDoctorShare;
+	
+	
+
+	public Character getIsRefDoctorShare() {
+		return isRefDoctorShare;
+	}
+
+	public void setIsRefDoctorShare(Character isRefDoctorShare) {
+		this.isRefDoctorShare = isRefDoctorShare;
+	}
+
+	public Integer getSexId() {
+		return sexId;
+	}
+
+	public void setSexId(Integer sexId) {
+		this.sexId = sexId;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public Integer getPackageMasterId() {
+		return packageMasterId;
+	}
+
+	public void setPackageMasterId(Integer packageMasterId) {
+		this.packageMasterId = packageMasterId;
+	}
+
+	public Integer getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(Integer serviceId) {
+		this.serviceId = serviceId;
+	}
+
+	public Integer getPatientTypeId() {
+		return patientTypeId;
+	}
+
+	public void setPatientTypeId(Integer patientTypeId) {
+		this.patientTypeId = patientTypeId;
+	}
+
+	public Integer getTariffId() {
+		return tariffId;
+	}
+
+	public void setTariffId(Integer tariffId) {
+		this.tariffId = tariffId;
+	}
+
+	public Integer getPaymentEntitlementId() {
+		return paymentEntitlementId;
+	}
+
+	public void setPaymentEntitlementId(Integer paymentEntitlementId) {
+		this.paymentEntitlementId = paymentEntitlementId;
+	}
+
+	public Integer getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
+
+	public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
+	}
+
+	public Integer getSubGroupId() {
+		return subGroupId;
+	}
+
+	public void setSubGroupId(Integer subGroupId) {
+		this.subGroupId = subGroupId;
+	}
+
+	public String getServiceCode() {
+		return serviceCode;
+	}
+
+	public void setServiceCode(String serviceCode) {
+		this.serviceCode = serviceCode;
+	}
+
+	public String getServiceDescription() {
+		return serviceDescription;
+	}
+
+	public void setServiceDescription(String serviceDescription) {
+		this.serviceDescription = serviceDescription;
+	}
+
+	public Integer getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(Integer unitId) {
+		this.unitId = unitId;
+	}
+
+	public Integer getPackagetypeId() {
+		return packagetypeId;
+	}
+
+	public void setPackagetypeId(Integer packagetypeId) {
+		this.packagetypeId = packagetypeId;
+	}
+
+	public Character getIsDoctorRequired() {
+		return isDoctorRequired;
+	}
+
+	public void setIsDoctorRequired(Character isDoctorRequired) {
+		this.isDoctorRequired = isDoctorRequired;
+	}
+
+	public Integer getVisitTypeId() {
+		return visitTypeId;
+	}
+
+	public void setVisitTypeId(Integer visitTypeId) {
+		this.visitTypeId = visitTypeId;
+	}
+
+	public Integer getBillingBedCategoryId() {
+		return billingBedCategoryId;
+	}
+
+	public void setBillingBedCategoryId(Integer billingBedCategoryId) {
+		this.billingBedCategoryId = billingBedCategoryId;
+	}
+
+	public String getPaymentEntitlement() {
+		return paymentEntitlement;
+	}
+
+	public void setPaymentEntitlement(String paymentEntitlement) {
+		this.paymentEntitlement = paymentEntitlement;
+	}
+
+	public String getPatientType() {
+		return patientType;
+	}
+
+	public void setPatientType(String patientType) {
+		this.patientType = patientType;
+	}
+
+	public String getVisitTypeName() {
+		return visitTypeName;
+	}
+
+	public void setVisitTypeName(String visitTypeName) {
+		this.visitTypeName = visitTypeName;
+	}
+
+	public String getBillingBedCategory() {
+		return billingBedCategory;
+	}
+
+	public void setBillingBedCategory(String billingBedCategory) {
+		this.billingBedCategory = billingBedCategory;
+	}
+
+	public MPackageMasterDto getmPackageMasterDto() {
+		return mPackageMasterDto;
+	}
+
+	public void setmPackageMasterDto(MPackageMasterDto mPackageMasterDto) {
+		this.mPackageMasterDto = mPackageMasterDto;
+	}
+
+	public Integer getIsInclusiveService() {
+		return isInclusiveService;
+	}
+
+	public void setIsInclusiveService(Integer isInclusiveService) {
+		this.isInclusiveService = isInclusiveService;
+	}
+
+	public Integer getIsServiceItem() {
+		return isServiceItem;
+	}
+
+	public void setIsServiceItem(Integer isServiceItem) {
+		this.isServiceItem = isServiceItem;
+	}
+
+}

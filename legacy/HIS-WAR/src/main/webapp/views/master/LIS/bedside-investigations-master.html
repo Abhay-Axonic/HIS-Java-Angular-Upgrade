@@ -1,0 +1,584 @@
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width10 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Lab</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+						<a href="" ng-click="setFirstTabLevel(2)" class="employeeRegRadioParent">Imaging</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width10" style="">
+						<a href="" ng-click="setFirstTabLevel(3)" class="employeeRegRadioParent">Procedures</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+		<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonlab.bedsideLabCode"> 
+							<label for="description" class="LISDynamicLabel">Code</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonlab.bedsideLabDesc"> 
+							<label for="description" class="LISDynamicLabel">Name</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonlab.maxReferenceRange"> 
+							<label for="description" class="LISDynamicLabel">Max.Reference Range</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonlab.minReferenceRange"> 
+							<label for="description" class="LISDynamicLabel">Min.Reference Range</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonlab.bedsideUnitId"> 
+							<label for="description" class="LISDynamicLabel">Unit</label>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			
+			
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+                 <div class="col-lg-11 col-sm-11 col-md-11">
+                 <select class="text-input floating-label dirty" name="unit" ng-model="commonlab.bedsideUnitId">
+				  <option ng-repeat="info in getUOMActiveList" ng-value="{{info.id}}" value="{{info.id}}">{{info.unit}}</option>
+				</select> 
+				<label for="description" class="LISDynamicLabel">Unit</label>
+				</div>
+				</div>
+			</div>
+		</div>
+		<div class="row padding-top8">
+		
+		<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4" style="    margin: 10px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+				</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" ng-if="saveBtnFlag" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"  data-target="" ng-click="saveLab()">
+					<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+				<div class=" ">
+					<a href="" ng-if="updateBtnFlag" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"  data-target="" ng-click="updateLab()">
+					<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px" >
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 table-container padding-top10">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr>
+								<th class="width2">
+									Code
+								</th>
+								<th class="width2">
+									Name
+								</th>
+								<th class="width2">
+									Max.Reference Range
+								</th>
+								<th class="width2">
+									Min.Reference Range
+								</th>
+								<th class="width2">
+									Unit
+								</th>
+								<th class="width2 text-center">
+									Status(n)
+								</th>
+								<th class="width2 text-center">
+									Action taken
+								</th>
+							</tr>
+						</thead>
+					</table>
+				</div> 
+				<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr ng-repeat="info in pagination.data">
+								<td class="width2">{{info.bedsideLabCode}}</td>
+								<td class="width2">{{info.bedsideLabDesc}}</td>
+								<td class="width2">{{info.maxReferenceRange}}</td>
+								<td class="width2">{{info.minReferenceRange}}</td>
+								<td class="width2">{{info.unitName}}</td>
+								<td class="width2 text-center">
+										<label class="switch">
+											<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatusLab(info.bedsideLabId,info.status)">
+											<div class="slider round"></div>
+										</label>
+								</td>
+								<td class="width2 text-center" title=" Remove ">
+								<i class="fa fa-pencil" style="color: #3131d2;" aria-hidden="true " title="Edit" ng-click="showUpdateBtnLab(info.bedsideLabId)"></i>
+								&nbsp
+								<!-- <i class="fa fa-times" style="color: #3131d2;" aria-hidden="true " title="Remove"></i> -->
+							</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div> 
+				</div>
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+				<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonImagging.bedsideImagingCode"> 
+										<label for="description" class="LISDynamicLabel">Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonImagging.bedsideImagingDesc"> 
+										<label for="description" class="LISDynamicLabel">Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					<!-- 	<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label"> 
+										<label for="description" class="LISDynamicLabel">Sub-Department</label>
+									</div>
+								</div>
+							</div>
+						</div> -->
+						
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+			        	<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+                      <div class="col-lg-11 col-sm-11 col-md-11">
+                      <select class="text-input floating-label dirty" name="unit" ng-model="commonImagging.subSpecialityId">
+				       <option ng-repeat="info in subSpecialityList" ng-value="{{info.subSpecialityId}}" value="{{info.subSpecialityId}}">{{info.subSpecialityName}}</option>
+				      </select> 
+				     <label for="description" class="LISDynamicLabel">Sub-Department</label>
+				     </div>
+				</div>
+			</div>
+					</div>
+					<div class="row padding-top8">
+					
+					<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4" style="    margin: 10px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+				</div>
+				
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+							<div class=" ">
+								<a href="" ng-if="saveBtnFlag"  class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"  data-target="" ng-click="saveImaging()">
+								<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+							</div>
+							<div class=" ">
+								<a href="" ng-if="updateBtnFlag" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"  data-target="" ng-click="updateImagging()">
+								<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+							<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px" >
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 table-container padding-top10">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr>
+								<th class="width2">
+									Code
+								</th>
+								<th class="width2">
+									Name
+								</th>
+								<th class="width2">
+									Sub-Department
+								</th>
+								<th class="width2 text-center">
+									Status(n)
+								</th>
+								<th class="width2 text-center">
+									Action taken
+								</th>
+							</tr>
+						</thead>
+					</table>
+				</div> 
+				<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr ng-repeat="info in pagination.data">
+								<td class="width2">{{info.bedsideImagingCode}}</td>
+								<td class="width2">{{info.bedsideImagingDesc}}</td>
+								<td class="width2">{{info.subSpecialityMasterName}}</td>
+								<td class="width2 text-center">
+										<label class="switch">
+											<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatusImaging(info.bedsideImagingId,info.status)">
+											<div class="slider round"></div>
+										</label>
+								</td>
+								<td class="width2 text-center" title="Remove ">
+								<i class="fa fa-pencil" style="color: #3131d2;" aria-hidden="true " title="Edit" ng-click="showUpdateBtnImaging(info)"></i>
+								&nbsp
+								<!-- <i class="fa fa-times" style="color: #3131d2;" aria-hidden="true " title="Remove"></i> -->
+							</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div> 
+				</div>
+				<div ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div" style="">
+					<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonPocedure.bedsideProcedureCode"> 
+										<label for="description" class="LISDynamicLabel">Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonPocedure.bedsideProcedureDesc"> 
+										<label for="description" class="LISDynamicLabel">Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top12 text-width-auto" style="    margin-top: 4px;">
+							<div class="row">
+								<label class="checkbox-inline"><input type="checkbox" id="myCheck"  onclick="myFunction()" value="" ng-model="commonPocedure.isAnaesthesia" ng-true-value="'Y'" ng-false-value="'N'"/>
+									<span></span>Anesthesia Required</label>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" id="text" style="display:none;">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonPocedure.duration"> 
+										<label for="description" class="LISDynamicLabel">Duration (Min)</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" id="update" ng-if="updateBtnFlag">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="commonPocedure.duration"> 
+										<label for="description" class="LISDynamicLabel">Duration (Min)</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<div class="row padding-top8">
+					
+					<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4" style="    margin: 10px;">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+				</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+							<div class=" ">
+								<a href="" ng-if="saveBtnFlag"  class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"  data-target="" ng-click="saveProcedure()">
+								<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+							</div>
+							<div class=" ">
+								<a href="" ng-if="updateBtnFlag"  class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"  data-target=""  ng-click="updateProcedure()">
+								<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+							<input type="text" autocomplete="off"   class="text-search-box dirty" placeholder="Search" style="margin-top: 0px" >
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4 table-container padding-top10">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr>
+								<th class="width2">
+									Code
+								</th>
+								<th class="width2">
+									Name
+								</th>
+								<th class="width2 text-center">
+									Anesthesia Required
+								</th>
+								<th class="width2">
+									Duration ((Minimum)
+								</th>
+								<th class="width2 text-center">
+									Status(n)
+								</th>
+								<th class="width2 text-center">
+									Action taken
+								</th>
+							</tr>
+						</thead>
+					</table>
+				</div> 
+				<div class="table-container-body fix-height-scroll400" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr ng-repeat=" info in pagination.data">
+								<td class="width2">{{info.bedsideProcedureCode}}</td>
+								<td class="width2">{{info.bedsideProcedureDesc}}</td>
+							
+								<td class="width2 text-center">
+										<label class="switch">
+											<input type="checkbox" ng-model="info.isAnaesthesia" ng-true-value="'Y'" ng-false-value="'N'" >
+											<div class="slider round"></div>
+										</label>
+								</td>
+								<td class="width2">{{info.duration}}</td>
+								<!-- <td class="width2 vertical-middle text-center">
+											<label class="switch"> 
+												<input type="checkbox">
+												<div class="slider round"></div>
+											</label>
+										</td> -->
+										<td class="width2 text-center">
+										<label class="switch">
+											<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatusProcedure(info.bedsideProcedureId,info.status)">
+											<div class="slider round"></div>
+										</label>
+								</td>
+								<td class="width2 text-center" title="Remove ">
+								<i class="fa fa-pencil" style="color: #3131d2;" aria-hidden="true " title="Edit" ng-click="showUpdateBtnProcedure(info)"></i>
+								&nbsp
+								<!-- <i class="fa fa-times" style="color: #3131d2;" aria-hidden="true " title="Remove"></i> -->
+							</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div> 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+function myFunction() {
+	  var checkBox = document.getElementById("myCheck");
+	  var text = document.getElementById("text");
+	  if (checkBox.checked == true){
+	    text.style.display = "block";
+	  } else {
+	     text.style.display = "none";
+	  }
+	}
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Bedside Investigations Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="bedsideInvestigationsMaster"]').parents("li").addClass("active");
+});
+</script>			

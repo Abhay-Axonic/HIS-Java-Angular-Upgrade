@@ -1,0 +1,301 @@
+<!-- /********************************************************************************************************************************************
+Procurement - Work Order - Details Work Order Quotation Entry Details page
+Created by - Pranita Patil
+Created Date - 19-July-2017 
+/********************************************************************************************************************************************/ -->
+
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row margin-top10">
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">VQR No. :</b>{{vm.model.quotationList.vqrNo}}</span>
+	            </div>
+	            <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">VQR Date:</b>{{vm.model.quotationList.vqrDate | date:'dd/MM/yyyy' : 'UTC'}}</span>
+	            </div>
+	            <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">QR No. :</b>{{vm.model.quotationList.qrNo}}</span>
+	            </div>
+	            <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">QR Date:</b>{{vm.model.quotationList.qrDate | date:'dd/MM/yyyy' : 'UTC'}}</span>
+	            </div>
+	            <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               		<b class="padding-right10 ">Store: </b>{{vm.model.quotationList.storeName}} 
+	               	</span>
+	            </div>
+	             <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">Contract Type :
+	               </b>{{vm.model.quotationList.contractType}}</span>
+	            </div>
+	             <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">Vendor :
+	               </b>{{vm.model.quotationList.vendorName}}</span>
+	            </div>
+	             <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">Reference No :
+	               </b>{{vm.model.quotationList.referenceNo}}</span>
+	            </div>
+	            <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">Reference Date :
+	               </b> {{vm.model.quotationList.referenceDate | date:'dd/MM/yyyy' : 'UTC'}}</span>
+	            </div>
+	            <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">Status:
+	               </b>{{vm.model.quotationList.status}}</span>
+	            </div>
+	            <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+	               <span class="margin-left10">
+	               <b class="padding-right10 ">Added By :
+	               </b>{{vm.model.quotationList.addedBy}}</span>
+	            </div>
+			</div>
+			<div class="row margin-top10">
+				<div class="col-lg-12 col-md-12 col-sm-12 height500-table-with-scroll">
+					<table class="table table-bordered first-checkBox-padding">
+						<thead class="mainServiceTableCommon">
+							<tr>
+								<th class="width6">
+									Asset Code
+                  <div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8">
+									Asset Name
+                  <div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width4">
+									Quantity
+                  <div class="float_right" ng-click="sortType = 'quantity'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">
+									Serial No
+                  <div class="float_right" ng-click="sortType = 'batchName'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width10">
+									Specification
+                  <div class="float_right" ng-click="sortType = 'specification'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">
+									Amount
+                  <div class="float_right" ng-click="sortType = 'amount'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8">Inclusion Details</th>
+								<th class="width8">Exclusion Details</th>
+								<th class="width8">Payment Terms</th>
+								<th class="width10">
+									Remarks
+                  <div class="float_right" ng-click="sortType = 'remark'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.model.quotationList.detail | orderBy:sortType:sortReverse">
+								<td title="{{item.itemCode}}">{{item.itemCode}}</td>
+								<td title="{{item.itemName}}">{{item.itemName}}</td>
+								<td title="{{item.quantity}}">{{item.quantity}}</td>
+								<td title="{{item.batchName}}">{{item.batchNo}}</td>
+								<td title="{{item.specification}}">{{item.specification}}</td>
+								<td title="{{item.amount}}">{{item.amount}}</td>
+                <td class="width4 text-center" title="Expected Inclusion">
+                  <a><i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'expectedInclusion');vm.model.ViewInclusion(item)" aria-hidden="true" title="Expected Inclusion"></i></a>
+                </td>
+                <td class="width4 text-center" title="Expected Inclusion">
+                  <a><i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'expectedExclusion');vm.model.ViewExclusion(item)" aria-hidden="true" title="Expected Inclusion"></i></a>
+                </td>
+								<td class="text-center">
+                  <a><i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'paymentTerms');vm.model.ViewPaymentTerms(item)" aria-hidden="true" title="Request Details"></i></a>
+								</td>
+								<td title="{{item.remark}}">{{item.remark}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<footer class="col-lg-12 col-md-12 col-sm-12">
+				<div class="row his-style margin-top10 padding-right20">
+			      <div class="col-lg-1 col-md-1 col-sm-2 text-right">
+			         <label>Remark:</label>
+			      </div>
+			      <div class="col-lg-10 col-md-10 col-sm-8 padding-left-right8">
+			       		<textarea rows="1" ng-model="vm.model.quotationList.remark" maxlength="100" class="form-control" readonly></textarea>
+			      </div>
+			      <div class="col-lg-1 col-md-1 col-sm-2 " style="padding-right:30px !important;  padding-left:0px !important;">
+			          <a href="" ng-click="vm.model.NavigateToBack()">
+			            <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+			          </a>
+			     </div>
+		    	</div>   
+			</footer>
+        </fieldset>	
+    </div>
+</div>
+<div id="expectedInclusion" class="modal fade ng-scope in common-small-popup" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <div class="modal-title patient-details-row">
+					Inclusion Details
+               <button type="button" class="close" ng-click="vm.model.ClosePopup('Close', 'expectedInclusion')">&times;</button>
+            </div>
+         </div>
+         <div class="modal-body">
+            <div class="row padding-left-right-set padding-top4">
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                     <span>Inclusion Details</span>
+                     <textarea ng-model="vm.model.expectedInclusion" rows="6" readonly></textarea>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div id="expectedExclusion" class="modal fade ng-scope in common-small-popup" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <div class="modal-title patient-details-row">
+               Exclusion Details
+               <button type="button" class="close" ng-click="vm.model.ClosePopup('Close', 'expectedExclusion')">&times;</button>
+            </div>
+         </div>
+         <div class="modal-body">
+            <div class="row padding-left-right-set padding-top4">
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                     <span> Exclusion Details</span>
+                     <textarea ng-model="vm.model.expectedExclusion" rows="6" readonly></textarea>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div id="paymentTerms" class="modal fade ng-scope in common-small-popup" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <div class="modal-title patient-details-row">
+					Payment Terms
+               <button type="button" class="close" ng-click="vm.model.ClosePopup('Close', 'paymentTerms')">&times;</button>
+            </div>
+         </div>
+         <div class="modal-body">
+            <div class="row padding-left-right-set padding-top4">
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                     <span>Payment Terms</span>
+                     <textarea ng-model="vm.model.paymentTerm" rows="6" readonly></textarea>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script type="text/javascript">
+$( document ).ready(function() {
+	$(".selectedPageName").text("Work Order Quotation Entry");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="detailsWorkorderQEntry"]').parents("li").addClass("active");
+	
+	/*************************** rejection radio button function*********************************/
+	$(".add-new-item-row").hide();
+	$(".rejection-details-row1").hide();
+	$(".get-request-row").hide();
+	 $( ".addNewItemRadioBtnClass" ).change(function() {
+			if ($(this).is(":checked"))
+			{
+				$(".add-new-item-row").show('slow');
+				$(".get-request-row").hide('slow');
+			}
+		}); 
+	$( ".getRequestListBtnClass" ).change(function() {
+		if ($(this).is(":checked"))
+		{
+			$(".add-new-item-row").hide('slow');
+			$(".get-request-row").show('slow');
+		}
+	}); 
+
+});
+/*************************** add button function start*********************************/
+$( ".radioRejected1" ).change(function() {
+	if ($(this).is(":checked"))
+		{
+			$(this).closest(".row").siblings(".rejection-details-row1").show();
+		}
+	});
+
+	$( ".radioAcceptedHold1" ).change(function() {
+		if ($(this).is(":checked"))
+		{
+			$(this).closest(".row").siblings(".rejection-details-row1").hide();
+		}
+	});
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

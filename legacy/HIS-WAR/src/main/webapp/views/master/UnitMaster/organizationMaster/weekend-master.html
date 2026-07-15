@@ -1,0 +1,204 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style ">
+		<!-- <legend class="heading-div">Holiday Calendar Master</legend> -->
+		<form name="weekendMasterForm" novalidate >
+		<div class="row margin-top10">
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors>
+<!-- 							<select class="text-input floating-label" name="" required=""> -->
+<!-- 								<option>Select Year</option> -->
+<!-- 								ngRepeat: info in prefixList -->
+<!-- 							</select>  -->
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datepicker"
+									model-view-value="true" is-open="datepicker.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePicker()" ng-change="test()" required> 
+							<label for="code">Select Year <span class="star">*</span></label>
+							<p class="help-block" ng-if="weekendMasterForm.datepicker.$error.required">Year is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" >
+<!-- 							<select class="text-input floating-label" name="prefixId" -->
+<!-- 								required=""> -->
+								<input type="hidden" ng-model="weekend.dayId">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty" name="dayDisplay" id="" ng-model="dayName" readonly/>
+							<label for="code">Select Day</label>
+								<!-- ngRepeat: info in prefixList -->
+<!-- 							</select> <label for="code"></label> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 text-center" style="    margin-top: 4px;">
+				<div class="checkbox">
+					<label class="common-lable-color-set checkbox-inline">
+						<input type="checkbox" value="" class="isHalfday" ng-model="common.isHalfDay" ng-true-value="'Y'" ng-false-value="'N'"><span></span>Is Halfday</label>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4"  ng-if="common.isHalfDay=='Y'">
+				<div
+					class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class=" col-lg-11 col-sm-10 col-md-10" >
+							<!-- <label for="description" class="">Time(From)<span class="star">*</span></label> -->
+							<div class="input-group clockpicker"  ng-init="initTime();">
+								<input type="text" autocomplete="off" class="form-control" style="border-radius: 10px 0px 0px 10px;height: 40px;"  name="weekendFromTime" placeholder="Time(From)*"  ng-model="common.fromTime"  >
+								<span class="input-group-addon"  style="background-color:white;    border-radius: 0px 10px 10px 0px;">
+									<span class="fa fa-clock-o"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						
+						
+						<div class=" col-lg-11 col-sm-10 col-md-10" >
+							<!-- <label for="description" class="">Time(Till)<span class="star">*</span></label> -->
+							<div class="input-group clockpicker"  ng-init="initTime();">
+								<input type="text" autocomplete="off" class="form-control" style="border-radius: 10px 0px 0px 10px;height: 40px;" placeholder="Time(Till)*"   name="weekendToTime" ng-model="common.toTime"  >
+								<span class="input-group-addon" style="background-color:white;    border-radius: 0px 10px 10px 0px;">
+									<span class="fa fa-clock-o"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right text-width-auto margin-top10">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+										ng-if="saveBtnFlag"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="update()"
+										ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 float_right margin-top10">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword" ng-keyup="serachTestmaster(searchKeyword);"
+					style="margin-top: 0px"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row">
+				<div class="col-lg-3 col-md-6 col-sm-6" >
+					<div class="search">
+						<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+								</select> entries
+						</label>
+					</div>
+				</div>
+			</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<tbody>
+						<tr class="">
+							<th class="width10">Year</th>
+							<th class="width10">Day</th>
+							<th class="width10">Date</th>
+							<th class="width10">Is Halfday</th>
+							<th class="width10">Time(From)</th>
+							<th class="width10">Time(Till)</th>
+							<th class="width5 text-center">Status(n)</th>
+							<th class="width5 text-center">Action taken</th>
+						</tr>
+						<tr ng-repeat="info in commonList | filter:searchKeyword">
+							<td>{{info.weekendDate}}</td>
+							<td>{{info.day}}</td>
+							<td>{{info.weekendDate}}</td>
+							<td>{{info.isHalfDay}}</td>
+							<td>{{info.fromTimeString}}</td>
+							<td>{{info.toTimeString}}</td>
+							<td class="text-center"><label class="switch"> <input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"
+														ng-change="updateStatus(info.weekendId, info.status)">
+									<div class="slider round"></div>
+							</label></td>
+							<td class="padding-edit-button-table text-center vertical-middle"><a ng-class="{disabled: info.status=='I'}"  > <i
+									class="fa fa-pencil" aria-hidden="true" title="Edit" ng-click="showUpdateBtn(info.weekendId)"></i>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="row margin-bottom45 sss">
+									<ul ng-if="pager.pages.length" class="pagination table-list"
+										style="font-size: 14px;">
+										<li ng-class="{disabled:pager.currentPage === 1}"><a
+											ng-click="setPage(1,'true')">First</a></li>
+										<li ng-class="{disabled:pager.currentPage === 1}"><a
+											ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+										<li ng-repeat="page in pager.pages"
+											ng-class="{active:pager.currentPage === page}"><a
+											ng-click="setPage(page,'true')">{{page}}</a></li>
+										<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+											<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+										</li>
+										<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+											<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+										</li>
+									</ul>
+								</div>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+<modal visible="showModal"></modal>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  
+  $(".selectedPageName").text("Weekend Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="weekendMaster"]').parents("li").addClass("active");
+});
+$(".fromtotime").hide();
+$(".isHalfday").click(function() {
+    if($(this).is(":checked")) {
+        $(".fromtotime").show();
+    } else {
+        $(".fromtotime").hide();
+    }
+});
+
+$('.clockpicker').clockpicker();
+</script>

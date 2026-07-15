@@ -1,0 +1,469 @@
+<style>
+.tableError {
+	border: 2px solid red !important;
+}
+
+.tableError select.w-100.ng-pristine.ng-empty, .tableError input.w-100.ng-valid.ng-empty,
+	.borderRed {
+	border: 2px solid red;
+}
+
+.font-W600 td {
+	font-weight: 600 !important;
+}
+</style>
+<div id="page-content-wrapper" class="ng-scope">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Store Indent Approval Details</legend> -->
+			<div class="row">
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b
+						class="padding-right10 ">Issue Reject No. :</b>
+						{{vm.model.detailsPatientIssueRejectionMedicationList.issueRejectNo}}</span>
+				</div>
+				<div
+					class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b
+						class="padding-right10 ">Issue Reject Date :</b>
+						{{vm.model.detailsPatientIssueRejectionMedicationList.issueRejectDate
+						| date:'dd/MM/yyyy' : 'UTC'}} </span>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b
+						class="padding-right10 ">Issue No. :</b>
+						{{vm.model.detailsPatientIssueRejectionMedicationList.issueNo}} </span>
+				</div>
+				<div
+					class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10 text-right">
+					<span class="margin-left10 ng-binding"><b
+						class="padding-right10 ">Patient Name :</b>
+						{{vm.model.detailsPatientIssueRejectionMedicationList.patientDetail}}
+					</span>
+				</div>
+			</div>
+			<div class="row margin-top10">
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b
+						class="padding-right10 ">UHID :</b>
+						{{vm.model.detailsPatientIssueRejectionMedicationList.uhid}} </span>
+				</div>
+				<div
+					class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b
+						class="padding-right10 ">Doctor Name :</b>
+						{{vm.model.detailsPatientIssueRejectionMedicationList.doctorDetail}}
+					</span>
+				</div>
+				<!-- <div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b
+						class="padding-right10 ">Is Consignee :</b> </span>
+				</div> -->
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding"><b
+						class="padding-right10 ">Store :</b>
+						{{vm.model.detailsPatientIssueRejectionMedicationList.store}} </span>
+				</div>
+				<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class="">
+						<a class="btn btn-primary btn-save-box-shadow" title="Clear" ng-click="vm.model.ClearBarcode()">
+						<i class="fa fa-eraser" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div> -->
+				<!-- <div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-barcode" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div ng-init="alert('init')">
+								<input type="text" autocomplete="off" id="barcode" 
+									name="barcode" class="text-input floating-label"
+									ng-model="vm.model.barcode"
+									ng-keypress="vm.model.BarcodeScan($event)">
+								<label for="barcode">Barcode</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+			</div>
+		</fieldset>
+		
+		<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+			  <table id="main-table" class="main-table width100">
+			    <thead>
+					<tr class="table-th-bg">
+						<th title="" class="text-center width2"><input
+							type="checkbox" ng-click="vm.model.SelectAllRequests()"
+							ng-disabled="vm.model.detailsPatientIssueRejectionMedicationList.statusId == 4"
+							ng-model="vm.model.selectAllRows"
+							ng-change="vm.model.valueOnChange(item, true)"></th>
+						<th title="Medication Name" class="width10">Brand Name</th>
+						<th title="Generic Name" class="width8">Generic Name</th>
+						<th title="Flag" class="width6">Flag</th>
+						<th title="UOM" class="width6">UOM</th>
+						<th title="UOM Unit" class="width6">UOM Unit</th>
+						<th title="Batch No." class="width6">Batch No.</th>
+						<th title="Expiry Date" class="width8">Expiry Date</th>
+						<th title="Price" class="width8">Price</th>
+						<th title="Issue Reject Qty" class="width8">Issue Reject Qty</th>
+						<th title="Reason for Reject" class="width10">Reason for Reject</th>
+						<th title="Accept Qty" class="width8">Accept Qty</th>
+						<th title="Reject Qty " class="width8">Reject Qty</th>
+						<th class="width5" title="Combination">Combination</th>
+						<th title="Action" class="width6">Action</th>
+					</tr>
+				</thead>
+			    <tbody>
+				<tr ng-if="vm.model.detailsPatientIssueRejectionMedicationList.items == null || !vm.model.detailsPatientIssueRejectionMedicationList.items.length">
+					<td title="" colspan="15">
+						<p style="text-align: center; margin-top: 0px !important; margin-bottom: 1px !important;">No Records Found</p>
+					</td>
+				</tr>
+				<tr
+					ng-repeat="item in vm.model.detailsPatientIssueRejectionMedicationList.items">
+					<td title="" class="text-center vertical-top"><input
+						type="checkbox" ng-model="item.isSelected"
+						ng-disabled="item.statusId == 4"
+						ng-click="vm.model.SelectRequestItem(item); vm.model.ClearFields(item)"
+						ng-change="vm.model.valueOnChange(item, false)"></td>
+					<td class="" title="{{item.itemName}}">
+						{{item.itemName}}</td>
+					<td class="" title="{{item.genericName}}">
+						{{item.genericName}}</td>
+					<td class="" title="{{item.rejectionFlag}}">
+						{{item.rejectionFlag}}</td>
+					<td class="" title="{{item.uom}}">{{item.uom}}</td>
+					<td class="">
+						<span ng-if="item.receivedQtyCon!=''">({{item.receivedQtyCon}}) = </span><br/>
+						<span> {{item.receivedQtyCalculation}} {{item.uomUnitData}}</span>
+					</td>
+					<td class="" title="{{item.batchNo}}">
+						{{item.batchNo}}</td>
+					<td class="" title="{{item.expiryDate | date:'MMM-yyyy'}}">
+						{{item.expiryDate | date:'MMM-yyyy' : 'UTC'}}</td>
+					<td class="text-right" title="{{vm.model.Currency}} {{item.price}}"
+						>{{vm.model.Currency}}
+						{{item.price | number:2}}</td>
+					<td class="text-right" title="{{item.issueRejectQuantity}}"
+						>{{item.issueRejectQuantity}}</td>
+					<td class="" title="{{item.pharmReasonName}}" ng-if="item.pharmReasonName != undefined">
+						{{item.pharmReasonName}}</td>
+					<td class="" title="{{item.reasonForReject}}" ng-if="item.pharmReasonName == undefined">
+						{{item.reasonForReject}}</td>
+					<td title="" class="text-right" title="{{item.acceptQuantity}}">
+						<div class="row approved-qty-remark">
+							<input type="text" autocomplete="off" ng-if="item.isSelected"
+								ng-model="item.acceptQuantity" class="w-100"
+								data-ng-class="{tableError:item.isAcceptQuantityValid}"
+								class="w-100"
+								ng-change="item.isAcceptQuantityValid = false;"
+								ng-blur="vm.model.ChangeItemStatus(item);vm.model.ApprovedQuantity(item);vm.model.ValidateQuantity(item);calculateReceivedQty(item)"
+								numbers-only>
+							<div ng-if="item.isDisabled"
+								title="{{!!item.acceptQuantity ? item.acceptQuantity : 0 }}">{{!!item.acceptQuantity
+								? item.acceptQuantity : 0 }}</div>
+						</div>
+
+
+					</td>
+					<td title="" class="text-right" title="{{item.rejectQuantity}}"
+						>{{item.rejectQuantity}}</td>
+					<td class="text-center"><a
+						ng-click="vm.model.ViewCombinationDetails(item)"
+						title="View Combination Details"> <i
+							class="fa fa-info-circle" aria-hidden="true"></i>
+					</a></td>
+					<td title="" class="vertical-top">
+						<div class="row">
+							<div class="checkbox">
+								<label class="switch switch-small"> <input
+									type="checkbox" value="" ng-model="item.isRejected"
+									ng-disabled="item.isDisabled"
+									data-ng-class="{tableError:item.isrejectReasonIdValid}"
+									ng-change="item.isrejectReasonIdValid = false;"
+									class="switchInput" ng-click="vm.model.RejectQty(item)">
+									<div class="slider round slider-small"></div>
+								</label>
+							</div>
+						</div> <!-- <div class="row rejection-details-row margin-top4" style="display: none;">
+							<table id="rejectContent">
+								<tbody><tr>
+									<td title="" class="width12"><input type="text" autocomplete="off" placeholder="Qty" class="qty-textbox-fixed text-center"></td>
+									<td title="" class="width60 padding-top4">
+										<select class="margin-left-right-set5 width94 select-box">
+											<option value="Select Reason">Select Reason</option>
+											<option selected="selected" value="Tablet Broken">Tablet Broken</option>
+											<option value="Reason 2">Reason 2</option>
+										</select>
+									</td>
+									<td title="" class="padding-top8">
+									<input type="button" style="width:36px" name="" id="" value="+" onclick="" class="btn btn-info add-dynamic-row margin-left-right-set5">
+									</td>
+								</tr>
+							</tbody></table>
+						</div> -->
+					</td>
+				</tr>
+			</tbody>
+		  </table>
+		</div>
+	</div>
+		
+	<footer
+		class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+		<div class="row his-style margin-top10 padding-right20">
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class="">
+					<a class="btn btn-primary btn-save-box-shadow" title="Back" ng-click="vm.model.NevigatetoPatientIssueRejection()">
+					<i class="fa fa-arrow-circle-o-left" style="font-size: 18px" aria-hidden="true"></i></a> 
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class="">
+					<a class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="vm.model.SavePopup()" ng-disabled="vm.model.detailsPatientIssueRejectionMedicationList.statusId == 4">
+					<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a> 
+				</div>
+			</div>
+		</div>
+	</footer>
+</div>
+</div>
+<div id="qtyaccepatReject"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Rejection
+					<button type="button" class="close" data-dismiss="modal" ng-click="vm.model.ModalDismissRejectionPopup(vm.model.detailsPatientIssueRejectionMedicationList)">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-6 col-md-6 col-sm-12">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" numbers-only ng-model="vm.model.rejectQty" name="code"
+											id="" class="text-input floating-label"> <label
+											for="code">Qty</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label dirty"
+											id="rejectReasonId" name="code"
+											ng-model="vm.model.rejectReason"
+											ng-options="reason.reason for reason in vm.model.rejectReasons">
+											<option value="">Select Reason</option>
+											<!-- <option ng-repeat="info in reasonList" value="{{info.reasonMasterId}}" >{{info.reasonDesc}}</option> -->
+										</select> <label for="code">Select Reasons</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="code" rows="4" id="noteReject" maxlength="100"
+										class="text-input floating-label"
+										ng-model="vm.model.rejectNote"></textarea>
+									<label for="code">Note</label>
+								</div>
+							</div>
+						</div>
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Save" data-toggle="modal" ng-click="vm.model.SaveAcceptReject() ; vm.model.isRejectReasonValid = false ; vm.model.rejectionFlag = true">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+<!--  confirmSave modal start -->
+
+<div id="confirmSave" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" id="popupClose" class="close"
+						data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to Save?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" id="" title="Cancel" data-toggle="modal"
+						ng-click="vm.model.closepopup()">
+						<i class="fa fa-times" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" id="popupClose" title="Ok" 
+						data-toggle="modal" data-ng-class="{'disabled': saveBtnDisabled == false}"
+						ng-click="vm.model.SaveIssueRejection(vm.model.detailsPatientIssueRejectionMedicationList)">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--  confirmSave modal end -->
+<!--  cancel modal start -->
+<div id="cancelStatus" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to remove rejected quantity?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Cancel" data-toggle="modal">
+							<i class="fa fa-times" style="font-size: 18px" aria-hidden="true"></i></a> 
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Ok" data-toggle="modal" ng-click="vm.model.CancelRejection(vm.model.detailsPatientIssueRejectionMedicationList)">
+							<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--  cancel modal end -->
+<!--  cancel modal start -->
+<div id="cancelStatus" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to remove rejected quantity?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Cancel" data-toggle="modal">
+						<i class="fa fa-times" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Ok" data-toggle="modal" ng-click="vm.model.CancelRejection(vm.model.detailsPatientIssueRejectionMedicationList)">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--  cancel modal end -->
+
+<!-- Generic Is Combination Details modal -->
+
+<div id="combinationDetails"
+	class="modal fade ng-scope in common-small-popup" data-keyboard="false"
+	data-backdrop="static" role="dialog">
+	<div class="modal-dialog" style="width: 600px !important;">
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Generic Combination
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div
+					class="row padding-left-right-set4 padding-top4 padding-bottom10">
+					<div class="col-md-12">
+						<table class="table table-bordered">
+							<thead>
+								<tr class="">
+									<th class="width8">Generic Name</th>
+									<th class="width8">Strength</th>
+									<th class="width8">Strength Unit</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="generics in vm.model.genericCombinationList">
+									<td>{{generics.name}}</td>
+									<td>{{generics.strengthUnit}}</td>
+									<td>{{generics.strength}}</td>
+								</tr>
+								<tr ng-if="vm.model.genericCombinationList.length == 0">
+									<td colspan="4" class="text-center">
+										<p>No Record Found</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Generic Is Combination Details modal -->

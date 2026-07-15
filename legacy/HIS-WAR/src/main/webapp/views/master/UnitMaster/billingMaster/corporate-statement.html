@@ -1,0 +1,1076 @@
+<style>
+.margin-top46{
+	margin-top: -46px !important;
+}
+.margin-top12{
+	margin-top: 12px !important;
+}
+.margin_left4{
+	margin-left: -4px !important;
+}
+</style>
+<div id="page-content-wrapper" >
+	<div class="container-fluid his-style">
+		<fieldset class="">
+				<div class="row padding-top5">
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+						<fieldset class="normalRegistration sub-fieldset">
+								<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group">
+											<select class="text-input floating-label" ng-model="searchObj.paymentEntitlementId" ng-change="getCompanyMasterList(searchObj.paymentEntitlementId)">
+												<option value="">-</option>
+												<option ng-repeat="paymentEntitlement in paymentEntitlementList" value="{{paymentEntitlement.id}}"
+													ng-if="paymentEntitlement.id != 1">{{paymentEntitlement.name}}</option>
+											</select> <label for="code">Payment Entitlement Type</label>
+										</div>
+									</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group">
+											<select class="text-input floating-label" ng-model="searchObj.companyId" ng-change="getAssociateCompanyMasterList(searchObj.companyId)">
+												<option value="">-</option>
+												<option ng-repeat="companyMaster in companyMasterList" value="{{companyMaster.id}}">{{companyMaster.name}}</option>
+											</select> <label for="code">Company</label>
+										</div>
+									</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="form-group">
+												<select class="text-input floating-label" ng-model="searchObj.associateCompanyId" ng-disabled="isDisable">
+														<option value="">-</option>
+														<option ng-repeat="associateCompanyMaster in associateCompanyMasterList" value="{{associateCompanyMaster.id}}" >{{associateCompanyMaster.name}}</option>
+													</select>
+												<label for="code">Insurance Company</label>
+											</div>
+										</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group">
+											<select class="text-input floating-label" ng-model="searchObj.visitTypeId">
+												<option value="">-</option>
+												<option ng-repeat="visit in visitTypeList" value="{{visit.id}}">{{visit.label}}</option>
+											</select> <label for="code">Visits</label>
+										</div>
+									</div>
+										</div>
+									</div>
+									<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="fromDate" id="date1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="searchObj.fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open()">
+													<label for="code" class="LISDynamicLabel">Date (From)</label>
+												</span>
+												
+											</div>
+										</div>
+										</div>
+									</div>
+									<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="date2" id="date2"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="searchObj.toDate"
+													model-view-value="true" is-open="popup1.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open1()">
+													<label for="code" class="LISDynamicLabel">Date-Till</label>
+												</span>
+												
+											</div>
+								</div>
+									</div>
+									</div>
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<div class="">
+												<input type="text" autocomplete="off"  name="uhidNumber" id="" ng-model="searchObj.uhidNumber" class="text-input floating-label">
+												<label for="description" class="LISDynamicLabel">UHID</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+								<!-- 	<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 margin-top46 pull-right text-width-auto">
+										<div class="common-save-button" style="padding-top:0px;"> 
+											 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" ng-click="getCompanyInvoiceListByFilter()"> 
+											 	<i class="fa fa-search" aria-hidden="true"></i> 
+											 </a> 
+										</div> 
+									</div> -->
+								</div>
+								
+						</fieldset>
+					</div>
+				</div>
+				<div class="row margin-top4">
+				<div class="col-lg-8 col-md-8 col-sm-8 padding-left10">
+					<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="pagination.pageSize='10'" 
+								ng-model="pagination.pageSize" 
+								ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				</div>
+					<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 margin-top46 pull-right text-width-auto">
+										<div class="common-save-button" style="padding-top:0px;"> 
+											 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" id="searchBtn" ng-click="getCompanyInvoiceListByFilter()">
+											 	<i class="fa fa-search" aria-hidden="true"></i> 
+											 </a> 
+										</div> 
+									</div> 
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+						<input type="text" autocomplete="off" class="text-search-box"  ng-model="searchKeyword" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+				<div class="row margin-top4 padding-left-right-set4 table-container padding-top15">
+					<div class="col-md-12 col-lg-12  fix-height-scroll500 table-responsive fixed-thead-tfoot-scroll"  id="fixed-thead-tfoot-scroll">
+					<table class="table table-bordered main-table">
+						<thead>
+							<tr>
+<!-- 								<th class="width2 th-bg"> -->
+<!-- 								</th> -->
+								<th class="width7">
+									<span class="">Invoice Date</span>
+								</th>
+								<th class="width7">
+									Invoice No.
+								</th>
+								<th class="width20">
+									Company Name
+								</th>
+								<th class="width6">
+									Credit Bill Amount
+								</th>
+								<th class="width3">
+									Action taken
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="inv in pagination.data|orderBy:column:reverse|filter:searchKeyword">
+<!-- 								<td class=" width4 td-bg text-center"> -->
+<!-- 								<input type="checkbox"  ng-model="inv.isSelected" ng-click="getCompanyInvoiceDetailsByInvoiceId(inv.companyInvoiceId,inv.isSelected)"> -->
+								
+<!-- 								</td> -->
+								<td class="td-bg">{{inv.invoiceDate}}</td>
+							    <td class="td-bg">{{inv.invoiceNumber}}</td>
+							    <td class="td-bg">{{inv.companyName}}</td>
+							    <td class="td-bg">{{parseFloatNum(inv.totalAmount)}}</td>
+								<td class="td-bg text-center" >
+									<a class="cursor-pointer" ng-click="NavigateToDetail(inv)">Details</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					
+				</div>
+				
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<!-- <div class="row margin-top4 padding-left-right-set4 table-container">
+					<div class="col-md-12 col-lg-12  fix-height-scroll500 table-responsive fixed-thead-tfoot-scroll"  id="fixed-thead-tfoot-scroll">
+					<table class="table table-bordered main-table" id="main-table">
+						<thead>
+							<tr>
+								<th class="width2 th-bg"><input type="checkbox" ng-model="selectedAll" ng-click="checkAll();"></th>
+								<th class="width7">
+									<span class="">Invoice Date</span>
+								</th>
+								<th class="width7">
+									Invoice No.
+								</th>
+								<th class="width20">
+									Company Name
+								</th>
+								<th class="width6">
+									Credit Bill Amount
+								</th>
+								<th class="width3">
+									Action
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="info in pagination.data|orderBy:column:reverse|filter:searchKeyword">
+								<td class="td-bg text-center"><input type="checkbox" ng-model="info.doctorShare"></td>
+								<td class="td-bg">{{info.invoiceDate}}</td>
+							    <td class="td-bg">{{info.invoiceNumber}}</td>
+							    <td class="td-bg">{{info.cpmName}}</td>
+							    <td class="td-bg">{{parseFloatNum(info.totalBillAmount)}}</td>
+								<td class="td-bg text-center" >
+									<a class="cursor-pointer" data-toggle="modal" data-target="#detailsInvoiceCreationModal" ng-click="deatilsCompanyInvoiceList(info.billId,info.payeeId);">Details</a>	
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table table-bordered">
+					<tr ng-if="(companyInvoiceList|filter:searchKeyword)=='' || (companyInvoiceList|filter:searchKeyword)==null">
+						<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+					</tr>
+				</table>
+				</div>
+				
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div> -->		
+		</fieldset>
+		
+		<!-- ----------Corporate Statement Details Page Start--------------------------------------------------------------- -->
+		<!-- <fieldset class="">
+				<div class="row padding-top5">
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+						<fieldset class="normalRegistration sub-fieldset">
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="form-group">
+												<select class="text-input floating-label" ng-model="associateCompanyId" ng-disabled="isDisable">
+														<option value="">-</option>
+														<option ng-repeat="associateCompanyMaster in associateCompanyMasterList" value="{{associateCompanyMaster.id}}" >{{associateCompanyMaster.name}}</option>
+													</select>
+												<label for="code">Invoice Number</label>
+										</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="form-group">
+												<select class="text-input floating-label" ng-model="associateCompanyId" ng-disabled="isDisable">
+														<option value="">-</option>
+														<option ng-repeat="associateCompanyMaster in associateCompanyMasterList" value="{{associateCompanyMaster.id}}" >{{associateCompanyMaster.name}}</option>
+													</select>
+												<label for="code">UHID Number</label>
+										</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="fromDate" id="date1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open()">
+													<label for="code" class="LISDynamicLabel">Ref Date</label>
+												</span>
+												
+											</div>
+										</div>
+										</div>
+									</div>	
+								</div>
+						</fieldset>		
+ 						<fieldset class="">main-fieldset
+							<legend class="main-heading-div">Corporate New Request</legend>	
+						
+						<div class="row padding-left-right-set4">	
+							<form name="patientRegistrationform" novalidate>
+								<div class="row">
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Hospital Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Employee Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Father Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Hosp. Treatment</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+											<textarea id="w3review" name="w3review" rows="4" cols="50">
+  											</textarea>
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Relationship</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Investigation</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+											<textarea id="w3review" name="w3review" rows="4" cols="50">
+  											</textarea>
+										</div>
+									</div> 
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Hosp Treatment</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+											<textarea id="w3review" name="w3review" rows="4" cols="50">
+  											</textarea>
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Cons. Amount</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					-------------Second View Trail 30JAN Night----------------------------------------------------------------------
+						<div class="row padding-left-right-set4">	
+							<form name="patientRegistrationform" novalidate>
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+								<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<div class="row">
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Father Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Hospital Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Investigation</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<textarea id="w3review" name="w3review" rows="4" cols="50">
+  											</textarea>
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Done On</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon margin_left4">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="fromDate" id="date1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open()">
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Consultant</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Org.Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Disease</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+								</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<div class="row">
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Hospital Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Hosp.Treatment</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<textarea id="w3review" name="w3review" rows="4" cols="50">
+  											</textarea>
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Adm/Visit From</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon margin_left4">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="fromDate" id="date1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open()">
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Adm/Visit To</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon margin_left4">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="fromDate" id="date1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open()">
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Treat From</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon margin_left4">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="fromDate" id="date1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open()">
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Treat To</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon margin_left4">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="fromDate" id="date1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open()">
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Cons.Date</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon margin_left4">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="fromDate" id="date1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open()">
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<div class="row">
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Employee Name</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Relationship</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Cons.Amount</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>LAB Amount</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Pharmacy Amount</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Adress 1</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 margin-top12">
+										<label>Adress 2</label>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+											<input  type="text" autocomplete="off"name="firstName" ng-model="" class="text-input floating-label dirty" style="text-transform: capitalize" required> 
+										</div>
+									</div>
+								</div>
+								</div>
+								</div>
+							</form>
+						</div>
+					</fieldset>	
+					<fieldset class="">main-fieldset
+							<legend class="main-heading-div">Letter Types</legend>
+								<div class="row padding-left-right-set4">	
+									<form name="patientRegistrationform" novalidate>
+										<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+											<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4 padding-top10">
+											<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<input type="radio" id="" name="" value="">
+� 												<label for="html">Check List</label>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											
+											</div>
+											</div>
+											</div>
+											<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4 padding-top10">
+											<div class="row">
+															<div class="col-md-2 col-sm-3">
+																<input type="radio" name="drug" class="remainingRecreationDrugRadio ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.childHabitObj[0].habitTypeId" value="1" id="ipd_no_habitId4_id"><a class="cursor-pointer" data-toggle="modal" data-target="#exampleModal">Check List</a>
+															</div>
+															<div class="col-md-2 col-sm-3">
+																<input type="radio" name="drug" class="currentRecreationDrugRadio ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.childHabitObj[0].habitTypeId" value="2" id="ipd_current_habitId4_id">Covering Letter
+															</div>
+															<div class="col-md-2 col-sm-3">
+																<input type="radio" name="drug" class="quitRecreationDrugRadio ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.childHabitObj[0].habitTypeId" value="3" id="ipd_quit_habitId4_id">Essentiality Certificate
+															</div>
+															<div class="col-md-2 col-sm-3">
+																<input type="radio" name="drug" class="quitRecreationDrugRadio ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.childHabitObj[0].habitTypeId" value="3" id="ipd_quit_habitId4_id">Emergency Certificate
+															</div>
+											</div>
+											<div class="row">
+															<div class="col-md-2 col-sm-3">
+																<input type="radio" name="drug" class="remainingRecreationDrugRadio ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.childHabitObj[0].habitTypeId" value="1" id="ipd_no_habitId4_id">Certificate A
+															</div>
+															<div class="col-md-2 col-sm-3">
+																<input type="radio" name="drug" class="currentRecreationDrugRadio ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.childHabitObj[0].habitTypeId" value="2" id="ipd_current_habitId4_id">Certificate B
+															</div>
+															<div class="col-md-2 col-sm-3">
+																<input type="radio" name="drug" class="quitRecreationDrugRadio ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.childHabitObj[0].habitTypeId" value="3" id="ipd_quit_habitId4_id"><a class="cursor-pointer" data-toggle="modal" data-target="#patientReports">Patient Reports</a>
+															</div>
+											</div>
+											</div>
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="md-12">
+											<div class="md-8"></div>
+											<div class="md-4">
+												<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">width4 margin-top8 
+													<div class=" ">
+													<a href="" class="btn btn-primary btn-save-box-shadow" title="Print" ng-click="checkPrint(0);">
+													<i class="fa fa-print" style="font-size: 21px" aria-hidden="true"></i>
+													</a>
+													</div>
+												</div>
+												<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+													<div class=" ">
+													<a href="#/" class="btn btn-primary btn-save-box-shadow width100" title="Back" data-toggle="modal">
+													<i class="fa fa-arrow-circle-o-left" style="font-size: 21px" aria-hidden="true"></i></a> 
+													</div>
+												</div>
+											</div>	
+											</div>	
+												<div class="row">
+        											<a href="#/corporateStatement">
+         												 <input type="button" value="Print" class="btn btn-primary btn-save-box-shadow">
+         											</a>
+      											</div><br>
+      											<div class="row">
+        											<a href="#/corporateStatement">
+         												 <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+        										 	</a>
+												</div>
+											</div>
+							
+										</div>
+									</form>
+								</div>
+					</fieldset>		
+					----------------------------------------------------------------------------------------------------------------	
+					</div>
+				</div>
+		</fieldset> -->			
+<!-- -----------Corporate Statement Details Page Start-------------------------------------------------------------------- -->
+</div>
+
+</div>
+
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- Check List Modal START -->
+<!-- <div id="exampleModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Check List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll ">
+				<div class="row margin-top4 padding-left-right-set4 table-container">
+					<div class="col-md-12 col-lg-12  fix-height-scroll500 table-responsive fixed-thead-tfoot-scroll"  id="fixed-thead-tfoot-scroll">
+					<table class="table table-bordered main-table">
+						<thead>
+							<tr>
+								<th class="width2 th-bg"><input type="checkbox"></th>
+								<th class="width7">
+									<span class="">Description</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="td-bg text-center"><input type="checkbox"></td>
+								<td class="td-bg">Original Credit Referral Letter</td>
+							</tr>
+						</tbody>
+					</table>
+					
+				</div>
+				
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+			</div>
+			<div class="modal-footer">
+		        <div class="row his-style">
+		        	<div class="col-md-12">
+		        	<div class="col-md-8"></div>
+		          <div class="col-md-4">
+		          <div class="col-md-1 padding-left0px-right6px">
+		            <div class="common-save-button">
+		              <input type="button" value="Ok" class="btn btn-primary btn-save-box-shadow" data-dismiss="modal" ng-click="okClick()">
+		            </div>
+		          </div>
+		          <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">width4 margin-top8 
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Print" ng-click="checkPrint(0);">
+								<i class="fa fa-print" style="font-size: 21px" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+								<div class=" ">
+									<a href="#/" class="btn btn-primary btn-save-box-shadow width100" title="Back" data-toggle="modal">
+									<i class="fa fa-arrow-circle-o-left" style="font-size: 21px" aria-hidden="true"></i></a> 
+								</div>
+					</div>
+		          </div>
+		          </div>
+		        </div>
+		      </div>
+		</div>
+	</div>
+</div> -->
+<!-- Check List Modal END -->
+
+<!-- Patient Reports Modal Start -->
+<!-- <div id="patientReports" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Check List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll ">
+				<div class="row padding-top15">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top15">
+										<div class="form-group">
+												<select class="text-input floating-label" ng-model="associateCompanyId" ng-disabled="isDisable">
+														<option value="">-</option>
+														<option ng-repeat="associateCompanyMaster in associateCompanyMasterList" value="{{associateCompanyMaster.id}}" >{{associateCompanyMaster.name}}</option>
+													</select>
+												<label for="code">Group</label>
+										</div>
+					</div>
+				</div>
+				<div class="row margin-top4 padding-left-right-set4 table-container">
+					<div class="col-md-12 col-lg-12  fix-height-scroll500 table-responsive fixed-thead-tfoot-scroll"  id="fixed-thead-tfoot-scroll">
+					<table class="table table-bordered main-table">
+						<thead>
+							<tr>
+								<th class="width2 th-bg"><input type="checkbox"></th>
+								<th class="width7">
+									<span class="">Report Group</span>
+								</th>
+								<th class="width7">
+									<span class="">Report Name</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="td-bg text-center"><input type="checkbox"></td>
+								<td class="td-bg">LAB</td>
+								<td class="td-bg">CBC</td>
+							</tr>
+						</tbody>
+					</table>
+					
+				</div>
+				
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+			</div>
+			<div class="modal-footer">
+		        <div class="row his-style">
+		        	<div class="col-md-12">
+		        	<div class="col-md-8"></div>
+		          <div class="col-md-4">
+		          <div class="col-md-1 padding-left0px-right6px">
+		            <div class="common-save-button">
+		              <input type="button" value="Ok" class="btn btn-primary btn-save-box-shadow" data-dismiss="modal" ng-click="okClick()">
+		            </div>
+		          </div>
+		          <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">width4 margin-top8 
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Print" ng-click="checkPrint(0);">
+								<i class="fa fa-print" style="font-size: 21px" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+								<div class=" ">
+									<a href="#/" class="btn btn-primary btn-save-box-shadow width100" title="Back" data-toggle="modal">
+									<i class="fa fa-arrow-circle-o-left" style="font-size: 21px" aria-hidden="true"></i></a> 
+								</div>
+					</div>
+		          </div>
+		          </div>
+		        </div>
+		      </div>
+		</div>
+	</div>
+</div> -->
+<!-- Patient Reports Modal END -->
+
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script>
+
+$(document).ready(function() {
+	 
+	 $(".selectedPageName").text("Corporate Statement");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="corporateStatement"]').parents("li").addClass("active");
+});
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

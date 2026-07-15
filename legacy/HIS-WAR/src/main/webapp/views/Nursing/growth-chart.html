@@ -1,0 +1,415 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<!-- <div ng-include="'./views/common/common-patient-search-opd-without-counter.html'" class="ng-scope" style=""></div>
+		<div class="ng-scope" ng-include="'./views/common/patient-demography-opd.html'"></div> -->
+		<!--<div ng-include="'./views/common/patient-search-billing.html'" style="margin-top:-5px;"></div>-->
+
+		<fieldset class="margin-bottom-fieldset">
+			<!--  <legend class="heading-div">Patient Search</legend> -->
+			<div class="row patienttSearchResult" >
+				<form name="patientRegSearchFilter">
+					<div class="row" style="    margin-bottom: 10px;">
+						<div class="col-lg-1 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="registrationNumber"    ng-model="patientSearchObj.uhIdNumber" id="" class="text-input floating-label" press-enter="searchPatient(patientSearchObj)" required>
+										<label for="description" class="LISDynamicLabel">UHID</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="" show-errors>
+										<input type="text" autocomplete="off" name="description"  ng-model="patientSearchObj.patientName" id="" class="text-input floating-label" press-enter="searchPatient(patientSearchObj)">
+										<label for="description" class="LISDynamicLabel">Patient Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10" style="    width: 22% !important;">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+								<div class="row input-container padding-top2">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+										<i class="fa fa-venus-mars" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10 ">
+										<div class="">
+											<select class="text-input floating-label dirty" ng-model="patientSearchObj.genderId" press-enter="searchPatient(patientSearchObj)">
+												<option></option>
+												<option ng-repeat="sex in sexMasterList" value="{{sex.id}}">{{sex.desc}}</option>
+											</select> <label for="code">Gender</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-mobile" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="description" id="" onkeypress="return /[0-9-+]/i.test(event.key)" class="text-input floating-label"  ng-model="patientSearchObj.mobileNo" press-enter="searchPatient(patientSearchObj)"> <label for="description" class="">Mobile No.</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0 dynamicLabelForEmployeeText">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10 ">
+										<div class="">
+											<!-- <input type="text" autocomplete="off" name="description" id="datepickerSearch" class="text-input floating-label" ng-model="patientSearchObj.birthDate" press-enter="searchPatient(patientSearchObj)"> <label for="description" class="">Birth Dateeee</label> -->
+
+											<input type="text" autocomplete="off" class="text-input floating-label dirty"    ng-readonly="true"
+												   name="datepicker" id="datepickerSearch"
+												   uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+												   placeholder="DD/MM/YYYY" ng-model="patientSearchObj.birthDate"
+												   model-view-value="true" is-open="datepickerSearch.opened"
+												   datepicker-options="dateOptionsSearch"  show-button-bar="false"
+												   ng-click="openDatePickerSearch()" press-enter="searchPatient(patientSearchObj)" >
+											<label for="description" class="">Birth Date</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+								<div class="row input-container padding-top2">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+										<i class="fa fa-address-book" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10">
+										<div class="">
+											<select class="text-input floating-label dirty" ng-model="patientSearchObj.identificationTypeId" name="identificationTypeId" >
+												<option></option>
+												<option ng-repeat="id in identificationTypeList" value="{{id.identificationId}}">{{id.identificationName}}</option>
+											</select> <label for="code">Identification Type</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0  padding-top10 dynamicLabelForEmployeeText">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-address-card-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label text-input-identification-no"  ng-model="patientSearchObj.identificationNo"  press-enter="searchPatient(patientSearchObj)"> <label for="description" class="">Identification No..</label>
+									</div>
+								</div>
+								<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right">
+									<div class="width-div-for-patient-reg " style="padding-bottom :5px; width :37px !important;">
+										<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="searchPatient(patientSearchObj)">
+										<i class="fa fa-search" aria-hidden="true" style="font-size:16px !important"></i></a>
+									</div>
+								</div> -->
+							</div>
+						</div>
+
+						<div class="width-div-for-patient-reg  position-icon-reg margin-right10" ><!-- position-icon -->
+							<a href="#/patientRegistration"  class="float_right" title="Patient Registration" style="color: #e8373b;">
+								<i class="fa fa-universal-access" style="font-size:26px" aria-hidden="true"></i>
+							</a>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4  padding-top10 text-width-auto"><!-- float_right -->
+							<div class="width-div-for-patient-reg ">
+								<a href="" id="searchBtn" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="searchPatient(patientSearchObj)">
+									<i class="fa fa-search" style="font-size: 17px" aria-hidden="true"></i></a>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4  padding-top10 text-width-auto"><!-- float_right -->
+							<div class="width-div-for-patient-reg ">
+								<a href="" class="btn btn-primary btn-save-box-shadow" title="Fingerprint" ng-click="thumbSearch();">
+									<i class="fa fa-podcast" style="font-size: 17px" aria-hidden="true"></i></a>
+							</div>
+						</div>
+
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4  padding-top10 text-width-auto"><!-- float_right -->
+							<div class="width-div-for-patient-reg ">
+								<a href="" class="btn btn-primary btn-save-box-shadow" title="clearFields" ng-click="clearFields();">
+									<i class="fa fa-refresh"  style="font-size: 17px" aria-hidden="true"></i></a>
+							</div>
+						</div>
+
+
+
+					</div>
+				</form>
+				<fieldset class="normalRegistration sub-fieldset border-none padding-top4">
+					<!-- <legend class="sub-legend border-bottom-none">List</legend> -->
+					<div class="row serachedPatientList">
+						<div class="col-md-12 col-lg-12">
+
+							<div class="row padding-top0 padding-left-right-set0">
+								<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll126">
+									<table id="main-table" class="main-table width100">
+										<thead>
+										<tr>
+											<th class="width1">
+											</th>
+											<th class="width10">
+												<span class="">UHID</span>
+											</th>
+											<th class="width18">
+												<span class="">Patient's Name</span>
+											</th>
+											<th class="width5">
+												Gender
+											</th>
+											<th class="width15">
+												Mobile No.
+											</th>
+											<th class="date-column">
+												Birth Date
+											</th>
+											<th class="width15">
+												Identification Type
+											</th>
+											<th class="width15">
+												Identification No..
+											</th>
+											<th class="date-column">
+												Registration Date
+											</th>
+											<!-- <th class="width12">
+														Loyalty Card
+											</th> -->
+										</tr>
+										</thead>
+										<tbody>
+										<tr class="cursor-pointer" ng-repeat="patient in patientList">
+											<td>
+												<input type="radio" name="patient-list-radio" ng-click="getPatientDetailsById(patient.patientId)" id="patientSelectRadioCommon_{{$index}}">
+											</td>
+											<td>
+												{{patient.uhIdNumber}}
+											</td>
+											<td style="word-break: break-word;">
+												{{patient.patientName}}
+											</td>
+											<td>
+												{{patient.genderName}}
+											</td>
+											<td>
+												{{patient.mobileNo}}
+											</td>
+											<td>{{getDateByFormat(patient.birthDate,false)}}
+
+											</td><!-- {{patient.birthDateNew | date :  dateFormat }} -->
+											<td>
+												{{patient.identificationName}}
+											</td>
+											<td>
+												{{patient.identificationNo}}
+											</td>
+											<td>{{getDateByFormat(patient.createdDate,false)}}
+
+											</td>
+											<!-- <td>
+												{{patient.loyaltycardNo==null?"-":patient.loyaltycardNo}}
+											</td> -->
+
+										</tr>
+										<tr class="cursor-pointer" ng-show="patientList.length>0" >
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;"></td>
+											<td style="border:1px solid #ffffff;">
+												<b ><a ng-click="loadMoreData()">View Next</a></b>
+											</td>
+
+
+											<!-- <td>
+												{{patient.loyaltycardNo==null?"-":patient.loyaltycardNo}}
+											</td> -->
+										</tr>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+				</fieldset>
+
+		<div ng-include="'./views/common/patient-demography.html'"></div>
+		<div class="row padding-top4">
+			<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+				<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" ng-click="saveGrowthChart();">
+					<i class="fa fa-floppy-o" aria-hidden="true"></i>
+				</button>
+			</div>
+		</div>
+		<div class="row custom-sub-tab padding-left-right-set4">
+			<ul class="tabs nav nav-tabs">
+				<li ng-class="{ active : isSetThirdTabLevel(1) }" class="active" style="width: 115px;"><a href="" ng-click="setThirdTabLevel(1);changetab(1)">Growth Chart</a></li>
+				<li ng-class="{ active : isSetThirdTabLevel(2) }" style="width: 221px;" class=""><a href="" ng-click="setThirdTabLevel(2);changetab(2)">Developmental Milestones
+				</a></li>
+
+
+			</ul>
+		</div>
+		<div ng-show="isSetThirdTabLevel(1)" class="row">
+			<div class="row padding-left-right-set4 table-container padding-top4">
+				<div class="table-container">
+					<div class="table-container-header">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="width10">Age</th>
+									<th class="width10">Date</th>
+									<th class="width10">Weight</th>
+									<th class="width10 ">Unit</th><!-- text-center -->
+									<th class="width10 border-right-none">Height</th>
+									<th class="width10 ">Unit</th><!-- text-center -->
+									<th class="width10 border-right-none" title="Head Circumference">Head Circumference</th>
+									<th class="width10 ">Unit</th><!-- text-center -->
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body fix-height-scroll280" style="overflow: overlay;"> <!-- fix-height-scroll230 -->
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat="growthChart in growthChartList track by $index">
+									<td class="width10">{{growthChart.ageInMonths}} Month</td>
+									<td class="width10">
+									<input  ng-disabled = "growthChart.tGrowthChartId != null" type="text" autocomplete="off" class="w-100"  name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" ng-model="growthChart.growthChartDate" model-view-value="true" is-open="datepickerList[$index].opened" datepicker-options="dateOptions" 
+														show-button-bar="false"	ng-click="openDatePicker($index)" > 
+									</td>
+									<td class="width10"><input type="text" ng-disabled = "growthChart.tGrowthChartId != null" autocomplete="off" class="w-100" ng-model="growthChart.weight"></td>
+									<td class="width10 "><!-- text-center -->
+									    <a title="">{{growthChart.weightUnit}}</a>&nbsp;
+									    <a title="Normal" ng-if="growthChart.weight>=growthChart.weightFrom && growthChart.weight<=growthChart.weightTo">N</a>&nbsp;
+									    <a title="Above"  ng-if="growthChart.weight>growthChart.weightTo"><i class="fa fa-arrow-up"></i></a>&nbsp;
+									    <a title="Below"  ng-if="growthChart.weight<growthChart.weightFrom"><i class="fa fa-arrow-down"></i></a></td>
+									<td class="width10"><input type="text" ng-disabled = "growthChart.tGrowthChartId != null" autocomplete="off" class="w-100" ng-model="growthChart.height"></td>
+									<td class="width10"><!-- text-center -->
+									    <a title="">{{growthChart.heightUnitString}}</a>&nbsp;
+									    <a title="Normal" ng-if="growthChart.height>=growthChart.heightFrom && growthChart.height<=growthChart.heightTo">N</a>&nbsp;
+									    <a title="Above"  ng-if="growthChart.height>growthChart.heightTo"><i class="fa fa-arrow-up"></i></a>&nbsp;
+									    <a title="Below"  ng-if="growthChart.height<growthChart.heightFrom"><i class="fa fa-arrow-down"></i></a></td>
+									<td class="width10"><input type="text" ng-disabled = "growthChart.tGrowthChartId != null" autocomplete="off" class="w-100" ng-model="growthChart.circumference"></td>
+									<td class="width10"><!-- text-center -->
+									      <a title="">{{growthChart.circumferenceUnitString}}</a>&nbsp;
+									     <a title="Normal" ng-if="growthChart.circumference>=growthChart.circumferenceFrom && growthChart.circumference<=growthChart.circumferenceTo">N</a>&nbsp;
+									    <a title="Above"  ng-if="growthChart.circumference>growthChart.circumferenceTo"><i class="fa fa-arrow-up"></i></a>&nbsp;
+									    <a title="Below"  ng-if="growthChart.circumference<growthChart.circumferenceFrom"><i class="fa fa-arrow-down"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- <div class="table-container-footer">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tfoot>
+								<tr>
+									<td></td>
+								</tr>
+							</tfoot>
+						</table>
+					</div> -->
+				</div>
+			</div> 
+		</div>
+		<div ng-show="isSetThirdTabLevel(2)" class="row">
+			<div class="row padding-left-right-set4 table-container padding-top4">
+				<div class="table-container">
+					<div class="table-container-header">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="width2">Age Form</th>
+									<th class="width2">Age To</th>
+									<th class="width7">Type</th>
+									<th class="width21 ">Milestone</th>
+									<th class="width5 border-right-none">Achieved Date</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body fix-height-scroll280" style="overflow: overlay;">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat="milestone in growthDevelopmentalMilestones track by $index">
+									<td class="width2">{{milestone.ageFrom}} Month</td>
+									<td class="width2">{{milestone.ageTo}} Month</td>
+									<td class="width7" title="{{milestone.type}}">{{milestone.type}}</td>
+									<td class="width21" style="word-wrap: break-word;white-space: normal;" title="{{milestone.milestone}}"><input type="checkbox" ng-model="milestone.selected" class="ng-valid ng-dirty ng-valid-parse ng-touched ng-empty" ng-disabled = "milestone.growthDevelopmentalMilestonesTransactionId != null"  > {{milestone.milestone}}</td>
+									<td class="width5"><input  type="text" autocomplete="off" class="text-input floating-label dirty"
+											   name="ordRenderDatetime" id="ordRenderDatetime"
+											   uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											   placeholder="DD/MM/YYYY" ng-model="milestone.achievedDate"
+											   model-view-value="true" is-open="ordRenderDatetime.opened[$index]"
+											   show-button-bar="false"
+											   ng-click="openRenderedDate($index)"   ng-disabled = "milestone.growthDevelopmentalMilestonesTransactionId != null" ng-change="calculateAge($index,milestone.achievedDate);"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- <div class="table-container-footer">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tfoot>
+								<tr>
+									<td></td>
+								</tr>
+							</tfoot>
+						</table>
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<!-- <footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right" >
+					<a href=""><input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" ng-click="saveGrowthChart();"></a>
+				</div>
+			</div>
+		</footer> -->
+	</div>
+</div>
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("Growth Chart");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="growthChart"]').parents("li").addClass("active");
+});
+
+
+</script>

@@ -1,0 +1,68 @@
+<style>
+.heading-padding
+{
+	padding-top:20px;
+}
+.heading-padding label
+{
+	font-size:26px !important;
+}
+.btn1
+{
+	padding: 20px 0px !important;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    color: white;
+    font-size: 26px !important;
+    border-radius: 4px;
+    touch-action: manipulation;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    display: inline-block;
+    height:auto;
+}
+.dropdown-menu
+{
+	min-width: 140px !important;
+	font-size:18px !important;
+	padding: 5px 0px 5px 0px !important;
+	margin: 2px 0 0 -152px !important;
+	text-align: right !important;
+}
+</style>
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+			<div class="col-lg-3 col-md-4 col-sm-4 padding-left-right-set padding-top10">
+				<div class="margin-left10 row padding-top10">
+					<div class="col-md-3 col-lg-3 col-sm-3">
+						<span>Select Kiosk</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6">
+						<select class="dirty" style="width:100%" ng-change="selectQMSKiosk(common.qmsKioskMasterId);" ng-model="common.qmsKioskMasterId" >
+						<option selected value>Select Kiosk</option>
+							<option value="{{qms.qmsKioskMasterId}}" ng-repeat="qms in activeQMSList">{{qms.qmsDesc}}</option>
+						</select>
+					</div>
+					
+				</div>
+				</div>
+	</div>
+</div>
+
+
+
+<script>
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("QMS Token");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="QMS"]').parents("li").addClass("active");
+});
+</script>

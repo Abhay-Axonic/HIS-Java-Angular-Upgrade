@@ -1,0 +1,90 @@
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top fix-height-scroll500 margin-bottom2">
+	<table class="table table-bordered">
+		<tr >
+			<th class="text-center" colspan="8" ng-if="doctorId !=null">{{doctorName}}</th>
+			<th class="text-center" colspan="8" ng-if="doctorId ==null && specialityId!=null ">{{specialityName}}</th>
+		</tr>
+		<tr >
+			<th class="text-center" colspan="8">
+				
+				<span><!-- 01st Jan 18 - 04th Feb 18 -->{{ firstDate | date :  " MMMM d, y" }} - {{ lastDate | date :  " MMMM d, y" }}</span>
+			</th>
+		</tr>
+		<tr>
+			<th class="width4">Week</th>
+			<th class="width12" ng-repeat="day in dayList">{{day.name}}</th>
+			
+		</tr>
+		<tr ng-repeat="week in weekArray">
+		<td>
+			<a href="#/appointmentSchedulingUnitMaster/week" ng-click="getWeekWiseSlots(week.id)">{{week.name}}</a>
+			<a class="float-right" >
+				<i class="fa fa-ban margin-left5" title="Deactive w {{week.id}} slots" style="font-size: 18px;color: #f0793a;" ng-click = "deactiveWeeklySlots(week.id)"></i>
+			</a>
+		</td>
+		<td id="color1{{week.id}}" class="">
+		<div ng-repeat="finalObj in slotListMonth[$index]" >
+		  <div ng-if="1 == finalObj.split('_')[0] " ng-init="changeClass(finalObj.split('_')[2],week.id,1,finalObj.split('_')[1])" > 
+		
+			{{ finalObj.split('_')[1] | date :  "  d MMMM" }}
+			<a class="padding-right10 float-right" ng-click="deactiveDaySlots(finalObj)"><i class="fa fa-ban margin-left5" title="Deactive {{ finalObj.split('_')[1] | date : 'd MMMM' }} slots" data-target="#timeSlotDetailsModal"  style="font-size: 18px;color: #f0793a;" ></i></a>
+		</div> 
+		</div>
+		</td>
+		<td id="color2{{week.id}}" class="">
+		<div ng-repeat="finalObj in slotListMonth[$index]" >
+		  <div ng-if="2 == finalObj.split('_')[0] " ng-init="changeClass(finalObj.split('_')[2],week.id,2,finalObj.split('_')[1])"> 
+		   
+			{{ finalObj.split('_')[1] | date :  "  d MMMM" }}
+			<a class="padding-right10 float-right" ng-click="deactiveDaySlots(finalObj)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;" ></i></a>
+		</div> 
+		</div>
+		</td>
+		<td id="color3{{week.id}}" class="">
+		<div ng-repeat="finalObj in slotListMonth[$index]" >
+		  <div ng-if="3 == finalObj.split('_')[0] " ng-init="changeClass(finalObj.split('_')[2],week.id,3,finalObj.split('_')[1])"> 
+		 
+			{{ finalObj.split('_')[1] | date :  "  d MMMM" }}
+			<a class="padding-right10 float-right" ng-click="deactiveDaySlots(finalObj)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;" ></i></a>
+		</div> 
+		</div>
+		</td>
+		<td id="color4{{week.id}}" class="">
+		<div ng-repeat="finalObj in slotListMonth[$index]" >
+		  <div ng-if="4 == finalObj.split('_')[0] " ng-init="changeClass(finalObj.split('_')[2],week.id,4,finalObj.split('_')[1])"> 
+		
+			{{ finalObj.split('_')[1] | date :  "  d MMMM" }}
+			<a class="padding-right10 float-right" ng-click="deactiveDaySlots(finalObj)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;" ></i></a>
+		</div> 
+		</div>
+		</td>
+		<td id="color5{{week.id}}" class="">
+		<div ng-repeat="finalObj in slotListMonth[$index]" >
+		  <div ng-if="5 == finalObj.split('_')[0] " ng-init="changeClass(finalObj.split('_')[2],week.id,5,finalObj.split('_')[1])"> 
+		
+			{{ finalObj.split('_')[1] | date :  "  d MMMM" }}
+			<a class="padding-right10 float-right" ng-click="deactiveDaySlots(finalObj)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;" ></i></a>
+		</div> 
+		</div>
+		</td>
+		<td id="color6{{week.id}}" class="">
+		<div ng-repeat="finalObj in slotListMonth[$index]" >
+		  <div ng-if="6 == finalObj.split('_')[0] " ng-init="changeClass(finalObj.split('_')[2],week.id,6,finalObj.split('_')[1])"> 
+			{{ finalObj.split('_')[1] | date :  "  d MMMM" }}
+			<a class="padding-right10 float-right" ng-click="deactiveDaySlots(finalObj)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;" ></i></a>
+		</div>
+		</div> 
+		</td>
+		<td id="color7{{week.id}}" class="">
+		<div ng-repeat="finalObj in slotListMonth[$index]" >
+		  <div ng-if="7 == finalObj.split('_')[0] " ng-init="changeClass(finalObj.split('_')[2],week.id,7,finalObj.split('_')[1])"> 
+			{{ finalObj.split('_')[1] | date :  "  d MMMM" }}
+			<a class="padding-right10 float-right" ng-click="deactiveDaySlots(finalObj)"><i class="fa fa-ban margin-left5" title="Deactive" style="font-size: 18px;color: #f0793a;" ></i></a>
+		</div> 
+		</div>
+		</td>
+		</tr>
+	</table>
+</div>
+</div>

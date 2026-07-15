@@ -1,0 +1,115 @@
+		<!-- Page Content -->
+		<div id="page-content-wrapper">
+			<div class="container-fluid his-style">
+				<div class="row searched-patient-details-row" ng-if="patientFullName != ''">
+						<div class="col-md-11 col-sm-11 col-xs-11 ">
+							<span class="profile_pic margin-left10"> 
+								<img alt="" src="resources/assets/images/tempImages/m.jpg" class="img-circle" style="width:30px">
+							</span> 
+							<span class="margin-left10">{{patientFullName}} </span>
+							<span class="margin-left10"><b class="padding-right5 ">UHID	:</b>{{uhidNum }}</span>
+							<span class="margin-left10"><b class="padding-right10 ">Ward:</b> {{wardName}} </span>
+							<span class="margin-left10"><b class="padding-right10 ">BED No.:</b> {{bedNumber}}</span>
+							<span class="margin-left10">Dr. {{doctorFullName}}</span>
+						</div>
+					</div>
+        
+				
+		            	<fieldset>
+							<legend class="main-heading-div commonPatientSearch cursor-pointer">
+								<div class="row" id="storeSelection">
+									<div class="col-lg-10 col-md-9 col-sm-6"></div>
+									<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set1 pull-right">
+										<span class="heading-name-font">{{nursingStationCookieShow}} </span>
+										<span class="heading-name-font pull-right" title="Change Nursing Station" data-toggle="modal" 
+											ng-click="isWardChanged()">
+											<i class="fa fa-stack-exchange" aria-hidden="true"></i>
+										</span>
+									</div>
+								</div>
+							</legend>	
+		            		<div class="row padding-left-right-set4">
+								<div class="custom-sub-tab padding-left-right-set4 ">
+									<ul class="tabs nav nav-tabs">
+										<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width10 active" style="">
+											<a href="" ng-click="setFirstTabLevel(1); initMasterListInitiate()">Initiate Request</a>
+										</li>
+										<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width20" style="">
+											<a href="" ng-click="setFirstTabLevel(2); initMasterListTransfer()" class="">Transfer/Move Request Status</a>
+										</li>
+									</ul>
+								</div>
+								<div class="row padding-left-right-set4">
+									<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+										<div ng-include="'./views/Nursing/transfer-OT-initiate-request.html'" class="ng-scope" style=""></div>
+									</div>
+									<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+										<div ng-include="'./views/Nursing/OT-Transfer-request-status.html'" class="ng-scope" style=""></div>
+									</div>
+								</div>
+							</div>
+							<div class="row margin-top4">
+								<!-- <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="tab-btn-primary">
+										<a class="btn btn-primary btn-save-box-shadow" ng-href="#/transferToOT/OTTransferRequest"></a>
+									</div>
+								</div> -->
+								<!-- <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="tab-btn-primary">
+										<a class="btn btn-primary  btn-save-box-shadow" ng-href="#/transferToOT/OTTransferRequestStatus">Transfer Request Status</a>
+									</div>
+								</div> -->
+								<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+									<div class="btn-hide">
+										<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="saveOTRequest()"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+									</div>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+									<input type="text" autocomplete="off" class="text-search-box" tabindex="3" ng-model="groupName" placeholder="Search"
+                       				uib-typeahead="group.patientName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                       				typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  required style="margin-top: 0px"/>
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+								</div> -->
+							</div>
+		            <!-- <div class="row">
+						<div class="" ui-view>
+					
+						</div>
+		            </div> -->
+		          
+					</fieldset>
+		          
+				
+  			</div>
+  			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-bottom10 padding-top5">
+				<div class="row" style="">
+					<div class="col-lg-11 col-md-11 col-sm-10"></div>
+						<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+							<div class=" ">
+								<a href="#/bedManagement" class="btn btn-primary btn-save-box-shadow" title="Back">Back</a>
+							</div>
+						</div> -->
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<a href="#/bedManagement">
+								<button class="btn btn-primary btn-save-box-shadow  width100" title="Back">
+								<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> </button>
+							</a>
+						</div>
+					</div>
+			</div>
+		</div>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		
+		/* var documentHeight= $(window).height();
+	    var sideBarHeight = documentHeight - 55;
+	 	$("#page-content-wrapper").css("height", sideBarHeight + "px" ); */
+	 	
+		$('.clockpicker').clockpicker();
+		$(".selectedPageName").text("OT Transfer");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="transferToOT/OTTransferRequest"]').parents("li").addClass("active");
+	});
+</script>

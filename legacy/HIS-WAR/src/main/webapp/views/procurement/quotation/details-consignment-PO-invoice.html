@@ -1,0 +1,299 @@
+<!-- /********************************************************************************************************************************************
+Procrument - Quotation - Add New Consignment PO Invoice Creation
+Created by - Minesh Prajapati
+Created Date - 27-March-2020
+/********************************************************************************************************************************************/ -->
+<!-- Page Content start-->
+<head>
+<style type="text/css">
+.tableError {
+	border: 2px solid red !important;
+}
+
+.tableError select.w-100.ng-pristine.ng-empty, .tableError input.w-100.ng-valid.ng-empty,
+	.borderRed {
+	border: 2px solid #ff0000;
+}
+
+.borderBottom {
+	border-bottom: 2px solid #ff0000;
+}
+
+.bgRed {
+	color: red !important;
+}
+
+.text-input[disabled] {
+	cursor: not-allowed !important;
+}
+</style>
+</head>
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row margin-top10">
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10" style="width: 13%;">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10">
+							<input type="text" autocomplete="off" class="text-input floating-label" ng-model="vm.model.vendorName" ng-disabled="true">
+							<label for="vendorName">Vendor</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10" style="padding-top: 2px;">
+							<select ng-model="vm.model.poType"
+								class="text-input floating-label"
+								data-ng-options="type.type for type in vm.model.assetTypes" ng-disabled="true"></select>
+							<label for="Type" class="LISDynamicLabel">Type</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" style="width: 13%;">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10">
+							<input type="text" autocomplete="off" class="text-input floating-label" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY" ng-model="vm.model.invoiceDate"
+							 model-view-value="true" is-open="vm.model.invoiceDateOpened" datepicker-options="vm.model.invoiceDateOptions" show-button-bar="false"
+							 ng-click="vm.model.OpenInvoiceDate()" ng-disabled="true">
+							<label for="invoiceDate">Invoice Date</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10" style="width: 13%;">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10">
+							<input type="text" autocomplete="off" ng-model="vm.model.invoiceNumber" class="text-input floating-label" ng-disabled="true">
+							<label for="invoiceNumber">Invoice No</label>
+						</div>
+					</div>
+				</div>				
+			</div>
+			<div class="row margin-top10" style="height: 310px;">
+				<div id="consumbleRowIdtable-scroll" class="table-scroll"
+				style="height: 310px !important; overflow-y: auto;">
+					<div class="table-wrap" style="overflow: auto;">
+						<table class="table table-bordered main-table"
+							style="max-width: 300%; min-width: 300%">
+							<thead>								
+								<tr>
+									<th class="width1">PO Number</th>
+									<th class="width1">PO Date</th>
+									<th class="width1">GRN Number</th>
+									<th class="width1">Code</th>
+									<th class="width1">Item Name</th>
+									<th class="width1">PO Qty</th>
+									<th class="width1">UOM</th>
+									<th class="width1">Bonus Qty</th>									
+									<th class="width1">Bonus Qty UOM</th>									
+									<th class="width2">COP {{vm.model.Currency}}</th>
+									<th class="width2">MRP {{vm.model.Currency}}</th>
+									<th class="width1">Tax Code</th>
+									<th class="width1">Tax %</th>									
+									<th class="width1">Disc %</th>
+									<th class="width3">Amount {{vm.model.Currency}}</th>									
+									<th class="width2">Disc Amount {{vm.model.Currency}}</th>									
+									<th class="width2">Tax Amount {{vm.model.Currency}}</th>
+									<th class="width2">Other Charges {{vm.model.Currency}}</th>
+									<th class="width3">Net Amount {{vm.model.Currency}}</th>
+									<th class="width3 vertical-middle ">Manufacture</th>
+									<th class="width4 vertical-middle">Specifications</th>
+									<th class="width4 vertical-middle">Remark</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in  vm.model.selectedPOItemList">
+									<td>{{item.poNumber}}</td>
+									<td>{{item.poDate | date:'dd/MM/yyyy'}}</td>
+									<td>{{item.grnNumber}}</td>
+									<td>{{item.itemCode}}</td>
+									<td>{{item.itemName}}</td>
+									<td>{{item.poQuantity}}</td>
+									<td>Dispense</td>
+									<td>{{item.bonusQuantity}}</td>
+									<td>Dispense</td>
+									<td>{{item.cop}}</td>
+									<td>{{item.mrp}}</td>
+									<td>{{item.taxName}}</td>
+									<td>{{item.taxPercentage}}</td>
+									<td>{{item.discount}}</td>
+									<td>{{item.totalAmount}}</td>
+									<td title="{{item.discountAmount}}">{{item.discountAmount}}</td>
+									<td title="{{item.taxAmount}}">{{item.taxAmount}}</td>
+									<td title="{{item.totalOtherAmount}}">{{item.totalOtherAmount}}</td>
+									<td title="{{item.netAmount}}">{{item.netAmount}}</td>
+									<td title="{{item.manufacturerName}}">{{item.manufacturerName}}</td>
+									<td>{{item.specification}}</td>
+									<td>{{item.remark}}</td>								
+								</tr>
+							</tbody>
+						</table>
+				</div>
+			</div>
+			</div>
+		</fieldset> 
+		<!-- *************** page footer row end  *************** --> 
+		<footer
+			class="col-lg-12 col-md-12 col-sm-12 padding-right20"
+			style="padding-right: 37px !important">
+			<div class="row padding-right20 margin-top4">
+				<div class="col-lg-10 col-md-10 col-sm-8 text-right"></div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">					
+			</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+					<a href="" ng-click="vm.model.NavigateToBack()"> <input
+						type="button" value="Back"
+						class="btn btn-primary btn-save-box-shadow">
+				</a>
+			</div>
+			</div>
+		</footer>
+</div>
+</div>
+
+<!-- ***************  Other Charge Model *************************** -->
+<div id="otherCharges_Modal"
+	class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">Other Charges
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+		</div>
+			<div class="modal-body">
+				<div class="row table-container">
+					<div
+					class="col-lg-12 col-md-12 table-container-header padding-top10">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="width3">Other Charges</th>
+									<th class="width6">Amount {{vm.model.Currency}}</th>
+									<th class="width2">Action</th>
+								</tr>
+							</thead>
+						</table>
+				</div>
+					<div class="table-container-body"
+					style="height: 230px; overflow-y: scroll;">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat="charges in vm.model.otherChargesList">
+									<td class="width3"><select name="otherCharge"
+										class="select-box floating-label dirty"
+										ng-model="charges.otherCharge"
+										data-ng-options="otherCharge.otherCharges for otherCharge in vm.model.otherChargesDropdownList"
+										ng-change="charges.isChargesValid=false"
+										ng-class="{borderRed: charges.isChargesValid}">
+									</select></td>
+									<td class="width6"><input type="number"
+										ng-model="charges.amount" class="select-box"
+										ng-class="{borderRed: charges.isAmountValid}"
+										ng-change="charges.isAmountValid=false;vm.model.SetOtherChargeDecimal(charges.amount)"
+										ng-blur="vm.model.SetDecimalOtherCharge(charges)"
+										allow-decimal-numbers></td>
+									<td class="width2" style="width: 1.89% !important"><input
+										type="button"
+										ng-click="vm.model.AddOtherCharge(charges.otherCharge.id, $index)"
+										value="+" class="btn btn-primary btn-save-box-shadow width35"
+										ng-disabled="$index !== (vm.model.otherChargesList.length-1)">
+
+										<input type="button"
+										ng-click="vm.model.lessOtherCharge(charges, $index)" value="-"
+										class="btn btn-primary btn-save-box-shadow width35"
+										ng-if="$index !== 0"></td>
+								</tr>
+							</tbody>
+						</table>
+				</div>
+					<div class="table-container-footer">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tfoot>
+								<tr>
+									<th class="text-right" style="width: 27.5% !important">Total
+										Amount</th>
+									<th style="width: 54.8% !important">{{vm.model.Currency}}
+										{{vm.model.otherChargesTotal = ((vm.model.otherChargesList |
+										sumByColumn: 'amount')) | number:2}}</th>
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+				</div>
+			</div>
+		</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-10"></div>
+					<div class="col-md-2 padding-left0px-right6px">
+						<div class="common-save-button"><input type="button"
+							ng-click="vm.model.sumOtherCharges(vm.model.otherChargesList)"
+							value="Save" class="btn btn-primary btn-save-box-shadow">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+
+<!-- *********** Add QR new Modal: added on 24De2018 end *********** -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".selectedPageName").text("Consignment PO Creation");
+		//$(".selectedServicesList").hide();
+		$(".addNewItemRadioBtnClass").change(function() {
+			if ($(this).is(":checked")) {
+				/* $("#getRequestWasteStore").modal(); */
+			}
+		});
+		$(".getRequestListBtnClass").change(function() {
+			if ($(this).is(":checked")) {
+				$("#againstPRmodal").modal();
+			}
+		});
+		/******* on type selection table hide-show function start*************/
+
+		$('#typeId').on('change', function() {
+			if (this.value == '0') {
+				// $("#fixeAssetRowId").show();
+				//    $("#consumbleRowId").hide();
+			} else if (this.value == '1') {
+				// $("#consumbleRowId").show();
+				// $("#fixeAssetRowId").hide();
+			} else {
+				// $("#fixeAssetRowId").hide();
+				// $("#consumbleRowId").hide();
+			}
+		});
+		/******* on type selection table hide-show function end*************/
+	});
+	$(".table-th-bg").click(function() {
+		//$(this).next().find(".selectedServicesList").toggle();
+	});
+	function setCloneTable() {
+		setTimeout(function() {
+			jQuery(".main-table").clone(true).appendTo(
+					'#consumbleRowIdtable-scroll').addClass('clone');
+		}, 500);
+	}
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

@@ -1,0 +1,629 @@
+<div id="page-content-wrapper" style="overflow-x:hidden;">
+	<div class="container-fluid his-style">
+		<div ng-include="'./views/common/common-patient-search-opd-without-counter.html'" class="ng-scope"></div>
+		<div ng-include="'./views/common/patient-demography-opd.html'" class="ng-scope" style=""></div>
+<!-- 				<div class="" ng-include="'./views/common/patient-demography.html'"></div> -->
+	      <div class="row col-lg-6 col-md-6 col-sm-6 padding-top10 padding-left-right-set4">
+	        <div class="row">
+	           <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set text-width-auto">
+								<div class=" " ng-if="startIOFlag">
+								<a href="" class="btn btn-primary btn-save-box-shadow" id="updateBtn"  title="Start I/O"  ng-disabled="startIOFlag">Start I/O</a>
+							</div>
+							<div class=" " ng-if="!startIOFlag">
+								<a href="" class="btn btn-primary btn-save-box-shadow" title="Start I/O" id="updateBtn"  data-toggle="modal" data-target="#StartIO" >Start I/O</a>
+							</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4  padding-left-right-set0">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="" >
+									<input  type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="intakeDate"
+									model-view-value="true" is-open="datepicker.opened"
+									datepicker-options="dateOptionsi" show-button-bar="false"
+									ng-click="openDatePicker()" ng-change="test()" required    ng-disabled="startFlag"> 
+								<label for="description" class="">Date</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="clockpicker" >
+							<input  type="text" autocomplete="off" name="description" id="" ng-model="intakeTime" class="text-input floating-label" ng-init="initClockPicker()"  ng-change="validateTime()" ng-disabled="startFlag"  >
+							<label for="description" class="LISDynamicLabel">Time</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>	
+			<div class="container-fluid his-style">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+									 <thead class="mainServiceTableCommon">
+								<tr>
+									
+									<th colspan="7" class="text-center">
+										Intake
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+						    <tr>
+								<td colspan="7">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+										<tr>
+											<th class="">
+												Date
+											</th>
+											<th class=" ">
+												Time
+											</th>
+											<th class=" ">
+												Shift
+											</th>
+											<th class="width14" title="Intake (Type)">
+												Intake (Type)
+											</th>
+											<th class="width18" title="Fluids (Type)">
+												Fluids (Type)
+											</th>
+											<th class=" " title="Quantity(ml)">
+												Quantity(ml)
+											</th>
+											<th class="text-center" title="Action taken">
+												Action taken
+											</th>
+										</tr>
+										<tr ng-repeat="morning in intakeListForMorning track by $index" ng-init="initVal = $index">
+											<td class="width6">
+												<input type="text" autocomplete="off"
+												class="text-input floating-label dirty backgroundTransparent"
+												name="datepickervaccine" id="datepickervaccine"
+												uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+												placeholder="DD/MM/YYYY" ng-model="morning.intakeStartDate"
+												model-view-value="true"
+												is-open="datepickervaccine.opened[$index]"
+												datepicker-options="dateOptionsVacc[$index]"
+												show-button-bar="false"
+												ng-click="datepickervaccinePicker($index)" ng-disabled="startFlag"  >
+											<label for="description" class=""></label>
+											</td>
+											<td class="width2">
+											<div class="clockpicker">
+										         <input type="text" autocomplete="off" name="description" id="" ng-model="morning.intakeStartTime" class="text-input floating-label backgroundTransparent" ng-init="initClockPicker()" ng-change="getListShift($index)" ng-disabled="startFlag"  >
+										    <label for="description" class="LISDynamicLabel"></label>
+										   </div>
+											</td>
+											<td class="width6">
+												<div class="form-group">
+													<select class="border-dropdown text-box-for-ICU" style="" ng-model="morning.intakeShiftId" ng-disabled="startFlag"  >
+													    <option ng-selected="true"></option>
+														<option ng-repeat="info in  morning.getListOfActiveShiftForIntake"  ng-value={{info.shiftId}} value={{info.shiftId}}>{{info.shiftName}}</option>
+													</select>
+												</div>
+											</td>
+											<td  class="fixed "scope="col" >
+												<div class="form-group has-error">
+												<select class="border-dropdown text-box-for-ICU" ng-model="morning.intakeFluidId" ng-change="getListOfIntakeTypeFluid(morning.intakeFluidId ,$index)" ng-disabled="startFlag"  >
+												      <option ng-selected="true"></option>
+													  <option  ng-repeat="info in listOfIntakeFluid"  ng-value={{info.intakeFluidId}} value={{info.intakeFluidId}} >  {{info.intakeFluiddesc}}</option>
+													    <!--  <option>-</option> -->
+												</select> 
+												</div>
+											</td>
+											<td  class="fixed "scope="col" >
+												<div class="form-group has-error">
+												<select class="border-dropdown text-box-for-ICU" ng-model="morning.intakeTypeFluidId" ng-disabled="startFlag"  >
+												      <option ng-selected="true"></option>
+													  <option value="" ng-repeat="info in morning.listOfIntakeTypeFluidById"  ng-value={{info.intakeTypeFluidId}} value={{info.intakeTypeFluidId}}>  {{info.intakeTypeFluidDesc}}</option>
+													   <!--   <option>-</option> -->
+												</select> 
+												</div>
+											</td>
+											<td class="width2">
+											    <input type="text" autocomplete="off" numbers-only name="description" ng-model="morning.intakeQuantity" id="" class="text-input floating-label backgroundTransparent" ng-change="calculateTotalIntake(morning.intakeQuantity,'{{morning.intakeQuantity}}',$index)" ng-disabled="startFlag"  > 
+											</td>
+											<td class="width1 text-center">
+												<a class="text-center" value="+">
+													<input type="button"
+														   value="+"
+														   class="btn btn-info add-dynamic-row"
+														   ng-click="addIntakeListMorning($index)" style="height: 30px;width: 32px;">
+													<input ng-if="$index!=0"
+														   type="button" name="" id="delrow" value="-" style="height: 30px;width: 32px;"
+														   id="cancelBtn" ng-if="$index!=0" ng-click="removeIntake($index);calculateTotalIntakeRemove(morning.intakeQuantity)" class="btn btn-info">
+												</a>
+											</td>
+										</tr>
+										</tbody>
+									</table>
+								</td>
+						       </tr>
+						       <tr>
+<!-- 						       <td rowspan="3" class="width2" ng-if="intake.shit==1" ></td> -->
+								<td colspan="5" class="" >Shift Total</td>
+								<td class="width2">{{totalIntakeQuantity}}&nbsp;&nbsp;ml</td>
+								<td class="width1"></td>
+						      </tr>
+						  
+						 <!--     <tr ng-repeat="evening in intakeListForEvening"  ng-init="initVal = $index">
+								<td rowspan="2" class="width2"  ng-if="evening.shift ==2  ">Evening</td>
+								<td class="width2">	<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="evening.intakeDate"
+									model-view-value="true" is-open="datepickerIntake.opened"
+									datepicker-options="dateOptionsIntake" show-button-bar="false"
+									ng-click="openDatePickerIntake()" required> </td>
+								<td class="width2">
+								 <input type="text" autocomplete="off" name="description" id="" ng-model="evening.intakeTime" class="text-input floating-label" ng-init="initClockPicker()">
+								 </td>
+								<td  class="fixed "scope="col" >
+									<div class="form-group has-error">
+									<select class="border-dropdown" ng-model="evening.intakeFluidId" ng-change="getListOfIntakeTypeFluid(intake.intakeFluidId)" >
+										<option></option>
+										  <option value="" ng-repeat="info in listOfIntakeFluid"  ng-value={{info.intakeFluidId}} value={{info.intakeFluidId}} >  {{info.intakeFluiddesc}}</option>
+										     <option>-</option>
+									</select> 
+									</div>
+								</td>
+								<td  class="fixed "scope="col" >
+									<div class="form-group has-error">
+								    <select class="border-dropdown" ng-model="evening.intakeTypeFluidId">
+									   <option></option>
+										  <option value="" ng-repeat="info in listOfIntakeTypeFluidById"  ng-value={{info.intakeTypeFluidId}} value={{info.intakeTypeFluidId}}>  {{info.intakeTypeFluidDesc}}</option>
+										     <option>-</option>
+									</select> 
+									</div>
+								</td>
+								<td class="width2">
+								  <input type="text" autocomplete="off" name="description" ng-model="evening.quantity" id="" class="text-input floating-label"> </td>
+								<td class="width1 text-center"><a class="text-center" ng-click="addIntakeListEvening($index)" value="+"><i class="fa fa-plus-circle"></i></a></td>
+						    </tr>
+						    <tr>
+								<td colspan="4" class="width2">Shift Total</td>
+								<td class="width2">-</td>
+								<td class="width1"></td>
+								
+						    </tr > -->
+						 <!--     <tr ng-repeat=" night in intakeListForNight" ng-init="initVal = $index">
+								<td rowspan="2" class="width2"  ng-if="night.shift == 3 ">Night</td>
+								<td class="width2">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="night.intakeDate"
+									model-view-value="true" is-open="datepickerIntake.opened"
+									datepicker-options="dateOptionsIntake" show-button-bar="false"
+									ng-click="openDatePickerIntake()" required> 
+									</td>
+								<td class="width2">
+								<input type="text" autocomplete="off" name="description" id="" ng-model="night.intakeTime" class="text-input floating-label" ng-init="initClockPicker()">
+								</td>
+								<td  class="fixed "scope="col" >
+									<div class="form-group has-error">
+									<select class="border-dropdown" ng-model="night.intakeFluidId" ng-change="getListOfIntakeTypeFluid(intake.intakeFluidId)" >
+										<option></option>
+										  <option value="" ng-repeat="info in listOfIntakeFluid"  ng-value={{info.intakeFluidId}} value={{info.intakeFluidId}} >  {{info.intakeFluiddesc}}</option>
+										     <option>-</option>
+									</select>  
+									</div>
+								</td>
+								<td  class="fixed "scope="col" >
+									<div class="form-group has-error">
+									   <select class="border-dropdown" ng-model="night.intakeTypeFluidId">
+									   <option></option>
+										  <option value="" ng-repeat="info in listOfIntakeTypeFluidById"  ng-value={{info.intakeTypeFluidId}} value={{info.intakeTypeFluidId}}>  {{info.intakeTypeFluidDesc}}</option>
+										     <option>-</option>
+									</select> 
+									</div>
+								</td>
+								<td class="width2">
+								  <input type="text" autocomplete="off" name="description" ng-model="night.quantity" id="" class="text-input floating-label"> 
+								  </td>
+								<td class="width1 text-center"><a class="text-center" ng-click="addIntakeListNight($index)" value="+"><i class="fa fa-plus-circle"></i></a></td>
+						    </tr> -->
+					<!-- 	   <tr>
+								<td colspan="4" class="width2">Shift Total</td>
+								<td class="width2">-</td>
+								<td class="width1"></td>
+								
+						    </tr> -->
+						   <!--   <tr>
+								<td colspan="5" class="width2">24 Hours Total Input</td>
+								<td class="width2">-</td>
+								<td class="width1"></td>
+						    </tr> -->
+						</tbody>
+					</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				       <div class="row col-lg-6 col-md-6 col-sm-6 padding-top10 padding-left-right-set0">
+				          
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10">
+										<div class="">
+											<input type="text" autocomplete="off" class="text-input floating-label dirty backgroundTransparent"  ng-disabled="stopIOFlag"
+									name="datepickerer" id="datepickerer"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="outputDate"
+									model-view-value="true" is-open="datepickerr.opened"
+									datepicker-options="dateOptionss" show-button-bar="false"
+									ng-click="openDatePickerr()" required ng-disabled="startFlag" ng-change="test()"  > 
+											<label for="description" class="">Date</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10">
+										<div class="clockpicker">
+							                  <input type="text" autocomplete="off" ng-disabled="stopIOFlag" name="description" id="" ng-model="outputTime" class="text-input floating-label backgroundTransparent" ng-init="initClockPicker()" ng-disabled="startFlag" ng-change="validateOutputTime()"  >
+							                <label for="description" class="LISDynamicLabel">Time</label>
+							            </div>
+									</div>
+								</div>
+							</div>
+							 <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set text-width-auto pull-right">
+								<div class=" ">
+									<input type="button"  ng-disabled="stopIOFlag" id="updateBtn" class="btn btn-primary btn-save-box-shadow" title="Stop I/O"  value="Stop I/O" ng-click="alertStopIO()">
+								</div><!-- data-toggle="modal" data-target="#StopIO" -->
+							</div>
+							<div class="row">
+									<div class="container-fluid his-style">
+										<div class="table-container padding-left-right-set4 padding-top5">
+											<div class="table-container-header padding-top5">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+												 <thead class="mainServiceTableCommon">
+												<tr>
+													<th colspan="6" class="text-center">
+														Output
+													</th>
+												</tr>
+									</thead>
+										<tbody>
+									    <tr>
+											<td colspan="6">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr>
+															<th class="">
+																Date
+															</th>
+															<th class="">
+																Time
+															</th>
+															<th class="">
+																Shift
+															</th>
+															<th class=" " title="Fluid Output(ml)(Type)">
+																Fluid Output(ml)(Type)
+															</th>
+															<th class=" " title="Quantity(ml)">
+																Quantity(ml)
+															</th>
+															<th class="text-center" title="Action taken">
+																Action taken
+															</th>
+														</tr>
+														<tr ng-repeat=" output in OutputListFor track by $index" ng-init="initVal = $index">
+															<td class="width6">
+														<!-- 		<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+												                 name="datepicker" id="datepickerr"
+												                 uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+												                 placeholder="DD/MM/YYYY" ng-model="output.outputDate"
+												                 model-view-value="true" is-open="datepickerOutPut.opened"
+												                 datepicker-options="dateOptionsOutPut" show-button-bar="false"
+											                    	ng-click="openDatePickerOutPut()" required>  -->
+											                    	<input type="text" autocomplete="off"
+																	class="text-input floating-label dirty backgroundTransparent"
+																	name="datepickervaccine" id="datepickervaccine"
+																	uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+																	placeholder="DD/MM/YYYY" ng-model="output.outputStartDate"
+																	model-view-value="true"
+																	is-open="datepickervaccineOutPut.opened[$index]"
+																	datepicker-options="dateOptionsVaccOutPut[$index]"
+																	show-button-bar="false"
+																	ng-click="datepickervaccinePickerOutPut($index)" ng-disabled="startFlag"  >
+												           </td>
+															<td class="width2">
+																<div class="clockpicker">
+										                                   <input type="text" autocomplete="off" name="description" id="" ng-model="output.outputStartTime" class="text-input floating-label backgroundTransparent" ng-init="initClockPicker()" ng-change="getListShiftOutput($index)" ng-disabled="startFlag"  >
+										                                    <label for="description" class="LISDynamicLabel"></label>
+										                        </div>
+										                     </td>
+										                     <td class="width6">
+																<div class="form-group">
+																	
+																	<select class="border-dropdown text-box-for-ICU" style="" ng-model="output.outputShiftId" ng-disabled="startFlag"  >
+																	<option ng-selected=""></option>
+																		<option ng-repeat="info in  output.getListOfActiveShiftForOutput"  ng-value={{info.shiftId}} value={{info.shiftId}}>{{info.shiftName}}</option>
+																	</select>
+																</div>
+															</td>
+															<td  class="fixed "scope="col" >
+																<div class="form-group has-error">
+																<select class="border-dropdown text-box-for-ICU" ng-model="output.outputTypeId" ng-disabled="startFlag"  >
+												                          <option ng-selected="true"></option>
+													                 <option ng-repeat="info in listOfOutputFluid"  ng-value={{info.outputTypeId}} value={{info.outputTypeId}}>  {{info.outputTypeDesc}}</option>
+												                 </select>
+																</div>
+															</td>
+															<td class="width2">
+                                                            <input type="text" autocomplete="off" numbers-only name="description" ng-model="output.outputQuantity" id="" class="text-input floating-label backgroundTransparent" ng-change="calculateTotalOutput(output.outputQuantity,'{{output.outputQuantity}}',$index)" ng-disabled="startFlag"  > 
+                                                           </td>
+															<td class="width1 text-center">
+																<a class="text-center">
+																	<input type="button"
+																		   value="+"
+																		   class="btn btn-info add-dynamic-row"
+																		   ng-click="addOutputList($index)" style="height: 30px;width: 32px;">
+																	<input ng-if="$index!=0"
+																		   type="button" name="" id="delrow" value="-" style="height: 30px;width: 32px;"
+																		   id="cancelBtn" ng-if="$index!=0" ng-click="remove($index);calculateTotalOutputRemove(output.outputQuantity)" class="btn btn-info">
+																</a></td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+											
+									    </tr>
+									    <tr>
+											<td colspan="4" class="width2">Shift Total</td>
+											<td class="width2">{{totalOutPutQuantity}}&nbsp;&nbsp;ml</td>
+											<td class="width2"></td>
+											
+									    </tr>
+									   <!--   <tr>
+									      	<td rowspan="2" class="width2">Evening</td>
+											<td class="width2"></td>
+											<td class="width2"></td>
+											<td  class="fixed "scope="col" >
+												<div class="form-group has-error">
+												<select class="border-dropdown">
+													  <option value=""  > - </option>
+													     <option>-</option>
+												</select> 
+												</div>
+											</td>
+											<td class="width2"></td>
+											<td class="width1 text-center"><a class="text-center"><i class="fa fa-plus-circle"></i></a></td>
+											
+									    </tr>
+									    <tr>
+											<td colspan="3" class="width2">Shift Total</td>
+											<td class="width2"></td>
+											<td class="width2"></td>
+									    </tr> -->
+									  <!--    <tr>
+									     	<td rowspan="2" class="width2">Night</td>
+											<td class="width2"></td>
+											<td class="width2"></td>
+											<td  class="fixed "scope="col" >
+												<div class="form-group has-error">
+												<select class="border-dropdown">
+													  <option value=""  > - </option>
+													     <option>-</option>
+												</select> 
+												</div>
+											</td>
+											<td class="width2"></td>
+											<td class="width1 text-center"><a class="text-center" value="+"> <i class="fa fa-plus-circle"></i></a></td>
+									    </tr>
+									   <tr>
+											<td colspan="3" class="width2">Shift Total</td>
+											<td class="width2"></td>
+											<td class="width2"></td>
+											
+											
+									    </tr> -->
+									   <!--   <tr>
+											<td colspan="4" class="width2">24 Hours Total Output</td>
+											<td class="width2">-</td>
+											<td class="width2"></td>
+											
+									    </tr> -->
+									</tbody>
+								</table>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+	      </div>
+	   <!--     <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label">
+								<option>Hourly</option>
+								<option>Shift</option>
+								<option>24 Hours</option>
+							</select> <label for="code">Balance</label>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			<div class="row">
+			</div>
+	<div class=" row serachedPatientList padding-bottom10 divOtherRegistrationType padding-left-right-set4 table-container padding-top4">
+							<div class="table-container">
+								<div class="table-container-header padding-top5">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<thead>
+											<tr>
+												<th class="width2">Date</th>
+<!-- 												<th class="width2">Start Intake Time</th> -->
+												<th class="width2"> Shifts</th>
+												<th class="width2"> Time</th>
+												<th class="width2" title="Intake Fluid (Type)">Intake Fluid (Type)</th>
+												<th class="width2" title="Intake Fluid (Quantity)">Intake Fluid (Quantity)</th>
+												<th class="width2" title="Total (Intake">Total (Intake)</th>
+<!-- 												<th class="width2">Start Output Date</th> -->
+<!-- 												<th class="width2">Start Output Time</th> -->
+												<!-- <th class="width2">Output Shift</th> -->
+								                <th class="width2" title="Fluid Output(ml) Fluid (Type)">Fluid Output(ml) Fluid (Type)</th>
+												<th class="width2" title="Fluid Output(ml) Fluid (Quantity)">Fluid Output(ml) Fluid (Quantity)</th>
+												<th class="width2" title="Output (Total)">Output (Total)</th>
+												<th class="width2" title="Cumulative (Balance)">Cumulative (Balance)</th>
+<!-- 												<th class="width2">Cumulative Balance</th> -->
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll320" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr ng-repeat="info in getListIntakOutputChartByPatientId">
+												<td class="width2">{{info.date}}</td>
+												<td class="width2">{{info.shift}}</td>
+												<td class="width2">{{info.time}}</td>
+												<td class="width2">
+												<div> {{info.intakeTypeFluidDesc != null ? info.intakeTypeFluidDesc : info.itemName}}<!-- 												<div ng-if="info.intakeTypeFluidDesc == null">-</div> -->
+												</td>
+												<td class="width2">
+												<div ng-if="info.startIntakeQuantity != null">{{info.startIntakeQuantity}} </div>
+												<div ng-if="info.startIntakeQuantity == null">-</div>
+												</td>
+												<td class="width2">
+												<div ng-if="info.totalIntake != null"><b>{{info.totalIntake}}</b></div>
+												<div ng-if="info.totalIntake == null">-</div>
+												</td>
+<!-- 												<td class="width2">{{info.startOutputDate}}</td> -->
+<!-- 												<td class="width2">{{info.startOutputTime}}</td> -->
+												<!-- <td class="width2">{{info.outputShiftName}}</td> -->
+												<td class="width2">
+												<div ng-if="info.outputTypeDesc != null">{{info.outputTypeDesc}}</div>
+												<div ng-if="info.outputTypeDesc == null">-</div>
+												</td>
+												<td class="width2">
+												<div ng-if="info.startOutputQuantity != null">{{info.startOutputQuantity}}</div>
+												<div ng-if="info.startOutputQuantity == null">-</div>
+												</td>
+												<td class="width2">
+												<div ng-if="info.totalOutput != null"><b>{{info.totalOutput}}</b></div>
+												<div ng-if="info.totalOutput == null">-</div>
+												</td>
+												<td class="width2"><b>{{info.sum}}</b></td>
+<!-- 												<td class="width2">{{CumulativeBalance}}</td> -->
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+	               <div class="row padding-top10">
+				  <div class="col-lg-11 col-md-11 col-sm-10"></div>
+					 <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					 	<div class=" ">
+							<input type="button"   ng-disabled="stopAndSaveDisabled" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="save()" value="Save">
+						</div>
+				</div>
+				 <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					 	<div class=" ">
+							<input type="button"   ng-disabled="stopAndSaveDisabled" class="btn btn-primary btn-save-box-shadow" title="Print" ng-click="printIntakeOutputChart()" value="Print">
+						</div>
+				</div>
+		</div>
+</div>	
+</div>	  
+
+
+
+<!-- CONFIRM POPUP FOR START-->
+<div id="StartIO" class="modal fade ng-scope in common-small-popup"
+	role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal"
+						ng-click="cancel();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Do you want to start the I/O chart?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"
+					ng-click="start()">Yes</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">No</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- CONFIRM POPUP END -->
+
+<!-- CONFIRM POPUP FOR STOP-->
+<div id="StopIO" class="modal fade ng-scope in common-small-popup"
+	role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal"
+						ng-click="cancel();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Do you want to stop the I/O chart?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"
+					ng-click="stop()">Yes</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">No</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- CONFIRM POPUP END -->
+<script src="resources/assets/js/common/page-height.js"></script>
+<modal visible="showModal"></modal> 
+<script>
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("Intake Output Charts");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="inputOutputCharts"]').parents("li").addClass("active");
+});
+
+
+</script>

@@ -1,0 +1,3369 @@
+<!-- /********************************************************************************************************************************************
+Inventory - store - (Add new item  PO Creation) main page
+Created by - Pranita Patil
+Created Date - 28 -Oct-2017 
+/********************************************************************************************************************************************/ -->
+<!-- Page Content start-->
+
+<head>
+	<style type="text/css">
+		.tableError {
+			border: 2px solid red !important;
+		}
+
+		.tableError select.w-100.ng-pristine.ng-empty, .tableError input.w-100.ng-valid.ng-empty,
+			.borderRed {
+			border: 2px solid #ff0000;
+		}
+
+		.borderBottom {
+			border-bottom: 2px solid #ff0000;
+		}
+
+		.bgRed {
+			color: red !important;
+		}
+
+		.text-input[disabled] {
+			cursor: not-allowed !important;
+		}
+	</style>
+</head>
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row margin-top10">
+				<div class="col-lg-3 col-md-2 col-sm-2 padding-left-right-set4 padding-top10"
+					>
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select name="fromStore" id="fromStore"
+									class="text-input floating-label dirty"
+									ng-model="vm.model.fromStore" ng-disabled="!!vm.model.poId"
+									data-ng-options="fromStore.store for fromStore in vm.model.fromStores">
+								</select> <label for="code">Requesting Store</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-2 col-sm-2 padding-left-right-set4 padding-top10"
+					>
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10">
+							<select ng-model="vm.model.store"
+								data-ng-options="store.store for store in vm.model.stores"
+								ng-focus="vm.model.SetOldValueStore(vm.model.store)"
+								ng-change="vm.model.isValidStore = false;vm.model.ChangeFromStore(vm.model.store)"
+								ng-class="{borderBottom: vm.model.isValidStore}"
+								ng-disabled="!!vm.model.poId" class="text-input floating-label"></select>
+							<label for="store" class="LISDynamicLabel">Delivery Store</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10"
+					>
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<input type="checkbox" class="switchInput" ng-model="isShop" ng-change="vm.model.isShop1()">
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<input type="text" autocomplete="off" ng-model="vm.model.vendorName"
+								class="text-input floating-label"
+								uib-typeahead="vendorNames.detail for vendorNames in vm.model.SearchVendorNames($viewValue)"
+								typeahead-on-select="vm.model.AddVendorName($item); vm.model.search = '';"
+								ng-class="{borderBottom: vm.model.isVendorValid}"
+								ng-change="vm.model.isVendorValid = false"> <label
+								for="vendorName">Vendor</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-2 col-sm-2 padding-left-right-set4 padding-top10"
+					>
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-eercast" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<select ng-model="vm.model.poType"
+								ng-focus="vm.model.SetOldValueAssetType(vm.model.poType)"
+								ng-change="vm.model.isValidPOType = false;vm.model.ChangeFromAssetType(vm.model.poType)"
+								ng-class="{borderBottom: vm.model.isValidPOType}"
+								data-ng-options="type.type for type in vm.model.poTypes"
+								ng-disabled="!!vm.model.poId" class="text-input floating-label"></select>
+							<label for="poType">PO Type</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set text-center">
+					<div class="row input-container customRadioBtn padding-top8">
+						<input type="radio" id="ApprovedQRRadioBtn"
+							class="addNewItemRadioBtnClass" name="ApprovedQRRadioBtn"
+							ng-disabled="!!vm.model.poId" ng-value="14"
+							ng-model="vm.model.prRequestTypeId"
+							ng-change="vm.model.isPRTypeValid = false;vm.model.ConfirmValidation(vm.model.prRequestTypeId,{{vm.model.prRequestTypeId}})">
+						<label for="ApprovedQRRadioBtn">Get Approved VQR</label> <input
+							type="radio" ng-model="vm.model.prRequestTypeId"
+							ng-disabled="!!vm.model.poId"
+							ng-change="vm.model.isPRTypeValid=false;vm.model.ConfirmValidation(vm.model.prRequestTypeId,{{vm.model.prRequestTypeId}})"
+							name="directPO" id="directPORadioBtn" ng-value="1"
+							class="directPO"> <label for="directPORadioBtn">Direct
+							PO</label> <input type="radio" ng-model="vm.model.prRequestTypeId"
+							ng-change="vm.model.isPRTypeValid = false;vm.model.ConfirmValidation(vm.model.prRequestTypeId,{{vm.model.prRequestTypeId}})"
+							ng-disabled="!!vm.model.poId" id="againstRRadioBtn"
+							class="againstPR" ng-value="3" name="againstPR"> <label
+							for="againstRRadioBtn">Against PR</label>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto pull-right">
+					<div class="padding-top10 margin-top12 common-save-button">
+						<input type="button" id="updateBtn" value="Add PR" id="addBtn" ng-if="vm.model.PRType == 3"
+							ng-click="vm.model.ChangePRType(vm.model.PRType)"
+							class="btn btn-primary btn-save-box-shadow"> <input id="updateBtn"
+							type="button" value="Add Item"
+							ng-if="vm.model.PRType == 1 || vm.model.PRType == undefined"
+							ng-click="vm.model.ChangePRType(vm.model.PRType)"
+							class="btn btn-primary btn-save-box-shadow"> <input
+							type="button" ng-if="vm.model.PRType == 14" id="addBtn" value="Add QR"
+							class="btn btn-primary btn-save-box-shadow"
+							ng-click="vm.model.ChangePRType(vm.model.PRType)" />
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto pull-right">
+					<div class="padding-top10 margin-top12 common-save-button">
+						<input type="button" value="Re-Order Item" id="updateBtn"
+							ng-if="vm.model.PRType == 1 || vm.model.PRType == undefined"
+							ng-click="vm.model.ChangePoReOrderPRType(vm.model.PRType)"
+							class="btn btn-primary btn-save-box-shadow">
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto pull-right">
+					<div class="padding-top10 margin-top12 common-save-button">
+					   <a class="btn btn-primary btn-save-box-shadow ng-scope btn-sm padding-left-right-10"
+						 title="Upload" id="submitbutton" ng-click="vm.model.uploadDoccument(vm.model.PRType)"
+						 data-toggle="modal"> <i class="fa fa-upload"
+						 style="font-size: 16px !important;" aria-hidden="true"></i>
+					   </a>
+				   </div>
+				</div>
+			</div>
+			<!-- ***************	table row start ************** -->
+			<div class="row padding-top10 padding-left-right-set4"
+				ng-if="vm.model.poType.id == 1 || !vm.model.poType.id"
+				id="consumbleRowId">
+				<div id="fixed-thead-tfoot-scroll"
+					class="fixed-thead-tfoot-scroll fix-height-scroll400">
+					<table id="main-table" class="main-table width300">
+						<thead>
+							<tr ng-if="vm.model.PRType == 14">
+								<th colspan="1" class="fixed" scope="col">Item Details</th>
+								<th colspan="7" class="font-weight700" scope="col">QR Qty
+									Details</th>
+								<th colspan="3" class="font-weight700" scope="col">Bonus
+									Qty Details</th>
+								<th colspan="5" class="font-weight700" scope="col">PO
+									Amount Details</th>
+								<th colspan="4" class="font-weight700" scope="col">PO
+									Amount Total Details</th>
+								<th colspan="6" class="font-weight700" scope="col">Other
+									Details</th>
+							</tr>
+							<tr class="fixed"
+								ng-if="vm.model.PRType == 1 || vm.model.PRType == 3">
+								<th colspan="1" class="fixed" scope="col">Item Details</th>
+								<th colspan="1" class="font-weight700" scope="col"
+									ng-if="vm.model.PRType == 3">PR Qty Details</th>
+								<th colspan="5" class="font-weight700" scope="col">PO Qty
+									Details</th>
+								<th colspan="3" class="font-weight700" scope="col">Bonus
+									Qty Details</th>
+								<th colspan="5" class="font-weight700" scope="col">PO
+									Amount Details</th>
+								<th colspan="4" class="font-weight700" scope="col">PO
+									Amount Total Details</th>
+								<th colspan="7" ng-if="vm.model.PRType == 3"
+									class="font-weight700" scope="col">Other Details</th>
+								<th colspan="5" ng-if="vm.model.PRType == 1"
+									class="font-weight700" scope="col">Other Details</th>
+							</tr>
+							<tr>
+								<th class="width4 fixed" scope="col" style="padding-top: 0;padding-bottom: 0 !important;margin-bottom: 0px;">
+									<div class="col-md-12 col-lg-12">
+										<div class="col-md-4 col-lg-4" style="border-right: 1.5px solid white;height: 47px;padding: 0;padding-top: 4px;">
+											Code
+										</div>
+										<div class="col-md-8 col-lg-8" style="padding-top: 4px;">
+											Name
+										</div>
+									</div>
+								</th>
+								<th class="width1" scope="col" ng-if="vm.model.PRType == 14">QR
+									No.</th>
+								<th class="width1" scope="col" ng-if="vm.model.PRType == 14">QR
+									Date</th>
+								<th class="width1" ng-if="vm.model.PRType == 3">PR Qty</th>
+								<th class="width2">UOM</th>
+								<th class="width2">UOM Unit</th>
+								<th class="width2">Pending Qty</th>
+								<th class="width2">Qty</th>
+								<th class="width2">Available Stock</th>
+								<th class="width1">Qty</th>
+								<th class="width2">UOM</th>
+								<th class="width2">UOM Unit</th>
+								<th class="width2">COP {{vm.model.Currency}}</th>
+								<th class="width2">MRP {{vm.model.Currency}}</th>
+								<th class="width1 vertical-middle">Last Purchase Detail</th>
+								<th class="width1">Tax Code</th>
+								<th class="width1">Tax %</th>
+								<th class="width1">Disc %</th>
+								<th class="width3">Amount {{vm.model.Currency}}</th>
+								<th class="width2">Disc Amount {{vm.model.Currency}}</th>
+								<th class="width2">Tax Amount {{vm.model.Currency}}</th>
+								<th class="width3">Net Amount {{vm.model.Currency}}</th>
+								<th class="width1 vertical-middle" ng-if="vm.model.PRType == 3">PR
+									Details</th>
+								<th class="width3 vertical-middle ">Manufacture</th>
+								<th class="width4 vertical-middle">Specifications</th>
+								<th class="width4 vertical-middle">Remark</th>
+								<th class="width1 vertical-middle text-center">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.model.itemDetails">
+								<td class="width4 fixed" scope="col" style="padding-top: 0;padding-bottom: 0 !important;margin-bottom: 0px;">
+									<div class="col-md-12 col-lg-12">
+										<div class="col-md-4 col-lg-4" style="border-right: 1.5px solid #ddd;height: 47px;padding: 0;padding-top: 4px;">
+											{{item.itemCode}}
+										</div>
+										<div class="col-md-8 col-lg-8" style="padding-top: 4px;">
+											{{item.itemName}}
+										</div>
+									</div>
+								</td>
+								<td ng-if="vm.model.PRType == 14">
+									{{item.prNumbersList[0].qrNo}}
+								</td>
+								<td ng-if="vm.model.PRType == 14">
+									{{item.prNumbersList[0].qrDate | date : "dd-MM-yyyy"}}
+								</td>
+								<td class="vertical-middle" ng-if="vm.model.PRType == 3">
+									{{item.totalPrQty}}
+								</td>
+								<td>
+									<select ng-model="item.selectedUom" ng-options="uom.uomDetails for uom in item.uom"
+									ng-change="item.valid_p_uom=false;vm.model.CalculateStock(item, item.uom, item.selectedUom,'{{item.selectedUom}}');item.isPOQuantityValid = false;"
+									ng-class="{borderRed: item.valid_p_uom}" class="w-100"></select>
+								</td>
+								<td class="vertical-middle">
+									<!-- <span>{{item.selectedUom.uomUnit}}</span> <br/> -->
+									<span ng-if="item.receivedQtyCon!=''">({{item.receivedQtyCon}}) = </span> <br/>
+									<span> {{item.receivedQtyCalculation}} {{item.uomUnitData}}</span>
+									<span class="pull-right text-right"> 
+										<a data-target="#selectUOM_modal"
+										ng-click="vm.model.uomInfoOnClick(item, $index)"
+										data-toggle="modal"> <i class="fa fa-info-circle"></i>
+										</a>
+									</span>
+								</td>
+								<td class="width2" title="{{item.newQty}} / {{item.newMaxStoreQuantity}}">
+									{{item.newQty}} / {{item.newMaxStoreQuantity}}
+								</td>
+								<td class="vertical-middle">
+									<div class="col-md-10 padding-left-right-set4">
+										{{item.poApprovedQuantity}}
+									</div>
+									<div class="col-md-2 text-left vertical-middle">
+										<a data-target="#AddQtyModal_ETOitemConfig"
+											data-toggle="modal" title="Add Qty"
+											ng-class="{disabled: !item.selectedUom.uomTypeId}"
+											ng-click="vm.model.fillPOQuantity(item)"> <i
+											class="fa fa-plus-circle"
+											ng-class="{bgRed: item.isPOQuantityValid}"></i>
+										</a>
+									</div>
+								</td>
+								<td>
+									{{item.stockAvailable}}
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.bonusQuantity"
+									class="select-box"
+									ng-class="{borderRed: vm.model.bonusQuantity[$index]}"
+									ng-change="vm.model.bonusQuantity[$index] = false;item.valid_b_uom=false; bonusConversionQty(item)"
+									numbers-only />
+								</td>
+								<td>
+									<select ng-model="item.bonusSelectedUom" class="w-100"
+									ng-options="uom.uomDetails for uom in item.uom"
+									ng-change="item.valid_b_uom=false; bonusConversionQty(item)"
+									data-ng-class="{borderRed: item.valid_b_uom}"></select>
+								</td>
+								<td class="vertical-middle">
+									<!-- <span>{{item.bonusSelectedUom.uomUnit}}</span> -->
+									<!-- <br/> -->
+									<span ng-if="item.receivedQtyBonusCon!=''">({{item.receivedQtyBonusCon}}) = </span> <br/>
+									<span> {{item.receivedQtyBonusCalculation}} {{item.uomUnitDataBonus}}</span>
+									<span class="pull-right text-right"> 
+										<a data-target="#bouns_selectUOM_modal"
+										ng-click="vm.model.bonusUomInfoOnClick(item, $index)"
+										data-toggle="modal"> <i class="fa fa-info-circle"></i>
+										</a>
+									</span>
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.costOfPurchase"
+									ng-change="vm.model.costOfPurchase[$index]=false;vm.model.SetDecimal('costOfPurchase', item, item.costOfPurchase);vm.model.discountCalc(item)"
+									ng-class="{borderRed: vm.model.costOfPurchase[$index]}"
+									class="select-box" allow-decimal-numbers />
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.POAmountMRP"
+									ng-class="{borderRed: vm.model.POAmountMRP[$index]}"
+									ng-change="vm.model.POAmountMRP[$index] = false"
+									class="select-box"
+									ng-blur="vm.model.SetDecimal('POAmountMRP', item, item.POAmountMRP); vm.model.ValidateConsumableAmount(item, $index)"
+									allow-decimal-numbers />
+								</td>
+								<td class="vertical-middle text-center">
+									<a ng-click="vm.model.ViewHistory(item)">
+										<i class="fa fa-info-circle" aria-hidden="true"
+										title="Last Purchase Details" data-toggle="modal"
+										data-target="#lastPurchaseDetails"></i>
+									</a>
+								</td>
+								<td>
+									<select ng-model="item.selectedTax" class="w-100"
+									ng-options="obj.taxName for obj in vm.model.taxList"
+									ng-change="vm.model.SelectTax(item.selectedTax, item);">
+									</select>
+								</td>
+								<td class="vertical-middle">
+									<input type="text" autocomplete="off"
+									ng-model="item.selectedTaxPercent"
+									ng-change="vm.model.SelectTax(item.selectedTax, item);"
+									ng-blur="vm.model.SetDecimal('taxPercentFixed', item, item.selectedTaxPercent)"
+									allow-decimal-numbers class="select-box" disabled />
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.discountPercent"
+									ng-change="vm.model.AddItemDiscount('percent', item, item.discountPercent, $index);vm.model.discountPercent[$index]=false;vm.model.discountAmount[$index]=false"
+									ng-class="{borderRed:vm.model.discountPercent[$index]}"
+									class="select-box" allow-decimal-numbers>
+								</td>
+								<td class="vertical-middle" name="poAmount">
+									{{vm.model.Currency}}
+									<!-- {{ ((item.poAmount = (item.poQuantity * item.costOfPurchase)) || 0) | number:2}} -->
+									{{item.poAmount || 0 | number:2}}
+								</td>
+								<td name="discountAmount">
+									<input type="text" autocomplete="off"
+									ng-model="item.discountAmount"
+									ng-change="vm.model.AddItemDiscount('amount', item, item.discountAmount, $index);vm.model.discountAmount[$index]=false;vm.model.discountPercent[$index]=false"
+									class="select-box"
+									ng-class="{borderRed:vm.model.discountAmount[$index]}"
+									allow-decimal-numbers>
+								</td>
+								<td name="taxAmount">{{vm.model.Currency}} 
+									<!-- {{(item.taxAmount = (((item.poAmount-item.discountAmount) *
+									(item.selectedTaxPercent/100) || 0))) | number:2}} -->
+									{{item.taxAmount || 0 | number:2}}
+								</td>
+								<td name="netAmount">{{vm.model.Currency}}
+									<!-- {{((item.netAmount = ((item.poAmount - item.discountAmount) +
+									(item.taxAmount) + (item.otherChargesAmount )) || 0)) |number:2}} -->
+									{{item.netAmount || 0 | number:2}}
+								</td>
+								<td class="vertical-middle text-center" ng-if="vm.model.PRType == 3">
+									<a>
+										<i class="fa fa-info-circle" aria-hidden="true"
+										title="Purchase Request Details" data-toggle="modal"
+										data-target="#purchaseRequestDetails"
+										ng-click="vm.model.fillPRModalList(item.prNumbersList)">
+										</i>
+									</a>
+								</td>
+								<td>
+									{{item.manufacturerName}}
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.specification"
+									maxlength="100" class="select-box" />
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.remark"
+									maxlength="100" class="select-box" />
+								</td>
+								<td class="vertical-middle text-center">
+									<a ng-click="vm.model.ConfirmRemove(item)"> 
+										<i class="fa fa-times" title="Remove"></i>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row padding-top10 padding-left-right-set4"
+				ng-if="vm.model.poType.id == 2">
+				<div id="fixed-thead-tfoot-scroll"
+					class="fixed-thead-tfoot-scroll fix-height-scroll400">
+					<table id="main-table" class="main-table width300">
+						<thead>
+							<tr class="table-th-bg ">
+								<th colspan="1" class="fixed" scope="col">Item Details</th>
+								<th colspan="1" class="font-weight700" scope="col"
+									ng-if="vm.model.PRType == 3">PR Qty Details</th>
+								<th colspan="9" class="font-weight700" scope="col">PO Qty
+									Details</th>
+								<th colspan="8" class="font-weight700" scope="col"
+									ng-if="vm.model.PRType == 3">PO Amount Details</th>
+								<th colspan="7" class="font-weight700" scope="col"
+									ng-if="vm.model.PRType == 1">PO Amount Details</th>
+								<th colspan="4" class="font-weight700" scope="col">PO
+									Amount Total Details</th>
+								<th colspan="12" class="font-weight700" scope="col">Other
+									Details</th>
+							</tr>
+							<tr>
+								<th class="width4 fixed" scope="col" style="padding-top: 0;padding-bottom: 0 !important;margin-bottom: 0px;">
+									<div class="col-md-12 col-lg-12">
+										<div class="col-md-4 col-lg-4" style="border-right: 1.5px solid white;height: 47px;padding: 0;padding-top: 4px;">
+											Asset Code
+										</div>
+										<div class="col-md-8 col-lg-8" style="padding-top: 4px;">
+											Asset Name
+										</div>
+									</div>
+								</th>
+								<th class="width1" ng-if="vm.model.PRType == 3">PR Quantity</th>
+								<th class="width1">Pending Quantity</th>
+								<th class="width2">Qty</th>
+								<th class="width2">Available Stock</th>
+								<th class="width2">Bonus Qty</th>
+								<th class="width2">COP {{vm.model.Currency}}</th>
+								<th class="width2">MRP {{vm.model.Currency}}</th>
+								<th class="width1 vertical-middle text-center">Last PO Details</th>
+								<th class="width2">Tax Code</th>
+								<th class="width2">Tax %</th>
+								<th class="width2">Discount %</th>
+								<th class="width2">Amount {{vm.model.Currency}}</th>
+								<th class="width1">Discount Amount {{vm.model.Currency}}</th>
+								<th class="width1">Tax Amount {{vm.model.Currency}}</th>
+								<th class="width3">Net Amount {{vm.model.Currency}}</th>
+								<th class="width2" ng-if="vm.model.PRType == 3">PR Details</th>
+								<th class="width2">Manufacturer</th>
+								<th class="width2">Service Provider</th>
+								<th class="width2">Warranty</th>
+								<th class="width2">Accessories</th>
+								<th class="width1">Warranty Period</th>
+								<th class="width1">Expected Support Terms</th>
+								<th class="width1">Expected Payment Terms</th>
+								<th class="width2">Expected Technical Specifications</th>
+								<th class="width3">Specifications</th>
+								<th class="width3">Remarks</th>
+								<th class="width1 vertical-middle text-center">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.model.itemDetails">
+								<td class="width4 fixed" scope="col" style="padding-top: 0;padding-bottom: 0 !important;margin-bottom: 0px;">
+									<div class="col-md-12 col-lg-12">
+										<div class="col-md-4 col-lg-4" style="border-right: 1.5px solid #ddd;height: 47px;padding: 0;padding-top: 4px;">
+											{{item.itemCode}}
+										</div>
+										<div class="col-md-8 col-lg-8" style="padding-top: 4px;">
+											{{item.itemName}}
+										</div>
+									</div>
+								</td>
+								<td class="vertical-middle" ng-if="vm.model.PRType == 3">
+									{{item.prQuantity = ((item.prNumbersList | sumByColumn:'prQuantity') || 0)}}
+								</td>
+								<td class="width2" ng-if="vm.model.prRequestTypeId == 3"
+									title="{{item.pendingQuantity}} / {{item.newMaxStoreQuantity}}">
+									{{item.pendingQuantity}} / {{item.newMaxStoreQuantity}}
+								</td>
+								<td class="width2" ng-if="vm.model.prRequestTypeId != 3"
+									title="{{item.newMaxOrderQuantity}} / {{item.newMaxStoreQuantity}}">
+									{{item.newMaxOrderQuantity}} / {{item.newMaxStoreQuantity}}
+								</td>
+								<td class="vertical-middle">
+									<div class="col-md-10 padding-left-right-set4">
+										{{item.poQuantity}}
+									</div>
+									<div class="col-md-2 text-left vertical-middle">
+										<a data-target="#AddQtyModal_ETOitemConfig"
+											data-toggle="modal" title="Add Qty"
+											ng-click="vm.model.fillPOQuantity(item)"> 
+											<i class="fa fa-plus-circle" ng-class="{bgRed: item.isPOQuantityValid}"></i>
+										</a>
+									</div>
+								</td>
+								<td>
+									{{item.stockAvailable}}
+								</td>
+								<td class="vertical-middle">
+									<input type="text" autocomplete="off"
+									ng-model="item.bonusQuantity" name="bonusQuantity"
+									class="select-box"
+									ng-class="{borderRed: vm.model.bonusQuantity[$index]}"
+									ng-change="vm.model.bonusQuantity[$index] = false" numbers-only />
+								</td>
+								<td class="vertical-middle">
+									<input type="text" autocomplete="off"
+									ng-model="item.costOfPurchase"
+									ng-change="vm.model.SetDecimal('costOfPurchase', item, item.costOfPurchase);vm.model.discountCalc(item);vm.model.costOfPurchase[$index]=false;"
+									ng-class="{borderRed: vm.model.costOfPurchase[$index]}"
+									class="select-box" allow-decimal-numbers />
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.POAmountMRP"
+									ng-class="{borderRed: vm.model.POAmountMRP[$index]}"
+									ng-change="vm.model.POAmountMRP[$index] = false"
+									class="select-box"
+									ng-blur="vm.model.SetDecimal('POAmountMRP', item, item.POAmountMRP); vm.model.ValidateConsumableAmount(item, $index)"
+									allow-decimal-numbers />
+								</td>
+								<td class="vertical-middle text-center">
+									<a ng-click="vm.model.ViewHistory(item)">
+										<i class="fa fa-info-circle" aria-hidden="true"
+										title="Last Purchase Details" data-toggle="modal"
+										data-target="#lastPurchaseDetails"></i>
+									</a>
+								</td>
+								<td>
+									<select ng-model="item.selectedTax" class="w-100"
+									ng-options="obj.taxName for obj in vm.model.taxList"
+									ng-class="{borderRed: vm.model.taxCodeValid[$index]}"
+									ng-change="vm.model.SelectTax(item.selectedTax, item);vm.model.taxCodeValid[$index] = false;"></select>
+									</select>
+								</td>
+								<td class="vertical-middle">
+									<input type="text" autocomplete="off"
+									ng-model="item.selectedTaxPercent"
+									ng-class="{borderRed: vm.model.taxPercent[$index]}"
+									ng-change="vm.model.taxPercent[$index] = false"
+									ng-blur="vm.model.SetDecimal('taxPercentFixed', item, item.selectedTaxPercent)"
+									allow-decimal-numbers class="select-box" />
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.discountPercent"
+									ng-change="vm.model.AddItemDiscount('percent', item, item.discountPercent, $index);vm.model.discountPercent[$index]=false;vm.model.discountAmount[$index]=false"
+									ng-class="{borderRed:vm.model.discountPercent[$index]}"
+									allow-decimal-numbers class="select-box">
+								</td>
+								<td>
+									{{vm.model.Currency}} 
+									<!-- {{ ((item.poAmount = (item.poQuantity * item.costOfPurchase)) || 0) | number:2}} -->
+									{{item.poAmount || 0 | number:2}}
+								</td>
+								<td name="discountAmount">
+									<input type="text" autocomplete="off"
+									ng-model="item.discountAmount"
+									ng-change="vm.model.AddItemDiscount('amount', item, item.discountAmount, $index);vm.model.discountAmount[$index]=false;vm.model.discountPercent[$index]=false"
+									class="select-box" ng-class="{borderRed:vm.model.discountAmount[$index]}"
+									allow-decimal-numbers>
+								</td>
+								<td name="taxAmount">
+									{{vm.model.Currency}} 
+									<!-- {{(item.taxAmount = (((item.poAmount-item.discountAmount) * (item.selectedTaxPercent/100) || 0))) | number:2}} -->
+									{{item.taxAmount || 0 | number:2}}
+								</td>
+								<td name="netAmount">{{vm.model.Currency}}
+									<!-- {{((item.netAmount = ((item.poAmount - item.discountAmount) +
+									(item.taxAmount) + (item.otherChargesAmount )) || 0)) | number:2}} -->
+									{{item.netAmount || 0 | number:2}}
+								</td>
+								<td class="vertical-middle text-center" ng-if="vm.model.PRType == 3">
+									<a>
+										<i class="fa fa-info-circle" aria-hidden="true"
+										title="Purchase Request Details" data-toggle="modal"
+										data-target="#purchaseRequestDetails"
+										ng-click="vm.model.fillPRModalList(item.prNumbersList)"></i>
+									</a>
+								</td>
+								<td>
+									{{item.manufacturerName}}
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.serviceProvider"
+									uib-typeahead="serviceProviders.detail for serviceProviders in vm.model.SearchProviderNames($viewValue)"
+									typeahead-on-select="vm.model.AddProviderName($item, item); vm.model.search = '';"
+									ng-class="{borderRed: vm.model.serviceProviderValid[$index]}"
+									ng-change="vm.model.serviceProviderValid[$index] = false"
+									class="select-box">
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.warrantyDate"
+									class="text-center select-box"
+									datepicker-options="vm.model.warrantyDateOptions"
+									uib-datepicker-popup="MMM-yyyy" model-view-value="true"
+									is-open="vm.model.dateOpen[$index]"
+									datepicker-options="vm.model.dateOptions"
+									show-button-bar="false"
+									ng-click="vm.model.OpenWarrantyDate($index)"
+									ng-change="item.warrantyDateValid = false"
+									ng-class="{borderRed: item.warrantyDateValid}" readonly="">
+								</td>
+								<td class="text-center">
+									<a ng-click="vm.model.OpenPopup('Open', 'addNewItemWasteStore', 'Accessory');vm.model.addItemFlag = false;vm.model.ViewItems(item)"
+									style="padding-right: 20px">
+										Add
+									</a> 
+									<a ng-click="vm.model.OpenPopup('Open', 'viewAddedItems');vm.model.ViewAddedItems(item)">
+										View
+									</a>
+								</td>
+								<td class="text-center">
+									<a ng-click="vm.model.OpenPopup('Open', 'warrantyPeriodModal');vm.model.ViewTerms('warrantyPeriodModal', item)">
+										<i class="fa fa-info-circle" ng-class="{bgRed: item.isValidWarrantyTerm}"></i>
+									</a>
+								</td>
+								<td class="text-center">
+									<a ng-click="vm.model.OpenPopup('Open', 'expectedSuportTermsModal');vm.model.ViewTerms('expectedSuportTermsModal', item)">
+										<i class="fa fa-info-circle" ng-class="{bgRed: item.isValidSupportTerm}"></i>
+									</a>
+								</td>
+								<td class="text-center">
+									<a ng-click="vm.model.OpenPopup('Open', 'expectedPaymentTermsModal');vm.model.ViewTerms('expectedPaymentTermsModal', item)">
+										<i class="fa fa-info-circle" ng-class="{bgRed: item.isValidPaymentTerm}"></i>
+									</a>
+								</td>
+								<td class="text-center">
+									<a ng-click="vm.model.OpenPopup('Open', 'expectedTechSpecificationModal');vm.model.ViewTerms('expectedTechSpecificationModal', item)">
+										<i class="fa fa-info-circle" ng-class="{bgRed: item.isValidTechSpec}"></i>
+									</a>
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.specification"
+									maxlength="100" class="select-box" />
+								</td>
+								<td>
+									<input type="text" autocomplete="off" ng-model="item.remark"
+									maxlength="100" class="select-box" />
+								</td>
+								<td class="vertical-middle text-center">
+									<a ng-click="vm.model.ConfirmRemove(item)"> 
+										<i class="fa fa-times" title="Remove"></i>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- *************** table row end  *************** -->
+		</fieldset>
+		<!-- *************** page footer row end  *************** -->
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			<fieldset>
+				<div class="row padding-left-right-set4">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<table class=" table table-bordered">
+							<tbody>
+								<tr>
+									<th class="width6" rowspan="2">
+										<label>Payment Terms</label>
+									</th>
+									<td class="width12" rowspan="2">
+										<textarea style="height:55px !important" rows="2" ng-model="vm.model.paymentMode"></textarea>
+									</td>
+									<th class="width6">
+										<label>Total Amount</label>
+									</th>
+									<td class="width8">{{vm.model.Currency}}
+										<!-- {{(vm.model.totalAmount = (vm.model.itemDetails | sumByColumn:
+										'poAmount') || 0) | number:2}} -->
+										{{vm.model.totalAmount || 0 | number:2}}
+									</td>
+									<th class="width7">
+										<label>Total Discount</label>
+									</th>
+									<td class="width8">{{vm.model.Currency}}
+										<!-- {{(vm.model.totalDiscount = (vm.model.itemDetails |
+										sumByColumn: 'discountAmount') || 0) | number:2}} -->
+										{{vm.model.totalDiscount || 0 | number:2}}
+									</td>
+									<th class="width8">
+										<label>Total Tax Amount</label>
+									</th>
+									<td class="width8">{{vm.model.Currency}}
+										<!-- {{(vm.model.totalTax = (vm.model.itemDetails | sumByColumn:
+										'taxAmount') || 0) | number:2}} -->
+										{{vm.model.totalTax || 0 | number:2}}
+									</td>
+								</tr>
+								<tr>
+									<th class="width10">
+										<label>Total Other Charges</label>
+									</th>
+									<td class="width8">
+										<div class="col-md-8">
+											{{vm.model.Currency}} {{(vm.model.otherChargesAmount || 0) | number:2}}
+										</div>
+										<div class="col-md-2 text-left vertical-middle padding-top5">
+											<a ng-click="vm.model.OpenPopup('Open', 'otherCharges_Modal');vm.model.fillOtherChargesList(vm.model.itemDetails)"
+												title="Other Charges"> 
+												<i class="fa fa-plus-circle"></i>
+											</a>
+										</div>
+									</td>
+									<th class="width7">
+										<label>Round Off</label>
+									</th>
+									<td class="width8">
+										<input type="text" autocomplete="off" ng-model="roundOff" ng-blur="roundoffCalculation()" 
+										class="select-box" style="font-weight: normal;">
+									</td>
+									<th class="width8">
+										<label>Net Amount</label>
+									</th>
+									<td>
+										{{vm.model.Currency}}
+										<div hidden>
+											{{(vm.model.totalNetAmount = ((vm.model.itemDetails | sumByColumn: 'netAmount') -
+											(vm.model.totalCreditNoteAmount)) || 0) | number:2}}
+										</div>
+										<!-- <div ng-if="roundOff > 0.50"> -->
+											<!-- {{(vm.model.totalNetAmount = ((vm.model.itemDetails | sumByColumn: 'netAmount') -
+											(vm.model.totalCreditNoteAmount)) || 0) | number:2}} -->
+											<!-- {{vm.model.totalNetAmount || 0 | number:2}} -->
+										<!-- </div> -->
+										<!-- <div ng-if="roundOff <= 0.50"> -->
+										<div>
+											{{vm.model.totalNetAmount1 || 0 | number:2}}
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th colspan="3">
+										<div class="row">
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top10">
+												<label class="margin0">Discount</label>
+											</div>
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10 padding-top10 text-width-auto">
+												<label class="radio-inline"> 
+													<input type="radio" ng-model="vm.model.discountType"
+													ng-change="vm.model.discountTypeFlag = true" value="1"
+													name="optradio">
+													Percentage
+												</label>
+											</div>
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10 padding-top10 text-width-auto">
+												<label class="radio-inline"> 
+													<input type="radio" ng-model="vm.model.discountType"
+													ng-change="vm.model.discountTypeFlag = true" value="2"
+													name="optradio">
+													Amount
+												</label>
+											</div>
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-top5">
+												<input type="text" autocomplete="off" ng-model="vm.model.finalDiscount"
+													ng-disabled="!vm.model.discountType" class="select-box"
+													style="font-weight: normal;"
+													ng-blur="vm.model.SetDecimalDiscount()"
+													ng-change="vm.model.isAppliedDiscountValid = true;"
+													allow-decimal-numbers>
+											</div>
+											<div class="col-lg-1 col-md-2 col-sm-2 padding-top4"
+												style="margin-left: 12px;">
+												<input type="button"
+													ng-click="vm.model.ApplyDiscount(vm.model.itemDetails); vm.model.ApplyDiscountValidation();vm.model.isDiscountAppliedValid = false;vm.model.isAppliedDiscountValid = false;vm.model.isDiscountApplied = true"
+													value="Apply" class="btn btn-primary btn-save-box-shadow"
+													ng-class="{disabled: !vm.model.itemDetails.length}">
+											</div>
+										</div>
+									</th>
+									<th class="width8 padding-top10">
+										<label>Terms and Conditions</label>
+									</th>
+									<td class="width8" colspan="4">
+										<textarea style="height:55px !important" ng-model="vm.model.purchaseOrderRemark" rows="2" maxlength=""></textarea>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</fieldset>
+			<div class="row padding-right20 margin-top4">
+				<div class="col-lg-10 col-md-10 col-sm-8 text-right"></div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+					<a href="" ng-click="vm.model.SavePurchaseOrder();" data-ng-class="{disabled:saveBtnDisabled==true}"> 
+						<input type="button" value="Save"
+						class="btn btn-primary btn-save-box-shadow" data-ng-class="{disabled:saveBtnDisabled==true}">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+					<a href="" ng-click="vm.model.NavigateToPO()"> <input
+						type="button" value="Back"
+						class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</div>
+		<!-- *************** page footer row end  *************** -->
+	</div>
+</div>
+<!-- *********** Add Qty Modal Start *********** -->
+<div id="AddQtyModal_ETOitemConfig"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Staged Qty
+					<button type="button" class="close" data-dismiss="modal"
+						ng-click="vm.model.ResetPOQuantity();">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row table-container">
+					<div
+						class="col-lg-12 col-md-12 table-container-header padding-top10">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="width2">Sr No.</th>
+									<th class="width8">Date</th>
+									<th class="width5">Qty</th>
+									<th class="width3">Action</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body"
+						style="height: 230px; overflow-y: scroll;">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat="quantity in vm.model.stageQuantityList">
+									<td class="width2 text-center">{{$index + 1}}</td>
+									<td class="width8"><input type="text" autocomplete="off"
+										ng-model="quantity.stagedDate" name="qtyDate"
+										class="select-box" uib-datepicker-popup="dd/MM/yyyy"
+										placeholder="DD/MM/YYYY" model-view-value="true"
+										is-open="quantity.stagedQtyDate"
+										datepicker-options="vm.model.stagedQtyDateOptions"
+										show-button-bar="false"
+										ng-click="vm.model.OpenStagedQtyDate(quantity)" readonly="">
+									</td>
+									<td class="width5"><input type="text" autocomplete="off" class="select-box"
+										ng-model="quantity.quantity"
+										ng-blur="vm.model.ValidateStagedQuantity(quantity);"
+										numbers-only></td>
+									<td class="width3" style="width: 2.8% !important"><input
+										type="button" value="+" ng-click="vm.model.addPOQuantity()"
+										class="btn btn-primary btn-save-box-shadow width35"> <input
+										type="button" value="-"
+										ng-click="vm.model.lessPOQuantity(quantity)"
+										ng-if="$index !== 0"
+										class="btn btn-primary btn-save-box-shadow width35"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="table-container-footer">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tfoot>
+								<tr>
+									<th style="width: 11% !important"></th>
+									<th class="text-right" style="width: 46% !important">Total
+										Qty</th>
+									<th>{{vm.model.poQuantity = (vm.model.stageQuantityList |
+										sumByColumn: 'quantity') || 0}}</th>
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-10"></div>
+					<div class="col-md-2 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Save"
+								class="btn btn-primary btn-save-box-shadow"
+								ng-click="vm.model.sumPOQuantity(vm.model.itemDetails[vm.model.selectedIndex])">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="againstPRmodal"
+	class="modal fade ng-scope in common-large-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Against PR
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll">
+				<div class="row margin-top10">
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" class="text-input floating-label"
+									uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+									ng-model="vm.model.fromDate" model-view-value="true"
+									is-open="vm.model.fromDateOpened"
+									datepicker-options="vm.model.fromDateOptions"
+									show-button-bar="false" ng-click="vm.model.OpenFromDate()"
+									readonly=""> <label>From Date</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input ng-model="vm.model.toDate"
+									uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+									model-view-value="true" is-open="vm.model.toDateOpened"
+									datepicker-options="vm.model.toDateOptions"
+									show-button-bar="false" ng-click="vm.model.OpenToDate()"
+									type="text" autocomplete="off" class="text-input floating-label" readonly="">
+								<label>To Date</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-building-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" ng-model="vm.model.prNumber"
+									class="text-input floating-label" /> <label>PR No.</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" ng-model="vm.model.searchIndent"
+									class="text-input floating-label" /> <label>Search</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style">
+						<div class="common-save-button">
+							<a href="" ng-click="vm.model.GetIndentList()"
+								class="btn btn-primary btn-save-box-shadow" style="width: auto;"><i
+								class="fa fa-search" aria-hidden="true"></i></a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th colspan="7" class="font-weight700">Item Details</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="cursor-pointer"
+									ng-repeat-start="item in vm.model.indents | filter: vm.model.searchIndent"
+									ng-click="vm.model.Expand(item)">
+									<td class="text-center">
+										<input type="checkbox" ng-model="item.isSelectedIndent"
+										ng-click="vm.model.Expand(item);vm.model.SelectAllIndentItems(item, item.items); $event.stopPropagation();" />
+									</td>
+									<td>
+										<div class="col-md-4 font-weight700">PR Date:</div>
+										<div class="col-md-4 text-left">{{item.prDate |
+											date:'dd/MM/yyyy'}}</div>
+										<div class="col-md-4 font-weight700 text-right">PR No.:
+										</div>
+									</td>
+									<td>
+										<div class="col-md-3 text-left">{{item.prNo}}</div>
+										<div class="col-md-4 font-weight700 text-right">Store
+											Name:</div>
+										<div class="col-md-4 padding-left-right-10">
+											{{item.storeName}}</div>
+									</td>
+									<td colspan="2">
+										<div class="col-md-4 font-weight700 text-left"
+											title="Requested By">Requested By:</div>
+										<div class="col-md-4 text-left">{{item.requestBy}}</div>
+										<div class="col-md-4 font-weight700 text-right">
+											Authorized By:</div>
+									</td>
+									<td>
+										<div class="col-md-5 text-left">{{item.authorisedBy}}</div>
+										<div class="col-md-3 font-weight700 text-right">
+											<!--  Date: -->
+										</div>
+										<div class="col-md-3 text-left padding-left-right-10">
+											<!-- 08/10/2017 -->
+										</div>
+									</td>
+								</tr>
+								<tr ng-repeat-end ng-show="item.Expanded">
+									<td colspan="6">
+										<div class="selectedServicesList">
+											<table class="table table-bordered ">
+												<tbody>
+													<tr>
+														<th class="width1">
+															<input type="checkbox" ng-model="vm.model.isSelectedAllItem" ng-click="vm.model.SelectIndentAllItem(item)" />
+														</th>
+														<th class="width10">Item Code
+															<div class="float_right"
+																ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width10">Item Name
+															<div class="float_right"
+																ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width5" ng-if="vm.model.poType.id == 1">UOM
+															<div class="float_right"
+																ng-click="sortType = 'uomType'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8" ng-if="vm.model.poType.id == 1">UOM
+															Unit
+															<div class="float_right"
+																ng-click="sortType = 'uomUnit'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8">PR Qty
+															<div class="float_right"
+																ng-click="sortType = 'prQuantity'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+													</tr>
+													<tr
+														ng-repeat="datum in item.items | orderBy:sortType:sortReverse ">
+														<td class="width1 text-center">
+															<input type="checkbox" ng-model="datum.isSelectedItem"
+															ng-change="vm.model.SelectIndentItem(datum, item)" />
+														</td>
+														<td class="width10" title="{{datum.itemCode}}">{{datum.itemCode}}</td>
+														<td class="width10" title="{{datum.itemName}}">{{datum.itemName}}</td>
+														<td class="width5" title="{{datum.uomType}}"
+															ng-if="vm.model.poType.id == 1">{{datum.uomType}}</td>
+														<td class="width8" title="{{datum.uomUnit}}"
+															ng-if="vm.model.poType.id == 1">{{datum.uomUnit}}</td>
+														<td class="width8" title="{{datum.prQuantity}}">{{datum.prQuantity}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-11"></div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" ng-click="vm.model.AddIndentItems()"
+								value="Add" class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="approvedQRmodal"
+	class="modal fade ng-scope in common-large-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Approved VQR
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll">
+				<div class="row margin-top10">
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" class="text-input floating-label"
+									uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+									ng-model="vm.model.fromDate" model-view-value="true"
+									is-open="vm.model.fromDateOpened"
+									datepicker-options="vm.model.fromDateOptions"
+									show-button-bar="false" ng-click="vm.model.OpenFromDate()"
+									readonly=""> <label>From Date</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input ng-model="vm.model.toDate"
+									uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+									model-view-value="true" is-open="vm.model.toDateOpened"
+									datepicker-options="vm.model.toDateOptions"
+									show-button-bar="false" ng-click="vm.model.OpenToDate()"
+									type="text" autocomplete="off" class="text-input floating-label" readonly="">
+								<label>To Date</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-building-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" ng-model="vm.model.prNumber"
+									class="text-input floating-label" /> <label>QR No.</label>
+							</div>
+						</div>
+					</div>
+
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-building-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" ng-model="vqlNo"
+									class="text-input floating-label" /> <label>VQR No.</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" ng-model="vm.model.searchIndent"
+									class="text-input floating-label" /> <label>Search</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style">
+						<div class="common-save-button">
+							<a href="" ng-click="vm.model.GetQRIndentList()"
+								class="btn btn-primary btn-save-box-shadow" style="width: auto;"><i
+								class="fa fa-search" aria-hidden="true"></i></a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th colspan="7" class="font-weight700">Item Details</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="cursor-pointer"
+									ng-repeat-start="item in vm.model.indents | filter: vm.model.searchIndent"
+									ng-click="vm.model.Expand(item)">
+									<td class="text-center"><input type="checkbox"
+										ng-model="item.isSelectedIndent"
+										ng-click="vm.model.SelectAllIndentItems(item, item.items); $event.stopPropagation();" />
+									</td>
+									<td>
+										<div class="col-md-3 font-weight700">QR Date:</div>
+										<div class="col-md-3 text-left">{{item.wrDate |
+											date:'dd/MM/yyyy'}}</div>
+										<div class="col-md-3 font-weight700 text-right">QR No.:
+										</div>
+										<div class="col-md-3 text-left">{{item.wrNo}}</div>
+									</td>
+									<!-- <td> -->
+									<td>
+										<div class="col-md-3 font-weight700 text-right">VQR No.:
+										</div>
+										<div class="col-md-3 padding-left-right-10">
+											{{item.vqrNo}}</div>
+										<div class="col-md-3 font-weight700 text-right">Store
+											Name:</div>
+										<div class="col-md-3 padding-left-right-10">
+											{{item.storeName}}</div>
+									</td>
+									<td>
+										<div class="col-md-4 font-weight700 text-left"
+											title="Requested By">Requested By:</div>
+										<div class="col-md-4 text-left">{{item.requestBy}}</div>
+										<div class="col-md-4 font-weight700 text-right">
+											Authorized By:</div>
+									</td>
+									<td>
+										<div class="col-md-5 text-left">{{item.authorisedBy}}</div>
+										<div class="col-md-3 font-weight700 text-right">
+											<!--  Date: -->
+										</div>
+										<div class="col-md-3 text-left padding-left-right-10">
+											<!-- 08/10/2017 -->
+										</div>
+									</td>
+								</tr>
+								<tr ng-repeat-end ng-show="item.Expanded">
+									<td colspan="7">
+										<div class="selectedServicesList">
+											<table class="table table-bordered ">
+												<tbody>
+													<tr>
+														<th class="width1"></th>
+														<th class="width10">Item Code
+															<div class="float_right"
+																ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width10">Item Name
+															<div class="float_right"
+																ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width5" ng-if="vm.model.poType.id == 1">UOM
+															<div class="float_right"
+																ng-click="sortType = 'uomType'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8" ng-if="vm.model.poType.id == 1">UOM
+															Unit
+															<div class="float_right"
+																ng-click="sortType = 'uomUnit'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8">QR Qty
+															<div class="float_right"
+																ng-click="sortType = 'prQuantity'; sortReverse = !sortReverse">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+													</tr>
+													<tr
+														ng-repeat="datum in item.items | orderBy:sortType:sortReverse ">
+														<td class="width1 text-center"><input type="checkbox"
+															ng-model="datum.isSelectedItem"
+															ng-change="vm.model.SelectIndentItem(datum, item)" /></td>
+														<td class="width10" title="{{datum.itemCode}}">{{datum.itemCode}}</td>
+														<td class="width10" title="{{datum.itemName}}">{{datum.itemName}}</td>
+														<td class="width5" title="{{datum.uomType}}"
+															ng-if="vm.model.poType.id == 1">{{datum.uomType}}</td>
+														<td class="width8" title="{{datum.uomUnit}}"
+															ng-if="vm.model.poType.id == 1">{{datum.uomUnit}}</td>
+														<td class="width8" title="{{datum.prQuantity}}">{{datum.qrQuantity}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-11"></div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" ng-click="vm.model.AddQRIndentItems()"
+								value="Add" class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- *********** Add Qty Modal End *********** -->
+<!-- *********** Last Purchase Details Modal Start *********** -->
+<div id="lastPurchaseDetails"
+	class="modal fade ng-scope in common-large-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Last Purchase Order
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div
+						class="col-md-12 col-sm-12 common-table-height-250 padding-top10 padding-left-right-set4">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+								    <th>Vendor</th>
+									<th>Against</th>
+									<th>QR/PR Number</th>
+									<th>Date</th>
+									<th>Quantity</th>
+									<th ng-if="vm.model.poType.id==1">Quantity UOM</th>
+									<th>Bonus Quantity</th>
+									<th ng-if="vm.model.poType.id==1">Bonus Quantity UOM</th>
+									<th>COP</th>
+									<th>MRP</th>
+									<th>Tax %</th>
+									<th>Amount</th>
+									<th>Discount</th>
+									<th>Tax Amount</th>
+									<th>Other Charges</th>
+									<th>Net Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in vm.model.lastOrderDetails">
+									<td>{{item.vendorName}}</td>
+									<td>{{item.retype}}</td>
+									<td>{{item.ponumber}}</td>
+									<td>{{item.podate | date:'dd/MM/yyyy'}}</td>
+									<td>{{item.quantity}}</td>
+									<td ng-if="vm.model.poType.id==1">{{item.quantityuom}}</td>
+									<td>{{item.bonusquantity}}</td>
+									<td ng-if="vm.model.poType.id==1">{{item.bonusuomunit}}</td>
+									<td>{{item.cop}}</td>
+									<td>{{item.mrp}}</td>
+									<td>{{item.taxpercentage}}</td>
+									<td>{{item.totalamount}}</td>
+									<td>{{item.totaldiscount}}</td>
+									<td>{{item.taxamount}}</td>
+									<td>{{item.otheramount}}</td>
+									<td>{{item.netamount}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="selectUOM_modal"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Select UOM
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div
+						class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width3">UOM</th>
+									<th class="width6">UOM Unit</th>
+									<th class="width6">Conversion Factor</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="datum in vm.model.selectedUOMList">
+									<td>{{datum.uomType}}</td>
+									<td><select ng-model="datum.uomUnitId" class="w-100"
+										ng-options="uom.uomUnit for uom in vm.model.selectedUOMUnit track by uom.uomUnitId"></select>
+									</td>
+									<td><input type="text" autocomplete="off" ng-model="datum.conversion" ng-disabled="datum.uomTypeId == 3"
+										class="select-box" numbers-only></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-10"></div>
+					<div class="col-md-2 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Save"
+								ng-click="vm.model.uomModalOnClick()"
+								class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="bouns_selectUOM_modal"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Select Bonus Qty UOM
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div
+						class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width3">UOM</th>
+									<th class="width6">UOM Unit</th>
+									<th class="width6">Conversion Factor</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="datum in vm.model.bonusSelectedUOMList">
+									<td>{{datum.uomType}}</td>
+									<td><select ng-model="datum.uomUnitId" class="w-100"
+										ng-options="uom.uomUnit for uom in vm.model.bonusSelectedUOMUnit track by uom.uomUnitId"></select>
+									</td>
+									<td><input type="text" autocomplete="off" ng-model="datum.conversion" ng-disabled="datum.uomTypeId == 3"
+										class="select-box" numbers-only></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-10"></div>
+					<div class="col-md-2 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Save"
+								ng-click="vm.model.bonusUomModalOnClick()"
+								class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="otherCharges_Modal"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Other Charges
+					<button type="button" class="close" data-dismiss="modal" ng-click="cancelOtherCharges()">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row table-container">
+					<div
+						class="col-lg-12 col-md-12 table-container-header padding-top10">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="width3">Other Charges</th>
+									<th class="width6">Amount {{vm.model.Currency}}</th>
+									<th class="width2">Action</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body"
+						style="height: 230px; overflow-y: scroll;">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat="charges in vm.model.otherChargesList">
+									<td class="width3"><select name="otherCharge"
+										class="select-box floating-label dirty"
+										ng-model="charges.otherCharge"
+										data-ng-options="otherCharge.otherCharges for otherCharge in vm.model.otherChargesDropdownList"
+										ng-change="charges.isChargesValid=false"
+										ng-class="{borderRed: charges.isChargesValid}"></select></td>
+									<td class="width6"><input type="text" autocomplete="off"
+										ng-model="charges.amount" class="select-box"
+										ng-class="{borderRed: charges.isAmountValid}"
+										ng-change="charges.isAmountValid=false;vm.model.SetOtherChargeDecimal(charges.amount)"
+										ng-blur="vm.model.SetDecimalOtherCharge(charges)"
+										allow-decimal-numbers></td>
+									<td class="width2" style="width: 1.89% !important"><input
+										type="button"
+										ng-click="vm.model.AddOtherCharge(charges.otherCharge.id, $index)"
+										value="+" class="btn btn-primary btn-save-box-shadow width35"
+										ng-disabled="$index !== (vm.model.otherChargesList.length-1)">
+
+										<input type="button"
+										ng-click="vm.model.lessOtherCharge(charges, $index)" value="-"
+										class="btn btn-primary btn-save-box-shadow width35"
+										ng-if="$index !== 0"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="table-container-footer">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<tfoot>
+								<tr>
+									<th class="text-right" style="width: 27.5% !important">Total
+										Amount</th>
+									<th style="width: 54.8% !important">{{vm.model.Currency}}
+										{{vm.model.otherChargesTotal = ((vm.model.otherChargesList |
+										sumByColumn: 'amount')) | number:2}}</th>
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-10"></div>
+					<div class="col-md-2 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button"
+								ng-click="vm.model.sumOtherCharges(vm.model.otherChargesList)"
+								value="Save" class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="purchaseRequestDetails"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Purchase Request
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div
+						class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width3">PR No.</th>
+									<th class="width6">PR Qty</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="pr in vm.model.prModalList">
+									<td>{{pr.prNo }}</td>
+									<td>{{pr.prQuantity || 0}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ***************  Purchase Request modal end *************************** -->
+<!-- <div ng-include="'./views/PharmacyInventory/Store/get-item-list.html'" ></div> -->
+<div id="addNewItemWasteStore"
+	class="modal fade ng-scope in common-large-popup" role="dialog"
+	data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Add Item List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll ">
+				<fieldset>
+					<div class="row">
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div>
+										<select name="assetCategory" id="assetCategory"
+											class="text-input floating-label dirty"
+											data-ng-options="assetCategory.category for assetCategory in vm.model.assetCategories"
+											ng-model="vm.model.assetCategory"
+											ng-change="vm.model.PopulateProductCategory(vm.model.assetCategory); vm.model.isAssetCategoryValid = false"></select>
+										<label for="assetCategory">Asset Category</label>
+									</div>
+									<p ng-if="vm.model.isAssetCategoryValid">Select Asset
+										Category</p>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div>
+										<select name="productCategory" id="productCategory"
+											class="text-input floating-label dirty"
+											data-ng-options="productCategory.category for productCategory in vm.model.productCategories"
+											ng-model="vm.model.productCategory">
+										</select> <label for="productCategory">Product Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div>
+										<input type="text" autocomplete="off" ng-model="vm.model.searchItem.itemCode"
+											name="itemCode" class="text-input floating-label"
+											ng-change="vm.model.GetItemList()"> <label
+											for="itemCode" class="LISDynamicLabel">Item Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div>
+										<input type="text" autocomplete="off" ng-model="vm.model.searchItem.itemName"
+											name="itemName" class="text-input floating-label"
+											ng-change="vm.model.GetItemList()" ng-trim="false"> <label
+											for="itemName" class="LISDynamicLabel">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style">
+							<div class="common-save-button">
+								<a href="" ng-click="vm.model.GetItemList()"
+									class="btn btn-primary btn-save-box-shadow"
+									style="width: auto;"> <i class="fa fa-search"
+									aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top5">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 ">
+							<div class="search">
+								<label class="show-entries">Show <select
+									ng-init="vm.model.pagination.pageSize='10'"
+									ng-model="vm.model.pagination.pageSize"
+									ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)"
+									class="search-popUp-ddl">
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+								</select> records
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row table-container">
+						<div
+							class="table-container-header col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width1 text-center media-middle "><input
+											type="checkbox" ng-model="vm.model.selectAllRows"
+											ng-click="vm.model.SelectAllItems()"
+											ng-disabled="vm.model.pagination.data.length == 0" /></th>
+										<th class="width7">Asset Category
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'assetCategory', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Product Category
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'productCategory', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Item Code
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemCode', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Item Name
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemName', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body padding-left-right-set4"
+							style="height: 350px; overflow-y: scroll;">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="item in vm.model.pagination.data">
+										<td class="width1 text-center"><input type="checkbox"
+											ng-model="item.isSelected"
+											ng-click="vm.model.SelectItem(item)" /></td>
+										<td class="width7">{{item.assetCategory}}</td>
+										<td class="width7">{{item.productCategory}}</td>
+										<td class="width7">{{item.itemCode}}</td>
+										<td class="width7" style="white-space: normal;">{{item.itemName}}</td>
+									</tr>
+									<tr ng-if="!vm.model.pagination.data.length">
+										<td class="text-center">
+											<p>No Record Found</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row margin-bottom45 center-block">
+						<ul ng-if="vm.model.pagination.totalPages > 1"
+							class="pagination table-list"
+							style="font-size: 14px; cursor: pointer;">
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+							</li>
+							<li
+								ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+								ng-class="{active:vm.model.pagination.currentPage === page}"><a
+								ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+							</li>
+							<li
+								ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a
+								ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+							</li>
+							<li
+								ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a
+								ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+							</li>
+						</ul>
+					</div>
+				</fieldset>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-11"></div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Add"
+								class="btn btn-primary btn-save-box-shadow"
+								ng-click="vm.model.AddItems()">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="addPOReorder_NewItemWasteStore"
+	class="modal fade ng-scope in common-large-popup" role="dialog"
+	data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Add Item List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll ">
+				<fieldset>
+					<div class="row">
+						<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+              <div class="row input-container">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                  <i class="fa fa-tasks" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11">
+                  <div>
+                    <select name="assetCategory" id="assetCategory" class="text-input floating-label dirty"
+                      data-ng-options="assetCategory.category for assetCategory in vm.model.assetCategories" ng-model="vm.model.assetCategory"
+                      ng-change="vm.model.PopulateProductCategory(vm.model.assetCategory); vm.model.isAssetCategoryValid = false"></select>
+                    <label for="assetCategory">Asset Category</label>
+                  </div>
+                  <p ng-if="vm.model.isAssetCategoryValid">Select Asset Category</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+              <div class="row input-container">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                  <i class="fa fa-tasks" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11">
+                  <div>
+                    <select name="productCategory" id="productCategory" class="text-input floating-label dirty"
+                      data-ng-options="productCategory.category for productCategory in vm.model.productCategories"
+                      ng-model="vm.model.productCategory">
+                    </select>
+                    <label for="productCategory">Product Category</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+              <div class="row input-container">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                  <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                  <div>
+                    <input type="text" autocomplete="off" ng-model="vm.model.searchItem.itemCode" name="itemCode" class="text-input floating-label"
+                    ng-change="vm.model.pagination.searchDataByField(vm.model.items, vm.model.pagination,{ itemCode:vm.model.searchItem.itemCode})">
+                    <label for="itemCode" class="LISDynamicLabel">Item Code</label>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div>
+										<input type="text" autocomplete="off" ng-model="vm.model.searchItem.itemName"
+											name="itemName" class="text-input floating-label"
+											ng-change="vm.model.pagination.searchDataByField(vm.model.items, vm.model.pagination,{ itemName:vm.model.searchItem.itemName})">
+										<label for="itemName" class="LISDynamicLabel">Search
+											Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style">
+							<!-- <div class="common-save-button">
+                <a href="" ng-click="vm.model.GetItemList()" class="btn btn-primary btn-save-box-shadow" style="width: auto;">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </a>
+              </div> -->
+						</div>
+					</div>
+					<div class="row padding-top5">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 ">
+							<div class="search">
+								<label class="show-entries">Show <select
+									ng-init="vm.model.pagination.pageSize='10'"
+									ng-model="vm.model.pagination.pageSize"
+									ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)"
+									class="search-popUp-ddl">
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+								</select> records
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row table-container">
+						<div
+							class="table-container-header col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width1 text-center media-middle "><input
+											type="checkbox" ng-model="vm.model.selectAllRows"
+											ng-click="vm.model.SelectAllItems()"
+											ng-disabled="vm.model.items.length == 0" /></th>
+										<th class="width7">Asset Category
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'assetCategory', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Product Category
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'productCategory', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Item Code
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemCode', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Item Name
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemName', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Available Quantity
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemName', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Min Quantity
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemName', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Max Quantity
+											<div class="float_right"
+												ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemName', sortReverse = !sortReverse)">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body padding-left-right-set4"
+							style="height: 350px; overflow-y: scroll;">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="item in vm.model.pagination.data">
+										<td class="width1 text-center"><input type="checkbox"
+											ng-model="item.isSelected"
+											ng-click="vm.model.SelectItem(item)" /></td>
+										<td class="width7">{{item.assetCategory}}</td>
+										<td class="width7">{{item.productCategory}}</td>
+										<td class="width7">{{item.itemCode}}</td>
+										<td class="width7" style="width: 6.9% !important">{{item.itemName}}</td>
+										<td class="width7" style="width: 6.9% !important">{{item.availableQuantity}}</td>
+										<td class="width7" style="width: 6.9% !important">{{item.minQty}}</td>
+										<td class="width7" style="width: 6.9% !important">{{item.maxQty}}</td>
+									</tr>
+									<tr ng-if="!vm.model.pagination.data.length">
+										<td class="text-center">
+											<p>No Record Found</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row margin-bottom45 center-block">
+						<ul ng-if="vm.model.pagination.totalPages > 1"
+							class="pagination table-list"
+							style="font-size: 14px; cursor: pointer;">
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+							</li>
+							<li
+								ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+								ng-class="{active:vm.model.pagination.currentPage === page}"><a
+								ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+							</li>
+							<li
+								ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a
+								ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+							</li>
+							<li
+								ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a
+								ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+							</li>
+						</ul>
+					</div>
+				</fieldset>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-11"></div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Add"
+								class="btn btn-primary btn-save-box-shadow"
+								ng-click="vm.model.AddItems()">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div id="viewAddedItems"
+	class="modal fade ng-scope in common-large-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Item List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll ">
+				<fieldset>
+					<div class="row table-container">
+						<div
+							class="table-container-header col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width7">Item Code
+											<div class="float_right"
+												ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">Item Name
+											<div class="float_right"
+												ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width2">Action</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body padding-left-right-set4"
+							style="height: 350px;">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr
+										ng-repeat="item in vm.model.addedAccessoryItems | orderBy:sortType:sortReverse">
+										<td class="width7">{{item.itemCode}}</td>
+										<td class="width7">{{item.itemName}}</td>
+										<td class="width2 text-center"><a
+											ng-click="vm.model.RemoveViewAddedItems(item)"> <i
+												class="fa fa-times" title="Remove"></i></a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="warrantyPeriodModal"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Warranty Period
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 padding-top4">
+					<div
+						class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set margin-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<input type="text" autocomplete="off" ng-model="vm.model.warrantyPeriod"
+									class="text-input floating-label dirty"> <label
+									for="code">Warranty Period</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="modal-footer" style="border: none;">
+					<button type="button"
+						ng-click="vm.model.SaveTerms('warrantyPeriodModal')"
+						class="btn btn-primary">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="expectedSuportTermsModal"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Expected Support Terms
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set padding-top4">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="form-group">
+							<!-- <span>Expected Support Terms</span> -->
+							<textarea ng-model="vm.model.supportTerms" rows="6" class="dirty"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="modal-footer" style="border: none;">
+					<button type="button"
+						ng-click="vm.model.SaveTerms('expectedSuportTermsModal')"
+						class="btn btn-primary">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="expectedPaymentTermsModal"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Expected Payment Terms
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set padding-top4">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="form-group">
+							<!-- <span>Expected Payment Terms</span> -->
+							<textarea ng-model="vm.model.paymentTerms" rows="6" class="dirty"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="modal-footer" style="border: none;">
+					<button type="button"
+						ng-click="vm.model.SaveTerms('expectedPaymentTermsModal');"
+						class="btn btn-primary">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="expectedTechSpecificationModal"
+	class="modal fade ng-scope in common-small-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Expected Technical Specification
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set padding-top4">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="form-group">
+							<!-- <span>Expected Technical Specification</span> -->
+							<textarea ng-model="vm.model.technicalSpecs" rows="6"
+								class="dirty"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="modal-footer" style="border: none;">
+					<button type="button"
+						ng-click="vm.model.SaveTerms('expectedTechSpecificationModal')"
+						class="btn btn-primary">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- **************** Accessory Details Add modal start*********************** -->
+<div id="accessoryAddModal"
+	class="modal fade ng-scope in common-large-popup" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Accessory Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div
+						class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"></div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<button type="button" class="btn btn-primary" id="addBtn"
+									style="margin-top: -9px; width: 50% !important;" id="addBtn"
+									ng-click="vm.model.openAddItemPopup()">Add Item</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div
+						class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width8">Item Code
+										<div class="float_right"
+											ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width8">Item Name
+										<div class="float_right"
+											ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									ng-repeat="item in vm.model.accessoryList | filter : search | orderBy:sortType:sortReverse">
+									<td>{{item.itemCode}}</td>
+									<td>{{item.itemName}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding: 5px">
+				<div class="row his-style">
+					<div class="col-md-11"></div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Save"
+								ng-click="vm.model.SaveAccessoryDetails(vm.model.accessoryList)"
+								data-dismiss="modal" class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="confirmRemove" class="modal fade ng-scope in" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to remove item?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" class="btn btn-primary" id="okBtn"
+					ng-click="vm.model.RemoveItem(vm.model.itemForRemove)">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="confirmClearList" class="modal fade ng-scope in" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>All items will removed, Are you sure you want to
+						continue?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" class="btn btn-primary"
+					ng-click="vm.model.ClearItemList()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- change store -->
+<div id="confirmStore" class="modal fade ng-scope in" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Below item list will clear, are you sure you want to
+						continue?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" class="btn btn-primary"
+					ng-click="vm.model.ConfirmStorePopup()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="confirmAssetTypePopup" class="modal fade ng-scope in"
+	role="dialog" data-backdrop="static">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Below item list will be clear, are you sure you want
+						to change asset type?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" class="btn btn-primary"
+					ng-click="vm.model.ConfirmAssetTypePopup()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- change request type  -->
+<div id="confirmValidation" class="modal fade ng-scope in" role="dialog"
+	data-backdrop="static">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal"
+						ng-click="vm.model.SetOldType()">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Below item list will be clear, are you sure you want
+						to change request type?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" class="btn btn-primary"
+					ng-click="vm.model.EmptyList()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary"
+					ng-click="vm.model.SetOldType()">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- **************** Accessory Details Add modal end*********************** -->
+
+<!-- *********** Add QR new Modal: added on 24De2018 start *********** -->
+<div id="addQR_modal" class="modal fade ng-scope in common-large-popup"
+	role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Add QR
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll">
+				<div class="row margin-top10">
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" class="text-input floating-label"
+									uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+									ng-model="vm.model.fromDate" model-view-value="true"
+									is-open="vm.model.fromDateOpened"
+									datepicker-options="vm.model.fromDateOptions"
+									show-button-bar="false"> <label>From Date</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input ng-model="vm.model.toDate"
+									uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+									model-view-value="true" is-open="vm.model.toDateOpened"
+									datepicker-options="vm.model.toDateOptions"
+									show-button-bar="false" type="text" autocomplete="off"
+									class="text-input floating-label"> <label>To
+									Date</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-building-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" class="text-input floating-label" /> <label>QR
+									No.</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" class="text-input floating-label" /> <label>Search</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style">
+						<div class="common-save-button">
+							<a href=" class=" btn btn-primary
+								btn-save-box-shadow" style="width: auto;"> <i
+								class="fa fa-search" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-top10">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th colspan="7" class="font-weight700">Quotation Details</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="width1 text-center"><input type="checkbox" />
+									</td>
+									<td>
+										<div class="col-md-4 font-weight700">QR Date:</div>
+										<div class="col-md-4 text-left"></div>
+										<div class="col-md-4 font-weight700 text-right">QR No.:
+										</div>
+									</td>
+									<td>
+										<div class="col-md-3 text-left"></div>
+										<div class="col-md-4 font-weight700 text-right">Store
+											Name:</div>
+										<div class="col-md-4 padding-left-right-10"></div>
+									</td>
+									<td colspan="2">
+										<div class="col-md-4 font-weight700 text-left"
+											title="Requested By">Requested By:</div>
+										<div class="col-md-4 text-left"></div>
+										<div class="col-md-4 font-weight700 text-right">
+											Authorized By:</div>
+									</td>
+									<td>
+										<div class="col-md-5 text-left"></div>
+										<div class="col-md-3 font-weight700 text-right">
+											<!--  Date: -->
+										</div>
+										<div class="col-md-3 text-left padding-left-right-10">
+											<!-- 08/10/2017 -->
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="6">
+										<div class="selectedServicesList">
+											<table class="table table-bordered ">
+												<tbody>
+													<tr>
+														<th class="width1"></th>
+														<th class="width10">Item Code
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width10">Item Name
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width5">UOM
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8">UOM Unit
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8">QR Qty
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+													</tr>
+													<tr>
+														<td class="width1 text-center"><input type="checkbox" />
+														</td>
+														<td class="width10" title=""></td>
+														<td class="width10" title=""></td>
+														<td class="width5" title=""></td>
+														<td class="width8" title=""></td>
+														<td class="width8" title=""></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-11"></div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Add"
+								class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="uploadDetails" class="modal common-medium-popup fade ng-scope in"  data-backdrop="static" role="dialog">
+	<div class="modal-dialog"> 
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Document Upload Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-bottom10 padding-top10">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<div class="fix-height-scroll230 padding-top10" style="overflow:overlay !important;">
+						<table class="table table-striped table-bordered" id="documentUpload">
+							<thead>
+								<tr>
+								    <th class="width8"> Date</th>
+									<th class="UHID-width"> Document Type</th>
+									<th class="UHID-width"> Document Upload (Allowed uploads *.txt, *.pdf, *.docx, *.doc)</th>
+									<th class="status">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="docObj in encounterDetailsList track by $index">
+									<td>
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty"
+											name="datepickervaccine" id="datepickervaccine"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="" ng-model="docObj.uploadDoccumentDate"
+											model-view-value="true"
+											is-open="datepickerUpload.opened[$index]"
+											datepicker-options="dateOptionsUpload"
+											show-button-bar="false"
+											ng-click="datepickerUploadK($index);"
+											style="background: transparent !important;" required>
+									</td>
+									<td>
+										<div>
+											<select class="text-input floating-label dirty" ng-model="docObj.documentTypeId">
+												<option selected value>Select Document Type</option>
+												<option ng-repeat="docType in documentTypeList" value="{{docType.documentTypeId}}">{{docType.documentTypeName}}</option>
+											</select> 
+										</div>
+									</td>
+									<td>
+										<div>
+											<input type="file" name="file{{$index}}" file-model="docObj.file" id="fileId" accept="application/msword,text/plain, application/pdf" validfile>
+											<p ng-show="fileError" style="color:red;">{{fileError}}</p>
+										</div>
+									</td>
+									<td>
+										<div class="">
+											<button class="btn btn-info" style="width:36px" value="+" ng-click="addImageDetails();"><b>+</b></button>
+											<button class="btn btn-info" style="width:36px" value="-" ng-click="removeImageDetails($index);" ng-if="$index!=0"><b>-</b></button>
+                    	                    <!-- ngIf: $index > 0 --> &nbsp;&nbsp;
+										</div>
+									</td>
+								</tr><!-- end ngRepeat: data in dataList -->
+							</tbody>
+						</table>
+						
+						</div>
+					</div>
+				</div>
+				<div class="table-container" >
+					<div class="table-container-header">
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="width10">Document Type</th>
+									 <th class="width10">File Name</th> 
+									<th class="width10">Document Uploaded Date</th>
+									<th class="width5">View</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body fix-height-scroll150" style="overflow: overlay; ">
+						<table  class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat = "documentObj in patientDocumentList|orderBy:column:reverse track by $index">
+								   <td class="width10">
+										<div>
+										  {{documentObj.documentName}}
+										</div>
+									</td>
+									 <td class="width10">
+										<div>
+										  {{documentObj.fileName}}
+										</div>
+									</td> 
+									<td class="width10">
+										<div>
+										  {{documentObj.uploadDoccumentDate}}
+										</div>
+									</td>
+									<td class="width5">
+										<div>
+										<a fancybox target ="_blank" href="{{documentObj.documentPath}}">View</a> 
+										</div>
+									</td>
+						</tr>
+							</tbody>
+						</table>
+						<table class="table table-bordered">
+							<tr ng-if="(patientDocumentList)=='' || (patientDocumentList)==null ">
+								<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;"><b>No Records Found</b></p></td>
+							</tr>
+			        </table>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal-footer" style="border:none;">
+				<!-- <button ng-if="forView == false" type="button"  class="btn btn-primary width11" id=""ng-click="uploadPatientImage();">Save</button> -->
+				<button ng-if="forView == false" type="button" data-dismiss="modal" class="btn btn-primary width11" >Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="addShopModel" class="modal fade ng-scope in common-large-popup"
+	role="dialog" style="padding-left: 17px;" data-backdrop="static" data-backdrop="">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding: 0px;">
+				<div class="modal-title patient-details-row">
+					Vendor
+					<button type="button" class="close" ng-click="vm.model.isShop1Hide()">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<fieldset>
+					<div class="row margin-top10">
+						<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div
+									class="col-lg-1 col-sm-1 col-md-1 polymer-icon padding-top10">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="form-group">
+										<input type="hidden" ng-model="vendorId" value="0" />
+										<select name="manufactureName" id="manufactureName" class="text-input floating-label" ng-model="vm.model.manufactureName"
+								 data-ng-options="manufactureName.name for manufactureName in vm.model.Manufactures" ng-change="vm.model.isManufacturerValid = false"
+								>
+								</select>
+										<label for="manufactureName" class="LISDynamicLabel">Manufacturer</label>
+										<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+											options="manufacturesMultiSelectList"
+											selected-model="selectedManufacturesList"
+											extra-settings="example6settings" events="yourEvents">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div> -->
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" maxlength="10" name="vendorCode"
+											id="vendorCode" ng-model="vm.model.vendorCode"
+											ng-class="{dirty: vm.model.vendorCode}"
+											class="text-input floating-label"
+											ng-change="vm.model.isvendorCodeValid = false">
+										<p ng-if="vm.model.isvendorCodeValid" class="errorMsg">Vendor
+											Code is required</p>
+										<label for="vendorCode" class="LISDynamicLabel">Vendor
+											Code<span class="star">*</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-user-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="vendorName" id="vendorName"
+											ng-model="vm.model.vendorName"
+											ng-class="{dirty: vm.model.vendorName}"
+											class="text-input floating-label"
+											ng-change="vm.model.isvendorNameValid = false">
+										<p ng-if="vm.model.isvendorNameValid" class="errorMsg">Vendor
+											Name is required</p>
+										<label for="vendorName" class="LISDynamicLabel">Vendor
+											Name<span class="star">*</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="contactPersonName"
+											id="contactPersonName" ng-model="vm.model.contactPersonName"
+											ng-class="{dirty: vm.model.contactPersonName}"
+											class="text-input floating-label"
+											ng-change="vm.model.iscontactPersonNameValid = false">
+										<p ng-if="vm.model.iscontactPersonNameValid" class="errorMsg">Contact
+											Person Name is required</p>
+										<label for="contactPersonName" class="LISDynamicLabel">Contact
+											Person Name<span class="star">*</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-list-ol" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="drugLicenseNo" id="drugLicenseNo"
+											ng-model="vm.model.drugLicenseNo"
+											ng-class="{dirty: vm.model.drugLicenseNo}"
+											class="text-input floating-label"
+											ng-change="vm.model.isdrugLiscenceNoValid = false"> <label
+											for="drugLicenseNo" class="LISDynamicLabel">Drug
+											License No.<!-- <span class="star">*</span> -->
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-list-ol" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="gstNo" id="gstNo"
+											ng-model="vm.model.gstNo" ng-class="{dirty: vm.model.gstNo}"
+											class="text-input floating-label"
+											ng-change="vm.model.isgstNoValid = false" maxlength="25">
+
+										<label for="gstNo" class="LISDynamicLabel">GST No.<!-- <span class="star">*</span> --></label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-location-arrow" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="address" id="address"
+											ng-model="vm.model.address"
+											ng-class="{dirty: vm.model.address}"
+											class="text-input floating-label"
+											ng-change="vm.model.isaddressValid = false"
+											title={{vm.model.address}}>
+										<p ng-if="vm.model.isaddressValid" class="errorMsg">Address
+											is required</p>
+										<label for="address" class="LISDynamicLabel">Address<span
+											class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top10">
+							<div class="row input-container test-master-sample">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon"
+									style="padding-left: 19px; padding-right: 15px;">
+									<i class="fa fa-map-marker" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10 "
+									style="padding-left: 15px;">
+									<div class="form-group">
+										<select name="countryName" id="countryName"
+											class="text-input floating-label"
+											ng-model="vm.model.countryName"
+											data-ng-options="countryName.countryName for countryName in vm.model.Countries"
+											ng-change="vm.model.iscountryNameValid = false; vm.model.PopulateStates(vm.model.countryName)">
+										</select>
+										<p ng-if="vm.model.iscountryNameValid" class="errorMsg">Country
+											is required</p>
+										<label for="code" class="LISDynamicLabel">Country<span
+											class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top10">
+							<div class="row input-container test-master-sample">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-bandcamp" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="form-group">
+										<select name="stateName" id="stateName"
+											class="text-input floating-label"
+											ng-model="vm.model.stateName"
+											data-ng-options="stateName.stateName for stateName in vm.model.States"
+											ng-change="vm.model.isstateNameValid = false; vm.model.PopulateCities(vm.model.stateName)">
+										</select> <label for="code" class="LISDynamicLabel">State<!-- <span class="star">*</span> --></label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="row">
+
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top10">
+							<div class="row input-container test-master-sample">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-map-signs" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="form-group">
+										<select name="cityName" id="cityName"
+											class="text-input floating-label"
+											ng-model="vm.model.cityName"
+											data-ng-options="cityName.cityName for cityName in vm.model.Cities"
+											ng-change="vm.model.iscityNameValid = false; vm.model.PopulateAreas(vm.model.cityName)">
+										</select> <label for="code" class="LISDynamicLabel">City<!-- <span class="star">*</span> --></label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-location-arrow" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group">
+										<select name="areaName" id="areaName"
+											class="text-input floating-label"
+											ng-model="vm.model.areaName"
+											data-ng-options="areaName.areaName for areaName in vm.model.Areas"
+											ng-change="vm.model.isareaNameValid = false">
+										</select> <label for="code" class="LISDynamicLabel">Area<!-- <span class="star">*</span> --></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-map-pin" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group">
+										<input type="text" autocomplete="off" name="zipCode" id="zipCode"
+											ng-model="vm.model.zipCode"
+											ng-class="{dirty: vm.model.zipCode}"
+											class="text-input floating-label"
+											ng-change="vm.model.iszipCodeValid = false" maxlength="6"
+											numbers-only> <label for="zipCode"
+											class="LISDynamicLabel">Zip Code<!-- <span class="star">*</span> --></label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-mobile" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group">
+										<input type="text" autocomplete="off" name="phoneNumber" id="phoneNumber"
+											ng-model="vm.model.phoneNumber"
+											ng-class="{dirty: vm.model.phoneNumber}"
+											class="text-input floating-label"
+											ng-change="vm.model.isphoneNumberValid = false"
+											ng-blur="vm.model.checkPhoneNumDigit();">
+										<p ng-if="vm.model.isphoneNumberValid" class="errorMsg">Phone
+											Number is required</p>
+										<label for="phoneNumber" class="LISDynamicLabel">Phone
+											Number<span class="star">*</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-envelope-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="emailAddress" id="emailAddress"
+											ng-model="vm.model.emailAddress"
+											ng-class="{dirty: vm.model.emailAddress}"
+											class="text-input floating-label"
+											ng-change="vm.model.isemailValid = false"> <label
+											for="emailAddress" class="LISDynamicLabel">Email
+											Address<!-- <span class="star">*</span> -->
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-envelope-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group">
+										<select name="modeOfPayment" id="modeOfPayment"
+											class="text-input floating-label"
+											ng-model="vm.model.modeOfPayment"
+											data-ng-options="modeOfPayment.paymentModeDesc for modeOfPayment in vm.model.modeOfPayments"
+											ng-change="vm.model.ismodofPaymentValid = false">
+										</select>
+										<p ng-if="vm.model.ismodofPaymentValid" class="errorMsg">Mode
+											of Payment is required</p>
+										<label for="code">Mode of Payment<span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-envelope-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="form-group">
+										<input type="text" autocomplete="off" name="paymentTerms" id="paymentTerms"
+											maxlength="100" ng-model="vm.model.paymentTerms"
+											ng-class="{dirty: vm.model.paymentTerms}"
+											class="text-input floating-label"
+											ng-change="vm.model.ispaymentTermsValid = false">
+										<p ng-if="vm.model.ispaymentTermsValid" class="errorMsg">Payment
+											Terms is required</p>
+										<label for="code">Payment Terms<span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div
+							class="col-lg-2 col-md-2 col-sm-2 padding-leftright15 padding-top10">
+							<div class="checkbox">
+								<label> <input type="checkbox" value=""
+									ng-model="vm.model.isLocalPurchase"
+									ng-class="{dirty: vm.model.isLocalPurchase}"
+									ng-checked="vm.model.isLocalPurchase">Local Purchase
+									Vendor
+								</label>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width8" id="">Ok</button> -->
+				<div class="row">
+					<div
+						class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<a href="" class="btn btn-primary btn-save-box-shadow"
+							title="Save" ng-click="vm.model.SaveVendorMaster()"
+							ng-class="{disabled: !vm.model.vendorCode || !vm.model.vendorName
+							 || !vm.model.contactPersonName  
+							 || !vm.model.address || !vm.model.countryName.countryId 
+							 ||  !vm.model.phoneNumber 
+							 || !vm.model.modeOfPayment || !vm.model.paymentTerms}">
+							<i class="fa fa-floppy-o" style="font-size: 21px"
+							aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- *********** Add QR new Modal: added on 24De2018 end *********** -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".selectedPageName").text("Purchase Order Creation");
+		$(".selectedServicesList").hide();
+		$(".addNewItemRadioBtnClass").change(function() {
+			if ($(this).is(":checked")) {
+				/* $("#getRequestWasteStore").modal(); */
+			}
+		});
+		$(".getRequestListBtnClass").change(function() {
+			if ($(this).is(":checked")) {
+				$("#againstPRmodal").modal();
+			}
+		});
+		/******* on type selection table hide-show function start*************/
+		// $("#consumbleRowId").hide();
+		// $("#fixeAssetRowId").hide();
+		$('#typeId').on('change', function() {
+			if (this.value == '0') {
+				// $("#fixeAssetRowId").show();
+				//    $("#consumbleRowId").hide();
+			} else if (this.value == '1') {
+				// $("#consumbleRowId").show();
+				// $("#fixeAssetRowId").hide();
+			} else {
+				// $("#fixeAssetRowId").hide();
+				// $("#consumbleRowId").hide();
+			}
+		});
+		/******* on type selection table hide-show function end*************/
+	});
+	$(".table-th-bg").click(function() {
+		$(this).next().find(".selectedServicesList").toggle();
+	});
+	function setCloneTable() {
+		setTimeout(function() {
+			jQuery(".main-table").clone(true).appendTo(
+					'#consumbleRowIdtable-scroll').addClass('clone');
+		}, 500);
+	}
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

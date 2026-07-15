@@ -1,0 +1,149 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<form name="additionalOtTimeConfigForm" novalidate >
+		<div class="row padding-top8">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors>
+							<select required ng-model="vm.model.otTimeConfig.procedureTypeId" name="procedureTypeId" class="text-input floating-label dirty">
+								<option value="" selected>Select Clinical Service Type</option>
+								<option value="{{prcType.procedureTypeId}}" ng-value="prcType.procedureTypeId" ng-repeat="prcType in vm.model.procedureTypes">{{prcType.procedureTypeName}}</option>
+							</select>
+							<label for="code">Clinical Service Type<span class="star">*</span></label>
+							<p class="help-block" ng-if="additionalOtTimeConfigForm.procedureTypeId.$error.required">Type is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors>
+							<input required type="text" autocomplete="off" numbers-only name="timeMin" ng-model="vm.model.otTimeConfig.timeMin" class="text-input floating-label dirty"> 
+							<label for="description" class="LISDynamicLabel">Minutes<span class="star">*</span></label>
+							<p class="help-block" ng-if="additionalOtTimeConfigForm.timeMin.$error.required">Minutes is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors>
+							<input required type="text" autocomplete="off" numbers-only name="rate" class="text-input floating-label dirty" ng-model="vm.model.otTimeConfig.rate"  />
+							<label for="description" class="LISDynamicLabel">Rate<span class="star">*</span></label>
+							<p class="help-block" ng-if="additionalOtTimeConfigForm.rate.$error.required">Rate is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+				
+		</div>
+		<div class="row margin-top5 padding-left-right-set1">
+		
+			<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="vm.model.pagination.pageSize='10'" 
+										ng-model="vm.model.pagination.pageSize" 
+										ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+						</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" padding-top4">
+					 <a href="" class="btn btn-primary btn-save-box-shadow text-width-auto" ng-click="vm.model.saveAddOtTimeConfig()" title="Save">
+	        			<i class="fa fa-floppy-o" style="font-size: 21px;width: 100%;" aria-hidden="true"></i>
+  						</a>
+	      		</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box oneeeee dirty" placeholder="Search"  ng-model="searchKeyword" ng-keyup="serachTestmaster(searchKeyword);"  >
+				 <i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+						<thead>
+							<tr class="">
+								<th class="width8">Clinical Service Type</th>
+								<th class="width8">Minutes</th>
+								<th class="width8">Rate</th>
+								<th class="width1 text-center">Status(n)</th>
+								<th class="width1 text-center">Action taken</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="otTimeConfig in vm.model.pagination.data | filter:searchKeyword track by $index">
+								<td>{{otTimeConfig.procedureTypeName}}</td>
+								<td>{{otTimeConfig.timeMin}}</td>
+								<td>{{otTimeConfig.rate}}</td>
+								<td>
+								<label class="switch"> 
+								<input type="checkbox" ng-true-value="'A'" ng-false-value="'I'" ng-change="vm.model.changeStatus(otTimeConfig.additionalOtTimeId,otTimeConfig.status)" ng-model="otTimeConfig.status">
+										<div class="slider round"></div>
+								</label></td>
+								<td class="text-center"><a  ng-class="{disabled: otTimeConfig.status=='I'}" ng-click="vm.model.editAddtionalOtTimeConfig(otTimeConfig)">
+								<i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+							</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="row margin-bottom45 center-block">
+						<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+							style="font-size: 14px; cursor: pointer;">
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+							</li>
+							<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+								ng-class="{active:vm.model.pagination.currentPage === page}"><a
+								ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+							</li>
+							<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+							</li>
+						</ul>
+					</div>
+		</div>
+		</form>
+	</div>
+</div>
+
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script>
+	$(document).ready(
+			function() {
+				// $(".patienttSearchResult").hide();
+				$(".selectedPageName").text("Additional OT Time Configuration");
+				$(".sidebar-nav li").each(function() {
+					$(this).find("a").parents("li").removeClass("active");
+				});
+				$('a[href$="additionalOtTimeConfiguration"]').parents("li").addClass(
+						"active");
+			});
+</script>

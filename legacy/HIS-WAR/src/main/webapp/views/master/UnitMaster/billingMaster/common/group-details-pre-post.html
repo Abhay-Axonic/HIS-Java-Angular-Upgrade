@@ -1,0 +1,115 @@
+<div class="second-level-tab-display-div">
+<div class="row padding-left-right-set4 margin-top10">
+	<div class="row">
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right padding-bottom10">
+			<input type="button" class="btn btn-primary btn-save-box-shadow"
+				ng-disabled="addToBillFlag" ng-click="addToBill()" id="addBtn"
+				value="Add to Bill">
+		</div>
+		
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right padding-bottom10">
+			<input  class="text-search-box"
+				ng-model="searchGroupPrePostFilter" placeholder="Search"
+				title="Search" style="margin-top: 0px"> <i
+				class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+		</div>
+	</div>
+
+	<div class="col-md-12 fix-height-scroll450">
+						<table class="table table-bordered">
+							<tr class="table-th-bg">
+								<!-- <th class="width12">
+									UHID
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th> 
+								<th class="patient-doc-details-width">
+									Patient Details
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="patient-doc-details-width">
+									Doctor Details
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="patient-doc-details-width">
+									Location
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>-->
+								<th class="width1">
+									<input type="checkbox" ng-true-value="'Y'"  ng-false-value="'N'" ng-model="checkAllServicePrePostFlag" ng-click="checkAllServicePrePost()" />
+								</th>
+								<th class="width4">
+									Date
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width10">
+									Service
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width10">
+									Sub Department
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								<th class="width8">
+									Status
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+								 <th class="width4">
+									Cancel Service
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th> 
+							</tr>
+							<tr ng-repeat="info in pendingServiceListPrePost | filter:searchGroupPrePostFilter " ng-if="info.status == 'A' && !(info.isPackage==false && info.packageTypeId==1)">
+							<td><input type="checkbox" ng-hide="info.isInvoiceGenerated=='Y'" ng-model="info.isServices" /></td>
+								<td><div>{{info.orderDate | date :dateFormat}}</div></td>
+								<td><div>{{info.serviceStandardName}}</div></td>
+								<td><div>{{info.subSpecialityName}}</div></td>
+								<td><div>Pending</div></td>
+								<td>
+									<div ng-if="info.serviceMasterId!=pharmacyServiceId">
+										<span class="hide-show-reason-for-cancel-service margin-top8">
+											<select ng-model="cancelReasonId" class="width65">
+											<option value="">Select Reason</option>
+												<option ng-repeat="res in reasonList" ng-if="res.reasonTypeId == 8" value="{{res.reasonMasterId}}">{{res.reasonDesc}}</option>
+											</select>
+										</span>
+										<span class="pull-right vertical-middle padding-top4">
+											<a href="" class="cursor-pointer"><i class="fa fa-times" title="Cancel Service" ng-click="cancelPendingServicePrePost(cancelReasonId,info)"></i></a></span>
+									</div>
+									<div ng-if="info.serviceMasterId==pharmacyServiceId">
+										Service cannot be cancelled.
+									</div>
+								</td> 
+							</tr>
+							
+							
+						</table>
+					</div>
+				</div>	
+</div>				

@@ -1,0 +1,708 @@
+<head>
+    <style>
+ body {
+   overflow: hidden !important;
+    background-image: url(resources/assets/images/icon/bg_hospital_img.jpg);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+}
+		[type="radio"]:checked,
+		[type="radio"]:not(:checked) {
+		    position: absolute;
+		    left: -9999px;
+		}
+		[type="radio"]:checked + label,
+		[type="radio"]:not(:checked) + label
+		{
+		    position: relative;
+		    padding-left: 28px;
+		    cursor: pointer;
+		    line-height: 20px;
+		    display: inline-block;
+		    color: #666;
+		}
+		[type="radio"]:checked + label:before,
+		[type="radio"]:not(:checked) + label:before {
+		        content: '';
+			    position: absolute;
+			    left: 1px;
+			    top: 1px;
+			    width: 20px;
+			    height: 20px;
+			    border: 1px solid #ccc;
+			    border-radius: 100%;
+			    background: #fff;
+		}
+		[type="radio"]:checked + label:after,
+		[type="radio"]:not(:checked) + label:after {
+		    content: '';
+		    width: 14px;
+		    height: 14px;
+		    background: #2e6ea2;
+		    position: absolute;
+		    top: 4px;
+		    left: 4px;
+		    border-radius: 100%;
+		    -webkit-transition: all 0.2s ease;
+		    transition: all 0.2s ease;
+		}
+		[type="radio"]:not(:checked) + label:after {
+		    opacity: 0;
+		    -webkit-transform: scale(0);
+		    transform: scale(0);
+		}
+		[type="radio"]:checked + label:after {
+		    opacity: 1;
+		    -webkit-transform: scale(1);
+		    transform: scale(1);
+		}
+		.form-control {
+			border-radius: 4px !important;
+			height: 40px !important;
+			font-size: 24px !important;
+			padding: 6px 12px 6px 2px;
+		}
+		label {
+	        font-size: 20px !important;
+		}
+		.text-input {
+		font-size: 24px !important;
+		}
+		.help-block {
+		font-size: 18px !important;
+		}
+		.heading-div {
+        font-size: 20px !important;
+        }
+        .btn {
+        padding: 6px 31px !important;
+        }
+        .btn {
+        font-size: 25px !important;
+        }
+        .fs23 {
+        font-size: 23px !important;
+        }
+        .his-style th {
+        font-size: 25px !important;
+        }
+        /* .modal-body span
+        {
+        	    font-size: 20px;
+        } */
+        .his-style select
+        {
+         padding-bottom: 4px !important;
+         padding-top: 1px !important;
+        }
+        .footer
+        {
+        	    margin-left: -20px !important;
+        }
+        .dropdown-menu>li>a
+        {
+        	font-size: 22px;
+        	padding: 3px 5px 3px 5px;
+        }
+        [uib-typeahead-popup].dropdown-menu
+        {
+        	max-height: 280px;
+        }
+
+         /******NEW CARD START*****/
+
+.card-print {
+    background: green;
+    height: 100px;
+    border-radius: 19px;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+    text-align: center;
+    cursor: pointer;
+}
+
+.print-text a {margin-top: 100px;}
+
+.print-text p {color: white;font-size: 15px;}
+.print-text a {
+    color: white;
+    font-size: 15px;
+    text-decoration: none;
+}
+.print-icon i.fa.fa-print {
+    color: #fff;
+    font-size: 20px;
+ 	margin-top: 15px;
+    align-items: center;
+}
+.card-print:hover {
+    background: #038684a6;
+}
+.print-icon i.fa.fa-hand-o-right {
+    color: #fff;
+    font-size: 20px;
+   margin-top: 15px;
+   align-items: center;
+}
+.container-fluid-nav label {
+    font-size: 20px !important;
+}
+i.fa.fa-blind {
+    color: #fff;
+    font-size: 20px;
+    margin-top: 15px;
+   align-items: center;
+}
+i.fa.fa-check-square-o {
+    color: #fff;
+    font-size: 20px;
+    margin-top: 15px;
+    align-items: center;
+}
+i.fa.fa-hand-o-left {
+    color: #fff;
+    font-size: 20px;
+   margin-top: 15px;
+    align-items: center;
+}
+
+i.fa.fa-ban {
+    color: #fff;
+    font-size: 20px;
+    margin-top: 15px;
+   align-items: center;
+}
+i.fa.fa-print {
+    color: #fff;
+    font-size: 20px;
+    margin-top: 15px;
+    align-items: center;
+}
+i.fa.fa-arrow-circle-o-right {
+    color: #fff;
+    font-size: 20px;
+  	margin-top: 15px;
+    align-items: center;
+}
+
+ .table-space-green
+   {
+       background-color: green !important;
+       cursor:pointer;
+   }
+
+html {
+	-webkit-font-smoothing: antialiased!important;
+	-moz-osx-font-smoothing: grayscale!important;
+	-ms-font-smoothing: antialiased!important;
+}
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size:16px;
+  color:#555555;
+}
+.md-stepper-horizontal {
+	display:table;
+	width:100%;
+	margin:0 auto;
+	background-color:#FFFFFF;
+	box-shadow: 0 3px 8px -6px rgba(0,0,0,.50);
+}
+.md-stepper-horizontal .md-step {
+	display:table-cell;
+	position:relative;
+	padding:24px;
+}
+.md-stepper-horizontal .md-step:hover,
+.md-stepper-horizontal .md-step:active {
+	background-color:rgba(0,0,0,0.04);
+}
+.md-stepper-horizontal .md-step:active {
+	border-radius: 15% / 75%;
+}
+.md-stepper-horizontal .md-step:first-child:active {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+.md-stepper-horizontal .md-step:last-child:active {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+.md-stepper-horizontal .md-step:hover .md-step-circle {
+	background-color:#757575;
+}
+.md-stepper-horizontal .md-step:first-child .md-step-bar-left,
+.md-stepper-horizontal .md-step:last-child .md-step-bar-right {
+	display:none;
+}
+.md-stepper-horizontal .md-step .md-step-circle {
+	width:30px;
+	height:30px;
+	margin:0 auto;
+	background-color:green;
+	border-radius: 50%;
+	text-align: center;
+	line-height:30px;
+	font-size: 16px;
+	font-weight: 600;
+	color:#FFFFFF;
+}
+.md-stepper-horizontal.green .md-step.active .md-step-circle {
+	background-color:#00AE4D;
+}
+.md-stepper-horizontal.orange .md-step.active .md-step-circle {
+	background-color:#F96302;
+}
+.md-stepper-horizontal .md-step.active .md-step-circle {
+	background-color: rgb(33,150,243);
+}
+.md-stepper-horizontal .md-step.done .md-step-circle:before {
+	font-family:'FontAwesome';
+	font-weight:100;
+	content: "\f00c";
+}
+.md-stepper-horizontal .md-step.done .md-step-circle *,
+.md-stepper-horizontal .md-step.editable .md-step-circle * {
+	display:none;
+}
+.md-stepper-horizontal .md-step.editable .md-step-circle {
+	-moz-transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+}
+.md-stepper-horizontal .md-step.editable .md-step-circle:before {
+	font-family:'FontAwesome';
+	font-weight:100;
+	content: "\f040";
+}
+.md-stepper-horizontal .md-step .md-step-title {
+	margin-top:16px;
+	font-size:16px;
+	font-weight:600;
+}
+.md-stepper-horizontal .md-step .md-step-title,
+.md-stepper-horizontal .md-step .md-step-optional {
+	text-align: center;
+	color:rgba(0,0,0,.26);
+}
+.md-stepper-horizontal .md-step.active .md-step-title {
+	font-weight: 600;
+	color:rgba(0,0,0,.87);
+}
+.md-stepper-horizontal .md-step.active.done .md-step-title,
+.md-stepper-horizontal .md-step.active.editable .md-step-title {
+	font-weight:600;
+}
+.md-stepper-horizontal .md-step .md-step-optional {
+	font-size:12px;
+}
+.md-stepper-horizontal .md-step.active .md-step-optional {
+	color:rgba(0,0,0,.54);
+}
+.md-stepper-horizontal .md-step .md-step-bar-left,
+.md-stepper-horizontal .md-step .md-step-bar-right {
+	position:absolute;
+	top:36px;
+	height:1px;
+	border-top:1px solid #DDDDDD;
+}
+.md-stepper-horizontal .md-step .md-step-bar-right {
+	right:0;
+	left:50%;
+	margin-left:20px;
+}
+.md-stepper-horizontal .md-step .md-step-bar-left {
+	left:0;
+	right:50%;
+	margin-right:20px;
+}
+
+.myOwnBg {
+   background-color: yellow;
+}
+
+
+
+/* jQuery Demo */
+
+.clearfix:after {
+  clear: both;
+  content: "";
+  display: block;
+  height: 0;
+}
+
+/* Responsive Arrow Progress Bar */
+
+.container {
+  font-family: 'Lato', sans-serif;
+}
+
+.arrow-steps .step {
+  font-size: 14px;
+  text-align: center;
+  color: #444;
+  cursor: default;
+  margin: 0 1px 0 0;
+  padding: 10px 0px 10px 0px;
+  width: 19%;
+  float: left;
+  position: relative;
+  background-color: #e4d3d3;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.arrow-steps .step a {
+  color: #777;
+  text-decoration: none;
+}
+
+.arrow-steps .step:after,
+.arrow-steps .step:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -17px;
+  width: 0;
+  height: 0;
+  border-top: 19px solid transparent;
+  border-bottom: 17px solid transparent;
+  border-left: 17px solid  #0098f7;
+  z-index: 2;
+}
+
+.arrow-steps .step:before {
+  right: auto;
+  left: 0;
+  border-left: 17px solid #fff;
+  z-index: 0;
+}
+
+.arrow-steps .step:first-child:before {
+  border: none;
+}
+
+.arrow-steps .step:last-child:after {
+  // border: none;
+}
+
+.arrow-steps .step:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.arrow-steps .step:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.arrow-steps .step span {
+  position: relative;
+}
+
+*.arrow-steps .step.done span:before {
+  opacity: 1;
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -10px;
+  font-size: 11px;
+  line-height: 21px;
+}
+
+.arrow-steps .step.current {
+  color: #fff;
+  background-color: green;
+}
+
+.arrow-steps .step.current a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.arrow-steps .step.current:after {
+  border-left: 17px solid #2f69aa;
+}
+
+.arrow-steps .step.done {
+  color: #173352;
+  background-color: #2f69aa;
+}
+
+.arrow-steps .step.done a {
+  color: #173352;
+  text-decoration: none;
+}
+
+.arrow-steps .step.done:after {
+  border-left: 17px solid #2f69aa;
+}
+
+
+	#wrapper {
+    padding-left: 0px !important;
+}
+.kiosk_bg {
+	   	/* MPShah LOGO */
+	     /* background :url("resources/assets/images/logo/Client/Kiosk M.P.SHAHA/Kiosk M.P.SHAHA Logo.png") no-repeat center center; */
+
+	     /* default LOGO */
+	    /* background :url("resources/assets/images/logo/kiosk_bg.png") no-repeat center center;
+	    position: absolute;
+	    top: 60px;
+	    opacity: 0.2;
+	    left: 0;
+	    width: 100%;
+	    height: 100%; */
+    }
+    .container-fluid-nav
+    {
+	    display: flex;
+		justify-content: space-around;
+	}
+	.container-fluid-nav label
+	{
+		color:white;
+		font-size:28px;
+		margin-left: -140px;
+	}
+	#wrapper {
+	    -webkit-transition: all 0s ease;
+	    -moz-transition: all 0s ease;
+	    -o-transition: all 0s ease;
+	    transition: all 0s ease;
+	   /*  overflow: hidden; */
+	}
+	.navbar-collapse
+	{
+	    padding-right: 5px;
+	    padding-left: 5px;
+	}
+	.kiosk-footer
+	{
+		margin-bottom: 55px;
+	}
+	.HIS_logo {
+    width: 160px;
+    height: 57px;
+    margin-top: -10px;
+}
+.navbar-default {
+    background-color: #2e6ea2 !important;
+<!--    height: 66px;-->
+}
+ /*****NEW CARD END*****/
+
+
+	</style>
+</head>
+<div id=""><!-- style="padding-right: 10px !important;" -->
+    <div class="his-style">
+<!--        <div ng-include="'./views/common/kiosk-top-bar.html'"></div>-->
+        <div class="kiosk_bg" id=""></div>
+        <div ng-include="'./views/common/poc-top-bar.html'"></div>
+
+        <div ng-include="'./views/common/poc-footer.html'"></div>
+
+            <div class="padding-left-right-10">
+                <div >
+                    <div class="row padding-top10">
+                        <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+                            <div class="form-group" >
+                                <label for="">Patient Visitor</label>
+                                <!--                        <input type="text" autocomplete="off"  class="form-control" tabindex="3" ng-model="patientName" placeholder="Search"-->
+                                <!--                               uib-typeahead="group.prefixCode+' '+group.firstName+' '+group.middleName+' '+group.lastName+'|'+group.uhidNumber+'|'+group.mobileNumber  for group in searchGroupList($viewValue)"-->
+                                <!--                               typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName" >-->
+                                <input type="text" autocomplete="off"  class="form-control" tabindex="3" ng-model="patientName" placeholder="Search"  press-enter="searchGroupList(patientName)">
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-1 col-md-2 col-sm-2 padding-left-rightset4 padding-top15 text-width-auto">
+                            <div class="">
+                                <a class="" style="" ng-click="searchGroupList(patientName)"> <input type="button" value="Search"
+                                                                                                     class="btn btn-primary btn-save-box-shadow text-width-auto fs23"
+                                                                                                     style="height: 42px; margin-top: 11px;padding: 3px 12px !important;" >
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="fix-height-scroll600" style="margin-top:20px">
+                        <form name="patientRegistrationform" novalidate id="patientRegistrationform">
+                            <fieldset class="normalRegistration margin-top10 padding-left-right-set4">
+                                <legend class="heading-div">Visitor Process </legend>
+                            </fieldset>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div class="row padding-top10">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+                                            <div class="form-group"  show-errors>
+                                                <label for="sel1">Prefix<span class="star">*</span></label>
+                                                <select class="form-control dirty" convert-to-number name="prefixId" ng-model="patientObj.prefixId" ng-change="selectGender(patientObj.prefixId)" ng-disabled="hideShowSearch" required>
+                                                    <option ng-repeat="info in prefixList" value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+                                                </select>
+                                                <p class="help-block" ng-if="patientRegistrationform.prefixId.$error.required">Prefix is required</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+                                            <div class="form-group" show-errors>
+                                                <label for="">First Name<span class="star">*</span> </label>
+                                                <input type="text" autocomplete="off"   only-letters-input class="form-control" name="firstName" ng-model="patientObj.firstName" ng-disabled="hideShowSearch" style="text-transform: capitalize" required>
+                                                <p class="help-block" ng-if="patientRegistrationform.firstName.$error.required">First Name is required</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+                                            <div class="form-group">
+                                                <label for="">Middle Name </label>
+                                                <input type="text" autocomplete="off"  only-letters-input class="form-control" id="" ng-model="patientObj.middleName" ng-disabled="hideShowSearch" style="text-transform: capitalize">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+                                            <div class="form-group">
+                                                <label for="">Last Name</label>
+                                                <input type="text" autocomplete="off"  only-letters-input class="form-control" name="lastName"  ng-model="patientObj.lastName" ng-disabled="hideShowSearch" style="text-transform: capitalize">
+                                                <!-- 						  		<p class="help-block" ng-if="patientRegistrationform.lastName.$error.required">Last Name is required</p> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row padding-left-right-set4">
+                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                    <div class="form-group" show-errors>
+                                        <label for="sel1">Gender<span class="star">*</span></label>
+                                        <select class="form-control dirty" convert-to-number id="sel1"  name="genderId" ng-model="patientObj.genderId" ng-disabled="hideShowSearch" required>
+                                            <option></option>
+                                            <option ng-repeat="sex in genderList" value="{{sex.id}}">{{sex.desc}}</option>
+                                        </select>
+                                        <p class="help-block" ng-if="patientRegistrationform.genderId.$error.required">Gender is required</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+                                        <div class="form-group" show-errors>
+                                            <label for="">Code<span class="star">*</span></label>
+                                            <input type="" class="form-control" name="countryCallingCode" id=""  ng-model="patientObj.countryCallingCode=91" ng-disabled="hideShowSearch" required>
+                                            <p class="help-block" ng-if="patientRegistrationform.countryCallingCode.$error.required">Code is required</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <div class="form-group" show-errors>
+                                            <label for="">Mobile No.<span class="star">*</span></label>
+                                            <input type="" class="form-control" numbers-only type="text" autocomplete="off" name="mobileNo" id="mobileNo"  ng-model="patientObj.mobileNo" ng-disabled="hideShowSearch" maxlength="10" required> <!--   ng-pattern="ph_numbr"-->
+                                            <p class="help-block" ng-if="patientRegistrationform.mobileNo.$error.required">Number is required</p>
+                                            <p class="help-block" ng-if="patientRegistrationform.mobileNo.$error.pattern">Please enter a 10 digit number</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4" >
+                                    <div class="form-group" show-errors>
+                                        <label for="">Email Id.</label>
+                                        <input type="" class="form-control"  type="text" autocomplete="off" name="email" id="email"  ng-model="patientObj.emailId" ng-disabled="hideShowSearch" > <!--   ng-pattern="ph_numbr"-->
+                                        <!-- <p class="help-block" ng-if="patientRegistrationform.mobileNo.$error.required">Number is required</p>
+                                      <p class="help-block" ng-if="patientRegistrationform.mobileNo.$error.pattern">Please enter a 10 digit number</p> -->
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4" >
+                                    <div class="form-group" show-errors>
+                                        <label for="">Reason For Visit</label>
+                                        <!--  <label for="">Identification Id.<span class="star">*</span></label>
+                                         <input type="" class="form-control" numbers-only type="text" autocomplete="off" name="identificationTypeId" id="identificationTypeId"  ng-model="patientObj.identificationTypeId" ng-disabled="hideShowSearch" >   ng-pattern="ph_numbr"
+                                           <p class="help-block" ng-if="patientRegistrationform.mobileNo.$error.required">Number is required</p>
+                                         <p class="help-block" ng-if="patientRegistrationform.mobileNo.$error.pattern">Please enter a 10 digit number</p> -->
+                                        <select class="form-control" name="identificationId"   ng-model="patientObj.reasonId"  convert-to-number ng-disabled="hideShowSearch">
+                                            <<option value="0">Select Reason</option>
+                                            <option value="1">Radiology Investigation</option>
+                                            <option value="2">Laboratory</option>
+                                            <option value="3">OPD Visit</option>
+                                            <option value="4">Inpatient Visit</option>
+                                            <option value="5">Other</option>
+                                            <!--                <option ng-repeat="info in identificationList" value="{{info.identificationId}}">{{info.identificationName}}</option>-->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4" ng-if="patientObj.reasonId=='5'" >
+                                    <div class="form-group" show-errors>
+                                        <label for="">Remark</label>
+                                        <input type="" class="form-control" type="text" autocomplete="off" name="identificationNumber" id="identificationNumber"  ng-model="patientObj.remark" ng-disabled="hideShowSearch"> <!--   ng-pattern="ph_numbr"-->
+                                        <!-- <p class="help-block" ng-if="patientRegistrationform.mobileNo.$error.required">Number is required</p>
+                                      <p class="help-block" ng-if="patientRegistrationform.mobileNo.$error.pattern">Please enter a 10 digit number</p> -->
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row padding-top15">
+                                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4" ng-if="patientObj.statusIdTemp != 5" >
+                                    <div class="form-group" show-errors>
+                                        <label for="">Status</label>
+                                        <select class="form-control" name="identificationId" ng-model="patientObj.checkinStatusId"  ng-change="set_color(patientObj.checkinStatusId)"convert-to-number >
+                                            <<option value="0" >Select</option>
+                                            <option value="1" ng-if="patientObj.statusIdTemp < 1"  >Check In</option>
+                                            <option value="2" ng-if="patientObj.statusIdTemp < 2" >Patient Prep</option>
+                                            <option value="3"  ng-if="patientObj.statusIdTemp < 3" >Wheel In</option>
+                                            <option value="4"  ng-if="patientObj.statusIdTemp < 4" >Wheel Out</option>
+                                            <option value="5"  ng-if="patientObj.statusIdTemp < 5">Patient Exit</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4"  ng-if="patientObj.statusIdTemp != 5" >
+                                    <a class="" ng-click="updateNewPatient(patientObj.statusIdTemp)">
+                                        <input type="button" value="Update"
+                                               class="btn btn-primary btn-save-box-shadow text-width-auto fs23"
+                                               style="height: 42px; margin-top: 27px;padding: 3px 12px !important;">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="container padding-top25" >
+                                <div class="arrow-steps clearfix">
+                                    <div ng-class="getClassforColor1();"> <span> Checked In</span> </div>
+                                    <div ng-class="getClassforColor2();"> <span>Patient Prepared</span> </div>
+                                    <div  ng-class="getClassforColor3();"  > <span>Wheel In<span> </div>
+                                    <div  ng-class="getClassforColor4();"> <span>Wheel Out<span> </div>
+                                    <div ng-class="getClassforColor5();"> <span>Checked out<span> </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<!--<script src="resources/assets/js/common/page-height.js"></script>-->
+<!--<script type="text/javascript">-->
+
+<!--/* $(document).ready(function() {  -->
+<!--	// $(".patienttSearchResult").hide();-->
+<!--	 $(".selectedPageName").text("Self Registration");-->
+<!--	$(".sidebar-nav li").each(function() {-->
+<!--		$(this).find("a").parents("li").removeClass("active");-->
+<!--	});-->
+<!--	$('a[href$="selfRegistration"]').parents("li").addClass("active");-->
+<!--}); */-->
+<!--/* $(".icon-span").hide(); */-->
+<!--$("#sidebar-wrapper").hide();-->
+
+
+<!--</script>-->

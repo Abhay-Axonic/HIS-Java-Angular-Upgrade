@@ -1,0 +1,967 @@
+<style>
+/* .ng-isolate-scope{
+	height: 110px !important;
+    overflow-y: scroll  !important;
+} */
+.custom-drop-down-btn button{
+	    width: 160% !important;
+}
+
+.clockpicker-popover .popover-footer {
+	display: none !important;
+}
+
+</style>
+ 
+ <!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+      	<div class="row margin-top10">
+      		<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 padding-top8">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+					<div class="row input-container test-master-sample">
+						<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-plus-o ddp-padding-top padding-top5" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-10 ">
+								<div class="">
+									<input name="fromDate"
+										id="date1" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+										uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+										placeholder="DD/MM/YYYY" tabindex="13" ng-model="fromDate"
+										model-view-value="true" is-open="popup.opened"
+										datepicker-options="dateOptions" show-button-bar="false" ng-click="open()" />
+										<label for="" class="LISDynamicLabel">Date (From)</label>
+									</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+					<div class="row input-container test-master-sample">
+						<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-minus-o ddp-padding-top padding-top5" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-10 ">
+							<div class="">
+								<input name="toDate"
+									id="date2" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" tabindex="13" ng-model="toDate"
+									model-view-value="true" is-open="popup1.opened"
+									datepicker-options="dateOptions" show-button-bar="false" ng-click="open1()"/>
+									<label for="" class="LISDynamicLabel">Date-Till</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container test-master-sample padding-top8">
+					<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-user" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10 ">
+								<div class="form-group" >
+									 <input type="text" autocomplete="off"
+										 class="text-input floating-label" tabindex="3"
+										 ng-model="patientId"
+										 placeholder="Search"
+										 uib-typeahead=" patient.patientWithUhid for patient in getMicroPatientList($viewValue)"
+										 typeahead-editable="false"
+										 typeahead-on-select="selectPatient($item, $model, $label);"
+										 name="patientName"  />
+									<label for="description" class="LISDynamicLabel">Patient Name</label>
+								</div>
+							</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 ">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+					<div class="row input-container test-master-sample padding-top8">
+						<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o padding-top8" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-10 ">
+							<div class="">
+								<input type="text" autocomplete="off" name="uhid" id=""  ng-model="uhid" typeahead-editable="false"class="text-input floating-label">
+								<label for="" class="LISDynamicLabel">UHID</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top8">
+					<div class="row input-container test-master-sample">
+						<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o ddp-padding-top" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-10 ">
+							<div class="row input-container test-master-sample">
+								<div class="col-lg-12 col-sm-12 col-md-12 ">
+									<div class="">
+										<label for="" class="LISDynamicLabel">Visit Type</label>
+										 <div class="custom-drop-down-btn"
+											ng-dropdown-multiselect="" options="visityTypeList"
+											selected-model="selectedVisitType" style="border-bottom:1px solid #333 !important"
+											>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 padding-top8">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+					<div class="row input-container test-master-sample">
+						<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o ddp-padding-top" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-10 ">
+							<div class="">
+								<label for="" class="LISDynamicLabel">Department </label>
+								<div class="custom-drop-down-btn" ng-dropdown-multiselect="" options="departmentList" 
+								selected-model="selectedDepartMentList" extra-settings="dropDownSetting"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+					<div class="row input-container test-master-sample">
+						<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o ddp-padding-top" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-10 ">
+							<div class="">
+								<label for="" class="LISDynamicLabel">Test</label>
+								<div class="custom-drop-down-btn" ng-dropdown-multiselect="" options="testList" 
+								selected-model="selectedtestList" extra-settings="dropDownSetting"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 ">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+					<div class="row input-container test-master-sample padding-top10">
+						<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-10 ">
+							<div class="">
+								<input type="text" autocomplete="off" name="sampleno" id="" class="text-input floating-label" tabindex="3"
+								  ng-model="selectedSampleNo"
+								  placeholder="Search"
+								 uib-typeahead="sample.sampleNo for sample in getSampleNoList($viewValue)"
+								 typeahead-on-select="selectSampleNo($item, $model, $label);"
+								  >
+								<label for="" class="LISDynamicLabel">Sample No.</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top8">
+					<div class="row input-container test-master-sample">
+						<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o ddp-padding-top" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-10 ">
+							<div class="">
+								<label for="" class="LISDynamicLabel">Specimen Type</label>
+								<div  class="custom-drop-down-btn" ng-dropdown-multiselect="" 
+									  options="specimanTypeList" selected-model="selectedspecimanTypeList" extra-settings="dropDownSetting">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set padding-top10">
+				<div class="col-lg-8 col-md-7 col-sm-6 padding-left-right-set4 padding-top8">
+					<div class="row input-container test-master-sample">
+						<div class="col-lg-2 col-sm-1 col-md-2 polymer-icon text-left" >
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-11 col-md-10 ">
+							<div class="">
+								<select class="text-input floating-label ng-touched dirty"
+								ng-model="statusId" name="statusId" required>
+								<option value="">Please Select Status</option>
+								<option ng-repeat="sampleStatusDtls in sampleStatusList"
+									value="{{sampleStatusDtls.id}}">{{sampleStatusDtls.name}}</option>
+							</select>
+								<label for="" class="LISDynamicLabel">Status(n)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+				
+				<div class="col-lg-4 col-md-5 col-sm-6 padding-left-right-set4 padding-top10">
+				  <label class="checkbox-inline padding-top5">
+				      <input type="checkbox" value="" ng-model="selectedOutsourced" ng-click="checkOutsourced();">Outsourced
+				   </label>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 padding-top10">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+				  <label class="checkbox-inline padding-top5">
+				     <!--  <input type="checkbox" value="" ng-model="selectedPending" ng-click="checkPending();">Pending -->
+				      <input type="checkbox" value="" ng-model="selectedPending" ng-click="checkPending();">Inprocess
+				   </label>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+				  <label class="checkbox-inline padding-top5">
+				      <input type="checkbox" value="" ng-model="selectedCompleted" ng-click="checkCompleted();" >Completed
+				   </label>
+				</div>
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="form-group">
+							<input type="text" autocomplete="off"
+								class="text-input floating-label ng-pristine ng-untouched ng-valid dirty ng-empty"
+								tabindex="3" ng-model="doctorName" placeholder="Search"
+								uib-typeahead="group.desc  for group in searchGroupSurgen($viewValue)"
+								typeahead-on-select="selectDoctor($item, $model, $label,idx)"
+								typeahead-editable="true" name="groupName"
+								aria-autocomplete="list" aria-expanded="false"
+								aria-owns="typeahead-89-8614"> <label for="code">Doctor
+								Name</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 padding-top10">
+				<div class="row input-container padding-top12">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-dot-circle-o ddp-padding-top padding-top2"
+							aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<select class="text-input floating-label dirty" ng-model="paymentEntitlementId" ng-change="getCompanyMasterList(paymentEntitlementId)">
+									<option value="">Select Payment Entitlement</option>
+									<option ng-repeat="paymentEntitlement in paymentEntitlementList" value="{{paymentEntitlement.id}}" ng-if="paymentEntitlement.id != 1">{{paymentEntitlement.name}}</option>
+								</select>
+							<label for="code">Payment Entitlement</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-dot-circle-o ddp-padding-top padding-top2" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+						
+						<label for="" class="LISDynamicLabel">Company/TPA</label>
+							<div class="custom-drop-down-btn" ng-dropdown-multiselect="" options="companyMasterList" 
+								selected-model="selectedCompanyList" extra-settings="dropDownSetting"  ng-click="getAssociateCompanyMasterList(selectedCompanyList)">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 padding-top10" ng-if="paymentEntitlementId == 2">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-dot-circle-o ddp-padding-top padding-top2"aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<label for="" class="LISDynamicLabel">Insurance</label>
+								<div class="custom-drop-down-btn" ng-dropdown-multiselect="" options="associateCompanyMasterList" 
+									selected-model="selectedassociateCompanyMasterList" extra-settings="dropDownSetting">
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 pull-right text-width-auto">
+				<div class="common-save-button" style="padding-top:  0px;"> 
+					 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" ng-click="searchWorkLoadDashBoardList();" title="Search"> 
+					 	<i class="fa fa-search" aria-hidden="true" ></i> 
+					 </a> 
+				</div> 
+			</div>
+			<div
+				class="col-lg-2 col-md-2 col-sm-3 text-right text-with-auto padding-left-right-set4 pull-right padding-top10">
+				<div class="common-save-button" style="padding-top: 0px;">
+					<a href="" class="btn btn-primary btn-save-box-shadow"
+						style="width: auto;" ng-click="clearFields();" title="Clear">
+						<i class="fa fa-eraser" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="row margin-top4">
+         	<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+         			<div class="search">
+									<label class="show-entries">Show 
+									<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage='50'" ng-model="noOfRecordsPerPage"
+										ng-change="setNoOfRecords();" class="search-popUp-ddl">
+											<!-- <option value="10">10</option>   	 -->
+											<option value="50">50</option>
+											<option value="75">75</option>
+											<option value="100">100</option>
+									</select> entries
+									</label>
+								</div>
+         	</div>
+         	
+         	<div  ng-show="isBillManipulationAllowed"  class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_left padding-top10 radio-container"  style="border: 1px solid #ccc;border-radius: 5px;margin-top:15px;width:180px;text-align:center">
+						<span >
+							<input id="all_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="otherRegistrationType trigger ng-pristine ng-untouched ng-valid ng-not-empty" value="1" ng-change="filterByDummyServices(isDummyService)">
+							<label for="all_Radio">All</label>
+						</span>
+								<span >
+							<input id="real_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="employeeRegRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="2" ng-change="filterByDummyServices(isDummyService)">
+							<label for="real_Radio">Real</label>
+						</span>
+								<span >
+							<input id="dummy_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="dependentRedRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="3" ng-change="filterByDummyServices(isDummyService)">
+							<label for="dummy_Radio">Dummy</label>
+						</span>
+					</div>
+            		
+            	<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top4">
+					
+         		</div>	
+            		
+         	<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4">
+	          	<div class="col-lg-2 col-md-2 col-sm-2 ">
+					<!-- <a href="" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#storageDetails">Accept</a> -->
+				</div>
+	          	<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4 padding-top4">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword" style="margin-top:0px" ng-change="workloadDashboardUniversalSearch(searchKeyword);">
+					<i class="fa fa-search common-search-text-icon padding-top4" aria-hidden="true" style="padding-left:4px"></i>
+				</div>
+			</div>
+      </div>
+      
+      <div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll380">
+			  <table id="main-table" class="main-table width180">
+			    <thead>
+			      <tr>
+			      	<th class="width5 vertical-top">
+						Sample No.
+					</th>
+					<th class="width7 vertical-top">
+						Patient Details
+					</th>
+					<th class="width8 vertical-top">
+						Test Name
+					</th>
+					<th class="width10 vertical-top">
+						Status(n)
+					</th>
+					<th class="width7 vertical-top">
+						Order Date and Time
+					</th>
+					<th class="width4 vertical-top">
+						Visit Type
+					</th>
+					<th class="width5 vertical-top">
+						Department
+					</th>
+					<th class="width5 vertical-top">
+						Assign Clinical Unit Name
+					</th>
+					<th class="width5 vertical-top">
+						UHID
+					</th>
+					<th class="width5 vertical-top">
+						Bill No.
+					</th>
+					<th class="width5 vertical-top">
+						Test Code
+					</th>
+					<th class="width7 vertical-top">
+						Profile Code
+					</th>
+					
+					<th class="width6 vertical-top">
+						Payment Entitlement
+					</th>
+					<th class="width7 vertical-top">
+						Company/Insurance
+					</th>
+					<th class="width4 vertical-top">
+						Profile Name
+					</th>
+					<th class="width6 vertical-top">
+						Package Name
+					</th>
+					<th class="width4 vertical-top">
+						Referral Name
+					</th>
+					<!-- <th class="width7 vertical-top">
+						Priority
+					</th> -->
+					<th class="width4 vertical-top">
+						Sample
+					</th>
+					<th class="width7 vertical-top">
+						Specimen Type
+					</th>
+					<!-- <th class="patient-doc-details-width">
+						Doctor Details
+						<div class="float_right">
+							<div>
+								<i ng-click='sortColumn("doctorDetails")' class="fa fa-caret-up" aria-hidden="true"></i>
+							</div>
+							<div class="margin-top-8">
+								<i ng-click='sortColumn("doctorDetails")' class="fa fa-caret-down"  aria-hidden="true"></i>
+							</div>
+						</div>
+					</th>
+					<th class="width7">
+						Department
+						<div class="float_right">
+							<div>
+								<i ng-click='sortColumn("deptName")' class="fa fa-caret-up" aria-hidden="true"></i>
+							</div>
+							<div class="margin-top-8">
+								<i ng-click='sortColumn("deptName")' class="fa fa-caret-down"  aria-hidden="true"></i>
+							</div>
+						</div>
+					</th> -->
+					
+					<th class="width7 vertical-top">
+						Out Source of referral Lab
+					</th>
+					<th class="width8 vertical-top">
+						Doctor Details
+					</th>
+					<th class="width6 text-center vertical-top last-col-fixed">
+						Internal Note
+					</th>
+					<th class="width6 text-center vertical-top last-col-fixed">
+						Action taken
+					</th>
+				</tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-repeat="dashBoardData in labDashBoardList|orderBy:column:reverse">
+			      	<td>{{dashBoardData.sampleNo}}</td>
+			      	<td>{{dashBoardData.patientDetails}}</td>
+			      	<td>{{dashBoardData.testDesc}}</td>
+			      	<td>{{(dashBoardData.status == null) ? 'Pending' : dashBoardData.status}}</td>
+
+			      	<td>{{getDateByFormat(dashBoardData.orderDateTimeStringNew,true)}}</td>
+					<td>{{(dashBoardData.visitType == null)? '-' : dashBoardData.visitType}}</td>
+					<td>{{dashBoardData.subSpecialityName}}</td>
+					<td>{{dashBoardData.assignUnitName}}</td>
+					<td>{{dashBoardData.uhid}}</td>
+					<td>{{dashBoardData.billNumber}}</td>
+					<td>{{dashBoardData.testCode}}</td>
+					<td>{{(dashBoardData.panelCode== null) ? '-' : dashBoardData.panelCode}}</td>
+					<!-- <td>{{dashBoardData.entitlementDesc}}</td> -->
+					<td>
+								<div ng-if ="dashBoardData.paymentEntitlementId == 1">Self</div>
+								<div ng-if ="dashBoardData.paymentEntitlementId == 2">Insurance</div>
+								<div ng-if ="dashBoardData.paymentEntitlementId == 3">Company</div>
+								</td>
+					<td>{{dashBoardData.companyOrInsuranceName}}</td>
+					<td>{{dashBoardData.panelName}}</td>
+					<td>{{dashBoardData.packageName}}</td>
+					<td>{{dashBoardData.referralName}}</td>			
+					<!-- <td>{{dashBoardData.priority}}</td> -->
+					<td>{{dashBoardData.sampleType}}</td>
+					<td>{{(dashBoardData.specimenType == null) ? '-' : dashBoardData.specimenType}}</td>
+					<td>{{(dashBoardData.outSourceLab == null) ? '-' : dashBoardData.outSourceLab}}</td>
+					<td>
+					  {{dashBoardData.doctorDetails}}
+					</td>
+					<td>
+<!-- 					  {{dashBoardData.internalNotes}} -->
+						<i class="fa fa-info-circle text-center" aria-hidden="true" data-toggle="modal" data-target="#internalNotesDetails" ng-click="displayInternalNotes(dashBoardData)"></i>
+					</td>
+					<td class="text-center last-col-fixed">
+						<div>
+						
+						 <a  ng-click="getSampleDtlsList(dashBoardData.labSampleDtlsId)" ng-if="(dashBoardData.status)!=null"
+							><i class="fa fa-info-circle" title="Details "></i></a>
+						</div>
+						
+						<div>
+						<a  ng-click="getDateListBysampleDetailsId(dashBoardData.labSampleDtlsId)" ng-if="manualSampleCollectionTime == 'Y'"
+							><i class="fa fa-info-circle" title="Details "></i></a>
+						</div>
+						<!-- <div>						
+							<i class="fa fa-print" aria-hidden="true" title="Print" ng-click=""></i>
+						</div> -->
+						<div ng-if="(dashBoardData.billingMasterId)!=null">
+							<a  href="#/workloadDashboard/serviceDetails" ng-click="getSampleBillDtlsList(dashBoardData)"   data-toggle="modal" data-target="#billListDetailsMain" ><i class="fa fa-money" title="Bill Details" style=" font-size: 22px; " ></i></a>
+						
+						</div>
+						<div>
+						
+						 <a  ng-click="printReport(dashBoardData.labSampleDtlsId)" ng-if="dashBoardData.sampleStatusId == 8 ">
+						 	<i class="fa fa-print" aria-hidden="true" title="Print" ng-click=""></i></a>
+						</div>
+						
+					</td>                         
+				</tr>
+			    </tbody>
+			  </table>
+			  <table class="table table-bordered">
+					<tr ng-if="(labDashBoardList|filter:searchKeyword)=='' || (labDashBoardList|filter:searchKeyword)==null">
+						<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+      
+		<div class="row margin-top10">
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>       		
+          	</div>
+		</div>
+	</div>
+ </div>
+  <!--// Page Content -->
+    <!-- ******************  Details modal start************************ -->	
+<div id="detailsModal" class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+     					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4" id=""><!-- pharmacologyDetailsTableId id for the table td fix height -->
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width8">
+										Action taken
+										<div class="float_right">
+									<div>
+										<i ng-click='sortColumn("action")' class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i ng-click='sortColumn("action")' class="fa fa-caret-down"  aria-hidden="true"></i>
+									</div>
+								</div>
+									</th>
+									<th class="width15">
+										 Action Performed By
+										<div class="float_right">
+									<div>
+										<i ng-click='sortColumn("userName")' class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i ng-click='sortColumn("userName")' class="fa fa-caret-down"  aria-hidden="true"></i>
+									</div>
+								</div>
+									</th>
+									<th class="width12">
+										  Action Date Time
+										<div class="float_right">
+									<div>
+										<i ng-click='sortColumn("actionDateTime")' class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i ng-click='sortColumn("actionDateTime")' class="fa fa-caret-down"  aria-hidden="true"></i>
+									</div>
+								</div>
+									</th>
+									
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="sampledtls in sampleDtlsList|orderBy:column:reverse">
+									<td>{{sampledtls.action}}</td>
+									<td>
+										<input type="text" autocomplete="off" ng-model="sampledtls.userName" ng-disabled="true" class="select-box">
+									</td>
+									<td>{{getDateByFormat(sampledtls.actionDateTimeStringNew,true)}}</td>
+								</tr>
+									
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			 <div class="modal-footer" style="padding:5px">
+				<!--<div class="row his-style">
+					<div class="col-md-10"></div>
+					<div class="col-md-2 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>-->
+				</div> 
+			</div>
+		</div>
+</div>
+<!-- ***************  Details modal end *************************** -->
+	<div id="internalNotesDetails" class="modal fade ng-scope in common-small-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Details<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-12 col-sm-12 col-md-12 padding-left-right-set">
+							
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<textarea name="code" rows="4" class="text-input floating-label" ng-disabled="true" ng-model="internalNotes"></textarea>
+										<label for="code">Internal note</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width12" id="" ng-click="rejectRequestForICU()" value="Save">Save</button> -->
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal"  >
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- ****************** Test Details modal start************************ -->	
+<div id="testDetailsModal" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+     					Test Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4" id="">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width8">
+										Visit No.
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down"  aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width15">
+										 Doctor Details
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down"  aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6">
+										 Ward
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down"  aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+									<th class="width6">
+										 Bed No.
+										<div class="float_right">
+											<div>
+												<i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+												<i class="fa fa-caret-down"  aria-hidden="true"></i>
+											</div>
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr >
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+								</tr>
+									
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			 <div class="modal-footer" style="padding:5px">
+				<!--<div class="row his-style">
+					<div class="col-md-10"></div>
+					<div class="col-md-2 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow">
+						</div>
+					</div>-->
+				</div> 
+			</div>
+		</div>
+	</div>
+<!-- *************** Test Details modal end *************************** -->
+
+
+ <!-- ******************  Details modal start************************ -->	
+<div id="sampleDates" class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+     					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4" id=""><!-- pharmacologyDetailsTableId id for the table td fix height -->
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width8">
+										Action taken
+									</th>
+									<th class="width15">
+										 Date
+									</th>
+									<th class="width12">
+										  Time
+									</th>
+									
+								</tr>
+							</thead>
+							<tbody>
+							
+							<tr ng-hide="collectionDate==null">
+<!--							<tr ng-hide="collectionDate==null || collectiontime ==null ">-->
+									<td>Sample Collected</td>
+									<td>
+										<div class="">
+											<input name="fromDate"
+											id="date1" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" tabindex="13" ng-model="collectionDate"
+											model-view-value="true" is-open="popup5.opened"
+											datepicker-options="dateOptions1" show-button-bar="false" ng-click="open5()" ng-disabled="collectionDate==null">
+										</div>
+									</td>
+									<td>
+									<div class="clockpicker">
+												<input type="text" autocomplete="off" name="collectiontime"
+													id=""
+													   ng-value="collectiontime"
+													class="text-input floating-label">
+<!--													ng-init="initClockPicker()">-->
+<!--													ng-init="initClockPicker()" ng-disabled="collectiontime==null">-->
+									</div>
+									</td>
+								</tr>
+								
+								<tr ng-hide="acceptDate==null">
+<!--								<tr ng-hide="acceptDate==null || acceptDatetime==null">-->
+									<td>Send To Department</td>
+									<td>
+										<div class="">
+											<input name="fromDate"
+											id="date1" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" tabindex="13" ng-model="acceptDate"
+											model-view-value="true" is-open="popup6.opened"
+											datepicker-options="dateOptions1" show-button-bar="false" ng-click="open6()" ng-disabled="acceptDate==null">
+										</div>
+									</td>
+									<td>
+									<div class="clockpicker">
+												<input type="text" autocomplete="off" name="acceptDatetime"
+													id=""
+													   ng-value="acceptDatetime"
+													class="text-input floating-label">
+<!--													ng-model="acceptDatetime" ng-init="initClockPicker()" ng-disabled="acceptDatetime==null">-->
+									</div>
+									</td>
+								</tr>
+								
+							
+								<tr ng-hide="reportEntryDate==null">
+<!--								<tr ng-hide="reportEntryDate==null || reportEntrytime==null">-->
+									<td>Report Entry</td>
+									<td>
+										<div class="">
+											<input name="fromDate"
+											id="date1" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" tabindex="13" ng-model="reportEntryDate"
+											model-view-value="true" is-open="popup4.opened"
+											datepicker-options="dateOptions1" show-button-bar="false" ng-click="open4()" ng-disabled="reportEntryDate==null">
+										</div>
+									</td>
+									<td>
+									<div class="clockpicker">
+												<input type="text" autocomplete="off" name="reportEntrytime"
+													id=""
+													   ng-value="reportEntrytime"
+													class="text-input floating-label">
+<!--													ng-model="reportEntrytime" ng-init="initClockPicker()" ng-disabled="reportEntrytime==null">-->
+									</div>
+									</td>
+								</tr>
+								<tr ng-hide="validationDate==null">
+<!--								<tr ng-hide="validationDate==null || validationtime==null">-->
+									<td>Report Validation</td>
+									<td>
+										<div class="">
+											<input name="fromDate"
+											id="date1" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" tabindex="13" ng-model="validationDate"
+											model-view-value="true" is-open="popup2.opened"
+											datepicker-options="dateOptions1" show-button-bar="false" ng-click="open2()" ng-disabled="validationDate==null">
+										</div>
+									</td>
+									<td>
+									<div class="clockpicker">
+												<input type="text" autocomplete="off" name="validationtime"
+													id=""
+													   ng-value="validationtime"
+													class="text-input floating-label">
+<!--													ng-model="validationtime" ng-init="initClockPicker()" ng-disabled="validationtime==null">-->
+									</div>
+									</td>
+								</tr>
+								<tr ng-hide="releaseDate==null">
+<!--								<tr ng-hide="releaseDate==null || releasetime==null">-->
+									<td>Report Release</td>
+									<td>
+										<div class="">
+											<input name="fromDate"
+											id="date1" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" tabindex="13" ng-model="releaseDate"
+											model-view-value="true" is-open="popup3.opened"
+											datepicker-options="dateOptions1" show-button-bar="false" ng-click="open3()" ng-disabled="releaseDate==null">
+										</div>
+									</td>
+									<td>
+									<div class="clockpicker">
+												<input type="text" autocomplete="off" name="releasetime"
+													id=""
+													   ng-value="releasetime"
+													class="text-input floating-label">
+<!--													ng-model="releasetime ng-init="initClockPicker()" ng-disabled="releasetime==null">-->
+									</div>
+<!--										<div>-->
+<!--											<uib-timepicker name="description" class="text-input floating-label" ng-model="validationtime"-->
+<!--															hour-step="1" minute-step="1" show-meridian="false">-->
+<!--											</uib-timepicker>-->
+<!--										</div>-->
+
+									</td>
+								</tr>
+									
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			 <div class="modal-footer" style="padding:5px">
+				<div class="row his-style">
+					<div class="col-md-10"></div>
+					<div class="col-md-2 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" ng-click= "updateDates();">
+						</div>
+					</div>
+				</div> 
+			</div>
+		</div>
+</div>
+</div>
+<!-- ***************  Details modal end *************************** -->
+
+<div ng-include="'./views/master/UnitMaster/billingMaster/common/bill-list-details-workload-dashboard.html'" ></div>
+
+<script type="text/javascript">
+$('.clockpicker').clockpicker();
+
+$( document ).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+ 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+ 	
+	$(".selectedPageName").text("Workload Dashboard");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+});
+	
+	
+	$(".created-gross-table-row").click(function(){
+       // $(".block-expand").next("tr").toggle();
+        $(this).parentsUntil('tr').parent().next().toggle("slow");
+    });
+	$(".create-slide").click(function(){
+		$(this).next("tbody").toggle("slow");
+	});
+
+</script>
+
+
+

@@ -1,0 +1,663 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<!-- Patient Search -->
+			<div ng-include="'./views/common/MPShah-patient-demography.html'" class="ng-scope"></div>
+		</div>
+		<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width9 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Quick Summary</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width6" style="">
+						<a href="" ng-click="setFirstTabLevel(2)" class="">Triage</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width6" style="">
+						<a href="" ng-click="setFirstTabLevel(3)" class="">History</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(4) }" class="width12" style="">
+						<a href="" ng-click="setFirstTabLevel(4)" class="">Physical Examination</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(5) }" class="width8" style="">
+						<a href="" ng-click="setFirstTabLevel(5)" class="">Prescriptions</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(6) }" class="width8" style="">
+						<a href="" ng-click="setFirstTabLevel(6)" class="">Laboratory</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(7) }" class="width6" style="">
+						<a href="" ng-click="setFirstTabLevel(7)" class="">Diagnosis</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(8) }" class="width7" style="">
+						<a href="" ng-click="setFirstTabLevel(8)" class="">Procedures</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(9) }" class="width6" style="">
+						<a href="" ng-click="setFirstTabLevel(9)" class="">Radiology</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(10) }" class="width8" style="">
+						<a href="" ng-click="setFirstTabLevel(10)" class="">Review Notes</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(11) }" class="width12" style="">
+						<a href="" ng-click="setFirstTabLevel(11)" class="">Provisional Diagnosis</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+				<!-- Overview Tab START -->
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					<!-- Triage START -->
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Triage</legend>
+					</fieldset>
+					<div class="row padding-top5">
+						<div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 padding-top10 ng-scope">
+						  	<div class="row" ng-repeat = "triage in quickSummery.triage">
+						  		<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+                                         <img src="resources/assets/images/icon/themprature.png">
+                                          <!--  <img src="resources/assets/images/icon/thermometer.png">
+                                            <img src="resources/assets/images/icon/thermometer.png">
+                                             <img src="resources/assets/images/icon/pulse.png">
+                                               <img src="resources/assets/images/icon/scale.png">
+                                                <img src="resources/assets/images/icon/height.png">
+                                                 <img src="resources/assets/images/icon/body-mass-index.png">
+                                                    <img src="resources/assets/images/icon/BSA.png"> -->
+						  		</div>
+						  		<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set padding-top5">
+						  			<span class="ng-binding">{{triage.vitalName}}</span>
+						  		</div>
+						  		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						  			<div>
+						  				<output for="fader">
+							  				<b></b>&nbsp;<span>{{triage.vitalValue}}</span>
+						  				</output>
+						  			</div>
+						  		</div>
+						  	</div>
+	      				</div>
+					</div>
+					<!-- Triage END -->
+					
+					<!-- History START -->
+					<fieldset class="normalRegistration margin-top5">
+						<legend class="heading-div">History</legend>
+					</fieldset>
+					<div class="row padding-top5" ng-repeat="history in quickSummery.history track by $index">
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set0 padding-top5">
+				  			<span class="ng-binding">Chief Complaints :</span>
+				  		</div>
+				  		<div class="col-lg-8 col-md-3 col-sm-3 padding-left-right-set0 padding-top5">
+				  			<label class="ng-binding">{{history.notes}}</label>
+				  		</div>
+					</div>
+					
+					<!-- History START -->
+					
+					<!-- Physical Examination START -->
+					<fieldset class="normalRegistration margin-top5">
+						<legend class="heading-div">Physical Examination</legend>
+					</fieldset>
+					<div class="row padding-top5" ng-repeat="pexa in quickSummery.physicalExamination">
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set0 padding-top5">
+				  			<span class="ng-binding">{{pexa.name}} :</span>
+				  		</div>
+				  		<div class="col-lg-8 col-md-3 col-sm-3 padding-left-right-set0 padding-top5">
+				  			<label class="ng-binding">{{pexa.notes}}</label>
+				  		</div>
+					</div>
+					<!-- Physical Examination END -->
+					
+					<!-- Prescriptions START -->
+					<fieldset class="normalRegistration margin-top5">
+						<legend class="heading-div">Prescriptions</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width10">Generic Name</th>
+											<th class="width10">Brand Name</th>
+											<th class="width10">Dosage</th>
+											<th class="width10">Duration</th>
+											<th class="width10">Frequency</th>
+											<th class="width15">Notes</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll250" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "pre in quickSummery.prescriptions">
+										    <td class="width10">{{pre.genericName}}</td>
+											<td class="width10">{{pre.brandName}}</td>
+											<td class="width10">{{pre.dosage}}</td>
+											<td class="width10">{{pre.duration}}</td>
+											<td class="width10">{{pre.frequency}}</td>
+											<td class="width15">{{pre.notes}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- Prescriptions END -->
+					<!-- Laboratory START -->
+					<fieldset class="normalRegistration margin-top5">
+						<legend class="heading-div">Laboratory</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Batch No.</th>
+											<th class="width10">Department Name</th>
+											<th class="width15">Lab Test</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll250" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "lab in quickSummery.loboratory">
+											<td class="width3">{{lab.batchNo}}</td>
+											<td class="width10">{{lab.deptName}}</td>
+											<td class="width15">{{lab.labTest}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- Laboratory END -->
+					<!-- Diagnosis START -->
+					<fieldset class="normalRegistration margin-top5">
+						<legend class="heading-div">Diagnosis</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Sr No.</th>
+											<th class="width5">ICD Code</th>
+											<th class="width15">ICD Description</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll250" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "diagnosis in quickSummery.diagnosis track by $index" >
+											<td class="width3">{{$index+1}}</td>
+											<td class="width5">{{diagnosis.icdCode}}</td>
+											<td class="width15">{{diagnosis.discription}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- Diagnosis END -->
+					
+					<!-- Procedures START -->
+					<fieldset class="normalRegistration margin-top5">
+						<legend class="heading-div">Procedures</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Sr No.</th>
+											<th class="width3">Code</th>
+											<th class="width15">Procedure Name</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll250" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "procedure in quickSummery.procedure track by $index">
+											<td class="width3">{{$index+1}}</td>
+											<td class="width15">{{procedure.code}}</td>
+											<td class="width15">{{procedure.name}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- Procedures START -->
+					
+					<!-- Radiology START -->
+					<fieldset class="normalRegistration margin-top5">
+						<legend class="heading-div">Radiology</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Batch No.</th>
+											<th class="width10">Department Name</th>
+											<th class="width15">Tests</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll250" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+									   <tr ng-repeat = "radiology in quickSummery.radiologyorders track by $index">
+											<td class="width3">{{radiology.batchNo}}</td>
+											<td class="width10">{{radiology.deptName}}</td>
+											<td class="width15">{{radiology.testName}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- Radiology END -->
+					
+					<!-- Review Notes START -->
+					<fieldset class="normalRegistration margin-top5">
+						<legend class="heading-div">Review Notes</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width1">Sr No.</th>
+											<th class="width10">Review Notes</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll250" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "reviewNote in quickSummery.reviewNotes track by $index">
+											<td class="width1">{{$index+1}}</td>
+											<td class="width10">{{reviewNote.notes}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- Review Notes END -->
+					
+					<!-- Provisional Diagnosis START -->
+					<fieldset class="normalRegistration margin-top5">
+						<legend class="heading-div">Provisional Diagnosis</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Date</th>
+											<th class="width3">Provisional Diagnosis</th>
+											<th class="width10">Notes</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll250" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "proDiagnosis in quickSummery.provisionalDiagnosys track by $index">
+											<td class="width3">{{proDiagnosis.date}}</td>
+											<td class="width3">{{proDiagnosis.name}}</td>
+											<td class="width10">{{proDiagnosis.notes}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- Provisional Diagnosis END -->
+					
+					
+				</div>
+				<!-- Overview Tab END -->
+				
+				<!-- Triage Tab START -->
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Triage</legend>
+					</fieldset>
+					<div class="row padding-top5">
+						<div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 padding-top10 ng-scope" ng-repeat = "triage in triageList">
+						  	<div class="row">
+						  		<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+                                         <img src="resources/assets/images/icon/themprature.png">
+						  		</div>
+						  		<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set padding-top5">
+						  			<span class="ng-binding">{{triage.vitalName}}</span>
+						  		</div>
+						  		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						  			<div>
+						  				<output for="fader">
+							  				<b></b>&nbsp;<span>{{triage.vitalValue}}</span>
+						  				</output>
+						  			</div>
+						  		</div>
+						  	</div>
+	      			</div>
+				</div>
+				</div>
+				<!-- Triage Tab END -->
+				
+				<!-- History Tab START -->
+				<div ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">History</legend>
+					</fieldset>
+					<div class="row padding-top5" ng-repeat="history in otherHistoryList track by $index">
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set0 padding-top5">
+				  			<span class="ng-binding">{{history.name}} :</span>
+				  		</div>
+				  		<div class="col-lg-8 col-md-3 col-sm-3 padding-left-right-set0 padding-top5">
+				  			<label class="ng-binding">{{history.notes}}</label>
+				  		</div>
+					</div>
+				</div>
+				<!-- History Tab END -->
+				
+				<!-- Physical Examination Tab START -->
+				<div ng-show="isSetFirstTabLevel(4)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Physical Examination</legend>
+					</fieldset>
+					<div class="row padding-top5" ng-repeat="pexa in physicalExaminationList">
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set0 padding-top5">
+				  			<span class="ng-binding">{{pexa.name}} :</span>
+				  		</div>
+				  		<div class="col-lg-8 col-md-3 col-sm-3 padding-left-right-set0 padding-top5">
+				  			<label class="ng-binding">{{pexa.notes}}</label>
+				  		</div>
+					</div>
+				</div>
+				<!-- Physical Examination Tab END -->
+				
+				<!-- Prescriptions Tab START -->
+				<div ng-show="isSetFirstTabLevel(5)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Prescriptions</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width10">Generic Name</th>
+											<th class="width10">Brand Name</th>
+											<th class="width10">Dosage</th>
+											<th class="width10">Duration</th>
+											<th class="width10">Frequency</th>
+											<th class="width15">Notes</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll475" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "pre in prescriptionList">
+											<td class="width10">{{pre.genericName}}</td>
+											<td class="width10">{{pre.brandName}}</td>
+											<td class="width10">{{pre.dosage}}</td>
+											<td class="width10">{{pre.duration}}</td>
+											<td class="width10">{{pre.frequency}}</td>
+											<td class="width15">{{pre.notes}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Prescriptions Tab END -->
+				
+				<!-- Laboratory Tab START -->
+				<div ng-show="isSetFirstTabLevel(6)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Laboratory</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Batch No.</th>
+											<th class="width10">Department Name</th>
+											<th class="width15">Lab Test</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll475" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "lab in labOrdersList">
+											<td class="width3">{{lab.batchNo}}</td>
+											<td class="width10">{{lab.deptName}}</td>
+											<td class="width15">{{lab.labTest}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Laboratory Tab END -->
+				
+				<!-- Diagnosis Tab START -->
+				<div ng-show="isSetFirstTabLevel(7)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Diagnosis</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Sr No.</th>
+											<th class="width5">ICD Code</th>
+											<th class="width15">ICD Description</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll475" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "diagnosis in diagnosisList track by $index" >
+											<td class="width3">{{$index+1}}</td>
+											<td class="width5">{{diagnosis.icdCode}}</td>
+											<td class="width15">{{diagnosis.discription}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Diagnosis Tab END -->
+				
+				<!-- Procedures Tab START -->
+				<div ng-show="isSetFirstTabLevel(8)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Procedures</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Sr No.</th>
+											<th class="width3">Code</th>
+											<th class="width15">Procedure Name</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll475" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "procedure in procedureList track by $index">
+											<td class="width3">{{$index+1}}</td>
+											<td class="width15">{{procedure.code}}</td>
+											<td class="width15">{{procedure.name}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Procedures Tab END -->
+				
+				<!-- Radiology Tab START -->
+				<div ng-show="isSetFirstTabLevel(9)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Radiology</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Batch No.</th>
+											<th class="width10">Department Name</th>
+											<th class="width15">Tests</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll475" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "radiology in radioLogyList track by $index">
+											<td class="width3">{{radiology.batchNo}}</td>
+											<td class="width10">{{radiology.deptName}}</td>
+											<td class="width15">{{radiology.testName}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Radiology Tab END -->
+				
+				<!-- Review Notes Tab START -->
+				<div ng-show="isSetFirstTabLevel(10)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Review Notes</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width1">Sr No.</th>
+											<th class="width10">Review Notes</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll475" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "reviewNote in otherReviewList track by $index">
+											<td class="width1">{{$index+1}}</td>
+											<td class="width10">{{reviewNote.notes}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Review Notes Tab END -->
+				
+				<!-- Provisional Diagnosis Tab START -->
+				<div ng-show="isSetFirstTabLevel(11)" class="second-level-tab-display-div" style="">
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Provisional Diagnosis</legend>
+					</fieldset>
+					<div class="row padding-left-right-set0 table-container padding-top0">
+						<div class="table-container">
+							<div class="table-container-header">
+								<table class="table table-striped table-hover table-condensed table-bordered">
+									<thead>
+										<tr>
+											<th class="width3">Date</th>
+											<th class="width3">Provisional Diagnosis</th>
+											<th class="width10">Notes</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="table-container-body fix-height-scroll475" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+								<table
+									class="table table-striped table-hover table-condensed table-bordered">
+									<tbody>
+										<tr ng-repeat = "proDiagnosis in privisionalDiagnosis track by $index">
+											<td class="width3">{{proDiagnosis.date}}</td>
+											<td class="width3">{{proDiagnosis.name}}</td>
+											<td class="width10">{{proDiagnosis.notes}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Provisional Diagnosis Tab END -->
+				
+			</div>
+		</div>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("MPShah Encounter Summary");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="MPShahEncounterSummary"]').parents("li").addClass("active");
+});
+</script>

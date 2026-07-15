@@ -1,0 +1,185 @@
+<div id="page-content-wrapper" class="ng-scope">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Issue No. :
+						</b>
+						<lable>{{vm.model.assetIssueListDetail.issueNo}}</lable>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Issue Date :</b>
+						<lable>{{vm.model.assetIssueListDetail.issueDate | date:'dd/MM/yyyy'}}</lable>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Requesting Store :</b>
+						<lable>
+							{{vm.model.assetIssueListDetail.toStore}}
+						</lable>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Issuing Store :</b>
+						<lable>
+							{{vm.model.assetIssueListDetail.fromStore}}
+                        </lable>
+					</span>
+				</div>
+			</div>
+			<div class="row margin-top10" >
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"ng-if="vm.model.assetIssueListDetail.indentNo">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Indent No. :
+						</b>
+						<lable>{{vm.model.assetIssueListDetail.indentNo}}
+                        </lable>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"ng-if="vm.model.assetIssueListDetail.indentNo">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Priority :
+						</b>
+						<lable>{{vm.model.assetIssueListDetail.priority}}
+                        </lable>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10"ng-if="vm.model.assetIssueListDetail.indentNo">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Type :</b>
+						<lable>{{vm.model.assetIssueListDetail.type}}
+                        </lable>
+					</span>
+				</div>
+			</div>
+			<div class="row" id="fixeAssetRowId">
+				<div class="container-fluid his-style">
+					<div class="table-container padding-left-right-set4 padding-top5">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width8" title="Item Code">Item Code
+											<div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8" title="Item Name">Item Name
+											<div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10" ng-show="vm.model.assetIssueListDetail.indentNo" title="Indent Quantity">Indent Qty
+											<div class="float_right" ng-click="sortType = 'indentQuantity'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7" title="Batch No">Batch No
+											<div class="float_right" ng-click="sortType = 'batchNo'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7" title="Issue Quantity">Issued Qty
+											<div class="float_right" ng-click="sortType = 'issueQuantity'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10" ng-show="vm.model.assetIssueListDetail.indentNo" title="Pending Indent Quantity">Pending Indent Qty
+											<div class="float_right" ng-click="sortType = 'pendingQuantity'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<!-- <th class="width10" title="Max Order Quantity">Max Order Qty
+											<div class="float_right" ng-click="sortType = 'maxOrderQuantity'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th> -->
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="height:400px; overflow-y: scroll;">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="item in vm.model.assetIssueListDetail.itemResponse | orderBy:sortType:sortReverse">
+										<td class="width8"  title="{{item.itemCode}}">{{item.itemCode}}</td>
+										<td class="width8"  title="{{item.itemName}}">{{item.itemName}}</td>
+										<td class="width10"  ng-if="vm.model.assetIssueListDetail.indentNo" title="{{item.indentQuantity}}">{{item.indentQuantity}}</td>
+										<td class="width7"  title="{{item.batchNo}}">{{item.batchNo}}</td>
+										<td class="width7"  title="{{item.issueQuantity}}">{{item.issueQuantity}}</td>
+										<td class="width10"  ng-if="vm.model.assetIssueListDetail.indentNo" title="{{item.pendingQuantity}}">{{item.pendingQuantity}}</td>
+										<!-- <td style="width: 9.7%!important;"  title="{{item.maxOrderQuantity}}">{{item.maxOrderQuantity}}</td> -->
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style padding-right20">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Carrier :
+						</b>
+						<lable>{{vm.model.assetIssueListDetail.carrierName}}</lable>
+					</span>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Remark :
+						</b>
+						<lable>{{vm.model.assetIssueListDetail.remark}}</lable>
+					</span>
+				</div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div class="">
+						<a href="#/assetIssueIndent">
+							<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>

@@ -1,0 +1,178 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row margin-top10">
+				<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<select class="text-input floating-label  ">
+									<option value=""></option>
+								</select> <label for="code">Department</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-user-md fa-color" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<select class="text-input floating-label" ng-model="referralTypeId" ng-change="getReferralMasterList()">
+									<option ng-repeat="referralDoc in referralTypeList" value="{{referralDoc.id}}">{{referralDoc.desc}}</option>
+								</select> <label for="code">Referral Type</label>
+							</div>
+						</div>
+					</div>
+				</div> 
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-user-md fa-color" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<select class="text-input floating-label" ng-model="referralDocId">
+									<option> </option>
+									<option ng-repeat="referralDoc in referralMasterList" value="{{referralDoc.referralId}}">{{referralDoc.referralName}}</option>
+								</select> <label for="code">Referral</label>
+							</div>
+						</div>
+					</div>
+				</div> 
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					      <div class="common-save-button">
+								<a href="" id="searchBtn" ng-click="getDoctorReferralDetails()" class="btn btn-primary btn-save-box-shadow text-width-auto">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+				</div> 
+<!-- 				<div ng-include="'./views/master/UnitMaster/billingMaster/details-doctor-referrel-share-master.html'"></div> -->
+				<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto float_right margin-top8">
+					<div class=" ">
+						<a href="#/addNewDoctorReferralShareMaster"> <input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div> -->
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right margin-top10">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div> -->
+			</div>
+		</fieldset>
+		
+		
+		<div class="row padding-top10">
+				<div class="col-md-6 col-sm-7 padding-left-right-set4">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+								<div class="search">
+								<label class="show-entries">Show 
+								<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+									ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+									ng-change="setNoOfRecords();" class="search-popUp-ddl">
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+								</select> entries
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				 <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+			        <a href="#/addNewDoctorReferralShareMaster"> <input type="button" value="Add New"
+							class="btn btn-primary btn-save-box-shadow">
+						</a>
+			      </div>
+			      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+			        <input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty search-popUp-ddl" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword"   ng-keyup="getDoctorReferralDetailsSearch(searchKeyword);"  >
+			        <!-- ng-keyup="getDoctorShareDepartmentMasterListSearch(searchKeyword);" -->
+			        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			      </div>
+			</div>
+			
+			
+		<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll380">
+			  <table id="main-table" class="main-table width100">
+			    <thead class="mainServiceTableCommon">
+						<tr>
+						<!-- 	<th class="width8">Department</th> -->
+<!-- 							<th class="width8">Doctor Grade</th> -->
+							<th class="width8">Referral</th>
+							<th class="width8">Status(n)</th>
+							<th class="width1 text-center">Action taken</th>
+							
+						</tr>
+					</thead>
+			    <tbody>
+						<tr ng-repeat="info in referralMasterDetailsList | filter : searchKeyword">
+<!-- 							<td>Specialist</td> -->
+							<td>{{info.referralName}}</td>
+							<td>
+							<label class="switch"> 
+							<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info.referralId,info.status)">
+							<div class="slider round"></div>
+							</label>
+						</td>
+							<td class="text-center"><a href="" ng-click="getRferralId(info)" class="cursor-pointer">Details</a></td><!--  #/detailsDoctorReferralShareMaster -->
+							
+							
+						</tr>
+						<!-- <tr ng-if="referralMasterDetailsList | filter : searchKeyword )=='' || (referralMasterDetailsList | filter : searchKeyword )==null">
+						<td colspan="2"><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+					    </tr> -->
+					</tbody>
+			   
+			  </table>
+			</div>
+		</div>
+		
+		<div class="row margin-top4 padding-left-right-set4">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				
+					<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script>
+
+$(document).ready(function() {
+	 
+	 $(".selectedPageName").text("Doctor Referral Share Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="doctorReferralShareMaster"]').parents("li").addClass("active");
+});
+
+
+
+</script>

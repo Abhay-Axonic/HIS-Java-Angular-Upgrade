@@ -1,0 +1,790 @@
+<style>
+.disabled-icon {
+    color: #5C4033 !important;
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+	
+}
+
+.checkbox-inline {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.enabled-icon {
+    color: #d63384 !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+   
+}
+.save-changes {
+  background-color: red;
+  padding: 7px 13px;
+  color: white;
+  border: 1px solid black;
+  font-weight: bold;
+}
+
+.save-changes[disabled] {
+  background-color: #F5F5F5
+}
+
+/*modal css start */
+	.modal-header {
+	margin-top: -27px !important;
+  margin-left: -28px;
+  background: url(resources/assets/images/icon/popTop.svg) no-repeat 16px center !important;
+  padding-left: 50px;
+  height: 77px;
+  align-items: self-start;
+  border-bottom: none;
+}
+
+.modal-body{
+    margin-top: -15px;
+   }
+
+.modal-header .modal-title {
+  background: none !important;
+  margin-left: 24px;
+  margin-top: 10px;
+}
+
+.modal-header .modal-title .close {
+  margin-top: 21px !important;
+}
+/*modal css end */
+
+</style>
+        <!-- Page Content -->
+        <div id="page-content-wrapper" class="">
+            <div class="container-fluid his-style">
+				<modal visible="showModal"></modal> 
+			<div class="row padding-left-right-set4 padding-top8">
+			<div class="col-md-6 col-sm-7" style="padding-left: 0px;">
+				<div class="row">
+					<div class="col-lg-3 col-md-6"
+						style="padding-left: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries 
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+		       <div class=" ">
+		        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"  ng-click="saveAdmittedPatientER()"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		       </div>
+		      </div>
+		      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+		        <input type="text" autocomplete="off" class="text-search-box search-popUp-ddl" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+		        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+		      </div>
+		</div>
+		
+				<div class="row padding-left-right-set4">
+					<div class="col-md-12 margin-top8 common-table-alignment">
+						<table class="table table-bordered table-th">
+							<tr class="">
+							<th class="width1"></th>
+								<th class="UHID-width">
+									UHID
+								<!-- 	<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div> -->
+								</th>
+								<th class="patient-doc-details-width">
+									Patient Details
+									<!-- <div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div> -->
+								</th>
+								<th class="patient-doc-details-width">
+									Encounter No.
+									<!-- <div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div> -->
+								</th>
+								<th class="patient-doc-details-width">
+									Encounter Date/Time							
+									<!-- <div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div> -->
+								</th>
+								<th class="patient-doc-details-width">
+									Priority							
+								<!-- 	<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div> -->
+								</th>
+                                                                      
+								<th class="patient-doc-details-width">Specialty Triage</th>
+								<th class="patient-doc-details-width">Analyze Triage</th>
+								<th class="patient-doc-details-width">
+									Triage 								
+									<!-- <div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div> -->
+								</th>
+							<!-- 	<th class="patient-doc-details-width">
+									Doctor Details						
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th> -->
+								<th class="patient-doc-details-width">
+									Allocation Type					
+									<!-- <div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div> -->
+								</th>
+								
+							</tr>
+							<tr ng-repeat="info in bedTypeAllocationList|filter:searchKeyword track by $index"  >
+								<td ng-style="set_color(info.triageCategoryId)" class="text-center">
+									<input type="radio" name="radioName" value="info.admissionId" ng-model="bedTypeAllocationEr" ng-click="selectItem(info,$index)" />
+								</td>
+								<td ng-style="set_color(info.triageCategoryId)">
+									{{info.uhidnumber}}
+								</td>
+								<td ng-style="set_color(info.triageCategoryId)" ng-style="set_color(info.triageCategoryId)">
+									<!--{{info.patientName+' '+info.ageString+' / '+info.genderName}} -->
+									<div>{{info.patientName}}</div>
+									<div>{{info.ageString+' / '+info.genderName}}</div>
+									<!--<span>{{}}</span> -->
+								</td>
+								<td ng-style="set_color(info.triageCategoryId)">{{info.admissionNumber}}</td>
+								<td ng-style="set_color(info.triageCategoryId)" class="text-left">{{info.encounterDate}}</td>
+								<td ng-style="set_color(info.triageCategoryId)">{{info.priorityDesc}}</td>
+								<!-- <td ng-style="set_color(info.triageCategoryId)" class="text-center"><span style="margin-right: 21px;"><i class="fa fa-microphone" style="color: blue !important;"></i></span><span>  <i class="fa fa-paper-plane" style="color: green !important;"></i></span></td> -->
+								<td ng-style="set_color(info.triageCategoryId)" class="text-center">
+									<span>
+										<i class="fa fa-female fa-2x" style="font-size: 23px !important;"
+										ng-class="info.genderName == 'F' ? 'enabled-icon' : 'disabled-icon'"
+										title="Obstetric Triage"
+										ng-click="info.genderName == 'F' && openObstetricTriageModal(info)">
+										</i>
+									</span>
+									<span>
+										<i class="fa fa-child fa-2x"
+										ng-class="isPaediatricAge(info.ageString) ? 'enabled-icon-blue' : 'disabled-icon'"
+										title="Pediatric Triage"
+										style="margin-left:24px"
+										ng-click="isPaediatricAge(info.ageString) && openPaediatricTriageModal(info)">
+										</i>
+									</span>
+								</td>
+								<td ng-style="set_color(info.triageCategoryId)" class="text-center"><div
+      style="
+        display:inline-flex;
+        align-items:center;
+		/* background: linear-gradient(90deg,#020024,#fef3f2,#fef3f2); */
+        padding:10px 14px;
+        border-radius:12px;
+        width:185px;
+		float: right;
+		margin-top: -1px;
+      ">
+
+  <!-- MIC -->
+  <span ng-disabled="info.checkPatientSelect" ng-click="startRecording(info.admissionId,info.checkPatientSelect)" id="updateBtn"
+        title="Record"
+        style="
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          width:33px;
+          height:33px;
+          border-radius:50%;
+          margin-right:10px;
+          cursor:pointer;
+		    background:#6cc3d5;
+          color:#fff;
+        
+          font-size:18px;
+        ">
+<i id="micIcon_{{info.admissionId}}" class="fa fa-microphone" style="color: blue !important;"></i>
+  </span>  
+
+  <span ng-disabled="info.checkPatientSelect" ng-click="pauseRecording(info.admissionId,info.checkPatientSelect)" id="saveBtn_{{info.admissionId}}"
+      title='Pause'
+      style="display:inline-flex;
+             align-items:center;
+             justify-content:center;
+             width:33px;
+             height:33px;
+             border: 1px solid;
+             border-radius:50%;
+             margin-right:10px;
+             cursor:pointer;
+			   background:#f5a623;
+          color:#fff;
+           
+             font-size:18px;">
+
+    <i class="fa fa-pause" id="hold_{{info.admissionId}}"
+      ></i>
+</span>
+
+
+  <!-- SAVE -->
+  <span ng-disabled="info.checkPatientSelect" ng-click="stopAndSave(info.admissionId,info.checkPatientSelect)" id="cancelBtn_{{info.admissionId}}"
+        title="Stop"
+        style="
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+           width:33px;
+          height:33px;
+              border: 1px solid;
+          border-radius:50%;
+          margin-right:12px;
+          cursor:pointer;
+           background:#ff5b5b;
+             color:#fff;
+          font-size:18px;
+        ">
+    <i class="fa fa-stop"></i>
+  </span>
+
+<!-- <span style="
+          font-family:monospace;
+          font-size:16px;
+          /* margin-left:auto; */
+        ">
+    {{recordTime}}
+  </span> -->
+
+</div></td>
+
+								<td ng-style="set_color(info.triageCategoryId)"><div>
+<!--								<select class="width100 save-changes" ng-change="defaultAllocationSel(info.triageCategoryId)" convert-to-number ng-model="info.triageCategoryId" ng-disabled="info.checkPatientSelect">-->
+								<select class="width100 save-changes" convert-to-number ng-model="info.triageCategoryId" ng-disabled="info.checkPatientSelect">
+<!--											<option value="0" >Select Triage Category</option>-->
+<!--										 <option value="1" ng-click="defaultSel();">Resuscitation</option>-->
+<!--											<option value="2">Emergent/Immediate</option>-->
+<!--											<option value="3">Urgent/Delayed</option>-->
+<!--											<option value="4">Less Urgent/Minimal</option>-->
+<!--											<option value="5">Non Urgent</option>-->
+<!--											<option value="6">Dead/Expectant</option>-->
+
+									<option value="0" >Select Triage Category</option>
+<!--									<option value="1" ng-click="defaultSel();">Emergent</option>-->
+									<option value="1">Emergent</option>
+									<option value="3">Urgent</option>
+									<option value="5">Non-Urgent</option>
+									<option value="6">Dead</option>
+										</select></div></td>
+								<!-- <td>
+									<div> <select class="select-box" ng-model="info.doctorId">
+											<option value="">Select Doctor</option>
+											<option ng-repeat="doc in doctorsList" value="{{doc.doctorId}}">{{doc.firstName}}</option>
+										</select></div>
+								</td> -->
+								<td ng-style="set_color(info.triageCategoryId)">
+									<div>
+										<select class="width100 select-ER save-changes"  ng-model="info.ErAreaId" ng-change="getERBedPopup(info.ErAreaId)" ng-disabled="info.checkPatientSelect" >
+											<option value="">Select</option>
+											<option value="1">Red</option>
+											<option value="2">Yellow</option>
+<!--											<option ng-selected="info.triageCategoryId==1" value="3">Resuscitation (Green)</option>-->
+											<option value="3">Green</option>
+											<option value="4">Black</option>
+										</select>
+									</div>
+								</td>
+							</tr>
+						</table>
+						
+						<div class="row margin-bottom45 sss">
+							<ul ng-if="pager.pages.length" class="pagination table-list"
+								style="font-size: 14px;">
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(1,'true')">First</a></li>
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+								<li ng-repeat="page in pager.pages"
+									ng-class="{active:pager.currentPage === page}"><a
+									ng-click="setPage(page,'true')">{{page}}</a></li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+								</li>
+							</ul>
+						</div>
+						
+					</div>
+				</div>
+  			</div>
+		</div>
+	
+	
+	<!-- ******************** START MODEL FOR BED ALLOCATION ER BED **************************** -->
+<div id="bedAllocationForER" class="modal fade ng-scope in common-popup-header-content" role="dialog"  data-backdrop="static">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						ER Bed
+						<button type="button" class="close" data-dismiss="modal" ng-click="closeTriageModel()">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body his-style ">
+					
+					<div class="row margin-top10 fix-height-scroll450">
+						<div class="col-md-12">
+							<div class="row padding-bottom10" >
+								<div class="col-md-2 col-sm-2 col-xs-2 padding-leftright15 padding-top10" ng-repeat="info in activeERBedList">
+				    			<div class="card text-center cursor-pointer">
+				    				<input type="radio" name="radioName1" value="info.bedId" ng-model="bedEr" ng-click="selectItemBed(info)" />
+				    				<div>
+				    					<label style="color: #04bcd4;" class="cursor-pointer" >{{info.bedNumber}}</label>
+				    				</div>
+				    				<div class="text-center bed-management">
+									  	<img src="resources/assets/images/icon/bed/Empty bed.png" alt="Avatar" >
+									 </div>
+								</div>
+				    		</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				 <div class="modal-footer his-style" style="border: none;">
+				 	<div class="row">
+				 		<div class="col-lg-10 col-sm-10 col-md-10"> 
+				 		</div>
+						<div class="col-lg-2 col-sm-2 col-md-2"> 
+		 					<input type="button" value="Allot" id="saveBtn"  ng-click="selectedBedObject()" class="btn btn-primary btn-save-box-shadow">
+		 				</div>
+				 	</div>
+				</div>
+			</div>
+		</div>
+</div>
+ 			<!-- ******************** END MODEL FOR BED ALLOCATION ER BED **************************** -->	
+	
+
+
+<div id="paediatricTriagePopup" class="modal fade" role="dialog" data-backdrop="static">
+  <div class="modal-dialog" style="width: 50% !important;">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header padding-zero" style="padding: 0px;">
+        <div class="modal-title patient-details-row">
+          Paediatric Triage
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+
+      <!-- Body -->
+    <div class="modal-body" style="max-height: 450px; overflow-y: auto; padding: 15px;">
+
+  <!-- Patient Info -->
+  <div style="margin-top:8px; font-size:13px; color:#555;margin-left: 7px;">
+    <b>UHID:</b> {{triagePopUpInfo.uhidnumber}} &nbsp; | &nbsp;
+    <b>Name:</b> {{triagePopUpInfo.patientName}} &nbsp; | &nbsp;
+    <b>Age:</b> {{triagePopUpInfo.ageString}} &nbsp; | &nbsp;
+    <b>Gender:</b> {{triagePopUpInfo.genderName}}
+  </div>
+
+  <!-- 🔴 RED -->
+  <!-- <h4 style="color:#dc3545;"><b>RED – Immediate Life-Threatening Emergency</b></h4>
+  <div class="checkbox"><label><input type="checkbox" ng-model="paediatricTriage.red.respiratory"> Severe respiratory distress</label></div>
+  <div class="checkbox"><label><input type="checkbox" ng-model="paediatricTriage.red.unresponsive"> Unresponsive / coma</label></div>
+  <div class="checkbox"><label><input type="checkbox" ng-model="paediatricTriage.red.seizures"> Active seizures</label></div>
+  <div class="checkbox"><label><input type="checkbox" ng-model="paediatricTriage.red.shock"> Shock</label></div>
+  <div class="checkbox"><label><input type="checkbox" ng-model="paediatricTriage.red.dehydration"> Severe dehydration</label></div>
+  <div class="checkbox"><label><input type="checkbox" ng-model="paediatricTriage.red.cardiac"> Cardiac arrest</label></div>
+  <div class="checkbox"><label><input type="checkbox" ng-model="paediatricTriage.red.trauma"> Severe trauma</label></div>
+  <div class="checkbox"><label><input type="checkbox" ng-model="paediatricTriage.red.allergy"> Severe allergic reaction</label></div> -->
+
+
+  <h4 style="color:#dc3545;"><b>RED – Immediate Life-Threatening Emergency</b></h4>
+
+<label class="checkbox-inline" style="margin-left: 11px;">
+    <input type="checkbox" ng-model="paediatricTriage.red.respiratory">
+    <span></span> Severe respiratory distress
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.red.unresponsive">
+    <span></span> Unresponsive / coma
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.red.seizures">
+    <span></span> Active seizures
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.red.shock">
+    <span></span> Shock
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.red.dehydration">
+    <span></span> Severe dehydration
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.red.cardiac">
+    <span></span> Cardiac arrest
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.red.trauma">
+    <span></span> Severe trauma
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.red.allergy">
+    <span></span> Severe allergic reaction
+</label>
+
+
+  <!-- RED Remarks -->
+  <div class="form-group" style="margin-left: 8px;">
+    <label><b>Remarks</b></label>
+    <textarea class="form-control"
+              ng-model="paediatricTriage.red.notes"
+              rows="2"
+              placeholder="Enter RED category notes..."></textarea>
+  </div>
+
+  <hr>
+
+  <!-- 🟡 YELLOW -->
+  <h4 style="color:#ffc107;"><b>YELLOW – Urgent</b></h4>
+
+<label class="checkbox-inline" style="margin-left: 11px;">
+    <input type="checkbox" ng-model="paediatricTriage.yellow.feverInfant">
+    <span></span> Fever in infant (&lt;3 months)
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.yellow.vomiting">
+    <span></span> Persistent vomiting
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.yellow.dehydration">
+    <span></span> Moderate dehydration
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.yellow.abdominalPain">
+    <span></span> Abdominal pain
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.yellow.respiratory">
+    <span></span> Mild respiratory distress
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.yellow.headInjury">
+    <span></span> Minor head injury
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.yellow.intake">
+    <span></span> Reduced oral intake
+</label>
+
+  <!-- YELLOW Remarks -->
+  <div class="form-group" style="margin-left: 8px;">
+    <label><b>Remarks</b></label>
+    <textarea class="form-control"
+              ng-model="paediatricTriage.yellow.notes"
+              rows="2"
+              placeholder="Enter YELLOW category notes..."></textarea>
+  </div>
+
+  <hr>
+
+  <!-- 🟢 GREEN -->
+ <h4 style="color:#28a745;"><b>GREEN – Non-Urgent / Stable</b></h4>
+
+<label class="checkbox-inline" style="margin-left: 11px;">
+    <input type="checkbox" ng-model="paediatricTriage.green.fever">
+    <span></span> Mild fever
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.green.cough">
+    <span></span> Mild cough / cold
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.green.injury">
+    <span></span> Minor injury
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.green.diarrhea">
+    <span></span> Mild diarrhea
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.green.rash">
+    <span></span> Skin rash
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="paediatricTriage.green.stable">
+    <span></span> Stable child
+</label>
+  <!-- GREEN Remarks -->
+  <div class="form-group" style="margin-left: 8px;">
+    <label><b>Remarks</b></label>
+    <textarea class="form-control"
+              ng-model="paediatricTriage.green.notes"
+              rows="2"
+              placeholder="Enter GREEN category notes..."></textarea>
+  </div>
+
+</div>
+
+      <!-- Footer -->
+      <div class="modal-footer" style="text-align: center;">
+        <button  ng-click="submitTriage()" id="saveBtn">Submit</button>
+        <button  data-dismiss="modal" id="cancelBtn" ng-click="closeTriageModel()">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+	
+
+
+<!-- obstetricTriagePopup start here -->
+
+<div id="obstetricTriagePopup" class="modal fade" role="dialog" data-backdrop="static">
+  <div class="modal-dialog" style="width: 50% !important;">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header padding-zero" style="padding: 0px;">
+        <div class="modal-title patient-details-row">
+          Obstetric Triage
+          <button type="button" class="close" data-dismiss="modal" ng-click="closeTriageModel()">&times;</button>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body" style="max-height: 450px; overflow-y: auto; padding: 15px;">
+
+        <!-- Patient Info -->
+        <div style="margin-top:8px; font-size:13px; color:#555;margin-left: 7px;">
+          <b>UHID:</b> {{triagePopUpInfo.uhidnumber}} &nbsp; | &nbsp;
+          <b>Name:</b> {{triagePopUpInfo.patientName}} &nbsp; | &nbsp;
+          <b>Age:</b> {{triagePopUpInfo.ageString}} &nbsp; | &nbsp;
+          <b>Gender:</b> {{triagePopUpInfo.genderName}}
+        </div>
+
+        <!-- 🔴 RED -->
+        <h4 style="color:#dc3545;"><b>RED – Immediate Obstetric Emergency</b></h4>
+
+<label class="checkbox-inline" style="margin-left: 11px;">
+    <input type="checkbox" ng-model="obsTriage.red.bleeding">
+    <span></span> Active heavy vaginal bleeding
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.red.convulsions">
+    <span></span> Convulsions / suspected eclampsia
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.red.shock">
+    <span></span> Shock
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.red.cordProlapse">
+    <span></span> Cord prolapse
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.red.fetalHeart">
+    <span></span> Fetal heart not detected
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.red.respiratory">
+    <span></span> Severe respiratory distress
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.red.sepsis">
+    <span></span> Suspected sepsis in pregnancy
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.red.trauma">
+    <span></span> Trauma during pregnancy
+</label>
+        <!-- RED Remarks -->
+        <div class="form-group" style="margin-left: 8px;">
+          <label><b>Remarks</b></label>
+          <textarea class="form-control"
+                    ng-model="obsTriage.red.notes"
+                    rows="2"
+                    placeholder="Enter RED category notes..."></textarea>
+        </div>
+
+        <hr>
+
+        <!-- 🟡 YELLOW -->
+        <h4 style="color:#ffc107;"><b>YELLOW – Urgent</b></h4>
+
+<label class="checkbox-inline" style="margin-left: 11px;">
+    <input type="checkbox" ng-model="obsTriage.yellow.contractions">
+    <span></span> Regular uterine contractions
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.yellow.bleeding">
+    <span></span> Mild vaginal bleeding
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.yellow.fever">
+    <span></span> Fever in pregnancy
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.yellow.vomiting">
+    <span></span> Persistent vomiting
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.yellow.abdominalPain">
+    <span></span> Mild abdominal pain
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.yellow.rom">
+    <span></span> Suspected rupture of membranes
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.yellow.fetalMovement">
+    <span></span> Decreased but present fetal movements
+</label>
+        <!-- YELLOW Remarks -->
+        <div class="form-group" style="margin-left: 8px;">
+          <label><b>Remarks</b></label>
+          <textarea class="form-control"
+                    ng-model="obsTriage.yellow.notes"
+                    rows="2"
+                    placeholder="Enter YELLOW category notes..."></textarea>
+        </div>
+
+        <hr>
+
+        <!-- 🟢 GREEN -->
+       <h4 style="color:#28a745;"><b>GREEN – Stable</b></h4>
+
+<label class="checkbox-inline" style="margin-left: 11px;">
+    <input type="checkbox" ng-model="obsTriage.green.routine">
+    <span></span> Routine labor assessment
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.green.irregular">
+    <span></span> Irregular contractions
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.green.backPain">
+    <span></span> Back pain in pregnancy
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.green.falseLabor">
+    <span></span> Query false labor
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.green.routineComplaints">
+    <span></span> Routine obstetric complaints
+</label>
+
+<label class="checkbox-inline">
+    <input type="checkbox" ng-model="obsTriage.green.noRedFlag">
+    <span></span> No red flag symptoms
+</label>
+
+<!-- GREEN Remarks -->
+        <div class="form-group" style="margin-left: 8px;">
+          <label><b>Remarks</b></label>
+          <textarea class="form-control"
+                    ng-model="obsTriage.green.notes"
+                    rows="2"
+                    placeholder="Enter GREEN category notes..."></textarea>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer" style="text-align: center;">
+        <button ng-click="submitTriage()" id="saveBtn">Submit</button>
+        <button data-dismiss="modal" id="cancelBtn" ng-click="closeTriageModel()">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+	<script type="text/javascript">
+	$( document ).ready(function() {
+	
+		var documentHeight= $(window).height();
+	    var sideBarHeight = documentHeight - 55;
+	 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+		
+		$(".selectedPageName").text("Triage Worklist");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="pendingAdmissionDischarge"]').parents("li").addClass("active");
+		
+	});
+	
+/* 	$( ".select-ER" ).change(function() {
+		alert();
+		 var selectedValue = $('.select-ER :selected').text();
+		if(selectedValue == "ER")
+			{
+				$('#bedAllocationForER').modal();
+			}
+	}); */
+	
+	
+</script>
+</body>
+</html>

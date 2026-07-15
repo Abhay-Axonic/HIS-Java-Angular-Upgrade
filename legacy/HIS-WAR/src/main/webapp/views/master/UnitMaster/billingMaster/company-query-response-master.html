@@ -1,0 +1,515 @@
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset class="">
+			<div class="row padding-top5">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+					<fieldset class="normalRegistration sub-fieldset">
+						<div class="row">
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label" ng-model="vm.model.searchObj.companyTypeId" ng-change="vm.model.getCompaniesByCompanyType(vm.model.searchObj.companyTypeId)">
+												<option value=""></option>
+												<option value="2">Insurance</option>
+												<option value="3">Corporate</option>
+											</select> <label for="code">Company Type</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label" ng-model="vm.model.searchObj.companyId" ng-change="vm.model.getInsuranceByCompanyId(vm.model.searchObj.companyId)">
+												<option value="">-</option>
+												<option value="{{comp.id}}" ng-value="comp.id" ng-repeat="comp in vm.model.companies">{{comp.name}}</option>
+											</select> <label for="code">Company</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label" ng-model="vm.model.searchObj.associateCompanyId" ng-disabled="disableInsurance">
+												<option value="">-</option>
+												<option value="{{assc.id}}" ng-value="assc.id" name="assc.name" ng-repeat="assc in vm.model.associateCompanies">{{assc.name}}</option>
+											</select> <label for="code">Insurance Company</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"  placeholder="DD/MM/YYYY"
+												model-view-value="true" is-open="vm.model.fromDateOpened" datepicker-options="vm.model.fromDateOptions" show-button-bar="false"	ng-click="vm.model.OpenFromDate()"
+												ng-model="vm.model.searchObj.fromDate"> 
+												<label for="description" class="LISDynamicLabel">Date (From)</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"  placeholder="DD/MM/YYYY"
+												model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions" show-button-bar="false"	ng-click="vm.model.OpenToDate()"
+												ng-model="vm.model.searchObj.toDate"> 
+												<label for="description" class="LISDynamicLabel">Date-Till</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+			<div class="row margin-top4">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					 <div class=" ">
+						      <a href="" ng-click="vm.model.getCompanyInvoiceListByFilter()" id="searchBtn" class="btn btn-primary btn-save-box-shadow" title="Search">
+						        <i class="fa fa-search" aria-hidden="true"></i>
+						      </a>
+					</div>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword"
+						style="margin-top: 0px"> <i
+						class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+			</div>
+			<div class="row margin-top4 padding-left-right-set4">
+				<div class="col-md-12 col-lg-12  OPDBillService table-responsive fix-height-scroll205">
+					<table class="table table-bordered OPDBillService common-tbody-scroll">
+						<thead>
+							<tr>
+								<th class="width1"></th>
+								<th class="width10"><span class="">Invoice Date</span></th>
+								<th class="width10">Invoice No</th>
+								<th class="width10">Company Name</th>
+								<th class="width10">Credit Bill Amount</th>
+								<th class="width5">Amount Received</th>
+								<th class="width5">Due Amount</th>
+							</tr>
+						</thead>
+						<tbody class="scrollable">
+							<tr>
+								<tr ng-repeat = "inv in vm.model.invoices|orderBy:column:reverse|filter:searchKeyword">
+									<td class="width1"><input type="checkbox" ng-model="inv.isSelected" ng-click="vm.model.getCompanyInvoiceDetailsByInvoiceId(inv.companyInvoiceId,inv.isSelected)"></td>
+									<td class="width10">{{inv.invoiceDate}}</td>
+									<td class="width10">{{inv.invoiceNumber}}</td>
+									<td class="width10">{{inv.companyName}}</td>
+									<td class="width12">{{parseFloatNum(inv.totalAmount)}}</td>
+									<td class="width10">{{parseFloatNum(inv.totalAmount - inv.dueAmount)}}</td>
+									<td class="width10">{{parseFloatNum(inv.dueAmount)}}</td>
+								</tr>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table table-bordered">
+					<tr ng-if="(vm.model.invoices|filter:searchKeyword)=='' || (vm.model.invoices|filter:searchKeyword)==null">
+						<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+					</tr>
+				</table>
+				</div>
+			</div>
+			<div class="row margin-top4 padding-left-right-set4">
+				<div class="col-md-12 col-lg-12  OPDBillService table-responsive">
+					<table
+						class="table table-bordered OPDBillService common-tbody-scroll">
+						<thead>
+							<tr>
+								<th class="width1"></th>
+								<th class="width8"><span class="">Invoice No.</span></th>
+								<th class="width7">Bill Date</th>
+								<th class="width7">Bill No.</th>
+								<th class="width7">UHID</th>
+								<th class="width10">Patient Name</th>
+								<th class="width10">Total Bill Amount</th>
+								<th class="width10">Net Payable</th>
+								<th class="width10">Paid Amount</th>
+								<th class="width7 text-center">Query</th>
+								<th class="width8 text-center">Pending Query</th>
+								<th class="width8 text-center">Resolved Queries</th>
+								<th class="width10 text-center">Details</th>
+							</tr>
+						</thead>
+						<tbody class="scrollable">
+							 <tr ng-repeat="invdtl in vm.model.invoiceDetails|orderBy:column:reverse|filter:searchKeyword1">
+								<td ><input type="checkbox" ng-model="invdtl.isSelected"></td>
+					            	<td class="width6">{{invdtl.invoiceNumber}}</td>
+					            	<td class="width5">{{invdtl.billDateTime}}</td>
+					            	<td class="width5">{{invdtl.billNumber}}</td>
+					            	<td class="width5">{{invdtl.uhidNumber}}</td>
+					            	<td class="width10">{{invdtl.patientName}}</td>
+					            	<td class="width10">{{parseFloatNum(invdtl.totalBillAmount)}}</td>
+					            	<td class="width8">{{parseFloatNum(invdtl.netAmount)}}</td>
+					            	<td class="width8">{{parseFloatNum(invdtl.netAmount - invdtl.outstanding)}}</td>
+								<td class="text-center"><a data-toggle="modal" data-target="#addQueryModal" id="" ng-click="vm.model.callSaveCompanyQuery(invdtl,$index);"  class="cursor-pointer">Add</a></td>
+								<td class="text-center"><a data-toggle="modal" data-target="#pendingQueryModal" id=""  ng-click="vm.model.getPendingQueryListByQueryStatusId(1,invdtl.companyInvoiceDetailId);" class="cursor-pointer"><i class="fa fa-info-circle"></i></a></td>
+								<td class="text-center"><a data-toggle="modal" data-target="#resolvedQueryModal" id="" ng-click="vm.model.getPendingQueryListByQueryStatusId(2,invdtl.companyInvoiceDetailId);"sclass="cursor-pointer">View</a></td>
+								<td class="text-center"><a data-toggle="modal" data-target="#detailsCompanyQueryResponseMaster" ng-click="vm.model.deatilsCompanyInvoiceList(invdtl.billId,invdtl.billPayeeId)" class="cursor-pointer">Details</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table table-bordered">
+					<tr ng-if="(vm.model.invoiceDetails|filter:searchKeyword)=='' || (vm.model.invoiceDetails|filter:searchKeyword)==null">
+						<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+					</tr>
+				</table>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+
+</div>
+
+
+
+<!-- addQueryModal POPUP -->
+<div id="addQueryModal"
+	class="common-small-popup modal fade ng-scope in his-style"
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Add Query
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id=""  my-date-picker ng-model="vm.model.tCompanyInvoiceQueryDetailDto.queryDate" class="text-input floating-label"> 
+												<label for="description" class="LISDynamicLabel">Query Received Date</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<div class="">
+													<input type="text" autocomplete="off" name="description" id=""  ng-model="vm.model.tCompanyInvoiceQueryDetailDto.queryDetails" class="text-input floating-label"> 
+													<label for="description" class="LISDynamicLabel">Query Details</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="code" rows="4" id="noteReject" class="text-input floating-label ng-pristine ng-valid ng-empty ng-touched" ng-model="vm.model.tCompanyInvoiceQueryDetailDto.remark" style=""></textarea>
+									<label for="code">Remark</label>
+								</div>
+							</div>
+						</div>
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="col-lg-1 col-sm-1 col-md-1 pull-right text-width-auto padding-left-right-set4">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id=""  ng-click="vm.model.saveCompanyQueryResponseData();" >Add</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Query Details Modal START -->
+<div id="pendingQueryModal"
+	class="common-large-popup modal fade ng-scope in his-style"
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Pending Query Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top4 padding-left-right-set4">
+				<div class="col-md-12 col-lg-12  OPDBillService table-responsive fix-height-scroll205">
+					<table class="table table-bordered OPDBillService common-tbody-scroll">
+						<thead>
+							<tr>
+								<th class="width2"></th>
+								<th class="width8 vertical-top"><span>Query No.</span></th>
+								<th class="width8 vertical-top">Query Received Date</th>
+								<th class="width10 vertical-top">Query Details</th>
+								<th class="width10 vertical-top">Remarks</th>
+								<th class="width6 vertical-top">Response Date</th>
+								<th class="width10 vertical-top">Response Details</th>
+								<th class="width5 vertical-top text-center">Query Completed</th>
+							</tr>
+						</thead>
+						<tbody class="scrollable">
+							<tr ng-repeat = "qrydtl in vm.model.pendingAndResolvedQueryDetails">
+								<td><input type="checkbox" ng-model="qrydtl.isSelected"/></td>
+								<td>{{qrydtl.queryNo}}</td>
+								<td>{{qrydtl.queryDate}}</td>
+								<td>{{qrydtl.queryDetails}}</td>
+								<td>{{qrydtl.remark}}</td>
+								<td><input type="text" autocomplete="off" my-date-picker ng-model="qrydtl.responseDate" class="w-100" ng-disabled="!qrydtl.isSelected"></td>
+								<td><input type="text" autocomplete="off" ng-model="qrydtl.responseDetails" class="w-100" ng-disabled="!qrydtl.isSelected"></td>
+								<td class="text-center">
+									<label class="switch">
+										<input type="checkbox" ng-model="qrydtl.queryStatusId" ng-true-value="2" ng-false-value="1">
+										<div class="slider round"></div>
+									</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <div class="col-lg-1 col-sm-1 col-md-1 pull-right text-width-auto padding-left-right-set4">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="">Submit</button>
+				</div> -->
+				<div class="col-lg-1 col-sm-1 col-md-1 pull-right text-width-auto padding-left-right-set4">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="vm.model.updatePendingQueryDetails()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- reminder Modal END -->
+
+<!-- details Reminder Modal START -->
+<div id="resolvedQueryModal"
+	class="common-large-popup modal fade ng-scope in his-style"
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Resolved Query Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+			
+			<div class="row padding-top4 padding-left-right-set4">
+				<div class="col-md-12 col-lg-12  OPDBillService table-responsive fix-height-scroll205">
+					<table class="table table-bordered OPDBillService common-tbody-scroll">
+						<thead>
+							<tr>
+								<th class="width5 vertical-top"><span class="">Query No.</span></th>
+								<th class="width5 vertical-top">Query Received Date</th>
+								<th class="width10 vertical-top">Query Details</th>
+								<th class="width10 vertical-top">Remarks</th>
+								<th class="width3 vertical-top">Response Date</th>
+								<th class="width10 vertical-top">Response Details</th>
+							</tr>
+						</thead>
+						<tbody class="scrollable">
+							<tr ng-repeat = "qrydtl in vm.model.pendingAndResolvedQueryDetails">
+								<td>{{qrydtl.queryNo}}</td>
+								<td>{{qrydtl.queryDate}}</td>
+								<td>{{qrydtl.queryDetails}}</td>
+								<td>{{qrydtl.remark}}</td>
+								<td>{{qrydtl.responseDate | date : "dd/MM/y"}}</td>
+								<td>{{qrydtl.responseDetails}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+<!-- 				<div class="row">
+					<div class="col-md-12 padding-left-right-set4">
+						<div class="row input-container padding-top5">
+						     <div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4 padding-top10">
+						       <span class="ng-binding"><b class="padding-right10 ">Query No.
+						            :</b>  </span>
+						     </div>
+						     <div class="col-lg-7 col-md-7 col-sm-7 padding-left0 padding-top10"></div>
+						</div>
+						<div class="row input-container margin-top5">
+						     <div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4 padding-top10">
+						       <span class="ng-binding"><b class="padding-right10 ">Query Received Date
+						            :</b>  </span>
+						     </div>
+						     <div class="col-lg-7 col-md-7 col-sm-7 padding-left0 padding-top10"></div>
+						</div>
+						<div class="row input-container margin-top5">
+							<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4 padding-top10">
+						       <span class="ng-binding"><b class="padding-right10 ">Query Details
+						            :</b>  </span>
+						     </div>
+						     <div class="col-lg-7 col-md-7 col-sm-7 padding-left0 padding-top10"></div>
+						</div>
+						<div class="row input-container margin-top5">
+						     <div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4 padding-top10">
+						       <span class="ng-binding"><b class="padding-right10 ">Remarks
+						            :</b>  </span>
+						     </div>
+						     <div class="col-lg-7 col-md-7 col-sm-7 padding-left0 padding-top10"></div>
+						</div>
+						<div class="row input-container margin-top5">
+						     <div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4 padding-top10">
+						       <span class="ng-binding"><b class="padding-right10 ">Response Date
+						            :</b>  </span>
+						     </div>
+						     <div class="col-lg-7 col-md-7 col-sm-7 padding-left0 padding-top10"></div>
+						</div>
+						<div class="row input-container margin-top5">
+						     <div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4 padding-top10">
+						       <span class="ng-binding"><b class="padding-right10 ">Response Details
+						            :</b>  </span>
+						     </div>
+						     <div class="col-lg-7 col-md-7 col-sm-7 padding-left0 padding-top10"></div>
+						</div>
+						<input type="text" autocomplete="off" id="commonId" />
+					</div>
+				</div>
+ -->			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="col-lg-1 col-sm-1 col-md-1 pull-right text-width-auto padding-left-right-set4">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END -->
+
+<!-- detailsCompanyQueryResponseMaster Modal START -->
+<div id="detailsCompanyQueryResponseMaster" class="common-large-popup modal fade ng-scope in his-style" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top5 padding-left-right-set4">
+					<div id="table-scroll" class="table-scroll">
+						<div class="table-wrap">
+							<table class="main-table">
+								<thead>
+									<tr>
+										<th class="width8 th-bg"><span class="">Order No.</span></th>
+										<th class="width10 th-bg">Service Name</th>
+										<th class="width10 th-bg">Doctor</th>
+										<th class="width10 th-bg">Qty</th>
+										<th class="width10 th-bg">Unit Price</th>
+										<th class="width10 th-bg">Total Amount</th>
+										<th class="width10 th-bg">Concession</th>
+										<!-- <th class="width10 th-bg">Disc %</th> -->
+										<th class="width10 th-bg">Discount Amount</th>
+										<th class="width10 th-bg">GST Amount</th>
+										<th class="width10 th-bg">Net Payable</th>
+										<th class="width10 th-bg">Self Payable</th>
+										<th class="width10 th-bg">Credit Payable</th>
+										<!-- <th class="width10 th-bg">Remark</th> -->
+									</tr>
+								</thead>
+								<tbody class="scrollable">
+									<tr ng-repeat="info in vm.model.detailsCompanyInvoiceCreationList|orderBy:column:reverse|filter:searchKeyword">
+										<!-- <td class="td-bg"><input type="checkbox"></td> -->
+										<td class="td-bg">{{info.orderNo}}</td>
+										<td class="td-bg">{{info.serviceStandardName}}</td>
+										<td class="td-bg">{{info.doctorName}}</td>
+										<td class="td-bg">{{info.quantity}}</td>
+										<td class="td-bg">{{info.unitRate}}</td>
+										<td class="td-bg">{{info.totalAmount}}</td>
+										<td class="td-bg">{{info.concession}}</td>
+									<!-- 	<td class="td-bg">{{info.concession}}</td> -->
+										<td class="td-bg">{{info.discount}}</td>
+										<td class="td-bg">{{info.taxAmount}}</td>
+										<td class="td-bg">{{info.netAmount}}</td>
+										<td class="td-bg">{{info.selfPayable}}</td>
+										<td class="td-bg">{{info.credtPayable}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<div class="col-lg-1 col-sm-1 col-md-1 pull-right text-width-auto padding-left-right-set4">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- detailsCompanyQueryResponseMaster END -->
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script>
+
+$(document).ready(function() {
+	 
+	 $(".selectedPageName").text("Company Query & Response Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="companyQueryResponseMaster"]').parents("li").addClass("active");
+});
+
+
+
+</script>

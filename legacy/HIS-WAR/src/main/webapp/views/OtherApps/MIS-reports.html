@@ -1,0 +1,642 @@
+
+
+<style>
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+  background-color: DodgerBlue;
+}
+
+.flex-container > div {
+  background-color: #f1f1f1;
+  width: 100px;
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+}
+
+/* .uib-datepicker-popup.dropdown-menu{
+display:none !important;
+}  */
+.vertical-list .nav>li {
+    position: relative;
+    display: contents;
+}
+.vertical-list ul.tabs li a {
+    color: black !important;
+   /*  font-weight: bold !important; */
+    text-decoration: none !important;
+    padding: 10px !important;
+}
+.second-level-tab-display-div {
+    padding: 10px !important;
+    margin-top: 0px  !important;
+    border: 1px solid #5ab7c8 !important;
+}
+.nav>li>a:focus, .nav>li>a:hover {
+   /*  background-color: #5ab7c8 !important; */
+  /*   padding: 10px !important; */
+}
+.nav>li>a:focus, .nav>li>a:hover {
+    /* background-color: #5ab7c8 !important; */
+   /*  padding: 10px !important; */
+}
+ /* .custom-sub-tab .nav-tabs>li.active>a:focus */
+/* .custom-sub-tab .nav-tabs>li.active>a, .custom-sub-tab .nav-tabs>li.active>a:hover {
+   color: #5ab7c8 !important;- 
+    background-color: #ddeeff !important;
+    border: 0px !important;
+    font-weight: 700 !important; - 
+    margin-top: -4px; -
+    height: 25px; -
+   font-size: 15px !important;- 
+     height: 45px !important ;-
+} */
+/* .custom-sub-tab ul.tabs li.active {
+    background-color: #5ab7c8;
+    border: 1px 1px 0px 1px solid grey;
+    border-top: 1px solid #5ab7c8;
+    border-left: 1px solid #5ab7c8;
+    border-right: 1px solid #5ab7c8;
+     margin-top:- 10px; 
+     padding-top:- 10px; 
+     height: 26px; -
+     z-index: 9999; -
+    padding: 6px 0px;
+} */
+/* .custom-sub-tab .nav-tabs>li.active>a, .custom-sub-tab .nav-tabs>li.active>a:focus, .custom-sub-tab .nav-tabs>li.active>a:hover */
+/* .custom-sub-tab .nav-tabs>li.active>a, .custom-sub-tab .nav-tabs>li.active>a, .custom-sub-tab .nav-tabs>li.active>a:hover {
+    background-color: #5ab7c8 !important;
+    background-color: #ddeeff !important; -
+    color:white !important;
+    border: 0px !important;
+    font-weight: 700; -
+    margin-top: -4px;- 
+     height: 25px;- 
+} */
+.padding-set10{
+	padding:10px 0px !important;
+}
+.border-set-grey{
+	border:1px solid #ddd !important;
+}
+
+
+
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0 margin-top5">
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+						<fieldset class="padding-bottom10">
+							<legend class="heading-div">MIS Report</legend>
+						</fieldset>
+						 <div class="row his-style padding-bottom10">
+			<div class="padding-left-right-set4">
+<!-- 					<input type="text" autocomplete="off" class="text-search-box dirty"   
+					placeholder="Search" ng-model="searchReportHeader" id="searchReportHea" ng-keyup="searchReportName(searchReportHeader)" style="margin-top: 0px; width: 92%; padding-left: 33px !important;">-->
+					<input type="text" autocomplete="off" class="text-search-box dirty"
+																tabindex="3" ng-model="searchReportHeader"
+																placeholder="Search"
+																uib-typeahead="group.reportName  for group in searchReportName($viewValue)"
+																typeahead-editable="false"
+																typeahead-on-select="selectReportSerachId($item, $model, $label,initVal);"
+																name="reportGroupHeaderName" 
+																typeahead-min-length="2">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"
+					style="left: 14px;margin-top: 32px;"></i>
+			</div>
+		</div>
+						<div class="row custom-sub-tab vertical-list fix-height-scroll550">
+							<ul class="tabs nav nav-tabs">
+								<li ng-class="{ active : isSetFirstTabLevel($index) }"  ng-repeat=" demo in getHeaderReportList | orderBy:'-reportGroupHeaderId':true track by $index " ng-init="idx=$index">
+											<a href ng-click="setFirstTabLevel($index);getReportListByReportGroupHeaderId(demo)" style="height: 35px !important;  text-align: left;"ng-value="{{demo.reportGroupHeaderId_}}" value="{{demo.reportGroupHeaderId}}" >{{demo.reportGroupHeaderName}}</a>
+										
+								 <div class="row custom-sub-tab vertical-list">
+									<ul class="tabs nav nav-tabs">
+										<li ng-class="{ active : isSetFirstTabLevel($index) }"  ng-repeat=" info in getReportList |  orderBy:'reportGroupHeaderName' track by $index" ng-init="idx=$index" ng-if="demo.reportGroupHeaderId == info.reportGroupHeaderId">
+											<a href ng-click="setFirstTabLevel($index);getparameterbyReportId(info)" style="height: 40px !important ; color: #2e6da2 !important; text-align: left;" ng-value="{{info.reportId_}}" value="{{info.reportId}}" >&nbsp;&nbsp;&nbsp;{{info.reportName}}</a>
+										</li>
+									</ul>
+								</div>
+								
+								
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-9 col-md-9 col-sm-8 padding-left-right-set0">
+						<div class="row">
+							<!--******* CONTENT FOR FIRST TAB *******-->
+
+							<div ng-show="isSetFirstTabLevel($index)" class="second-level-tab-display-div" ng-repeat="info in getReportList" ng-model="common.reportId" >
+
+								<fieldset>
+									<legend class="heading-div" value="{{info.reportId}}" >{{reportNamesHOW}}</legend>
+								</fieldset>
+								<div class="row padding-top10 ">
+								<div style="position: relative;margin:auto;">
+								  	<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top20" ng-repeat="info in getparameterbyReportId1" ng-style="getRowStyle($index)">
+								  		<div class="row input-container" ng-if="info.controlName == 'DatePickerFrom'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									                    <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											       name="fromDatepicker" id="fromDatepicker"
+										           uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											       placeholder="DD/MM/YYYY" ng-model="info.fromdate$index"
+											       model-view-value="true" is-open="fromDatepicker.opened" 
+											       datepicker-options="dateOptionsfrom" show-button-bar="false" onkeydown="event.preventDefault()"
+											      ng-click="openFromDatePicker()" ng-change="validateToDate()" required>
+													<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+									</div>
+									<div class="row input-container" ng-if="info.controlName == 'DatePickerTo'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									                <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											        name="toDatepicker" id="toDatepicker"
+										            uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											        placeholder="DD/MM/YYYY" ng-model="info.todate$index"
+											        model-view-value="true" is-open="toDatepicker.opened" 
+											        datepicker-options="dateOptionsTo" show-button-bar="false" onkeydown="event.preventDefault()"
+											        ng-click="openToDatePicker()" ng-change="validateToDate()"  required>
+									                
+									 				<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+										</div>
+								    	<!-- <div ng-show="dateFlag" class="row input-container" id="show-hide" ng-if="info.controlName == 'DateFromDay'">
+											
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+												 <input type="date" autocomplete="off" class="w-100 text-center text-input floating-label dirty"
+											        name="fromDaypicker" id="fromDaypicker"
+										            uib-datepicker-popup="MMM-yyyy"
+											        placeholder="DD/MM/YYYY" ng-model="info.fromday$index"
+											       model-view-value="true" is-open="fromDaypicker.opened" 
+											       datepicker-options="dateOptionsfromDay" show-button-bar="false" onkeydown="event.preventDefault()"
+											      ng-click="openFromDayPicker()" ng-change="validateToDay()" required>
+											        
+													<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+									</div>
+									ng-show="dateFlag" 
+									<div class="row input-container"  ng-if="dateFlag && info.controlName == 'DateToDay' ">
+											
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									               <input type="date" autocomplete="off" class="w-100 text-center text-input floating-label dirty"
+											        name="toDaypicker" id="toDaypicker"
+										           uib-datepicker-popup="MMM-yyyy"
+											        placeholder="DD/MM/YYYY"  ng-model="info.today$index"
+											        model-view-value="true" is-open="toDaypicker.opened" 
+											        datepicker-options="dateOptionsToDay" show-button-bar="false" onkeydown="event.preventDefault()"
+											        ng-click="openToDayPicker()" ng-change="validateToDay()"  required>
+									                
+									 				<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+										</div>
+										Month & year wise
+										<div class="row input-container" id="show-hide" ng-if="monthFlag && info.controlName == 'DatePickerMonth'" style="">
+											
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									 		 <input type="text" autocomplete="off" class="w-100 text-center" name="monthDatepicker" id="monthDatepicker"
+                        						  uib-datepicker-popup="MMM-yyyy" ng-model="info.month$index" model-view-value="true" ng-change="validateMonth();"
+                       							  is-open="monthDatepicker.opened" datepicker-options="dateOptionsMonth"
+                         						  show-button-bar="false" ng-click="openMonthDatePicker($index)" 
+                          						  class="w-100 text-right">
+                          						  
+									           <input type="month" autocomplete="off" class="w-100 text-center text-input floating-label dirty"
+											        name="monthDatepicker" id="monthDatepicker"
+										            uib-datepicker-popup="MMM-yyyy"
+											        placeholder="DD/MM/YYYY" ng-model="info.month$index"
+											        model-view-value="true" is-open="monthDatepicker.opened" 
+											        datepicker-options="dateOptionsMonth" show-button-bar="false" onkeydown="event.preventDefault()"
+											        ng-click="openMonthDatePicker($index)" ng-change="validateMonth()"  required>
+									                
+									 				<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+										</div>
+										<div ng-show="monthFlag" class="row input-container" id="show-hide" ng-if="info.controlName == 'DatePickerToMonth'" style="">
+											
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									                <input type="month" autocomplete="off" class="w-100 text-center text-input floating-label dirty"
+											        name="toMonthDatepicker" id="toMonthDatepicker"
+										           	uib-datepicker-popup="MMM-yyyy"
+											        placeholder="DD/MM/YYYY" ng-model="info.tomonth$index"
+											        model-view-value="true" is-open="toMonthDatepicker.opened" 
+											        datepicker-options="dateOptionsToMonth" show-button-bar="false" onkeydown="event.preventDefault()"
+											        ng-click="openToMonthDatePicker($index)" ng-change="validateMonth()"  required>
+									                
+									 				<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+										</div>
+								
+								<div ng-show="yearFlag" class="row input-container" id="show-hide" ng-if="info.controlName == 'DatePickerYear'" style="">
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+												
+									                <input type="year" autocomplete="off" class="yearpicker form-control text-input floating-label dirty"
+											        name="yearDatepicker" id="yearDatepicker"
+										            uib-datepicker-popup="yyyy"
+											        placeholder="DD/MM/YYYY" ng-model="info.year$index"
+											        model-view-value="true" is-open="yearDatepicker.opened" 
+											        datepicker-options="dateOptionsYear" show-button-bar="false" onkeydown="event.preventDefault()"
+											        ng-click="openYearDatePicker()" ng-change="validateYear()"  required>
+									                
+									 				<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+										</div>
+										<div ng-show="yearFlag" class="row input-container" id="show-hide" ng-if="info.controlName == 'DatePickerToYear'" style="">
+											 <div class="col-lg-11 col-sm-11 col-md-11">
+											 <div class="form-group">
+											 
+													<input type="text" class="yearpicker form-control text-input floating-label dirty" name="toYearDatepicker" id="toYearDatepicker"
+										           uib-datepicker-popup="yyyy"
+											       placeholder="DD/MM/YYYY" ng-model="info.toyear$index"
+											        is-open="toYearDatepicker.opened" 
+											       datepicker-options="dateOptionsToYear" show-button-bar="false" onkeydown="event.preventDefault()"
+											       ng-click="openToYearDatePicker()" ng-change="validateYear()"  required
+ 											style="border-bottom-color: black;border-right: none;border-left: none;border-top: none;"/>
+											</div>
+												<div class="" >
+									                <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											        name="toYearDatepicker" id="toYearDatepicker"
+										            uib-datepicker-popup="yyyy"
+											        placeholder="DD/MM/YYYY" ng-model="info.toyear$index"
+											        model-view-value="true" is-open="toYearDatepicker.opened" 
+											        datepicker-options="dateOptionsToYear" show-button-bar="false" onkeydown="event.preventDefault()"
+											        ng-click="openToYearDatePicker()" ng-change="validateYear()"  required>
+									                
+									 				<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+										</div>
+									 -->
+								  	
+										<div class="row input-container" ng-if="info.controlName == 'TimePickerFrom'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="clockpicker"> 
+										         <input type="text" autocomplete="off" name="description" id="" ng-model="info.Fromtime$index" 
+										         class="text-input floating-label backgroundTransparent"  ng-change="validateToDate()" ng-init="initClockPicker()" 
+										          >
+										    <label for="description" class="LISDynamicLabel"></label>
+													<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+									</div>
+									
+									<div class="row input-container" ng-if="info.controlName == 'TimePickerTo'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="clockpicker">
+										         <input type="text" autocomplete="off" name="description" id="" ng-model="info.Totime$index"  
+										         class="text-input floating-label backgroundTransparent"  ng-change="validateToDate()" ng-init="initClockPicker()">
+										    <label for="description" class="LISDynamicLabel"></label>
+													<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+									</div>
+									
+									<div class="row input-container" ng-if="info.controlName == 'text'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									                  <input type="text" autocomplete="off"  tabindex="3" name="groupName" placeholder="Search" ng-model="obj.searchPatientName"
+									                   uib-typeahead="group.firstName+' '+group.lastName+'|'+group.uhidNumber for group in searchGroupList($viewValue)"
+                                                       typeahead-editable="false" typeahead-on-select="selectPatientIdOnSearch($item, $model, $label,$index);"   id="" class="text-input floating-label" required>
+													<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+									</div>
+									
+                                    <div class="row input-container" ng-if="info.controlName == 'ItemSearch'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									                  <input type="text" autocomplete="off" name="description" id="searchServiceId1"
+									                   class="text-input floating-label ng-pristine ng-valid dirty ng-empty ng-touched" 
+									                   ng-model="medicationObj.searchItem" 
+									                   uib-typeahead="serviceMaster.medicationName for serviceMaster in searchMedicationItems($viewValue)"
+									                    typeahead-on-select="addMedicationItemList($item, $model, $label,idx)" 
+									                    aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-4694-3981" style="">
+													<label for="code">{{info.lable}}</label>
+												</div>
+											</div>
+									</div>	
+									 <div class="row input-container" ng-if="info.controlName == 'Servicesearch'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									                  <input type="text" autocomplete="off" name="description" id="searchServiceId1"
+									                   class="text-input floating-label ng-pristine ng-valid dirty ng-empty ng-touched" 
+									                   ng-model="investigationObj.serviceName" 
+									                   uib-typeahead="serviceMaster.serviceDescription for serviceMaster in searchInvestigations($viewValue)"
+									                    typeahead-on-select="selectInvestigation($item, $model, $label,idx)" 
+									                    aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-4694-3981" style="">
+													<label for="code">{{info.lable}}</label>
+												</div>
+											</div>
+									</div>	
+									
+									 <div class="row input-container" ng-if="info.controlName == 'DiagnosiSearch'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+														<input type="text" autocomplete="off" class="text-input floating-label"
+														tabindex="3" ng-model="diagnosisObj.diagnosisName"
+														placeholder="Search"
+														uib-typeahead="group.diagnosisName+'|'+group.code  for group in searchGroupListForFamily($viewValue)"
+														typeahead-editable="false"
+														typeahead-on-select="selectDignosisIdForUpdateFamily($item, $model, $label,initVal);"
+														name="groupName" > 
+										
+													<label for="code">{{info.lable}}</label>
+												</div>
+											</div>
+									</div>
+									
+									<div class="row input-container" ng-if="info.controlName == 'VenderSearch'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+														<input type="text" autocomplete="off" class="text-input floating-label"
+														tabindex="3" ng-model="venderObj.vendorName"
+														placeholder="Search"
+														uib-typeahead="vendorNames.detail  for vendorNames in SearchVendorNames($viewValue)"
+														typeahead-editable="false"
+														typeahead-on-select="selectVender($item, $model, $label,initVal);"
+														name="groupName" > 
+										
+													<label for="code">{{info.lable}}</label>
+												</div>
+											</div>
+									</div>
+								  	
+									  <div class="row input-container" ng-if="info.controlName == 'DatePickerExpiry'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									                <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											        name="expiryDatepicker" id="expiryDatepicker"
+										            uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											        placeholder="DD/MM/YYYY" ng-model="info.expirydate$index"
+											        model-view-value="true" is-open="expiryDatepicker.opened" 
+											        datepicker-options="dateOptionsExpiry" show-button-bar="false" onkeydown="event.preventDefault()"
+											        ng-click="openToDatePickerExpiry()" required>
+									                
+									 				<label for="code">{{info.lable}}<span class="star">*</span></label>
+												</div>
+											</div>
+										</div>
+										
+										
+										<div class="row input-container" ng-if="info.controlName == 'radio'" >
+											<input type="radio" ng-model="info.paramValue" value="Y">{{info.lable}}
+										</div>
+										
+										<div class="row input-container" ng-if="info.controlName == 'checkbox'">
+											<input type="checkbox" ng-model="info.paramValue" value="Y">{{info.lable}}
+										</div>
+										
+										
+										<div class="row input-container" ng-if="info.controlName == 'textBox'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div> 
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									              <input numbers-only type="text" autocomplete="off" name="description"
+																ng-model="info.paramValue" id=""
+																class="text-input floating-label" ng-change="validateAge(info.paramValue)"> <label
+																for="description" class="">{{info.lable}}</label>
+												</div>
+											</div>
+										</div>
+										<div class="row input-container" ng-if="info.controlName == 'textBoxstring'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div> 
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									              <input numbers-only type="text" autocomplete="off" name="description"
+																ng-model="info.paramValue" id=""
+																class="text-input floating-label" ng-change="validateAge(info.paramValue)"> <label
+																for="description" class="">{{info.lable}}</label>
+												</div>
+											</div>
+										</div>
+										<div class="row input-container" ng-if="info.controlName == 'inputBox'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div> 
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+									              <input numbers-only type="text" autocomplete="off" name="description"
+																ng-model="info.paramValue" id=""
+																class="text-input floating-label"> <label
+																for="description" class="">{{info.lable}}</label>
+												</div>
+											</div>
+										</div>
+												  
+										
+										  <div class="row input-container" ng-if="info.controlName == 'multiSelectlist'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+												    <label for="code">{{info.lable}}</label>
+													<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										              options="info.metaDataDetailsDtosList" selected-model="info.multiSelectList">
+												    </div>
+											   </div>
+										  </div>
+										  </div>
+								  	
+										<div class="row input-container" ng-if="info.controlName == 'list'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+													<select class="text-input floating-label dirty " name="treatingDoctorSpecialityId" ng-model="info.paramValue">
+														<option ng-select="true" value="0"></option>
+														<option  ng-repeat="maplist in info.metaDataDetailsDtosList" value="{{maplist.id}}">{{maplist.name}}</option>
+													</select>
+						                      	<label for="code">{{info.lable}}</label>
+												</div>
+											</div>
+										</div>
+										
+										<div class="row input-container" ng-if="info.controlName == 'unit'" >
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+													<select class="text-input floating-label dirty " name="treatingDoctorSpecialityId" ng-model="info.paramValue">
+														<option ng-select="true" value="0"></option>
+														<option  ng-repeat="maplist in info.metaDataDetailsDtosList" ng-value="{{maplist.id}}"value="{{maplist.id}}">{{maplist.name}}</option>
+													</select>
+						                      	<label for="code">{{info.lable}}</label>
+												</div>
+											</div>
+										</div>
+										
+											<div class="row input-container" ng-show="info.controlName == 'user' ">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+													<select class="text-input floating-label dirty " name="treatingDoctorSpecialityId" ng-model="info.paramValue">
+														<option ng-select="true" value="0"></option>
+														<option  ng-repeat="maplist in info.metaDataDetailsDtosList" ng-value="{{maplist.id}}" value="{{maplist.id}}">{{maplist.name}}</option>
+													</select>
+						                      	<label for="code">{{info.lable}}</label>
+												</div>
+											</div>
+										</div>
+										
+										<div class="row input-container" ng-if="info.controlName == 'org'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+													<select class="text-input floating-label dirty " name="treatingDoctorSpecialityId" ng-model="info.paramValue">
+														<option ng-select="true" value="0"></option>
+														<option  ng-repeat="maplist in info.metaDataDetailsDtosList" ng-value="{{maplist.id}}"value="{{maplist.id}}">{{maplist.name}}</option>
+													</select>
+						                      	<label for="code">{{info.lable}}</label>
+												</div>
+											</div>
+										</div>
+									</div>  
+									</div>
+								</div>
+								<div class="row input-container" style="position: relative;">
+								  			<div class="col-lg-2 col-sm-2 col-md-2" style="margin-top: 11px;">
+												<div class="">
+									<!-- format dropdown -->			
+										<!--  <div class="row input-container" ng-show="info.controlName == 'DateFromDay'">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="" >
+													<select class="text-input floating-label dirty " name="format" ng-model="info.paramValue">
+														<option ng-select="true" value="0"></option>
+														<option  ng-repeat="maplist in info.metaDataDetailsDtosList" ng-value="{{maplist.id}}"value="{{maplist.id}}">{{maplist.name}}</option>
+													</select>
+						                      	<label for="code">{{info.lable}}</label>
+												</div>
+											</div>
+										
+												
+													<select class="text-input floating-label dirty" id="select" ng-change="ShowHideDiv(dateChangePicker)" ng-model="dateChangePicker" style="">
+														<option  ng-value="Day">Day</option>
+														<option  ng-value="Month">Month</option>
+														<option  ng-value="Year">Year</option>
+													</select>
+						                      	<label for="code">Format</label>
+						                      	</div> --> 
+												</div>
+										</div>
+										
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 margin-top5">
+										<button class="btn btn-info padding-left-right-set" id="updateBtn"  ng-click="getPreview()" style="margin-top: 5px !important;">View</button>
+									</div>
+									</div>
+								
+								
+								<div class="row fix-height-scroll450 padding-left-right-set4 padding-top5">
+									Report View
+								</div>
+								<div class="row padding-top5">
+									<div class="col-md-2 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+								        <div class="">
+								          <a>
+								            <input type="button" value="Export" id="updateBtn" class="btn btn-primary btn-save-box-shadow" ng-click="getExcel()">
+								          </a>
+								        </div>
+								    </div>
+								    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4  float_right padding-top20">
+									<!-- <div class="col-md-4 col-sm-4 padding-left-right-set4 float_right text-width-auto"> -->
+								        	<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="">
+													<select class="text-input floating-label dirty" id="icpcsystem" ng-model="Obj.id">
+														<option ng-repeat="datas in getReportFormatesToShow " ng-value="{{datas.id}}" value="{{datas.id}}">{{datas.description}}</option>
+													</select> <label for="code">Select Format</label>
+												</div>
+											</div>
+								    </div>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+<!-- <div ng-include="'./views/OtherApps/yearpicker.html'"></div> -->
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("MIS Report");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="MISReports"]').parents("li").addClass("active");
+});
+</script>
+
+
+
+

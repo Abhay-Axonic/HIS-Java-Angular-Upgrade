@@ -1,0 +1,153 @@
+		<!-- <div class="row his-style margin-top4">
+            		<div class="col-lg-8"></div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0">
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<input type="text" autocomplete="off" class="text-search-box" style="margin-top: 0px" ng-model="groupName" placeholder="Search"
+                       uib-typeahead="group.patientName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                       typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  required/>
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div> -->
+				<div class="col-md-5">
+		            	<div class="row">
+							<div class="col-lg-4 col-md-4 padding-top8">
+								<div class="search">
+									<label class="show-entries">Show <select
+										name="DataTables_Table_0_length"
+										aria-controls="DataTables_Table_0"
+										ng-init="physicalTransferPerPageRecords='10'" ng-model="physicalTransferPerPageRecords"
+										ng-change="physicalTransferSetNoOfRecords(physicalTransferPerPageRecords);" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> entries
+									</label>
+								</div>
+							</div>
+						</div>
+            	</div>
+				<div class="row margin-top2 his-style padding-left-right-set4">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+						<!-- <input type="text" autocomplete="off" class="text-search-box" style="margin-top: 0px" ng-model="groupName" placeholder="Search"
+                       uib-typeahead="group.patientName+'|'+group.uhidnumber for group in searchGroupList($viewValue)"
+                       typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  required/> -->
+							 <input type="text" autocomplete="off" class="text-search-box" style="margin-top: 0px" ng-model="searchPhysicalFilter" ng-change="searchPhysicalData(searchPhysicalFilter)" placeholder="Search"
+                         style="margin-top: 0px"/> 
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+				<div class="row padding-top10 padding-left-right-set4">
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+					  <table id="main-table" class="main-table width100">
+					    <thead>
+					      <tr class="">
+							
+<!-- 								<th class="width7"> -->
+<!-- 									UHID -->
+<!-- 								</th> -->
+								<th class="patient-doc-details-width">
+									Patient Details
+								</th>
+								<th class="patient-doc-details-width">
+									Ward
+								</th>
+								<th class="width10">
+									From Bed No.
+								</th>
+								<th class="width10">
+									To Bed No.
+								</th>
+								<th class="width18">
+									Reason for Bed Transfer <!-- Reason -->
+								</th>
+								<th class="width12">
+									 Note for Bed Transfer Request <!-- Note -->
+								</th>
+								<!-- <th class="width12">
+									Transfer			
+								</th>
+								<th class="width10 text-center">
+									Abort			
+								</th> -->
+								<th class="width12 text-center">
+									Action
+								</th>
+							</tr>
+					    </thead>
+					    <tbody>
+					      <tr ng-repeat="info in listOfAdmittedPatientList" ng-if="info.transferStatusId != '1' && info.transferTypeId == '2'">
+<!-- 								<td>{{info.uhidnumber}}</td> -->
+<!-- 								<td ng-init='age=getAge(info.dob)'> -->
+<!-- 									<div ng-if="info.patientId > 0">{{info.patientFullName+' '+age+'/'+info.genderCode}}</div> -->
+<!-- 									<div  ng-if="info.tPatientId > 0">{{info.patientFullName+' '+info.dob+'/'+info.genderCode}}</div> -->
+<!-- 								</td> -->
+									<td class="text-center width15">
+									<div class="row patient-details" id="45#1247#2_new" >
+										<div class="col-lg-3 col-sm-12 col-md-3">
+											<div class="" >
+												<img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+											</div>
+										</div>
+										<div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+											<div class="patient-name">{{info.prefixDesc+' '+info.patientFullName}}
+										</div>
+											<div class="patient-details">
+												<span class="patient-details patient">{{info.ageStr}}/ </span>
+												<span class="patient-details patient">{{info.genderCode}}</span>
+												<!-- <span class="patient-details patient" >||||||
+												<span class="patient-details patient" >info</span> -->
+											</div>
+											<div class="patient">{{info.uhidnumber}}</div>
+										</div>
+									</div>
+								</td>
+								<td >{{info.wardName}}</td>
+								<td>{{info.bedNumber}}</td>
+								<td>{{info.toBedNumber}}</td>
+								<td>{{info.reasonDesc}}</td>
+								<td>{{info.remark}}</td>
+								<!-- <td>
+									<a href="" ng-if="info.transferStatusId == 6" ng-click="getAdmissionDataAccept(info)" data-toggle="modal" data-target="{{info.transferStatusId == 6 ? '#commonNote':''}}"><i class="fa fa-exchange" aria-hidden="true"></i></a>
+								</td>
+								<td class="text-center">
+									<a href="" ng-if="info.transferStatusId == 6" ng-click="getAdmissionDataAccept(info)" data-toggle="modal" data-target="{{info.transferStatusId == 6 ? '#accepatReject':''}}"><i class="fa fa-window-close" aria-hidden="true" ></i> </a>
+								</td> -->
+								<td class="text-center">
+									<a href="" ng-if="info.transferStatusId == 6" ng-click="getAdmissionDataAccept(info)" data-toggle="modal" data-target="{{info.transferStatusId == 6 ? '#commonNote':''}}"><i class="fa fa-exchange" aria-hidden="true"></i></a>&nbsp;
+									<a href="" ng-if="info.transferStatusId == 6" ng-click="getAdmissionDataAccept(info)" data-toggle="modal" data-target="{{info.transferStatusId == 6 ? '#accepatReject':''}}"><i class="fa fa-window-close" aria-hidden="true" ></i> </a>
+									<!-- <label class="radio-inline" ng-if="info.transferStatusId == 6" ng-click="getAdmissionDataAccept(info)" data-toggle="modal" data-target="{{info.transferStatusId == 6 ? '#commonNote':''}}"><input type="radio" name="optradio" checked>Accept</label>&nbsp;
+									<label class="radio-inline" ng-if="info.transferStatusId == 6" ng-click="getAdmissionDataAccept(info)" data-toggle="modal" data-target="{{info.transferStatusId == 6 ? '#accepatReject':''}}"><input type="radio" name="optradio">Reject</label> -->
+								</td>
+							</tr>
+					    </tbody>
+					  </table>
+					</div>
+				</div>
+			<div class="row padding-left-right-set4 margin-top8" id="tableOne">
+					<div class="col-md-12">
+						<!-- table one for report entry -->
+						<!--// table one for report entry -->
+					</div>
+					
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="physicalTransferPager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:physicalTransferPager.currentPage === 1}"><a
+							ng-click="setPhysicalTransferPage(1,'true',physicalTransferPager)">First</a></li>
+						<li ng-class="{disabled:physicalTransferPager.currentPage === 1}"><a
+							ng-click="setPhysicalTransferPage(physicalTransferPager.currentPage - 1,'true',initiateReqPager)">Previous</a></li>
+						<li ng-repeat="physicalTransferPage in physicalTransferPager.pages"
+							ng-class="{active:physicalTransferPager.currentPage === physicalTransferPage}"><a
+							ng-click="setPhysicalTransferPage(physicalTransferPage,'true',physicalTransferPager)">{{physicalTransferPage}}</a></li>
+						<li ng-class="{disabled:physicalTransferPager.currentPage === physicalTransferPager.totalPages}">
+							<a ng-click="setPhysicalTransferPage(physicalTransferPager.currentPage + 1,'true',initiateReqPager)">Next</a>
+						</li>
+						<li ng-class="{disabled:physicalTransferPager.currentPage === physicalTransferPager.totalPages}">
+							<a ng-click="setPhysicalTransferPage(physicalTransferPager.totalPages,'true',physicalTransferPager)">Last</a>
+						</li>
+					</ul>
+				</div>
+				</div>
+				

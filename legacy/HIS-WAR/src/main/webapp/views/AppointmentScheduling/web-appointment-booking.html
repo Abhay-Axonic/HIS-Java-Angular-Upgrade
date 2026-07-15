@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+<meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0" />
+<link rel="stylesheet" href="resources/assets/css/bootstrap.min.css" media="all">
+<title>Web Appointment Booking</title>
+<!--<link rel="shortcut icon" href="HYPERLINK "images/favicon.ico">	-->
+<style>
+
+.customRadioBtn1 input[type="radio"] {
+  display: none;
+}
+
+.customRadioBtn1 input[type="radio"] + label {
+    cursor: pointer;
+    padding: 4px 10px;
+   /*  border: 1px solid #ccc; */
+    border: 1px solid #ccc;
+    background: #fff;
+    color: black;
+     border-radius: 8px; 
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0);
+    margin-right: -4px;
+    margin-top: 5px;
+}
+.customRadioBtn1 input[type="radio"]:checked + label {
+    background: #007bff; /* #f5f5a6 #2e6ea2 #098bfa*/
+    border: 1px solid #afa6a6;
+    /* text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4); */
+    color: #fff; /* #171717 */
+     border-radius: 8px; 
+    margin-right: -4px;
+    margin-top: 5px;
+}
+.doctorBox{
+    background: #fff;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 8px; 
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0);
+    margin-left:5px;
+    margin-top: 20px;
+    padding-top:10px;
+    padding-bottom:10px;
+    width:28%;
+}
+
+.doctorBox:hover{
+    cursor: pointer;
+    background: #f3f0f0;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 8px; 
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0);
+     margin-left: 5px;
+    margin-top: 20px;
+     padding-top:10px;
+    padding-bottom:10px;
+     width:28%;
+}
+#wrapper{
+    margin: 0 auto !important;
+    width: 90%;
+    padding-left:0px !important;
+}
+
+.rectangle65 {
+/*     position: absolute; */
+      box-sizing: content-box;
+      -ms-transform: rotate(0.00deg);
+    -webkit-transform: rotate(0.00deg);
+    transform: rotate(0.00deg);
+    -ms-transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+      opacity: 1;
+      cursor: default;
+      margin-top: 0.00px;
+      margin-right: 0.00px;
+      margin-bottom: 0.00px;
+      margin-left: 0.00px;
+      padding-top: 0.00px;
+      padding-right: 0.00px;
+      padding-bottom: 0.00px;
+      padding-left: 0.00px;
+      background-color: rgba(255, 255, 255, 1);
+      border-bottom-color: rgba(112, 112, 112, 1);
+      border-bottom-style: none;
+      border-bottom-width: 1.00px;
+      border-left-color: rgba(112, 112, 112, 1);
+      border-left-style: none;
+      border-left-width: 1.00px;
+      border-right-color: rgba(112, 112, 112, 1);
+      border-right-style: none;
+      border-right-width: 1.00px;
+      border-top-color: rgba(112, 112, 112, 1);
+      border-top-style: none;
+      border-top-width: 1.00px;
+      border-top-left-radius: 0.00px;
+      border-top-right-radius: 0.00px;
+      border-bottom-left-radius: 0.00px;
+      border-bottom-right-radius: 0.00px;
+      -webkit-filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.1607843137254902));
+    filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.1607843137254902));
+      width: 1914.00px;
+/*     height: 105.00px; */
+    left: 0.00px;
+    top: px;
+
+}
+
+</style>
+</head>
+<body style="background-color:#f3f0f0 !important;">
+<div class="row">
+</div>
+
+ <div class="row rectangle65" style="width: -webkit-fill-available; border-bottom: groove;">
+	 <!--  	<div class="col-md-4 col-sm-4 col-xs-4" style="padding-left: 6% !important;">
+	  		<img id="logo" width="80" height="70" /> class="unnamed"
+	  	</div> -->
+	  	<div class="col-md-4 col-sm-4 col-xs-4 text-center" style="margin-top: 2%;">
+	  		<label class="addressLable labeltopadd" id="unitAddress"></label>
+	  	</div>
+	  	<div class="col-md-4 col-sm-4 col-xs-4 text-center" style="padding-top: 7;">
+	  		<div data-layer="c3417a13-20b4-4f5a-a628-b347578346f1" class="poweredBy">Powered by</div>
+	  		 <img src="resources/assets/images/icon/bed/temp/CHT_logo_2July.png" style="width: 212px !important;margin-left: 96px;"> <!-- class="image17" -->
+	  	</div>
+	</div>
+	
+	<div class="row padding-left-right-set4" style="margin-top:50px !important;margin-right:5px">
+		<div class="col-md-6 col-sm-6 col-xs-6"></div>
+		<div class="col-md-4 col-sm-4 col-xs-4">
+			<div ng-hide="isHideUnitList" class="col-md-2 col-sm-2 col-xs-2"><span><B>Unit Name</B></span></div>
+			<div ng-hide="isHideUnitList" class="col-md-8 col-sm-8 col-xs-8">
+				<select  style="width:100%" ng-model="selectedUnitId"
+					ng-change="getChangedUnitData();">
+					<option ng-repeat="info in unitList" ng-value="info.unitId"
+						value="{{info.unitName}}">{{info.unitName}}</option>
+				</select>
+			</div>
+		</div>
+	</div>
+
+	<div class="row padding-left-right-set4 " ><!-- uk-input-group customRadioBtn1 -->
+		 <div id="mediaType" class="row uk-input-group customRadioBtn1" style="margin-right:100px !important;"> 
+			<span> <input  name="specialities"
+				type="radio" id="allDoctors" value="1" checked="checked" class="trigger"
+				ng-click="getDoctorsList();"> 
+				<label for="allDoctors" style="margin-right:5px;">All</label>
+			</span>
+			 <span ng-repeat="spec in specialityMasterList" ng-if="spec.isClinicalSpeciality=='Y'">
+			  <input
+				id="speciality{{spec.specialityId}}" name="specialities" type="radio" value="{{spec.specialityId}}" checked="checked"
+				class="otherRegistrationType" ng-click="getDoctorsList();" > <label
+				for="speciality{{spec.specialityId}}" style="margin-right:5px;">{{spec.specialityName}}</label>
+			</span>
+
+		 </div> 
+	</div>
+	
+	<div class="row">
+		<div class="col-md-4 col-sm-4 col-xs-4 doctorBox" ng-repeat="doc in doctorList" ng-click="gotoBookAppointmentPage(doc);">
+			<div class="col-md-3 col-sm-3 col-xs-3" >
+			<img ng-if="doc.doctorImage!=''" src="{{doc.doctorImage}}" style="height: 100px; width: 100px;" class="img-circle">
+			<img ng-if="doc.doctorImage==''" class="img-circle" width="100" height="100" src="resources/assets/images/tempImages/Dr2 copy.png">
+			</div>
+			<div class="col-md-9 col-sm-9 col-xs-9" style="padding-left:20px !important;padding-top:10px;" >
+			<span><B>Dr. {{doc.firstName}} {{doc.lastName}}</B></span><br>
+			<span align="center"> <b align="center"> {{doc.specialityName}}</b> </span>
+			</div>
+		</div>
+		<div ng-if="doctorList.length==0" style="text-align:center;padding-top:40px !important;">
+		 <B>{{loadingMsg}}</B>
+		</div>
+	</div>
+	
+	<br><br>
+
+<script>
+var radiobtn = document.getElementById("allDoctors");
+radiobtn.checked = true;
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+package com.param.bloodBank.service;
+
+import javax.transaction.Transactional;
+
+import com.param.bloodBank.dto.BloodTransfusionPrecheckMasterDto;
+import com.param.global.common.Response;
+
+import in.param.exception.ApplicationException;
+
+@Transactional
+@SuppressWarnings({"rawtypes"})
+public interface IBloodTransfusionPrecheckMasterService {
+
+	Response saveBloodTransfusionPrecheckMaster(BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto) throws ApplicationException;
+
+	Response updateBloodTransfusionPrecheckMasterStatus(
+			BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto) throws ApplicationException;
+
+	Response getBloodTransfusionPrecheckMasterList(BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto) throws ApplicationException;
+
+	Response getActiveBloodTransfusionPrecheckMasterList(
+			BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto) throws ApplicationException;
+
+	Response getBloodTransfusionPrecheckMasterListPagination( BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto)throws ApplicationException;
+
+	Response getBloodTransfusionPrecheckMasterListCount(BloodTransfusionPrecheckMasterDto bloodTransfusionPrecheckMasterDto)throws ApplicationException;
+
+}

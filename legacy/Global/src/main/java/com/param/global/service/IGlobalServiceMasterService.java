@@ -1,0 +1,27 @@
+package com.param.global.service;
+
+import com.param.global.common.Response;
+import com.param.global.dto.ServiceMasterDto;
+import com.param.global.dto.UnitServiceMasterDetailsDto;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface  IGlobalServiceMasterService {
+
+	Response glablServiceMaster(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+
+	Response glablServiceMasterSpecialityName(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+
+	Response glablServiceMasterSubSpecialityName(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+
+	Response searchGlablServiceMaster(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+
+	Response saveGlobalServiceMasterByExcel(ServiceMasterDto serviceMasterDto)throws ApplicationException;
+
+	Response saveGlobalMasterData(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+
+	Response callProcedure(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+
+	Response getAllGlablServiceMaster(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+}

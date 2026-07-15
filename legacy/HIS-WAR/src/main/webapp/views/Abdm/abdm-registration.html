@@ -1,0 +1,442 @@
+
+<style>
+.stepper-wrapper {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+}
+
+.stepper-item::before {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 20px;
+  left: -50%;
+  z-index: 2;
+}
+
+.stepper-item::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 20px;
+  left: 50%;
+  z-index: 2;
+}
+
+.stepper-item .step-counter {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ccc;
+  margin-bottom: 6px;
+}
+
+.stepper-item.active {
+  font-weight: bold;
+}
+
+.stepper-item.completed .step-counter {
+  background-color: rgb(55, 154, 175);
+}
+
+.stepper-item.completed::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 20px;
+  left: 50%;
+  z-index: 3;
+}
+
+.stepper-item:first-child::before {
+  content: none;
+}
+.stepper-item:last-child::after {
+  content: none;
+}
+<!--.card{-->
+<!--margin-right: 170px-->
+<!--}-->
+
+
+
+
+
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+<!--body {-->
+<!--  background-color: #f1f1f1;-->
+<!--}-->
+
+#regForm {
+  border-radius: 15px;
+  background-color: #f5f5f5;
+ // margin: 100px auto;
+  font-family: Raleway;
+  padding: 40px;
+  width: 70%;
+  min-width: 300px;
+<!--  height: 600px-->
+}
+
+h1 {
+  text-align: center;
+}
+
+<!--input {-->
+<!--  padding: 10px;-->
+<!--  width: 100%;-->
+<!--  font-size: 17px;-->
+<!--  font-family: Raleway;-->
+<!--  border: 1px solid #aaaaaa;-->
+<!--}-->
+
+/* Mark input boxes that gets an error on validation: */
+<!--input.invalid {-->
+<!--  background-color: #ffdddd;-->
+<!--}-->
+
+/* Hide all steps by default: */
+.tab {
+  display: none;
+}
+
+button {
+  background-color: #333;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 17px;
+  font-family: Raleway;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+#prevBtn {
+  background-color: #bbbbbb;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbbbbb;
+  border: none;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.5;
+}
+
+.step.active {
+  opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step.finish {
+  background-color: #04AA6D;
+}
+
+</style>
+
+
+
+<div class="container-fluid" >
+	<div class="main-container" style="margin-top:20px;margin-left:100px">
+		<form id="regForm"  >
+			<div ng-if="aadhaarStepper">
+				<div class="stepper-wrapper">
+					<div class="stepper-item" ng-class="getClassforColor1();">
+						<div class="step-counter">1</div>
+						<div class="step-name">Consent Collection</div>
+					</div>
+					<div class="stepper-item" ng-class="getClassforColor2();">
+						<div class="step-counter">2</div>
+						<div class="step-name">Aadhaar Authentication</div>
+					</div>
+					<div class="stepper-item">
+						<div class="step-counter">3</div>
+						<div class="step-name">Profile Completion</div>
+					</div>
+					<div class="stepper-item">
+						<div class="step-counter">4</div>
+						<div class="step-name">ABHA number Creation</div>
+					</div>
+				</div>
+
+			</div>
+			<div ng-if="drivingStepper">
+				<div class="stepper-wrapper">
+					<div class="stepper-item completed">
+						<div class="step-counter">1</div>
+						<div class="step-name">Consent Collection</div>
+					</div>
+					<div class="stepper-item ">
+						<div class="step-counter">2</div>
+						<div class="step-name">Mobile Authentication</div>
+					</div>
+					<div class="stepper-item">
+						<div class="step-counter">3</div>
+						<div class="step-name">Driving Licence</div>
+					</div>
+					<div class="stepper-item">
+						<div class="step-counter">4</div>
+						<div class="step-name">Profile Completion</div>
+					</div>
+					<div class="stepper-item">
+						<div class="step-counter">5</div>
+						<div class="step-name">ABHA number Creation</div>
+					</div>
+				</div>
+			</div>
+			<!-- One "tab" for each step in the form: -->
+			<div class="tab" ng-if="mainTab">
+				<div class="radio-container" id="rad1">
+					<input type="radio" id="radio1" name="radiogroup" value="option1" ng-click="usingAadharBtn(true)">
+					<label for="radio1" style="font-size: 40px;">Using Aadhaar </label>
+					<div ng-if="usingAadhar">
+						<div class="card" style="border-radius: 10px;">
+							<div class="card-body text-left">
+								<div class="body">
+									<label style="font-size: 20px;">You can create your ABHA number  using Aadhaar instantaneously.
+										Please ensure that  Aadhaar is linked to a Mobile Number as an OTP authentication will follow.
+										If you do not have a Mobile Number linked, visit the nearest<a class="MuiBox-root css-ibnnmb" href="https://facility.ndhm.gov.in/" target="_blank" rel="noreferrer noopener">
+											ABDM participating facility</a> and seek assistance.</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="radio-container" id="rad2">
+					<input type="radio" id="radio2" name="radiogroup" value="option2" ng-click="usingDrivingBtn(true)" >
+					<label for="radio2" style="font-size: 40px;">Using Driving Licence</label>
+					<div ng-if="usingDriving">
+						<div class="card" style="border-radius: 10px;">
+							<div class="card-body text-left">
+								<label style="font-size: 20px;">You can initiate the request for ABHA number  using Driving Licence,
+									however, you will only obtain an Enrolment Number on the portal.
+									You will be required to carry your Driving Licence to the nearest
+									<a class="MuiBox-root css-ibnnmb" href="https://facility.ndhm.gov.in/" target="_blank" rel="noopener  norefferrer">
+										ABDM participating facility</a> and get your identity verified by the facility staff to obtain the ABHA number .</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div style="overflow:auto;">
+					<div style="float:right;">
+						<button type="button" ng-if="!mainTab" ng-click="BackPage()">Back</button>
+						<button type="submit" id="nextBtn"  ng-click="nextPage()">Next</button>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<div ng-if="usingAadharOP">
+					<label><h3>Aadhaar Number</h3></label><br>
+					<input type="text" id="textInput" maxlength="12" placeholder="Aadhaar Number" class="form-control" ng-model="aahaarNumber" class="text-left dirty ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched" numbers-only="">
+					<div>
+						<input type="checkbox" id="checkbox1" name="checkbox_group" ng-model="checkboxes.val1">
+						I am voluntarily sharing my / Virtual IDissued bythe Unique Identification Authcyity of India &mographic for the purpose Of
+						creating an Ayushman Bharat Health Account number ( "ABRA number") and Ayushman Bharat Health Account address ( -ABHA Address"). authorize NHA to use my
+						Aadhaar number f Virtual ID for performing Aadhaar based authentication with UIDAI as per the provisions of the Aadhaar (Targeted Delivery of Financial and other Subsidies,
+						Benefits and Act, 2016 for the aforesaid punsc. I un&rstand that IJIDAI will share my c-KYC details, of "Yes" with N HA succcssii.l authentxation_ o<br>
+					</div>
+					<input type="checkbox" id="checkbox2" name="checkbox_group" ng-model="checkboxes.val2">
+					I intend to create Ayushman Bharat Health Account number") and Ayushnun Bharat Health Account address ("ABRA Address") using other than
+					(Click here to proceed further)<br>
+
+					<input type="checkbox" id="checkbox3" name="checkbox_group" ng-model="checkboxes.val3">
+					I censent to ABHA number linking of my legacy (past) govemnEnt health and those which Will be generated during this<br>
+
+					<input type="checkbox" id="checkbox4" name="checkbox_group" ng-model="checkboxes.val4">
+					I authorize the sharing Of all my health With healthcare for tirpurvse of vyoviding healacare services to this encmmter.<br>
+
+					<input type="checkbox" id="checkbox5" name="checkbox_group" ng-model="checkboxes.val5">
+					I ccmscnt to the anonymization and subsequent of my govcrnmcnt E?calth records for public health purpose<br>
+
+					<input type="checkbox" id="checkbox6" name="checkbox_group" ng-model="checkboxes.val6">
+					(name worker- depending on 'he username used for /+ing in into the system), confirm that I have duly informed and explained the beneficiary of the
+					contents of consent for aforenrntioned purvses.
+					'Airpoxs. o<br>
+
+					<input type="checkbox" id="checkbox7" name="checkbox_group" ng-model="checkboxes.val7">
+					I,(bareficiary name), have been explained about the ccmsent as stated above and hereby vyovi& my the aforenxnticmed purposes. <br>
+
+					<input type="checkbox" id="checkbox8" name="checkbox_group" ng-model="checkboxes.val8">
+					I agree
+					<div style="overflow:auto;">
+						<div style="float:right;">
+							<button type="button" ng-if="!mainTab" ng-click="BackPage()">Back</button>
+							<button type="submit" id="nextBtn"  ng-click="ConsentComplete()">Next</button>
+						</div>
+					</div>
+				</div>
+				<div  ng-if="otpMobile">
+					We just sent an OTP on the Mobile Number *******9003 linked with your Aadhaar
+					Enter OTP
+
+					<div class="MuiBox-root css-0"><legend >Enter OTP</legend>
+						<div  required="" label="OTP" placeholder="OTP">
+							<input type="text" class="otpInput" value="" style="width:70px"><input type="text" class="otpInput" value="" style="width:70px">
+							<input type="text" class="otpInput" value="" style="width:70px"><input type="text" class="otpInput" value="" style="width:70px">
+							<input type="text" class="otpInput" value="" style="width:70px"><input type="text" class="otpInput" value="" style="width:70px">
+						</div><p class="MuiFormHelperText-root css-18srdhz"></p><div class="MuiBox-root css-4juikq">
+							<div class="MuiBox-root css-0">
+								<p >Resend in<span class="MuiBox-root css-m31qj8">01:14</span></p>
+							</div>
+							<div >
+							<button  tabindex="-1" type="button" disabled="">Resend OTP</button></div>
+						</div></div>
+					<div style="overflow:auto;">
+						<div style="float:right;">
+							<button type="button" ng-if="!mainTab" ng-click="ConsentBack()">Back</button>
+							<button type="submit" id="nextBtn"  ng-click="otpMobileFun()">Next</button>
+						</div>
+					</div>
+				</div>
+				<div ng-if="profileDetails" >
+					Your Profile Details (As in Aadhaar)
+					Aadhaar Authentication Successful
+					<div style="overflow:auto;">
+						<div style="float:right;">
+							<button type="button" ng-if="!mainTab" ng-click="otpBack()">Back</button>
+							<button type="submit" id="nextBtn"  ng-click="otpMobileFun()">Next</button>
+						</div>
+					</div>
+				</div>
+				<div class="tab">
+					It is recommended that you use the Mobile Number linked with Aadhaar.<br>
+					<label><h3>Aadhaar Number</h3></label><br>
+					<input type="text" id="textInput" maxlength="10" placeholder="Aadhaar Number" class="form-control" ng-model="aahaarNumber" class="text-left dirty ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched" numbers-only="">
+				</div>
+
+
+			</div>
+
+
+		</form>
+
+	</div>
+</div>
+
+<script >
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+  //... and fix the Previous/Next buttons:
+  if (n == 0) {
+    document.getElementById("prevBtn").style.display = "none";
+  } else {
+    document.getElementById("prevBtn").style.display = "inline";
+  }
+  if (n == (x.length - 1)) {
+    document.getElementById("nextBtn").innerHTML = "Submit";
+  } else {
+    document.getElementById("nextBtn").innerHTML = "Next";
+  }
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+  // Exit the function if any field in the current tab is invalid:
+  if (n == 1 && !validateForm()) return false;
+  // Hide the current tab:
+  x[currentTab].style.display = "none";
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("regForm").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function validateForm() {
+  // This function deals with validation of the form fields
+  var x, y, i, valid = true;
+  x = document.getElementsByClassName("tab");
+  y = x[currentTab].getElementsByTagName("input");
+  // A loop that checks every input field in the current tab:
+  for (i = 0; i < y.length; i++) {
+    // If a field is empty...
+    if (y[i].value == "") {
+      // add an "invalid" class to the field:
+      y[i].className += " invalid";
+      // and set the current valid status to false
+      valid = false;
+    }
+  }
+  // If the valid status is true, mark the step as finished and valid:
+  if (valid) {
+    document.getElementsByClassName("step")[currentTab].className += " finish";
+  }
+  return valid; // return the valid status
+}
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
+}
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

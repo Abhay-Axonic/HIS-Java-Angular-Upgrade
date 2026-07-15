@@ -1,0 +1,739 @@
+
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+                <form name="Specialityform" novalidate>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                    <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                </div>
+
+                                <input type="hidden">
+<!--                                <div class="col-lg-11 col-sm-11 col-md-11 ">-->
+<!--                                    <div class="form-group" show-errors>-->
+<!--                                        <input type="text" autocomplete="off" id="" class="text-input floating-label"-->
+<!--                                               name="specialityCode" ng-model="rackCode"-->
+<!--                                               required> <label for="code">Code<span class="star">*</span></label>-->
+<!--                                        <p class="help-block"-->
+<!--                                           ng-if="Specialityform.specialityCode.$error.required">Code-->
+<!--                                            is required</p>-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+                                <div class="col-lg-11 col-sm-11 col-md-11">
+                                    <div class="form-group" show-errors>
+                                        <select class="text-input floating-label dirty" ng-model="specialityId" ng-change="getDoctorBySpeciality(specialityId)" name="specialityCode" required>
+                                            <option ng-repeat="info in specialityList" ng-if="info.isClinicalSpeciality =='Y'" value="{{info.specialityId}}">{{info.specialityName}}</option>
+                                        </select> <label for="code">Speciality<span class="star">*</span></label>
+                                    <p class="help-block"
+                                       ng-if="Specialityform.specialityCode.$error.required">Speciality
+                                        is required</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                    <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                    <div class="form-group" show-errors>
+
+                                        <select class="text-input floating-label dirty" id="doctorId" ng-model="doctorId" ng-change="getFavoritesMedication()" name="doctor">
+                                            <option ng-repeat="info in doctorList" value="{{info.doctorId}}">{{info.doctorName}}</option>
+                                        </select> <label for="code">Doctor</label>
+<!--                                        </select> <label for="code">Doctor<span class="star">*</span></label>-->
+
+<!--                                        <p class="help-block"-->
+<!--                                           ng-if="Specialityform.doctor.$error.required">Doctor-->
+<!--                                            is required</p>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-sm-2 col-md-2 text-width-pull-right padding-top8 padding-left-right-set4 pull-right text-width-auto">
+                            <a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="getFavoritesMedication()" style="text-align: -webkit-center;">
+                                <i class="fa fa-search" style="" aria-hidden="true"></i></a>
+                            <!--                                    <input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword" ng-keyup="serachDepartmentMaster(searchKeyword)">-->
+
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2 text-width-pull-right padding-top8 padding-left-right-set4 pull-right text-width-auto">
+                            <div class="common-save-button" style="padding-top: 0px;">
+                                <a href="" ng-click="clearDoctors()" title="Clear"
+                                   data-toggle="modal" data-target=""
+                                   class="btn btn-primary btn-save-box-shadow"
+                                   style="width: auto;"> <i class="fa fa-eraser" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </fieldset>
+
+
+
+        <div class="row padding-top10">
+<!--            <div class="col-md-6 col-sm-7 padding-left-right-set4">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">-->
+<!--                        <div class="search">-->
+<!--                            <label class="show-entries">Show-->
+<!--                                <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"-->
+<!--                                        ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"-->
+<!--                                        ng-change="setNoOfRecords();" class="search-popUp-ddl">-->
+<!--                                    <option value="10">10</option>-->
+<!--                                    <option value="25">25</option>-->
+<!--                                    <option value="50">50</option>-->
+<!--                                    <option value="100">100</option>-->
+<!--                                </select> entries-->
+<!--                            </label>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">-->
+<!--                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save Medication" data-toggle="modal" ng-click="saveRack()" ng-hide="saveBtnFlag">-->
+<!--                    <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>-->
+<!--&lt;!&ndash;                <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="showUpdateBtn(info)" ng-hide="updateBtnFlag">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>&ndash;&gt;-->
+<!--            </div>-->
+
+
+<!--            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">-->
+<!--                <input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword" ng-keyup="serachDepartmentMaster(searchKeyword)">-->
+<!--                <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>-->
+<!--            </div>-->
+        </div>
+        <div class="row"><!-- style="height: 435px;overflow: auto;" -->
+            <!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-bottom5 pull-right text-width-auto">
+                        <div class="ng-scope" style="">
+                            <input type="button" name="" value="Save" class="btn btn-info text-width-auto" ng-click="saveMedication()">
+                        </div>
+                    </div> -->
+            <div
+                    class="col-md-12 col-lg-12 padding-left-right-set4 "><!-- fix-height-scroll600 -->
+                <fieldset class="normalRegistration">
+                    <legend class="heading-div">Medication </legend>
+                    <div class="row"> <!-- condition 1 start -->
+                        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                            <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+                                <div class="row input-container">
+                                    <div class="col-lg-11 col-sm-11 col-md-11">
+                                        <label
+                                                class="checkbox-inline">
+                                            <input type="checkbox" ng-true-value="'Y'" ng-false-value="'N'"
+                                                   ng-model="medicationObj.nonFormularyAdvice"  ng-click="clrNonForData(medicationObj.nonFormularyAdvice)">
+                                            <label for="description" class="LISDynamicLabel"><span></span>Non Formulary</label>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-2 padding-left-right-set4 padding-top10">
+                            <div class="row input-container">
+                                <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-10 col-sm-10 col-md-10">
+                                    <div class="" ng-if="medicationObj.nonFormularyAdvice == 'N'">
+                                        <input type="text" autocomplete="off" name="description" id="searchServiceId134"  tabIndex = "-1"  class="text-input floating-label"
+                                               ng-model="medicationObj.searchItem" ng-change="genericClear()"
+                                               uib-typeahead="serviceMaster.medicationName for serviceMaster in searchMedicationItems($viewValue)"
+                                               typeahead-on-select="addMedicationItemList($item, $model, $label,idx);calculateEndDate(medicationObj);"
+                                               aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-1350-6834" data-ng-trim="false" style="">
+                                        <label for="description" class="LISDynamicLabel">Brand Name <span class="star">*</span> </label>
+                                    </div>
+                                    <div ng-if="medicationObj.nonFormularyAdvice  == 'Y'">
+                                        <input type="text" autocomplete="off" name="description"
+                                               id="searchServiceId134" tabIndex = "-1"
+                                               ng-model="medicationObj.medicationName"
+                                               class="text-input floating-label" >
+                                        <label for="description" class="LISDynamicLabel">Brand Name <span class="star">*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-3 padding-left-right-set4 padding-top10">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11">
+                                    <div class=""  ng-if="medicationObj.nonFormularyAdvice == 'N'">
+                                        <input type="text" autocomplete="off" name="description" id="brandname" class="text-input floating-label"
+                                               class="w-100" ng-model="medicationObj.searchGeneric" ng-change="medicationClear()"
+                                               uib-typeahead="serviceMaster.genericName for serviceMaster in searchGenericItems($viewValue)"
+                                               typeahead-min-length="3"
+                                               typeahead-on-select="addMedicationGenericList($item, $model, $label,idx)"
+                                        >
+                                        <label for="description" class="LISDynamicLabel">Generic Name <span class="star">*</span></label>
+                                    </div>
+                                    <div ng-if="medicationObj.nonFormularyAdvice == 'Y'">
+                                        <input type="text" autocomplete="off" class="text-input floating-label" ng-model="medicationObj.genericName"  ng-blur="getROAForNonFormulary()">
+                                        <label for="description" class="LISDynamicLabel">Generic Name <span class="star">*</span></label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11">
+                                    <div class="" ng-if="medicationObj.nonFormularyAdvice== 'N'">
+                                        <select class="text-input floating-label dirty" ng-model="medicationObj.roaId" convert-to-number>
+                                            <option value=""></option>
+                                            <option ng-repeat="roaDetail in roa_options" value="{{roaDetail.roa_id}}">{{roaDetail.roa_details}}</option>
+                                        </select> <label for="code">Route Of Administration<span class="star" ng-if="roaConfiguration =='Y'">*</span></label>
+                                    </div>
+                                    <div class="" ng-if="medicationObj.nonFormularyAdvice== 'Y'">
+                                        <select class="text-input floating-label dirty" ng-model="medicationObj.roaId" convert-to-number>
+                                            <option value=""></option>
+                                            <option ng-repeat="roaDetail in roa_options1" value="{{roaDetail.roa_id}}">{{roaDetail.roa_details}}</option>
+                                            </select> <label for="code">Route Of Administration <span class="star" ng-if="roaConfiguration =='Y'">*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+<!--                            <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 ">-->
+                            <div ng-if="medicationObj.nonFormularyAdvice == 'N' " class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 ">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11">
+                                    <label class="text-input floating-label dirty padding-left-right-set4 padding-top10" >{{medicationObj.itemStrength}}</label>
+                                    <label for="code">Strength </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>	<!-- condition 2 end here -->
+
+
+                    <div class="row padding-top5">
+                        <div class="col-lg-3 col-md-3 col-sm-3 ">
+                            <div class="row">
+                                <div ng-if="medicationObj.nonFormularyAdvice == 'Y'"  class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <div class="">
+                                                <input  type="number" name="" ng-model="medicationObj.dose" id="" class="text-input floating-label dirty" min="0">
+                                                <label for="description" class="LISDynamicLabel">Dose<span class="star" ng-if="dosageConfiguration =='Y'">*</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="medicationObj.nonFormularyAdvice == 'Y'"  class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <div class="">
+                                                <select class="text-input floating-label dirty" ng-model="medicationObj.doseUnitId" convert-to-number>
+                                                    <option value=""></option>
+                                                    <option ng-repeat="dose in doseList" value="{{dose.id}}">{{dose.unit}}</option>
+                                                </select> <label for="code">Dose Unit<span class="star" ng-if="dosageConfiguration =='Y'">*</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--                                <div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4 padding-top10">-->
+                                <div ng-if="medicationObj.nonFormularyAdvice == 'N'"  class="col-lg-6 col-md-5 col-sm-5 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <div class="">
+                                                <input  type="number" name="" ng-model="medicationObj.prescribeDose" ng-show="medicationObj.isDoseCalculationApplicable == undefined || medicationObj.isDoseCalculationApplicable == false"
+                                                        id="" class="text-input floating-label dirty" min="0" ng-blur="calculateFre(idx)">
+                                                <!-- 																				ng-disabled="(medicationObj.prescribedDosageUnitList.length>0 && medicationObj.prescribedDosageUnitList[0].formulationFactorId==2) && medicationObj.isDoseCalculationApplicable == false"  -->
+                                                <input  type="number" name="" ng-model="medicationObj.prescribeDose" ng-show="medicationObj.isDoseCalculationApplicable == true"
+                                                        id="" class="text-input floating-label dirty" min="0" >
+                                                <label for="description" class="LISDynamicLabel">Prescribed Dosage<span class="star" ng-if="dosageConfiguration =='Y'">*</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="medicationObj.nonFormularyAdvice == 'N'"  class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <div class="">
+                                                <select  class="text-input floating-label dirty" ng-model="medicationObj.formulationCounterIndex"  ng-change="calculateFre(idx);" convert-to-number>
+                                                    <option value=""></option>
+                                                    <option ng-if="dose.formulationFactorId==1" ng-repeat="dose in medicationObj.prescribedDosageUnitList | unique:'formulationDosageFromUnit' " value="{{dose.counterIndex}}">{{dose.formulationDosageFromUnit}}</option>
+                                                    <option ng-if="dose.formulationFactorId==2" ng-repeat="dose in medicationObj.prescribedDosageUnitList"  value="{{dose.counterIndex}}">{{dose.formulationDosage}}</option>
+                                                </select> <label for="code">Prescribed Unit <span class="star" ng-if="dosageConfiguration =='Y'">*</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top8">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11">
+                                    <div class="" ng-if="medicationObj.nonFormularyAdvice== 'Y' || medicationObj.isGeneric == 'Y'">
+                                        <input type="text" ng-keydown="removeTagOnBackspace($event)" autocomplete="off" name="" id="medicationFreq435" ng-model="medicationObj.searchItemFre" uib-typeahead = "serviceMaster.frequency for serviceMaster in searchMedicationFreItems($viewValue)"
+                                               typeahead-on-select="addFrequencyItemList($item, $model, $label,idx);calculateFre(idx);" placeholder="Search frequency" class="text-input floating-label">
+                                        <label for="description" class="LISDynamicLabel">Frequency<span class="star">*</span></label>
+                                    </div>
+                                    <div class="" ng-if="medicationObj.nonFormularyAdvice== 'N' && medicationObj.isGeneric == 'N'">
+                                        <input type="text" ng-keydown="removeTagOnBackspace($event)" autocomplete="off" name="" id="medicationFreq435" ng-model="medicationObj.searchItemFre" uib-typeahead = "serviceMaster.frequency for serviceMaster in searchMedicationFreItems($viewValue)"
+                                               typeahead-on-select="addFrequencyItemList($item, $model, $label,idx);calculateFre(idx);" placeholder="Search frequency"
+                                               class="text-input floating-label" tabindex="9">
+                                        <label for="description" class="LISDynamicLabel">Frequency<span class="star">*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set1 padding-top8">
+                            <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+                                <div class="row input-container">
+                                    <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-10 col-sm-10 col-md-10 ">
+                                        <div class="" ng-if="medicationObj.nonFormularyAdvice== 'Y' || medicationObj.isGeneric == 'Y'">
+                                            <!-- <input numbers-only type="text" autocomplete="off" name="" id=""
+                                                class="text-input floating-label" maxlength="3"
+                                                ng-model="medicationObj.durationCount"
+                                                ng-change="onDurationCountChange(medicationObj);calculateFre($index)"
+                                                > -->
+                                            <input numbers-only type="text" autocomplete="off" name="" id="Duration435"
+                                                   class="text-input floating-label" maxlength="3"
+                                                   ng-model="medicationObj.durationCount"
+                                                   ng-change="calculateEndDate(medicationObj);"
+                                            ><!-- ng-change="onDurationCountChange(medicationObj);calculateFre(idx);onDurationUnitChange(medicationObj); -->
+                                            <label
+                                                    for="description" class="LISDynamicLabel">Duration<span class="star">*</span></label>
+                                        </div>
+                                        <div class="" ng-if="medicationObj.nonFormularyAdvice== 'N' && medicationObj.isGeneric == 'N'">
+                                            <!-- <input numbers-only type="text" autocomplete="off" name="" id=""
+                                                class="text-input floating-label" maxlength="3"
+                                                ng-model="medicationObj.durationCount"
+                                                ng-change="onDurationCountChange(medicationObj);calculateFre($index)"
+                                                > -->
+                                            <input numbers-only type="text" autocomplete="off" name="" id="Duration435"
+                                                   class="text-input floating-label" maxlength="3"
+                                                   ng-model="medicationObj.durationCount"
+                                                   ng-change="calculateEndDate(medicationObj);"
+                                                   tabindex="10"><!-- ng-change="onDurationCountChange(medicationObj);calculateFre(idx);onDurationUnitChange(medicationObj); -->
+                                            <label
+                                                    for="description" class="LISDynamicLabel">Duration<span class="star">*</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+                                <div class="row input-container padding-top2">
+                                    <div class="col-lg-11 col-sm-11 col-md-11">
+                                        <div class="">
+                                            <select class="text-input floating-label dirty"
+                                                    ng-model="medicationObj.durationUnit"
+                                                    ng-change="calculateEndDate(medicationObj);"
+                                                    class="width50 w-100">
+                                                <option value="Day">Day</option>
+                                                <option value="Month">Month</option>
+                                                <option value="Week">Week</option>
+                                                <option value="Year">Year</option>
+                                            </select> <label for="code">Duration Unit<span class="star">*</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                                class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                            <div class="row input-container">
+                                <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-10 col-sm-10 col-md-10">
+                                    <div class="">
+                                        <input numbers-only type="text" autocomplete="off" name="quantity" id="quantity"
+                                               ng-model="medicationObj.quantity"
+                                               class="text-input floating-label"> <label
+                                            for="description" class="LISDynamicLabel">Quantity<span class="star">*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10" style="    margin-top: -5px;">
+                            <div class="row input-container">
+                                <div class="col-lg-11 col-sm-11 col-md-11">
+                                    <div class="">
+                                        <label class="checkbox-inline padding-top10 checkbox-inline"><input
+                                                type="checkbox" value=""  ng-true-value="'Y'" ng-false-value="'N'" ng-model="medicationObj.isInstruction"><span></span>Instruction</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-if="medicationObj.isInstruction == 'N'">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11">
+                                    <div class="">
+                                        <select class="text-input floating-label dirty"
+                                                ng-model="medicationObj.instructionId"
+                                                convert-to-number>
+                                            <option ng-repeat="mediIns in medicationInstructions"
+                                                    value="{{mediIns.instructionId}}">{{mediIns.instructionDesc}}</option>
+                                        </select> <label for="code">Instruction</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-if="medicationObj.isInstruction == 'Y'">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11">
+                                    <div class="">
+                                       <!--  <label for="code" class="LISDynamicLabel">Instruction</label> -->
+                                        <input type="text" autocomplete="off" placeholder="Instruction" style="border-radius: 10px;height: 40px;" name="isInstructionText" ng-model="medicationObj.isInstructionText"  id="searchServiceId" class="w-100 dirty" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row padding-top5">
+                        <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-center">
+                            <!-- <div class="row">
+                                        <div class="col-md-6 col-lg-6 padding-left-right-set4">
+                                            <label class="checkbox-inline padding-top5">
+                                            <input type="checkbox" ng-model="medicationObj.isStat" >Stat</label>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 padding-left-right-set4">
+                                            <label class="checkbox-inline padding-top5">
+                                            <input type="checkbox" ng-model="medicationObj.isDischarge" ng-disabled="disOrNotCount == 0">Is Discharge</label>
+                                        </div>
+                                    </div> -->
+                            <!-- 	<label class="checkbox-inline padding-top10"><input
+                                    type="checkbox" value="" ng-model="medicationObj.isStat">STAT</label>
+                                <label class="checkbox-inline padding-top10"><input
+                                    type="checkbox" ng-true-value=true ng-false-value=false
+                                    ng-model="medicationObj.isDischarge"
+                                    ng-disabled="disOrNotCount == 0">Discharge</label> -->
+<!--                            <span>-->
+                                <span ng-if="ipStatNotRequired == false">
+                                     <label class="checkbox-inline padding-top10">
+                                        <input id="radio12" name="radio12" ng-click="getFlagStat()" ng-checked="flagStat == true"
+                                               type="radio" value="stat" ng-model="medicationObj.isStat" >
+                                            Treatment Room
+                                     </label>
+                                </span>
+                        </div>
+
+<!--                        <div-->
+<!--                                class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">-->
+<!--                            <div-->
+<!--                                    class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">-->
+<!--                                <div class="row input-container">-->
+<!--                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">-->
+<!--                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-lg-11 col-sm-11 col-md-11">-->
+<!--                                        <div class="">-->
+<!--                                            <select-->
+<!--                                                    class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty"-->
+<!--                                                    ng-model="medicationObj.priorityId" convert-to-number>-->
+<!--                                                <option value="? string: ?"></option>-->
+<!--                                                <option ng-repeat="mediIns in priorityList"-->
+<!--                                                        value="{{mediIns.priorityId}}">{{mediIns.priorityCode}}</option>-->
+<!--                                            </select> <label for="code">Priority</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                    </div>
+
+                    <div class="row">
+                        <!--            <div class="row" ng-hide="skipReadyForBillingFlag">-->
+                        <div class="col-lg-2 col-sm-2 col-md-2 text-width-pull-right padding-top8 padding-left-right-set4 pull-right text-width-auto">
+                            <div class="common-save-button" style="padding-top: 0px;">
+<!--                            <div class="common-save-button" style="padding-top: 0px;" onclick="document.getElementById('searchServiceId134').focus();">-->
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save Medication" data-toggle="modal" ng-click="saveOrUpdate(medicationObj)" ng-disabled="saveBtnFlag" id="saveBtn">
+                                    <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        <div
+                                class="col-lg-2 col-sm-2 col-md-2 text-width-pull-right padding-top8 padding-left-right-set4 pull-right text-width-auto">
+                            <div class="common-save-button" style="padding-top: 0px;" onclick="document.getElementById('searchServiceId134').focus();">
+                                <!--                        <a href="" ng-if="saveFlag" ng-click="initMedicationObj()" title="Clear"-->
+                                <a href="" ng-click="initMedicationObj()" title="Clear"
+                                   data-toggle="modal" data-target=""
+                                   class="btn btn-primary btn-save-box-shadow"
+                                   style="width: auto;"> <i class="fa fa-eraser" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+<!--                        <div class="col-lg-2 col-sm-2 col-md-2 text-width-pull-right padding-top8 padding-left-right-set4 pull-right text-width-auto">-->
+<!--                            <div class="common-save-button" style="padding-top: 0px;">-->
+<!--                                <input type="button" data-toggle="modal" value="S" data-target="#substituteModal" ng-click="getGenericAddSubstitue()"-->
+<!--                                       ng-disabled="genericQuantityCheck ==false" class="btn btn-info add-dynamic-row" id="" data-ng-class="">-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+
+                    <!-- *****************advice : medication  table end added on 19/feb/2019********************** -->
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="row padding-left-right-set4 margin-top4">
+            <div class="col-md-12">
+                <table class="table table-bordered  margin-top8">
+                    <thead>
+                    <tr>
+                        <th class="width1"></th>
+                        <th class="width10">
+                            <span class="">Brand Name</span>
+                        </th>
+                        <th class="width10">
+                            <span class="">Generic Name</span>
+                        </th>
+                        <th class="width8">
+                            <span class="">ROA</span>
+                        </th>
+                        <th class="width8">
+                            <span class="">Strength</span>
+                        </th>
+                        <th class="width8">
+                            <span class="">Prescribed Dose</span>
+                        </th>
+                        <th class="width7">
+                            <span class="">Frequency</span>
+                        </th>
+                        <th class="width8">
+                            <span class="">Instruction</span>
+                        </th>
+                        <th class="width8">
+                            <span class="">Speciality</span>
+                        </th>
+                        <th class="width7">
+                            <span class="">Doctor</span>
+                        </th>
+                        <th class="width5">
+                            <span class="">Action taken</span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="medication in favouriteMedications |orderBy:column:reverse|filter:searchKeyword">
+                        <td></td>
+                        <td title="{{medication.itemName}}">{{medication.itemName}}</td>
+                        <td title="{{medication.genericName}}">{{medication.genericName}}</td>
+                        <td title="{{medication.roaDesc}}">{{medication.roaDesc}}</td>
+                        <td title="{{medication.dose +' '+medication.doseDesc}}">{{medication.dose +' '+medication.doseDesc}}</td>
+                        <td  ng-if="medication.factorId!=null && medication.factorId==1" title="{{medication.prescribeDose}} {{medication.prescribeDoseUnit}}">{{medication.prescribeDose}} {{medication.prescribeDoseUnit}}</td>
+                        <td  ng-if="medication.factorId!=null && medication.factorId==2" title="{{medication.prescribeDose}}{{medication.dosageForm}}">{{medication.prescribeDose}}{{medication.dosageForm}}</td>
+                        <td class="vertical-top" ng-if="medication.factorId==null">
+                            <div ng-if="activeMedication.dosageForm == null" title="{{medication.prescribeDose}}">{{medication.prescribeDose}}</div>
+                            <div  ng-if="activeMedication.dosageForm != null" title="{{medication.dosageForm}}">{{medication.dosageForm}}</div></td>
+                        <td title="{{medication.frequencyDesc}}">{{medication.frequencyDesc}}</td>
+                        <td>
+                            <div ng-if="medication.instructionDesc != null" title="{{medication.instructionDesc}}">
+                                {{medication.instructionDesc}}
+                            </div>
+                            <div ng-if="medication.instructionText != null" title="{{medication.instructionText}}">
+                                {{medication.instructionText}}
+                            </div>
+                        </td>
+                        <td title="{{medication.specialityName}}">
+                            {{medication.specialityName}}
+                        </td>
+                        <td title="{{medication.doctorName}}">
+                            {{medication.doctorName}}
+                        </td>
+                        <td class="text-center">
+                            <a title="Edit">
+                                <i class="fa fa-pencil" ng-click="getValuesForUpdate(medication);" style="padding-right: 30px;"></i>
+                            </a>
+                            <a title="Remove From Favourites">
+                                <i class="fa fa-trash" ng-click="removeFavouriteMedication(medication, $index);"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr ng-if="favouriteMedications == undefined || favouriteMedications.length==0">
+                        <td colspan="11"><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+                    </tr>
+                    </tbody>
+                </table>
+<!--                <table class="table table-bordered">-->
+<!--                    <tr ng-if="favouriteMedications == undefined || favouriteMedications.length==0">-->
+<!--                        <td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>-->
+<!--                    </tr>-->
+<!--                </table>-->
+
+
+<!--                <table class="table table-bordered">-->
+<!--                    <thead>-->
+<!--                    <tr class="">-->
+<!--                        <th class="width10">Rack Code</th>-->
+<!--                        <th class="width15">Description</th>-->
+<!--                        <th class="width8">Status</th>-->
+<!--                        <th class="text-center width8">Action</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr ng-repeat="info in getMrd |filter:searchKeyword track by $index">-->
+<!--                        <td>{{info.rackCode}}</td>-->
+<!--                        <td>{{info.rackDescription}}</td>-->
+<!--                        <td><label class="switch">-->
+<!--                            <input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"-->
+<!--                                       ng-change="updateStatus(info.rackId,info.rackCode,info.rackDescription,info.rackId,info.status,$index)">-->
+<!--                            <div class="slider round"></div>-->
+<!--                        </label></td>-->
+<!--                        <td class="padding-edit-button-table text-center"><a> <i -->
+<!--                                class="fa fa-pencil" aria-hidden="true"-->
+<!--                                ng-click="viewBtn(info)"></i>-->
+<!--                        </a></td>-->
+<!--                    </tr>-->
+
+<!--                    </tbody>-->
+<!--                </table>-->
+
+
+                <div ng-include="'./views/OPD/CoverSheet/medication-favorites-details-ipd.html'"></div>
+
+<!--                <div class="row margin-bottom45">-->
+<!--                    <ul ng-if="pager.pages.length" class="pagination table-list"-->
+<!--                        style="font-size: 14px;">-->
+<!--                        <li ng-class="{disabled:pager.currentPage === 1}"><a-->
+<!--                                ng-click="setPage(1,'true')">First</a></li>-->
+<!--                        <li ng-class="{disabled:pager.currentPage === 1}"><a-->
+<!--                                ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>-->
+<!--                        <li ng-repeat="page in pager.pages"-->
+<!--                            ng-class="{active:pager.currentPage === page}"><a-->
+<!--                                ng-click="setPage(page,'true')">{{page}}</a></li>-->
+<!--                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">-->
+<!--                            <a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>-->
+<!--                        </li>-->
+<!--                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">-->
+<!--                            <a ng-click="setPage(pager.totalPages,'true')">Last</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="substituteModal" class="modal fade ng-scope in common-large-popup" role="dialog" data-backdrop="static" style="width: 55% !important; margin-left: 20% !important;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Generic Name
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <!-- <div ng-include="'./views/common/patient-demography.html'"></div> -->
+                <section>
+                    <div class="row margin-top10">
+                        <div
+                                class="col-md-12 col-lg-12 table-responsive padding-left-right-set4"
+                                style="padding: 0px 0px 0px 0px !important;">
+                            <div class="table-container padding-left-right-set4 padding-top5"
+                                 style="padding: 0px 0px 0px 0px !important;">
+                                <div class="table-container-header">
+                                    <table
+                                            class="table table-striped table-hover table-condensed table-bordered">
+                                        <thead>
+                                        <tr class="table-th-bg">
+                                            <th class="width2" title=""></th>
+                                            <th class="width15" title="Brand Name">Brand Name
+                                                <div class="float_right"
+                                                     ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+                                                    <div>
+                                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="margin-top-8">
+                                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                    </div>
+                                                </div>
+                                            </th>
+
+                                            <th class="width15" title="Available Qty">Available Qty
+                                                <div class="float_right"
+                                                     ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+                                                    <div>
+                                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="margin-top-8">
+                                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="table-container-body"
+                                     style="height: 350px; overflow-y: scroll;">
+                                    <table
+                                            class="table table-striped table-hover table-condensed table-bordered">
+                                        <tbody>
+                                        <tr ng-repeat="item in genericAddSubstitueList ">
+                                            <td class="width2" title="{{item.medicationName}}">
+                                                <!-- <input type="radio" ng-click="getGenericAddSubstitue" ng-model="" ng-true-value="true"> </td> -->
+                                                <input type="radio" name="template" ng-true-value="true" ng-false-value="false" ng-click="getGenericRadioSubstitute(item)"> </td>
+                                            <td class="width15">{{item.medicationName}}</td>
+                                            <td class="width15">{{item.qty}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer" style="border: none;">
+                <div class="row">
+                    <div
+                            class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <div class=" ">
+                            <a href=""><input ng-click="getGenericAddSubstitute()" id="substituteModall"  type="button" value="Add"
+                                              class="btn btn-primary btn-save-box-shadow"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

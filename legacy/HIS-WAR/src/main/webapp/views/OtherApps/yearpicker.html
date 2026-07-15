@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>HTML Skeleton</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="Keywords" content="HTML, Python, CSS, SQL, JavaScript, How to, PHP, Java, C, C++, C#, jQuery, Bootstrap, Colors, W3.CSS, XML, MySQL, Icons, NodeJS, React, Graphics, Angular, R, AI, Git, Data Science, Code Game, Tutorials, Programming, Web Development, Training, Learning, Quiz, Exercises, Courses, Lessons, References, Examples, Learn to code, Source code, Demos, Tips, Website">
+<meta name="Description" content="Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, Python, PHP, Bootstrap, Java, XML and more.">
+<meta property="og:image" content="https://www.w3schools.com/images/w3schools_logo_436_2.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="436">
+<meta property="og:image:height" content="228">
+<meta property="og:description" content="W3Schools offers free online tutorials, references and exercises in all the major languages of the web. Covering popular subjects like HTML, CSS, JavaScript, Python, SQL, Java, and many, many more.">
+
+<!-- <link rel="stylesheet" href="resources/assets/css/yearpicker/style.css"> -->
+
+<link rel="stylesheet" href="resources/assets/css/yearpicker/Year_pic.css">
+
+<script src="resources/assets/js/yearpicker/core.js"></script>
+<!-- <script src="resources/assets/js/yearpicker/jquery.min.js"></script> -->
+<script src="resources/assets/js/yearpicker/Year_pic.js"></script>
+
+
+</head>
+<style>
+/* .uib-datepicker-popup.dropdown-menu{
+display:none !important; */
+} 
+</style>
+<body>
+
+
+<div class="col-3">
+<strong>Examples</strong>
+<div class="form-group">
+
+<input type="text" class="yearpicker form-control" name="toYearDatepicker" id="toYearDatepicker"
+										           uib-datepicker-popup="yyyy"
+											     	ng-model="info.toyear$index"
+											        model-view-value="true" is-open="toYearDatepicker.opened" 
+											        datepicker-options="dateOptionsToYear" show-button-bar="false" onkeydown="event.preventDefault()"
+											        ng-click="openToYearDatePicker()" ng-change="validateYear()"  required
+ style="width: 12% !important;border-bottom-color: black;border-right: none;border-left: none;border-top: none;
+    "/>
+</div>
+</div>
+<!-- border-right: none !important;
+    border-left: none !important;
+    border-top: none !important;
+    -webkit-box-shadow: none !important; -->
+
+<script>
+$(document).ready(function () {
+$(".yearpicker").yearpicker({
+startYear: new Date().getFullYear() - 10,
+endYear: new Date().getFullYear() + 10,
+});
+
+
+
+$("#example2").yearpicker({
+year: new Date().getFullYear(),
+startYear: new Date().getFullYear() - 10,
+endYear: new Date().getFullYear() + 10,
+onChange: function (value) {
+$("#OutputContainer").html(value);
+},
+});
+});
+</script>
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+<div id="page-content-wrapper" style="height: 100%; overflow-y: auto">
+	<div class="container-fluid his-style">
+		<div class="row margin-top8">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" name="id" ng-model="wardObj.id">
+							<option></option>
+								<option ng-repeat="info in getStoreList" ng-value="{{info.id}}" value="{{info.id}}">{{info.store}}</option>	
+							</select> <label for="code">Store</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" name="wardId" ng-model="wardObj.wardId">
+								<option></option>
+								<option ng-repeat="ward in getWardList" ng-value="{{ward.wardId}}" value="{{ward.wardId}}">{{ward.wardName}}</option>	
+							</select> <label for="code">Ward</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+        <div class="row padding-top8">
+        <div class="col-md-6 col-sm-7 padding-left-right-set4">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+							<div class="search">
+							<label class="show-entries">Show 
+							<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+						</div>
+					</div>
+				</div>
+				
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+                    <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" 
+					ng-click="saveWardStoreMapper()" ng-if="saveBtnFlag">
+                        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+                    </a>
+                    <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" 
+					ng-click="updateWardStoreMapper()" ng-if="updateBtnFlag">
+                        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+                    </a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+                <input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty search-popUp-ddl" 
+                placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-top10">
+			<div class="col-md-12 col-lg-12 col-sm-12" id="nonBillableTableHt">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 height55-table-with-scroll padding-left-right-set4">
+						<table class="table table-bordered first-checkBox-padding">
+							<thead class="mainServiceTableCommon">
+								<tr>
+									<th class="width8">
+										Store
+									</th>
+									<th class="width8">
+										Ward
+									</th>
+									<th class="width3">
+										Status(n)
+									</th>
+									<th class="width3 text-center vertical-middle">
+                                        Action taken
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in getWardStoremappedList|orderBy:column:reverse|filter:searchKeyword">
+								<td >{{info.storeName}}</td>
+								<td>{{info.wardName}}</td>
+								<td><label class="switch"> <input type="checkbox"
+									ng-model="info.status" ng-checked="info.status=='A'"
+									ng-true-value="'A'" ng-false-value="'I'"
+									ng-change="updateStatus(info.wardStoreMapperId,info.status)">
+									<div class="slider round"></div>
+									</label></td>
+									<td class="text-center"><a><i class="fa fa-pencil"
+									aria-hidden="true" ng-click="showUpdateBtn(info.wardStoreMapperId)"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="table table-bordered">
+					        <tr ng-if="(getWardStoremappedList|filter:searchKeyword)=='' || (getWardStoremappedList|filter:searchKeyword)==null">
+						        <td>
+                                    <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+                                </td>
+					        </tr>
+				        </table>
+				        <div class="row margin-bottom45 sss">
+					  <ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+					</div>
+			   </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+    $(document).ready(function() {  
+	    // $(".patienttSearchResult").hide();
+	    $(".selectedPageName").text("Ward Store Mapper");
+	    $(".sidebar-nav li").each(function() {
+		    $(this).find("a").parents("li").removeClass("active");
+	    });
+	    $('a[href$="wardStoreMapper"]').parents("li").addClass("active");
+    });
+</script>

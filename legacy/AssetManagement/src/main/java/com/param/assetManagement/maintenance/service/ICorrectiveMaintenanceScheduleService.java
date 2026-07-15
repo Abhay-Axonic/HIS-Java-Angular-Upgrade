@@ -1,0 +1,37 @@
+package com.param.assetManagement.maintenance.service;
+
+import javax.transaction.Transactional;
+
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceScheduleDto;
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceSparesComsumptionDto;
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceWorklistDto;
+import com.param.assetManagement.maintenance.model.CorrectiveMaintenanceAssetReplacement;
+import com.param.global.common.Response;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+@Transactional
+public interface ICorrectiveMaintenanceScheduleService {
+
+	Response saveCorrectiveMaintenanceSchedule(CorrectiveMaintenanceScheduleDto correctiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response getCorrectiveMaintenanceScheduleByMultipleCrit(CorrectiveMaintenanceScheduleDto correctiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response getCorrectiveMainSparesComsumptionByitemId(CorrectiveMaintenanceSparesComsumptionDto correctiveMaintenanceSparesComsumptionDto)throws ApplicationException;
+
+	Response getvendorlistByBatchId(CorrectiveMaintenanceWorklistDto correctiveMaintenanceWorklistDto)throws ApplicationException;
+
+	Response getSparesComsumptionlistById(CorrectiveMaintenanceScheduleDto orrectiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response getreplaceItemById(CorrectiveMaintenanceScheduleDto orrectiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response getreplaceDetailOnReturnByMultipleCrit(CorrectiveMaintenanceScheduleDto correctiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response getdetailsOfCM(CorrectiveMaintenanceScheduleDto correctiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response returnAsset(CorrectiveMaintenanceAssetReplacement correctiveMaintenanceAssetReplacement)throws ApplicationException;
+
+	Response rejectAsset(CorrectiveMaintenanceAssetReplacement correctiveMaintenanceAssetReplacement)throws ApplicationException;
+	
+}

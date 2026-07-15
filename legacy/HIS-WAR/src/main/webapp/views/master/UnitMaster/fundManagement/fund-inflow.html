@@ -1,0 +1,534 @@
+<!-- /********************************************************************************************************************************************
+Work Order - Fund inflow main page
+Created by - Pranita Patil 
+Created Date - 26-fab-2020
+/********************************************************************************************************************************************/ -->
+<!-- Page Content -->
+<style>
+	#add_daignosis_modal_Btn{
+	 border: 1px solid #2A83F2 !important;
+    background-color: #EBF4FF !important;
+    border-radius: 20px;
+    color: #2A83F2 !important;
+	}
+	#approve_Request_Details_modal_Btn{
+	border: 1px solid #2A83F2 !important;
+    background-color: #EBF4FF !important;
+    border-radius: 20px;
+    color: #2A83F2 !important;
+	}
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	<form name="commonform" novalidate>
+		<div class="row">
+			<div ng-include="'./views/common/common-patient-search-opd-without-counter.html'"></div>
+	 		<div ng-include="'./views/common/patient-demography-opd.html'" class="margin-top4"></div>
+		</div>
+		<fieldset class="margin-top4">
+			<legend class="main-heading-div">Fund Collection</legend>
+			<div class="row padding-top10">
+				<div class="row ">
+					<!-- <div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+										<label for="" class="">Diagnosis</label>
+										<div class="custom-drop-down-btn"
+											options="" selected-model="">
+										</div>
+									</div>
+							</div>
+						</div>
+					</div> -->
+					
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" >
+									<select class="text-input floating-label" name="trustId"   ng-model="trustlistObj.trustId"  convert-to-number ng-change="getTrustDetails(trustlistObj.trustId)" required>
+										<option ng-repeat="info in getTrustActiveList" value="{{info.trustId}}">{{info.trustName}}</option>
+									</select><label for="code">Trust Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" >
+									<select class="text-input floating-label" ng-model="selectedtrustFundTypeId" ng-change="gethideshowBtn(selectedtrustFundTypeId)">
+										<option value="3">Diagnosis</option>
+										<option value="2">Patient</option>
+										<option value="1">Trust</option>
+										<option value="4">Virtual Acceptance</option>
+									</select>
+									<label for="code">Fundn Inflow Type</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					  <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set text-center text-width-auto">
+						<input type="button" id="add_daignosis_modal_Btn" value="Select Daignosis"  class="btn btn-primary btn-save-box-shadow text-width-auto" style="display: none;"  data-toggle="modal" data-target="#add_daignosis_modal">
+					</div>
+					
+					<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set text-center text-width-auto">
+						<input type="button" id="approve_Request_Details_modal_Btn" value="Select Approval Request"  class="btn btn-primary btn-save-box-shadow text-width-auto" style="display: none;" ng-click="getFundApprovalRequestDetails()" >
+					</div>
+					
+				</div>
+				<div class="row padding-top10">
+					<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input is-number  ng-class="{disabled: selectedtrustFundTypeId==4}" type="text" autocomplete="off" name="" id="" class="text-input floating-label"  ng-model="fundAmount" > 
+									<label for="" class="">Amount</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+<!-- 									<input type="text" autocomplete="off" name="" id=""   ng-model="trustObj.fundRemark" class="text-input floating-label">  -->
+<!-- 									<label for="" class="" name="" id=""   ng-model="trustObj.fundRemark" >Remark</label> -->
+									<textarea name="" rows="1" id=""   ng-model="trustObj.fundRemark"
+													class="text-input floating-label"></textarea>
+												<label for="">Remark</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-10 text-width-auto">
+						<div class="">
+<!-- 							<span><label></label></span> -->
+							<span>
+								<input type="button" value="Collect Fund" id="updateBtn"  class="btn btn-primary btn-save-box-shadow text-width-auto" ng-click="setFundAmmount()" ><!-- ng-disabled="trustlistObj.trustId==undefined"   -->
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+			<div class="row padding-left-right-set4 table-container padding-top8">
+				<div class="table-container">
+					<div class="table-container-header">
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="width3">Sr. No.</th>
+									<th class="width10">Trust Name</th>
+									<th class="width5">Fund Type</th>
+									<th class="width8">Total Amount</th>
+										<th class="width8">Allocated Fund</th>
+									<th class="width8">Bill Consumed  Amount</th>
+									<th class="width8">Available Fund</th>
+									<th class="width3">Action taken</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body" style="overflow: overlay;"> 
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat="info in commonTrustInflowlist track by $index">
+									<td class="width3">{{$index+1}}</td>
+									
+									<td class="width10">{{info.trustName}}</td>
+									
+									<td class="width5" ng-if="info.fundtypeId==1">Trust</td>
+									<td class="width5" ng-if="info.fundtypeId==2">Patient</td>
+									<td class="width5" ng-if="info.fundtypeId==3">Diagnosis</td>
+									<td class="width5" ng-if="info.fundtypeId==4">Virtual Acceptance</td>
+									
+									<td class="width8" ng-if="info.fundtypeId==4 "><a ng-click="getTrustInflowVirtualAcceptanceDetails(info)" >{{ parseFloatNum( info.totalCollectedAmount ) }}</a></td>
+									<td class="width8" ng-if="info.fundtypeId!=4 ">{{ parseFloatNum( info.totalCollectedAmount )}}</td>
+									
+									
+									
+									<td class="width8" ng-if="info.fundtypeId==1 || info.fundtypeId==3"><a ng-click="getTrustInflowAllocatedDetails(info)" >{{ parseFloatNum(info.totalCollectedAmount - info.availableAmount )}}</a></td>
+									<td class="width8" ng-if="info.fundtypeId==2 ">{{ parseFloatNum(info.totalCollectedAmount) }}</td>
+									<td class="width8" ng-if="info.fundtypeId==4 ">-</td>
+									
+									
+									<td class="width8" ng-if="info.fundtypeId!=4 ">{{ parseFloatNum(info.billConsumeAmount) }}</td>
+									<td class="width8" ng-if="info.fundtypeId==4 ">-</td>
+									
+									<td class="width8" ng-if="info.fundtypeId!=4 ">{{ parseFloatNum(info.totalCollectedAmount - info.billConsumeAmount)}}</td>
+									<td class="width8" ng-if="info.fundtypeId==4 ">-</td> 
+									
+									
+									<td class="width3">
+									<a data-toggle="modal" ng-click="getTrustInflowPaymentDetails(info)"><i class="fa fa-eye"></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- ********** fieldDetailsModal POPUP start **********  -->
+<div id="fieldDetailsModal" class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Visit Type Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row serachedPatientList padding-left-right-set4">
+					<div class="col-md-12 col-lg-12  fix-height-scroll230">
+						<table class="table table-bordered  margin-top4">
+							<thead>
+								<tr>
+							 		<th><span class="">Sr No.</span></th>
+									<th><span class="">Visit Type</span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in fieldMasterList track by $index">
+									<td>{{$index+1}}</td>
+									<td>{{info.visitTypeCode}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="fundInflowDetailsModal" class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Payment Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row serachedPatientList padding-left-right-set4">
+					<div class="col-md-12 col-lg-12  fix-height-scroll230">
+						<table class="table table-bordered  margin-top4">
+							<thead>
+								<tr>
+							 		<th><span class="">Sr No.</span></th>
+									<th><span class="">Payment Type</span></th>
+									<th><span class="">Amount</span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in paymentDetails track by $index">
+									<td>{{$index+1}}</td>
+									<td ng-if="info.paymentModeId==1">Cash</td>
+									<td ng-if="info.paymentModeId==2">Cheque</td>
+									<td ng-if="info.paymentModeId==3">Card</td>
+									<td ng-if="info.paymentModeId==8">E -Transfer</td>
+									<td>{{parseFloatNum(info.amount)}}</td>
+									
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ********** fieldDetailsModal POPUP End **********  -->
+<!-- ********** Add Diagnosis  Modal POPUP start **********  -->
+<div id="add_daignosis_modal" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Add Diagnosis 
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10">
+					<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+				 		<div class="row input-container padding-top2">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+		                            <input type="text" autocomplete="off" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-valid-editable ng-empty dirty" 
+											tabindex="3" ng-model="searchDiagnosis" placeholder="Search" 
+											uib-typeahead="group.diagnosisName+'|'+group.code  for group in getDiagnosisListSearch($viewValue)" typeahead-editable="false" 
+											typeahead-on-select="addDiagnosisListTemp($item, $model, $label);search=null" name="groupName"  
+											aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-86-2495" typeahead-min-length="3">
+                                              </ul>
+                                       <label for="" class="">Search Diagnosis</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="row padding-top10 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+						  <table id="main-table" class="main-table width100">
+						    <thead>
+						      <tr>
+							 		<th class="width2">Sr No.</th>
+							 		<th  class="width5">Diagnosis Code</th>
+									<th class="width10">Diagnosis Name</th>
+									<th  class="width3">Action</th>
+								</tr>
+						    </thead>
+						    <tbody>
+						      <tr ng-repeat="info in addDiagnosisList">
+										<!-- <td class="width2 text-center"><input type="checkbox" ng-model="info.status" ng-true-value="true" ng-false-value="false"></td> -->
+										<td class="width2">{{($index)+1}}</td>
+										<td class="width2">{{info.code}}</td>
+										<td class="width5">{{info.diagnosisName}}</td>
+<!-- 										<td class="width10">{{info.serviceStandardCode}}</td> -->
+										<td class="width3"><a> <i class="fa fa-times"
+												aria-hidden="true"
+												ng-click="removeTempAddedDiagnosis($index)"></i>
+										</a></td>
+									</tr>
+						    </tbody>
+						  </table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 float-right">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ********** Add Diagnosis  Modal POPUP End **********  -->
+<!-- ********** Approve Request Details Modal POPUP start **********  -->
+<div id="approve_Request_Details_modal" class="modal fade ng-scope in common-popup" role="dialog" data-keyboard="false" data-backdrop="static" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Approve Request Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10">
+					
+					<div class="row padding-top10 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll360">
+						  <table id="main-table" class="main-table width100 ">
+						    <thead>
+						      <tr >
+						      			
+						      	     <th class="width1 text-center"></th>
+							 		 <th class="width5">Fund Request No.</th>
+							 		 <th  class="width5">Patient Name</th>
+							 		  <th class="width5">Fund Approval Amount</th>
+							 		 <th  class="width5">Bill Consumed Amount</th>
+							 		  <th  class="width5">Actual Received Amount</th>
+							 		  <th  class="width5">Balance Amount</th>
+							 		  <th  class="width5">Amount</th>
+									
+								</tr>
+						    </thead>
+						    <tbody>
+						      <tr ng-repeat="info in commonVitualTrustAcceptanceList">
+				                        <td class="width1 text-center">
+										<input type="checkbox" ng-click="getcheckedFundApprovalDetails($index)" ng-model="info.sanctionApprovedflagforCheck"  >
+									    </td>
+										<td class="width2">{{info.fundrequestNumber}}</td>
+										<td class="width5">{{info.patientName}}</td>
+										<td class="width5">{{parseFloatNum(info.requestApprovalAmount)}}</td>
+										<td class="width5">{{parseFloatNum(info.approvalBillConsumeAmount)}}</td>  
+										<td class="width5">{{parseFloatNum(info.virtualPaidAmount)}}</td>  
+										<td class="width5">{{parseFloatNum(info.requestApprovalAmount - info.virtualPaidAmount)}}</td>                  
+										<td class="width10"><input is-number type="text" autocomplete="off" ng-model="info.virtualAcceptancePaidAmmount" ng-disabled="!info.sanctionApprovedflagforCheck" ng-blur="getcheckedFundApprovalDetails($index)"></td>
+							</tr>
+						    </tbody>
+						    <tfoot ng-if="finalCheckedAmount > 0">
+						      <tr>
+									<td class="ng-binding">
+									</td>
+									<td class="ng-binding">
+									</td>
+									<td class="ng-binding">
+									</td>
+									<td class="text-right">
+									</td><td class="text-right">
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right" >
+										Selected Trust Amount
+									</td>
+									<td class="ng-binding">
+										{{parseFloatNum(finalCheckedAmount)}}
+									</td></tr>
+						    </tfoot>
+						  </table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 float-right">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="allocated_Request_Details_modal" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Allocated Request
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10">
+					
+					<div class="row padding-top10 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+						  <table id="main-table" class="main-table width100 ">
+						    <thead>
+						      <tr >
+						      			
+							 		 <th class="width2">Sr No.</th>
+							 		 <th class="width5">Fund Request No.</th>
+							 		 <th  class="width5">Patient Name</th>
+									 <th class="width5">Fund Request Amount</th>
+									 <th class="width5">Fund Allocated Amount</th>
+								</tr>
+						    </thead>
+						    <tbody>
+						      <tr ng-repeat="info in getInflowAcceptedRequestList">
+										<td class="width2">{{($index)+1}}</td>
+										<td class="width2">{{info.fundrequestNumber}}</td>
+										<td class="width5">{{info.patientName}}</td>
+										<td class="width5">{{ parseFloatNum(info.fundrequestAmount) }}</td>
+										<td class="width5">{{ parseFloatNum(info.requestApprovalAmount) }}</td>
+							</tr>
+						    </tbody>
+						  </table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 float-right">
+<!-- 						<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button> -->
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="Virtual_Acceptance_Details_modal" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Virtual Acceptance  Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10">
+					
+					<div class="row padding-top10 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+						  <table id="main-table" class="main-table width100 ">
+						    <thead>
+						      <tr >
+						      			
+							 		 <th class="width2">Sr No.</th>
+							 		 <th class="width5">Fund Request No.</th>
+							 		 <th  class="width5">Patient Name</th>
+									 <th class="width5">Fund Approval Amount</th>
+									 <th class="width5">Fund Paid Amount Amount</th>
+								</tr>
+						    </thead>
+						    <tbody>
+						      <tr ng-repeat="info in getInflowVirtualAcceptedDetialsList">
+										<td class="width2">{{($index)+1}}</td>
+										<td class="width2">{{info.fundrequestNumber}}</td>
+										<td class="width5">{{info.patientName}}</td>
+										<td class="width5">{{ parseFloatNum(info.requestApprovalAmount) }}</td>
+										<td class="width5">{{ parseFloatNum(info.virtualAcceptancePaidAmmount) }}</td>
+							</tr>
+						    </tbody>
+						  </table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 float-right">
+<!-- 						<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button> -->
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ********** Approve Request Details Modal POPUP End **********  -->
+<div ng-include="'./views/common/fund-collect-payment.html'"></div> 
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Fund Inflow");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="fundInflow"]').parents("li").addClass("active");
+});
+</script>

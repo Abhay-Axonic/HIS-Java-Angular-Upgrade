@@ -1,0 +1,1582 @@
+<div id="page-content-wrapper" style="height:100%; overflow-y:auto ">
+	<div class="container-fluid his-style">
+	<form name="ambulanceChargesForm" novalidate >
+	<div class="row padding-top12">
+<!-- 	<div ng-include="'./views/common/common-patient-search-opd.html'"></div> -->
+	<div class="row padding-left-right-set4">
+		<fieldset class="">
+			<legend class="main-heading-div">Patient Search</legend>
+			<!-- <form name="patientRegSearchFilter"> -->
+					<div class="row divOtherRegistrationType">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-address-book-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="form-group">
+										<input type="text" autocomplete="off" name="uhidNumber" id="" ng-model="patientSearchObj.uhidNumber" press-enter="searchPatient(patientSearchObj)" class="text-input floating-label" required>
+										<label for="description" class="long-text-overflow">Registration Number</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="" show-errors>
+										<input type="text" autocomplete="off" name="patientName"  id="" ng-model="patientSearchObj.patientName" press-enter="searchPatient(patientSearchObj)" class="text-input floating-label dirty" value=""> 
+										<label for="description" >Patient Name</label> <p class="help-block" ng-if="ambulanceChargesForm.patientName.$error.required">Patient Name is required</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top0">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-venus-mars" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<select class="text-input floating-label"
+										ng-model="patientSearchObj.genderId"
+										press-enter="searchPatient(patientSearchObj)">
+										<option></option>
+										<option ng-repeat="sex in genderList" value="{{sex.id}}">{{sex.desc}}</option>
+									</select> <label for="code">Gender</label>
+									</div>
+								</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-mobile" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input numbers-only type="text" autocomplete="off"  id="" ng-model="patientSearchObj.mobileNumber" press-enter="searchPatient(patientSearchObj)" class="text-input floating-label dirty"  value=""> 
+										<label for="description" class="">Mobile Number</label>
+									</div>
+								</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4" >
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty"	name="datepicker" id="datepickerSearch"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"	placeholder="DD/MM/YYYY" ng-model="patientSearchObj.birthDate"
+													model-view-value="true" is-open="datepickerSearch.opened"	datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="openDatePickerSearch()" press-enter="searchPatient(patientSearchObj)" > 
+										 <label for="description" class="">Birth Date</label>
+									</div>
+								</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+								<div class="row input-container test-master-sample  padding-top0">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-address-book" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<select class="text-input floating-label dirty" name="identificationId"   ng-model="patientSearchObj.identificationTypeId"  >
+													<option>Select Identification</option>
+													<option ng-repeat="info in identificationList" value="{{info.identificationId}}">{{info.identificationName}}</option>
+												</select> 
+										<label for="" class="long-text-overflow">Identification Type</label>
+									</div>
+								</div>
+								</div>
+							</div>
+						</div>	
+						<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div>
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10 " >
+										<div class="">
+											<input type="text" autocomplete="off"  id="" ng-model="patientSearchObj.identificationNumber" press-enter="searchPatient(patientSearchObj)" class="text-input floating-label dirty " value="">
+											 <label for="description" class="long-text-overflow">Identification No..</label>
+										</div>
+									</div>
+									</div>
+									<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top2 margin-top-5">
+										<div class="common-save-button" style="padding-top:  0px;">
+							                <a href="" ng-click="searchPatient()" id="searchBtn" class="btn btn-primary btn-save-box-shadow" style="width: auto;">
+							                  <i class="fa fa-search" aria-hidden="true"></i>
+							                </a>
+							             </div>
+									</div>
+							</div>
+						</div>
+					</div>
+					<!-- </form> -->
+			<div class=" row serachedPatientList padding-bottom10 divOtherRegistrationType padding-left-right-set4 table-container padding-top4">
+							<div class="table-container">
+								<div class="table-container-header">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<thead>
+											<tr>
+												<th class="width2"></th>
+												<th class="width12">
+													<span class="">Registration Number</span>
+												</th>
+												<th class="width12">
+													 <span class="">Patient's Name</span>
+												</th>
+												<th class="width5">
+													Gender
+												</th>
+												<th class="width15">
+													Mobile Number
+												</th>
+												<th class="width6">
+													Birth Date
+												</th>
+												<th class="width12">
+														Identification Type
+												</th>
+												<th class="width12">
+													Identification No..
+												</th>
+												<th class="width8">
+													Verified Status
+												</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll94" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr ng-repeat="info in searchPatientList1">
+												<td class="width2 text-center">
+													<input type="radio" name="radioName" value="{{info.patientId}}" ng-model="ambulanceCharges.selectedPatientId" ng-click="selectPatientById(info);" />
+												</td>
+												<td class="width12">
+													{{info.uhIdNumber}}
+													
+												</td>
+												<td class="width12">{{info.firstName+' '+info.lastName}}
+													
+												</td>
+												<td class="width5">
+													{{info.genderCode}}
+												</td>
+												<td class="width15">{{info.mobileNo}}
+													
+												</td>
+												<td class="width6">
+													{{info.birthDate}}
+												</td>
+												<td class="width12">
+													{{info.identificationName}}
+												</td>
+												<td class="width12">
+													{{info.identificationNo}}
+												</td>
+												<td class="text-center width8">
+													<a href=""><img src="resources/assets/images/icon/check-mark.png" class="width21px "></a>
+												</td>
+											</tr>
+											<tr ng-if="searchPatientList1.length == 0" class="text-center">
+												<td colspan="9">No Record Found</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+		</fieldset>
+	</div>
+	<div class="row padding-top0"> 	
+	
+	   <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					   <div class="col-lg-11 col-sm-11 col-md-11">
+				         <div class="">
+				            <select class="text-input floating-label"  ng-model="visitNumber" ng-change="visitDoctorName()" >
+				              <option ng-repeat="visit in visitNumbers">{{visit}}</option>
+				            </select>
+				            <label for="code">Visit Number</label>				         
+				         </div>
+				      </div>
+				</div>
+	  </div>
+	
+	   <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+						<input type="hidden" name="ambulanceChargesId" ng-model="ambulanceCharges.ambulanceChargesId" class="text-input floating-label" value="" >
+						<input type="text" autocomplete="off" class="text-input floating-label"  name="fromAddress" ng-model="ambulanceCharges.fromAddress" required="required"> 
+							<label for="code">From<span class="star">*</span></label>
+						<p class="help-block" ng-if="ambulanceChargesForm.fromAddress.$error.required">From Address is required</p>
+						</div>
+					</div>
+				</div>
+	  </div>
+  	   <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label"  name="toAddress" ng-model="ambulanceCharges.toAddress" required="required"> 
+							<label for="code">To<span class="star">*</span></label>
+						<p class="help-block" ng-if="ambulanceChargesForm.toAddress.$error.required">To Address is required</p>
+						</div>
+					</div>
+				</div>
+	  </div>
+	
+	  <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="">
+						<select class="text-input floating-label" name="ambulanceType" ng-model="ambulanceCharges.ambulanceType" ng-change="setAmbTypeDetails();" required="required"> <!-- ng-change="getNameByAmbType(ambulanceCharges.ambulanceTypeMasterId)" -->
+							<option ng-repeat="info in ambulanceTypeList" value="{{info.ambulanceTarrifMasterId}}" >{{info.ambulanceType}}</option>
+						</select> <label for="code">Ambulance Tariff</label> <p class="help-block" ng-if="ambulanceChargesForm.ambulanceType.$error.required">Ambulance Type is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+						<input type="text" autocomplete="off" class="text-input floating-label"  name="distance" ng-model="ambulanceCharges.distance" ng-keyup="calculateDistance(ambulanceCharges.ambulanceType);" required="required"> 
+							<label for="description" class="LISDynamicLabel">Distance (KM)<span class="star">*</span></label>
+							<p class="help-block" ng-if="ambulanceChargesForm.distance.$error.required">Distance Between is required</p>
+						</div>
+				</div>
+	    </div>
+		</div>
+	</div>
+	<div class="row padding-top10"> 
+	  <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="">
+						<select class="text-input floating-label" id="ambulanceProvider" name="ambulanceProvider" ng-model="ambulanceCharges.ambulanceProvider"  onclick="setClass()">
+							<option value="inHouse">In House</option>
+							<option value="outSource">Out Sourced</option>
+						</select> <label for="code">Ambulance Provider</label>
+					</div>
+				</div>
+			</div>
+		</div>	 
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 " id="vechileNoDiv">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="vehicleNo" ng-model="ambulanceCharges.vehicleNo" class="text-input floating-label"> 
+							<label for="description" class="LISDynamicLabel">Vehicle No.</label>
+						</div>
+					</div>
+				</div>
+	  </div>
+	  <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" id="outSourceVenderDiv" style="display:none;">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="outSourceVenderName" ng-model="ambulanceCharges.outSourceVenderName" class="text-input floating-label"> 
+							<label for="description" class="LISDynamicLabel">Out Sourced Vendor Name</label>
+						</div>
+					</div>
+				</div>
+	  </div>
+	   <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-10 padding-right0 padding-top10" id="LPOButtonDiv" style="display:none;">
+					<a>
+						<input type="button" value="LPO" class="btn btn-primary btn-save-box-shadow" aria-hidden="true" data-toggle="modal" ng-click="getAssignValues();" data-target="#lpoDetailsModel">
+					</a>
+		</div>
+	 </div>
+	 </div>
+	</form>
+	<div class="row margin-top10 padding-left-right-set1">
+		<div class="col-md-8 col-sm-8 padding-left-right-set4">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+							<div class="search">
+							<label class="show-entries">Show 
+							<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+						</div>
+					</div>
+				</div>
+	  <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" " ng-if = "ambulanceCharges.ambulanceProvider == 'inHouse' ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"  ng-click="saveAmbulanceCharges()" ng-if="saveBtnFlag">
+					<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateAmbulanceCharges()" ng-if="updateBtnFlag">
+			        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty search-popUp-ddl" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>	
+			</div> 	
+	</div>
+	<modal visible="showModal"></modal> 
+	<div class="row padding-top10 padding-left-right-set4 padding-top5">
+		<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll300">
+		  <table id="main-table" class="main-table width120">
+		    <thead>
+					<tr>
+						<th class="width4">UHID</th>
+						<th class="width5 fixed">Patient Name</th>
+						<th class="width4">Order Number.</th>
+						<th class="width4">From</th>
+						<th class="width4">To</th>
+						<th class="width5">Ambulance Type</th>
+						<th class="width2">Distance</th>
+						<th class="width5">Ambulance Provider</th>
+						<!-- <th class="width2 text-center">LPO</th> -->
+						<th class="width4">Net Bill Amt</th>
+						<th class="width2">Bill Status</th>
+						<th class="width1 text-center">Action taken</th>
+					</tr>
+				</thead>
+		    <tbody>
+		      <tr ng-repeat="info in ambulanceChargesList|filter:searchKeyword">
+				<td class="">{{info.uhidNumber}}</td>
+				<td class="fixed">{{info.patientName}}</td>
+				<td class="">{{info.orderNo}}</td> 
+				<td class="">{{info.fromAddress}}</td>
+				<td class="">{{info.toAddress}}</td>
+				<td class="">{{info.ambulanceTypeName}}<input type="hidden"  ng-model="ambulanceCharges.ambulanceTypeIds" value='{{info.ambulanceType}}'></td>
+				<td class="">{{info.distance}}</td>
+				<td class="">{{info.ambulanceProvider}}</td>
+				<!-- <td class="text-center"><a href=""><i class="fa fa-info-circle" aria-hidden="true" title="View" data-toggle="modal" ng-click="getLPODetails(info.ambulanceChargesId)" data-target="#lpoDetailsInfo"></i></a></td> -->
+				<td class="">{{info.totalAmount}}</td>
+				<td class="">
+					<div ng-if= "info.status == 'A' && info.billingMasterId != null"> Completed </div>
+					<div  ng-if= "info.status == 'A'  && info.billingMasterId == null" > Pending </div>
+					<div ng-if= "info.status == 'I'">Cancelled</div>
+				 </td>
+				<td class="text-center"><i class="fa fa-times"  ng-if= "info.status == 'A' && info.billingMasterId == null"  ng-click="orderCancel(info.orderDetailsId);" aria-hidden="true"></i></td><!--  -->
+			</tr>
+		    </tbody>
+		  </table>
+		</div>
+		<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+	</div>
+</div>		
+
+<!-- COLLECT PAYMENT POPUP -->
+ <div id="collectPayment" class="common-large-popup modal fade ng-scope in" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Collect Payment
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body row">
+					<div class="col-md-12">
+								<div class="row">
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<span>Total Deposit: </span><span>{{parseFloatNum(activeDeposit)}}</span>
+									</div>
+									<div class="col-lg-2 col-md-3 col-sm-3 margin-left5 padding-top10">
+										<input type="checkbox" name="registrationType" ng-model="useActiveDepo" class="useActiveDeposit" ng-click="checkAciveDepo(useActiveDepo)"><span class="margin-left5">Use Active Deposit</span>
+									</div>
+								</div>
+									<div class="row serachedPatientList">
+										<div class="col-md-12 col-lg-12 headerHeight fix-height-scroll230 padding-left-right-set4">
+											<table class="table table-bordered  margin-top8">
+											<thead>
+												<tr>
+													<th class="width1">
+													</th>
+													<th class="width15">
+														<span class="">Date</span>
+													</th>
+													<th class="width15">
+														 <span class="">Voucher No.</span>
+													</th>
+													<th class="width15">
+														Deposit Type
+													</th>
+													
+													<th class="width15">
+														Total Amount
+													</th>
+													<th class="width15">
+														Consume Amount
+													</th>
+													<th class="width15">
+														Balance
+													</th>
+												</tr>
+												</thead>
+												<tbody>
+												
+												<tr ng-repeat="deposit in availableDeposits" ng-if="deposit.depositTypeId == '1' && useActiveDepo == true">
+													<td>
+														<input type="checkbox" checklist-model="depositeList.depositeIds" checklist-value="deposit.depositDetailsId" ng-model="deposit.depositeFlag" ng-true-value="'Y'" ng-false-value="'N'"  ng-click="depositeSub(deposit,$index)" ng-disabled="depositeDisabledFlag">
+													</td>
+													<td>
+														{{deposit.depositDate}}
+													</td>
+													<td>
+														{{deposit.depositNo}}
+													</td>
+													<td>
+														{{deposit.depositTypeId == 1 ? 'Active' : 'Encounter'}}
+													</td>
+													<td>
+														{{parseFloatNum(deposit.depositAmount)}}
+													</td>
+													<td>
+														{{parseFloatNum(deposit.consumedDeposit)}}
+													</td>
+													<td>
+														{{parseFloatNum(deposit.availableDeposit)}}
+													</td>
+												</tr>
+												<tr ng-repeat="deposit in availableDeposits" ng-if="deposit.depositTypeId != '1'">
+													<td>
+														<input type="checkbox" checklist-model="depositeList.depositeIds" checklist-value="deposit.depositDetailsId" ng-model="deposit.depositeFlag" ng-true-value="'Y'" ng-false-value="'N'"  ng-click="depositeSub(deposit,$index)" ng-disabled="depositeDisabledFlag">
+													</td>
+													<td>
+														{{deposit.depositDate}}
+													</td>
+													<td>
+														{{deposit.depositNo}}
+													</td>
+													<td>
+														{{deposit.depositTypeId == 1 ? 'Active' : 'Encounter'}}
+													</td>
+													<td>
+														{{parseFloatNum(deposit.depositAmount)}}
+													</td>
+													<td>
+														{{parseFloatNum(deposit.consumedDeposit)}}
+													</td>
+													<td>
+														{{parseFloatNum(deposit.availableDeposit)}}
+													</td>
+												</tr>
+												</tbody>
+											
+											</table>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<span>Consumed Amount : {{consumedAmt}}</span>
+										</div>
+									</div>
+									
+							<fieldset class="normalRegistration sub-fieldset padding-left-right-set4" ng-if="payeeId != selfPayeeIdCookies">
+								<legend class="heading-div">Credit Details</legend>
+									<div class="row">
+										<div id="mediaType" class="col-lg-2 col-md-2 col-sm-2 uk-input-group customRadioBtn">													
+											<span>
+													<input id="insuranceRadio" name="registrationType" type="radio" value="1" val="yes" checked="checked">
+													<label for="insuranceRadio">Insurance</label>
+											</span>
+											<span>
+													<input id="sponserRadio" name="registrationType" type="radio" value="2">
+													<label for="sponserRadio">Sponsor</label>
+											</span>
+										</div>
+									</div>
+									
+									<div class="col-md-12 col-lg-12 headerHeight fix-height-scroll230 insuranceTable">
+										<table class="table table-bordered  margin-top8">
+											<tr>
+												<th class="width1">
+													<input type="checkbox">
+												</th>
+												<th class="width20">
+													<span class="">Insurance/Credit Name</span>
+												</th>
+												<th class="width15">
+													<span class="">Associated Company</span>
+												</th>
+												<th class="width15">
+													<span class="">Insurance No.</span>
+												</th>
+												<th class="width15">
+													<span class="">Insurance Code</span>
+												</th>
+												<th class="width15">
+													 <span class="">Authorization No.</span>
+												</th>
+												<th class="width10">
+													Date 
+												</th>
+												<th class="width10">
+													Amount
+												</th>
+											</tr>
+											<tr>
+												<td colspan="7" class="text-right">
+													Insurance Payable Amount
+												</td>
+												<td>
+													0.00
+												</td>
+											</tr>
+											<tr>
+												<td colspan="7" class="text-right">
+													Excess Amount
+												</td>
+												<td>
+													0.00
+													<span class="pull-right">
+						      							<span class="iconSet">
+						      								<button class="" id="insCredGenerateCreditNote" disabled="">
+						      								<i class="fa fa-credit-card font-size20 cursor-pointer" aria-hidden="true" title="Generate Credit Note"></i>
+						      								</button>
+						      							</span>
+						      							<span class="iconSet">
+						      								<button class="" id="insCredTransferToActiveDeposit" disabled="">
+						      								<i class="fa fa-money font-size20 cursor-pointer" aria-hidden="true" title="Transfer To Active Deposit"></i>
+						      								</button>
+						      							</span>
+						      							
+							      					</span>
+												</td>
+											</tr>
+											
+										</table>
+									</div>
+									
+									<div class="col-md-12 col-lg-12 headerHeight fix-height-scroll230 sponserTable">
+										<table class="table table-bordered  margin-top8">
+											<tr>
+												<th class="width1">
+													<input type="checkbox">
+												</th>
+												<th class="width15">
+													<span class="">Company Name</span>
+												</th>
+												<th class="width15">
+													<span class="">Contract Name</span>
+												</th>
+												<th class="width15">
+													<span class="">Validity From</span>
+												</th>
+												<th class="width15">
+													 <span class="">Validity To</span>
+												</th>
+											</tr>
+											<tr>
+												<td colspan="4" class="text-right">
+													Corporate Payable Amount
+												</td>
+												<td>
+													0.00
+												</td>
+											</tr>
+											<tr>
+												<td colspan="4" class="text-right">
+													Excess Amount
+												</td>
+												<td>
+													0.00
+													<span class="pull-right">
+						      							<span class="iconSet">
+						      								<button class="" id="insCredGenerateCreditNote" disabled="">
+						      								<i class="fa fa-credit-card font-size20 cursor-pointer" aria-hidden="true" title="Generate Credit Note"></i>
+						      								</button>
+						      							</span>
+						      							<span class="iconSet">
+						      								<button class="" id="insCredTransferToActiveDeposit" disabled="">
+						      								<i class="fa fa-money font-size20 cursor-pointer" aria-hidden="true" title="Transfer To Active Deposit"></i>
+						      								</button>
+						      							</span>
+							      					</span>
+												</td>
+											</tr>
+											
+										</table>
+									</div>
+									
+							</fieldset>
+					<!-- *****************  PAYMENT Mode POPUP  *****************-->
+
+				<div class="row">
+					<fieldset class="normalRegistration sub-fieldset padding-left-right-set4">
+						<legend class="heading-div">Payment Mode</legend>
+						<div class="row margin-top4">
+							<div class="col-lg-10 col-md-10 col-sm-10 schedulerTabs">
+								<ul class="tabs nav nav-tabs">
+									<li ng-class="{ active : isSetFirstTabLevel(1) }" ng-hide="companySettlement">
+										<a href ng-click="setFirstTabLevel(1);setPaymentModeId(1)">Cash</a>
+									</li>
+									<li ng-class="{ active : isSetFirstTabLevel(2) }">
+										<a href ng-click="setFirstTabLevel(2);setPaymentModeId(2)">Cheque</a>
+									</li>
+									<li ng-class="{ active : isSetFirstTabLevel(3) }" ng-hide="companySettlement">
+										<a href ng-click="setFirstTabLevel(3);setPaymentModeId(3)">Credit Card</a>
+									</li>
+									<li ng-class="{ active : isSetFirstTabLevel(4) }" ng-hide="companySettlement">
+										<a href ng-click="setFirstTabLevel(4);setPaymentModeId(4)">Debit Card</a>
+									</li>
+									<li ng-class="{ active : isSetFirstTabLevel(7) }" >
+										<a href ng-click="setFirstTabLevel(7);setPaymentModeId(7)">E - Transfer</a>
+									</li>
+									<li ng-class="{ active : isSetFirstTabLevel(6) }" >
+										<a href ng-click="setFirstTabLevel(6);setPaymentModeId(6)">Loyalty Card</a>
+									</li>
+									<li ng-class="{ active : isSetFirstTabLevel(5) }" ng-if = "mpesaRequired != null && mpesaRequired == true">
+										<a href ng-click="setFirstTabLevel(5);setPaymentModeId(5)">M-Pesa</a>
+									</li>
+								</ul>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 float-right">
+								<div class="width-div-for-patient-reg ">
+									<a href="" style="width:40px" class="btn btn-primary btn-save-box-shadow" ng-click="addPaymentDetails()" ng-if="dueAmount > 0 && transferToActiveDeposit == 'N'"  title="Save" >+</a>	<!-- ng-click="addPaymentDetails()" -->
+									<a href="" style="width:40px" class="btn btn-primary btn-save-box-shadow" ng-click="addPaymentDetails()" ng-if="transferToActiveDeposit == 'Y'"  title="Save" >+</a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							
+							<!-- CONTENT FOR FIRST TAB start-->
+							<div ng-show="isSetFirstTabLevel(1)">
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" class="text-input floating-label" ng-decimal="200" ng-model="paymentDetails.cashAmount" ng-keyup="checkAmount(paymentDetails.cashAmount)"><!--  ng-model="paymentDetailsObj.amount" -->
+														 <label for="description" class="">Amount</label>
+													</div>
+												</div>
+											</div>
+									</div>
+								</div>
+							</div>
+							<!-- CONTENT FOR FIRST TAB end-->
+							
+							<!-- CONTENT FOR 2nd TAB start-->
+							<div ng-show="isSetFirstTabLevel(2)">
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<select class="text-input floating-label" ng-model="paymentDetails.bankId">
+														 <option value={{bank.bankId}} ng-value="bank.bankId"  ng-repeat="bank in bankList">{{bank.bankName}}</option> 
+													</select> <label for="code">Bank Name</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+										
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<select class="text-input floating-label" ng-model="paymentDetails.hospitalAccountId" >
+														 <option ng-selected="{{hBank.isDefault=='Y'}}"  value="{{hBank.id}}"  ng-repeat="hBank in hospitalBankList">{{hBank.name}}</option> 
+													</select> <label for="code">Hospital Account</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" ng-decimal="200" ng-model="paymentDetails.chequeNumber" class="text-input floating-label"><!-- ng-model="paymentDetailsObj.checkNumber" -->
+														 <label for="description" class="">Cheque Number</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+													<input type="text" autocomplete="off" onkeydown="event.preventDefault()" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="paymentDetails.chequeDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptions" 
+													show-button-bar="false"	ng-click="openDatePicker()" required>
+														<label for="description" class="">Cheque Date</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" id="" ng-decimal="200" ng-model="paymentDetails.chequeAmount" class="text-input floating-label" ng-keyup="checkAmount(paymentDetails.chequeAmount)"><!-- ng-model="paymentDetailsObj.amount" -->
+														 <label for="description" class="">Amount</label>
+													</div>
+												</div>
+											</div>
+									</div>
+								</div>
+							</div>
+							<!-- CONTENT FOR 2nd TAB end-->
+							<!-- CONTENT FOR 3rd TAB start-->
+							<div ng-show="isSetFirstTabLevel(3)">
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" id=""  chars="letters" ng-model="paymentDetails.credCardHolderName" class="text-input floating-label" > <!-- ng-model="paymentDetailsObj.cardHolderName" -->
+														<label for="description" class="">Card Holder Name</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<select class="text-input floating-label" ng-model="paymentDetails.credCardTypeId">
+															 <option value="{{card.cardTypeId}}" ng-repeat="card in cardTypeList">{{card.cardTypeName}}</option> 
+														</select> <label for="code">Card Type</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" id="" ng-decimal="200" ng-model="paymentDetails.credAmount" class="text-input floating-label" ng-keyup="checkAmount(paymentDetails.credAmount)"> <!-- ng-model="paymentDetailsObj.amount" -->
+														<label for="description" class="">Amount</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" id="" ng-model="paymentDetails.credCardNumber" ng-decimal="200" class="text-input floating-label" > <!-- ng-model="paymentDetailsObj.cardNo" -->
+														<label for="description" class="">Card Number</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									
+								</div>
+								<div class="row">
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                            <div class="row input-container">
+                                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                    <div class="">
+                                                        <input type="text" autocomplete="off" name="description" id="" ng-model="paymentDetails.transactionNo" class="text-input floating-label"  > 
+                                                        <label for="description" class="">Transaction No.</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+													<input type="text" autocomplete="off" onkeydown="event.preventDefault()" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="paymentDetails.credExpiryDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptions" 
+													show-button-bar="false"	ng-click="openDatePicker()" required>
+														<!-- <input type="text" autocomplete="off" name="description" id="" ng-model="paymentDetails.credExpiryDate" class="text-input floating-label"> --> <!-- ng-model="paymentDetailsObj.expiryDate" -->
+														 <label for="description" class="">Expiry Date</label>
+													</div>
+												</div>
+											</div>
+									</div>
+								</div>
+							</div>
+							<!-- CONTENT FOR 3rd TAB end-->
+							<!-- CONTENT FOR 4th TAB start-->
+							<div ng-show="isSetFirstTabLevel(4)">
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" id="" ng-model="paymentDetails.debCardHolderName" class="text-input floating-label" ><!--  ng-model="paymentDetailsObj.cardHolderName" -->
+														<label for="description" class="">Card Holder Name</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<select class="text-input floating-label" ng-model="paymentDetails.debCardTypeId"><!-- ng-model="paymentDetailsObj.cardTypeId" -->
+															 <option value="{{card.cardTypeId}}" ng-repeat="card in cardTypeList">{{card.cardTypeName}}</option>
+														</select> <label for="code">Card Type</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" id="" ng-decimal="200" ng-model="paymentDetails.debAmount" class="text-input floating-label" ng-keyup="checkAmount(paymentDetails.debAmount)">
+														 <label for="description" class="">Amount</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" id="" ng-model="paymentDetails.debCardNumber" ng-decimal="200" class="text-input floating-label" > <!-- ng-model="paymentDetailsObj.cardNo" -->
+														<label for="description" class="">Card Number</label>
+													</div>
+												</div>
+											</div>
+									</div>
+									</div>
+									<div class="row">
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 ">
+														<div class="">
+														<input type="text" autocomplete="off" onkeydown="event.preventDefault()" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="paymentDetails.debExpiryDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptions" 
+													show-button-bar="false"	ng-click="openDatePicker()" required>
+															<!-- <input type="text" autocomplete="off" name="description" id="" ng-model="paymentDetails.debExpiryDate" class="text-input floating-label" > --><!-- ng-model="paymentDetailsObj.expiryDate" --> 
+															<label for="description" class="">Expiry Date</label>
+														</div>
+													</div>
+												</div>
+										</div>
+									</div>
+							</div>
+							<!-- CONTENT FOR 4th TAB end-->
+							<!-- CONTENT FOR 5th TAB start-->
+							<div ng-show="isSetFirstTabLevel(5)">
+								<div class="row">
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="">
+													<select class="text-input floating-label dirty" ng-model="paymentDetails.transactionTypeId">
+														<option value="">-</option>
+														<option value="trans.id" ng-value="trans.id" ng-repeat="trans in transactionTypes">{{trans.name}}</option>
+													</select> <label for="code">Transaction Type</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="">
+													<select class="text-input floating-label dirty" ng-model="paymentDetails.transBankId">
+														<option value="-">-</option>
+														<option value={{bank.bankId}} ng-value="bank.bankId"  ng-repeat="bank in bankList">{{bank.bankName}}</option>
+													</select> <label for="code">Bank Name</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off" allow-pattern="(\d|[a-z])" name="description" id="" ng-model="paymentDetails.transactionNo" class="text-input floating-label dirty"> 
+													<label for="description" class="LISDynamicLabel">Transaction No.</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off" onkeydown="event.preventDefault()" name="description" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" placeholder="DD/MM/YYYY"  model-view-value="true"  ng-model="paymentDetails.transTransactionDate" class="text-input floating-label dirty"
+													is-open="datepicker.opened" datepicker-options="dateOptions" show-button-bar="false"	ng-click="openDatePicker()"> 
+													<label for="description" class="LISDynamicLabel">Transaction Date</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off" name="description" id="" ng-decimal="200" ng-model="paymentDetails.transferAmount" class="text-input floating-label dirty"> 
+													<label for="description" class="LISDynamicLabel">Amount</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+							<!-- CONTENT FOR 5th TAB END-->
+							<!-- CONTENT FOR 6th TAB start-->
+								<div ng-show="isSetFirstTabLevel(6)">
+									<div class="row" ng-form="loyaltyCardForm">
+										<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty" ng-model="paymentDetails.loyaltyCardNo" ng-blur="getLoyaltyCardByNo(paymentDetails.loyaltyCardNo);" is-number  maxlength="16"> 
+														<label for="description" class="LISDynamicLabel">Card No.</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty" ng-model="paymentDetails.cardBalAmount"  disabled="disabled"> 
+														<label for="description" class="LISDynamicLabel">Available Balance</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="form-group" show-errors>
+														<input type="text" autocomplete="off" name="loyaltyCardAmt" id="" class="text-input floating-label dirty" ng-model="paymentDetails.loyaltyCardAmt"  ng-blur="checkAmt(paymentDetails.loyaltyCardAmt);" min="1"> 
+														<label for="description" class="LISDynamicLabel">Amount</label>
+														<!-- <p class="help-block" ng-if="loyaltyCardForm.loyaltyCardAmt.$error.$valid">Amount should not be 0.</p> -->
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class=" ">
+												<a href="" class="btn btn-primary btn-save-box-shadow" title="Generate OTP" ng-click="sendOTP('N');" ng-disabled="loyaltyCardForm.$invalid && loyaltyCardForm.loyaltyCardAmt.$invalid">Generate OTP</a> <!-- data-toggle="modal" data-target="#confirmLogout" -->	
+											</div>
+										</div>
+										<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+											<a class="btn btn-primary btn-save-box-shadow" ng-click="sendOTP('Y');" ng-disabled="!resend">Resend OTP</a>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11" >
+													<div class="form-group" show-errors>
+														<input type="text" autocomplete="off" name="lcotp" id="" class="text-input floating-label dirty" ng-model="paymentDetails.otp" ng-minlength="6" numbers_only required> 
+														<label for="description" class="LISDynamicLabel">OTP Number</label>
+													</div>
+														<!-- <p class="help-block" ng-if="loyaltyCardForm.lcotp.$error.required">Please Enter otp Number.</p> -->
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10">
+											<div class=" ">
+												<a href="" class="btn btn-primary btn-save-box-shadow" title="Validate" ng-click="validateOtp();" ng-disabled="loyaltyCardForm.lcotp.$invalid">Validate</a> <!-- data-toggle="modal" data-target="#confirmLogout" -->	
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- CONTENT FOR 6th TAB MPESA End-->
+								
+								<!-- CONTENT FOR 7th TAB MPESA start-->
+							<div ng-show="isSetFirstTabLevel(7)">
+								<div class="row">
+									<div
+										class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off" name="description"
+														class="text-input floating-label"
+														ng-model="mpesaObject.transactionId"> <label
+														for="description" class="">Transaction ID</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off" name="description"
+														class="text-input floating-label" ng-decimal="200"
+														ng-model="mpesaObject.mobileNo"> <label
+														for="description" class="">Mobile Number</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off" name="description"
+														class="text-input floating-label" ng-decimal="200"
+														ng-model="mpesaObject.mpesaAmount" readonly> <label
+														for="description" class="">Amount</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+
+											<div class="col-lg-3 col-sm-3 col-md-3 ">
+												<div class="">
+													<!-- <input type="" name="description" class="text-input floating-label" ng-decimal="200" ng-model="paymentDetails.checkboxStatus" read only> -->
+													<button type="button" class="btn btn-primary" id=""
+														ng-click="validateMpesaDetails(mpesaObject)">Check</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- CONTENT FOR 7th TAB end-->
+							
+							<!-- Common table -->
+							<div class="row padding-left-right-set4">
+								<div class="col-md-12 col-lg-12 headerHeight fix-height-scroll230">
+									<table class="table table-bordered  margin-top8">
+										<tr>
+											<th class="width15 vertical-top">
+												<span class="">Payment Mode</span>
+											</th>
+											<th class="width15 vertical-top">
+												 <span class="">Bank Name</span>
+											</th>
+											<th class="width15 vertical-top">
+												Cheque No/Card No/Transaction No
+											</th>
+											<th class="width15 vertical-top">
+												Transaction Type
+											</th>
+											<th class="width15 vertical-top">
+												Total Amount
+											</th>
+											<th class="width5 vertical-top">
+												Action taken
+											</th>
+										</tr>
+										<tr ng-repeat="payment in listPaymentDetails">
+											<!-- <td>{{payment.paymentModeId == 1 ? 'Cash' : payment.paymentModeId == 2 ? 'Cheque' :  payment.paymentModeId == 3 ? 'Credit Card' : payment.paymentModeId == 4 ? 'Debit Card' : payment.paymentModeId == 5 ? 'E-Transfer' : payment.paymentModeId == 6 ? 'Loyalty Card':'-'}}</td> -->
+											<td>{{payment.paymentModeId == 1 ? 'Cash' : payment.paymentModeId == 2 ? 'Cheque' :  payment.paymentModeId == 3 ? 'Credit Card' : payment.paymentModeId == 4 ? 'Debit Card' : payment.paymentModeId == 5 ? 'M-Pesa' : payment.paymentModeId == 6 ? 'Loyalty Card':'-'}}</td>
+											<td>{{(payment.paymentModeId == 2 || payment.paymentModeId == 5) && payment.bankName != '' ? payment.bankName : '-'}}</td>
+											<td>{{(payment.paymentModeId == 2 && payment.chequeNumber != '') ? payment.chequeNumber : (payment.paymentModeId == 3 && payment.cardNo != '' || payment.transactionNo != "") ? payment.cardNo + ' || '+ payment.transactionNo : (payment.paymentModeId == 4 && payment.cardNo != '') ? payment.cardNo : (payment.paymentModeId == 5 && payment.transactionNo != '') ? payment.transactionNo :(payment.paymentModeId == 6 && payment.cardNumber != '')? payment.cardNumber :(payment.paymentModeId == 8 && payment.transactionNo != '')?payment.transactionNo:'-' }}</td>
+											<td>{{payment.transactionType}}</td>
+											<td>{{payment.amount}}</td>
+											<td>
+												<i class="fa fa-times" aria-hidden="true" ng-click="removePaymentDetails($index)"></i>
+											</td>
+										</tr> 
+									</table>
+								</div>
+							</div>
+							
+							
+							
+						</div>
+					</fieldset>
+					
+				</div>
+			
+<!-- ***************** COLLECT PAYMENT POPUP  *****************-->
+
+
+					<div class="col-md-12 col-lg-12">
+							<table class="table table-bordered">
+								<tbody><tr>
+									<td class="text-right">
+										Total Amount
+									</td>
+									<td class="ng-binding">
+										{{parseFloatNum(totalAmount)}}
+									</td>
+								
+									<td class="text-right">
+										Total Due Amount
+									</td>
+									<td class="ng-binding">
+										{{parseFloatNum(dueAmount)}}
+									</td>
+									
+									<td class="text-right">
+										Self Due Amount
+									</td>
+									<td class="ng-binding">
+										{{parseFloatNum(payeeDueAmtFinal)}}
+									</td>
+								
+									<td class="text-right">
+										<!-- Refund Amount -->
+									</td>
+									<td class="ng-binding">
+										<!-- {{parseFloatNum(refundAmount)}} -->
+									</td>
+								</tr>
+							</tbody></table>
+						</div>
+						<div class="col-md-12 col-lg-12 padding-bottom10">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" onkeypress="return /[A-Z-a-z]/i.test(event.key)" class="text-input floating-label ng-pristine ng-valid dirty ng-empty ng-touched" ng-model="amountReceivedFrom" style=""> 
+												<label for="description" class="">Amount Receive From</label>
+											</div>
+										</div>
+									</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid dirty ng-empty" ng-model="identificaitonNumber"> 
+												<label for="description" class="">Identification No..</label>
+											</div>
+										</div>
+									</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10">
+									<div class=" ">
+										<a href="" style="width:100%" class="btn btn-primary btn-save-box-shadow" title="Save" ng-disabled="billDisabled" ng-click="settleAmbulanceBill()">Settle</a> <!-- data-toggle="modal" data-target="#confirmLogout" -->	
+									</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right padding-top10">
+								<input type="checkbox" id="transferToActiveDepositId" ng-selected="$parent.$parent.transferToActiveDeposit=='Y'" name="registrationType" ng-model="$parent.$parent.transferToActiveDeposit" ng-true-value="'Y'" ng-false-value="'N'"><span class="margin-left5">Transfer To Active Deposit</span>
+							</div>
+							<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right padding-top10">
+								<input type="checkbox" name="" id="isFinancialClearance" ng-click="validFclearance(isFinancialClearance)" ng-model="isFinancialClearance" >
+								<span class="margin-left5" ><label for="isFinancialClearance">Financial Clearance</label></span>
+							</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+<!-- COLLECT PAYMENT POPUP END -->
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Ambulance Charges");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="ambulanceCharges"]').parents("li").addClass("active");
+});
+
+
+function setClass(){
+	
+	var ambulanceProvider = $("#ambulanceProvider").val();
+	if(ambulanceProvider == "inHouse"){
+		$("#outSourceVenderDiv").hide();
+		$("#vechileNoDiv").show();
+		$("#LPOButtonDiv").hide();
+	}else if(ambulanceProvider =="outSource"){  
+		$("#LPOButtonDiv").show();
+		$("#outSourceVenderDiv").show();
+		$("#vechileNoDiv").hide();
+	}
+}
+</script>	
+
+ 	
+ 	
+<!-- LPO Modal START -->
+<div id="lpoDetailsModel" class="modal fade ng-scope in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					LPO
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10"> 	
+			   		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="lpoNo" disabled="disabled" ng-model="ambulanceCharges.lpoNo" class="text-input floating-label"> 
+									<label for="description" class="LISDynamicLabel">LPO No.</label>
+								</div>
+							</div>
+						</div>
+			  		</div>
+			  		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"  id="datepickerSearchLpo" name="datepickerSearchLpo" 
+													placeholder="DD/MM/YYYY" ng-model="ambulanceCharges.lpoDate" model-view-value="true" is-open="datepicker.opened" 
+													datepicker-options="dateOptions" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													show-button-bar="false"	ng-click="openDatePicker()" required> 
+								
+								<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="lpoDate" id="datepickerSearchLpo"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="ambulanceCharges.lpoDate"
+													model-view-value="true" is-open="datepickerSearchLpo.opened"
+													datepicker-options="dateOptions"Lpo"  show-button-bar="false"
+													ng-click="openDatePickerSearchLpo()" >  -->
+									<!-- <input type="text" autocomplete="off" name="lpoDate" ng-model="ambulanceCharges.lpoDate" class="text-input floating-label"> --> 
+									<label for="description" class="LISDynamicLabel">LPO Date</label>
+								</div>
+							</div>
+						</div>
+			  		</div>
+			  		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="lpoVenderName" ng-model="ambulanceCharges.lpoVenderName" class="text-input floating-label"> 
+									<label for="description" class="LISDynamicLabel">Vendor Name</label>
+								</div>
+							</div>
+						</div>
+			  		</div>
+			  		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="lpoVenderAddress" ng-model="ambulanceCharges.lpoVenderAddress" class="text-input floating-label"> 
+									<label for="description" class="LISDynamicLabel">Vendor Address</label>
+								</div>
+							</div>
+						</div>
+			  		</div>
+			  		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label"  name="lpoAmbulanceProvider" ng-model="ambulanceCharges.lpoAmbulanceProvider"  >
+										<option value="inHouse">In House</option>
+										<option value="outSource">Out Sourced</option>
+									</select> <label for="code">Ambulance Provider</label>
+								</div>
+							</div>
+						</div>
+					</div>	 
+				</div>
+				<div class="row padding-top10"> 
+				   <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="lpoFromLocation" ng-model="ambulanceCharges.lpoFromLocation" class="text-input floating-label"> 
+									<label for="description" class="LISDynamicLabel">From Location</label>
+								</div>
+							</div>
+						</div>
+			  		</div>
+			  		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="lpoToLocation" ng-model="ambulanceCharges.lpoToLocation" class="text-input floating-label"> 
+									<label for="description" class="LISDynamicLabel">To Location</label>
+								</div>
+							</div>
+						</div>
+			  		</div>
+			  		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="lpoDistance" ng-model="ambulanceCharges.lpoDistance" ng-keyup="calculateDistance(ambulanceCharges.ambulanceType);changeOrgDistance();" class="text-input floating-label"> 
+									<label for="description" class="LISDynamicLabel">Distance (KM)</label>
+								</div>
+							</div>
+						</div>
+			  		</div>
+			  		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="lpoAmount" ng-model="ambulanceCharges.lpoAmount" class="text-input floating-label"> 
+									<label for="description" class="LISDynamicLabel">Amount<span class="star">*</span></label>
+						<p class="help-block" ng-if="serviceProviderForm.serviceProviderPersonName.$error.required">Amount is required</p>
+								</div>
+							</div>
+						</div>
+			  		</div>
+				</div>
+			</div>	
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" title="Save" data-toggle="modal"  ng-click="saveAmbulanceCharges()" ng-if="saveBtnFlag" >Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" title="Update" data-toggle="modal"  ng-click="updateAmbulanceCharges()" ng-if="updateBtnFlag">Update</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- LPO Modal END -->
+<!-- LPO Details Info Modal-->
+<div id="lpoDetailsInfo" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					 LPO Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top0">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr>
+								<th class="width2">
+									LPO No.
+								</th>
+								<th class="width2">
+									LPO Date
+								</th>
+								<th class="width3">
+									Vender Name
+								</th>
+								<th class="width3">
+									Vender Address
+								</th>
+								<th class="width2">
+									From Location
+								</th>
+								<th class="width2">
+									To Location
+								</th>
+								<th class="width2">
+									Distance
+								</th>
+								<th class="width2">
+									Amount
+								</th>
+							</tr>
+						</thead>
+					</table>
+				</div> 
+				<div class="table-container-body fix-height-scroll300" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr ng-repeat="info in ambulanceLPOList|filter:searchKeyword">
+								<td class="width2">{{info.lpoNo}}</td>
+								<td class="width2">{{info.lpoDate}}</td>
+								<td class="width3">{{info.lpoVenderName}}</td>
+								<td class="width3">{{info.lpoVenderAddress}}</td>
+								<td class="width2">{{info.lpoFromLocation}}</td>
+								<td class="width2">{{info.lpoToLocation}}</td>
+								<td class="width2">{{info.lpoDistance}}</td>
+								<td class="width2">{{info.lpoAmount}}</td>
+							</tr>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div> 
+			</div>
+		  <div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>	
+		</div>
+	</div>
+</div>
+<!-- LPO Details Info Modal--> 	

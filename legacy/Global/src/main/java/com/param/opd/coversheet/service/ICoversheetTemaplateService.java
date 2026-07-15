@@ -1,0 +1,31 @@
+package com.param.opd.coversheet.service;
+
+import javax.transaction.Transactional;
+
+import com.param.global.common.Response;
+import com.param.global.dto.CoversheetTemplateMasterDto;
+import com.param.global.unit.dto.CoversheetAccessMasterDto;
+
+import in.param.exception.ApplicationException;
+@Transactional
+public interface ICoversheetTemaplateService {
+
+	public Response saveCoversheetAsTemaplate(CoversheetTemplateMasterDto coversheetTemplateMasterDto) throws ApplicationException;
+
+	public Response getCoversheetAsTemaplateList(CoversheetTemplateMasterDto coversheetTemplateMasterDto) throws ApplicationException;
+
+	public Response getAllCoversheetListsByTemplateId(CoversheetTemplateMasterDto coversheetTemplateMasterDto) throws ApplicationException;
+
+	public Response updateCoversheetAsTemaplate(CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+	public Response saveTemplateListDataForNewEMR(CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+	public Response getTemplateDataByCovTempId(CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+	public Response saveCovTemplateDataForPatient(CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+	public Response getCoversheetListData(CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+	public Response updateCovTemplateDataForPatient(CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+}

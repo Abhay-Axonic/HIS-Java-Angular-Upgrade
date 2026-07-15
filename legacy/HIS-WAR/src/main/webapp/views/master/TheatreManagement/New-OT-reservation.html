@@ -1,0 +1,3747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>OT Schedule</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <link rel="stylesheet"
+	href="resources/assets/css/OT-Schedule-CSS/bootstrap.min2.css">
+<script src="resources/assets/js/OT-Schedule-JS/jquery-new2.min.js"></script>
+<script src="resources/assets/js/OT-Schedule-JS/bootstrap.min-new1.js"></script>
+<script src="resources/assets/js/jquery-clockpicker.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+<!-- <link rel="stylesheet" type="text/css" href="resources/assets/css/jquery-clockpicker.min.css?version=2.04" />
+  <link rel="stylesheet" type="text/css" href="http://weareoutman.github.io/clockpicker/dist/jquery-clockpicker.min.css" />
+  <script src="http://weareoutman.github.io/clockpicker/dist/jquery-clockpicker.min.js"></script> -->
+ <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<!--   <script type="text/javascript" src="libraries/datetimepicker/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script> -->
+<!--   <link rel="stylesheet" href="email.multiple.css"> -->
+  
+<style>
+input.text-input, select.text-input {
+    border-bottom: 1px solid #716d6d !important;
+}
+.slider:before {
+    bottom: 1px !important;
+}
+.switch {
+    height: 22px !important;
+}
+.second-level-tab-display-div {
+    border: 1px solid #f8f8f8 !important;
+}
+.text-input.floating-label:focus ~ label, .text-input.floating-label.dirty ~ label {
+    color: #716d6d !important;
+}
+tr th {
+    text-align: left !important;
+}
+.modal-sm {
+	width: 300px !important;
+}
+
+label {
+	display: inline-block !important;
+	max-width: 100% !important;
+	margin-bottom: 5px !important;
+	font-weight: 700 !important;
+}
+
+.modal-header .close {
+	margin-top: 5px !important;
+}
+
+.tab-content {
+	padding: 3px !important;
+}
+
+#wrapper {
+	padding-left: 40px !important;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover
+	{
+	color: #555 !important;
+	cursor: default !important;
+	background-color: #fff !important;
+	border: 1px solid #ddd !important;
+	border-bottom-color: transparent !important;
+}
+
+.nav-tabs>li>a {
+	margin-right: 2px !important;
+	line-height: 1.42857143 !important;
+	border-radius: 4px 4px 0 0 !important;
+}
+
+.nav>li>a {
+	position: relative !important;
+	display: block !important;
+	padding: 10px 15px !important;
+}
+
+.nav-tabs>li {
+	float: left !important;
+	margin-bottom: -1px !important;
+}
+
+.nav-tabs {
+	border-bottom: 1px solid #ddd !important;
+}
+
+
+table td.highlighted {
+	background-color: rgb(221, 239, 255) !important;
+	color: #000 !important;
+}
+
+.highlighteddiv {
+	background-color: rgb(30 143 253) !important;
+	color: #fff !important;
+    padding-left: 13px;
+}
+
+.nav {
+	padding-left: 0 !important;
+	margin-bottom: 0 !important;
+	list-style: none !important;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
+.calender-text i {
+	font-size: 15px !important;
+	font-weight: bold !important;
+}
+
+.calender-text {
+	margin-top: 0px !important;
+}
+
+.m-t-50 {
+	margin-top: 50px !important;
+}
+
+.m-t-8 {
+	margin-top: 8px !important;
+	margin-bottom: 8px !important;
+}
+
+.navbar {
+	margin-bottom: 1px !important;
+}
+
+.p-r-0 {
+	padding-right: 0px !important;
+}
+
+.p-l-0 {
+	padding-left: 0px !important;
+}
+
+.p-t-5 {
+	margin-top: 4px !important;
+}
+
+.p-t-8 {
+	margin-top: 8px !important;
+}
+
+p {
+	margin: 0 0 0px !important;
+}
+
+i.fa.fa-calendar-check-o {
+	font-size: 25px !important;
+	color: #337ab7 !important;
+}
+
+.calender-text p {
+	font-size: 19px !important;
+	color: #337ab7 !important;
+	float: right !important;
+}
+
+.calender-color {
+	display: block !important;
+	width: 100% !important;
+	height: 34px !important;
+	padding: 6px 12px !important;
+	font-size: 14px !important;
+	line-height: 1.42857143 !important;
+	color: #555 !important;
+	background-color: #fff !important;
+	background-image: none !important;
+	border: 1px solid #ccc !important;
+	border-radius: 4px !important;
+	box-shadow: inset 0 1px 1px rgb(0 0 0/ 8%) !important;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
+		!important;
+}
+
+.calender-color:focus {
+	border-color: #66afe9 !important;
+	outline: 0 !important;
+	-webkit-box-shadow: inset 0 1px 1px rgb(0 0 0/ 8%), 0 0 8px
+		rgb(102 175 233/ 60%) !important;
+	box-shadow: inset 0 1px 1px rgb(0 0 0/ 8%), 0 0 8px
+		rgb(102 175 233/ 60%) !important;
+}
+
+.m-l-r-15 {
+	margin-left: 15px !important;
+	margin-right: 15px !important;
+}
+
+.gridtable tbody {
+	display: block !important;
+	max-height: 580px !important;
+	overflow-y: scroll !important;
+}
+
+.gridtable thead, .gridtable tbody tr {
+	display: table !important;
+	table-layout: fixed !important;
+	width: 100% !important;
+}
+
+.gridtable thead {
+	width: calc(100% - 1.1em) !important;
+}
+
+.gridtable thead {
+	position: relative !important;
+}
+
+
+/* scrollbar */
+::-webkit-scrollbar {
+	width: 5px !important;
+	height: 5px !important;
+}
+
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
+	-webkit-border-radius: 10px !important;
+	border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 10px !important;
+	border-radius: 10px !important;
+	background: rgba(255, 255, 255, 0.3) !important;
+	-webkit-box-shadow: inset 0 0 6px rgb(118, 118, 118) !important;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(255, 255, 255, 0.3) !important;
+}
+
+tbody.tbodyHover tr td:hover {
+	background: #f2f2f2 !important;
+	color: #000 !important;
+}
+
+.gridtable {
+	background: #ffffff !important;
+}
+
+tbody.tbodyHover tr td {
+	color: #000 !important;
+	font-weight: 600 !important;
+	font-size: 13px !important;
+}
+
+.modal-body-height {
+	height: 450px !important;
+	overflow-y: scroll !important;
+}
+
+.OTImg img {
+	width: 400px !important;
+	height: 365px !important;
+}
+
+table td.highlighted {
+	background-color: rgb(221, 239, 255) !important;
+	color: #000 !important;
+}
+
+.table>thead>tr>th {
+	font-weight: normal !important;
+}
+
+.modal-lg {
+	width: 1345px !important;
+}
+
+.patient-data h4 {
+	font-size: 15px !important;
+	margin-top: 15px !important;
+}
+/* Style the buttons */
+.btn1 {
+	border: none !important;
+	outline: none !important;
+	padding: 3px 10px !important;
+	background-color: #337ab7 !important;
+	cursor: pointer !important;
+	color: #fff !important;
+	border-radius: 190px !important;
+	padding: 5px 15px 3px 15px !important;
+	font-size: 12px !important;
+	box-shadow: 0px 3px 1px -2px rgb(0 0 0/ 20%), 0px 2px 2px 0px
+		rgb(0 0 0/ 14%), 0px 1px 5px 0px rgb(0 0 0/ 12%) !important;
+}
+
+/* Style the active class (and buttons on mouse-over) */
+.active1, .btn1:hover {
+	background-color: #666 !important;
+	color: white !important;
+}
+
+.btn2 {
+	border: none !important;
+	outline: none !important;
+	padding: 3px 10px !important;
+	background-color: #337ab7 !important;
+	cursor: pointer !important;
+	color: #fff !important;
+	border-radius: 190px !important;
+	padding: 5px 15px 3px 15px !important;
+	font-size: 12px !important;
+	box-shadow: 0px 3px 1px -2px rgb(0 0 0/ 20%), 0px 2px 2px 0px
+		rgb(0 0 0/ 14%), 0px 1px 5px 0px rgb(0 0 0/ 12%) !important;
+}
+
+/* Style the active class (and buttons on mouse-over) */
+.active2, .btn2:hover {
+	background-color: #666 !important;
+	color: white !important;
+}
+
+.btn3 {
+	border: none !important;
+	outline: none !important;
+	padding: 3px 10px !important;
+	background-color: #337ab7 !important;
+	cursor: pointer !important;
+	color: #fff !important;
+	border-radius: 190px !important;
+	padding: 5px 15px 3px 15px !important;
+	font-size: 12px !important;
+	box-shadow: 0px 3px 1px -2px rgb(0 0 0/ 20%), 0px 2px 2px 0px
+		rgb(0 0 0/ 14%), 0px 1px 5px 0px rgb(0 0 0/ 12%) !important;
+}
+
+/* Style the active class (and buttons on mouse-over) */
+.active3, .btn3:hover {
+	background-color: #666 !important;
+	color: white !important;
+}
+
+thead tr {
+	background: #337ab7 !important;
+	color: #fff !important;
+	font-weight: normal !important !important;
+}
+
+
+.close-M {
+	background-color: #d11b1b !important;
+	border-radius: 190px !important;
+	padding: 5px 15px 3px 15px !important;
+	font-size: 12px !important;
+}
+
+.available {
+	background-color: #0cac26 !important;
+	border-radius: 190px !important;
+	padding: 5px 15px 3px 15px !important;
+	font-size: 12px !important;
+}
+
+.unavailable {
+	background-color: #d11b1b !important;
+	border-radius: 190px !important;
+	padding: 5px 15px 3px 15px !important;
+	font-size: 12px !important;
+}
+
+.maintenance {
+	background-color: #939393 !important;
+	border-radius: 190px !important;
+	padding: 5px 15px 3px 15px !important;
+	font-size: 12px !important;
+}
+
+.change {
+	background: #337ab7 !important;
+	border-radius: 190px !important;
+	padding: 5px 15px 3px 15px !important;
+	font-size: 12px !important;
+}
+
+.change:hover {
+	background: #2198ff !important;
+	color: #fff !important;
+}
+
+.form-control {
+	box-shadow: none !important;
+	transition: none !important;
+	border-top: none !important;
+	border-left: none !important;
+	border-right: none !important;
+	border-radius: 0px !important;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th,
+	.table>thead>tr>td, .table>thead>tr>th {
+	padding: 0px 1px 0px 1px !important;
+	line-height: 28px !important;
+}
+
+span.glyphicon.glyphicon-remove {
+	color: #d11b1b !important;
+	font-size: 12px !important;
+}
+
+span.glyphicon.glyphicon-plus {
+	color: #fff !important;
+}
+
+.calender-color {
+	box-shadow: none !important;
+	transition: none !important;
+	border-top: none !important;
+	border-left: none !important;
+	border-right: none !important;
+	border-radius: 0px !important;
+}
+
+.popover-content {
+	padding: 0px 10px !important;
+}
+
+.modalTitle {
+	border-bottom: 1px solid #ccc !important;
+	width: 275px !important;
+	margin: 10px 0px 5px -11px !important;
+}
+
+.modalTitle h5 {
+	padding-left: 12px !important;
+}
+
+.heading h5 {
+	font-weight: bold !important;
+	font-size: 18px !important;
+	color: #045aa3 !important;
+}
+
+.organizer h4 {
+	font-size: 14px !important;
+}
+
+.organizer h6 {
+	font-size: 11px !important;
+	margin-left: 18px !important;
+}
+
+span.glyphicon.glyphicon-user {
+	color: #626262 !important;
+}
+
+#orderModal {
+	z-index: 10000 !important;
+}
+#procedureOrderInfo {
+	z-index: 10000 !important;
+}
+#procedureTemplateUploadedModal {
+	z-index: 10000 !important;
+}
+#checklistItemsModal {
+	z-index: 10000 !important;
+}
+#otCancel {
+	z-index: 100000 !important;
+}
+
+#changeDate {
+	z-index: 100000000 !important;
+}
+
+.table-space-blueDRUG {
+	 background-color: DodgerBlue !important;
+	 cursor:pointer;
+	 color: #fff !important;
+	 padding-left: 13px;
+}
+.table-space-red {
+     background-color: rgb(253 30 92) !important;
+	 cursor:pointer;
+	 color: #fff !important;
+	 padding-left: 13px;
+}
+
+.table-space-blueDRUG-slot {
+      background-color: DodgerBlue !important;
+	 cursor:pointer;
+	 color: DodgerBlue !important;
+	 padding-left: 13px;
+}
+.table-space-red-slot {
+     background-color: rgb(253 30 92) !important;
+	 cursor:pointer;
+	 color:rgb(253 30 92) !important;
+	 padding-left: 13px;
+}
+.table-space-pending {
+     background-color: #1efbff !important;
+ 	 cursor:pointer;
+     color: #fff !important;
+	 padding-left: 13px;
+}
+   .table-space-green
+   {
+       background-color: green;
+       cursor:pointer;
+        color: #fff !important;
+	 padding-left: 13px;
+   }
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+
+}
+/* td {
+  border: 0px solid black;
+}
+
+td:hover {
+  background: #8deaed;
+  background: -webkit-gradient(linear, 0 0, 0 bottom, from(#8deaed), to(#9fedf0));
+  background: -moz-linear-gradient(#8deaed, #9fedf0);
+  background: linear-gradient(#8deaed, #9fedf0);
+  box- */
+  /* shadow: inset 0 0 0 1px #b9f2f5;
+} */
+
+.noSelect {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.noSelect:focus {
+    outline: none !important;
+}
+/* .popover.clockpicker-popover.bottom.clockpicker-align-left {
+    position: absolute;
+    z-index: 1000000000 !important;
+} */
+/* .modal-backdrop {
+    display: none !important;
+} */
+</style>
+</head>
+
+<body>
+
+	<div class="row m-l-r-15">
+		<div class="thumbnail m-t-8">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="col-lg-2 text-center p-r-0">
+						<div class="form-group">
+							<label for="inputPassword"
+								class="col-sm-3 control-label p-t-8 p-r-0" style="margin-left: -42px;">Calender</label>
+							<div class="col-sm-9 p-l-0 p-r-0">
+								<input type="text"
+								autocomplete="off" class="calender-color" name="datepicker"
+								id="datepicker" uib-datepicker-popup="dd/MM/yyyy"
+								ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+								ng-model="fromDate" model-view-value="true"
+								is-open="datepickerDob.opened"
+								onkeydown="event.preventDefault()"
+								show-button-bar="false" ng-change="getOtSchedulingList();"
+								ng-click="openDatePicker()" ng-readonly="true"
+							    style="margin-left: 18px;">
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 text-center p-r-0">
+						<div class="form-group">
+							<label for="inputPassword"
+								class="col-sm-3 control-label p-t-8 p-r-0">Role</label>
+							<div class="col-sm-9 p-l-0 p-r-0">
+								<select ng-model="roleObj" class="text-input floating-label"
+								ng-options="x as x.roleName for x in otimsRoleList track by x.roleId"
+								class="form-control" 
+								ng-change="getStaffListByRoleId(roleObj.roleId,0)"
+								ng-required="true">
+							</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 text-center p-r-0">
+						<div class="form-group">
+							<label for="inputPassword"
+								class="col-sm-3 control-label p-t-8 p-r-0">Doctor</label>
+							<div class="col-sm-9 p-l-0 p-r-0">
+								<select style="height: 30px;" class="text-input floating-label"  ng-model="doctorId" ng-change="getOtSchedulingList();">
+											     <option value="null">--Select Doctor--</option>
+												 <option ng-repeat="info in staffList" value="{{info.userId}}">{{info.userName}}</option>
+											</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 text-center p-r-0">
+						<div class="form-group">
+							<label for="inputPassword"
+								class="col-sm-4 control-label p-t-8 p-r-0">Procedure</label>
+							<div class="col-sm-8 p-l-0 p-r-0">
+								<input type="text" autocomplete="off" name="description" id="billSearch.procedureOrderName"
+										class="text-input floating-label" ng-model="procedureSearchUp"
+										uib-typeahead="procedure.serviceStandardName for procedure in searchProceduresSearch($viewValue)"
+										typeahead-on-select="selectProcedureName($item, $model, $label)" >
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 text-center p-r-0">
+						<div class="form-group">
+							<label for="inputPassword"
+								class="col-sm-5 control-label p-t-8 p-r-0">Status</label>
+							<div class="col-sm-7 p-l-0 p-r-0">
+							<select style="height: 30px;" class="text-input floating-label"  ng-model="reservationStatusId" ng-change="getOtSchedulingList();" convert-to-number>
+											     <option value="null">--Select Status--</option>
+												 <option ng-repeat="info in getActiveProcedureStatus" value="{{info.id}}">{{info.status}}</option>
+											</select>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row m-l-r-15">
+		<div class="thumbnail">
+			<div class="row">
+				<div class="col-lg-12 p-l-0 p-r-0">
+					<div class="gridtable">
+					 <table class="table" id="our_table" border="1">
+							<thead>
+								<tr>
+									<th style="width :100px !important">Time</th>
+									<th ng-repeat="info1 in getOperationTabledetailsList">{{info1.theatreName}} - {{info1.tableName}}</th>
+								</tr>
+							</thead> 
+							<tbody class="noSelect" data-toggle="modal" data-target="#orderModal">
+								<!-- class="tbodyHover" -->
+				       <tr  ng-repeat="info in item track by $index" >
+							    <td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"  id="td_{{$index}}"
+										data-target="#" style="width :100px !important">{{info.timee}}</td>
+								<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#"  id="td_{{$index}}" ng-repeat="info1 in getOperationTabledetailsList" ng-mousedown="getdetails(info1,info,$index)" ng-mouseup="getdetailsup(info1,info,$index)">
+								              <div  ng-repeat="itm in info.reservationList" >
+								              
+														  <div  ng-if="(itm.tableId==info1.tableId) &&  (itm.theatreId == info1.theatreId) && (info.timee == itm.preferTime)"
+															id="td_{{info1.theatreId}}_{{info1.tableId}}_{{info.count}}_{{$index}}" 
+															ng-click="editOTReservation(itm);"
+														      ng-mousedown="getdetails(info1,info,$index)" ng-mouseup="getdetailsup(info1,info,$index)"
+														        ng-class="{
+														        'table-space-blueDRUG' :  (itm.reservationStatusId == 3 ),
+														        'table-space-red' :  (itm.reservationStatusId == 1),
+											                            }" style=" text-align: center;">
+											                           <i ng-if="(itm.otStatus == 1 || itm.otStatus == 0 ||  itm.otStatus == NULL) && itm.visitNumber != null && checkDate != false " class="fa fa-bell" aria-hidden="true" style=" margin-left: 90%;" ng-click="updateStatusToSendThePatient(itm)" title="Call Patient"></i>
+											                           <i ng-if="(itm.otStatus == 2 ) && itm.visitNumber != null && checkDate != false " class="fa fa-exchange" aria-hidden="true" style=" margin-left: 90%;" ng-click="otCompletionDetails(itm)" title="Patient Ready To Transfer"></i>
+											                           <i ng-if="itm.visitNumber != null && checkDate != false" class="fa fa-sign-out" aria-hidden="true"  style=" margin-left: 90%;" ng-click="otCompletionDetails(itm)" title="OT Check-In"></i>  
+											                       <div ng-click="editOTReservation(itm);"> 
+																	   {{itm.procedureName}}</br>
+															           {{itm.patientName}}</br>
+															           {{itm.visitNumber}}</br>
+															      <div ng-repeat="surgen in itm.surgeonList">
+															           {{surgen.roleName}}-
+															           {{surgen.staffName}},
+															      </div>
+															     </div> 
+															</div>  
+															
+															 <div  
+																 ng-if="(itm.tableId==info1.tableId) &&  (itm.theatreId == info1.theatreId) && (info.timee == itm.toTime)"
+																id="td_{{info1.theatreId}}_{{info1.tableId}}_{{info.count}}_{{$index}}" 
+																ng-click="editOTReservation(itm);"
+															       ng-mousedown="getdetails(info1,info,$index)" ng-mouseup="getdetailsup(info1,info,$index)"
+															        ng-class="{
+															        'table-space-blueDRUG-slot' :  (itm.reservationStatusId == 3 ),
+															        'table-space-red-slot' :  (itm.reservationStatusId == 1)}" >
+																	  <div ng-click="editOTReservation(itm);"> 
+																		  {{itm.patientName}}
+																     </div> 
+																</div>
+														
+														<div  ng-if="(itm.tableId==info1.tableId) &&  (itm.theatreId == info1.theatreId) && ((info.timee == itm.fakePreferedTime))"
+														    id="td_{{info1.theatreId}}_{{info1.tableId}}_{{info.count}}_{{$index}}" 
+														     ng-click="editOTReservation(itm);"
+														    ng-class="{
+													        'table-space-blueDRUG-slot' :  (itm.reservationStatusId == 3 ),
+													        'table-space-red-slot' :  (itm.reservationStatusId == 1)}"
+													       ng-mousedown="getdetails(info1,info,$index)" ng-mouseup="getdetailsup(info1,info,$index)"
+													         ng-class="{
+													        'table-space-blueDRUG-slot' :  (itm.reservationStatusId == 3 ),
+													        'table-space-red-slot' :  (itm.reservationStatusId == 1),}">
+															  <div ng-click="editOTReservation(itm);" > 
+														       slot booked
+														     </div> 
+												        </div>
+												        
+												
+										</div>
+										<div  ng-if="info.reservationList.length == 0"
+										 id="td_{{info1.theatreId}}_{{info1.tableId}}_{{info.count}}_{{$index}}" 
+									       ng-mousedown="getdetails(info1,info,$index)" ng-mouseup="getdetailsup(info1,info,$index)">
+											  <div  ng-click="editOTReservationNew(info);" style="color: #fafafa !important;" > 
+												  {{info.timee}} 
+										     </div> 
+										</div>
+								</td>
+							</tr>   
+						<!--  <tr >
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">{{info.timee}}</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">CABG Dr.Nilesh Jain</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">CABG Dr.Nilesh Jain</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">Tunor Removal Dr.Manoj Sharma</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+								</tr>  
+								<tr >
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">{{info.timee}}</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">CABG Dr.Nilesh Jain</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">CABG Dr.Nilesh Jain</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">Tunor Removal Dr.Manoj Sharma</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+								</tr>  
+								<tr >
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">{{info.timee}}</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">CABG Dr.Nilesh Jain</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">CABG Dr.Nilesh Jain</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">Tunor Removal Dr.Manoj Sharma</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+								</tr>   -->
+										
+					<!-- 	<tr>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">12 Am</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">CABG Dr.Nilesh Jain</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">CABG Dr.Nilesh Jain</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">Tunor Removal Dr.Manoj Sharma</td>
+									<td data-toggle="popover" data-container="body"
+										data-placement="right" type="button" data-html="true"
+										data-target="#" id="login">TKR - Dr.Abhay Chopda</td>
+								</tr>
+								
+							<tr>
+									<td>12:30 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr> 
+								<tr>
+									<td>01:00 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>01:30 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>02:00 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>02:30 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>03:00 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>03:30 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>04:00 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>04:30 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>05:00 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>05:30 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>06:00 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>06:30 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>
+								<tr>
+									<td>07:00 Am</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+									<td>CABG Dr.Nilesh Jain</td>
+									<td>Tunor Removal Dr.Manoj Sharma</td>
+									<td>TKR - Dr.Abhay Chopda</td>
+								</tr>  -->
+							</tbody>
+						</table> 
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div id="popover-content-login" class="hide">
+			<div class="col-lg-9 p-l-0 p-r-0">
+				<div class="modalTitle">
+					<h5>My Calendar</h5>
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close"
+					style="padding: 7px 0px 0px 38px; text-align: right; margin-right: -16px;">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="col-lg-12 p-l-0 p-r-0">
+				<div class="heading">
+					<h5>Operation Title</h5>
+					<h6>20 September 2022 10:30 am - 11:30 am</h6>
+				</div>
+			</div>
+			<div class="col-lg-12 p-l-0 p-r-0">
+				<div class="organizer">
+					<h4>
+						<span class="glyphicon glyphicon-user"></span> Vishal Vispute
+					</h4>
+					<h6>Organizer</h6>
+				</div>
+			</div>
+			<div class="col-lg-12 p-l-0 p-r-0 text-right"
+				style="padding: 5px 0px 8px 0px;">
+				<button class="btn btn-primary" data-toggle="modal" data-target="#orderModal">Edit</button>
+				<button class="close-M" data-toggle="modal" data-target="#otCancel">Cancel
+					OT</button>
+			</div>
+		</div>
+
+	</div>
+
+
+	<!-- Modal -->
+	<div id="orderModal" class="modal fade" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true" style="top: 50px !important;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						New OT Scheduled
+						<button type="button" class="close" data-dismiss="modal" ng-click ="getOtSchedulingList()">&times;</button>
+					</div>
+				</div>
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist" id="myTab">
+					<li><a data-target="#new" role="tab" ng-click="setRegistartionType(1)"
+						data-toggle="tab">NEW</a></li>
+					<li class="active"><a data-target="#register" role="tab"  ng-click="setRegistartionType(2)"
+					    data-toggle="tab">REGISTERED</a></li>
+				</ul>
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div class="tab-pane" id="new">
+						<div id="orderItems" class="modal-body modal-body-height"
+							style="padding-top: 0px; padding-bottom: 0px;">
+							<div class="thumbnail"
+								style="height: 165px; margin-top: 8px; margin-bottom: 7px;">
+								<div class="col-lg-12 p-l-0 p-r-0">
+									<div class="top_section">
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="sel1">Prefix</label> <select
+													class="text-input floating-label dirty" name="prefixId"
+													ng-model="patientObj.prefixId" convert-to-number
+													ng-change="selectGender(patientObj.prefixId)" required>
+													<option value="">Select Prefix</option>
+													<option ng-repeat="info in prefixList"
+														value="{{info.prefixId}}">{{info.prefixDesc}}</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="fName">First Name</label> <input
+													only-letters-input type="text" autocomplete="off"
+													name="firstName" ng-model="patientObj.firstName"
+													class="form-control" style="text-transform: capitalize"
+													required>
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="email">Middle Name</label> <input
+													only-letters-input type="text" autocomplete="off" id=""
+													name="middleName" class="form-control"
+													ng-model="patientObj.middleName" value=""
+													style="text-transform: capitalize">
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="email">Last Name</label> <input
+													only-letters-input type="text" autocomplete="off"
+													name="lastName" class="form-control"
+													ng-model="patientObj.lastName" value=""
+													style="text-transform: capitalize" required>
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="sel1">Gender</label> <select
+													class="text-input floating-label dirty" name="genderId"
+													ng-model="patientObj.genderId" convert-to-number required>
+													<option value=""></option>
+													<option ng-repeat="sex in genderList1" value="{{sex.id}}">{{sex.desc}}</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="Calender">Birth Date</label> <input type="text"
+													autocomplete="off" class="calender-color" name="datepicker"
+													id="datepicker" uib-datepicker-popup="dd/MM/yyyy"
+													ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+													ng-model="datepicker" model-view-value="true"
+													is-open="datepickerDob.opened"
+													onkeydown="event.preventDefault()"
+													datepicker-options="dateOptions" show-button-bar="false"
+													ng-click="openDatePicker()" ng-readonly="true"
+													ng-blur="calculateAge()" required>
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="Age">Age</label> <input type="text"
+													autocomplete="off" numbers-only ng-maxlength="3" id="age"
+													class="form-control" ng-model="age" ng-blur="myFunct(age)"
+													value="">
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="Mobile">Mobile No</label> <input numbers-only
+													type="text" autocomplete="off" name="mobileNo" id=""
+													class="form-control" ng-model="patientObj.mobileNumber"
+													maxlength="{{registrationFieldObj.mobileDigit}}" required>
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="email">Email</label> <input type="text"
+													autocomplete="off" id="email" name="email"
+													class="form-control" ng-model="patientObj.email" value=""
+													required>
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="email">Remark</label> <input type="text"
+													autocomplete="off" name="description" id=""
+													ng-model="patientObj.remark" class="form-control">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+
+							<div class="col-lg-12 p-l-0 p-r-0">
+								<div class="thumbnail" style="margin-bottom: 7px; height: auto;">
+									<div>
+										<ul class="nav nav-tabs" style="margin-bottom: 10px;">
+											<li class="active"><a data-toggle="tab"
+												data-target="#Procedure1"  ng-click="switchTab();">Procedure Details</a></li>
+											<li><a data-toggle="tab" data-target="#Scheduling1"  ng-click="getScheduleDetailsProc();getActiveOperationTheatreList();">Scheduling
+													Details</a></li>
+										</ul>
+										<div class="tab-content">
+											<div id="Procedure1" class="tab-pane fade in active">
+												<div class="thumbnail"
+													style="height: 310px; margin-top: 8px; margin-bottom: 7px;">
+													<div class="row rocedureForm">
+														<div class="col-lg-2">
+															<div class="form-group">
+																<label for="sel1">Speciality</label> <select
+																	ng-model="procedureSubSpeciality"
+																	class="text-input floating-label"
+																	ng-options="x as x.specialityName for x in specialityList track by x.specialityId"
+																	ng-change="selectSpeciality(procedureSubSpeciality);"
+																	class="form-control" ng-required="true">
+																</select>
+															</div>
+														</div>
+														<div class="col-lg-2">
+															<div class="form-group">
+																<label for="sel1">Procedure Name</label> <input
+																	type="text" autocomplete="off" name="description"
+																	id="procedureOrderId" class="text-input floating-label"
+																	ng-model="procedureSearch"
+																	uib-typeahead="procedureMasterList.serviceStandardName + '|' +procedureMasterList.cptCode for procedureMasterList in searchProcedures($viewValue)"
+																	typeahead-on-select="selectProcedureName($item, $model, $label)">
+															</div>
+														</div>
+														<div class="col-lg-3">
+															<div class="form-group">
+																<label for="Calender">Procedure Date & Time :</label> 
+																<div class="col-lg-4 p-l-0 p-r-0" style="margin-top: 25px;">
+																<input
+																	type="text" autocomplete="off"
+																	class="text-input floating-label dirty"
+																	name="dateOptionsProc" id="dateOptionsProc"
+																	uib-datepicker-popup="dd/MM/yyyy"
+																	placeholder="DD/MM/YYYY" ng-model="procedureDate"
+																	model-view-value="true" is-open="procedureOpen.opened"
+																	datepicker-options="dateOptionsProc"
+																	show-button-bar="false" ng-click="openproc()"
+																	onkeydown="event.preventDefault()" disabled="disabled">
+																</div>
+																<div class="col-lg-8">
+																	<!-- <div class="clockpicker">
+																	  <input type="text" autocomplete="off" name="description" id=""  ng-model="preferedTime" class="text-input floating-label"   ng-disabled="isDisabled" > 
+															     </div> -->
+															     	 <div class="col-lg-6">
+															     	 <div class="clockpicker">
+																		<input type="text" autocomplete="off" name="description" id="single-input" placeholder="HH:mm" class="text-input floating-label dirty"  ng-model="preferedTime" disabled="disabled"> 
+																	</div>
+															     	 </div>
+															     	 <div class="col-lg-6">
+															     	 <div class="clockpicker">
+																		<input type="text" autocomplete="off" name="description" id="" placeholder="HH:mm" class="text-input floating-label dirty"  ng-model="postferedTime" disabled="disabled"> 
+																	</div>
+															     	 </div>
+														        </div>
+														        </div>
+														        </div>
+														<div class="col-lg-2" id="myDIV2">
+															<div class="">
+																<label class="col-lg-12" for="sel1">Priority :</label>
+																<div class="col-lg-12" style="padding-right: 0px;">
+																	<button id="updateBtn" name="discount" value="0" val="yes" ng-model="procedureOrderMaster.urgency" ng-click="setNormalEmergency('0');" class="btn3">Normal</button>
+																	<button id="updateBtn" name="discount" value="1" ng-model="procedureOrderMaster.urgency" class="btn3" ng-click="setNormalEmergency('1');" class="btn3">Emergency</button>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-2">
+															<div class="form-group">
+																<label for="sel1">Reason for Request:</label>
+																<textarea type="text" autocomplete="off" name="description" id="searchServiceId"
+													class="text-input floating-label dirty" ng-model="procedureOrderMaster.requestReason" rows="1"></textarea>
+															</div>
+														</div>
+														<div class="col-lg-1" style="margin-top: 29px;">
+															<!-- <button class="btn btn-primary" ng-click="showCalender();">Surgical Calendar</button> -->
+															<button class="btn btn-primary" ng-if="getSaveProceudreFlag == true">
+																<a href="" data-toggle="modal" data-target="" style="width: auto;"  ng-disabled = "true"> <span
+																	class="glyphicon glyphicon-plus"></span>
+																</a>
+															</button>
+															<button class="btn btn-primary" style="width: 50px;" value="+" ng-if="getSaveProceudreFlag == false">
+																<a href="" data-toggle="modal" data-target="" style="width: auto;" ng-click="addNewProc();"> +
+																</a>
+															</button>
+														</div>
+													</div>
+													<div class="table-responsive"
+														style="margin-bottom: 7px; height: 227px;">
+														<table class="table table-striped table-hover table-condensed table-bordered">
+															<thead>
+															<tr>
+																<th class="vertical-top" title="Speciality"><span
+																	class="">Request No.</span></th>
+																<th class="vertical-top" title="Speciality"><span
+																	class="">Speciality</span></th>
+																<th class="vertical-top" title="Procedure"><span
+																	class="">Procedure</span></th>
+																<th class="vertical-top" title="Date of Procedure"><span
+																	class="">Date of Procedure</span></th>
+																<th class="vertical-top" title="Procedure Time"><span
+																	class="">Procedure Time</span></th>	
+																<th class="vertical-top" title="Priority"><span
+																	class="">Priority</span></th>
+																<th class="vertical-top"
+																	title="Reason For Request"><span class="">Reason
+																		For Request</span></th>
+																<th class="vertical-top" title="Procedure Sequence"><span
+																	class="">Procedure</span></th>
+																<th class="">Procedure Details</th>
+																<th class="text-center vertical-top" title="Action" ng-if="getSaveProceudreFlag == false"><span
+																	class="">Action</span></th>
+															</tr>
+															</thead>
+															<tbody>
+													<tr
+														ng-repeat="procedreOrderObj in procedureOrderList track by $index" ng-init="parentIndex=$index">
+														<td class="">
+															<div ng-if="procedreOrderObj.proReqId == 0">New
+																Request</div>
+															<div ng-if="procedreOrderObj.proReqId != 0">ReqNo
+																-{{procedreOrderObj.proReqId}}</div>
+														</td>
+														<td class="">{{procedreOrderObj.specialityName}}</td>
+														<td class="">{{procedreOrderObj.procedureName}}</td>
+														<td class="">{{procedreOrderObj.preferedDateTime}}</td>
+														<td class="">{{procedreOrderObj.preferedTime}}</td>
+														<td class="">{{(procedreOrderObj.urgency==0)?"Normal":"Emergency"}}</td>
+														<td class=""><textarea type="text" autocomplete="off" class="text-input floating-label" disabled="disabled" style="height: 30px !important;">{{procedreOrderObj.requestReason}}</textarea></td>
+														<!-- <td class="width4">{{(procedreOrderObj.isPrimarySecondary=='Y')?"Primary":"Secondary"}}</td> -->
+														<td class="">
+															<select class="text-input floating-label" id="ProcedureSequence" ng-model="procedreOrderObj.procedureSequence" ng-change="changeProcedureSequence(parentIndex,1)">
+																<option ng-repeat="info in procedureOrderedSequenceList " ng-value="info.id" value="{{info.id}}">{{info.sequenceName}}</option>
+															</select> 
+														</td>
+														<td class="text-center"><a
+															data-target="#procedureOrderInfo" data-toggle="modal"
+															ng-click="getProcedureConfigDetails($index,1);"><i
+																class="fa fa-info-circle"></i></a></td>
+														<td class="text-center"><!-- <a class=""
+															title="Edit"><i class="fa fa-pencil"
+																ng-click="editProcedureOder(procedreOrderObj ,$index)"></i></a>&nbsp; -->
+															<a><i class="fa fa-times"
+																ng-click="removeProcedureOder($index,1);"></i></a></td>
+													</tr>
+													<tr ng-repeat="procedreOrderObj in orderedProcedureList track by $index" ng-init="parentIndex=$index">
+														<td class="">ReqNo
+															-{{procedreOrderObj.proReqId}}</td>
+														<td class="">{{procedreOrderObj.specialityName}}</td>
+														<td class="">{{procedreOrderObj.procedureName}}</td>
+														<td class="">{{procedreOrderObj.preferedDateTime}}</td>
+														<td class="">{{procedreOrderObj.preferedTime}}</td>
+														<td class="">{{(procedreOrderObj.urgency==0)?"Normal":"Emergency"}}</td>
+														<td class=""><textarea type="text" autocomplete="off" class="text-input floating-label" rows="1" disabled="disabled">{{procedreOrderObj.requestReason}}</textarea></td>
+														<!-- <td class="width4">{{(procedreOrderObj.isPrimarySecondary=='Y')?"Primary":"Secondary"}}</td> -->
+														<td class="">
+															<select class="text-input floating-label" id="ProcedureSequence" ng-model="procedreOrderObj.procedureSequence" ng-change="changeProcedureSequence(parentIndex,2)">
+																<option ng-repeat="info in procedureSequenceList " ng-value="info.id" value="{{info.id}}">{{info.sequenceName}}</option>
+															</select> 
+														</td>
+														<td class="text-center">
+															<a data-target="#procedureOrderInfo" data-toggle="modal" ng-click="getProcedureConfigDetails($index,2);">
+																<i class="fa fa-info-circle"></i>
+															</a>
+														</td>
+														<td class="text-center"  ng-if="getSaveProceudreFlag == false">
+														 	<a class="" title="Edit"><i class="fa fa-pencil" ng-click="editProcedureOder(procedreOrderObj ,$index)"></i></a>&nbsp;
+															<a><i class="fa fa-times" ng-click="cancelProcedure($index,2);"></i></a>
+														</td>
+													</tr>
+												</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<div id="Scheduling1" class="tab-pane fade">
+												<div class="col-lg-8" style="padding-left: 0px;">
+													<ul class="nav nav-tabs">
+														<li ng-class="{ active : isSetSecondTabLevel(111) }" class="active"><a data-toggle="tab"
+															data-target="#OT1">OT</a></li>
+														<li ng-class="{ active : isSetSecondTabLevel(112) }"><a data-toggle="tab" data-target="#Staff1">Staff</a></li>
+														<li ng-class="{ active : isSetSecondTabLevel(113) }"><a data-toggle="tab" data-target="#Equipment1">Equipment</a></li>
+													</ul>
+												</div>
+												<div class="clearfix"></div>
+												<div class="col-lg-4"
+													style="border-bottom: 0.5px solid #e3e3e3; float: right; margin: -36px 0px 0px 0px !important; display: block; width: 450px; padding: 5px 5px 5px 0px; text-align: right;">
+													<button class="available">Available</button>
+													<button class="unavailable">Unavailable</button>
+													<button class="maintenance">Maintenance</button>
+													<button class="btn btn-primary" id="updateBtn" data-toggle="modal" style="width: 108px !important;"
+														data-target="#changeDate">Change of Date</button>
+												</div>
+
+												<div class="tab-content">
+													<div id="OT1" class="tab-pane fade in active">
+														<div class="thumbnail"
+															style="margin-bottom: 7px; height: 310px; margin-top: 0px; border-top: none; border-radius: 0px;">
+															<div class="row OTform" >
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Operation Theator</label>
+																		<select ng-model="theatreObj" class="text-input floating-label"
+																		ng-options="x as x.theatreName for x in activeOperationTheatreList track by x.operationTheatreId"
+																		ng-change="getOperationTableByTheatreId(theatreObj.operationTheatreId,0,$index)"
+																		class="form-control" 
+																		ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Operating Table</label> 
+																		<select ng-model="tableObj"
+																			class="text-input floating-label"
+																			ng-options="x as x.tableName for x in activeOperationTableList track by x.operationTableId"
+																			class="form-control" ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-1" style="margin-top: 29px;">
+																	<button class="btn1" id="addBtn" ng-click="addOTDetails();" id="addBtn">Add</button>
+																</div>
+															</div>
+															<div class="table-responsive"
+																style="margin-bottom: 7px; height: 227px;">
+																<table class="table table-striped table-hover table-condensed table-bordered">
+																	<thead>
+																		<tr>
+																			<th>Operation Theator</th>
+																			<th>Operation Table</th>
+																			<th style="text-align: center;">Action</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="info in otList">
+																			<td class="width1" ng-style="setColor(info)"
+																				ng-if="info.status=='A'"><select name="" id=""
+																				ng-model="info.selectedTheatreId"
+																				class="text-input floating-label"
+																				ng-change="getOperationTableByTheatreId(info.selectedTheatreId,1,$index)">
+																					<option value="" selected>Select Theatre</option>
+																					<option value="{{theatre.operationTheatreId}}"
+																						ng-value="theatre.operationTheatreId"
+																						ng-repeat="theatre in info.theatreList">{{theatre.theatreName}}</option>
+
+																			</select></td>
+																			<td class="width4" ng-style="setColor(info)"
+																				ng-if="info.status=='A'"><select name="" id=""
+																				ng-model="info.selectedTableId"
+																				class="text-input floating-label"
+																				ng-change="checkAvailableOTSlot(info,0);">
+																					<option value="" selected>Select Table</option>
+																					<option value="{{table.operationTableId}}"
+																						ng-value="table.operationTableId"
+																						ng-repeat="table in info.tableList">{{table.tableName}}</option>
+																			</select></td>
+																			<td class="width1 text-center"
+																				ng-style="setColor(info)" ng-if="info.status=='A'">
+																				<i class="fa fa-times" title="Remove"
+																				ng-click="removeOTDetails($index,0);"></i>&nbsp;&nbsp;
+																				<a data-toggle="modal" data-target="#addRemarkOnOTOverideDetails" ng-click="overrideOT($index,info);"> 
+																				<i class="fa fa-refresh" title="Override" aria-hidden="true"></i>
+																			</a>
+																			</td>
+																		</tr>
+																		<tr ng-repeat="info in otAddedList">
+																			<td class="width1" ng-style="setColor(info)">{{info.theatreTypeName}}</td>
+																			<td class="width4" ng-style="setColor(info)">{{info.tableName}}</td>
+																			<td class="width1 text-center"
+																				ng-style="setColor(info)"><i
+																				class="fa fa-times" title="Remove"
+																				ng-click="removeOTDetails($index,1);"></i>&nbsp;&nbsp;
+																				
+																				<a data-toggle="modal" data-target="#addRemarkOnOTOverideDetails" ng-click="overrideOT($index,info);"> 
+																				<i class="fa fa-refresh" title="Override"  aria-hidden="true"></i>
+																		    	</a>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+													<div id="Staff1" class="tab-pane fade in">
+														<div class="thumbnail"
+															style="margin-bottom: 7px; height: 310px; margin-top: 0px; border-top: none; border-radius: 0px;">
+															<div class="row OTform">
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Role:</label> 
+																		<select ng-model="roleObj" class="text-input floating-label"
+																			ng-options="x as x.roleName for x in otimsRoleList track by x.roleId"
+																			class="form-control" 
+																			ng-change="getStaffListByRoleId(roleObj.roleId,0)"
+																			ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Staff Name:</label> 
+																		<select ng-model="staffObj" class="text-input floating-label"
+																				ng-options="x as x.userName for x in staffList track by x.userId"
+																				class="form-control" 
+																				ng-required="true">
+																			</select>
+																	</div>
+																</div>
+																<div class="col-lg-1" style="margin-top: 29px;">
+																	<button class="btn1" id="addBtn" ng-click="addStaffSDetails();">Add</button>
+																</div>
+															</div>
+															<div class="table-responsive"
+																style="margin-bottom: 7px; height: 227px;">
+																<table class="table table-striped table-hover table-condensed table-bordered">
+																	<thead>
+																		<tr>
+																			<th>Role</th>
+																			<th>Staff Name</th>
+																			<th style="text-align: center;">Action</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="info in otAddedStaffDetailsList">
+																			<td ng-style="setColor(info)">{{info.roleName}}</td>
+																			<td ng-style="setColor(info)">{{info.userName}}</td>
+																			<td style="text-align: center;" ng-style="setColor(info)">
+																			<a
+																				data-target="#" ng-click="removeStaffDetails($index,0);"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a>
+																			<a
+																				data-toggle="modal" data-target="#addRemarkOnStaffOverideDetails" ng-click="overrideStaff($index,info);"> 
+																				<i class="fa fa-refresh" title="Override"  aria-hidden="true"></i>
+																			</a>
+																			</td>
+																		</tr>
+																		<tr ng-repeat="info in otStaffDetailsList">
+																			<td ng-style="setColor(info)" ng-if="info.status=='A'">{{info.roleName}}</td>
+																			<td ng-style="setColor(info)" ng-if="info.status=='A'">
+																				<select ng-model="info.selectedStaffId" class="text-input floating-label"
+																					ng-options="x as x.userName for x in info.staffList track by x.userId"
+																					class="form-control" 
+																					ng-change = "checkAvailabilityOfStaff(info,1,$index);"
+																					ng-required="true">
+																				</select>
+																			</td>
+																			<td style="text-align: center;" ng-style="setColor(info)" ng-if="info.status=='A'">
+																			<a data-target="#" ng-click="removeStaffDetails($index,1);"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a>
+																			<a
+																				data-toggle="modal" data-target="#addRemarkOnStaffOverideDetails" ng-click="overrideStaff($index,info);"> 
+																				<i class="fa fa-refresh"  title="Override"  aria-hidden="true"></i>
+																			</a>
+																			</td>
+																		</tr>
+																		<!-- <tr>
+																			<td>OT Manager</td>
+																			<td><select class="form-control">
+																					<option>Select Staff Name</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Manager</td>
+																			<td><select class="form-control">
+																					<option>Select Staff Name</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Manager</td>
+																			<td><select class="form-control">
+																					<option>Select Staff Name</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr> -->
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+													<div id="Equipment1" class="tab-pane fade in">
+														<div class="thumbnail"
+															style="margin-bottom: 7px; height: 310px; margin-top: 0px; border-top: none; border-radius: 0px;">
+															<div class="row OTform">
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Equipment Type:</label>
+																		<select ng-model="equipmentTypeObj" class="text-input floating-label"
+																			ng-options="x as x.category for x in equipmentTypeList track by x.id"
+																			class="form-control" 
+																			ng-change="getEquipmentNamesByEquipmentId(equipmentTypeObj)"
+																			ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Equipment Name:</label> 
+																		<select ng-model="equipmentNameObj" class="text-input floating-label"
+																				ng-options="x as x.itemName for x in equipmentNameList track by x.id"
+																				class="form-control" 
+																				ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-1" style="margin-top: 29px;">
+																	<button class="btn1" id="addBtn" ng-click="addEquipmentDetails();">Add</button>
+																</div>
+															</div>
+															<div class="table-responsive"
+																style="margin-bottom: 7px; height: 227px;">
+																<table class="table table-striped table-hover table-condensed table-bordered">
+																	<thead>
+																		<tr>
+																			<th>Equipment Type</th>
+																			<th>Equipment Name</th>
+																			<th>Equipment Name & Batch</th>
+																			<th style="text-align: center;">Action</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																			<tr ng-repeat="info in equipmentDetailList">
+																					<td  ng-style="setColor(info)">{{info.equipmentTypeName}}</td>
+																					<td  ng-style="setColor(info)">{{info.equipmentName}}</td>
+																					<td  ng-style="setColor(info)">{{info.itemName}}</td>
+																					<td  ng-style="setColor(info)">
+																					<a data-target="#" ng-click="removeEquipment($index);"><span
+																					class="glyphicon glyphicon-remove"></span>
+																						<i class="fa fa-times"  title="Remove" ></i>&nbsp;&nbsp;
+																						</a>
+																							<a
+																							data-toggle="modal" data-target="#addRemarkOnEquipOverideDetails" ng-click="overrideEquip($index,info);"> 
+																							<i class="fa fa-refresh"  title="Override"  aria-hidden="true"></i>
+																						</a>
+																					</td>
+																				</tr>
+																				<tr ng-repeat="info in equipmentBatchList">
+																					<td  ng-style="setColor(info)">{{info.equipmentTypeName}}</td>
+																					<td  ng-style="setColor(info)">{{info.itemName}}</td>
+																					<td  ng-style="setColor(info)">
+																					 	<select ng-model="info.selectedItemBatchObj" class="text-input floating-label"
+																						ng-options="x as x.itemName for x in info.itemBatchList track by x.batchId"
+																						class="form-control" 
+																						ng-change="checkAvailabilityOfEquipment(info,$index,0);"
+																						ng-required="true">
+																					</select>
+																					</td>
+																					<td  ng-style="setColor(info)">
+																						<i class="fa fa-times"  title="Remove" ng-click="removeEquipment($index,1);"></i>&nbsp;&nbsp;
+																							<a
+																							data-toggle="modal" data-target="#addRemarkOnEquipOverideDetails" ng-click="overrideEquip($index,info);"> 
+																							<i class="fa fa-refresh"  title="Override"  aria-hidden="true"></i>
+																						</a>
+																					</td>
+																				</tr>
+																	
+																	<!-- 	<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr> -->
+																	<!-- 	<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr> -->
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane  active" id="register">
+						<div id="orderItems" class="modal-body modal-body-height"
+							style="padding-top: 0px; padding-bottom: 0px;">
+							<div class="thumbnail"
+								style="height: 165px; margin-top: 8px; margin-bottom: 7px;" ng-hide="hidePatientDetails">
+								<div class="col-lg-12 p-l-0 p-r-0">
+									<div class="top_section">
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="email">UHID:</label> <input type="text" ng-model="patientSearchObj.uhidNumber" press-enter="searchPatient(patientSearchObj)" 
+													class="form-control" id="UHID" placeholder="Enter UHID"
+													name="UHID">
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="email">Patient Name:</label> <input type="text" ng-model="patientSearchObj.patientName" press-enter="searchPatient(patientSearchObj)" 
+													class="form-control" id="PaitentName"
+													placeholder="Enter Patient Name" name="PaitentName">
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="sel1">Gender:</label>
+												<select class="form-control"
+													ng-model="patientSearchObj.genderId"
+													press-enter="searchPatient(patientSearchObj)">
+													<option></option>
+													<option ng-repeat="sex in sexMasterList" value="{{sex.id}}">{{sex.desc}}</option>
+												</select> 
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="email">Mobile No :</label> <input type="number"
+													class="form-control" id="MobileNumber" ng-model="patientSearchObj.mobileNumber" press-enter="searchPatient(patientSearchObj)"
+													placeholder="Enter Mobile No" name="MobileNumber">
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="Calender">Birth Date :</label> 
+												<input
+													class="calender-color" type="text" id="Calender"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="datepickerSearch"
+													model-view-value="true" is-open="datepickerSearch.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="openDatePickerSearch()" press-enter="searchPatient(patientSearchObj)"
+													name="Calender">
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="sel1">Identification Type:</label>
+												 <select
+													class="form-control" id="Gender" ng-model="patientSearchObj.identificationTypeId">
+													<option value="">Identification</option>
+													<option ng-repeat="info in identificationList" value="{{info.identificationId}}">{{info.identificationName}}</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label for="email">Identification No :</label> <input
+													type="number" class="form-control" id="Identification" ng-model="patientSearchObj.identificationNumber" press-enter="searchPatient(patientSearchObj)" 
+													placeholder="Enter Identification Number"
+													name="MobileNumber">
+											</div>
+										</div>
+										<div class="col-lg-10 text-right" style="margin-top: 25px;">
+											<button class="btn btn-primary" ng-click="searchPatient(patientSearchObj)" id="searchBtn">Search</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12 text-right p-r-0"
+								style="margin-bottom: 7px;" ng-hide="hidePatientDetails">
+								<div id="myDIV">
+									<button class="btn1" value="Update" id ="V1" ng-click="changeVisitTypeId(1)">OPD</button>
+									<button class="btn1" value="Update" id ="V2" ng-click="changeVisitTypeId(2)">IPD</button>
+									<button class="btn1" value="Update" id ="V3" ng-click="changeVisitTypeId(3)">ER</button>
+									<button class="btn1" value="Update" id ="V4" ng-click="changeVisitTypeId(4)">DC</button>
+								</div>
+							</div>
+							<div class="col-lg-12 p-l-0 p-r-0" ng-hide="hidePatientDetails">
+								<div class="table-container-body" style="overflow: overlay;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead>
+											<tr>
+												<th></th>
+												<th>UHID</th>
+												<th>Patient Name</th>
+												<th>Gender</th>
+												<th>Mobile No.</th>
+												<th>Birth Date</th>
+												<th>Identification Type</th>
+												<th>Identification No..</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="patient in patientList" ng-click="getPatientDetailsByIndex($index);selectedPatientRadioCommon($index)">
+												<td>
+												   <input type="radio" name="optradio" ng-click="getPatientDetailsByIndex($index)" id="patientSelectRadioCommon_{{$index}}">
+												</td>
+												<td>{{patient.uhidNumber}}</td>
+												<td>{{patient.firstName+' '+patient.middleName+' '+patient.lastName}}</td>
+												<td>{{patient.genderCode}}</td>
+												<td>{{patient.mobileNumber}}</td>
+												<td>{{patient.birthDate}}</td>
+												<td>{{patient.identificationName}}</td>
+												<td><div ng-if="patient.identificationNumber!='null'">{{patient.identificationNumber}}</div></td>
+											</tr>
+								<!-- 			<tr>
+												<td><input type="radio" name="optradio"></td>
+												<td>CLI-3</td>
+												<td>Mayur Chaturvedi</td>
+												<td>M</td>
+												<td>+91 99 88 22 33 44</td>
+												<td>27 Nov 1995</td>
+												<td></td>
+												<td></td>
+											</tr>
+											<tr>
+												<td><input type="radio" name="optradio"></td>
+												<td>CLI-3</td>
+												<td>Mayur Chaturvedi</td>
+												<td>M</td>
+												<td>+91 99 88 22 33 44</td>
+												<td>27 Nov 1995</td>
+												<td></td>
+												<td></td>
+											</tr>
+											<tr>
+												<td><input type="radio" name="optradio"></td>
+												<td>CLI-3</td>
+												<td>Mayur Chaturvedi</td>
+												<td>M</td>
+												<td>+91 99 88 22 33 44</td>
+												<td>27 Nov 1995</td>
+												<td></td>
+												<td></td>
+											</tr> -->
+										</tbody>
+									</table>
+
+								</div>
+							</div>
+							<div class="col-lg-12 p-l-0 p-r-0">
+								<div class="thumbnail" style="margin-bottom: 7px; height: 53px;">
+									<div class="patient-info">
+										<div class="col-lg-1 text-center">
+											<div class="patient-img">
+												<!-- <img src="resources/assets/css/OT-Schedule-CSS/male.png"
+													class="img-circle" alt="male"
+													style="width: 45px; height: 45px; padding: 5px;"> -->
+													<img ng-src="{{patientDetails.genderCode=='F'?'resources/assets/images/tempImages/patient.png':'resources/assets/css/OT-Schedule-CSS/male.png'}}"
+													class="img-circle" alt="male"
+													style="width: 45px; height: 45px; padding: 5px;">
+														
+											</div>
+										</div>
+										<div class="col-lg-11 text-left p-l-0">
+											<div class="patient-data">
+												<h4>
+													<strong>UHID :</strong> {{patientDetails.uhIdNumber}} &nbsp;&nbsp; {{patientDetails.patientName}} / {{patientDetails.age}}
+													
+												</h4>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12 p-l-0 p-r-0">
+								<div class="thumbnail" style="margin-bottom: 7px; height: auto;">
+									<div>
+										<ul class="nav nav-tabs" style="margin-bottom: 10px;">
+											<li id="abc" class="active"><a data-toggle="tab"
+												data-target="#Procedure12"  ng-click="switchTab();">Procedure Details</a></li>
+											<li id="def"><a data-toggle="tab" data-target="#Scheduling12"  ng-click="getScheduleDetailsProc();getActiveOperationTheatreList();">Scheduling
+													Details</a></li>
+										</ul>
+										<div class="tab-content">
+											<div id="Procedure12" class="tab-pane fade in active">
+												<div class="thumbnail"
+													style="height: 310px; margin-top: 8px; margin-bottom: 7px;">
+													<div class="row rocedureForm">
+														<div class="col-lg-2">
+															<div class="form-group">
+																<label for="sel1">Speciality</label> <select
+																	ng-model="procedureSubSpeciality"
+																	class="text-input floating-label"
+																	ng-options="x as x.specialityName for x in specialityList track by x.specialityId"
+																	ng-change="selectSpeciality(procedureSubSpeciality);"
+																	class="form-control" ng-required="true">
+																</select>
+															</div>
+														</div>
+														<div class="col-lg-2">
+															<div class="form-group">
+																<label for="sel1">Procedure Name</label> <input
+																	type="text" autocomplete="off" name="description"
+																	id="procedureOrderId" class="text-input floating-label"
+																	ng-model="procedureSearch"
+																	uib-typeahead="procedureMasterList.serviceStandardName + '|' +procedureMasterList.cptCode for procedureMasterList in searchProcedures($viewValue)"
+																	typeahead-on-select="selectProcedureName($item, $model, $label)">
+															</div>
+														</div>
+														<div class="col-lg-3">
+															<div class="form-group">
+																<label for="Calender">Procedure Date & Time :</label> 
+																<div class="col-lg-4 p-l-0 p-r-0" style="margin-top: 25px;">
+																<input
+																	type="text" autocomplete="off"
+																	class="text-input floating-label dirty"
+																	name="dateOptionsProc" id="dateOptionsProc"
+																	uib-datepicker-popup="dd/MM/yyyy"
+																	placeholder="DD/MM/YYYY" ng-model="procedureDate"
+																	model-view-value="true" is-open="procedureOpen.opened"
+																	datepicker-options="dateOptionsProc"
+																	show-button-bar="false" ng-click="openproc()"
+																	onkeydown="event.preventDefault()" disabled="disabled">
+																</div>
+																<div class="col-lg-8">
+																<div class="col-lg-6">
+																 <div class="clockpicker">
+																		<input type="text" autocomplete="off" name="description" id="" placeholder="HH:mm" class="text-input floating-label dirty"  ng-model="preferedTime" disabled="disabled"  ng-init="initClockPicker()">
+																	</div>
+																</div>
+																<div class="col-lg-6">
+																<div class="clockpicker">
+																		<input type="text" autocomplete="off" name="description" id="" placeholder="HH:mm" class="text-input floating-label dirty"  ng-model="postferedTime" disabled="disabled"  ng-init="initClockPicker()"> 
+																	</div>
+																</div>
+																	<!-- <div class="clockpicker">
+																	  <input type="text" autocomplete="off" name="description" id=""  ng-model="preferedTime" class="text-input floating-label"  ng-disabled="isDisabled" > 
+															     </div> -->
+														        </div>
+														        </div>
+														        </div>
+														<div class="col-lg-2" id="myDIV2">
+															<div class="">
+																<label class="col-lg-12" for="sel1">Priority :</label>
+																<div class="col-lg-12" style="padding-right: 0px;">
+																	<button id="updateBtn" name="discount" value="0" val="yes" ng-model="procedureOrderMaster.urgency" ng-click="setNormalEmergency('0');" class="btn3">Normal</button>
+																	<button id="updateBtn" name="discount" value="1" ng-model="procedureOrderMaster.urgency" class="btn3" ng-click="setNormalEmergency('1');" class="btn3">Emergency</button>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-2">
+															<div class="form-group">
+																<label for="sel1">Reason for Request:</label>
+																<textarea type="text" autocomplete="off" name="description" id="searchServiceId"
+													class="text-input floating-label dirty" ng-model="procedureOrderMaster.requestReason" rows="1"></textarea>
+															</div>
+														</div>
+														<div class="col-lg-1" style="margin-top: 29px;">
+															<!-- <button class="btn btn-primary" ng-click="showCalender();">Surgical Calendar</button> -->
+															<button class="btn btn-primary" ng-if="getSaveProceudreFlag == true">
+																<a href="" data-toggle="modal" data-target="" style="width: auto;"  ng-disabled = "true"> <span
+																	class="glyphicon glyphicon-plus"></span>
+																</a>
+															</button>
+															<button class="btn btn-primary" style="width: 50px;" value="+" ng-if="getSaveProceudreFlag == false">
+																<a href="" data-toggle="modal" data-target=""  style="width: auto;" ng-click="addNewProc();">
+																	+
+																</a>
+															</button>
+														</div>
+													</div>
+													<div class="table-responsive"
+														style="margin-bottom: 7px; height: 227px;">
+														<table class="table table-striped table-hover table-condensed table-bordered">
+															<thead>
+															<tr>
+																<th class="vertical-top" title="Speciality"><span
+																	class="">Request No.</span></th>
+																<th class="vertical-top" title="Speciality"><span
+																	class="">Speciality</span></th>
+																<th class="vertical-top" title="Procedure"><span
+																	class="">Procedure</span></th>
+																<th class="vertical-top" title="Date of Procedure"><span
+																	class="">Date of Procedure</span></th>
+																<th class="vertical-top" title="Procedure Time"><span
+																	class="">Procedure Time</span></th>	
+																<th class="vertical-top" title="Priority"><span
+																	class="">Priority</span></th>
+																<th class="vertical-top"
+																	title="Reason For Request"><span class="">Reason
+																		For Request</span></th>
+																<th class="vertical-top" title="Procedure Sequence"><span
+																	class="">Procedure</span></th>
+																<th class="">Procedure Details</th>
+																<th class="text-center vertical-top" title="Action" ng-if="getSaveProceudreFlag == false"><span
+																	class="">Action</span></th>
+															</tr>
+															</thead>
+															<tbody>
+													<tr
+														ng-repeat="procedreOrderObj in procedureOrderList track by $index" ng-init="parentIndex=$index">
+														<td class="">
+															<div ng-if="procedreOrderObj.proReqId == 0">New
+																Request</div>
+															<div ng-if="procedreOrderObj.proReqId != 0">ReqNo
+																-{{procedreOrderObj.proReqId}}</div>
+														</td>
+														<td class="">{{procedreOrderObj.specialityName}}</td>
+														<td class="">{{procedreOrderObj.procedureName}}</td>
+														<td class="">{{procedreOrderObj.preferedDateTime}}</td>
+														<td class="">{{procedreOrderObj.preferedTime}}</td>
+														<td class="">{{(procedreOrderObj.urgency==0)?"Normal":"Emergency"}}</td>
+														<td class=""><textarea type="text" autocomplete="off" class="text-input floating-label" disabled="disabled" style="height: 30px !important;">{{procedreOrderObj.requestReason}}</textarea></td>
+														<!-- <td class="width4">{{(procedreOrderObj.isPrimarySecondary=='Y')?"Primary":"Secondary"}}</td> -->
+														<td class="">
+															<select class="text-input floating-label" id="ProcedureSequence" ng-model="procedreOrderObj.procedureSequence" ng-change="changeProcedureSequence(parentIndex,1)">
+																<option ng-repeat="info in procedureOrderedSequenceList " ng-value="info.id" value="{{info.id}}">{{info.sequenceName}}</option>
+															</select> 
+														</td>
+														<td class="text-center"><a
+															data-target="#procedureOrderInfo" data-toggle="modal"
+															ng-click="getProcedureConfigDetails($index,1);"><i
+																class="fa fa-info-circle"></i></a></td>
+														<td class="text-center"><!-- <a class=""
+															title="Edit"><i class="fa fa-pencil"
+																ng-click="editProcedureOder(procedreOrderObj ,$index)"></i></a>&nbsp; -->
+															<a><i class="fa fa-times"
+																ng-click="removeProcedureOder($index,1);"></i></a></td>
+													</tr>
+													<tr ng-repeat="procedreOrderObj in orderedProcedureList track by $index" ng-init="parentIndex=$index">
+														<td class="">ReqNo
+															-{{procedreOrderObj.proReqId}}</td>
+														<td class="">{{procedreOrderObj.specialityName}}</td>
+														<td class="">{{procedreOrderObj.procedureName}}</td>
+														<td class="">{{procedreOrderObj.preferedDateTime}}</td>
+														<td class="">{{procedreOrderObj.preferedTime}}</td>
+														<td class="">{{(procedreOrderObj.urgency==0)?"Normal":"Emergency"}}</td>
+														<td class=""><textarea type="text" autocomplete="off" class="text-input floating-label" rows="1" disabled="disabled">{{procedreOrderObj.requestReason}}</textarea></td>
+														<!-- <td class="width4">{{(procedreOrderObj.isPrimarySecondary=='Y')?"Primary":"Secondary"}}</td> -->
+														<td class="">
+															<select class="text-input floating-label" id="ProcedureSequence" ng-model="procedreOrderObj.procedureSequence" ng-change="changeProcedureSequence(parentIndex,2)">
+																<option ng-repeat="info in procedureSequenceList " ng-value="info.id" value="{{info.id}}">{{info.sequenceName}}</option>
+															</select> 
+														</td>
+														<td class="text-center">
+															<a data-target="#procedureOrderInfo" data-toggle="modal" ng-click="getProcedureConfigDetails($index,2);">
+																<i class="fa fa-info-circle"></i>
+															</a>
+														</td>
+														<td class="text-center"  ng-if="getSaveProceudreFlag == false">
+														 	<a class="" title="Edit"><i class="fa fa-pencil" ng-click="editProcedureOder(procedreOrderObj ,$index)"></i></a>&nbsp;
+															<a><i class="fa fa-times" ng-click="cancelProcedure($index,2);"></i></a>
+														</td>
+													</tr>
+												</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<div id="Scheduling12" class="tab-pane fade">
+												<div class="col-lg-8" style="padding-left: 0px;">
+													<ul class="nav nav-tabs">
+														<li ng-class="{ active : isSetSecondTabLevel(111) }" class="active"><a data-toggle="tab"
+															data-target="#OT12">OT</a></li>
+														<li ng-class="{ active : isSetSecondTabLevel(112) }"><a data-toggle="tab" data-target="#Staff12">Staff</a></li>
+														<li ng-class="{ active : isSetSecondTabLevel(113) }"><a data-toggle="tab" data-target="#Equipment12">Equipment</a></li>
+													</ul>
+												</div>
+												<div class="clearfix"></div>
+												<div class="col-lg-4"
+													style="border-bottom: 0.5px solid #e3e3e3; float: right; margin: -36px 0px 0px 0px !important; display: block; width: 450px; padding: 5px 5px 5px 0px; text-align: right;">
+													<button class="available">Available</button>
+													<button class="unavailable">Unavailable</button>
+													<button class="maintenance">Maintenance</button>
+													<button class="btn btn-primary" id="updateBtn" data-toggle="modal"
+														data-target="#changeDate">Change of Date</button>
+												</div>
+
+												<div class="tab-content">
+													<div id="OT12" class="tab-pane fade in active">
+														<div class="thumbnail"
+															style="margin-bottom: 7px; height: 310px; margin-top: 0px; border-top: none; border-radius: 0px;">
+															<div class="row OTform" >
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Operation Theator</label>
+																		<select ng-model="theatreObj" class="text-input floating-label"
+																		ng-options="x as x.theatreName for x in activeOperationTheatreList track by x.operationTheatreId"
+																		ng-change="getOperationTableByTheatreId(theatreObj.operationTheatreId,0,$index)"
+																		class="form-control" 
+																		ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Operating Table</label> 
+																		<select ng-model="tableObj"
+																			class="text-input floating-label"
+																			ng-options="x as x.tableName for x in activeOperationTableList track by x.operationTableId"
+																			class="form-control" ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-1" style="margin-top: 29px;">
+																	<button class="btn1" id="addBtn" ng-click="addOTDetails();">Add</button>
+																</div>
+															</div>
+															<div class="table-responsive"
+																style="margin-bottom: 7px; height: 227px;">
+																<table class="table table-striped table-hover table-condensed table-bordered">
+																	<thead>
+																		<tr>
+																			<th>Operation Theator</th>
+																			<th>Operation Table</th>
+																			<th style="text-align: center;">Action</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="info in otList">
+																			<td class="width1" ng-style="setColor(info)"
+																				ng-if="info.status=='A'"><select name="" id=""
+																				ng-model="info.selectedTheatreId"
+																				class="text-input floating-label"
+																				ng-change="getOperationTableByTheatreId(info.selectedTheatreId,1,$index)">
+																					<option value="" selected>Select Theatre</option>
+																					<option value="{{theatre.operationTheatreId}}"
+																						ng-value="theatre.operationTheatreId"
+																						ng-repeat="theatre in info.theatreList">{{theatre.theatreName}}</option>
+
+																			</select></td>
+																			<td class="width4" ng-style="setColor(info)"
+																				ng-if="info.status=='A'"><select name="" id=""
+																				ng-model="info.selectedTableId"
+																				class="text-input floating-label"
+																				ng-change="checkAvailableOTSlot(info,0);">
+																					<option value="" selected>Select Table</option>
+																					<option value="{{table.operationTableId}}"
+																						ng-value="table.operationTableId"
+																						ng-repeat="table in info.tableList">{{table.tableName}}</option>
+																			</select></td>
+																			<td class="width1 text-center"
+																				ng-style="setColor(info)" ng-if="info.status=='A'">
+																				
+																				<i class="fa fa-times" title="Remove"
+																				ng-click="removeOTDetails($index,0);"></i>&nbsp;&nbsp;
+																				
+																				<a data-toggle="modal" data-target="#addRemarkOnOTOverideDetails" ng-click="overrideOT($index,info);"> 
+																				<i class="fa fa-refresh" title="Override"  aria-hidden="true"></i>
+																			</a>
+																			</td>
+																		</tr>
+																		<tr ng-repeat="info in otAddedList">
+																			<td class="width1" ng-style="setColor(info)">{{info.theatreTypeName}}</td>
+																			<td class="width4" ng-style="setColor(info)">{{info.tableName}}</td>
+																			<td class="width1 text-center"
+																				ng-style="setColor(info)"><i
+																				class="fa fa-times" title="Remove"
+																				ng-click="removeOTDetails($index,1);"></i>&nbsp;&nbsp;
+																				
+																				<a data-toggle="modal" data-target="#addRemarkOnOTOverideDetails" ng-click="overrideOT($index,info);"> 
+																				<i class="fa fa-refresh" title="Override"  aria-hidden="true"></i>
+																			</a>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+													<div id="Staff12" class="tab-pane fade in">
+														<div class="thumbnail"
+															style="margin-bottom: 7px; height: 310px; margin-top: 0px; border-top: none; border-radius: 0px;">
+															<div class="row OTform">
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Role:</label> 
+																		<select ng-model="roleObj" class="text-input floating-label"
+																			ng-options="x as x.roleName for x in otimsRoleList track by x.roleId"
+																			class="form-control" 
+																			ng-change="getStaffListByRoleId(roleObj.roleId,0)"
+																			ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Staff Name:</label> 
+																		<select ng-model="staffObj" class="text-input floating-label"
+																				ng-options="x as x.userName for x in staffList track by x.userId"
+																				class="form-control" 
+																				ng-required="true">
+																			</select>
+																	</div>
+																</div>
+																<div class="col-lg-1" style="margin-top: 29px;">
+																	<button class="btn1" id="addBtn" ng-click="addStaffSDetails();">Add</button>
+																</div>
+															</div>
+															<div class="table-responsive"
+																style="margin-bottom: 7px; height: 227px;">
+																<table class="table table-striped table-hover table-condensed table-bordered">
+																	<thead>
+																		<tr>
+																			<th>Role</th>
+																			<th>Staff Name</th>
+																			<th style="text-align: center;">Action</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="info in otAddedStaffDetailsList">
+																			<td ng-style="setColor(info)">{{info.roleName}}</td>
+																			<td ng-style="setColor(info)">{{info.userName}}</td>
+																			<td style="text-align: center;" ng-style="setColor(info)"><a
+																				data-target="#" ng-click="removeStaffDetails($index,0);"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a>
+																			<a
+																				data-toggle="modal" data-target="#addRemarkOnStaffOverideDetails" ng-click="overrideStaff($index,info);"> 
+																				<i class="fa fa-refresh" title="Override" aria-hidden="true"></i>
+																			</a>
+																			</td>
+																		</tr>
+																		<tr ng-repeat="info in otStaffDetailsList">
+																			<td ng-style="setColor(info)" ng-if="info.status=='A'">{{info.roleName}}</td>
+																			<td ng-style="setColor(info)" ng-if="info.status=='A'">
+																				<select ng-model="info.selectedStaffId" class="text-input floating-label"
+																					ng-options="x as x.userName for x in info.staffList track by x.userId"
+																					class="form-control" 
+																					ng-change = "checkAvailabilityOfStaff(info,1,$index);"
+																					ng-required="true">
+																				</select>
+																			</td>
+																			<td style="text-align: center;" ng-style="setColor(info)" ng-if="info.status=='A'">
+																			<a data-target="#" ng-click="removeStaffDetails($index,1);"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a>
+																			<a
+																				data-toggle="modal" data-target="#addRemarkOnStaffOverideDetails" ng-click="overrideStaff($index,info);"> 
+																				<i class="fa fa-refresh" title="Override" aria-hidden="true"></i>
+																			</a>
+																			</td>
+																		</tr>
+																		<!-- <tr>
+																			<td>OT Manager</td>
+																			<td><select class="form-control">
+																					<option>Select Staff Name</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Manager</td>
+																			<td><select class="form-control">
+																					<option>Select Staff Name</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Manager</td>
+																			<td><select class="form-control">
+																					<option>Select Staff Name</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr> -->
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+													<div id="Equipment12" class="tab-pane fade in">
+														<div class="thumbnail"
+															style="margin-bottom: 7px; height: 310px; margin-top: 0px; border-top: none; border-radius: 0px;">
+															<div class="row OTform">
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Equipment Type:</label>
+																		<select ng-model="equipmentTypeObj" class="text-input floating-label"
+																			ng-options="x as x.category for x in equipmentTypeList track by x.id"
+																			class="form-control" 
+																			ng-change="getEquipmentNamesByEquipmentId(equipmentTypeObj)"
+																			ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-3">
+																	<div class="form-group">
+																		<label for="sel1">Equipment Name:</label> 
+																		<select ng-model="equipmentNameObj" class="text-input floating-label"
+																				ng-options="x as x.itemName for x in equipmentNameList track by x.id"
+																				class="form-control" 
+																				ng-required="true">
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-1" style="margin-top: 29px;">
+																	<button class="btn1" id="addBtn" ng-click="addEquipmentDetails();">Add</button>
+																</div>
+															</div>
+															<div class="table-responsive"
+																style="margin-bottom: 7px; height: 227px;">
+																<table class="table table-striped table-hover table-condensed table-bordered">
+																	<thead>
+																		<tr>
+																			<th>Equipment Type</th>
+																			<th>Equipment Name</th>
+																			<th>Equipment Name & Batch</th>
+																			<th style="text-align: center;">Action</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																			<tr ng-repeat="info in equipmentDetailList">
+																					<td  ng-style="setColor(info)">{{info.equipmentTypeName}}</td>
+																					<td  ng-style="setColor(info)">{{info.equipmentName}}</td>
+																					<td  ng-style="setColor(info)">{{info.itemName}}</td>
+																					<td  ng-style="setColor(info)">
+																					<a data-target="#" ng-click="removeEquipment($index,0);"><span
+																					class=""></span>
+																						<i class="fa fa-times"  title="Remove" ></i>&nbsp;&nbsp;
+																						</a>
+																							<a
+																							data-toggle="modal" data-target="#addRemarkOnEquipOverideDetails" ng-click="overrideEquip($index,info);"> 
+																							<i class="fa fa-refresh" title="Override"  aria-hidden="true"></i>
+																						</a>
+																						
+																					</td>
+																				</tr>
+																				<tr ng-repeat="info in equipmentBatchList">
+																					<td  ng-style="setColor(info)">{{info.equipmentTypeName}}</td>
+																					<td  ng-style="setColor(info)">{{info.itemName}}</td>
+																					<td  ng-style="setColor(info)">
+																					 	<select ng-model="info.selectedItemBatchObj" class="text-input floating-label"
+																						ng-options="x as x.itemName for x in info.itemBatchList track by x.batchId"
+																						class="form-control" 
+																						ng-change="checkAvailabilityOfEquipment(info,$index,0);"
+																						ng-required="true">
+																					</select>
+																					</td>
+																					<td  ng-style="setColor(info)">
+																						<i class="fa fa-times"  title="Remove" ng-click="removeEquipment($index,1);"></i>&nbsp;&nbsp;
+																						<a
+																							data-toggle="modal" data-target="#addRemarkOnEquipOverideDetails" ng-click="overrideEquip($index,info);"> 
+																							<i class="fa fa-refresh" title="Override"  aria-hidden="true"></i>
+																						</a>
+																					</td>
+																				</tr>
+																	
+																	<!-- 	<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr> -->
+																	<!-- 	<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr>
+																		<tr>
+																			<td>OT Equipments</td>
+																			<td>Medical Anesthesia Machine</td>
+																			<td><select class="form-control">
+																					<option>Select Equipment Name & Batch</option>
+																					<option>2</option>
+																					<option>3</option>
+																					<option>4</option>
+																			</select></td>
+																			<td style="text-align: center;"><a
+																				data-target="#"> <span
+																					class="glyphicon glyphicon-remove"></span>
+																			</a></td>
+																		</tr> -->
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-primary" id="saveBtn" data-dismiss="modal" ng-click="saveProcedureSchedule();">Save</button>
+				</div>
+			</div>
+		</div>
+				<!-- Switch TAb START -->
+<div id="switchTab"class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Switch Tab
+					<button type="button" class="close"  ng-click="yesSwitchCancel()">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top4">
+					<label for="description" class="LISDynamicLabel">Schedule details will  getting wiped out still  do you want to continue ?</label>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button"  class="btn btn-primary"id="" ng-click="yesSwitch();yesSwitchCancel()">Ok</button>
+				<button type="button" class="btn btn-primary"id=""  ng-click="yesSwitchCancel()">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--  Switch TAb  END -->
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="changeDate" role="dialog">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+					<h4 class="modal-title">Change Date & Time</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<div class="row">
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label for="Calender">Prefer Date & Time :</label> 
+									<input type="text" autocomplete="off"  class="text-input floating-label dirty"
+                                            name="dateOptionsProc1" id="dateOptionsProc1"
+                                            uib-datepicker-popup="dd/MM/yyyy" 
+                                            placeholder="DD/MM/YYYY" ng-model="changeOfDate"
+                                            model-view-value="true" is-open="datepickerOpen1.opened"
+                                            datepicker-options="dateOptions1" show-button-bar="false"
+                                            ng-click="openDatepicker1()"  >
+                                     <div class="clockpicker">
+                                     <input type="text" autocomplete="off" name="description" id="" ng-model="changeOfTime"  ng-init="initClockPicker()" class="text-input floating-label ng-pristine ng-valid dirty ng-not-empty ng-touched" ng-init="initClockPicker()" ng-disabled="isDisabled" style=""> 
+                                 </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" data-dismiss="modal" id="saveBtn" ng-click="changeDatefunc();">Save</button>
+					<button class="close-M" data-dismiss="modal" id="cancelBtn" ng-click="cancelChangeDate();">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="otCancel" role="dialog">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Cancel OT</h4>
+				</div>
+				<div class="modal-body" style="height: 130px;">
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="sel1">Reason for Cancel:</label>
+							<textarea class="form-control" rows="3" id="comment"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" data-dismiss="modal">Save</button>
+					<button type="button" class="close-M" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- procedureOrderInfo modal START -->
+<div id="procedureOrderInfo" class="modal fade" role="dialog"
+		aria-labelledby="orderModalLabel" aria-hidden="true" >
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header" style="margin-left: -31px;background-size: 210px 80px !important;">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title" ng-if="indexFlag==1">{{procedureOrderList[currentIndex].specialityName}}-{{procedureOrderList[currentIndex].procedureName}}</h4>
+					<h4 class="modal-title" ng-if="indexFlag==2">
+					{{orderedProcedureList[orderedCurrentIndex].specialityName}}-{{orderedProcedureList[orderedCurrentIndex].procedureName}}
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</h4>
+				</div>
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs">
+							<li ng-class="{ active : isSetThirdTabLevel(30) }" id=""
+								class="width12 active" style=""><a href=""
+								ng-click="setThirdTabLevel(30)">Procedure Details</a></li>
+							<li ng-class="{ active : isSetThirdTabLevel(31) }" id=""
+								class="width8" style=""><a href=""
+								ng-click="setThirdTabLevel(31)">Consent</a></li>
+							<li ng-class="{ active : isSetThirdTabLevel(32) }" class="width8"
+								style=""><a href="" ng-click="setThirdTabLevel(32)"
+								class="">Checklist</a></li>
+							<li ng-class="{ active : isSetThirdTabLevel(33) }" class="width5"
+								style=""><a href="" ng-click="setThirdTabLevel(33)"
+								class="">Staff</a></li>
+
+							<li ng-class="{ active : isSetThirdTabLevel(36) }" class="width8"
+								style=""><a href="" ng-click="setThirdTabLevel(36)"
+								class="">Equipment</a></li>
+							<li ng-class="{ active : isSetThirdTabLevel(37) }" class="width6"
+								style=""><a href="" ng-click="setThirdTabLevel(37)"
+								class="">Services</a></li>
+
+
+							<li ng-class="{ active : isSetThirdTabLevel(311) }"
+								class="width12" style=""><a href=""
+								ng-click="setThirdTabLevel(311)" class="">Patient Education</a>
+							</li>
+
+							<li ng-class="{ active : isSetThirdTabLevel(312) }"
+								class="width12" style=""><a href=""
+								ng-click="setThirdTabLevel(312)" class="">Medication</a></li>
+
+
+							<li ng-class="{ active : isSetThirdTabLevel(314) }"
+								class="width10" style=""><a href=""
+								ng-click="setThirdTabLevel(314)" class="">Implant</a></li>
+
+						</ul>
+				<!-- Tab panes -->
+				<div class="tab-content">
+						<!-- Procedure Details Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(30)"
+							class="second-level-tab-display-div" style="">
+							<div
+								class="row padding-top5 padding-bottom10 padding-left-right-set4"
+								ng-if="indexFlag==1">
+
+								<label class="checkbox-inline padding-top8"> <input
+									type="checkbox" value=""
+									ng-model="procedureOrderList[currentIndex].isIcuRequired"
+									ng-checked="procedureOrderList[currentIndex].isIcuRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">ICU Required
+								</label> <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="procedureOrderList[currentIndex].isBloodComponentRequired"
+									ng-checked="procedureOrderList[currentIndex].isBloodComponentRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">Blood
+									Component Required</label> <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="procedureOrderList[currentIndex].isPacRequired"
+									ng-checked="procedureOrderList[currentIndex].isPacRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">PAC
+									Required</label> <!-- <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="procedureOrderList[currentIndex].isPrimarySecondary"
+									ng-checked="procedureOrderList[currentIndex].isPrimarySecondary =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'"
+									 ng-disabled="true">Is Primary</label> --><!-- ng-change="checkPrimary()" -->
+							</div>
+							<div
+								class="row padding-top5 padding-bottom10 padding-left-right-set4"
+								ng-if="indexFlag==2">
+
+								<label class="checkbox-inline padding-top8"> <input
+									type="checkbox" value=""
+									ng-model="orderedProcedureList[orderedCurrentIndex].isIcuRequired"
+									ng-checked="orderedProcedureList[orderedCurrentIndex].isIcuRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">ICU
+									Required
+								</label> <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="orderedProcedureList[orderedCurrentIndex].isBloodComponentRequired"
+									ng-checked="orderedProcedureList[orderedCurrentIndex].isBloodComponentRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">Blood
+									Component Required</label> <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="orderedProcedureList[orderedCurrentIndex].isPacRequired"
+									ng-checked="orderedProcedureList[orderedCurrentIndex].isPacRequired =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="true">PAC
+									Required</label> <!-- <label class="checkbox-inline padding-top8"><input
+									type="checkbox" value=""
+									ng-model="orderedProcedureList[orderedCurrentIndex].isPrimarySecondary"
+									ng-checked="orderedProcedureList[orderedCurrentIndex].isPrimarySecondary =='Y'"
+									ng-true-value="'Y'" ng-false-value="'N'"
+									ng-change="checkPrimary()" ng-disabled="true">Is
+									Primary</label> -->
+							</div>
+						</div>
+						<!-- Procedure Details Tab Content END -->
+						<!-- Consent Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(31)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="consentTypeObj"
+													class="text-input floating-label"
+													ng-options="x as x.consentTypeMasterName for x in consentTypeList track by x.consentTypeMasterId"
+													ng-change="getconsentListByTypeId(consentTypeObj);"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="code">Type</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="consentObj"
+													class="text-input floating-label"
+													ng-options="x as x.consentMasterName for x in consentList track by x.consentMasterId"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="code">Consent</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add"
+											class="btn btn-primary"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width3">Type</th>
+													<th class="width10">Consent</th>
+													<th class="width1"></th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderConsentList"
+													ng-if="indexFlag==1">
+													<td class="width3">{{info.consentTypeMasterName}}</td>
+													<td class="width10">{{info.consentMasterName}}</td>
+													<td class="width1 text-center">
+														<div ng-if="info.templateType==1">
+															<a class="" title="Info" data-toggle="modal"
+																data-target="#veiwChecklistTemplate"><i
+																class="fa fa-info-circle"
+																ng-click="getCurrentIndex($index);"></i></a>
+														</div>
+														<div ng-if="info.templateType==2">
+															<a class="" title="Info" data-toggle="modal"
+																data-target="#procedureTemplateUploadedModal"><i
+																class="fa fa-info-circle"
+																ng-click="getCurrentIndex($index);"></i></a>
+														</div>
+
+													</td>
+													<!-- <td class="width2 text-center"><a class=""
+														title="Remove"><i class="fa fa-times"
+															ng-click="removeConsent($index);"></i></a>&nbsp;&nbsp; <a class="" title="View"><i class="fa fa-eye"></i></a>
+													</td> -->
+												</tr>
+												<tr
+													ng-repeat="info in orderedProcedureList[orderedCurrentIndex].procedureOrderConsentList"
+													ng-if="indexFlag==2">
+													<td class="width3">{{info.consentTypeMasterName}}</td>
+													<td class="width10">{{info.consentMasterName}}</td>
+													<td class="width1 text-center">
+														<div ng-if="info.templateType==1">
+															<a class="" title="Info" data-toggle="modal"
+																data-target="#veiwChecklistTemplate"><i
+																class="fa fa-info-circle"
+																ng-click="getCurrentIndex($index);"></i></a>
+														</div>
+														<div ng-if="info.templateType==2">
+															<a class="" title="Info" data-toggle="modal"
+																data-target="#procedureTemplateUploadedModal"><i
+																class="fa fa-info-circle"
+																ng-click="getCurrentIndex($index);"></i></a>
+														</div>
+
+													</td>
+													<!-- <td class="width2 text-center"><a class=""
+														title="Remove"><i class="fa fa-times"></i></a>&nbsp;&nbsp;
+														<a class="" title="View"><i class="fa fa-eye"></i></a>
+													</td> -->
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Consent Tab Content END -->
+
+						<!-- Checklist Tab Checklist START -->
+						<div ng-show="isSetThirdTabLevel(32)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select class="text-input floating-label"
+													ng-model="stageObj.stageId" convert-to-number
+													ng-change="getcheckListByTypeId(stageObj.stageId);" ng-disabled="true">
+													<option value=""></option>
+													<option value="1">Consent</option>
+													<option value="2">Pre-Operative</option>
+													<option value="3">Intra-Operative</option>
+													<option value="4">Post-Operative</option>
+													<option value="5">Discharge</option>
+												</select> <label for="code">Stage</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="checklistObj"
+													class="text-input floating-label"
+													ng-options="x as x.description for x in checklistNameList track by x.checklistMasterId"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="description" class="">Checklist Name</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add"
+											class="btn btn-primary"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width10">Stage</th>
+													<th class="width10">Checklist Name</th>
+													<th class="width10">Role</th>
+													<th class="width10">Checklist Item</th>
+													<!-- <th class="width2 text-center">Action</th> -->
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderCheckList"
+													ng-if="indexFlag==1">
+													<td class="width10">
+														<div ng-if="info.stageId==1">Consent</div>
+														<div ng-if="info.stageId==2">Pre-Operative</div>
+														<div ng-if="info.stageId==3">Intra-Operative</div>
+														<div ng-if="info.stageId==4">Post-Operative</div>
+														<div ng-if="info.stageId==5">Discharge</div>
+														<div ng-if="info.stageId==6">Ward</div>
+													</td>
+													<td class="width10">{{info.description}}</td>
+													<td class="width10">{{info.roleName}}</td>
+													<td class="width10"><a class="" data-toggle="modal"
+														data-target="#checklistItemsModal"
+														ng-click="getChecklistNameListById(info);"><i
+															class="fa fa-info-circle"></i></a></td>
+													<!-- <td class="width2 text-center"><a class=""
+														title="Remove"><i class="fa fa-times"
+															ng-click="removeChecklist($index);"></i></a>&nbsp;&nbsp;</td> -->
+												</tr>
+												<tr
+													ng-repeat="info in  orderedProcedureList[orderedCurrentIndex].procedureOrderCheckList"
+													ng-if="indexFlag==2">
+													<td class="width10">
+														<div ng-if="info.stageId==1">Consent</div>
+														<div ng-if="info.stageId==2">Pre-Operative</div>
+														<div ng-if="info.stageId==3">Intra-Operative</div>
+														<div ng-if="info.stageId==4">Post-Operative</div>
+														<div ng-if="info.stageId==5">Discharge</div>
+													</td>
+													<td class="width10">{{info.description}}</td>
+													<td class="width10">{{info.roleName}}</td>
+													<td class="width10"><a class="" data-toggle="modal"
+														data-target="#checklistItemsModal"
+														ng-click="getChecklistNameListById(info);"><i
+															class="fa fa-info-circle"></i></a></td>
+													<!-- <td class="width2 text-center"><a class=""
+														title="Remove"><i class="fa fa-times"></i></a>&nbsp;&nbsp;
+													</td> -->
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Checklist Tab Content END -->
+
+						<!-- Staff Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(33)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="staffObj"
+													class="text-input floating-label"
+													ng-options="x as x.roleName for x in otimsRoleList track by x.roleId"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="code">Role</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="row input-container">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<input type="text" autocomplete="off" numbers-only name="description" id=""
+													class="text-input floating-label"
+													ng-model="commonStaffObj.staffNumber" ng-disabled="true"> <label
+													for="description" class="">Number</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add"
+											class="btn btn-primary"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width1">Role</th>
+													<th class="width1">Number</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderStaffList"
+													ng-if="indexFlag==1">
+													<td class="width1">{{info.roleName}}</td>
+													<td class="width1	"><input type="text" autocomplete="off" numbers-only
+														class="select-box" ng-model="info.staffNumber" /></td>
+												</tr>
+												<tr
+													ng-repeat="info in orderedProcedureList[orderedCurrentIndex].procedureOrderStaffList"
+													ng-if="indexFlag==2">
+													<td class="width1">{{info.roleName}}</td>
+													<td class="width1	"><input type="text" autocomplete="off" numbers-only
+														class="select-box" ng-model="info.staffNumber" /></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Staff Tab Content END -->
+
+						<!-- Equipment Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(36)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="equipmentTypeObj"
+													class="text-input floating-label"
+													ng-options="x as x.category for x in equipmentTypeList track by x.id"
+													class="form-control"
+													ng-change="getEquipmentNamesByEquipmentId(equipmentTypeObj.id)"
+													ng-required="true" ng-disabled="true">
+												</select> <label for="code">Equipment Type</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select ng-model="equipmentNameObj"
+													class="text-input floating-label"
+													ng-options="x as x.name for x in equipmentNameList track by x.id"
+													class="form-control" ng-required="true" ng-disabled="true">
+												</select> <label for="description" class="">Equipment Name</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add"
+											class="btn btn-primary"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width10">Equipment Category</th>
+													<th class="width10">Equipment Name</th>
+													<th class="width1">Qty</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderEquipmentList"
+													ng-if="indexFlag==1">
+													<td class="width10">{{info.equipmentTypeName}}</td>
+													<td class="width10">{{info.itemName}}</td>
+													<td class="width1"><input type="text" autocomplete="off" numbers-only
+														name="description" id="" class="text-input floating-label"
+														ng-model="info.qty"></td>
+												</tr>
+												<tr
+													ng-repeat="info in orderedProcedureList[orderedCurrentIndex].procedureOrderEquipmentList"
+													ng-if="indexFlag==2">
+													<td class="width10">{{info.equipmentTypeName}}</td>
+													<td class="width10">{{info.itemName}}</td>
+													<td class="width1"><input type="text" autocomplete="off" numbers-only
+														name="description" id="" class="text-input floating-label"
+														ng-model="info.qty"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Equipment Tab Content END -->
+
+						<!-- Services Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(37)"
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto pull-right">
+									<div class="">
+										<a href=""> <input
+											type="button" value="Add Service"
+											class="btn btn-primary"
+											ng-disabled="true">
+										</a>
+									</div>
+								</div>
+								<div
+									class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+									<input type="text" autocomplete="off" class="text-search-box dirty"
+										placeholder="Search" style="margin-top: 0px;padding-left: 22px !important;"> <i
+										class="fa fa-search common-search-text-icon"
+										aria-hidden="true"></i>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width5">Specialty</th>
+													<th class="width5">Sub Specialty</th>
+													<th class="width5">Code</th>
+													<th class="width5">Service Name</th>
+													
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="info in procedureOrderList[currentIndex].procedureOrderServiceList"
+													ng-if="indexFlag==1">
+													<td class="width5">{{info.specialityName}}</td>
+													<td class="width5">{{info.subSpecialityName}}</td>
+													<td class="width5">{{info.serviceStandardCode}}</td>
+													<td class="width5">{{info.serviceStandardName}}</td>
+												</tr>
+												<tr
+													ng-repeat="info in orderedProcedureList[orderedCurrentIndex].procedureOrderServiceList"
+													ng-if="indexFlag==2">
+													<td class="width5">{{info.specialityName}}</td>
+													<td class="width5">{{info.subSpecialityName}}</td>
+													<td class="width5">{{info.serviceStandardCode}}</td>
+													<td class="width5">{{info.serviceStandardName}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Services Tab Content END -->
+
+						<!-- PatientEducation Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(311)"
+							class="second-level-tab-display-div" style="">
+							<fieldset class="padding-top0">
+								<!-- main-fieldset -->
+								<legend class="main-heading-div">Patient Education</legend>
+							</fieldset>
+							<div class="row">
+								<div class="row margin-top0">
+									<div id="formeo-editor"></div>
+									<div id="myHtml" class="render-form" style="display: none"></div>
+								</div>
+								<div class="col-lg-12 col-md-12" ng-if="indexFlag==1">
+									<textarea name="editor" type="text" autocomplete="off" id="editor" rows="12"
+										cols="50" ck-editor
+										ng-model="procedureOrderList[currentIndex].procedureOrderPatientEducationDto.patientEducationTempale" readonly></textarea>
+								</div>
+								<div class="col-lg-12 col-md-12" ng-if="indexFlag==2">
+									<textarea name="editor" type="text" autocomplete="off" id="editor" rows="12"
+										cols="50" ck-editor
+										ng-model="orderedProcedureList[orderedCurrentIndex].procedureOrderPatientEducationDto.patientEducationTempale"
+										readonly></textarea>
+								</div>
+							</div>
+						</div>
+						<!-- PatientEducation Tab Content END -->
+
+						<!-- Medication Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(312)"
+							class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div
+									class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+									<label class="switch"> <input type="checkbox"
+										ng-true-value="'Y'" ng-false-value="'N'"
+										ng-model="encounterDetailsObj.isItemOrKit"
+										class="ng-pristine ng-untouched ng-valid ng-empty"
+										ng-click="selectItemOrKit(encounterDetailsObj.isItemOrKit)">
+										<div class="slider round"></div>
+									</label>
+								</div>
+								<div
+									class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									Item List/Kit</div>
+								<div
+									class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<div ng-if="encounterDetailsObj.isItemOrKit=='Y'">
+													<input type="text" autocomplete="off" class="text-input floating-label"
+														name="groupName" 
+														ng-model="encounterDetailsObj.kitName" ng-disabled="true"> <label
+														for="description" class="LISDynamicLabel">Medication
+														Kit</label>
+												</div>
+												<div ng-if="encounterDetailsObj.isItemOrKit!='Y'">
+													<input type="text" autocomplete="off" class="text-input floating-label"
+														name="groupName" 
+														ng-model="encounterDetailsObj.itemName" ng-disabled="true"> <label
+														for="description" class="LISDynamicLabel">Medication</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top8">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width20"><span class="">Medication
+															Name</span></th>
+													<th class="width8"><span class="">Item/Kit</span></th>
+													<th class="width5"><span class="">Qty</span></th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="medication in procedureOrderList[currentIndex].medicationDetailsList"
+													ng-if="indexFlag==1">
+													<td class="width20">
+														<div
+															ng-if="medication.isItemOrKit==N || medication.isItemOrKit=='N'">{{medication.itemName}}</div>
+														<div
+															ng-if="medication.isItemOrKit!=N || medication.isItemOrKit!='N'">{{medication.kitName}}</div>
+													</td>
+													<td class="width8">
+														<div
+															ng-if="medication.isItemOrKit==N || medication.isItemOrKit=='N'">Item</div>
+														<div
+															ng-if="medication.isItemOrKit!=N && medication.isItemOrKit!='N'">Kit</div>
+													</td>
+													<td class="width5" ng-model="medicationObj.qty"><input
+														type="text" autocomplete="off" numbers-only class="select-box"
+														ng-model="medication.qty" /></td>
+												</tr>
+												<tr
+													ng-repeat="medication in orderedProcedureList[orderedCurrentIndex].medicationDetailsList"
+													ng-if="indexFlag==2">
+													<td class="width20">
+														<div
+															ng-if="medication.isItemOrKit==N || medication.isItemOrKit=='N'">{{medication.itemName}}</div>
+														<div
+															ng-if="medication.isItemOrKit!=N || medication.isItemOrKit!='N'">{{medication.kitName}}</div>
+													</td>
+													<td class="width8">
+														<div
+															ng-if="medication.isItemOrKit==N || medication.isItemOrKit=='N'">Item</div>
+														<div
+															ng-if="medication.isItemOrKit!=N && medication.isItemOrKit!='N'">Kit</div>
+													</td>
+													<td class="width5" ng-model="medicationObj.qty"><input
+														type="text" autocomplete="off" numbers-only class="select-box"
+														ng-model="medication.qty" /></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Medication Tab Content END -->
+
+						<!-- Surgical Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(313)"
+							class="second-level-tab-display-div" style=""></div>
+						<!-- Surgical Tab Content END -->
+
+						<!-- Implant Tab Content START -->
+						<div ng-show="isSetThirdTabLevel(314)"
+							class="second-level-tab-display-div" style="">
+							<div class="row">
+								<div
+									class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+									<label class="switch"> <input type="checkbox"
+										ng-true-value="'Y'" ng-false-value="'N'"
+										ng-model="implantObj.isItemOrKit"
+										class="ng-pristine ng-untouched ng-valid ng-empty"
+										ng-disabled="true">
+										<div class="slider round"></div>
+									</label>
+								</div>
+								<div
+									class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									Item List/Kit</div>
+								<div
+									class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<div ng-if="implantObj.isItemOrKit=='Y'">
+													<input type="text" autocomplete="off" class="text-input floating-label"
+														tabindex="3" placeholder="Search"
+														name="groupName" 
+														ng-model="implantObj.kitName"> <label
+														for="description" class="LISDynamicLabel">Kit</label>
+												</div>
+												<div ng-if="implantObj.isItemOrKit!='Y'">
+													<input type="text" autocomplete="off" class="text-input floating-label"
+														tabindex="3" placeholder="Search"
+														name="groupName" 
+														ng-model="implantObj.itemName" ng-disabled="true"> <label
+														for="description" class="LISDynamicLabel">Implant</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div
+								class="row padding-left-right-set4 table-container padding-top8">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width20"><span class="">Implant Name</span></th>
+													<th class="width8"><span class="">Item/Kit</span></th>
+													<th class="width5"><span class="">Qty</span></th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr
+													ng-repeat="dataItem in procedureOrderList[currentIndex].implantDetailsList"
+													ng-if="indexFlag==1">
+													<td class="width20">
+														<div
+															ng-if="dataItem.isItemOrKit==N || dataItem.isItemOrKit=='N'">{{dataItem.itemName}}</div>
+														<div
+															ng-if="dataItem.isItemOrKit!=N && dataItem.isItemOrKit!='N'">{{dataItem.kitName}}</div>
+													</td>
+													<td class="width8">
+														<div
+															ng-if="dataItem.isItemOrKit==N || dataItem.isItemOrKit=='N'">Item</div>
+														<div
+															ng-if="dataItem.isItemOrKit!=N && dataItem.isItemOrKit!='N'">Kit</div>
+													</td>
+													<td class="width5" ng-model="implantObj.qty"><input
+														type="text" autocomplete="off" numbers-only class="select-box"
+														ng-model="dataItem.qty" /></td>
+												</tr>
+												<tr
+													ng-repeat="dataItem in orderedProcedureList[orderedCurrentIndex].implantDetailsList"
+													ng-if="indexFlag==2">
+													<td class="width20">
+														<div
+															ng-if="dataItem.isItemOrKit==N || dataItem.isItemOrKit=='N'">{{dataItem.itemName}}</div>
+														<div
+															ng-if="dataItem.isItemOrKit!=N && dataItem.isItemOrKit!='N'">{{dataItem.kitName}}</div>
+													</td>
+													<td class="width8">
+														<div
+															ng-if="dataItem.isItemOrKit==N || dataItem.isItemOrKit=='N'">Item</div>
+														<div
+															ng-if="dataItem.isItemOrKit!=N && dataItem.isItemOrKit!='N'">Kit</div>
+													</td>
+													<td class="width5" ng-model="implantObj.qty"><input
+														type="text" autocomplete="off" numbers-only class="select-box"
+														ng-model="dataItem.qty" /></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<!-- Implant Tab Content END -->
+					</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-primary" data-dismiss="modal">OK</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- procedureOrderInfo Modal END -->
+	
+<!-- procedureTemplateUploadedModal Modal START -->
+	<div id="procedureTemplateUploadedModal" class="modal fade" role="dialog"
+		aria-labelledby="orderModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">View Document</h4>
+				</div>
+						<div class="modal-body modal-body-height" style="padding-top: 0px; padding-bottom: 0px;">
+							<div
+					class="row padding-left-right-set4 padding-top4 padding-bottom5">
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<th class="width15">
+									<div>File Name</div>
+								</th>
+
+								<th class="width8 text-center">
+
+									<div>Action</div>
+								</th>
+							</tr>
+							<tr ng-if="indexFlag==1">
+								<td>
+									<div>{{procedureOrderList[currentIndex].procedureOrderConsentList[consentCurrentIndex].documentName}}</div>
+								</td>
+								<td class="text-center"><a
+									href="{{procedureOrderList[currentIndex].procedureOrderConsentList[consentCurrentIndex].filePath}}"><span
+										class="margin-left10" title="view"><i class="fa fa-eye"
+											aria-hidden="true"></i></span></a></td>
+
+							</tr>
+							<tr ng-if="indexFlag==2">
+								<td>
+									<div>{{orderedProcedureList[orderedCurrentIndex].procedureOrderConsentList[consentCurrentIndex].documentName}}</div>
+								</td>
+								<td class="text-center"><a
+									href="{{orderedProcedureList[orderedCurrentIndex].procedureOrderConsentList[consentCurrentIndex].filePath}}"><span
+										class="margin-left10" title="view"><i class="fa fa-eye"
+											aria-hidden="true"></i></span></a></td>
+
+							</tr>
+						</tbody>
+					</table>
+				</div>
+						</div>
+					<div class="modal-footer">
+					<button class="btn btn-primary" data-dismiss="modal">Save</button>
+				</div>
+					</div>
+				</div>
+				
+			</div>
+		<!-- procedureTemplateUploadedModal Modal END -->
+<!-- checklistItemsModal Modal START -->
+	<div id="checklistItemsModal" class="modal fade" role="dialog"
+		aria-labelledby="orderModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Checklist Items</h4>
+				</div>
+						<div class="modal-body modal-body-height" style="padding-top: 0px; padding-bottom: 0px;">
+							<div
+					class="row padding-left-right-set4 table-container padding-top4">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="width12">Checklist Items</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="overflow: overlay;">
+							<!-- fix-height-scroll230, background: #fff; -->
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="info in checklistItemList">
+										<td class="width12">{{info.description}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+						</div>
+					<div class="modal-footer">
+					<button class="btn btn-primary" data-dismiss="modal">Ok</button>
+				</div>
+					</div>
+				</div>
+				
+			</div>
+		<!-- checklistItemsModal Modal END -->
+		
+<div id="addRemarkOnOTOverideDetails" class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);z-index: 99999;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-bottom10">
+						<div class="padding-left-right-10">
+							<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10 padding-bottom10">
+							 		<div class="row input-container">
+										<div class="col-lg-11 col-sm-11 col-md-11"><label><b>Reason to override record. </b></label>
+											<div class="">
+												<textarea rows="3" class="width-100" ng-model="justificationOverrideOt"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+			</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Continue" ng-click="overrideOtRemark()" data-dismiss="modal">
+							<i class="fa fa-arrow-circle-right" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+<div id="addRemarkOnStaffOverideDetails" class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);z-index: 99999;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-bottom10">
+						<div class="padding-left-right-10">
+							<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10 padding-bottom10">
+							 		<div class="row input-container">
+										<div class="col-lg-11 col-sm-11 col-md-11"><label><b>Reason to override record. </b></label>
+											<div class="">
+												<textarea rows="3" class="width-100" ng-model="justificationOverrideStaff"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+			</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Continue" ng-click="overrideStaffRemark()" data-dismiss="modal">
+							<i class="fa fa-arrow-circle-right" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+<div id="addRemarkOnEquipOverideDetails" class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);z-index: 99999;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-bottom10">
+						<div class="padding-left-right-10">
+							<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10 padding-bottom10">
+							 		<div class="row input-container">
+										<div class="col-lg-11 col-sm-11 col-md-11"><label><b>Reason to override record. </b></label>
+											<div class="">
+												<textarea rows="3" class="width-100" ng-model="justificationOverrideEquip"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+			</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Continue" ng-click="overrideEquipRemark()" data-dismiss="modal">
+							<i class="fa fa-arrow-circle-right" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+  <!--   <script src="resources/assets/js/jquery-clockpicker.min.js"></script> -->
+	<!-- <script type="text/javascript">
+	$('.clockpicker').clockpicker();
+	</script> -->
+	<script>
+		$("[data-toggle=popover]").each(function(i, obj) {
+			$(this).popover({
+				html : true,
+				content : function() {
+					var id = $(this).attr('id')
+					return $('#popover-content-' + id).html();
+				}
+			});
+
+		});
+	</script>
+	<!-- <script type="text/javascript" charset="utf-8">
+		$(function() {
+			var isMouseDown = false;
+			$("#our_table td").mousedown(function() {
+				isMouseDown = true;
+				$(this).toggleClass("highlighted");
+				return false; // prevent text selection
+			}).mouseover(function() {
+				if (isMouseDown) {
+					$(this).toggleClass("highlighted");
+				}
+			}).bind("selectstart", function() {
+				return false; // prevent text selection in IE
+			});
+
+			$(document).mouseup(function() {
+				isMouseDown = false;
+			});
+		});
+	</script>  -->
+	
+	<script>
+		$(function() {
+			$('#checklistItemsModal').modal({
+				keyboard : true,
+				backdrop : "static",
+				show : false,
+
+			}).on('show', function() {
+				var getIdFromRow = $(event.target).closest('tbody').data('id');
+				//make your ajax call populate items or what even you need
+
+			});
+		});
+	</script>
+<script>
+		$(function() {
+			$('#procedureTemplateUploadedModal').modal({
+				keyboard : true,
+				backdrop : "static",
+				show : false,
+
+			}).on('show', function() {
+				var getIdFromRow = $(event.target).closest('tbody').data('id');
+				//make your ajax call populate items or what even you need
+
+			});
+		});
+	</script>
+	<!-- <script>
+		$(function() {
+			$('#orderModal').modal({
+				keyboard : true,
+				backdrop : "static",
+				show : false,
+
+			}).on('show', function() {
+				var getIdFromRow = $(event.target).closest('tbody').data('id');
+				//make your ajax call populate items or what even you need
+
+			});
+		});
+	</script> -->
+	<script>
+		$(function() {
+			$('#procedureOrderInfo').modal({
+				keyboard : true,
+				backdrop : "static",
+				show : false,
+
+			}).on('show', function() {
+				var getIdFromRow = $(event.target).closest('tbody').data('id');
+				//make your ajax call populate items or what even you need
+
+			});
+		});
+	</script>
+	<script>
+		// Add active class to the current button (highlight it)
+		var header = document.getElementById("myDIV");
+		var btns = header.getElementsByClassName("btn1");
+		for (var i = 0; i < btns.length; i++) {
+			btns[i].addEventListener("click", function() {
+				var current = document.getElementsByClassName("active1");
+				current[0].className = current[0].className.replace(" active1",
+						"");
+				this.className += " active1";
+			});
+		}
+	</script>
+	<script>
+		// Add active class to the current button (highlight it)
+		var header = document.getElementById("myDIV1");
+		var btns = header.getElementsByClassName("btn2");
+		for (var i = 0; i < btns.length; i++) {
+			btns[i].addEventListener("click", function() {
+				var current = document.getElementsByClassName("active2");
+				current[0].className = current[0].className.replace(" active2",
+						"");
+				this.className += " active2";
+			});
+		}
+	</script>
+	<script>
+		// Add active class to the current button (highlight it)
+		var header = document.getElementById("myDIV2");
+		var btns = header.getElementsByClassName("btn3");
+		for (var i = 0; i < btns.length; i++) {
+			btns[i].addEventListener("click", function() {
+				var current = document.getElementsByClassName("active3");
+				current[0].className = current[0].className.replace(" active3",
+						"");
+				this.className += " active3";
+			});
+		}
+	</script>
+<!-- 	<script>
+	var input = $('#single-input').clockpicker({
+	    placement: 'bottom',
+	    align: 'left',
+	    autoclose: true,
+	    'default': 'now'
+	}); -->
+</script>
+</body>
+
+</html>
+
+

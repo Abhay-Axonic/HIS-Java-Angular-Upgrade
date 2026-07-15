@@ -1,0 +1,1418 @@
+<!-- /********************************************************************************************************************************************
+Procurement - quotation - barcode printing main page
+Created by - Pranita Patil
+Created Date - 17-Nov-2017 
+/********************************************************************************************************************************************/ -->
+
+<style>
+
+
+</style>
+
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Barcode Printing</legend> -->
+			<div class="row margin-top10">
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select name="store" id="store" class="text-input floating-label dirty" ng-model="vm.model.store" data-ng-options="store.store for store in vm.model.storeList">
+								</select>
+								<label for="description" class="LISDynamicLabel">Store</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-4 col-sm-4 padding-left-right-set">
+					<div class="row input-container padding-top10 customRadioBtn">
+						<label for="" class="font-weight700">Type :</label>
+						<input type="radio" name="FixedAssestRadioB" id="FixedAssestR" ng-model="vm.model.assetType" ng-click="vm.model.clearList()" value="2" checked>
+						<label for="FixedAssestR">Fixed Assets</label> <!-- Resolved HIS-10581 Spelling mistake of 'Assets' on BarCode Printing. -->
+						<input type="radio" name="FixedAssestRadioB" id="ConsumablesRadioB2" ng-click="vm.model.clearList()" ng-model="vm.model.assetType" value="1">
+						<label for="ConsumablesRadioB2" class="">Consumables</label>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container customRadioBtn">
+						<label for="" class="font-weight700">Against :</label>
+						<input type="radio" name="FixedAB" id="ItemRadiB" class=""  checked="checked" ng-click="vm.model.clearList()">
+						<label for="ItemRadiB" class="ItemRadiobtn">Item</label>
+						<input type="radio" name="FixedAB" id="GRNRadiB" class="" ng-click="vm.model.clearList()">
+						<label for="GRNRadiB" class="GRNRadiobtn">GRN</label>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 text-width-auto margin-top10 ItemRadioRow">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" id="updateBtn" title="Get Item" ng-click="vm.model.ShowModalPopup('item');">
+							Get Item</a>
+					</div>
+				</div>
+				   <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 text-width-auto margin-top10 GRNRadioRow">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" id="updateBtn" title="Get GRN" ng-click="vm.model.ShowModalPopup('grn');">
+							Get GRN</a>
+					</div>
+				</div> 
+				<div class="col-lg-3 col-md-3 col-sm-3"></div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 text-width-auto margin-top10 pull-right">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Print" data-toggle="modal" ng-click="vm.model.printSelectedBarcodes()">
+							<i class="fa fa-print" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 text-width-auto margin-top10 pull-right">
+					<div class=" ">
+						<!--   <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="savePrePrintedBarcodes()">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i>
+						</a>-->
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 margin-top10 pull-right">
+					<input type="text" autocomplete="off" class="text-search-box search-popUp-ddl ng-pristine ng-valid ng-empty ng-touched" placeholder="Search"
+					 ng-model="searchItem" style="margin-top: 0px;" ng-model="searchKeyword">
+					<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+
+			</div>
+		</fieldset>
+
+		<div class="row padding-left-right-set4 padding-top4">
+			<div class="col-md-12 col-lg-12 col-sm-8 padding-left-right-set0" id="nonBillableTableHt">
+				<fieldset>
+					<div class="row ItemRadioRow" ng-show="vm.model.assetType == 2">
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-bordered first-checkBox-padding">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												 <th class="width2 text-center">
+													 <input type="checkbox" ng-model="vm.model.selectAllItems" ng-click="vm.model.SelectAllItems();" class="ng-pristine ng-valid ng-empty ng-touched" style="">
+												</th>
+												<th class="width5" title="Item Code">
+													Item Code
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width7" title="Item Name">
+													Item Name
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="Serial Number">
+													Serial Number
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="Manufacture Year">
+													Manufacture Year
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th> 
+												<th class="width4" title="Quantity">
+													Quantity
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width4" title="Printed Count">
+													Printed Count
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width10" title="Manual Pre Printed Barcode" ng-show="isManualBarcodeRequired">
+													Pre Printed Barcode No.
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width8 text-center vertical-middle">Action taken</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body" style="height:500px; overflow-y: scroll; background: #fff;">
+									<table class="table table-bordered first-checkBox-padding">
+										<tbody>
+											<tr ng-if="!vm.model.items || !vm.model.items.length">
+												<td colspan="11">
+													<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+												</td>
+											</tr>
+											<tr ng-repeat="item in vm.model.items | filter:searchItem ">
+												<td class="width2 text-center">
+													<input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItem(item);" />
+												</td>
+												<td class="width5" title="{{item.itemCode}}">{{item.itemCode}}</td>
+												<td class="width7" title="{{item.itemName}}">{{item.itemName}}</td>
+												<td class="width5" title="{{item.batchNo}}">{{item.batchNo}}</td>
+<!-- 												<td class="width10" title="{{item.expiry | date:'MMM-yyyy'}}">{{item.manufactureYear | date:'MMM-yyyy'}}</td>  -->
+												<td class="width5" title="{{item.manufactureYear}}">{{item.manufactureYear}}</td> 
+												<td class="width4" title="{{item.availableQuantity}}">{{item.availableQuantity}}</td>
+												<td class="width4" title="{{item.barcodePrintCount}}">{{!!item.printedCount ? item.printedCount : 0}}</td>
+												<td class="width10" title="Manual Pre Printed Barcode" ng-show="isManualBarcodeRequired">
+												<input data-ng-class="{disabled:item.prePrintedBarcodeflag}" type="text" autocomplete="off" class="status" ng-model="item.prePrintedBarcode" ng-blur="getPreBarcode1(item)"style="width: 45% !important; margin-right: 2px;">
+												<button data-ng-class="{disabled:item.prePrintedBarcodeflag}"class="btn btn-primary btn-save-box-shadow" title="Save " ng-click="savePrePrintedBarcodes(item);" style="width: 10%; height: 30px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+												<button data-ng-class="{disabled:!item.prePrintedBarcodeflag}"class="btn btn-primary btn-save-box-shadow" title="Edit " ng-click="editRecords(item);" style="width: 10%; height: 30px;"><i class="fa fa-pencil" aria-hidden="true"></i> </button>
+												<button class="btn btn-primary btn-save-box-shadow" title="Barcode " ng-click="ShowPrePrintedBarcode(item);" style="width: 10%; height: 30px;"><i class="fa fa-barcode" aria-hidden="true"></i> </button>
+												<button class="btn btn-primary btn-save-box-shadow" title="Print " ng-click="PrintPrePrintedBarcode(item);" style="width: 10%; height: 30px;"><i class="fa fa-print" aria-hidden="true"></i> </button>
+												</td>
+												<td style="width: 8.77% !important;" class="width8 text-center media-middle">
+												    <div class="col-lg-6 col-md-6 padding-left-right-set4 " ng-show="isPrnPrintFlag">
+														<input type="text" autocomplete="off" class="status" ng-model="item.prnCount"style="width: 70% !important; margin-right: 2px; allow-only-numbers">
+													</div>
+													<div class="col-lg-6 col-md-6 padding-left-right-set4 " ng-show="isPrnPrintFlag==false">
+													</div>
+													<div class="col-lg-2 col-md-2 padding-left-right-set4 ">
+														<a title="Preview" ng-click="vm.model.ShowBarcode(item);">
+															<i class="fa fa-barcode" aria-hidden="true"></i>
+														</a>
+													</div>
+
+													<div class="col-lg-2 col-md-2 padding-left-right-set4 ">
+														<a title="Print" ng-click="vm.model.PrintBarcode(item);">
+															<i class="fa fa-print" aria-hidden="true"></i>
+															</i>
+														</a>
+													</div>
+													<div class="col-lg-2 col-md-2 padding-left-right-set4 ">
+														<a title="Remove" ng-click="ConfirmRemove($index,vm.model.items);">
+															<i class="fa fa-minus" aria-hidden="true"></i>
+															</i>
+														</a>
+													</div>
+													
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+<!--					<div class="row ItemRadioRow" ng-show="vm.model.assetType == 1" style="width: 100%;height: 100%;border:1px solid black;overflow-x:scroll">-->
+					<div class="row ItemRadioRow" ng-show="vm.model.assetType == 1">
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-bordered first-checkBox-padding">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width2 text-center">
+													<input type="checkbox" ng-model="vm.model.selectAllItems" ng-click="vm.model.SelectAllItems();" class="ng-pristine ng-valid ng-empty ng-touched" style="">
+												</th>
+												<th class="width5" title="Item Code">
+													Item Code
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width6" title="Item Name">
+													Item Name
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width7" title="Batch Number">
+													Batch Number
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="Date of expiry">
+													Date of expiry
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width4" title="Unit of Measurement">
+													Unit of Measurement
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width4" title="UOM Clinical Unit">
+													UOM Clinical Unit
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="GRN Date">
+													GRN Date
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width4" title="GRN Number">
+													GRN No.
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width4" title="Vendor">
+													Vendor
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width4" title="Quantity">
+													Quantity
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width6" title="Printed Count">
+													Printed Count
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th> 
+												<th class="width10" title="Manual Pre Printed Barcode" ng-show="isManualBarcodeRequired">
+													Pre Printed Barcode No.
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th style="width: 8% !important;" class=" text-center vertical-middle">Action taken</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body" style="width:100%; height:500px; overflow-y: scroll; background: #fff;">
+									<table class="table table-bordered first-checkBox-padding">
+										<tbody>
+											<tr ng-if="!vm.model.items || !vm.model.items.length">
+												<td colspan="11">
+													<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+												</td>
+											</tr>
+											<tr ng-repeat="item in vm.model.items | filter:searchItem ">
+												<td class="width2 text-center">
+													<input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItem(item);" />
+												</td>
+												<td class="width5" title="{{item.itemCode}}">{{item.itemCode}}</td>
+												<td class="width6" title="{{item.itemName}}">{{item.itemName}}</td>
+												<td class="width7" title="{{item.batchNo}}">{{item.batchNo}}</td>
+												<td class="width5" title="{{item.expiry | date:'MMM-yyyy'}}">{{item.expiry | date:'MMM-yyyy'}}</td>
+												<td class="width4" title="{{item.uomType}}">{{item.uomType}}</td>
+												<td class="width4" title="{{item.uomUnit}}">{{item.uomUnit}}</td>
+												<td class="width5" title="{{item.grnDate}}">{{item.grnDate}}</td>
+												<td class="width4" title="{{item.grnNo}}">{{item.grnNo}}</td>
+												<td class="width4" title="{{item.vendorName}}">{{item.vendorName}}</td>
+												<td class="width4" title="{{item.availableQuantity}}">{{item.availableQuantity}}</td>
+												<td class="width6" title="{{item.printedCount}}">{{!!item.printedCount ? item.printedCount : 0}}</td>
+												<td class="width10" title="Manual Pre Printed Barcode" ng-show="isManualBarcodeRequired">
+												<input data-ng-class="{disabled:item.prePrintedBarcodeflag}" type="text" autocomplete="off" class="status" ng-model="item.prePrintedBarcode" ng-blur="getPreBarcode1(item)"style="width: 45% !important; margin-right: 2px;">
+												<button data-ng-class="{disabled:item.prePrintedBarcodeflag}" class="btn btn-primary btn-save-box-shadow" title="Save " ng-click="savePrePrintedBarcodes(item);" style="width: 10%; height: 30px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+												<button data-ng-class="{disabled:!item.prePrintedBarcodeflag}"class="btn btn-primary btn-save-box-shadow" title="Edit " ng-click="editRecords(item);" style="width: 10%; height: 30px;"><i class="fa fa-pencil" aria-hidden="true"></i> </button>
+												<button class="btn btn-primary btn-save-box-shadow" title="Barcode " ng-click="ShowPrePrintedBarcode(item);" style="width: 10%; height: 30px;"><i class="fa fa-barcode" aria-hidden="true"></i> </button>
+												<button class="btn btn-primary btn-save-box-shadow" title="Print " ng-click="PrintPrePrintedBarcode(item);" style="width: 10%; height: 30px;"><i class="fa fa-print" aria-hidden="true"></i> </button>
+												
+												</td>
+												<td style="width: 8% !important;" class="width8 text-center media-middle">
+												    <div class="col-lg-6 col-md-6 padding-left-right-set4 " ng-show="isPrnPrintFlag">
+														<input type="text" autocomplete="off" class="status" ng-model="item.prnCount" style="width: 70% !important; margin-right: 2px; allow-only-numbers">
+													</div>
+													<div class="col-lg-6 col-md-6 padding-left-right-set4 " ng-show="isPrnPrintFlag==false">
+													</div>
+													<div class="col-lg-2 col-md-2 padding-left-right-set3 ">
+														<a title="Preview" ng-click="vm.model.ShowBarcode(item);">
+															<i class="fa fa-barcode" aria-hidden="true"></i>
+														</a>
+													</div>
+
+													<div class="col-lg-2 col-md-2 padding-left-right-set3 ">
+														<a title="Print" ng-click="vm.model.PrintBarcode(item);">
+															<i class="fa fa-print" aria-hidden="true"></i>
+															</i>
+														</a>
+													</div>
+													<div class="col-lg-2 col-md-2 padding-left-right-set3 ">
+														<a title="Remove" ng-click="ConfirmRemove($index,vm.model.items);">
+															<i class="fa fa-minus" aria-hidden="true"></i>
+															</i>
+														</a>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top10 GRNRadioRow">
+						<div class="col-lg-12 col-md-12 col-sm-12 height500-table-with-scroll">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-bordered first-checkBox-padding">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width2 text-center">
+													<!-- <input type="checkbox" /> -->
+													<!-- change code for resolved HIS-10633 Barcode Printing: All Checkbox not working -->
+													<input type="checkbox" ng-model="vm.model.selectAllItems" ng-click="vm.model.SelectAllItems();" class="ng-pristine ng-valid ng-empty ng-touched" style="">
+												</th>
+												<th class="width5" title="Item Code">
+													Item Code
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width7" title="Item Name">
+													Item Name
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="Batch No.">
+													Batch No.
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="Date of expiry">
+													Date of expiry
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="Unit of Measurement">
+													Unit of Measurement
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="UOM Clinical Unit">
+													UOM Clinical Unit
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="Quantity">
+													Quantity
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="GRN No.">
+													GRN No.
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width7" title="GRN Date">
+													GRN Date
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="Vendor">
+													Vendor
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="Printed Count">
+													Printed Count
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5" title="No. of Print">
+													No. of Print
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width8" title="Manual Pre Printed Barcode" ng-show="isManualBarcodeRequired">
+													Pre Printed Barcode No.
+													<div class="float_right">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width3 text-center vertical-middle">Action taken</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body" style="height:500px; overflow-y: scroll; background: #fff;">
+									<table class="table table-bordered first-checkBox-padding">
+										<tbody>
+											<tr ng-repeat="item in vm.model.GRNItem | filter:searchItem">
+												<td class="width2 text-center">
+													<!-- <input type="checkbox"  /> -->
+													<!-- change code for resolved HIS-10633 Barcode Printing: All Checkbox not working -->
+													<input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItem(item);" />
+												</td>
+												<td class="width5" title="Item Code">{{item.itemCode}}</td>
+												<td class="width7" title="Item Name">{{item.itemName}}</td>
+												<td class="width5" title="Batch No.">{{item.batchNo}}</td>
+												<td class="width5" title="Date of expiry">{{item.expiry | date:'MMM-yyyy'}}</td>
+												<td class="width5" title="UOM">{{item.uomType}}</td>
+												<td class="width5" title="UOM Clinical Unit">{{item.uomUnit}}</td>
+												<td class="width5" title="Quantity">{{item.availableQuantity}}</td>
+												<td class="width5" title="GRN No.">{{item.grnNo}}</td>
+												<td class="width7" title="GRN Date">{{item.grnDate | date:'dd/MM/yyyy'}}</td>
+												<td class="width5" title="{{item.vendor}}">{{item.vendor}}</td>
+												<td class="width5" title="Printed Count">{{!!item.printedCount ? item.printedCount : 0}}</td>
+												<td class="width5" title="No. of Print">
+													<input type="text" autocomplete="off" ng-model="item.prints" class="w-100 text-right" numbers-only>
+												</td>
+												<td class="width8" title="Manual Pre Printed Barcode" ng-show="isManualBarcodeRequired">
+												<input data-ng-class="{disabled:item.prePrintedBarcodeflag}" type="text" autocomplete="off" class="status" ng-model="item.prePrintedBarcode" ng-blur="getPreBarcode1(item)"style="width: 45% !important; margin-right: 2px;">
+												<button data-ng-class="{disabled:item.prePrintedBarcodeflag}" class="btn btn-primary btn-save-box-shadow" title="Save " ng-click="savePrePrintedBarcodes(item);" style="width: 16px; height: 30px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+												<button data-ng-class="{disabled:!item.prePrintedBarcodeflag}"class="btn btn-primary btn-save-box-shadow" title="Edit " ng-click="editRecords(item);" style="width: 16px; height: 30px;"><i class="fa fa-pencil" aria-hidden="true"></i> </button>
+												<button class="btn btn-primary btn-save-box-shadow" title="Barcode " ng-click="ShowPrePrintedBarcode(item);" style="width: 16px; height: 30px;"><i class="fa fa-barcode" aria-hidden="true"></i> </button>
+												<button class="btn btn-primary btn-save-box-shadow" title="Print " ng-click="PrintPrePrintedBarcode(item);" style="width: 16px; height: 30px;"><i class="fa fa-print" aria-hidden="true"></i> </button>
+
+												</td>
+												<td style="width: 2.67% " class="text-center media-middle">
+													<div class="row">
+														<div class="col-md-12">
+															<a title="Preview" ng-click="vm.model.ShowBarcode(item);">
+																<i class="fa fa-barcode" aria-hidden="true"></i>
+															</a>
+															<a title="Print" ng-click="vm.model.PrintBarcode(item);">
+																<i class="fa fa-print" aria-hidden="true"></i>
+																<!-- </i> -->
+															</a>
+															<a title="Remove" ng-click="ConfirmRemoveGrn($index,vm.model.GRNItem);">
+																<i class="fa fa-minus" aria-hidden="true" style="padding-right: 18px;"></i>
+															</a>
+														</div>
+													</div>
+												</td>
+											</tr>
+											<tr ng-if="!vm.model.GRNItem">
+												<td colspan="14">
+													<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- GetGRN Modal Start -->
+<div id="getGRNModal" class="modal fade ng-scope in common-large-popup" role="dialog" data-backdrop="static" >
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Get GRN
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div class="row padding-left-right-set4">
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+									 placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+									 datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+									<label for="code">From Date</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+									 ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"
+									 show-button-bar="false" ng-click="vm.model.OpenToDate()">
+									<label for="description" class="LISDynamicLabel">To Date</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container padding-top10 padding-leftright15">
+							<div class="col-lg-1 col-sm-3 col-md-3 polymer-icon">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-9 col-md-9">
+								<div class="">
+									<input type="text" autocomplete="off" name="vendorName" id="vendorName" class="text-input floating-label" ng-model="vm.model.vendorName" uib-typeahead="vendorNames.detail for vendorNames in vm.model.SearchVendorNames($viewValue)"
+									 typeahead-on-select="vm.model.AddVendorName($item); vm.model.search = '';" ng-class="{dirty: vm.model.vendorName}">
+									<label for="vendorName" class="LISDynamicLabel">Vendor</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-3 col-sm-4 padding-left-right-set padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-9 col-sm-8 col-md-8">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="vm.model.grnNo">
+									<label for="code">GRN</label>
+								</div>
+							</div>
+							<div class="col-lg-1 col-sm-2 col-md-2 padding-left-right-set4">
+								<div class="common-save-button" style="padding-top:  0px;">
+									<a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" ng-click="vm.model.searchNewGRN()" style="width: auto;">
+										<i class="fa fa-search" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="row padding-left-right-10 padding-top10">
+					<div class="col-lg-3 col-md-3 col-sm-4 float_right">
+						<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="search" style="margin-top:0px">
+						<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+				<div class="row padding-left-right-10 margin-top10">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<table class="table table-bordered">
+							<thead>
+								<tr class="">
+									<th class="width1"></th>
+									<th colspan="4" class="font-weight700">Details</th>
+									<th class="width5"> No. of Prints </th>
+									<th class="width3 text-center vertical-middle">Action taken</th>
+								</tr>
+							</thead>
+							<tbody ng-repeat="item in vm.model.NewItemList | orderBy:sortType:sortReverse |  filter:search ">
+							<!-- <tbody ng-repeat="item in vm.model.NewItemList | orderBy:sortType:sortReverse |  filterBy: ['grnNo']:search "> -->
+								<tr class="table-th-bg cursor-pointer" ng-click="item.showList = !item.showList">
+									<td class="width1 text-center">
+										<input type="checkbox" ng-model="item.selectAllRows" ng-click="vm.model.SelectAllGRNItems(item,$index,true)" />
+									</td>
+									<td class="width15">
+										<div class="col-lg-3 col-md-3 font-weight700">
+											GRN No. :
+										</div>
+										<span class="">
+											{{item.grnNo}}
+										</span>
+									</td>
+									<td class="width15">
+										<div class="col-lg-3 col-md-4 font-weight700">
+											GRN Date :
+										</div>
+										<span class="">
+											{{item.grnDate | date:'dd/MM/yyyy'}}
+										</span>
+									</td>
+									<td class="width12">
+										<div class="col-lg-3 col-md-3 font-weight700">
+											Store :
+										</div>
+										<span class="">
+											{{item.store}}
+										</span>
+									</td>
+									<td class="width12">
+										<div class="col-lg-3 col-md-3 font-weight700">
+											Vendor:
+										</div>
+										<span class="">
+											{{item.vendor}}
+										</span>
+									</td>
+									<td class="width5">
+									<div class="">
+										<input type="text" autocomplete="off" ng-model="item.printCount" class="w-100 text-right dirty ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched" numbers-only="" >
+									</div>
+									</td>
+									<td class="width3 text-center vertical-middle">
+										<div class="width100">
+											<a title="Print Barcode" ng-click="getItemsForBarcode(item);">
+												<i class="fa fa-print" aria-hidden="true" style="text-align:centre;"></i>
+											</a>
+										</div>
+									</td>
+								</tr>
+								<tr class="{{item.isItemChecked || item.showList ? '' : 'ng-hide'}}">
+									<td colspan="7">
+										<div class="selectedServicesList">
+											<table class="table table-bordered ">
+												<tbody>
+													<tr>
+														<th class="width1 text-center vertical-middle">
+															<input type="checkbox" ng-model="item.selectAllRows" ng-click="vm.model.SelectAllGRNItems(item,$index,true)" />
+														</th>
+														<th class="width8">Item Code
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8">Item Name
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8">Batch Name
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width8">Date of expiry
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+														<th class="width5">Qty
+															<div class="float_right">
+																<div>
+																	<i class="fa fa-caret-up" aria-hidden="true"></i>
+																</div>
+																<div class="margin-top-8">
+																	<i class="fa fa-caret-down" aria-hidden="true"></i>
+																</div>
+															</div>
+														</th>
+													</tr>
+													<tr ng-repeat="itemDetail in item.items | orderBy:sortType:sortReverse ">
+														<td class="width1 text-center">
+															<input type="checkbox" ng-model="itemDetail.isSelected" ng-click="vm.model.SelectGRNItem(itemDetail , item)" />
+														</td>
+														<td class="width8">{{itemDetail.itemCode}}</td>
+														<td class="width8">{{itemDetail.itemName}}</td>
+														<td class="width8">{{itemDetail.batchNo}}</td>
+														<td class="width8">{{itemDetail.expiry | date:'MMM-yyyy'}}</td>
+														<td class="width5">{{itemDetail.availableQuantity}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" class="btn btn-primary" id="okBtn" ng-click="vm.model.getAllGRNItemDetails();">Ok</button>
+				<button type="button" data-dismiss="modal" id="cancelBtn" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- GetGRN Modal END -->
+
+<!-- GetItemList Modal Start -->
+<div id="getBarcodeItemList" class="modal fade ng-scope in common-large-popup" role="dialog" data-backdrop="static" >
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Get Item List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll">
+				<fieldset class="get-request-row">
+					<div class="row margin-top10">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<select name="assetCategory" id="assetCategory" class="text-input floating-label dirty" data-ng-options="assetCategory.category for assetCategory in vm.model.assetCategories"
+										 ng-model="vm.model.assetCategory" ng-change="vm.model.PopulateProductCategory(vm.model.assetCategory)">
+										</select>
+										<label for="code">Asset Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<select name="productCategory" id="productCategory" class="text-input floating-label dirty" data-ng-options="productCategory.category for productCategory in vm.model.productCategories"
+										 ng-model="vm.model.productCategory">
+										</select>
+										<label for="code">Product Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="itemCode"
+										ng-change="vm.model.PopulateBatchList()">
+										<label for="code">Item Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="itemName"
+										ng-change="vm.model.PopulateBatchList()" ng-trim="false">
+										<label for="code">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="batchNo"
+										ng-change="vm.model.PopulateBatchList()">
+										<label for="code">Batch Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left8px-right-0px padding-top10 his-style">
+							<div class="common-save-button" style="padding-top:  0px;">
+								<a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" style="width: auto;" ng-click="vm.model.PopulateBatchList();">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-top5">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 ">
+									<div class="search">
+										<label class="show-entries">Show 
+										<select ng-init="vm.model.pagination.pageSize='10'" 
+											ng-model="vm.model.pagination.pageSize" 
+											ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+												<option value="10">10</option>
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+										</select> records 
+										</label>
+									</div>
+							</div>
+					</div>
+					<div class="row padding-top10 padding-left-right-set4">
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<div class="table-container-header">
+										<table class="table table-bordered first-checkBox-padding">
+											<thead class="mainServiceTableCommon">
+												<tr>
+													<th class="width2 text-center vertical-middle">
+														<input type="checkbox" ng-model="vm.model.selectAllBatches" ng-click="vm.model.SelectAllBatches();" />
+													</th>
+													<th class="width10" title="Asset Category">
+														Asset Category
+														<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'assetCategory', sortReverse = !sortReverse)">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8" title="Product Category">
+														Product Category
+														<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'productCategory', sortReverse = !sortReverse)">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width7" title="Item Code" >
+														Item Code
+														<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemCode', sortReverse = !sortReverse)">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width15" title="Item Name" >
+														Item Name
+														<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'itemName', sortReverse = !sortReverse)">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8" title="Batch No." >
+														Batch No.
+														<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'batchNo', sortReverse = !sortReverse)">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width7" title="Date of expiry" >
+														Date of expiry
+														<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'expiry', sortReverse = !sortReverse)">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width6" title="Unit of Measurement" ng-hide="vm.model.assetType == 2">
+														Unit of Measurement
+														<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'uomType', sortReverse = !sortReverse)">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width6" title="UOM Clinical Unit" ng-hide="vm.model.assetType == 2">
+														UOM Clinical Unit
+														<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'uomUnit', sortReverse = !sortReverse)">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+													<th class="width8" title="Available Qty">
+														Available Qty
+														<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'availableQuantity', sortReverse = !sortReverse)">
+															<div>
+																<i class="fa fa-caret-up" aria-hidden="true"></i>
+															</div>
+															<div class="margin-top-8">
+																<i class="fa fa-caret-down" aria-hidden="true"></i>
+															</div>
+														</div>
+													</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+								</div>
+								<div class="table-container-body" style="height: 320px; overflow-y: scroll; background: #fff;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr ng-if="vm.model.pagination.data == null || !vm.model.pagination.data.length">
+												<td colspan="10">
+													<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+												</td>
+											</tr>
+											<tr ng-repeat="batch in vm.model.pagination.data">
+												<td class="width2 text-center">
+													<input type="checkbox" ng-model="batch.isSelected" ng-click="vm.model.SelectBatch(batch);" />
+												</td>
+												<td class="width10" title="{{batch.assetCategory}}">{{batch.assetCategory}}</td>
+												<td class="width8" title="{{batch.productCategory}}">{{batch.productCategory}}</td>
+												<td class="width7" title="{{batch.itemCode}}">{{batch.itemCode}}</td>
+												<td class="width15" title="{{batch.itemName}}">{{batch.itemName}}</td>
+												<td class="width8" title="{{batch.batchNo}}">{{batch.batchNo}}</td>
+												<td class="width7" title="{{batch.expiry | date:'MMM-yyyy'}}">{{batch.expiry | date:'MMM-yyyy'}}</td>
+												<td class="width6" title="{{batch.uomType}}"ng-hide="vm.model.assetType == 2">{{batch.uomType}}</td>
+												<td class="width6" title="{{batch.uomUnit}}" ng-hide="vm.model.assetType == 2">{{batch.uomUnit}}</td>
+												<td style="width: 8.3% !important;" title="{{batch.availableQuantity}}">{{batch.availableQuantity}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="row margin-bottom45 center-block">
+									<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+										style="font-size: 14px; cursor: pointer;">
+										<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+											ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+										</li>
+										<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+											ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+										</li>
+										<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+											ng-class="{active:vm.model.pagination.currentPage === page}"><a
+											ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+										</li>
+										<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+											<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+										</li>
+										<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+											<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+										</li>
+									</ul>
+								</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-lg-10 col-sm-10 col-md-10"></div>
+					<div class="col-lg-1 col-sm-1 col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" data-dismiss="modal" ng-click="vm.model.AddItems();">
+						</div>
+					</div>
+					<div class="col-lg-1 col-sm-1 col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Cancel" class="btn btn-primary btn-save-box-shadow" data-dismiss="modal" ng-click="CancelItems();">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- GetItemList Modal END -->
+
+<!-- barcodePreview Modal Start -->
+<div id="barcodePreview" class="modal fade ng-scope in" role="dialog" data-backdrop="static" >
+	<div class="modal-dialog" style="width: 500px !important; margin: 80px auto !important;">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Barcode Preview
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body" align="center">
+				<div id="barcode" style="background: #ffffff; padding: 10px;">
+					<table style="width: 190px !important; font: 14px monospace !important;">
+						<tbody>
+						   
+						     <tr style="font: 16px monospace !important;font-weight: bold !important;position: absolute;left: 0px;top: 80px;">
+								<td colspan="4" style="text-align: center;">
+								  <div class="col-lg-2 col-sm-2 col-md-2">
+									  <span style="-webkit-transform: rotate(90deg);display: inline-block;">{{vm.model.barcode.batchNo}}</span>
+									 </div>
+								</td>
+							 </tr>
+						     <tr style="font: 16px monospace !important; font-weight: bold !important;">
+								<td colspan="4" style="text-align: center;">
+									<span>{{vm.model.barcode.hospitalName}}</span>
+								</td>
+							 </tr>
+							<tr style="font: 18px monospace !important; font-weight: bold !important;">
+								<td colspan="4" style="text-align: center;">
+									<span>{{vm.model.Currency}} {{vm.model.barcode.mrp}}</span>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4" style="text-align: center;padding-left:40px">
+									<barcode type="{{vm.model.barcode.type}}" string="{{vm.model.barcode.code}}" options="vm.model.options" render="img"
+									style="display: flex;flex-direction: column; max-width: 320px;"></barcode>
+								</td>
+							</tr>
+							<tr style="font: 15px monospace !important; font-weight: bold !important;">
+								<td colspan="4" style="text-align: center;">
+									<span>{{vm.model.barcode.code}}</span>
+								</td>
+							</tr>
+							   <tr style="font: 16px monospace !important; font-weight: bold !important;">
+								<td style="text-align: center;">
+									<!-- <span>{{itemCode}}</span>	 -->
+									<span>{{vm.model.barcode.itemName}}</span>
+								</td>
+							   </tr>
+						       <tr style="font: 16px monospace !important;font-weight: bold !important;position: absolute;left: 360px;top: 80px;">
+								<td colspan="4" style="text-align: center; padding-left: 25px;">
+								 <div class="col-lg-2 col-sm-2 col-md-2">
+									  <span style="-webkit-transform: rotate(90deg);display: inline-block;">{{vm.model.barcode.expiry}}</span>
+									 </div>
+							    </td>
+							   </tr>
+						    
+							<!-- <tr style="font: 24px monospace !important; font-weight: bold !important;">
+								<td style="text-align: right; padding-left: 10px;">
+									<span>{{salePrice}}</span>
+								</td>
+								<td style="text-align: right; padding-left: 10px;">
+									<span>{{vm.model.Currency}}{{mrp}}</span>
+								</td>
+							</tr> -->
+							<!-- <tr style="font: 24px monospace !important; font-weight: bold !important;">
+								<td style="text-align: left; padding-right: 10px;">
+									<span>{{expiryDate | date:'MMM-yyyy'}}</span>
+								</td>
+								<td style="text-align: right; padding-left: 10px;">
+									<span>{{grnNo}}</span>
+								</td>
+							</tr> -->
+							<!-- <tr style="font: 24px monospace !important; font-weight: bold !important;">
+								<td style="text-align: left; padding-right: 10px;">
+									<span>{{vendorName}}</span>
+								</td>
+								<td style="text-align: right; padding-left: 10px;">
+									<span>{{vendorCode}}</span>
+								</td>
+							</tr> -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+<!-- 				<input type="button" value="Print" class="btn btn-primary" ng-click="vm.model.PrintBarcode(vm.model.itemsForPrintBarcode);" data-dismiss="modal"> -->
+				<input type="button" value="Print" class="btn btn-primary" id="printBtn" ng-click="vm.model.PrintBarcodeOnBarcodeCilck();" data-dismiss="modal">
+				<input type="button" value="Close" class="btn btn-primary" id="cancelBtn" data-dismiss="modal">
+			</div>
+		</div>
+	</div>
+</div>
+<div id="sampleBarCode" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="width: 25% !important;margin: 200px 0 0 510px !important;"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Confirmation
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div style = "padding-top: 10px; padding-left: 20px;">
+					<p>Do you want to print selected {{vm.model.barcodeList.length}} items.</p>
+				</div>
+<!--				<div id="barcodePrintingId" style="background:#fff;padding:10px;">-->
+<!--						<div class="row">-->
+<!--						&lt;!&ndash;  &ndash;&gt;-->
+<!--							 <div class="col-lg-4 col-md-4 col-sm-4"  ng-repeat="barcode in vm.model.barcodeList track by $index">-->
+<!--								<table style="font: 14px monospace !important;">-->
+<!--									<tbody>&lt;!&ndash; font-weight: bold !important; &ndash;&gt;-->
+<!--									<tr style="font: 14px monospace !important;">-->
+<!--											<td colspan="2">-->
+<!--												<span>Hospital : </span><span>{{barcode.hospital}}</span>-->
+<!--											</td>-->
+<!--										</tr>-->
+<!--										<tr style="font: 14px monospace !important;">-->
+<!--											<td colspan="2">-->
+<!--												<span>Barcode : </span><span>{{barcode.code}}</span>-->
+<!--											</td>-->
+<!--										</tr>-->
+<!--										<tr style="font: 14px monospace !important;">-->
+<!--											<td colspan="2">-->
+<!--												<span class="ng-binding">Batch: </span>-->
+<!--												<span class="ng-binding">{{barcode.batchCode}}</span>-->
+<!--											</td>-->
+<!--										</tr>-->
+<!--										<tr style="font: 14px monospace !important;">-->
+<!--											<td>-->
+<!--												<span class="ng-binding">Item :</span>-->
+<!--												<span class="ng-binding">{{barcode.itemCode}}</span>-->
+<!--											</td>-->
+<!--										</tr>-->
+<!--										<tr style="font: 14px monospace !important;">-->
+<!--											<td>-->
+<!--												<span class="ng-binding">Date :</span>-->
+<!--												<span class="ng-binding">{{barcode.expiry}}</span>-->
+<!--											</td>-->
+<!--										</tr>-->
+<!--										<tr style="font: 14px monospace !important;">-->
+<!--											<td>-->
+<!--												<span class="ng-binding">MRP:</span>-->
+<!--												<span class="ng-binding"> {{barcode.mrp}}</span>-->
+<!--											</td>-->
+<!--										</tr>-->
+<!--										<tr style="font: 10px monospace !important; ">-->
+<!--											<td colspan="2">-->
+<!--												<barcode type="{{barcode.type}}" string="{{barcode.code}}" options="options" render="img" heigh="5px"></barcode>-->
+<!--											</td>-->
+<!--										</tr>-->
+<!--									</tbody>-->
+<!--								</table>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+					<!-- <div class="row padding-top10 text-left padding-left-right-10">
+						<div class="col-lg-4 col-md-4 col-sm-4">
+							<div class="">
+								<label>Sample No. : </label><span></span>
+							</div>
+							<div class="">
+								<label>UHID : </label><span></span>
+							</div>
+							<div class="">
+								<label>Name   : </label><span></span>
+							</div>
+							<div class="">
+								<label>Date : </label><span></span>
+							</div>
+							<div class="">
+								<barcode type="" string="" options="options" render="img" class="ng-isolate-scope"><img></barcode>
+							</div>
+						</div>
+					</div> -->
+				</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" id="updateBtn" class="btn btn-primary" ng-click="getMultipleItemsForBarcode(vm.model.barcodeList);">
+					<i style="font-size:16px;align:right" class="fa">&#xf02f;</i>
+				</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- barcodePreview Modal END -->
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".selectedPageName").text("Barcode Printing");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$(".selectedServicesList").hide();
+	});
+	$(".table-th-bg").click(function () {
+		/* alert(); */
+		$(this).next().find(".selectedServicesList").toggle();
+	});
+	$(".ItemRadioRow").show();
+	$(".GRNRadioRow").hide();
+	$(".ItemRadiobtn").click(function () {
+		$(".ItemRadioRow").show();
+		$(".GRNRadioRow").hide();
+	});
+	$(".GRNRadiobtn").click(function () {
+		$(".ItemRadioRow").hide();
+		$(".GRNRadioRow").show();
+	});
+</script>

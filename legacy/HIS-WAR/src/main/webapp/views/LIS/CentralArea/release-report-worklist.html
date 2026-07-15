@@ -1,0 +1,508 @@
+    
+        <!-- Page Content -->
+        <div id="page-content-wrapper" class="">
+            <div class="container-fluid his-style">
+            	<div class="row padding-left-right-set4 margin-top4">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 padding-top10">
+							<div class="row input-container padding-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o ddp-padding-top padding-top2" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label ng-touched dirty"
+											ng-model="assignUnit" name="unitId" required convert-to-number ng-change="searchLabReportRelease();">
+											<option ng-repeat="unitObj in unitMasterList" value="{{unitObj.unitId}}">{{unitObj.unitName}}</option>
+										</select>
+										<label for="" class="LISDynamicLabel">Unit</label>
+									</div>
+								</div>			
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-6 padding-top10">
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											name="datepicker" id="datepicker"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="fromDate"
+											model-view-value="true" is-open="popup.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="open()" required="" style="">
+										<label for="code" class="">From Date</label>
+									</div>
+								</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											name="datepicker" id="datepicker"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY"  ng-model="toDate"
+											model-view-value="true" is-open="popup1.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="open1();" required="" style="">
+										<label for="code" class="">To Date</label>
+									</div>
+								</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off"
+												 class="text-input floating-label" tabindex="3"
+												 ng-model="patientId"
+												 placeholder="Search"
+												 uib-typeahead=" patient.patientWithUhid for patient in getPatientSearch($viewValue)"
+												 typeahead-editable="false"
+												 typeahead-on-select="selectPatient($item, $model, $label);"
+												 name="patientName"  ng-blur="checkPatient();"/>
+										<label for="description" class="LISDynamicLabel">Patient Name</label>
+								  	</div>
+								</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="code"  ng-model="uhid"  id="" class="text-input floating-label">
+											<label for="description" class="LISDynamicLabel">UHID</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<label for="" class="LISDynamicLabel">Visit Type</label>
+												<div class="custom-drop-down-btn"
+													ng-dropdown-multiselect="" options="visityTypeList"
+													selected-model="selectedVisitType">
+											 	 </div>
+											</div>
+										</div>
+									</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-6 padding-left-right-set4 padding-top10">
+							<div class="row input-container padding-top10">
+								<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-10">
+									<div class="">
+										<select class="text-input floating-label" ng-model="reportType">
+											<option selected value>Select Report Type</option>
+											<option value="1">Normal</option>
+											<option value="2">Abnormal</option>
+											<option value="3">Critical</option>
+										</select>
+										<label for="description" class="LISDynamicLabel">Report Types</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					
+				</div>
+				
+				<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 padding-top10">
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-dot-circle-o ddp-padding-top padding-top2" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<select class="text-input floating-label ng-touched dirty"
+										ng-model="labSortingId" name="labSortingId" required convert-to-number>
+										<option value="null">Select Lab Sorting Criteria</option>
+										<option ng-repeat="info in labSortingList" value="{{info.id}}">{{info.displayName}}</option>
+									</select>
+									<label for="" class="LISDynamicLabel">Default Sorting Parameter</label>
+								</div>
+							</div>			
+						</div>
+					</div>
+					<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0 padding-top10">
+                        <div class="row input-container padding-top12">
+                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                <i class="fa fa-dot-circle-o ddp-padding-top padding-top2" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-11 col-md-11">
+                                <div class="">
+                                    <input type="checkbox" ng-model="isOnHoldParameter"  ng-true-value=true  ng-false-value=false>
+                                    <label for="" class="LISDynamicLabel" style="">Is On Hold Parameter</label>
+                                </div>
+                            </div>            
+                        </div>
+                    </div> -->
+					<div  ng-show="isBillManipulationAllowed" class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_left padding-top10 radio-container"  style="border: 1px solid #ccc;border-radius: 5px;margin-top:15px;width:180px;text-align:center">
+					<span >
+						<input id="all_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="otherRegistrationType trigger ng-pristine ng-untouched ng-valid ng-not-empty" value="1" ng-change="filterByDummyServices(isDummyService)">
+						<label for="all_Radio">All</label>
+					</span>
+						<span >
+						<input id="real_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="employeeRegRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="2" ng-change="filterByDummyServices(isDummyService)">
+						<label for="real_Radio">Real</label>
+					</span>
+						<span >
+						<input id="dummy_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="dependentRedRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="3" ng-change="filterByDummyServices(isDummyService)">
+						<label for="dummy_Radio">Dummy</label>
+					</span>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-3 text-right padding-top15 text-width-auto pull-right padding-left-right-set1">
+							<div class="common-save-button" style="padding-top:0px;"> 
+								 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" id="searchBtn" ng-click="searchLabReportRelease();">
+								 	<i class="fa fa-search" aria-hidden="true"></i> 
+								 </a> 
+							</div> 
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 text-right padding-top15 text-width-auto pull-right padding-left-right-set1">
+						<div class="common-save-button" style="padding-top:0px;"> 
+								 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" ng-click="clearFields();" title="Clear"> 
+								 	<i class="fa fa-eraser"   aria-hidden="true"></i> 
+								 </a> 
+					      </div> 
+		           	   </div>
+				</div>
+            	<div class="row padding-left-right-set4 margin-top4">
+	            	<div class="col-md-5">
+	            		<div class="row">
+							<div class="col-lg-4 col-md-4 padding-top8">
+								<div class="search">
+									<label class="show-entries">Show <select
+										name="DataTables_Table_0_length"
+										aria-controls="DataTables_Table_0"
+										ng-init="noOfRecordsPerPage='50'" ng-model="noOfRecordsPerPage"
+										ng-change="setNoOfRecords();" class="search-popUp-ddl">
+											<!-- <option value="10">10</option> -->
+											<option value="50">50</option>
+											<option value="75">75</option>
+											<option value="100">100</option>
+									</select> entries
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+							<!-- <input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeyword"> -->
+<!--					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div>
+					        <button href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="showPopupRelease();" ng-disabled="saveBtn">
+					        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true" ></i>
+					      </button>
+					    </div>
+					</div>-->
+					<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto pull-right">
+						<div class="">
+							<a href="">
+								<input type="button" value="Report Release" id="searchBtn" class="btn btn-primary btn-save-box-shadow" ng-click="generateUrlForReportRelease();" ng-disabled="reportReleaseBtn">
+							</a>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+						<input type="text" autocomplete="off" ng-model="searchKeyword" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-change="typeSearchLabReportRelease(searchKeyword)">
+		     			<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+            	</div>
+            	
+            	<div class="row padding-top10 padding-left-right-set4">
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll380">
+					  <table id="main-table" class="main-table width180">
+					    <thead>
+					      <tr class="">
+							   <!--  <th class="width5 fixed" title="Group Release">-->
+							   <!--  <input type="checkbox" ng-model="selectedAll" ng-click="checkAll();" ng-disabled="saveBtn || isDisableGroupRelease"/> -->
+							   </th>
+								<th class="width4" title="Visit Type">Visit Type</th>
+								<th class="width5" title="Order No." style="z-index: 1023;">Order No.</th>
+								<th class="width5" title="Sample No." style="z-index: 1023;">Sample No.</th>
+								<th class="width4" title="UHID">UHID</th>
+								<th class="width4" title="Bill No.">Bill No.</th>
+								<th class="width8" title="Patient Details">Patient Details</th>
+								<th class="width8" title="Test Name">Test Name</th>
+								<th class="width4" title="Test Code">Test Code</th>
+								<th class="width4" title="Profile Code">Profile Code</th>
+								<!-- <th class="width4" title="Priority">Priority</th> -->
+								<th class="width8" title="Doctor Details">Doctor Details</th>
+								<th class="width4" title="Sample">Sample</th>
+							<!-- 	<th class="width4" title="Priority">Priority</th> -->
+								<th class="width4" title="Report Type">Report Type</th>
+								<th class="width4" title="Ward">Ward</th>
+								<th class="width4" title="Bed No.">Bed No.</th>
+								<th class="width6">Payment Entitlement</th>
+								<th class="width6" title="Order Date and Time">Order Date and Time</th>
+								<th class="width7" title="Sample Date and Time">Sample Date and Time</th>
+								<th class="width4 last-col-fixed text-center">
+								   Action
+								</th>
+							</tr>
+					    </thead>
+					    <tbody>
+					      <tr ng-repeat="resultEntryValidation in resultEntryworklistForValidation|orderBy:column:reverse track by $index">
+									<!--<td class="fixed"  title="">
+										 <div ng-if="resultEntryValidation.reportType==1">
+										  	
+										    <input type="checkbox" ng-model="resultEntryValidation.sampleStatusId" ng-true-value="{{reportReleased}}" ng-false-value="0" 
+										    data-ng-class="{disabled:!resultEntryValidation.selectOnlyOneVisitType}"  
+										    ng-checked="resultEntryValidation.sampleStatusId == reportReleased" 
+										    ng-click="selectGroupRelease();checkAdmissionAndEncounterAvailableForPatient(resultEntryValidation)" ng-disabled="saveBtn"/>
+										 </div>{{resultEntryValidation.reportType==1?"":"-"}}
+									</td>-->
+									<td class=""  title="{{resultEntryValidation.visitType}}">{{resultEntryValidation.visitType}}</td>
+									<td class=""  title="{{resultEntryValidation.orderNo}}">{{resultEntryValidation.orderNo}}</td>
+									<td class=""  title="{{resultEntryValidation.sampleNo}}">
+									  <div class="col-md-10 padding-left-right-set0 long-text-overflow">{{resultEntryValidation.sampleNo}}</div>
+											<div class="col-md-2 padding-left-right-set0" ng-if="resultEntryValidation.sampleRecollectFlag=='Y'||resultEntryValidation.retestCount>0">
+												<i class="fa fa-flask" aria-hidden="true"></i>
+											</div>
+									</td>
+									<td class=""  title="{{resultEntryValidation.uhid}}">{{resultEntryValidation.uhid}}</td>
+									<td class=""  title="{{resultEntryValidation.billNumber}}">{{resultEntryValidation.billNumber}}</td>
+									 <td class=""  title="{{resultEntryValidation.patientDetails}}">
+									      <div>{{resultEntryValidation.patientDetails}}</div>
+									 </td>
+									    <td class=""  title="{{resultEntryValidation.testDesc}}">{{resultEntryValidation.testDesc}}</td>
+										<td class=""  title="{{resultEntryValidation.testCode}}">{{resultEntryValidation.testCode}}</td>
+										<td class=""  title="{{resultEntryValidation.panelCode}}">{{(resultEntryValidation.panelCode==null)?"-":resultEntryValidation.panelCode}}</td>
+										<!-- <td class=""  title="{{resultEntryValidation.priorityName}}">
+										     <div>{{resultEntryValidation.priorityName}}</div>
+										</td> -->
+										<td class=""  title="{{resultEntryValidation.doctorDetails}}">
+											<div>{{resultEntryValidation.doctorDetails}}</div>
+										</td>
+										<td class=""  title="{{resultEntryValidation.sampleType}}">{{resultEntryValidation.sampleType}}</td>
+									<!-- 	<td class="" style="color: {{resultEntryValidation.colorCode}}" title="{{resultEntryValidation.priorityName}}">{{resultEntryValidation.priorityName}}</td> -->
+										<td class=""  title="">{{resultEntryValidation.reportType|getReportType}}</td>
+										<td class=""  title="{{resultEntryValidation.wardCode}}">{{(resultEntryValidation.wardCode==null)?"-":resultEntryValidation.wardCode}}</td>
+										<td class=""  title="{{resultEntryValidation.bedNumber}}">{{(resultEntryValidation.bedNumber==null)?"-":resultEntryValidation.bedNumber}}</td>
+										<!-- <td title="{{resultEntryValidation.entitlementDesc}}">{{resultEntryValidation.entitlementDesc}}</td> -->
+										<td>
+											<div ng-if ="resultEntryValidation.paymentEntitlementId == 1">Self</div>
+											<div ng-if ="resultEntryValidation.paymentEntitlementId == 2">Insurance</div>
+											<div ng-if ="resultEntryValidation.paymentEntitlementId == 3">Company</div>
+										</td>
+										<td class=""  title="{{getDateByFormat(resultEntryValidation.orderDateTimeString,true)}}">{{getDateByFormat(resultEntryValidation.orderDateTimeString,true)}}</td>
+										<td class=""  title="{{getDateByFormat(resultEntryValidation.sampleCollectionDatetimeString,true)}}">{{getDateByFormat(resultEntryValidation.sampleCollectionDatetimeString,true)}}</td>
+										<!-- <td class="text-center last-col-fixed">
+										 <div>
+										      	<input type="checkbox"  checklist-model="selectedRepReleaseEntryList" checklist-value="resultEntryValidation" ng-click="selectReport(selectedRepReleaseEntryList);" ng-disabled="reportReleaseBtn">
+										 </div>
+										</td> -->
+										<td class="text-center last-col-fixed">
+										 <div>
+												<a title="provisional Print" style="margin-right: 10px"   ng-click="print(resultEntryValidation.labSampleDtlsId)"><i class="fa fa-print" aria-hidden="true"></i></a>
+										      	<input type="checkbox"   ng-model = "resultEntryValidation.statusFlag"   data-ng-class="{disabled:!resultEntryValidation.selectOnlyOneVisitType}"  ng-true-value = true ng-false-value = false 
+										      	ng-click = "selectReport(resultEntryValidation,$index);checkAdmissionAndEncounterAvailableForPatient(resultEntryValidation)" ng-disabled="reportReleaseBtn">
+										 </div>
+										</td>
+									</tr>
+					    </tbody>
+					    
+					  </table>
+					</div>
+				</div>
+            	
+            	<!-- <div class="row padding-left-right-set4 table-container padding-top8">
+					<div class="table-container">
+						<div class="table-container-header">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr class="">
+									    <th class="width2" title="Group Release">Group Release<input type="checkbox" ng-model="selectedAll" ng-click="checkAll();"/></th>
+										<th class="width6" title="Visit Type">Visit Type</th>
+										<th class="width6" title="Sample No.">Sample No.</th>
+										<th class="width6" title="UHID">UHID</th>
+										<th class="width6" title="Patient Details">Patient Details</th>
+										<th class="width6" title="Test Name">Test Name</th>
+										<th class="width6" title="Test Code">Test Code</th>
+										<th class="width6" title="Profile Code">Profile Code</th>
+										<th class="width6" title="Priority">Priority</th>
+										<th class="width6" title="Doctor Details">Doctor Details</th>
+										<th class="width6" title="Sample">Sample</th>
+										<th class="width6" title="Priority">Priority</th>
+										<th class="width6" title="Report Type">Report Type</th>
+										<th class="width6" title="Ward No.">Ward No.</th>
+										<th class="width6" title="Bed No.">Bed No.</th>
+										<th class="width6" title="Order Date">Order Date</th>
+										<th class="width6" title="Sample Date">Sample Date</th>
+										<th class="width6">
+										   Select report
+										</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<table class="table table-bordered">
+							<tr ng-if="(resultEntryworklistForValidation|filter:searchKeyword)==''">
+								<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+							</tr>
+						</table>
+						<div class="table-container-body fix-height-scroll280" style="overflow: overlay;"> fix-height-scroll230
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="resultEntryValidation in resultEntryworklistForValidation|orderBy:column:reverse|filter:searchKeyword track by $index">
+									<td class="width2" style="color: {{resultEntryValidation.colorCode}}" title="">
+										 <div ng-if="resultEntryValidation.reportType==1">
+										  	<a>Release</a>
+										    <input type="checkbox" ng-model="resultEntryValidation.sampleStatusId" ng-true-value="{{reportReleased}}" ng-false-value="0" ng-checked="resultEntryValidation.sampleStatusId == reportReleased"/>|
+										 </div>
+									</td>
+									<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="">
+									  <div class="col-md-10 padding-left-right-set0">{{resultEntryValidation.sampleNo}}</div>
+											<div class="col-md-2 padding-left-right-set0" ng-if="resultEntryValidation.sampleRecollectFlag=='Y'||resultEntryValidation.retestCount>0">
+												<i class="fa fa-flask" aria-hidden="true"></i>
+											</div>
+									</td>
+									<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="">{{resultEntryValidation.uhid}}</td>
+									 <td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="">
+									      <div>{{resultEntryValidation.patientDetails}}</div>
+									 </td>
+									    <td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="">{{resultEntryValidation.testDesc}}</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="">{{resultEntryValidation.testCode}}</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="">{{(resultEntryValidation.panelCode==null)?"-":resultEntryValidation.panelCode}}</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="">
+										     <div>{{resultEntryValidation.priorityName}}</div>
+										</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="">
+											<div>{{resultEntryValidation.doctorDetails}}</div>
+										</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="{{resultEntryValidation.sampleType}}">{{resultEntryValidation.sampleType}}</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="{{resultEntryValidation.priorityName}}">{{resultEntryValidation.priorityName}}</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="{{resultEntryValidation.reportType|getReportType}}">{{resultEntryValidation.reportType|getReportType}}</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="{{(resultEntryValidation.wardCode==null)?'-':resultEntryValidation.wardCode}}">{{(resultEntryValidation.wardCode==null)?"-":resultEntryValidation.wardCode}}</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="{{(resultEntryValidation.bedNumber==null)?'-':resultEntryValidation.bedNumber}}">{{(resultEntryValidation.bedNumber==null)?"-":resultEntryValidation.bedNumber}}</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="{{resultEntryValidation.orderDateTime| date : 'dd/MM/y h:mm a'}}">{{resultEntryValidation.orderDateTime| date : "dd/MM/y h:mm a"}}</td>
+										<td class="width6" style="color: {{resultEntryValidation.colorCode}}" title="{{resultEntryValidation.sampleCollectionDatetime|date : 'dd/MM/y h:mm a'}}">{{resultEntryValidation.sampleCollectionDatetime|date : "dd/MM/y h:mm a"}}</td>
+										<td class="width6" class="text-center">
+										 <div>
+										      	<input type="checkbox"  checklist-model="selectedRepReleaseEntryList" checklist-value="resultEntryValidation">
+										 </div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="table-container-footer">
+							<table
+								class="table table-striped table-hover table-condensed table-bordered">
+								<tfoot>
+									<tr>
+										<td></td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div> -->
+            	
+            	<div class="row padding-left-right-set4 margin-top4" id="tableOne">
+					<div class="col-md-12">
+						<!-- table one for report entry -->
+						<table class="table table-bordered">
+							
+							
+						</table>
+						<!--// table one for report entry -->
+					</div>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				</div>
+            </div>
+        </div>
+        <!--// Page Content -->
+    
+	<!-- CONFIRM POPUP FOR ALL -->
+<div id="bulk_release" class="modal fade ng-scope in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="width: 560px !important;margin: 80px auto !important;"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<span>Are you sure you want to Save?</span>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="saveBulkRelease();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="No" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Yes" data-dismiss="modal" ng-click="saveBulkRelease();">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Common Allocation Confirm Popup -->
+    <div ng-include="'./views/common/worklist-details.html'"></div> 
+    <div ng-include="'./views/common/help-value.html'"></div> 
+<script src="resources/assets/js/common/page-height.js"></script>    
+<script type="text/javascript">
+$('.clockpicker').clockpicker();
+
+$( document ).ready(function() {
+	$(".selectedPageName").text("Report Release Work List");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+
+});
+</script>

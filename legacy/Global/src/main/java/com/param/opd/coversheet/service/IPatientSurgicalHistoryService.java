@@ -1,0 +1,41 @@
+package com.param.opd.coversheet.service;
+
+import in.param.exception.ApplicationException;
+
+import org.springframework.transaction.annotation.Transactional;
+
+import com.param.global.common.Response;
+import com.param.opd.coversheet.dto.PatientFamilyHistoryDto;
+import com.param.opd.coversheet.dto.PatientPersonalHistoryDetailsDto;
+import com.param.opd.coversheet.dto.PatientSurgicalHistoryDto;
+import com.param.opd.coversheet.model.PatientFamilyHistory;
+import com.param.opd.coversheet.model.PatientSurgicalHistory;
+@Transactional
+@SuppressWarnings("rawtypes")
+public interface IPatientSurgicalHistoryService {
+
+	public Response savePatientSurgicalHistory(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+
+	public Response getOldListOfPatientSurgicalHistory(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+	
+	public Response getCurrentListOfPatientSurgicalHistory(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+	
+	public Response updatePatientSurgicalHistory(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+	
+	public Response updateSaveNurseReviewedFlag(PatientSurgicalHistory patientSurgicalHistory)throws ApplicationException;
+	
+	public Response updateStatusEnterInError(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+
+	public Response getCurrentPatientSurgicalHistoryForCoversheet(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+
+	public Response getPatientSurgicalHistoryForBookView(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+
+	public Response getCompletedProcedureListForSurgicalHistory(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+
+	public Response updateStatusRemoveSurgicalHistory(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+
+	public Response getPatientSurgicalHistory(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+
+	public Response getMostUsedSurgicalHistory(PatientSurgicalHistoryDto patientSurgicalHistoryDto)throws ApplicationException;
+
+}

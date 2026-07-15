@@ -1,0 +1,366 @@
+package com.param.entity.model.procurement;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity(name = "NewWorkOrderCompletionDetails")
+@Table(name = "t_new_work_order_completion_details", schema = "procurement")
+@SequenceGenerator(name = "t_new_work_order_completion_details_seq", sequenceName = "procurement.t_new_work_order_completion_details_seq", allocationSize = 1)
+public class newWorkOrderCompletionDetails {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "t_new_work_order_completion_details_seq")
+	@Column(name = "work_order_completion_details_id")
+	private Integer workOrderCompletionDetailsId;
+	
+	@Column(name = "work_order_completion_id")
+	private Integer workOrderCompletionId;
+	
+	@Column(name = "workorder_request_approval_details_id")
+	private Integer workorderRequestApprovalDetialsId;
+	
+	@Column(name = "workorder_request_details_id")
+	private Integer workorderRequestDetialsId;
+	
+	@Column(name = "workorder_request_id")
+	private Integer workorderRequestId;
+	
+	@Column(name = "item_id")
+	private Integer itemId;
+	
+	@Column(name = "store_id")
+	private Integer storeId;
+	
+	@Column(name = "item_name")
+	private String itemName;
+	
+	@Column(name = "item_quantity")
+	private Integer itemQuantity;
+	
+	@Column(name = "item_rate")
+	private Double itemRate;
+	
+	@Column(name = "item_mrp")
+	private Double itemMrp;
+	
+	@Column(name = "item_disc_percentage")
+	private Double itemDiscPercentage;
+	
+	@Column(name = "item_disc_amount")
+	private Double itemDiscAmount;
+	
+	@Column(name = "item_tax_id")
+	private Integer itemTaxId;
+	
+	@Column(name = "item_tax")
+	private String itemTax;
+	
+	@Column(name = "item_tax_amount")
+	private Double itemTaxAmount;
+	
+	@Column(name = "item_net_amount")
+	private Double itemNetAmount;
+	
+	@Column(name = "item_remark")
+	private String itemRemark;
+	
+	
+	
+	@Column(name = "org_id")
+	private Integer orgId;
+	
+	@Column(name = "unit_id")
+	private Integer unitId;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+	
+	@Column(name="created_by")
+	private Integer createdBy;
+	
+	@Column(name="updated_by")
+	private Integer updatedBy;
+	
+	@Column(name="status")
+	private String status;
+	
+	@Column(name="approved_qty")
+	private Integer approvedQty;
+	
+	@Column(name="rejected_qty")
+	private Integer rejectedQty;
+	
+	@Column(name="approval_detail_remark")
+	private String approvalDetailRemark;
+	
+	@Column(name="is_rejected_qty")
+	private Boolean isRejectedQty;
+
+	
+	@Column(name="is_selected")
+	private Boolean isSelected;
+	
+	@Column(name="work_order_completion")
+	private boolean workOrderCompletion;
+	
+	public Integer getWorkorderRequestApprovalDetialsId() {
+		return workorderRequestApprovalDetialsId;
+	}
+
+	public void setWorkorderRequestApprovalDetialsId(Integer workorderRequestApprovalDetialsId) {
+		this.workorderRequestApprovalDetialsId = workorderRequestApprovalDetialsId;
+	}
+
+	public Integer getWorkorderRequestDetialsId() {
+		return workorderRequestDetialsId;
+	}
+
+	public void setWorkorderRequestDetialsId(Integer workorderRequestDetialsId) {
+		this.workorderRequestDetialsId = workorderRequestDetialsId;
+	}
+
+	public Integer getWorkorderRequestId() {
+		return workorderRequestId;
+	}
+
+	public void setWorkorderRequestId(Integer workorderRequestId) {
+		this.workorderRequestId = workorderRequestId;
+	}
+
+	public Integer getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(Integer itemId) {
+		this.itemId = itemId;
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public Integer getItemQuantity() {
+		return itemQuantity;
+	}
+
+	public void setItemQuantity(Integer itemQuantity) {
+		this.itemQuantity = itemQuantity;
+	}
+
+	public Double getItemRate() {
+		return itemRate;
+	}
+
+	public void setItemRate(Double itemRate) {
+		this.itemRate = itemRate;
+	}
+
+	public Double getItemMrp() {
+		return itemMrp;
+	}
+
+	public void setItemMrp(Double itemMrp) {
+		this.itemMrp = itemMrp;
+	}
+
+	public Double getItemDiscPercentage() {
+		return itemDiscPercentage;
+	}
+
+	public void setItemDiscPercentage(Double itemDiscPercentage) {
+		this.itemDiscPercentage = itemDiscPercentage;
+	}
+
+	public Double getItemDiscAmount() {
+		return itemDiscAmount;
+	}
+
+	public void setItemDiscAmount(Double itemDiscAmount) {
+		this.itemDiscAmount = itemDiscAmount;
+	}
+
+	public Integer getItemTaxId() {
+		return itemTaxId;
+	}
+
+	public void setItemTaxId(Integer itemTaxId) {
+		this.itemTaxId = itemTaxId;
+	}
+
+	public String getItemTax() {
+		return itemTax;
+	}
+
+	public void setItemTax(String itemTax) {
+		this.itemTax = itemTax;
+	}
+
+	public Double getItemTaxAmount() {
+		return itemTaxAmount;
+	}
+
+	public void setItemTaxAmount(Double itemTaxAmount) {
+		this.itemTaxAmount = itemTaxAmount;
+	}
+
+	public Double getItemNetAmount() {
+		return itemNetAmount;
+	}
+
+	public void setItemNetAmount(Double itemNetAmount) {
+		this.itemNetAmount = itemNetAmount;
+	}
+
+	public String getItemRemark() {
+		return itemRemark;
+	}
+
+	public void setItemRemark(String itemRemark) {
+		this.itemRemark = itemRemark;
+	}
+
+	public Integer getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
+
+	public Integer getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(Integer unitId) {
+		this.unitId = unitId;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public Integer getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Integer getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(Integer updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Integer getApprovedQty() {
+		return approvedQty;
+	}
+
+	public void setApprovedQty(Integer approvedQty) {
+		this.approvedQty = approvedQty;
+	}
+
+	public Integer getRejectedQty() {
+		return rejectedQty;
+	}
+
+	public void setRejectedQty(Integer rejectedQty) {
+		this.rejectedQty = rejectedQty;
+	}
+
+	public String getApprovalDetailRemark() {
+		return approvalDetailRemark;
+	}
+
+	public void setApprovalDetailRemark(String approvalDetailRemark) {
+		this.approvalDetailRemark = approvalDetailRemark;
+	}
+
+	public Boolean getIsRejectedQty() {
+		return isRejectedQty;
+	}
+
+	public void setIsRejectedQty(Boolean isRejectedQty) {
+		this.isRejectedQty = isRejectedQty;
+	}
+
+	public Boolean getIsSelected() {
+		return isSelected;
+	}
+
+	public void setIsSelected(Boolean isSelected) {
+		this.isSelected = isSelected;
+	}
+
+	public boolean getWorkOrderCompletion() {
+		return workOrderCompletion;
+	}
+
+	public void setWorkOrderCompletion(boolean workOrderCompletion) {
+		this.workOrderCompletion = workOrderCompletion;
+	}
+
+	public Integer getWorkOrderCompletionDetailsId() {
+		return workOrderCompletionDetailsId;
+	}
+
+	public void setWorkOrderCompletionDetailsId(Integer workOrderCompletionDetailsId) {
+		this.workOrderCompletionDetailsId = workOrderCompletionDetailsId;
+	}
+
+	public Integer getWorkOrderCompletionId() {
+		return workOrderCompletionId;
+	}
+
+	public void setWorkOrderCompletionId(Integer workOrderCompletionId) {
+		this.workOrderCompletionId = workOrderCompletionId;
+	}
+	
+	
+	
+}

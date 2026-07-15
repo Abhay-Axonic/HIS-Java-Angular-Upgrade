@@ -1,0 +1,773 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset class="" style="margin-top:-5px !important">
+		
+			<div ng-include="'./views/common/patient-search-billing.html'"></div>
+			<div ng-include="'./views/common/patient-demography.html'"></div>
+
+			<div class="row searched-patient-details-row">
+				<!-- 	<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+						<span class="profile_pic"> 	
+							<img alt="" src="resources/assets/images/tempImages/m.jpg" class="img-circle" style="width:30px">
+						</span>
+						<span class="margin-left10">John Deo 26/M </span>
+						<span class="margin-left10"><b class="padding-right5 ">UHID	:</b> Pune-769 </span>
+						<span class="margin-left10"><b class="padding-right10 ">DOA	:</b> 02/05/2017</span>
+						<span class="margin-left10"><b class="padding-right10 ">PDD	:</b> 02/05/2017 11:16am </span>
+						<span class="margin-left10"><b class="padding-right10 ">BED NO	:</b> BM129091</span>
+						<span class="margin-left10">Dr. Suresh Pathak</span> 
+						<span class="margin-left10 float_right">
+								<b><a href="" class="anchor-tag">Bill Details</a></b>
+						</span> 
+					</div> -->
+				<span class="margin-left10 float_right padding-left-right-10"> <b><a href=""
+						class="anchor-tag">Bill Details</a></b>
+				</span>
+				<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 old-encounter-details padding-bottom5 padding-left-right-set4">
+					<div class="row">
+						<div
+							class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right padding-bottom10">
+							<input type="text" autocomplete="off" class="text-search-box dirty"
+								placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword"> <i
+								class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+					<div class="headerHeight">
+						<table class="table table-bordered">
+							<tr>
+								<th class="width1"></th>
+								<th class="width6"><span class="">Bill Date</span></th>
+								<th class="width8"><span class="">Bill No.</span></th>
+								<th class="width7">UHID</th>
+								<th class="width12">Patient Name</th>
+								<th class="width5">Visit Type</th>
+								<th class="width6">Visit Date</th>
+								<th class="width9">Visit No.</th>
+								<th class="width7">Total Bill Amount</th>
+								<th class="width7">Net Payable</th>
+								<th class="width7">Paid Amount</th>
+								<th class="width7">Total Balance Amount</th>
+								<th class="width10">Created By</th>
+
+							</tr>
+							<tr ng-repeat="billObj in billList | filter:searchKeyword track by $index">
+								<td><input type="radio" id="billDtlsId"
+									ng-click="getBillDetailsByBillId(billObj);" name="debitRadio">
+								</td>
+								<td>{{billObj.billDate}}</td>
+								<td>{{billObj.billNumber}}</td>
+								<td>{{billObj.uhidNumber}}</td>
+								<td>{{billObj.patientName}}</td>
+								<td>{{billObj.visitTypeId == 1 ? 'OP' : billObj.visitTypeId
+									== 2 ? 'IP' : billObj.visitTypeId == 3 ? 'Day Care' :
+									billObj.visitTypeId == 4 ? 'ER' : '-'}}</td>
+								<td>{{(billObj.visitDate==null)?"-":billObj.visitDate}}</td>
+								<td>{{(billObj.visitNo==null)?"-":billObj.visitNo}}</td>
+
+								<td class="text-right">{{billObj.totalBillAmount|setDec:2}}</td>
+								<td class="text-right">{{billObj.netAmount|setDec:2}}</td>
+								<td class="text-right">{{billObj.amountPaid|setDec:2}}</td>
+								<td class="text-right">{{billObj.outstanding|setDec:2}}</td>
+								<td>{{billObj.userName}}</td>
+							</tr>
+						</table>
+						<table class="table table-bordered">
+							<tr
+								ng-if="(billList|filter:searchKeyword)=='' || (billList|filter:searchKeyword)==null">
+								<td><p
+										style="text-align: center; margin-top: 0px !important; margin-bottom: 1px !important;">No
+										Records Found</p></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row padding-top5">
+				<div class="custom-sub-tab padding-left-right-set4">
+					<div class="col-lg-4 col-md-4 col-sm-6 padding-top5">
+						<ul class="tabs nav nav-tabs">
+							<li ng-class="{ active : isSetFirstTabLevel(1) }" class="active width25"><a href=""
+								ng-click="setFirstTabLevel(1)">Service</a></li>
+							<!-- <li ng-class="{ active : isSetFirstTabLevel(2) }" class="width25"><a
+								href=""
+								ng-click="setFirstTabLevel(2);getPackages();setSecondTabLevel(21);">Package</a></li>
+							<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width25"><a
+								href="" ng-click="setFirstTabLevel(3)" data-toggle="modal"
+								data-target="#payeeDetailsPopup">Payer</a></li> -->
+						</ul>
+					</div>
+					<div
+						class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right text-width-auto"
+						style="margin-bottom: 7px;">
+						<div class=" ">
+							<a href="" id="savedisablebtn"
+								class="btn btn-primary btn-save-box-shadow" title="Save"
+								ng-click="updateBillingPopup();"><i class="fa fa-floppy-o"
+								style="font-size: 21px" aria-hidden="true"></i></a>
+						</div>
+					</div>
+					<!-- <div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+						<input type="text" autocomplete="off" class="text-search-box" placeholder="Search"
+							style="margin-top: 0px" ng-model="searchServiceFilter"> <i
+							class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div> -->
+				</div>
+				</div>
+				<div class="row padding-left-right-set4">
+					<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+						<div class="row padding-top0 padding-left-right-set0">
+							<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll230">
+							  <table id="main-table" class="main-table width100">
+								<thead>
+									<tr>
+										<th class="width5"><span class="">Order No.</span></th>
+										<th class="width10"><span class="">Service Name</span></th>
+										<th class="width10">Doctor</th>
+										<th class="width3">Quantity</th>
+										<th class="width5">Unit Price</th>
+										<th class="width5">Total Amount</th>
+										<th class="width5">Concession %</th>
+										<th class="width5">Concession</th>
+										<th class="width5">Disc %</th>
+										<th class="width6">Disc Amount</th>
+										<th class="width6">GST Type</th>
+										<th class="width5">GST %</th>
+										<th class="width5">GST Amount</th>
+										<th class="width6">Net Payable</th>
+										<th class="width6">Self Payable</th>
+										<th class="width6">Credit Payable</th>
+									</tr>
+								</thead>
+								<tbody
+									ng-repeat="service in billServicesList  track by $index " ng-init="serviceIdx=$index">
+									<tr
+										ng-repeat="packageMppr in service.orderDetailsPackageMapperDtosList"
+										ng-if="packageMppr.isPackageService=='N'">
+										<td>{{service.orderNo}}</td>
+										<td>{{service.serviceStandardName}}</td>
+										<td>{{service.doctorName}}</td>
+										<td class="text-right">{{service.quantity}}</td>
+										<td class="text-right">{{parseFloatNum((service.packageConsumptionAmt > 0
+											||service.packageConsumptionAmt < 0) ?
+											packageMppr.serviceAmount:service.unitPrice)}}</td>
+										<td class="text-right">{{parseFloatNum((service.packageConsumptionAmt > 0
+											||service.packageConsumptionAmt < 0) ?
+											packageMppr.serviceAmount:service.grossAmount)}}</td>
+										<td>
+											<div class="text-right"
+												ng-if="(isSchemeDiscount == 'N' && service.isDiscountApplicable == 'N') || (isSchemeDiscount == 'N' && service.isDiscountApplicable == 'Y') || (isSchemeDiscount == 'Y' && service.isDiscountApplicable == 'N')">{{parseFloatNum(service.concessionPercentage)}}%</div>
+											<div
+												ng-if="isSchemeDiscount == 'Y' && service.isDiscountApplicable == 'Y'">
+												<input type="text" autocomplete="off" class="width100 text-right" allow-decimal-numbers
+													ng-decimal="200" valid-number
+													ng-model="service.concessionPercentage"
+													ng-blur="getConcessionPerCal(service,serviceIdx)" />
+											</div>
+										</td>
+										<td class="text-right">{{parseFloatNum(service.concession)}}</td>
+										<td>
+											<div>
+												<input type="text" autocomplete="off" class="width100 text-right"
+													ng-model="service.discountPercentage"
+													allow-decimal-numbers ng-decimal="200" valid-number
+													ng-blur="getDiscountPerCal(service,serviceIdx)"
+													ng-disabled="service.isDiscountApplicable == 'N'" />
+											</div>
+										</td>
+										<td>
+											<div>
+												<input ng-disabled="service.quantity<0 || service.isDiscountApplicable == 'N'" type="text" autocomplete="off" class="width100 text-right"
+													ng-model="service.discount" allow-decimal-numbers
+													ng-decimal="200" valid-number
+													ng-blur="getDiscountCal(service,serviceIdx)"
+													ng-disabled="service.isDiscountApplicable == 'N'" />
+											</div>
+
+										</td>
+										<td class="text-right">{{service.taxName}}</td>
+										<td class="text-right">{{parseFloatNum(service.taxPercentage)}}%</td>
+										<td class="text-right">{{parseFloatNum(service.taxAmount)}}</td>
+										<td class="text-right">{{parseFloatNum(service.netAmt)}}</td>
+										<td class="text-right">{{parseFloatNum(service.selfPayable)}}</td>
+										<td class="text-right">{{parseFloatNum(service.creditPayable)}}</td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td colspan="5" class="text-right"><span>Account
+												Summary</span></td>
+										<td class="text-right">
+											<!-- <input type="text" autocomplete="off" class="width62px" value="60"> -->{{totalAmtQuaBase|setDec:2}}
+										</td>
+										<td class="width5"></td>
+										<td class="width5 text-right">
+											<!-- <input type="text" autocomplete="off" class="width100"> -->{{totalAmtConcession|setDec:2}}
+										</td>
+										<td colspan="2" class="text-right">
+											<!-- <input type="text" autocomplete="off" class="width62px"> -->{{totalAmtDiscount|setDec:2}}
+										</td>
+										<td colspan="3" class="text-right">
+											<!-- <input type="text" autocomplete="off" class="width62px"> -->{{totalAmtGst|setDec:2}}
+										</td>
+										<td class="width5 text-right">
+											<!-- <input type="text" autocomplete="off" class="width62px" value="60"> -->{{totalNetPayableAmt|setDec:2}}
+										</td>
+										<td class="text-right">{{totalSelfPayable|setDec:2}}</td>
+										<td class="text-right">{{totalCreditPayable|setDec:2}}</td>
+
+									</tr>
+								</tfoot>
+							  </table>
+							</div>
+						</div>
+					</div>
+					<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+						<div class="OPDBillService">
+							<div ng-include="'./views/common/billing/package-consumption.html'" style=""></div>	
+						</div>
+					</div>
+				</div>
+			
+			
+			
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+						<fieldset class="normalRegistration">
+							<legend class="heading-div">Discount Details</legend>
+								 <div class="row">
+									<div id="mediaType" class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">													
+										
+										 <!-- <span ng-hide="discountDisabledFlagForRequest">
+												<input id="groupDiscount" name="discount" type="radio" value="2">
+												<label for="groupDiscount" data-toggle="modal"  data-target="{{discountDisabledFlagForRequest == false ? '#groupWiseDiscountModal':''}}" ng-click="groupWiseDiscountPopup()">Group Wise Discount</label>
+										</span>  -->
+										<span>
+												<input id="billDiscount" name="discount" ng-model="disflg" type="radio" value="1" val="yes" checked="checked" >
+												<label for="billDiscount">Bill Wise Discount</label>
+										</span>
+										<span>
+												<input id="" name="discount" type="radio" value="2" ng-click="cancelDiscountForServices();">
+												<label  for="discount" >Cancel Discount</label>
+										</span>
+										<span ng-show="isSchemeDiscount == 'Y'">
+												<input id="" name="discount"  ng-model="disflg" type="radio" value="3" >
+												<label  for="billconcession">Bill wise concession</label>
+										</span>
+										<span ng-show="isSchemeDiscount == 'Y'">
+												<input id="" name="discount" type="radio" value="4" ng-click="cancelConcessionForServices();">
+												<label  for="concession" ng-click="">Cancel Concession</label>
+										</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4" ng-show="disflg == 1">
+										<div class="row">
+											<label class="radio-inline"><input type="radio"  ng-model="discountRadio" value="1">Percentage Wise</label>
+											<label class="radio-inline"><input type="radio"  ng-model="discountRadio" value="2">Amount Wise</label>
+										</div>
+										<div class="row padding-top4">
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-show="discountRadio == 1">
+												<div class="row input-container">
+													<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+														<i class="fa fa-percent" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-10 col-sm-10 col-md-10">
+														<div class="">
+															<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-valid dirty ng-empty ng-touched" allow-decimal-numbers ng-decimal="200" valid-number ng-model="discountPercentageBillWise"  ng-blur="funDiscountPercentageBillWise()" ><!-- ng-blur="calculateDiscountAmount()" --> 
+															<label for="description" class="LISDynamicLabel">Disc %</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-show="discountRadio == 2">
+												<div class="row input-container">
+													<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+														<i class="fa fa-money" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-10 col-sm-10 col-md-10">
+														<div class="">
+															<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-valid dirty ng-empty ng-touched" allow-decimal-numbers ng-decimal="200" valid-number ng-model="discountAmountBillWise"  ng-blur="funDiscountAmountBillWise()" > <!--  ng-blur="calculateDiscountPercentage()" -->
+															<label for="description" class="LISDynamicLabel">Disc Amount</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-1 col-md-2 text-width-auto">
+												<div class=" margin-left-padding-top">
+													<a href="" class="btn btn-primary btn-save-box-shadow" id="saveBtn" ng-click="getApplyDiscountPopup()" >
+														Apply
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4" ng-show="disflg == 3">
+										<div class="row">
+											<label class="radio-inline"><input type="radio"  ng-model="concessionRadio" value="1">Percentage Wise</label>
+											<label class="radio-inline"><input type="radio"  ng-model="concessionRadio" value="2">Amount Wise</label>
+										</div>
+										<div class="row padding-top4">
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-show="concessionRadio == 1">
+												<div class="row input-container">
+													<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+														<i class="fa fa-percent" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-10 col-sm-10 col-md-10">
+														<div class="">
+															<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-valid dirty ng-empty ng-touched" allow-decimal-numbers ng-decimal="200" valid-number ng-model="concessionPercentageBillWise"  ng-blur="funConcessionPercentageBillWise()" ><!-- ng-blur="calculateDiscountAmount()" --> 
+															<label for="description" class="LISDynamicLabel">Concession %</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-show="concessionRadio == 2">
+												<div class="row input-container">
+													<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+														<i class="fa fa-money" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-10 col-sm-10 col-md-10">
+														<div class="">
+															<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-valid dirty ng-empty ng-touched" allow-decimal-numbers ng-decimal="200" valid-number ng-model="concessionAmountBillWise"  ng-blur="funConcessionAmountBillWise()"> <!--  ng-blur="calculateDiscountPercentage()" -->
+															<label for="description" class="LISDynamicLabel">Concession Amt</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-1 col-md-2 text-width-auto">
+												<div class=" margin-left-padding-top">
+													<a href="" id="saveBtn" class="btn btn-primary btn-save-box-shadow" ng-click="getApplyConcessionPopup()" >
+														Apply
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+										<div class="row">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 ">
+														<div class="">
+															<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty" ng-model="totalSelfPayble" ng-disabled="true"> 
+															<label for="description" class="LISDynamicLabel">Self Payable</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 ">
+														<div class="">
+															<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty" ng-model="totalCreditPayble" ng-disabled="true"> 
+															<label for="description" class="LISDynamicLabel">Credit Payable</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 ">
+														<div class="">
+															<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty" ng-model="roundOffAmt" ng-disabled="true"> 
+															<label for="description" class="LISDynamicLabel">Discount Round-off</label>
+														</div>
+													</div>
+												</div>
+											</div>
+										<!-- 	<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 ">
+														<div class="">
+															<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label dirty"> 
+															<label for="description" class="LISDynamicLabel">Deposit</label>
+														</div>
+													</div>
+												</div>
+											</div> -->
+										</div>
+										
+										<div class="row">
+											<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0 padding-top10">
+												<div class="row input-container">
+													<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon width6">
+														<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+													</div>
+													<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set0">
+														<div class="">
+															<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid dirty ng-empty" ng-model="billRemark"> 
+															<label for="description" class="LISDynamicLabel">Remark</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+												<div class="row input-container padding-top10">
+													<input type="checkbox" name="" id="finalBillCheckbox" class="" ng-model="finalBill" ng-true-value="'Y'" ng-false-value="'N'" ng-disabled="billWiseDiscountObj.requestAmountBillWise > 0" ng-click="checkFinalBill();">
+														<label for="finalBillCheckbox" class="checkbox-margin-left-right">Final Bill</label>
+												</div>
+											</div> -->
+											
+											<!--  <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10" ng-show="encounterDetails.patientClassId > 0 && encounterDetails.patientClassId != null">
+												<div class="row input-container padding-top10">
+													<input type="checkbox" name="" id="applyPatientClass" class=""   ng-model="isPatientClass" ng-true-value="'Y'" ng-false-value="'N'" ng-click="getPatientClassServiceOP()">
+														<label for="applyPatientClass" class="checkbox-margin-left-right">Apply Surge Charge Service</label>
+												</div>
+											</div>
+											
+											 <div class="col-lg-4 col-md-4 col-sm-4 padding-top12" ng-show="admissionDetails.patientClassId > 0 && admissionDetails.patientClassId != null">
+												<div class="row input-container padding-top10">
+													<input type="checkbox" name="" id="applyPatientClass" class=""   ng-model="isPatientClass" ng-true-value="'Y'" ng-false-value="'N'" ng-click="getPatientClassServiceIP()">
+													<label for="isPatientClassCheckbox" class="checkbox-margin-left-right">Apply Surge Charge Service</label>
+												</div>
+											</div> --> 
+											
+										</div>
+									</div>
+								</div>
+						</fieldset>
+					</div>
+				</div>
+
+
+
+
+		</fieldset>
+	</div>
+</div>
+
+<!--  Change Patient Class Modal START -->
+<div id="change_patient_class" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					 Change Patient Class
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10" ng-if="visitTypeId == 1">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-user-md" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" id="patientClassIdPopup" ng-model="patientClassIdPopup" convert-to-number>
+														<option value="">Select Patient Class</option>
+														<option ng-repeat="info in patientTypeList" value="{{info.patientTypeId}}">{{info.description}}</option>
+										</select><label for="code">Patient Class</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10" ng-if="visitTypeId == 1">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-user-md" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" id="patientClassCancelReasonIdPopup" name="code" ng-model="patientClassCancelReasonIdPopup">
+											<option value="">Select Reason</option>
+											<option ng-repeat="info in reasonList" value="{{info.reasonMasterId}}"  ng-if="info.reasonTypeId == 8">{{info.reasonDesc}}</option>
+										</select>
+										<label for="" class="LISDynamicLabel">Reason</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10" ng-if="visitTypeId != 1">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-user-md" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" id="patientClassIdPopup" ng-model="patientClassIdPopup" convert-to-number>
+														<option value="">Select Patient Class</option>
+														<option ng-repeat="info in patientTypeList" value="{{info.patientTypeId}}">{{info.description}}</option>
+										</select><label for="code">Patient Class</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10" ng-if="visitTypeId != 1">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-user-md" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select class="text-input floating-label" id="patientClassCancelReasonIdPopup" name="code" ng-model="patientClassCancelReasonIdPopup">
+											<option value="">Select Reason</option>
+											<option ng-repeat="info in reasonList" value="{{info.reasonMasterId}}" ng-if="info.reasonTypeId == 8">{{info.reasonDesc}}</option>
+										</select>
+										<label for="" class="LISDynamicLabel">Reason</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button"  class="btn btn-primary" id="saveBtn"  ng-click="applyPatientClassPopup()">Apply</button>
+				<button type="button"   style="float:left;" id="cancelBtn"  data-toggle="modal" data-target="#confirmCancelPatientClass" class="btn btn-primary width40" >Cancel Applied Patient Class</button><!-- ng-click="cancelPatientClassPopup()" Applied Patient Class data-dismiss="modal" -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Change Patient Class  Modal END -->
+
+<div id="confirmCancelPatientClass" data-backdrop="static"  class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal" >&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure want to cancel patient class, do you want to continue?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" class="btn btn-primary" id="yesBtn"  ng-click="cancelPatientClassPopup()">Yes</button>
+				<button type="button"  class="btn btn-primary" id="noBtn" ng-click="cancelPatientClassClosePopup()" >No</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="discountCancellationModalReq" data-backdrop="static" class="modal fade ng-scope in common-small-popup" role="dialog" style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Cancel
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										Are you sure want to cancel?
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button"  class="btn btn-primary" ng-click="getCancelDiscountReq()">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- CONFIRM POPUP FOR ALL -->
+<div id="applyDiscountPopup"  class="modal fade ng-scope in common-small-popup" role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to Apply Discount?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Cancel" data-dismiss="modal"> 
+						<i class="fa fa-times" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Ok" data-dismiss="modal" ng-click="applyDiscount()"> 
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- CONFIRM POPUP FOR ALL -->
+<div id="applyConcessionPopup"  class="modal fade ng-scope in common-small-popup" role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to Apply Concession?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="applyConcession()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+ 
+<!-- CONFIRM POPUP FOR ALL -->
+<div id="cancelDiscountPopup" class="modal fade ng-scope in" role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to Cancel Discount?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="finalCancelDiscount()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- CONFIRM POPUP FOR ALL -->
+<div id="cancelConcessionPopup" class="modal fade ng-scope in" role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to Cancel Concession?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="finalCancelConcession()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- <div ng-include="'./views/master/UnitMaster/billingMaster/common/bill-list-details.html'" ></div>
+<div ng-include="'./views/master/UnitMaster/billingMaster/common/bill-list-details-for-claim.html'" ></div> -->
+
+
+<div id="saveConfirmPopup" data-backdrop="static"  class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal" >&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure you want to Save?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="No" ng-click="stopLoader();"  data-dismiss="modal" >
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Yes" ng-disabled="saveBtnDisable"  ng-click="updateBill();saveBtnDisable = true" data-dismiss="modal">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+$(document).ready(function() {  
+	 $(".patienttSearchResult").show();
+	 $(document).on('click', '.commonPatientSearch', function(){
+			//alert()
+			$(this).closest(".patienttSearchResult").toggle();
+		});
+	 $(".selectedPageName").text("Concession Manager");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="concessionManager"]').parents("li").addClass("active");
+});
+$("#button").click(function() {
+	$("#bill").hide();
+
+});
+
+<!-- debitnote scripts START -->
+$(".useActiveDeposit").click(function()
+		{
+			$(".useActiveDepositList").toggle();
+		})
+
+		$(".insuranceRadio").click(function()
+		{
+			$(".insuranceTable").show();
+			$(".sponserTable").hide();
+		})
+		$(".sponsorRadio").click(function()
+		{
+			$(".sponserTable").show();
+			$(".insuranceTable").hide();
+		})
+		$(".old-encounter-details").hide();
+		$(".anchor-tag").click(function()
+			{
+				$(this).parents().next(".old-encounter-details").toggle();
+			})
+<!-- debitnote scripts END -->
+
+
+
+</script>
+
+
+
+
+

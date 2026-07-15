@@ -1,0 +1,217 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+		
+<!-- 		<div class="main-heading-div">
+				<div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div>
+			</div> -->
+			
+			
+			<!-- <legend class="heading-div">Package Master</legend> -->
+			<form name="wrapper_expiry_form" novalidate>
+			<div class="row padding-top8">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group" show-errors>
+							<input type="text" autocomplete="off" name="code" id="code" ng-model="wrapperExpiryMasterObj.code" class="text-input floating-label" required>
+									 <label for="code">Wrapper Code</label>
+									<p class="help-block" ng-if="wrapperExpiryMasterObj.code.$error.required">Code is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group" show-errors>
+								<input type="text" autocomplete="off" name="name" id="name" ng-model="wrapperExpiryMasterObj.name"
+									class="text-input floating-label" required>
+									 <label for="code"> Wrapper Name</label>
+								<p class="help-block" ng-if="wrapperExpiryMasterObj.name.$error.required">Name is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group" show-errors>
+							
+								<input type="text" autocomplete="off" numbers-only name="duration" id="duration" ng-model="wrapperExpiryMasterObj.duration"
+									class="text-input floating-label" required><label for="duration"> Sterility duration (Days)</label> 
+									
+								<p class="help-block" ng-if="wrapperExpiryMasterObj.duration.$error.required">Duration is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			<!-- 	<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-10 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<select class="text-input floating-label" ng-options="item.id as item.name for item in itemMasterList"
+								ng-model="wrapperExpiryMasterObj.itemId" required>
+									<option value=""></option>
+								</select>
+								<label for="code">Select Item</label>
+								<p class="help-block" ng-if="wrapperExpiryMasterObj.itemId.$error.required">Item is required</p>
+						</div>
+					</div>
+				</div> -->
+			</div>
+			</form>
+		</fieldset>
+		<div class="row margin-top10 padding-left-right-set1">
+		
+		<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+							<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+				<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveWrapperExpiry()" ng-if="saveBtnFlag">
+				<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				 <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updateWrapperExpiry()" ng-if="updateBtnFlag">
+		        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model='searchText'> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			
+				<!--  <ul>
+                <li ng-repeat='info in expiryMasterList | filter:searchText'> {{info.name}} </li>
+            </ul> -->
+			</div>
+		</div>
+		<modal visible="showModal"></modal>
+		<div class="row padding-left-right-set4 margin-top10">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<tbody>
+						<tr class="">
+							<th class="width15">
+								Wrapper Code
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width15">
+								Wrapper Name
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width15">
+								Sterility duration (Days)
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<!-- <th class="width15">
+								Item
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th> -->
+							<th class="width6">
+								Status(n)
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width3 text-center vertical-middle">
+								Action taken
+							</th>
+						</tr>
+						<tr ng-repeat="info in expiryMasterList  | orderBy : 'name' | filter:searchText">
+							<td>{{info.code}}</td>
+							<td>{{info.name}}</td>
+							<td>{{info.duration}}</td>
+							<!-- <td>{{info.itemName}}</td> -->
+							<td>
+								<label class="switch">
+									<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'" ng-change="updateStatus(info)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<td class="padding-edit-button-table text-center">
+								<a>
+										<i class="fa fa-pencil" aria-hidden="true" title="Edit" aria-hidden="true" ng-click="editWrapperExpiry(info)"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+});
+  
+  $(".selectedPageName").text("Wrapper Expiry Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="wrapperExpiryMaster"]').parents("li").addClass("active");
+
+</script>

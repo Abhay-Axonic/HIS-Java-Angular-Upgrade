@@ -1,0 +1,750 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width10 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Triggered Mail</a> <!-- triggled -->
+					</li>
+				 	<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+						<a href="" ng-click="setFirstTabLevel(2)" class="">Scheduled Mail</a><!-- schedule-->
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					
+						<div class="row margin-top10 padding-left-right-10">
+							<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+										</div>
+										<input type="hidden" ng-model="subSpeciality.subSpecialityId">
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group"   >							
+												<select class="text-input floating-label" name="" ng-change="getReqiredData(common.triggerId)" ng-model="common.triggerId" required convert-to-number>
+													<!-- <option>Select</option> -->
+													<option ng-repeat="info in triggerList" value="{{info.triggerId}}">{{info.triggerName}}</option>
+												</select>
+												<label for="code">Trigger Point<span class="star">*</span></label>
+											 <p class="help-block" ng-if="">Trigger Point is required</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group"   >							
+												<select class="text-input floating-label" name="" ng-model="common.categoryId"  required>
+													<!-- <option>Select</option> -->
+													<option ng-repeat="catList in categoryList" ng-value="{{catList.categoryId}}" value="{{catList.categoryId}}">{{catList.categoryName}}</option>
+												</select>
+												<label for="code">Category<span class="star">*</span></label>
+												<!-- <p class="help-block" ng-if="">Category is required</p> -->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group"   >							
+												<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="common.mailSubject">
+												<label for="code">Mail Subject<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-if="whatsAppOption != 4">
+									<div class="row input-container">
+									
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group">
+													<input type="checkbox" name="isWhatsappSend" id="checkMenu" ng-true-value="'Y'" ng-false-value="'N'"  ng-model="common.isWhatsappSend" ng-click="getWhatsAppTemplateList();">
+												<label for="code">Is WhatsApp Send</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-if="common.isWhatsappSend == 'Y' && whatsAppOption == 4">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="form-group"   >
+											<select class="text-input floating-label" name="" ng-model="common.whatsAppTemplateMasterId" required>
+												<option ng-value="" value="">Select</option>
+												<option ng-repeat="template in whatsAppTemplateList" ng-value="{{template.whatsAppTemplateMasterId}}" value="{{template.whatsAppTemplateMasterId}}">{{template.templateDesc}}</option>
+											</select>
+											<label for="code">WhatsApp Template<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+									
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group"  ng-if = "common.triggerId == 30 " >							
+													<input type="checkbox" name="isWhatsappSend" id="checkMenu" ng-true-value="'Y'" ng-false-value="'N'" ng-model="common.criticalReport">
+												<label for="code">Mark as a important for critical report</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								
+							</div>
+							<div class="row margin-top10">
+								<form action="" class="">
+									<div class="col-lg-12 col-md-12 col-sm-8 padding-left-right-set4">
+										<div class="row col-md-5set" id="">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+												<div class="">
+													<label class="common-lable-color-set">Required Data</label>
+													<div class="masterborderScroll">
+														<div class="col-lg-12 col-md-12 col-sm-12">
+															<div class="col-lg-12 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+																<div class="row input-container">
+																	<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																		<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																	</div>
+																	<div class="col-lg-11 col-sm-11 col-md-11">
+																		<div class="">
+																			<select name="format" id="format" ng-model="selectedDate" class="text-input floating-label dirty">
+																			<option value="1">User Defined</option>
+																			<option ng-repeat="info in dataList" value="{{info.data}}">{{info.dataDesc}}</option>
+																			
+																			</select>
+																			<label for="code">Select Required Data</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col-lg-12 col-md-3 col-sm-3  padding-left-right-set4 padding-top10" ng-show="selectedDate==1">
+																<div class="row input-container padding-top10">
+																	<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																		<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																	</div>
+																	<div class="col-lg-11 col-sm-11 col-md-11 ">
+																		<div class="">
+																			<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="userDefinedString">
+																			<label for="code" class="LISDynamicLabelOne">Enter Data</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+					
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+												<div class="text-center margintop120 text-width-auto">
+													<div class="row">
+														<button type="button" class="btn btn-primary text-width-auto btn-sm selectionBtn" ng-click="appendString(selectedDate);">&gt;&gt;</button>
+													</div>
+					
+												</div>
+											</div>
+											<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4 ">
+												<div class="row input-container">
+													<!-- <input type="hidden" ng-model="common.templateDescription"> -->
+														<div class="form-group"   >		
+														<label for="code" >Mail Body<span class="star">*</span></label>
+														<textarea ng-model="common.templateDescription"  name="editor" type="text" autocomplete="off" id="editor" rows="10" cols="50" ck-editor></textarea><!--  class="w-100" style="height: 156px;" -->	
+						                                        <!-- <input type="text" autocomplete="off" class="text-input floating-label" /> -->
+															
+														<!-- 	<p class="help-block" ng-if="">Template Description is required</p> -->
+														</div>
+												</div>
+											</div>
+											<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0 float_right">
+												<div class="text-center margintop120 "> 
+													<button type="button" class="btn btn-primary btn-sm width40" id="" ng-click="clearFields();" title="Clear"><i class="fa fa-eraser"></i></button>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="row margin-top10" ng-if= "common.categoryId == 15">
+									<div class="col-lg-12 col-md-12 col-sm-8 padding-left-right-set4 " >
+										<div class="row col-md-5set" id="">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+												<div class="">
+													<label class="common-lable-color-set">Mail Id</label>
+													<div class="masterborderScroll">
+														<div class="col-lg-12 col-md-12 col-sm-12">
+															<div class="col-lg-12 col-md-3 col-sm-3  padding-left-right-set4 padding-top10" >
+																<div class="row input-container padding-top10">
+																	<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																		<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																	</div>
+																	<div class="col-lg-11 col-sm-11 col-md-11 ">
+																		<div class="">
+																			<input type="text" autocomplete="off" name="code" id="" ng-model="mailDto.mailId">
+																			
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+												<div class="text-center margintop120 text-width-auto">
+													<div class="row">
+														<button type="button" class="btn btn-primary text-width-auto btn-sm "  ng-click="addMailNumber();">&gt;&gt;</button>
+													</div>
+					
+												</div>
+											</div>
+											<div class="">
+											   <label class="common-lable-color-set"> Mail Id Description List </label>
+											<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4 masterborderScroll">
+												<div class="row input-container">
+														<div class="form-group"   >		
+														<ul>
+														    <li ng-repeat="mail in mailList" class="{'fadeOut' : mail.done}">
+														      <span class="fa fa-close" ng-click="deleteMailId($index)"></span>
+														      <span>{{mail.title}}</span>
+														    </li>
+														  </ul>
+														</div>
+												</div>
+											</div>
+											</div>
+											<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0 float_right">
+												<div class="text-center margintop120 "> 
+													<button type="button" class="btn btn-primary btn-sm width40" id="" ng-click="clearMobileTempFields();" title="Clear"><i class="fa fa-eraser"></i></button>
+												</div>
+											</div>
+										</div>
+									</div>
+							</div>
+									
+								</form>
+							</div>
+							
+							<div class="row padding-left-right-set1 padding-top4">
+								<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+			              	</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+								<div class="">
+									 <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+													ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+													
+									<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="save()"
+													ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					      		</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+								<input type="text" autocomplete="off" class="text-search-box oneeeee" placeholder="Search" style="margin-top: 0px;" ng-model="searchKeyword">
+								 <i class="fa fa-search common-search-text-icon " aria-hidden="true"></i>
+							</div>
+						</div>
+						
+					</div>
+					<div class="row ">
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-10 margin-top8">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+										<!-- <th class="width15">Sr No
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th> -->
+										<th class="width15">Trigger Point
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Mail Subject
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width40">Mail Body
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">Category
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">Is WhatsApp Send 
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class=" width5 text-center">Action taken
+										</th>
+										<th class=" width5 text-center">Status(n)
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="mailConfigList in pagination.data |orderBy:column:reverse|filter:searchKeyword">
+										<!-- <td></td> -->
+										<td>{{mailConfigList.triggerName}}</td>
+										<td>{{mailConfigList.mailSubject}}</td>
+										<td><div>
+											<textarea name="editor" ck-editor-field type="text" autocomplete="off" id="" rows="1" cols="80" ng-model="mailConfigList.templateDescription" ng-disabled="true"></textarea>
+										</div></td>
+										<td>{{mailConfigList.categoryName}}</td>
+										<td>{{mailConfigList.isWhatsappSend}}</td>
+										<td class="width5 text-center">
+										  <a><i class="fa fa-pencil" aria-hidden="true" ng-click="showData(mailConfigList)" ></i></a>
+									   </td>
+										<td class=" width5 text-center"><label class="switch"> <input type="checkbox"
+												ng-model="mailConfigList.status" ng-true-value="'A'"
+												ng-false-value="'I'"
+												ng-change="updateStatus(mailConfigList.smsUtilityId,mailConfigList.status)">
+												<div class="slider round"></div>
+										</label></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="row margin-bottom45 center-block">
+								<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+									style="font-size: 14px; cursor: pointer;">
+									<li ng-class="{disabled:pagination.currentPage === 1}"><a
+										ng-click="pagination.setFirstPage(pagination)">First</a>
+									</li>
+									<li ng-class="{disabled:pagination.currentPage === 1}"><a
+										ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+									</li>
+									<li ng-repeat="page in pagination.getPagesList(pagination)"
+										ng-class="{active:pagination.currentPage === page}"><a
+										ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+									</li>
+									<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+										<a ng-click="pagination.setNextPage(pagination)">Next</a>
+									</li>
+									<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+										<a ng-click="pagination.setLastPage(pagination)">Last</a>
+									</li>
+								</ul>
+							</div>
+					</div>
+					
+				</div>
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					
+						<div class="row margin-top10 padding-left-right-10">
+							<div class="row">
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+										</div>
+										<input type="hidden" ng-model="subSpeciality.subSpecialityId">
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group"   >							
+												<select class="text-input floating-label" name="" ng-change="getReqiredData(common.triggerId)" ng-model="common.triggerId" required convert-to-number>
+													<!-- <option>Select</option> -->
+													<option ng-repeat="info in scheduleTriggerList" value="{{info.triggerId}}">{{info.triggerName}}</option>
+												</select>
+												<label for="code">Trigger Point<span class="star">*</span></label>
+											 <p class="help-block" ng-if="">Trigger Point is required</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group"   >							
+												<select class="text-input floating-label" name="" ng-model="common.categoryId"  required>
+													<!-- <option>Select</option> -->
+													<option ng-repeat="catList in scheduleCategoryList" ng-value="{{catList.categoryId}}" value="{{catList.categoryId}}">{{catList.categoryName}}</option>
+												</select>
+												<label for="code">Category<span class="star">*</span></label>
+												<!-- <p class="help-block" ng-if="">Category is required</p> -->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group"   >							
+												<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="common.mailSubject">
+												<label for="code">Mail Subject<span class="star">*</span></label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="form-group"   >							
+												<select class="text-input floating-label" name="" ng-model="common.type"  required>
+													<!-- <option>Select</option> -->
+													<option ng-value="Daily" value="Daily">Daily</option>
+													<option ng-value="Monthly" value="Monthly">Monthly</option>
+													<option ng-value="Weekly" value="Weekly">Weekly</option>
+													<option ng-value="Yearly" value="Yearly">Yearly</option>
+												</select>
+												<label for="code">Type<span class="star">*</span></label>
+												<!-- <p class="help-block" ng-if="">Category is required</p> -->
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								
+								
+								
+							</div>
+							<div class="row margin-top10">
+								<form action="" class="">
+									<div class="col-lg-12 col-md-12 col-sm-8 padding-left-right-set4">
+										<div class="row col-md-5set" id="">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+												<div class="">
+													<label class="common-lable-color-set">Required Data</label>
+													<div class="masterborderScroll">
+														<div class="col-lg-12 col-md-12 col-sm-12">
+															<div class="col-lg-12 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+																<div class="row input-container">
+																	<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																		<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																	</div>
+																	<div class="col-lg-11 col-sm-11 col-md-11">
+																		<div class="">
+																			<select name="format" id="format" ng-model="selectedDate" class="text-input floating-label dirty">
+																			<option value="1">User Defined</option>
+																			<option ng-repeat="info in dataList" value="{{info.data}}">{{info.dataDesc}}</option>
+																			
+																			</select>
+																			<label for="code">Select Required Data</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col-lg-12 col-md-3 col-sm-3  padding-left-right-set4 padding-top10" ng-show="selectedDate==1">
+																<div class="row input-container padding-top10">
+																	<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																		<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																	</div>
+																	<div class="col-lg-11 col-sm-11 col-md-11 ">
+																		<div class="">
+																			<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty dirty" ng-model="userDefinedString">
+																			<label for="code" class="LISDynamicLabelOne">Enter Data</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+					
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+												<div class="text-center margintop120 text-width-auto">
+													<div class="row">
+														<button type="button" class="btn btn-primary text-width-auto btn-sm selectionBtn" ng-click="appendString(selectedDate);">&gt;&gt;</button>
+													</div>
+					
+												</div>
+											</div>
+											<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4 ">
+												<div class="row input-container">
+													<!-- <input type="hidden" ng-model="common.templateDescription"> -->
+														<div class="form-group"   >		
+														<label for="code" >Mail Body<span class="star">*</span></label>
+														<textarea ng-model="common.templateDescription"  name="editor" type="text" autocomplete="off" id="editor" rows="10" cols="50" ck-editor></textarea><!--  class="w-100" style="height: 156px;" -->	
+						                                        <!-- <input type="text" autocomplete="off" class="text-input floating-label" /> -->
+															
+														<!-- 	<p class="help-block" ng-if="">Template Description is required</p> -->
+														</div>
+												</div>
+											</div>
+											<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0 float_right">
+												<div class="text-center margintop120 "> 
+													<button type="button" class="btn btn-primary btn-sm width40" id="" ng-click="clearFields();" title="Clear"><i class="fa fa-eraser"></i></button>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="row margin-top10" ng-if= "common.categoryId == 16">
+									<div class="col-lg-12 col-md-12 col-sm-8 padding-left-right-set4 " >
+										<div class="row col-md-5set" id="">
+											<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+												<div class="">
+													<label class="common-lable-color-set">Mail Id</label>
+													<div class="masterborderScroll">
+														<div class="col-lg-12 col-md-12 col-sm-12">
+															<div class="col-lg-12 col-md-3 col-sm-3  padding-left-right-set4 padding-top10" >
+																<div class="row input-container padding-top10">
+																	<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+																		<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+																	</div>
+																	<div class="col-lg-11 col-sm-11 col-md-11 ">
+																		<div class="">
+																			<input type="text" autocomplete="off" name="code" id="" ng-model="mailDto.mailId">
+																			
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+												<div class="text-center margintop120 text-width-auto">
+													<div class="row">
+														<button type="button" class="btn btn-primary text-width-auto btn-sm "  ng-click="addMailNumber();">&gt;&gt;</button>
+													</div>
+					
+												</div>
+											</div>
+											<div class="">
+											   <label class="common-lable-color-set"> Mail Id Description List </label>
+											<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4 masterborderScroll">
+												<div class="row input-container">
+														<div class="form-group"   >		
+														<ul>
+														    <li ng-repeat="mail in mailList" class="{'fadeOut' : mail.done}">
+														      <span class="fa fa-close" ng-click="deleteMailId($index)"></span>
+														      <span>{{mail.title}}</span>
+														    </li>
+														  </ul>
+														</div>
+												</div>
+											</div>
+											</div>
+											<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set0 float_right">
+												<div class="text-center margintop120 "> 
+													<button type="button" class="btn btn-primary btn-sm width40" id="" ng-click="clearMobileTempFields();" title="Clear"><i class="fa fa-eraser"></i></button>
+												</div>
+											</div>
+										</div>
+									</div>
+							</div>
+									
+								</form>
+							</div>
+							
+							<div class="row padding-left-right-set1 padding-top4">
+								<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+			              	</div>
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+								<div class="">
+									 <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+													ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+													
+									<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="save()"
+													ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					      		</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+								<input type="text" autocomplete="off" class="text-search-box oneeeee" placeholder="Search" style="margin-top: 0px;" ng-model="searchKeyword">
+								 <i class="fa fa-search common-search-text-icon " aria-hidden="true"></i>
+							</div>
+						</div>
+						
+					</div>
+					<div class="row ">
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-10 margin-top8">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+										<!-- <th class="width15">Sr No
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th> -->
+										<th class="width15">Trigger Point
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Mail Subject
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width40">Mail Body
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">Category
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										
+										<th class=" width5 text-center">Action taken
+										</th>
+										<th class=" width5 text-center">Status(n)
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="mailConfigList in mailConfigurationScheduledList |orderBy:column:reverse|filter:searchKeyword">
+										<!-- <td></td> -->
+										<td>{{mailConfigList.triggerName}}</td>
+										<td>{{mailConfigList.mailSubject}}</td>
+										<td><div>
+											<textarea name="editor" ck-editor-field type="text" autocomplete="off" id="" rows="1" cols="80" ng-model="mailConfigList.templateDescription" ng-disabled="true"></textarea>
+										</div></td>
+										<td>{{mailConfigList.categoryName}}</td>
+										<td class="width5 text-center">
+										  <a><i class="fa fa-pencil" aria-hidden="true" ng-click="showData(mailConfigList)" ></i></a>
+									   </td>
+										<td class=" width5 text-center"><label class="switch"> <input type="checkbox"
+												ng-model="mailConfigList.status" ng-true-value="'A'"
+												ng-false-value="'I'"
+												ng-change="updateStatus(mailConfigList.smsUtilityId,mailConfigList.status)">
+												<div class="slider round"></div>
+										</label></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="row margin-bottom45 center-block">
+								<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+									style="font-size: 14px; cursor: pointer;">
+									<li ng-class="{disabled:pagination.currentPage === 1}"><a
+										ng-click="pagination.setFirstPage(pagination)">First</a>
+									</li>
+									<li ng-class="{disabled:pagination.currentPage === 1}"><a
+										ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+									</li>
+									<li ng-repeat="page in pagination.getPagesList(pagination)"
+										ng-class="{active:pagination.currentPage === page}"><a
+										ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+									</li>
+									<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+										<a ng-click="pagination.setNextPage(pagination)">Next</a>
+									</li>
+									<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+										<a ng-click="pagination.setLastPage(pagination)">Last</a>
+									</li>
+								</ul>
+							</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+		$(".selectedPageName").text("SMS Configuration");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="smsConfiguration"]').parents("li").addClass("active");
+</script>

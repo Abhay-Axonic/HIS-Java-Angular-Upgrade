@@ -1,0 +1,22 @@
+package com.param.assetManagement.maintenance.dao;
+
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceAssetReplacementDto;
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceScheduleDto;
+import com.param.assetManagement.maintenance.model.CorrectiveMaintenanceAssetReplacement;
+import com.param.global.common.Response;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface ICorrectiveMaintenanceAssetReplacementDao {
+	
+	Response saveCorrectiveMaintenanceAssetReplacement(CorrectiveMaintenanceAssetReplacementDto correctiveMaintenanceAssetReplacementDto)throws ApplicationException;
+
+	Response getreplaceItemById(CorrectiveMaintenanceScheduleDto orrectiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response getreplaceDetailOnReturnByMultipleCrit(CorrectiveMaintenanceScheduleDto correctiveMaintenanceScheduleDto)throws ApplicationException;
+
+	Response returnAsset(CorrectiveMaintenanceAssetReplacement correctiveMaintenanceAssetReplacement)throws ApplicationException;
+
+	Response rejectAsset(CorrectiveMaintenanceAssetReplacement correctiveMaintenanceAssetReplacement)throws ApplicationException;
+}

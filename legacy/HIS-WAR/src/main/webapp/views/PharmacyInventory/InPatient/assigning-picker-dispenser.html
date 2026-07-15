@@ -1,0 +1,585 @@
+<!-- *****************************************************************************************************************************
+													Pending List For Assigning Picker/Dispenser 
+****************************************************************************************************************************** -->
+<!-- Page Content -->
+<!--  <div ng-include="'./views/common/storesPopup.html'" ></div> 
+ -->
+<div id="page-content-wrapper" class="clockPopupOver">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<legend class="main-heading-div commonPatientSearch cursor-pointer">
+				<!-- <div class="row">
+					<div ng-include="'./views/common/selectedStore.html'"></div>
+				</div> -->
+				<div class="row" id="storeSelection">
+					<div class="col-lg-10 col-md-9 col-sm-6"></div>
+					<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set1 pull-right">
+						<span class="heading-name-font pull-right" data-toggle="modal" ng-click="popupStore()">{{storeName}}</span>
+					</div>
+				</div>
+			</legend>
+			<div class="row padding-left-right-10 padding-left0 margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-top10">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+									 placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+									 datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+									<label for="fromDate" class="">Date (From)</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy"
+									 placeholder="DD/MM/YYYY" ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened"
+									 datepicker-options="vm.model.toDateOptions" show-button-bar="false" ng-click="vm.model.OpenToDate()">
+									<label for="toDate" class="">Date-Till</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container margin-top4">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<select class="dirty text-input floating-label" ng-model="vm.model.visitType" name="visitType" ng-change="vm.model.ChangeVisitType()"
+								 data-ng-options="visitTypeData.type for visitTypeData in vm.model.visitTypeDataList">
+								</select>
+								<label for="visitType">Visit Type</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="patientName" id="patientName" class="text-input floating-label" ng-model="vm.model.patientName"
+								 uib-typeahead="patientNames.patientName as patientNames.details for patientNames in vm.model.SearchpatientNames($viewValue)"
+								 typeahead-on-select="vm.model.AddUHID($item); vm.model.search = '';" data-ng-keyup="vm.model.PatientNameKeyPress($event)">
+
+								<label for="patientName">Patient Name</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-bullseye" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<!-- <div class="">
+							<input type="text" autocomplete="off" name="uhid" ng-model="vm.model.uhid" ng-class="{dirty:vm.model.uhid}" id="" class="text-input floating-label"> <label
+								for="code">UHID</label>
+						</div> -->
+							<div class="">
+								<input type="text" autocomplete="off" name="uhid" ng-model="vm.model.uhid" id="" class="dirty text-input floating-label"
+								 uib-typeahead="patientNames.uhid as patientNames.details for patientNames in vm.model.SearchUhid($viewValue); "
+								 ng-trim="false" typeahead-on-select="vm.model.AddUHID($item); vm.model.search = '';" data-ng-keyup="vm.model.uHIDKeyPress($event)">
+								<label for="code">UHID</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-user-md fa-color" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<!-- <input type="text" autocomplete="off" name="doctorName" ng-model="vm.model.doctorName" class="text-input floating-label"> -->
+								<input type="text" autocomplete="off" name="doctorName" id="doctorName" class="text-input floating-label" ng-model="vm.model.doctorName"
+								 uib-typeahead="doctorNames.doctorName as doctorNames.details for doctorNames in vm.model.SearchdoctorNames($viewValue)">
+
+								<label for="doctorName">Doctor Name</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<!-- <i class="fa fa-hospital-o " aria-hidden="true"></i> -->
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-8 col-sm-8 col-md-8">
+							<!-- <div class="">
+								<input type="text" autocomplete="off" ng-model="wordName" name="code" id="" class="text-input floating-label"> <label for="code">Ward</label>
+							</div> -->
+							<div class="">
+									<select class="dirty text-input floating-label" ng-model="vm.model.status" name="status" ng-class="{dirty: vm.model.status}"
+									 ng-options="statusData.status for statusData in vm.model.statusDataList">
+									</select>
+									<label for="status">Status(n)</label>
+								</div>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4  margin-top-5">
+							<div class="common-save-button margin-top-5">
+								<a href="" ng-click="vm.model.AssigningPickerDispenser()" id="searchBtn" class="btn btn-primary btn-save-box-shadow" style="width: auto;">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-left0 margin-top10 ">
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4" style="margin-left:-7px !important ;">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set0">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<select class="dirty text-input floating-label" ng-model="vm.model.status" name="status" ng-class="{dirty: vm.model.status}"
+									 ng-options="statusData.status for statusData in vm.model.statusDataList">
+									</select>
+									<label for="status">Status</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="vm.model.pagination.search" 
+					ng-change="vm.model.pagination.searchData(vm.model.assigningPickerDispenser, vm.model.pagination)" style="margin-top: 0px">
+					<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 pull-left">
+						<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="vm.model.pagination.pageSize='10'" 
+								ng-model="vm.model.pagination.pageSize" 
+								ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> records 
+							</label>
+						</div>
+				</div>
+			</div>
+			
+			<div class="row padding-top10 padding-left-right-set4">
+				<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll430">
+				  <table id="main-table" class="main-table width100">
+				    <thead>
+						<tr class="">
+							<th class="width12 vertical-top" title="Patient Details">Patient Details
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'patientDetail', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width6 vertical-top" title="Visit Type">
+								Visit Type
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'visitType', sortReverse = !sortReverse)">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6 vertical-top" title="Visit DateTime">
+								Visit Date & <br> Time
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'visitDate', sortReverse = !sortReverse)">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width10 vertical-top" title="Prescription Time">
+								Prescription Date & <br> Time
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'prescriptionDate', sortReverse = !sortReverse)">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width8 vertical-top" title="Doctor Details">Doctor Details
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'doctorDetail', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8 vertical-top" title="Ward Name">Ward Name
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'wardName', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width6 vertical-top" title="Bed No.">Ward Bed No.
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'bedNo', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5 vertical-top" title="Priority">Priority
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'priority', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<!-- <th class="width7 vertical-middle" title="Picker">Picker
+							<div class="float_right" ng-click="sortType = ''; sortReverse = !sortReverse">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th> -->
+							<th class="width7 vertical-top" title="Status">Status(n)
+								<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'status', sortReverse = !sortReverse)">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width7 text-center vertical-middle" title="Action">Action taken
+							</th>
+						</tr>
+					</thead>
+				    <tbody>
+						<tr ng-if="vm.model.pagination.data == null || !vm.model.pagination.data.length">
+							<td colspan="11">
+								<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+							</td>
+						</tr>
+						<tr ng-repeat="item in vm.model.pagination.data">
+							<td class="text-center">
+								<div class="row patient-details cursor-pointer"><!-- id="45#1247#2_new" -->
+									<div class="col-lg-3 col-sm-12 col-md-3">
+										<div class="" >
+											<img ng-src="{{(item.imagePath!=null&&item.imagePath!='')?item.imagePath:(item.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60" ng-click="patientDocumnetInformation(item)">
+										</div>
+									</div>
+									<div class="col-lg-8 col-sm-12 col-md-8">
+										<div class="patient-name">{{item.patientName}}</div>
+										<div class="patient-details">
+											<span class="patient-details patient">{{item.ageString}} / </span>
+											<span class="patient-details patient">{{item.genderCode}}</span>												
+										</div>
+										<div class="patient">{{item.uhid}}</div>
+									</div>
+								</div>
+							</td>
+							<td class="" title="{{item.visitType}}">
+								{{item.visitType}}
+							</td>
+							<td class="" title="{{item.visitDate | date:'dd/MM/yyyy hh:mm a'}}">
+								{{item.visitDate | date:'dd/MM/yyyy'}}
+								<br>
+								{{item.visitDate | date:'hh:mm a'}}
+							</td>
+							<td class="" title="{{item.prescriptionDate | date:'dd/MM/yyyy hh:mm a'}}">
+								{{item.prescriptionDate | date:'dd/MM/yyyy'}}
+								<br>
+								{{item.prescriptionDate | date:'hh:mm a'}}
+							</td>
+							<td class="" title="{{item.doctorDetail}}">
+								{{item.doctorDetail}}
+							</td>
+							<td class="" title="{{item.wardName}}">
+								{{item.wardName}}
+							</td>
+							<td class="" title="{{item.bedNo}}">
+								{{item.bedNo}}
+							</td>
+							<td class="" title="{{item.priority}}">
+								{{item.priority}}
+							</td>
+							<!-- <td>
+							{{item.}}
+						</td> -->
+							<td class="" title="{{item.status}}">
+								{{item.status}}
+							</td>
+							<td class="text-center vertical-top">
+								<span>
+									<a title="Print" ng-click="vm.model.printAssigningPickerDispenserReport(item)">
+										<i class="fa fa-print" aria-hidden="true"></i>
+									</a>
+								</span>
+								<span class="">
+									<a ng-class="{disabled: item.status == 'Completed' || item.status == 'Partially Completed' || item.status == 'Cancelled' || userAccess }" title="Cancel" ng-click="vm.model.cancelBillPopup(item.prescriptionId)">
+										<i class="fa fa-ban" aria-hidden="true" ></i>
+									</a>
+								</span>
+								<span class="padding-left10 cursor-pointer"><a ng-click="vm.model.NavigateToDetail(item)">Details</a></span>
+							</td>
+						</tr>
+					</tbody>
+				  </table>
+				</div>
+			</div>
+			
+			<div class="row margin-bottom45 center-block">
+					<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+							ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+							ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+							ng-class="{active:vm.model.pagination.currentPage === page}"><a
+							ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+							<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+							<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+						</li>
+					</ul>
+			</div>
+		</fieldset>
+	</div>
+</div>
+
+<div id="storePopUp" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>
+						If you need to change the store then user will log out from the system.
+					</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- confirm cancel -->
+<div id="confirmCancel" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static" style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Prescription Cancellation
+					<button type="button" class="close" ng-click="vm.model.ModalDismiss('confirmCancel')">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div>
+									<select name="cancelReason" id="cancelReason" class="text-input floating-label" 
+										ng-model="vm.model.cancelReason" ng-class="{dirty: vm.model.cancelReason}"
+										ng-change="vm.model.isReasonValid = false">
+										<option></option>
+										<option ng-repeat="reason in vm.model.reasons" value="{{reason.id}}">{{reason.reason}}</option>
+									</select>
+									<label for="code">Select Reasons</label>
+								</div>
+								<p ng-if="vm.model.isReasonValid" class="errorMsg">Select Reason</p>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div>
+									<textarea name="rejectNote" rows="4" id="noteReject" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+										ng-model="vm.model.rejectNote" ng-class="{dirty: vm.model.rejectNote}"></textarea>
+									<label for="rejectNote">Note</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Save" data-dismiss="modal" ng-click="vm.model.cancelItem()">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- CONFIRM POPUP FOR SAVE END -->
+
+<div class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" id="patientDocumentOption" role="dialog">
+     <div  class="modal-dialog" style="width: 700px !important; margin: 161px auto !important;">
+         <div class="modal-content" style="border-radius: 20px;">
+             	<div class="modal-header padding-zero" style="padding:0px;margin-left: -34px;background-size: 210px 72px !important;">
+		   <div class="modal-title patient-details-row">
+                  <span class="heading-dialog"> APPOINTMENT DETAILS</span>
+                  <button type="button" class="close" data-dismiss="modal" style=" color: red; margin-top: 26px;height: 23px;width: 23px !important;border: 2px solid;background-color: #FCE0E0;border-radius: 50% !important;float: right;">&times;</button>
+              </div>
+             </div>
+             <div class="modal-body">
+                 <div class="body-content" style="padding-top: 0px;">
+                     <div class="row">
+                        
+                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 padding-left-right-set margin-top10" style="text-align: -webkit-center;">
+                             <div class="" style="vertical-align: middle !important;text-align: ;padding-right: 0px !important;">
+                             <span class=" " id="patPhoto">
+                             <img ng-src="{{(patientDocumentOption.imagePath!=null&&patientDocumentOption.imagePath!='')?patientDocumentOption.imagePath:(patientDocumentOption.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" class="img-circle" width="60" height="60">
+                             </span>
+                             </div>
+                         </div>
+                        
+                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 uk-input-group">
+                             <div class="row">
+                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                     <div class="row">
+                                         <span class="LISDynamicLabel"  id="mrnNumber">UHID:{{patientDocumentFlipBook.uhidNumber != null ? patientDocumentFlipBook.uhidNumber :patientDocumentFlipBook.uhid}}</span>
+                                     </div>
+                                 </div>
+                                  <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                     <div class="row">
+                                         <span class="LISDynamicLabel"id="patName">Name:{{patientDocumentFlipBook.patientName}}&nbsp;</span>
+                                     </div>
+                                 </div>
+                                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                     <div class="row">
+                                         <span class="LISDynamicLabel" id="patAgeAndGender">Age:{{patientDocumentFlipBook.age != null ? patientDocumentFlipBook.age : patientDocumentFlipBook.ageString}}</span>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     
+                     <div class="row padding-top20">
+                     </div>
+                     <div class="row padding-top20">
+                      <div class="patientDetailsBox">
+                         <div class="row text-center">
+                             <span class="appDetailsHeader"></span>
+                         </div>
+                         <div class="row padding-top20">
+                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                             <!--     <div class="row">
+                                   <div class="row" style="padding-top: 15px;">
+                                     <span class="LISDynamicLabel">Template:</span>
+                                   </div>    
+                                     <div class="row">
+                                         <span class="LISDynamicLabel" id="templateView">View the templates</span>
+                                     </div>
+                                 </div> -->
+                                 <div class="row">
+                                   <div class="row" style="padding-top: 15px;">
+                                     <span class="LISDynamicLabel">Medical File:</span>
+                                   </div>    
+                                     <div class="row">
+                                         <a href="" ng-click="generateFlipbookData()">
+                                         <span class="LISDynamicLabel" id="viewFlipBookTemplate">View the documents </span>
+                                         </a>
+                                     </div>
+                                 </div>
+                             </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-left10">
+<!--                                     <div class="row padding-left10" style="padding-top: px;">
+                                        <span class="LISDynamicLabel">Appointment Time:</span><br>
+                                        <span id="patAppTime"><div>{{getDateByFormat(patientDocumentFlipBook.encounterDateWithTimeString != null ? patientDocumentFlipBook.encounterDateWithTimeString : patientDocumentFlipBook.doa ,false)}}</div> </span>
+                                      </div>
+ -->
+                                       <div class="row padding-left10" style="padding-top: 5px;" > 
+                                        <span class="LISDynamicLabel">Visit Type:</span><br>
+<!--                                        <span id="patVisit" ng-if="patientDocumentFlipBook.visitTypeId ==1">OPD</span>
+                                        <span id="patVisit" ng-if="patientDocumentFlipBook.visitTypeId ==2">IPD</span>
+                                        <span id="patVisit" ng-if="patientDocumentFlipBook.visitTypeId ==3">Day Care</span>
+ -->
+                                         <span id="patVisit">{{patientDocumentFlipBook.visitType}}</span>
+                                      </div>
+<!--                                       <div class="row padding-left10" style="padding-top: 5px;">
+                                        <span class="LISDynamicLabel">Sponsor:</span><br>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementTypeId == 1">Self</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementTypeId == 2">Insurance</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementTypeId == 3">Corporate</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementId == 1">Self</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementId == 2">Insurance</span>
+                                        <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementId== 3">Corporate</span>
+                                      </div>
+ -->
+                                      <div class="row padding-left10" style="padding-top: 5px;"  ng-if=" patientDocumentFlipBook.visitTypeId ==1">
+                                        <span class="LISDynamicLabel">Status:</span><br>
+                                        <span id="appStatus"> {{patientDocumentFlipBook.appointmentStatusDesc}} </span>
+                                      </div>
+                                </div>
+                         </div>
+                      </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".selectedPageName").text("Pending List For Assigning Picker");/* Dispenser */
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="assigningPickerDispenser"]').parents("li").addClass("active");
+	});
+</script>

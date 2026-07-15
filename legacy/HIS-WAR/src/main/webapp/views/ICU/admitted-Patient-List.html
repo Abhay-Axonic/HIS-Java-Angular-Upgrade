@@ -1,0 +1,153 @@
+<div class="row padding top10">
+		<!-- CommonSearch -->
+		
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+					<input type="text" autocomplete="off" class="text-search-box oneeeee" placeholder="Search" style="margin-top: 0px;" ng-model="searchKeyword">
+					 <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+		</div>
+</div>
+<div class="row padding-left-right-set4 table-container padding-top10 ">
+			<div class="table-container">
+				<div class="table-container-header">
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<thead>
+							<tr><th class="width6">
+									Patient Details 
+								</th>
+								<th class="width3">
+									Doctor Details
+								</th>
+								<th class="width3">
+									 Specialty
+								</th>
+								<th class="width3">
+									Bed Number
+								</th>
+								<th class="width3">
+									Payment  Entitlement
+								</th>
+								<th class="width2">
+									DOA
+								</th>
+								<th class="width2">
+									PDD
+								</th>
+								<th class="width1">
+									Action
+								</th>
+								<th class="width2 text-center">
+									Status
+								</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="table-container-body fix-height-scroll500" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+					<table
+						class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr ng-repeat="info in listOfAdmittedPatientListforAddmitted |orderBy:column:reverse|filter:searchKeyword" >
+<!-- 								<td class="width6" ng-init='age=getAge(info.dob)'> -->
+<!-- 									<div  class="col-lg-3 col-sm-12 col-md-3" >ng-click="gotoCoverSheet(info)" -->
+<!-- 									   <img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60"> -->
+<!-- 									</div> -->
+									
+<!-- 									<div ng-if="info.patientId > 0">{{info.pFirstName+' '+age+'/'+info.genderCode}}</div> -->
+<!-- 									<div  ng-if="info.tPatientId > 0">{{info.patientFullName+' '+info.dob+'/'+info.genderCode}}</div> -->
+<!-- 									<div>{{info.uhidnumber}}</div> -->
+<!-- 								</td>  -->
+								<td class="text-center width15">
+									<div class="row patient-details" id="45#1247#2_new" >
+										<div class="col-lg-3 col-sm-12 col-md-3">
+											<div class="" >
+												<img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+											</div>
+										</div>
+										<div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+											<div class="patient-name">{{info.prefixDesc+' '+info.pFirstName}}
+										</div>
+											<div class="patient">{{info.uhidnumber}}</div>
+											<div class="patient-details">
+												<span class="patient-details patient">{{info.genderCode}}</span>
+												<span class="patient-details patient">{{info.ageString}}
+												<span class="patient-details patient" >||||||
+												<span class="patient-details patient" >info</span>
+												</span></span>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td class="width3">
+									<div>Dr.{{info.doctorFullName}}</div>
+								</td>
+								<td class="width3">
+									<div>{{info.specialityName}}</div>
+								</td>
+								<td class="width3"><div>{{info.bedNumber}}</div></td>
+								<td class="width3"><div>{{info.paymentEntitlementDesc}}</div></td>
+								<td class="width2"><div>{{info.datepicker}}</div></td>
+								<td class="width2"><div>{{info.datepickerPdd}}</div></td>
+								<td class="width1 text-center">
+								 <a ng-click="generateIpdCoverSheetUrl(info)">
+								     <i class="fa fa-sign-out" style="font-size: 16px;" aria-hidden="true"></i>
+								 </a>
+								</td>
+								<td class="width2 text-center">-</td>
+							</tr>
+							
+							<tr ng-repeat="info in patientBedList |orderBy:column:reverse|filter:searchKeyword" >
+<!-- 								<td class="width6" ng-init='age=getAge(info.dob)'> -->
+<!-- 									<div  class="col-lg-3 col-sm-12 col-md-3" >ng-click="gotoCoverSheet(info)" -->
+<!-- 									   <img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60"> -->
+<!-- 									</div> -->
+									
+<!-- 									<div ng-if="info.patientId > 0">{{info.pFirstName+' '+age+'/'+info.genderCode}}</div> -->
+<!-- 									<div  ng-if="info.tPatientId > 0">{{info.patientFullName+' '+info.dob+'/'+info.genderCode}}</div> -->
+<!-- 									<div>{{info.uhidnumber}}</div> -->
+<!-- 								</td>  -->
+
+								<td class="text-center width6">
+									<div class="row patient-details" id="45#1247#2_new" >
+										<div class="col-lg-3 col-sm-12 col-md-3">
+											<div class="" >
+												<img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+											</div>
+										</div>
+										<div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+											<div class="patient-name">{{info.prefixDesc+' '+info.pFirstName}}
+										</div>
+											<div class="patient">{{info.uhidnumber}}</div>
+											<div class="patient-details">
+												<span class="patient-details patient">{{info.genderCode}}</span>
+												<span class="patient-details patient">{{info.ageString}}
+												<span class="patient-details patient" >||||||
+												<span class="patient-details patient" >info</span>
+												</span></span>
+											</div>
+										</div>
+									</div>
+								</td>
+							
+								<td class="width3">
+									<div>Dr.{{info.dFirstName}}</div>
+								</td>
+								<td class="width3">
+									<div>{{info.specialityName}}</div>
+								</td>
+								<td class="width3"><div>{{info.bedNumber}}</div></td>
+								<td class="width3"><div>{{info.paymentEntitlementDesc}}</div></td>
+								<td class="width2"><div>{{info.doa}}</div></td>
+								<td class="width2"><div>{{info.pdd}}</div></td>
+								<td class="width1 text-center">
+								 <a ng-click="generateIpdCoverSheetUrl(info)">
+								     <i class="fa fa-sign-out" style="font-size: 16px;" aria-hidden="true"></i>
+								 </a>
+								</td>
+								<td class="width2 text-center">-</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div> 

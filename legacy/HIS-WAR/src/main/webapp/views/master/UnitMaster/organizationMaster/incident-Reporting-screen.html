@@ -1,0 +1,209 @@
+
+
+<link rel="stylesheet" type="text/css"
+      href="resources/assets/css/template/drag-drop.css" />
+<style>
+    .card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 10px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
+.card-body{
+margin-left:6px;
+}
+
+<!--label {-->
+<!--   color: #3F77CF;-->
+<!--}-->
+.custom-drop-down-btn-set-vital button.custom-drop-down-btn:focus{
+    width :auto !important;
+}
+.table-container-nowrapping table td, .table-container-nowrapping table th{
+    white-space: inherit !important;
+    text-overflow: clip !important;
+}
+/***************** overlap class for drag-drop.css file*********************/
+.modal {
+    background-color: transparent !important;
+    margin-left: inherit !important;
+    width: -webkit-fill-available !important;
+    height: inherit !important;
+    margin-top: inherit !important;
+    padding-right: 0 !important;
+}
+/***************** *********************/
+.customRadioBtnS input[type="radio"]+label {
+    cursor: pointer;
+    padding: 4px 10px;
+    border: 1px solid #ccc;
+    background: #efefef;
+    color: #aaa;
+    /* border-radius: 3px; */
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0);
+    margin-right: -4px;
+    margin-top: 5px;
+}
+
+.drop-down-shadow {
+    padding: 10px 0px 10px 30px;
+    box-shadow: 1px 2px 7px 3px rgba(0, 0, 0, 0.4)
+}
+
+.width60 {
+    width: 60%;
+}
+
+.marginTop5 {
+    margin-top: 5px
+}
+
+.customRadioBtnS input[type="radio"] {
+    display: none;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/*  .customRadioBtnS input[type="radio"]:checked + label {
+    background: #f5f5a6;
+    border: 1px solid #afa6a6;
+    color: #171717;
+} */
+.margin-right05 {
+    margin-right: 5px !important;
+}
+
+ul.tabs li {
+    margin-right: 3px !important;
+}
+
+.readOnlyTemp{
+pointer-events: none;
+}
+.height-auto{
+    height: auto !important;
+}
+
+
+table>tbody>tr.td-bg-red > td
+    {
+        color : #ff0000 !important;
+    }
+#page-content-wrapper{
+    height: auto !important;
+    padding-bottom: 0% !important;
+}
+
+    #select
+    {
+     border-radius: 5px;
+    }
+
+    .panel{
+      background-color: #d8c9c9 !important;
+    }
+
+</style>
+
+
+<div id="page-content-wrapper" >
+    <div class="container-fluid his-style" style="height: 600px;" >
+        <div class="padding-top4" ng-include="'./views/common/nutritional-patient-search.html'" style="margin-top:-5px"></div>
+        <div class="padding-top8 padding-left-right-set4" ng-include="'./views/common/nabh-patient-demography-info.html'"></div>
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+                <div class="row">
+                    <div class="card" style="margin-right: 5px; margin-left: 10px;">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-3 col-md-3" style="margin-left:10px">
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Surgery on wrong body part</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Surgery on Wrong Patient</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Wrong Surgical Procedure</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Surgery Rescheduled </label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Intra or Post Operative Death </label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Contaminated Drug, Device or Biologic</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Device failure</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Air Embolism</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Elopement</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Deterioration in Pressure Ulcer</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Change in Anesthsia Plan</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Adverse Drug Reaction</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Symptomatic Urinary Tract Infection</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Other </label></span>
+
+                            </div>
+                            <div class="col-lg-3 col-sm-3 col-md-3" style="margin-left:10px">
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Suicide</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Medication error</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Maternal Labour or Delivery</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Surgery Cancelled </label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Neonate Labor or Delivery</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Patient Fall</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Pressure Ulcer</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Wrong Sperm or Egg</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Needle Stick Injury</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Early Signs of Pressure Ulcer</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Unplanned Ventillation post Anesthesia</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Transfusion Reaction </label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Ventilator Associated Pnuemonia (VAP)</label></span>
+
+                            </div>
+
+                            <div class="col-lg-3 col-sm-3 col-md-3" style="margin-left:10px">
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Electric Shock</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Wrong or contaminated gas</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Restraint</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Surgical Site Infection </label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Introduction of Metallic Object into MRI area</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Impersonation of Healthcare Provider</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Abduction</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Sexual Assault</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Failure to Communicate Test Result</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Reporting errors in Pathology Lab Report</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Reporting errors in Pathology Radiology Report</label></span><br>
+                                <span><input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Central Line Associated Blood Stream Infection (CLABSI)</label></span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <button type="submit" href="" ng-disabled="assessmentSelectedList.length<21" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveNutritionalAssessmentScore('N')">
+                            Cancel</button>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                        <button type="submit" href="" ng-disabled="assessmentSelectedList.length<21" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveNutritionalAssessmentScore('N')">
+                            <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+
+            </div>
+
+        </fieldset>
+    </div>
+
+
+</div>
+
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

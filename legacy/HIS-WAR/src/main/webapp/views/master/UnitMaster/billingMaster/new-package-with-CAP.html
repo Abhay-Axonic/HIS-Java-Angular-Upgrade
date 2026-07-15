@@ -1,0 +1,308 @@
+<style>
+	.fixed-thead-tfoot-scroll tfoot, .fixed-thead-tfoot-scroll tfoot th, .fixed-thead-tfoot-scroll tfoot td {
+    background-color: white;
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    color: #fff;
+    z-index: 4;
+}
+</style>
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<!-- <div ng-include="'./views/common-billing-package.html'"></div> -->
+		<fieldset>
+			<legend class="heading-div">Package</legend>
+			<div class="row margin-top8 enabled" id="divEnabled">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5" ><!-- ng-controller="samplecontroller" -->
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+
+								 <select class="text-input floating-label" ng-model="packageObj.packageTypeId">
+        						 <option ng-repeat="packType in packageTypeList" ng-value="packType.id" value="{{packType.id}}" ng-if="packType.id == 3" selected>{{packType.name}}</option>
+       							 </select>
+								<label class="LISDynamicLabel">Package Type</label>
+							</div>
+						</div>
+					</div>
+				 </div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label" tabindex="3"
+						           ng-model="packageService" placeholder="Search" uib-typeahead=" serv.name for serv in getPackageServiceList($viewValue)"
+						           typeahead-editable="false" typeahead-on-select="selectPackageService($item, $model, $label);"
+						           name=""  ng-disabled="parentPackageId>0"/>
+								<label for="code">Package Service</label>
+							</div>
+						</div>
+					</div>
+				 </div>
+				 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+				 	<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+						<div class="row input-container padding-top4">
+							<div class="col-lg-2 col-sm-2 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<select class="text-input floating-label" ng-model="packageObj.tariffId" ng-change="getPaymentEntitlementList(packageObj.tariffId);getPatientTypeList(packageObj.tariffId);validateFetch(true)" convert-to-number>
+        							 <option value="">-</option>
+        							 <option ng-repeat="tariff in tariffList" value="{{tariff.id}}">{{tariff.name}}</option>
+        							</select>
+									<label class="LISDynamicLabel">Tariff</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4 margin-top-10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+								<i class="fa fa-tasks" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+										<label for="" class="">Payment Entitlement</label>
+										<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+											options="paymentEntitlementList" selected-model="selectedPaymentEntitlementList" events="fetchEvent">
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				 </div>
+				 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+					<div class="row input-container padding-top4">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="packageObj.sexId" convert-to-number ng-change="validateFetch(false)">
+						         	 <option value="">-</option>
+						         	 <option value="0">All</option>
+							         <option ng-repeat="sex in genderList" value="{{sex.id}}">{{sex.desc}}</option>
+							         </select>
+								<label class="LISDynamicLabel">Gender</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				 
+			</div>
+			<div class="row margin-top8">
+			 <div id="divEnabled2" class="enabled">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					<div class="row input-container padding-top4">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<label for="" class="">Patient Type</label>
+									<div class="custom-drop-down-btn"  ng-dropdown-multiselect=""
+										options="patientTypeList" selected-model="selectedPatientTypeList" events="fetchEvent">
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					<div class="row input-container padding-top4">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<label for="" class="">Visit Type</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect="" events="getBillingBedCategory"
+										options="visitTypeList" selected-model="selectedVisitTypeList">
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+				 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					<div class="row input-container padding-top4">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+									<label for="" class="">Bed Billing Category</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="bedBillingCategoryList" selected-model="selectedBedBillingCategoryList" events="fetchEvent">
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				 <div class="col-lg-3 col-md-3 col-sm-3 float-right padding-left-right-set1 text-right">
+					<div class="common-save-button">
+						<input type="button" value="Import From Package" class="btn btn-primary btn-save-box-shadow text-width-auto" ng-click="importFromPackage();"  ng-disabled="parentPackageId>0">
+						<span class="padding-left-right-set0">
+							<button href="" class="btn btn-primary btn-save-box-shadow text-width-auto" ng-click="savePackage(false)" title="Save"  ng-disabled="fetchValidate" ng-class="{pkgdisabled: fetchValidate}"> <!--ng-disabled="angular.equals({}, packageObjResponse)"-->
+								<i class="fa fa-floppy-o" style="font-size: 17px !important" aria-hidden="true"></i>
+	        				</button>
+	        			</span>
+	        			<span class="padding-left-right-set0">
+							<a href="" class="btn btn-primary btn-save-box-shadow text-width-auto" ng-click="clear()" title="Clear">
+								<i class="fa fa-eraser" style="font-size: 17px !important" aria-hidden="true"></i>
+	        				</a>
+	        			</span>
+	        			<span class="padding-left-right-set0">
+							<a href="#/packageWithCAP">
+								<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow text-width-auto">
+							</a>
+						</span>
+						<span class="padding-left-right-set0">
+							<button href="" class="btn btn-primary btn-save-box-shadow text-width-auto"  id="fetchPkgId" ng-click="savePackage(true)" title="Fetch Package"  ng-disabled="!fetchValidate" >
+								<i class="fa fa-retweet" style="font-size: 17px !important" aria-hidden="true" ng-class="{pkgdisabled: !fetchValidate}"></i>
+							</button>
+	   					 </span>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<!-- <legend class="heading-div">Service</legend> -->
+			<div class="row">
+				<div ng-include="'./views/master/UnitMaster/billingMaster/ip-package.html'" ></div>
+			</div>
+		</fieldset>
+	</div>
+</div>
+<!-- ************************************** GET Bed Category Modal START  ************************************** -->
+<div id="addBedCategoryModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Add Bed Category
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group">
+									<select class="text-input floating-label dirty">
+										<option value="">Select</option>
+									</select> <label for="code"> Bed Category Code</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty"/>
+									 <label for="code">Bed Category Description</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-1 col-md-1 col-sm-1 text-width-auto padding-left-right-10">
+						<div class="common-save-button" style="padding-top: 0px;">
+							<a class="btn btn-primary btn-save-box-shadow"style="width: auto;">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row padding-left-right-10 padding-top5">
+					<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll230">
+						<table class="table table-bordered">
+							<!-- mainServiceTable -->
+							<thead class="mainServiceTableCommon">
+								<tr>
+									<th class="width1 text-center"><input type="checkbox"></th>
+									<th class="width10">Bed Category Code</th>
+									<th class="width10">Bed Category Desciption</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="width1 text-center"><input type="checkbox"></td>
+									<td>-</td>
+									<td>-</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Add</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ************************************** GET Bed Category Modal END  ************************************** -->
+
+<!-- <div ng-include="'./views/PharmacyInventory/Store/get-item-list.html'" ></div> -->
+
+<!-- tableExpandModal START -->
+<div id="tableExpandModal" class="modal fade ng-scope in common-large-popup his-style" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Added Services
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div ng-include="'./views/master/UnitMaster/billingMaster/ip-package.html'" ></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary width6" id="okBtn">Ok</button>
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width6">Cancel</button> -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- tableExpandModal END -->
+
+<!-- Page Content -->        
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".selectedServicesList").hide();
+	
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Add New Package With CAP");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="addNewPackageWithCAP"]').parents("li").addClass("active");
+});
+$(".table-th-bg").click(function(){
+	//alert("23======");
+	$(this).next().find(".selectedServicesList").toggle();
+});
+
+
+</script>

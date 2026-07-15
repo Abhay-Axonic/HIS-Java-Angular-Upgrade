@@ -1,0 +1,216 @@
+<style>
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+      border-radius: 10px;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    .container {
+      padding: 2px 16px;
+    }
+    .card-body{
+    margin-left:6px;
+    }
+    .labelName{
+    color:#212325;
+    }
+</style>
+
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <div class="padding-top4" ng-include="'./views/common/nutritional-patient-search.html'" style="margin-top:-5px"></div>
+        <div class="padding-top8 padding-left-right-set4" ng-include="'./views/common/nabh-patient-demography-info.html'"></div>
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+                <div class="card" style="margin-left: 5px;margin-right: 5px">
+                    <form name="medicationErrorReporting" novalidate ng-submit="submitForm()">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-3 col-md-3 padding-left-right-set4 padding-top10" >
+                                <label class="labelName"><b>Primary Admission:</b></label>
+                                <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Ortho</label>
+                                <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Surgery</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-3 col-md-3 padding-left-right-set4 padding-top10" >
+                                <label class="labelName"><b>Referred:</b></label>
+                                <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Yes</label>
+                                <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">No</label>
+                            </div>
+                            <div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 padding-top10">
+                                <label class="labelName"><b>Date of Event:</b></label>
+                            </div>
+                            <div class="col-lg-3 col-sm-3 col-md-3 padding-left-right-set4 padding-top10">
+                                <label class="labelName"><b>ICD-10-PCS or CPT Clinical Service Code:</b></label>
+                            </div>
+                            <div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 padding-top10">
+                                <label class="labelName"><b>Date of Clinical Service:</b></label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set4 padding-top10">
+                                <label class="labelName"><b>Location in Hospital:</b></label>
+                                <input type="radio" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Ward</label>
+                                <input type="radio" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">ICU</label>
+                                <input type="radio" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">OPD</label>
+                                <input type="radio" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Others (Specify)</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set4 padding-top10">
+                                <div class="card">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-sm-6 col-md-6">
+                                            <label class="labelName"><b>Event Details</b></label><br>
+                                            <label class="labelName">Specific Event:</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Superficial Incisional Primary (SIP)</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Superficial Incisional Secondary (SIS)</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Organ/Space (specify site)</label><br>
+                                        </div>
+                                        <div class="col-lg-6 col-sm-6 col-md-6">
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Deep Incisional Primary (DIP)</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Deep Incisional Secondary (DIS)</label><br>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-sm-12 col-md-12">
+                                            <label class="labelName"><b>Infection present at the time of surgery (PATOS):</b></label>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Yes</label>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="margin-top: 10px">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-sm-12 col-md-12 padding-left-right-set4 padding-top10">
+                                            <label class="labelName"><b>Surgical Site Infection Detected</b></label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">A (During admission)</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">P(Post-Hospital Discharge)</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">RF (Readmission to facility where procedure performed)</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">RO (Readmission to facility other than where procedure was performed)</label><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-7 col-sm-7 col-md-7 padding-left-right-set4 padding-top10">
+                                <div class="card">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-4 col-md-4 padding-left-right-set4 padding-top10">
+                                            <label class="labelName"><b>Specify Criteria Used (check all that apply):</b></label><br>
+                                            <label class="labelName"><b>Siens & Symptoms</b></label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Drainage or Material</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Pain or tenderness</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Swelling or inflammation</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Erythema or redness</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Heat</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Fever</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Incision deliberately opened drained</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Wound spontaneously dehisces</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Abscess</label><br>
+
+                                        </div>
+                                        <div class="col-lg-2 col-sm-2 col-md-2" style="margin-top:50px">
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Sinus tract</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Hypothermia</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Apnea</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Bradycardia</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Lethargy</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Cough</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Nausea</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Vomiting</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Dysuria</label><br>
+                                        </div>
+                                        <div class="col-lg-6 col-sm-6 col-md-6">
+                                            <label class="labelName"><b>Laboratory</b></label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Organism(s) identified</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Culture or non-culture based testing not performed</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Organism(s) identified from blood specimen</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Organism(s) identified from ≥2 paprosthetic specimens</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Other positive laboratory tests'</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Imaging test evidence of infection</label><br>
+                                            <label class="labelName"><b>Clinical Diagnosis</b></label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Physician diagnosis of this event type</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Physician institutes appropriate antimicrobial therapy"</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Relevant Investigation (USG, X-ray, HMG)</label><br>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-sm-12 col-md-12 padding-left-right-set4 padding-top10">
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Other evidence of infection found on invasive procedure, gross anatomic exam, or histopathologic exam</label><br>
+                                            <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Other signs & symptoms</label><br>
+                                            <label class="labelName">per specific site criteria</label><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-lg-3 col-sm-3 col-md-3 padding-left-right-set4 padding-top10">
+                              <label class="labelName"><b>Secondary Bloodstream Infection:</b></label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Yes</label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">No</label>
+                          </div>
+                            <div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 padding-top10">
+                              <label class="labelName"><b>Died:</b></label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Yes</label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">No</label>
+                          </div>
+                            <div class="col-lg-3 col-sm-3 col-md-3 padding-left-right-set4 padding-top10">
+                              <label class="labelName"><b>SSI Contributed to Death:</b></label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Yes</label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">No</label>
+                          </div>
+                            <div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 padding-top10">
+                              <label class="labelName"><b>Hospital Discharge Date:</b></label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Yes</label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">No</label>
+                          </div>
+                            <div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 padding-top10">
+                              <label class="labelName"><b>Pathogens Identified:</b></label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">Yes</label>
+                              <input type="checkbox" name="patient-list-radio2" ng-click="prescribing($index)"><label class="labelName" style="padding: 5px">No</label>
+                          </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 10px">
+
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveRack()">
+                                    Disable</a>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <button type="submit" href="" ng-disabled="nutritionalAssessment.$invalid" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" >
+                                    <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveRack()">
+                                    Draft</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

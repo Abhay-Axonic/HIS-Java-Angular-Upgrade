@@ -1,0 +1,425 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<!-- Replacement Table START -->
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Inward No. :</b>
+					<label>{{vm.model.inwardApprovalDetails.inwardNo}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Inward Date:
+					</b>
+					<label>{{vm.model.inwardApprovalDetails.inwardDate | date:'dd/MM/yyyy'}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Store :
+					</b>
+					<label>{{vm.model.inwardApprovalDetails.store}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">
+						Vendor:</b>
+					<label>{{vm.model.inwardApprovalDetails.vendor}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Type :
+					</b>
+					<label>{{vm.model.inwardApprovalDetails.assetType}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Replacement Type :
+					</b>
+					<label>{{vm.model.inwardApprovalDetails.replacementType}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Ret GP No. :
+					</b>
+					<label>{{vm.model.inwardApprovalDetails.returnableGatePassNo}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">
+						Document Date:</b>
+					<label>{{vm.model.inwardApprovalDetails.documentDate | date:'dd/MM/yyyy'}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">
+						Document No.:</b>
+					<label>{{vm.model.inwardApprovalDetails.documentNo}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 padding-top10" ng-show="vm.model.inwardApprovalDetails.replacementTypeId == 8">
+			<div id="" class="table-scroll hideClass">
+				<!-- height-table-with-scroll -->
+				<div class="table-wrap" style="overflow: auto;">
+					<table id="" class="table table-bordered main-table">
+						<!-- mainServiceTable -->
+						<thead class="mainServiceTableCommon">
+							<tr>
+								<th class="width1">
+									<input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" ng-change="vm.model.valueOnChange(inward, true)"
+									 ng-disabled="!vm.model.inwardApprovalDetails || !vm.model.inwardApprovalDetails.statusId == 2">
+								</th>
+								<th class="width10">Item Code</th>
+								<th class="width10">Item Name</th>
+								<th class="width10" ng-show="vm.model.inwardApprovalDetails.assetTypeId != 2">UOM</th>
+								<th class="width10" ng-show="vm.model.inwardApprovalDetails.assetTypeId != 2">UOM Unit</th>
+								<th class="width10">Batch</th>
+								<th class="width10">Exp. Date</th>
+								<th class="width10">{{vm.model.Currency}} COP</th>
+								<th class="width10">Tax Code</th>
+								<th class="width10">Tax %</th>
+								<th class="width10">Pending Return Qty</th>
+								<th class="width10">Received Qty</th>
+								<th class="width10">Total {{vm.model.Currency}}</th>
+								<th class="width10">Tax {{vm.model.Currency}}</th>
+								<th class="width10">Net {{vm.model.Currency}}</th>
+								<th class="width10">Approved Received Qty</th>
+								<th class="width5">Reject Qty</th>
+								<th class="width5">Reject</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="inward in vm.model.inwardApprovalDetails.items | orderBy:sortType:sortReverse | filter:search" ng-class="{'disabled': inward.netAmount == 0 }">
+								<td>
+									<input type="checkbox" ng-model="inward.isSelected" ng-disabled="inward.statusId != 2 "
+									 ng-click="vm.model.SelectItem(inward)" ng-change="vm.model.valueOnChange(inward, false)" />
+								</td>
+								<td>{{inward.itemCode}}</td>
+								<td>{{inward.itemName}}</td>
+								<td ng-show="vm.model.inwardApprovalDetails.assetTypeId != 2">{{inward.uomType}}</td>
+								<td ng-show="vm.model.inwardApprovalDetails.assetTypeId != 2">
+									<span ng-if="inward.receivedQtyCon!=''" title="{{inward.receivedQtyCon}}">({{inward.receivedQtyCon}}) = </span><br/>
+									<span> {{inward.receivedQtyCalculation}} {{inward.uomUnitData}}</span>
+								</td>
+								<td>{{inward.batchNo}}</td>
+								<td>{{inward.expiryDate | date:'MMM-yyyy'}}</td>
+								<td>{{vm.model.Currency}} {{inward.cop}}</td>
+								<td>{{inward.taxName}}</td>
+								<td>{{inward.taxAmount | number: 2}}</td>
+								<td>{{inward.returnQuantity}}</td>
+								<td>{{inward.receivedQuantity}}</td>
+								<td>{{vm.model.Currency}} {{inward.totalAmount}}</td>
+								<td>{{vm.model.Currency}} {{inward.taxAmount}}</td>
+								<td>{{vm.model.Currency}} {{inward.netAmount}}</td>
+								<td>
+									<input type="text" autocomplete="off" class="w-100" ng-model="inward.approvedQuantity" 
+									ng-blur="vm.model.ApprovedQuantity(inward);calculateReceivedQty(inward)"
+									 ng-if="!inward.isDisabled" numbers-only>
+									<div ng-if="inward.isDisabled">{{!!inward.approvedQuantity ? inward.approvedQuantity : 0 }}</div>
+								</td>
+								<td>{{inward.rejectedQuantity}}</td>
+								<td class=" vertical-middle">
+									<div class="checkbox">
+										<label class="switch switch-small">
+											<input type="checkbox" class="switchInput" ng-disabled="inward.isDisabled" ng-click="vm.model.RejectionPopup(inward)"
+											 ng-model="inward.isReject">
+											<div class="slider round slider-small"></div>
+										</label>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- Replacement Table END -->
+		<!-- Credit Note Table START -->
+		<div class="row padding-left-right-set4 padding-top10" ng-show="vm.model.inwardApprovalDetails.replacementTypeId == 9">
+			<div id="" class="table-scroll hideClass">
+				<!-- height-table-with-scroll -->
+				<div class="table-wrap" style="overflow: auto;">
+					<table id="" class="table table-bordered main-table">
+						<!-- mainServiceTable -->
+						<thead class="mainServiceTableCommon">
+							<tr>
+								<th class="width18">Returnable Gate Pass No.</th>
+								<th class="width18">Returnable Gate Pass Date</th>
+								<th class="width15">Vendor</th>
+								<th class="width10">Total Amount</th>
+								<th class="width10">Tax Amount</th>
+								<th class="width10">Net Amount</th>
+								<th class="width10">Credit Note Amount</th>
+								<th class="width10">Credit Tax Amount</th>
+								<th class="width10">Credit Net Amount</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="inward in vm.model.inwardApprovalDetails.items">
+								<td>{{inward.returnableGatePassNo}}</td>
+								<td>{{inward.returnableGatepassDate| date:'dd/MM/yyyy'}}</td>
+								<td>{{vm.model.inwardApprovalDetails.vendor}}</td>
+								<td>{{inward.totalAmount}}</td>
+								<td>{{inward.taxAmount}}</td>
+								<td>{{inward.netAmount}}</td>
+								<td>
+									<div ng-if="vm.model.inwardApprovalDetails.statusId != 8">
+										<input type="text" class="w-100 text-left dirty ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched" allow-decimal-numbers="" ng-model="inward.creditNoteAmount" ng-change="vm.model.ValidateCredit('Note', inward)" class="w-100">
+									</div>
+									<div ng-if="vm.model.inwardApprovalDetails.statusId == 8">
+										{{inward.creditNoteAmount}}
+									</div>
+								</td>
+								<td>
+									<div ng-if="vm.model.inwardApprovalDetails.statusId != 8">
+										<input type="text" class="w-100 text-left dirty ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched" allow-decimal-numbers="" ng-model="inward.creditTaxAmount" ng-change="vm.model.ValidateCredit('Tax', inward)" class="w-100">
+									</div>
+									<div ng-if="vm.model.inwardApprovalDetails.statusId == 8">
+										{{inward.creditTaxAmount}}
+									</div>
+								</td>
+								<td>
+									<div ng-if="vm.model.inwardApprovalDetails.statusId != 8">
+										<input type="text" class="w-100 text-left dirty ng-dirty ng-empty ng-invalid ng-invalid-parse ng-touched" allow-decimal-numbers="" ng-model="inward.creditNetAmount" ng-change="vm.model.ValidateCredit('Net', inward)" class="w-100">
+									</div>
+									<div ng-if="vm.model.inwardApprovalDetails.statusId == 8">
+										{{inward.creditNetAmount}}
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- Credit Note Table END -->
+		<div class="row table-scroll" ng-if="vm.model.inwardApprovalDetails.assetTypeId == 9">
+			<div class="col-lg-12 col-md-12 table-wrap">
+				<table class="table table-bordered main-table">
+					<thead>
+						<tr class="table-th-bg">
+							<th colspan="7" class="font-weight700">Pending Return Asset Details</th>
+							<th colspan="12" class="font-weight700">Received Return Asset Details</th>
+						</tr>
+						<tr>
+							<th class="width6">Asset Code</th>
+							<th class="width6">Asset Details</th>
+							<th class="width6">Serial No.</th>
+							<th class="width6">Return Qty</th>
+							<th class="width6">Assessories</th>
+							<th class="width6">Expected Return</th>
+							<th class="width6">Return Amount</th>
+							<th class="width6">Received Qty</th>
+							<th class="width6">Serial No.</th>
+							<th class="width6">Assessories</th>
+							<th class="width6">COP $</th>
+							<th class="width6">Tax Code</th>
+							<th class="width6">Tax %</th>
+							<th class="width6">Tax Amount</th>
+							<th class="width6">Total Amount</th>
+							<th class="width6">Net Amount</th>
+							<th class="width6">Specification</th>
+							<th class="width6">Upload</th>
+							<th class="width6">Approve Ret Qty</th>
+							<th class="width6">Reject Qty</th>
+							<th class="width6 text-center">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class="text-center">
+								<a class="cursor-pointer" title="View">View</a>
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class="text-center">
+								<a class="cursor-pointer" title="Add">Add</a>&nbsp;
+								<a class="cursor-pointer" title="View">View</a>
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td><input type="text" autocomplete="off" class="100"></td>
+							<td></td>
+							<td class="td-bg text-center">
+								<div class="checkbox">
+									<label><input type="checkbox" value="" data-toggle="modal" data-target="#qtyaccepatReject">Reject</label>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- Asset Details Table END -->
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+			<fieldset>
+			  <div class="row padding-left-right-set4">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+				  <table class=" table table-bordered">
+					<tbody>
+					  	<tr ng-hide="vm.model.inwardApprovalDetails.replacementTypeId == 9">
+							<th class="width7">
+								<label>Total Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardApprovalDetails.totalAmount}}</td>
+							<th class="width7 text-right">
+								<label>Tax Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardApprovalDetails.totalTaxAmount}}</td>
+							<th class="width8 text-right">
+								<label>Net Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardApprovalDetails.totalNetAmount}}</td>
+							<th class="width8"></th>
+							<td class="width8"></td>
+						</tr>
+						<tr ng-hide="vm.model.inwardApprovalDetails.replacementTypeId == 9">
+							<th class="width7">
+								<label>Returnable GatePass Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardApprovalDetails.returnAmount}}</td>
+							<th class="width7 text-right">
+								<label>Material Inward Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardApprovalDetails.totalNetAmount}}</td>
+							<th class="width8 text-right">
+								<label>Vendor Payable</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardApprovalDetails.vendorPayable | number:2}}</td>
+							<th class="width8 text-right">
+								<label>Credit Note</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardApprovalDetails.creditNote | number:2}}</td>
+
+						</tr>
+						<tr>
+							<th class="width7">
+								<label>Document Date</label>
+							</th>
+							<td class="width8">{{vm.model.inwardApprovalDetails.documentDate | date:'dd/MM/yyyy' }}</td>
+							<th class="width7 text-right">
+								<label>Document No.</label>
+							</th>
+							<td class="width8">{{vm.model.inwardApprovalDetails.documentNo}}</td>
+							<th class="width8 text-right">
+								<label>Remarks</label>
+							</th>
+							<td class="width16">{{vm.model.inwardApprovalDetails.remarks}}</td>
+						</tr>
+					</tbody>
+				  </table>
+				</div>
+			  </div>
+			</fieldset>
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-md-1 text-right"></div>
+				<div class="col-md-9 padding-left-right8"></div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div class="" ng-if="vm.model.inwardApprovalDetails.statusId!=8">
+						
+						<a href="">
+							<input type="button" value="Save" data-ng-class="{disabled:saveBtnDisabled==true}" ng-click="vm.model.SaveApproval()" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div class="">
+						<a href="#/materialInwardsApproval">
+							<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<div id="qtyaccepatReject" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Rejection
+					<button type="button" ng-click="vm.model.ModalDismiss('qtyaccepatReject')" class="close">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-6 col-md-6 col-sm-12">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="rejectQty" name="rejectQty" ng-model="vm.model.rejectQty" class="text-input floating-label dirty"
+										 ng-class="{dirty: vm.model.rejectQty}" numbers-only>
+										<label for="rejectQty">Qty</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select name="rejectReason" id="rejectReason" class="text-input floating-label" ng-model="vm.model.rejectReason">
+											<option value="">Select Reason</option>
+											<option ng-repeat="datum in vm.model.reasons" value="{{datum.id}}">{{datum.reason}}</option>
+										</select>
+										<label for="rejectReason">Select Reason</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="rejectNote" rows="4" id="rejectNote" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+									 ng-model="vm.model.rejectNote" ng-class="{dirty: vm.model.rejectNote}"></textarea>
+									<label for="rejectNote">Note</label>
+								</div>
+							</div>
+						</div>
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" ng-disabled="!vm.model.rejectQty" id="saveBtn" class="btn btn-primary" ng-click="vm.model.SaveAcceptReject()">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-include="'./views/common/qty-accept-reject.html'" class="" style=""></div>

@@ -1,0 +1,192 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset class="">
+			<!-- <legend class="heading-div">Store Indent Details</legend> -->
+			<div class="row margin-top10">
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Issue No. :</b>{{viewKitIssueObj.issueNo}} </span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Issue
+							Date:</b>{{viewKitIssueObj.createdDate}}</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Indent
+							No. :</b>{{viewKitIssueObj.indentNo}}</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Indent
+							Date :</b>{{viewKitIssueObj.indentDate}} </span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">From
+							Store :</b>{{viewKitIssueObj.fromStore}}</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">To
+							Store:</b>{{viewKitIssueObj.toStore}}</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Status
+							:</b>{{viewKitIssueObj.status}}</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Request No
+							:</b>{{viewKitIssueObj.requestNo}}</span>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Request Date
+							:</b>{{viewKitIssueObj.requestDate}}</span>
+				</div>
+			</div>
+			<div class="row padding-left-right-set4 padding-top10">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered first-checkBox-padding">
+					<!-- mainServiceTable -->
+					<thead class="mainServiceTableCommon">
+						<tr>
+							<th class="width20 vertical-middle">Kit Code
+							</th>
+							<th class="width20 vertical-middle">Kit Name
+							</th>
+							<th class="width3 vertical-middle">Qty
+							</th>
+						</tr>
+					</thead>
+					<!-- <tbody>
+						<tr class="addedKit-details">
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+						</tr>
+						<tr>
+							<td colspan="6" class="addedkitList" style="display: none;">
+								<div>
+									<table class="table table-bordered">
+										<thead>
+											<tr class="">
+													<th class="width8">
+														Kit Code
+													</th>
+													<th class="width8">
+														Kit Name
+													</th>
+													<th class="width8">
+														Batch No.
+													</th>
+													<th class="width8">
+														AutoClave No.
+													</th>
+													<th class="width8">
+														AutoClave Date
+													</th>
+													<th class="width8">
+														Expiry Date
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+												</tr>
+											</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
+					</tbody> -->
+					<tbody>
+						<tr class="table-th-bg " ng-repeat="data in viewKitIssueObj.kitList">
+
+							<td colspan="6">
+								<table class="table table-bordered">
+									<tr class="cursor-pointer"
+										ng-click="showSterilizedKitListRow(data)">
+										<!-- <td class="width1 text-center vertical-middle"><input
+											type="checkbox" class="" name="selectedKitData" ng-checked="selectedKitToIssue" ng-click="selectKitsToIssue(data)" ng-model="selectedKitData" value={{data}} multiple></td> -->
+										<td class="width20">{{data.kitCode}}</td>
+										<td class="width20">{{data.kitName}}</td>
+										<td class="width3">{{data.quantity}}</td>
+										<!-- <td class=" width5 text-center vertical-middle cursor-pointer"
+											data-toggle="modal" data-target="#addKitModal"><a
+											href="" ng-click="getSterilizedKitsByKitId(data)">Add Kit</a></td> -->
+
+									</tr>
+
+									<tr id="kitId-{{data.kitId}}" class="subKitRow-{{data.kitId}}"
+										style="display: none;">
+										<td colspan="6">
+											<div>
+												<table class="table table-bordered">
+													<thead>
+														<tr class="">
+															<th class="width8">Kit Code</th>
+															<th class="width8">Kit Name</th>
+															<th class="width8">Batch No.</th>
+															<th class="width8">AutoClave No.</th>
+															<th class="width8">AutoClave Date</th>
+															<th class="width8">Expiry Date</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng-repeat="kitDetails in data.subKitList">
+															<td>{{kitDetails.kitCode}}</td>
+															<td>{{kitDetails.kitName}}</td>
+															<td>{{kitDetails.batchNumber}}</td>
+															<td>{{kitDetails.autoclaveNumber}}</td>
+															<td>{{kitDetails.autoclaveDate}}</td>
+															<td>{{kitDetails.expiryDate}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</td>
+									</tr>
+
+
+
+
+								</table>
+
+
+							</td>
+
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+		</fieldset>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-top5 margin-top10 padding-right20">
+				<div class="col-lg-11 col-sm-11"></div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a href="#/kitIssue">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<script>
+/* $(".addedKit-details").click(function(){
+	$(this).next().find(".addedkitList").toggle();
+}); */
+</script>

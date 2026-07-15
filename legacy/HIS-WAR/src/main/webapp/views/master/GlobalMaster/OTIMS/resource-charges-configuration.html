@@ -1,0 +1,167 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<form name="resourceChargesCofiguForm" novalidate >
+		<div class="row padding-top8">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors>
+							<select  required ng-model="resourceChargesConfigurationObj.specialityId" class="text-input floating-label dirty" name="specialityId" >
+								<option value="" selected>Select Speciality</option>
+								<option value="{{spec.specialityId}}" ng-value="spec.specialityId" ng-repeat="spec in specialityList" ng-if="spec.isClinicalSpeciality == 'Y'">{{spec.specialityName}}</option>
+								</select>
+							<label for="code">Specialty<span class="star">*</span></label>
+							<p class="help-block" ng-if="resourceChargesCofiguForm.specialityId.$error.required">Specialty is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors>
+							<select required ng-model="resourceChargesConfigurationObj.roleId" name="roleId" class="text-input floating-label dirty">
+								<option value="" selected>Select Role</option>
+								<option value="{{role.id}}" ng-value="role.id" ng-repeat="role in roleListByDoctorCharges">{{role.name}}</option>
+								</select>
+							<label for="code">Role<span class="star">*</span></label>
+							<p class="help-block" ng-if="resourceChargesCofiguForm.roleId.$error.required">Role is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors>
+							<input required type="text" autocomplete="off" name="service" class="text-input floating-label dirty" ng-model="service" uib-typeahead = "psrv.serviceStandardName + '|' +psrv.serviceStandardCode for psrv in searchProcServices($viewValue)" typeahead-on-select="selectProcService($item, $model, $label)" />
+							<label for="description" class="LISDynamicLabel">Clinical Service<span class="star">*</span></label>
+							<p class="help-block" ng-if="resourceChargesCofiguForm.service.$error.required">Procedure is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors>
+							<input required type="text" autocomplete="off" numbers-only name="amount" ng-model="resourceChargesConfigurationObj.amount" class="text-input floating-label dirty"> 
+							<label for="description" class="LISDynamicLabel">Amount<span class="star">*</span></label>
+							<p class="help-block" ng-if="resourceChargesCofiguForm.amount.$error.required">Amount is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</form>
+		<div class="row margin-top5 padding-left-right-set1">
+		   <div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+				<div class="search">
+					<label class="show-entries">Show 
+					<select ng-init="pagination.pageSize='10'" 
+						ng-model="pagination.pageSize" 
+						ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+							<option value="10">10</option>
+							<option value="25">25</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+					</select> records 
+					</label>
+				</div>
+				</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" padding-top4">
+					 <a href="" class="btn btn-primary btn-save-box-shadow text-width-auto" data-toggle="modal" ng-click="saveProcedureCharges()" title="Save" ng-if="saveBtnFlag">
+	        			<i class="fa fa-floppy-o" style="font-size: 21px;width: 100%;" aria-hidden="true"></i>
+  						</a>
+  						<a href="" class="btn btn-primary btn-save-box-shadow text-width-auto"  ng-click="updateProcedureCharges()" title="Save" ng-if="updateBtnFlag">
+	        			<i class="fa fa-floppy-o" style="font-size: 21px;width: 100%;" aria-hidden="true"></i>
+  						</a>
+	      		</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box oneeeee dirty" placeholder="Search">
+				 <i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+						<thead>
+							<tr class="">
+								<th class="width8">Specialty</th>
+								<th class="width8">Role</th>
+								<th class="width8">Clinical Service</th>
+								<th class="width8">Amount</th>
+								<th class="width1 text-center">Status(n)</th>
+								<th class="width1 text-center">Action taken</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="proc in pagination.data">
+								<td>{{proc.specialityName}}</td>
+								<td>{{proc.procedureRoleName}}</td>
+								<td>{{proc.serviceStandardName}}</td>
+								<td>{{proc.amount}}</td>
+								<td>
+								<label class="switch"> 
+							<input type="checkbox" ng-model="proc.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(proc.resourceChargeConfigurationId,proc.status)">
+							<div class="slider round"></div>
+							</label></td>
+								<td class="text-center"><a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(proc)"></i></a></td>
+							</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+		</div>
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script>
+	$(document).ready(
+			function() {
+				// $(".patienttSearchResult").hide();
+				$(".selectedPageName").text("Resource Charges Configuration");
+				$(".sidebar-nav li").each(function() {
+					$(this).find("a").parents("li").removeClass("active");
+				});
+				$('a[href$="resourceChargesConfiguration"]').parents("li").addClass(
+						"active");
+			});
+</script>

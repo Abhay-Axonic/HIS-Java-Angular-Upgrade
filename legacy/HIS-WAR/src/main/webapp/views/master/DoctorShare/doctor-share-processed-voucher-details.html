@@ -1,0 +1,358 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<!-- ****** tab row start ********* -->
+		<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li  ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="width12 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Doctor</a>
+					</li>
+					<li  ng-class="{ active : isSetFirstTabLevel(2) }" class="width12" style="">
+						<a href="" ng-click="setFirstTabLevel(2)" class="">Referral</a>
+					</li>
+				</ul>
+			</div>
+			<!-- ****** tab1 bill row start ********* -->
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1) "  class="second-level-tab-display-div">
+					<div class="row his-style">
+
+						<fieldset>
+							<form name="docVoucherform" novalidate>
+								<div class="row margin-top10 padding-left-right-set4">
+									<div
+										class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0 margin-top8">
+										<div class="row input-container">
+											<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+												<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10 ">
+												<div class="">
+													<input type="text" autocomplete="off" name="description"
+														id="date1" class="text-input floating-label"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" tabindex="13" ng-model="fromDate"
+														model-view-value="true" is-open="popup.opened"
+														datepicker-options="dateOptions" show-button-bar="false"
+														ng-click="open()" /> <label for="description"
+														class="LISDynamicLabel">From Date</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0 margin-top8">
+										<div class="row input-container">
+											<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+												<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10 ">
+												<div class="">
+													<input type="text" autocomplete="off" name="description"
+														id="date2" class="text-input floating-label"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" tabindex="13" ng-model="toDate"
+														model-view-value="true" is-open="popup1.opened"
+														datepicker-options="dateOptions" show-button-bar="false"
+														ng-click="open1()" /> <label for="description"
+														class="LISDynamicLabel">To Date</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-user" aria-hidden="true"></i> 
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="form-group" show-errors>
+													<select class="text-input floating-label" name="doctorId"
+														ng-model="doctorId" required>
+														<option ng-repeat="info in doctorList"
+															value="{{info.doctorId}}" ng-value="info.doctorId">{{info.firstName+'
+															'+info.lastName}}</option>
+													</select> <label for="code">Doctor</label>
+													<p class="help-block"
+														ng-if="docVoucherform.doctorId.$error.required">Doctor
+														is required</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-1 col-sm-2 col-md-2 padding-top8  padding-left-right-set text-width-auto">
+										<div class="common-save-button" style="padding-top: 0px;">
+											<a href="" class="btn btn-primary btn-save-box-shadow"
+												ng-click="searchDoctorShareProcessedVoucherList();"
+												style="width: auto;"> <i class="fa fa-search"
+												aria-hidden="true"></i>
+											</a>
+										</div>
+									</div>
+							</form>
+						</fieldset>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5 padding-bottom5">
+					         <div class="search">
+								<label class="show-entries">Show <select
+									name="DataTables_Table_0_length"
+									aria-controls="DataTables_Table_0"
+									ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+									ng-change="setNoOfRecords();" class="search-popUp-ddl" convert-to-number>
+										<option value="10">10</option>
+										<option value="50">50</option>
+										<option value="75">75</option>
+										<option value="100">100</option>
+								</select> entries
+								</label>
+							</div>
+					     </div>
+						<div class="row padding-left-right-set0 margin-top5">
+							<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll430">
+							  <table id="main-table" class="main-table width100">
+							    <thead>
+							      <tr>
+										<th class="width5">Voucher No.</th>
+										<th class="width5">Voucher Date</th>
+										<th class="width7">Doctor</th>
+										<th class="width6">Share Amt</th>
+										<th class="width6">Processed Amt</th>
+										<th class="width6">Total Doctor Credit</th>
+										<th class="width6">Consumed Doctor Credit</th>
+										<th class="width6">Doctor Advanced</th>
+										<th class="width6">Consumed Doctor Advanced</th>
+										<th class="width6">Retainership Fee</th>
+										<th class="width5 text-center">Details</th>
+									</tr>
+							    </thead>
+							    <tbody>
+							      <tr ng-repeat="docVouchDtls in doctorShareProcessedVoucherList|filter:searchKeyword">
+											<td>{{docVouchDtls.voucherNo}}</td>
+											<td>{{docVouchDtls.voucherDate}}</td>
+											<td>{{docVouchDtls.doctorName}}</td>
+											<td>- </td>
+											<td>{{(docVouchDtls.paidAmount).toFixed(2)}}</td>
+											<td>{{(docVouchDtls.totalDoctorCredit).toFixed(2)}}</td>
+											<td>{{(docVouchDtls.consumedDoctorCredit).toFixed(2)}}</td>
+											<td>{{docVouchDtls.doctorAdvance == null ? 0.0 :(docVouchDtls.doctorAdvance).toFixed(2)}}</td>
+											<td>{{(docVouchDtls.consumedDoctorAdvance).toFixed(2)}}</td>
+											<td>{{(docVouchDtls.retainerShipFee).toFixed(2)}}</td>
+											<td class="text-center"><a class="cursor-pointer" data-toggle="modal" ng-click=""data-target="">Details</a></td>
+										</tr>
+							    </tbody>
+							  </table>
+							  <table class="table table-bordered">
+									<tr ng-if="(doctorShareProcessedVoucherList |filter:searchKeyword)=='' || (doctorShareProcessedVoucherList |filter:searchKeyword)==null">
+										<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="row padding-top5">
+				         <div class="col-md-12 col-lg-12 table-responsive padding-left-right-set4">
+				             <div class="row margin-bottom45 center-block">
+									<ul ng-if="pager.pages.length" class="pagination table-list"
+										style="font-size: 14px;">
+										<li ng-class="{disabled:pager.currentPage === 1}"><a
+											ng-click="setPage(1,'true')">First</a></li>
+										<li ng-class="{disabled:pager.currentPage === 1}"><a
+											ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+										<li ng-repeat="page in pager.pages"
+											ng-class="{active:pager.currentPage === page}"><a
+											ng-click="setPage(page,'true')">{{page}}</a></li>
+										<li
+											ng-class="{disabled:pager.currentPage === pager.totalPages}">
+											<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+										</li>
+										<li
+											ng-class="{disabled:pager.currentPage === pager.totalPages}">
+											<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+										</li>
+									</ul>
+								</div>
+				         </div>
+				     </div>
+					</div>
+				</div>
+			</div>
+			<!-- ****** tab1 bill row end ********* -->
+			<!-- ****** tab2 details row start ********* -->
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(2) "  class="second-level-tab-display-div">
+					<fieldset>
+							<form name="docVoucherform" novalidate>
+								<div class="row margin-top10 padding-left-right-set4">
+									<div
+										class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0 margin-top8">
+										<div class="row input-container">
+											<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+												<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10 ">
+												<div class="">
+													<input type="text" autocomplete="off" name="description"
+														id="date1" class="text-input floating-label"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" tabindex="13" ng-model="fromDate"
+														model-view-value="true" is-open="popup.opened"
+														datepicker-options="dateOptions" show-button-bar="false"
+														ng-click="open()" /> <label for="description"
+														class="LISDynamicLabel">From Date</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top0 margin-top8">
+										<div class="row input-container">
+											<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+												<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10 ">
+												<div class="">
+													<input type="text" autocomplete="off" name="description"
+														id="date2" class="text-input floating-label"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY" tabindex="13" ng-model="toDate"
+														model-view-value="true" is-open="popup1.opened"
+														datepicker-options="dateOptions" show-button-bar="false"
+														ng-click="open1()" /> <label for="description"
+														class="LISDynamicLabel">To Date</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-user" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="form-group" show-errors>
+													<select class="text-input floating-label" name="referralId"
+														ng-model="referralId" required>
+														<option ng-repeat="info in referralList"
+															value="{{info.referralId}}" ng-value="info.referralId">{{info.desc}}</option>
+													</select> <label for="code">Referral</label>
+													<p class="help-block"
+														ng-if="docVoucherform.referralId.$error.required">Referral
+														is required</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-1 col-sm-2 col-md-2 padding-top8  padding-left-right-set text-width-auto">
+										<div class="common-save-button" style="padding-top: 0px;">
+											<a href="" class="btn btn-primary btn-save-box-shadow"
+												ng-click="searchReferralProcessedVoucherList();"
+												style="width: auto;"> <i class="fa fa-search"
+												aria-hidden="true"></i>
+											</a>
+										</div>
+									</div>
+							</form>
+					</fieldset>
+					<div class="row his-style">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5 padding-bottom5">
+					         <div class="search">
+					             <label class="show-entries">Show <select
+									name="DataTables_Table_0_length"
+									aria-controls="DataTables_Table_0"
+									ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+									ng-change="setNoOfRecords();" class="search-popUp-ddl" convert-to-number>
+										<option value="10">10</option>
+										<option value="50">50</option>
+										<option value="75">75</option>
+										<option value="100">100</option>
+								</select> entries
+								</label>
+					         </div>
+					     </div>
+						<div class="row padding-left-right-set0 margin-top5">
+							<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll430">
+							  <table id="main-table" class="main-table width100">
+							    <thead>
+							      <tr>
+										<th class="width5">Voucher No.</th>
+										<th class="width5">Voucher Date</th>
+										<th class="width7">Referral Name</th>
+										<th class="width6">Share Amt</th>
+										<th class="width6">Processed Amt</th>
+										<th class="width6">Total Referral Credit</th>
+										<th class="width6">Consumed Referral Credit</th>
+										<th class="width6">Retainership Fee</th>
+										<th class="width5 text-center">Details</th>
+									</tr>
+							    </thead>
+							    <tbody>
+							      <tr ng-repeat="docVouchDtls in doctorShareProcessedVoucherList|filter:searchKeyword">
+											<td>{{docVouchDtls.voucherNo}}</td>
+											<td>{{docVouchDtls.voucherDate}}</td>
+											<td>{{docVouchDtls.referralName}}</td>
+											<td>- </td>
+											<td>{{(docVouchDtls.paidAmount).toFixed(2)}}</td>
+											<td>{{(docVouchDtls.totalReferralCredit).toFixed(2)}}</td>
+											<td>{{docVouchDtls.consumedDoctorCredit}}</td>
+											<td>{{(docVouchDtls.retainerShipFee).toFixed(2)}}</td>
+											<td class="text-center"><a class="cursor-pointer" data-toggle="modal" ng-click=""data-target="">Details</a></td>
+										</tr>
+							    </tbody>
+							  </table>
+							  <table class="table table-bordered">
+									<tr ng-if="(doctorShareProcessedVoucherList |filter:searchKeyword)=='' || (doctorShareProcessedVoucherList |filter:searchKeyword)==null">
+										<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="row padding-top5">
+				         <div class="col-md-12 col-lg-12 table-responsive padding-left-right-set4">
+				             <div class="row margin-bottom45 center-block">
+				                 <ul ng-if="pager.pages.length" class="pagination table-list"
+										style="font-size: 14px;">
+										<li ng-class="{disabled:pager.currentPage === 1}"><a
+											ng-click="setPage(1,'true')">First</a></li>
+										<li ng-class="{disabled:pager.currentPage === 1}"><a
+											ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+										<li ng-repeat="page in pager.pages"
+											ng-class="{active:pager.currentPage === page}"><a
+											ng-click="setPage(page,'true')">{{page}}</a></li>
+										<li
+											ng-class="{disabled:pager.currentPage === pager.totalPages}">
+											<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+										</li>
+										<li
+											ng-class="{disabled:pager.currentPage === pager.totalPages}">
+											<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+										</li>
+									</ul>
+				             </div>
+				         </div>
+				     </div>
+					</div>
+				</div>
+				
+			</div>
+			<!-- ****** tab2 details row end ********* -->
+		</div>
+		<!-- ****** tab row end ********* -->
+		
+	</div>
+</div>
+
+
+
+<script src="resources/assets/js/common/page-height.js"></script>					
+<script type="text/javascript">
+$(document).ready(function() {
+$(".selectedPageName").text("Doctor Share Processed Voucher Details");
+$(".sidebar-nav li").each(function() {
+	$(this).find("a").parents("li").removeClass("active");
+});
+$('a[href$="doctorShareProcessedVoucherDetails"]').parents("li").addClass("active");
+});
+</script>

@@ -1,0 +1,161 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+            	
+        <div class="row margin-top4">
+          	<div class="col-md-9"></div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+							<input type="text" autocomplete="off" class="text-search-box" ng-model="serachKeyword" placeholder="Search" style="margin-top:0px">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+		</div>
+        <div class="row padding-left-right-set4 padding-top10">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll500">
+			  <table id="main-table" class="main-table width120">
+			    <thead>
+			      <tr class="">
+						<th class="UHID-width fixed">
+							UHID
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="patient-doc-details-width">
+							Patient Details
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="patient-doc-details-width">
+							Doctor Details
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="UHID-width">
+							Location in Hospital
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="status">
+							Date (Requested)
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="status">
+							Short Leave Date (From) Time
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="status">
+							Short Leave Date-Till Time
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width10">
+							Reason
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width5 last-col-fixed">
+							Action taken
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+					</tr>
+			    </thead>
+			    <tbody>
+						<tr ng-repeat="info in shortLeaveRequestList | filter:serachKeyword">
+							<td class="fixed">
+								<div>{{info.uhidNumber}}</div>
+								<!-- <b>UHID:</b>  -->
+							</td>
+							<td ng-init='age=getAge(info.dob)'>
+								<div ng-if="info.patientId > 0">{{info.patientName+'
+									'+age+'/'+info.genderCode}}</div>
+								<div ng-if="info.tPatientId > 0">{{info.patientName+'
+									'+info.dob+'/'+info.genderCode}}</div>
+							</td>
+							<td>
+								<div>Dr.{{info.doctorName+', '+info.specialityName}}</div>
+							</td>
+							<td>
+								<div>{{info.floorName+' , '+info.bedNumber}}</div>
+							</td>
+							<td>
+								<div>{{info.createdDate}}</div>
+							</td>
+							<td>
+								<div>{{info.fromDate+' '+info.stringFromTime}}</div>
+							</td>
+							<td>
+								<div>{{info.toDate+' '+info.stringToTime}}</div>
+							</td>
+							<td>
+								<div>{{info.shortLeaveReasonName}}</div>
+							</td>
+							<td class="last-col-fixed">
+								<div class="row">
+									<input type="radio" name="radioBtnForTransferRqust"
+										class="radioAccepted" data-toggle="modal"
+										data-target="#commonNote"
+										ng-click="getAdmissionDataAccept(info)"><span>Accept</span>
+									<input type="radio" name="radioBtnForTransferRqust"
+										class="radioRejected" data-toggle="modal"
+										data-target="#accepatReject"
+										ng-click="getAdmissionDataAccept(info)"><span>Reject</span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+			  </table>
+			</div>
+		</div>
+	</div>
+	 <div ng-include="'./views/common/accept-reject.html'"></div>
+     <div ng-include="'./views/common/note-save.html'"></div>
+         
+	<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right15">
+					<div class="row padding-left-right15" style="padding-right: 25px !important;">
+						<div class="col-lg-11 col-md-11 col-sm-10"></div>
+							<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+								<button class="btn btn-primary btn-save-box-shadow  width100" title="Back">
+								<a href="#/bedManagement" class="color-white"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a></button>
+							</div>
+						</div>
+				</footer>
+</div>
+	<script type="text/javascript">
+
+	$( document ).ready(function() {
+		
+		var documentHeight= $(window).height();
+	    var sideBarHeight = documentHeight - 55;
+	 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+	 	
+		
+		$(".selectedPageName").text("Pending Short Leave");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="pendingShortLeave"]').parents("li").addClass("active");
+		
+		
+		
+	});
+	</script>

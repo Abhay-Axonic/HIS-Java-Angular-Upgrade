@@ -1,0 +1,285 @@
+<div id="page-content-wrapper" class="ng-scope">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row margin-top10 padding-left-right-set4">
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+								 placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened" datepicker-options="vm.model.fromDateOptions"
+								 show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+								<label for="code">Date (From)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+								 ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"
+								 show-button-bar="false" ng-click="vm.model.OpenToDate()">
+								<label for="description" class="LISDynamicLabel">Date-Till</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container margin-top4">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select name="fromStore" id="fromStore" class="text-input floating-label dirty" ng-model="vm.model.fromStore" data-ng-options="fromStore.store for fromStore in vm.model.fromStores">
+								</select>
+								<label for="code">Store (Requester)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container margin-top4">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select name="toStore" id="toStore" class="text-input floating-label dirty" ng-model="vm.model.toStore" ng-change="vm.model.storeChange();"
+								 data-ng-options="toStore.store for toStore in vm.model.toStores">
+								</select>
+
+								<label for="code">Issuing Store</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-bullseye" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="vm.model.indentNumber" ng-class="{dirty: vm.model.storeIndentType}">
+								<label for="code" class="LISDynamicLabel">Indent No.</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-2 col-md-2 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container margin-top4">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<select name="status" id="status" class="text-input floating-label dirty" ng-model="vm.model.status" data-ng-options="status.status for status in vm.model.statuses">
+								</select>
+								<label for="description" class="LISDynamicLabel">Status(n)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<!-- <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<select name="indentType" id="indentType" class="text-input floating-label dirty" ng-model="vm.model.indentType" data-ng-options="indentType.type for indentType in vm.model.indentTypes">
+								</select>
+								<label for="description" class="LISDynamicLabel">Type</label>
+							</div>
+						</div> -->
+					</div>
+				</div>
+				<div class="col-md-1 col-sm-2 col-lg-1 padding-left-right-set1">
+					<div class="padding-top10">
+						<a class="btn btn-primary btn-save-box-shadow width40" title="Search" ng-click="vm.model.LinenIndentApprovalData()">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12 col-lg-12 col-sm-8 padding-left-right-set0" id="nonBillableTableHt">
+				<fieldset>
+					<!-- <legend class="heading-div">Table</legend> -->
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 height500-table-with-scroll">
+							<table class="table table-bordered first-checkBox-padding">
+								<!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width7">
+											Indent No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Indent (Date)
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Store (Requester)
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Issuing Store
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6">
+											Priority
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width7">
+											Requestor
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width9">
+											Remark
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width5">
+											Status(n)
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+										  Approval Status
+										  <div class="float_right" ng-click="sortType = 'approvalStatus'; sortReverse = !sortReverse">
+											<div>
+											  <i class="fa fa-caret-up" aria-hidden="true"></i>
+											</div>
+											<div class="margin-top-8">
+											  <i class="fa fa-caret-down" aria-hidden="true"></i>
+											</div>
+										  </div>
+										</th>
+										<th class="width7">
+											Action taken
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="indent in vm.model.searchLinenIndentApprovalData | orderBy:sortType:sortReverse">
+										<td class="width6"> {{indent.indentNo}} </td>
+										<td class="width7"> {{indent.indentDate | date:'dd/MM/yyyy' }} </td>
+										<td class="width8"> {{indent.fromStoreName}} </td>
+										<td class="width8"> {{indent.toStoreName}} </td>
+										<td class="width5"> {{indent.priorityName}} </td>
+										<td class="width7"> {{indent.requestedBy}} </td>
+										<td class="width5" title="{{indent.remark}}"> {{indent.remark}} </td>
+										<td class="width6"> {{indent.status}} </td>
+										<td class="width8"> {{indent.approvalStatus}} </td>
+										<td>
+											<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+												<a title="Print">
+													<i class="fa fa-print" aria-hidden="true"></i>
+												</a>
+											</div>
+											<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+												<a title="Cancel">
+													<i class="fa fa-times-circle-o" aria-hidden="true" data-toggle="modal" data-target="#CanellationModalForStoreIndent" ng-click="vm.model.CancelIndent($index)"></i>
+												</a>
+											</div>
+											<div class="col-lg-6 col-md-6 padding-left-right-set4 text-right">
+												<a href="" ng-click="vm.model.LinenIndentApprovalDetails(indent)">Details</a>
+											</div>
+										</td>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("Linen Indent Approval");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="linenIndentApproval"]').parents("li").addClass("active");
+});
+
+
+</script>

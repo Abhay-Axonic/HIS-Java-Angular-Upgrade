@@ -1,0 +1,2697 @@
+	<style>
+.sidebar-wrapper {
+	cursor: wait;
+	pointer-events: none;
+}
+/* #li-span-margin{
+	margin-left: 20px !important;
+} */
+/* .OPDbg
+{
+	background:#59b7c8 !important;
+} */
+</style>
+<!-- Sidebar -->
+<div id="sidebar-wrapper" class="clini-sidebar" ng-controller="sidebarController">
+	<ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+		<div class="main-menu-heading" style=""><label>HIMS</label></div>
+		<!-- EMERGENCY ROOM Main Menu Start-->
+		<li><a class="cursor-pointer" ng-if="checkAccess(328)"> <i
+				class="fa fa-free-code-camp" aria-hidden="true"
+				style="font-size: 13px"></i> <span>ER</span><!-- Emergency Room -->
+		</a>
+			<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+				style="list-style-type: none;">
+				<li ng-if="checkAccess(329)"><a href="#/unknownPatientReg/personalForUnknown"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>ER-Encounter</span>
+				</a></li>
+				<li ng-if="checkAccess(330)"><a href="#/bedTypeAllocation"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Triage Worklist</span>
+				</a></li>
+				<li ng-if="checkAccess(331)"><a href="#/erPatientList"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>ER
+							Patient List</span>
+				</a></li>
+				<li ng-if="checkAccess(332)"><a href="#/mapOfBedForER"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Map
+							Of Bed</span>
+				</a></li>
+				<li ng-if="checkAccess(333)"><a href="#/ERdueForDischarge"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Due
+							For Discharge</span>
+				</a></li>
+				<li ng-if="checkAccess(776)"><a href="#/erMarkForDischarge"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>ER
+							Mark For Discharge</span>
+				</a></li>
+				<li ng-if="checkAccess(334)"><a href="#/ERreadyForBilling"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Ready
+							For Billing</span>
+				</a></li>
+				<li ng-if="checkAccess(335)"><a href="#/ERfinalDischarge"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Final
+							Discharge</span>
+				</a></li>
+				<li ng-if="checkAccess(336)"><a class="cursor-pointer" ng-click="getAdmissionNote('ER')">
+						<i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Admission
+							Note</span>
+				</a></li>
+				<li ng-if="checkAccess(789)"><a class="cursor-pointer" href="#/erInitiateBedTransfer/erInitiateRequestTransferBed"> <i
+								class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>
+								ER Bed Transfer </span>
+				</a></li>
+				<!-- <li><a class="cursor-pointer" href="#/erTransferRequestAcceptance"> <i
+								class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>
+								ER Acceptance Transfer</span>
+								<span>Request</span> 
+				</a></li> -->
+			</ul></li>
+		<!-- EMERGENCY ROOM Main Menu End-->
+		<!-- OPD Main Menu Start-->
+		<li><a class="cursor-pointer" ng-if="checkAccess(1)" id="OPD"> <i class="fa fa-blind"
+				aria-hidden="true"></i> <span>OPD</span>
+		</a> <!-- OPD Sub Menu One Start-->
+			<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+				style="list-style-type: none;">
+				<!-- APPOINTMENT SCHEDULING START -->
+				<li><a class="cursor-pointer"> <i
+					class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Appointment Scheduling</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+							<li><a class="cursor-pointer" ng-if="checkAccess(7)" href="#/appointmentList">
+								<i class="fa fa-pencil" aria-hidden="true"></i> 
+								<span>Appointment List</span>
+						</a></li>
+						<li>
+							<a class="cursor-pointer" ng-if="checkAccess(686)" href="#/encounterQueueEHC">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Encounter Queue EHC</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<!-- APPOINTMENT SCHEDULING END -->
+				<!-- ENCOUNTER START -->
+				<li ng-class="{active: isActive('/encounter/encounterDetails')}"><a class="cursor-pointer" ng-if="checkAccess(5)"
+							href="#/encounter/encounterDetails"> <i class="fa fa-pencil"
+						aria-hidden="true"></i> <span>Encounter</span>
+				</a></li>
+				<!-- ENCOUNTER END -->
+				<!-- PATIENT MANAGEMENT START -->
+				<li ng-if="checkAccess(2)"><a class="cursor-pointer"> <i
+					class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Patient Management</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li ng-class="{active: isActive('/patientRegistration')}"><a class="cursor-pointer" ng-if="checkAccess(3)"
+							href="#/patientRegistration"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>
+									Registration</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(8)" href="#/patientList"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Patient
+									List</span>
+						</a></li>
+						<li>
+							<a href="#/deposit" ng-if="checkAccess(12)">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Deposit</span>
+							</a>
+						</li>
+						<li><a class="cursor-pointer"  href="#/growthChart" ng-if="checkAccess(744)"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Growth Chart</span>
+						</a></li>
+						
+					</ul>
+				</li>
+				<!-- PATIENT MANAGEMENT END -->
+				<!-- TOKEN START -->
+				<li><a class="cursor-pointer"> <i
+					class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Token</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li ng-if="isKioskForMenu == 'Y'"><a class="cursor-pointer"  href="#/tokenDisplay" ng-if="checkAccess(747)"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Front Desk</span><!-- Token Display -->
+						</a></li>
+						<li ng-if="isKioskForMenu == 'Y'"><a class="cursor-pointer"  href="#/nursingDisplay" ng-if="checkAccess(759)"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Nursing</span><!-- Nursing Assesment Display -->
+						</a></li>
+                        <!--ng-if="checkAccess(760)" -->
+						<li ng-if="isKioskForMenu == 'Y'"><a class="cursor-pointer"  href="#/cabinDisplay" > <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Doctor's Cabin</span><!-- Cabin Display -->
+						</a></li>
+					</ul>
+				</li>
+				<!-- TOKEN END -->
+				<!-- BILLING START -->
+				<li ng-if="checkAccess(10)"><a class="cursor-pointer"> <i
+					class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Billing</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+						<li><a class="cursor-pointer" ng-if="checkAccess(13)" 
+								href="#/billList"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Bill
+									List</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(11)" 
+								href="#/newOPDBilling" > <!-- ng-click="gotoOpBilling()" -->
+						 	<i class="fa fa-pencil" aria-hidden="true"></i> <span>New Bill</span><!-- OPD Bill -->
+							</a>
+						</li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(15)" href="#/debitNoteList"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Debit
+									Note List</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(14)" 
+								href="#/debitNote"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> 
+								<span>Create Debit Note</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(16)" href="#/creditNote"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Create Credit
+									Note</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(20)" href="#/refundList"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Refund List
+									</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(19)" href="#/refundAgainstDeposit"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Refund Deposit
+									</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(21)" href="#/refundAgainstCR"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Refund CR
+									</span>
+						</a></li>
+					</ul>
+				</li>
+				<!-- BILLING END -->
+			</ul>
+		</li>
+		<!-- OPD END -->
+		<!-- IPD START -->
+		<!-- IPD Main Menu Start-->
+		<li><a class="cursor-pointer" ng-if="checkAccess(26)" id="IPD"> <i class="fa fa-user-secret"
+				aria-hidden="true"></i> <span>IPD</span>
+		</a> <!-- IPD Sub Menu One Start-->
+			<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+				style="list-style-type: none;">
+				<li ng-if="checkAccess(27)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Admission</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(33)" href="#/admittedPatientList"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Admitted
+									patient List</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(28)"
+							ng-click="getAdmissionNote('ADN')"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Admission Request</span>
+						</a></li>
+						<li><a ng-if="checkAccess(711)" href="#/admission"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>
+									Bed Allocation</span><!-- Admission -->
+						</a></li>
+						<li><a ng-if="checkAccess(30)" href="#/bedReservationList"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Reserved Bed list</span><!-- Bed Reservation List -->
+						</a></li>
+						<li><a ng-if="checkAccess(31)" href="#/bedAvailability"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Bed Wait List</span><!-- Bed Reservation Waitlist -->
+						</a></li>
+						<li><a ng-if="checkAccess(34)" href="#/passIssued"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Issued Pass Management</span><!-- Issued Pass -->
+						</a></li>
+					</ul>
+				</li>
+				
+				<li ng-if="checkAccess(35)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Transfers</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(36)" href="#/transferRequestAcceptance"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Acceptance
+									Transfer Request</span>
+						</a></li>
+					</ul>
+				</li>
+				
+				<li ng-if="checkAccess(37)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Billing</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<!-- <li><a class="cursor-pointer" ng-if="checkAccess(38)" href="#/billEstimation"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Bill
+									Estimation</span>
+						</a></li> -->
+						<li><a class="cursor-pointer" ng-if="checkAccess(43)" href="#/preAuthorizationRequest">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Insurance Authorization 
+									</span><!-- Pre Authorization Request -->
+									<span class="alignmet-span-for-sidebar">Request</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(39)"
+							href="#/IPDCharges"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>New
+									Charges</span><!-- IPD Charges -->
+						</a></li>
+						<!-- <li><a class="cursor-pointer" ng-if="checkAccess(40)" href="#/IPDBilling"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>IPD
+									Billing</span>
+						</a></li> -->
+					<!-- 	<li><a class="cursor-pointer" ng-if="checkAccess(41)" href="#/intermediateBill">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Intermediate
+									Billing</span>
+						</a></li> -->
+						<li><a  ng-if="checkAccess(42)" href="#/updatePayeeInformation"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Update
+									Payee </span><!-- Update Payee Information -->
+						</a></li>
+						
+					</ul></li>
+			</ul>
+		</li>
+		<!-- IPD END -->
+		<!-- EHR START -->
+		<li><a class="cursor-pointer" ng-if="checkAccess(243)"> <i class="fa fa-hospital-o"
+				aria-hidden="true" style="font-size: 18px;"></i> <span>EHR</span>
+		</a>
+			<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+				style="list-style-type: none;">
+	            <!-- ng-if="checkAccess(758)" -->
+				<li><a href="#/doctorDesk"> <i class="fa fa-pencil" aria-hidden="true">
+					      </i><span>Patient Desk</span><!-- Doctor Desk -->
+					</a></li>
+				
+					<li><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Transfer</span>
+					</a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+							style="list-style-type: none;">
+							<li><a ng-if="checkAccess(257)" href="#/intiateTransferCare"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>
+									 Initiate Care Transfer</span><!-- Initiate Transfer Of Care -->
+							</a></li>
+							<li><a ng-if="checkAccess(258)" href="#/acceptanceOfTransferOfCare"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>
+										Accept Care Transfer</span><!-- Accept Transfer Of Care  -->
+							</a></li>
+							<li><a ng-if="checkAccess(259)" href="#/pendingTransferRequest"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>
+										View Pending Transfer</span><!-- Pending Transfer -->
+							</a></li>
+							<li><a ng-if="checkAccess(260)" href="#/transferToICU"> <i class="fa fa-pencil"
+									aria-hidden="true"></i> <span>Transfer To ICU</span>
+							</a></li>
+						</ul>
+					</li>
+					
+					<li ng-if="checkAccess(261)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Discharge</span>
+					</a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+							style="list-style-type: none;">
+							<li><a ng-if="checkAccess(262)" href="#/dueForDischarge"> <i class="fa fa-pencil"
+									aria-hidden="true"></i> <span>Initiate Discharge</span><!-- Due For Discharge -->
+							</a></li>
+							<li>
+							<!-- <a ng-if="checkAccess(263)" href="#/cancelForDischarge"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>Cancel
+										Discharge</span>
+							</a> -->
+							<a ng-if="checkAccess(263)" href="#/cancelDischarge"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>Cancel
+										Discharge</span>
+							</a></li>
+							<li><a ng-if="checkAccess(264)" href="#/pendingShortLeave"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>
+										Short Leave Approval</span><!-- Pending Short Leave -->
+							</a></li>
+							<li>
+								<a ng-if="checkAccess(763)" href="#/dischargeSummary">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Discharge Summary</span>
+								</a>
+							</li>
+						</ul>
+					</li>
+						
+			</ul>
+		</li>
+		<!-- EHR END -->
+		<!-- NURSING START -->
+		<li><a class="cursor-pointer"> <i class="fa fa-heartbeat"
+				aria-hidden="true" style="font-size: 18px;"></i> <span>Nursing</span>
+		</a>
+			<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2" style="list-style-type: none;">
+				<li><a ng-if="checkAccess(46)" href="#/patientAcceptance"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Patient
+									Acceptance</span>
+						</a></li>
+				<li ng-if="checkAccess(65)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Transfer</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(66)"
+							href="#/initiateBedTransfer/initiateRequestTransferBed"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>
+									Bed Transfer Request</span>
+						</a></li>
+						<li><a ng-if="checkAccess(67)" href="#/transferRequest/initiateRequestTransferBed">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Ward Transfer
+									Request</span>
+						</a></li>
+						<!-- <li>
+							<a href="">
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Pending Surgeries</span>
+							</a>
+						</li> -->
+						<li><a ng-if="checkAccess(68)" href="#/transferToOT/OTTransferRequest"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>OT
+									Transfer</span>
+						</a></li>
+						<!-- <li><a ng-if="checkAccess(69)"
+							href="#/transferForInvestigation/investigationTransferRequest">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Investigation
+									Transfer</span>
+						</a></li> -->
+					</ul></li>
+					<li><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Patient Activity</span>
+					</a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+							style="list-style-type: none;">
+							<li><a ng-if="checkAccess(48)" href="#/bedManagement"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Map of Bed</span>
+							</a></li>
+							<li><a ng-if="checkAccess(47)" href="#/allergies"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Allergies</span>
+							</a></li>
+							<li><a ng-if="checkAccess(49)" href="#/drugAdministrator"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Drug
+									Administration</span>
+							</a></li>
+							<li><a ng-if="checkAccess(50)"  ui-sref="sampleCollection"> <i class="fa fa-pencil"
+									aria-hidden="true"></i> <span>Sample Collection</span>
+							</a></li>
+							<li><a  href="#/bloodIssueAcceptanceWorklist"> <i class="fa fa-pencil"
+									aria-hidden="true"></i> <span>Blood Issue Acceptance Worklist</span>
+							</a></li>
+							<li><a ng-if="checkAccess(51)" href="#/nursingOrderView"> <i class="fa fa-pencil"
+									aria-hidden="true"></i> <span>Nursing Orders</span>
+							</a></li>
+							<li><a ng-if="checkAccess(53)" href="#/pendingOrders"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Pending Orders</span>
+							</a></li>
+							<li><a ng-if="checkAccess(54)" href="#/homecareMedicationEntry"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>Homecare
+										Medication Entry</span>
+							</a></li>
+	
+							<li><a ng-if="checkAccess(55)" href="#/patientIssueReturn"> <i class="fa fa-pencil"
+									aria-hidden="true"></i> <span>Patient Sales Return</span>
+							</a></li>
+							
+							<li>
+								<a ng-if="checkAccess(56)" href="#/periodicityService">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Periodicity Service</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(693)" href="#/serviceRendering">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Service Rendering</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(694)" href="#/nursingProgressNote">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Nursing Progress Note	</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(777)" href="#/administrationWorklist">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Administration Worklist</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/nursingHandover">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Nursing Handover</span>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li ng-if="checkAccess(57)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Pharmacy</span>
+					</a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+							style="list-style-type: none;">
+							<li>
+								<a ng-if="checkAccess(59)" href="#/patientIndent">
+									<i class="fa fa-pencil" aria-hidden="true"></i> 
+									<span>Indent</span><!-- Indent Patient -->
+								</a>
+							</li>
+							<li><a ng-if="checkAccess(58)" href="#/patientIssueAcceptance"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>Issue
+										Acceptance</span>
+							</a></li>
+							<li><a ng-if="checkAccess(60)" href="#/billableConsumption"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>Billable
+										Consumption</span>
+							</a></li>
+							<li><a ng-if="checkAccess(61)" href="#/returnBillableConsumption"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>Return Billable
+										Consumption</span>
+							</a></li>
+						</ul></li>
+						<li ng-if="checkAccess(265)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>New
+							Born</span>
+						</a>
+							<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+								style="list-style-type: none;">
+								<li><a href="#/newBornDetails"> <i class="fa fa-pencil"
+										aria-hidden="true"></i> <span>List</span><!-- Details -->
+								</a></li>
+								<li><a ng-if="checkAccess(266)" href="#/newBornRegistration"> <i
+										class="fa fa-pencil" aria-hidden="true"></i> <span>Registration</span>
+								</a></li>
+								<li><a ng-if="checkAccess(268)" href="#/cradleBedAllocation"> <i
+										class="fa fa-pencil" aria-hidden="true"></i> <span>Bed
+											Allocation</span>
+								</a></li>
+							</ul></li>
+			</ul>
+		</li>
+		<!-- NURSING END -->
+		<div class="main-menu-heading" style=""><label>Master</label></div>
+		<li><a class="cursor-pointer" ng-if="checkAccess(369)"> <i class="fa fa-globe"
+				aria-hidden="true"></i> <span style="margin-left: 28px;">Global Master</span>
+		</a>
+			<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+				style="list-style-type: none;">
+				
+				<li ng-if="checkAccess(490)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Common</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(383)" href="#/countryMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Country Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(384)" href="#/stateMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>State Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(385)" href="#/districtMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>District Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(386)" href="#/cityMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>City Master</span> </a></li>
+						<li><a ng-if="checkAccess(387)" href="#/areaMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Area Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(491)"
+							 href="#/commonMaster/priorityMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Priority Master</span></a></li>
+						<!-- <li>
+							<a class="cursor-pointer" ng-if="checkAccess(492)" ng-click="getMasterPage('Discount Reason Master')">
+							<i class="fa fa-pencil" aria-hidden="true"></i><span>Discount Master</span></a>
+						</li> -->
+						<li><a ng-if="checkAccess(493)" href="#/rejectionMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Rejection Master</span></a></li>
+						<!-- <li><a ng-if="checkAccess(494)" href="#/reasonTypeMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Reason Type Master</span></a></li> -->
+						<li><a ng-if="checkAccess(495)" href="#/reasonMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Reason Master</span></a></li>
+						<li><a ng-if="checkAccess(496)" href="#/qualificationMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Qualification Master</span></a></li>
+						<li><a ng-if="checkAccess(497)" href="#/degreeMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Degree Master</span></a></li>
+						<li><a ng-if="checkAccess(498)" href="#/employeeCategoryMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Employee Category Master</span></a></li>
+						<li><a ng-if="checkAccess(499)" href="#/doctorCategoryMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Doctor Category Master</span></a></li>
+						<li><a ng-if="checkAccess(500)" href="#/designationMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Designation Master</span></a></li>
+						<li><a ng-if="checkAccess(501)" href="#/instructionMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Instruction Master</span></a></li>
+						<li><a  ng-if="checkAccess(502)" href="#/doseMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Dose Master</span></a></li>
+						<li><a ng-if="checkAccess(844)" href="#/commonMaster/languageMaster"><i class="fa fa-pencil"
+						        aria-hidden="true"></i><span>Language Master</span></a></li>
+						
+					</ul>
+				</li>
+				<li ng-if="checkAccess(370)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Organization
+							Structure</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(379)" href="#/licenseTypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>License Type Master
+									</span>
+						</a></li>
+						<li><a ng-if="checkAccess(377)" href="#/organizationMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Organization
+									Master</span>
+						</a></li>
+						<li><a  href="#/qmslogo"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>QMS Logo
+									</span>
+						</a></li>
+						<li><a ng-if="checkAccess(371)" href="#/hospitalMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Hospital
+									Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(372)" href="#/specialityMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Department Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(373)" href="#/subSpecialityMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Sub
+									Department Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(376)" href="#/serviceMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Service Master</span>
+						</a></li>
+						
+						<li><a ng-if="checkAccess(375)" href="#/holidayCalenderMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Holiday
+									Calendar Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(378)" href="#/documentTypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Document
+									Type Master</span>
+						</a></li>
+					</ul></li>
+					<li ng-if="checkAccess(380)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Patient
+							Registration</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<!-- <li><a ng-if="checkAccess(383)" href="#/countryMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Country Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(384)" href="#/stateMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>State Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(385)" href="#/districtMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>District Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(386)" href="#/cityMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>City Master</span> </a></li>
+						<li><a ng-if="checkAccess(387)" href="#/areaMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Area Master</span>
+						</a></li> -->
+						<li><a ng-if="checkAccess(381)" href="#/nationalityMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Nationality
+									Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(382)" href="#/raceMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Race Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(388)" class="cursor-pointer" href="#/identificationMaster">
+								<!-- ng-click="getMasterPage('identificationmaster')" --> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Identification
+									Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(389)" class="cursor-pointer" href="#/commonMaster/sexmaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Gender
+									Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(398)" href="#/prefixMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Prefix Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(390)"  class="cursor-pointer"
+							href="#/commonMaster/relationmaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Relation Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(391)" class="cursor-pointer"
+							href="#/commonMaster/maritalstatus"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Marital Status Master</span>
+						</a></li>
+						<!-- <li><a ng-if="checkAccess(392)" class="cursor-pointer" href="#/commonMaster/religion">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Religion
+									Master</span>
+						</a></li> -->
+						<li><a ng-if="checkAccess(393)" class="cursor-pointer"
+							href="#/commonMaster/occupation"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Occupation Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(394)" ng-if="checkAccess('Religion Master', 'screen')"class="cursor-pointer"
+							href="#/commonMaster/patientsource"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Patient Source Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(395)" ng-if="checkAccess('Religion Master', 'screen')"class="cursor-pointer"
+							href="#/commonMaster/referraltype"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Referral Type Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(396)" href="#/referralMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Referral Master</span>
+						</a></li>
+						<!-- <li><a ng-if="checkAccess(397)" href="#/encounterTypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Encounter
+									Type Master</span>
+						</a></li> -->
+						<li><a ng-if="checkAccess(399)" href="#/consentTypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Consent
+									Type Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(400)" href="#/consentMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Consent Master</span>
+						</a></li>
+					</ul></li>
+					<li ng-if="checkAccess(401)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>ADT</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<!-- all ADT scren added here -->
+						<li><a ng-if="checkAccess(402)"  class="cursor-pointer" href="#/bedTypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Bed
+									Type Master</span>
+						</a></li>
+						<!-- <li><a class="cursor-pointer" ng-if="checkAccess(403)" href="#/admissionTypeMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Admission
+									Type</span>
+						</a></li> -->
+						<li><a class="cursor-pointer" ng-if="checkAccess(404)" href="#/occupancyUnitMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Occupancy
+									Unit Type</span>
+						</a></li>
+						<!-- <li><a class="cursor-pointer" ng-if="checkAccess(405)" href="#/dischargeTypeMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Reason
+									For Discharge Master</span>
+						</a></li> -->
+						<li><a class="cursor-pointer" ng-if="checkAccess(406)" href="#/shortLeaveReasonMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Short
+									Leave Reason</span>
+						</a></li>
+						<!-- <li><a class="cursor-pointer" href="#/hierarchyMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Hierarchy Master</span>
+						</a></li> -->
+					</ul></li>
+					<li ng-if="checkAccess(411)"><a class="cursor-pointer"> 
+					    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> 
+					    <span>LIS</span>
+					</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a href="#/bedsideInvestigationsMaster"
+							class="cursor-pointer"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span> Bedside Investigations Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(412)" href="#/commonMaster/sampleMaster"
+							class="cursor-pointer"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Sample Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(413)"
+							href="#/commonMaster/containerMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Container
+									Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(414)"
+							href="#/commonMaster/techinqueMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Technique
+									Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(415)"
+							href="#/commonMaster/prerequisitesMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Prerequisites
+									Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(416)" href="#/ageGroupMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Age Group Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(417)" class="cursor-pointer"
+							href="#/commonMaster/unitMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Unit Master</span>
+						</a></li>
+						<li>
+							<a ng-if="checkAccess(418)" class="cursor-pointer" href="#/textualReferenceRangeMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Textual Reference Range</span>
+							</a>
+						</li>
+						<li><a ng-if="checkAccess(419)" class="cursor-pointer"
+							href="#/commonMaster/reagentMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Reagent Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(420)" class="cursor-pointer"
+							href="#/commonMaster/reportTypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Report
+									Type Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(421)"
+							href="#/commonMaster/bacteriaShapMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Bacteria
+									Shape Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(422)" href="#/incubationPeriodMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Incubation period
+									Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(423)"
+							href="#/commonMaster/wtifilmStudyMasterMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Wet
+									Film Study Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(424)"
+							href="#/commonMaster/mediaMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Media Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(425)"
+							href="#/commonMaster/incubationTestMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Incubation
+									Test Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(426)"
+							href="#/sampleTypeMediaMappingMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Sample
+									Type Media </span> <span class="alignmet-span-for-sidebar">Mapping
+									Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(427)"
+							href="#/commonMaster/colonyMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Colony Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(428)" href="#/commonMaster/bacteriaClassificationMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Bacteria
+									Classification Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(429)" href="#/commonMaster/antibioticsMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Antibiotic Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(430)" href="#/commonMaster/antibioticMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Antibiotics
+									Class  Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(431)" href="#/commonMaster/antibioticsGroupMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Antibiotics
+									Group Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(432)" href="#/additionofAntibiotic"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Addition
+									of Antibiotics </span> <span class="alignmet-span-for-sidebar">Against
+									Antibiotic Class</span>
+						</a></li>
+						<li><a ng-if="checkAccess(433)" href="#/antibioticAdditionGroupMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Addition
+									of Antibiotics </span> <span class="alignmet-span-for-sidebar">Group
+									Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(434)" href="#/colonyTestWithMediaMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Colony
+									Test With</span>
+								<div class="alignmet-span-for-sidebar">Media Master</div>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(435)" href="#/commonMaster/organismMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> 
+								<span>Organism Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(436)" href="#/commonMaster/organismGroupMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span
+								>Organism Group Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(437)" href="#/commonMaster/stainigMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span
+								>Staining Master </span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(825)" href="#/commonMaster/microbiologyStainMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span
+								>microbiology Stain Master </span>
+						</a></li>
+						<li><a ng-if="checkAccess(438)" href="#/commonMaster/sensitivityTypeResultMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Sensitivity
+									Test Result</span>
+						</a></li>
+						<!-- <li><a class="cursor-pointer"
+							href="#/specimanMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Speciman Master</span>
+						</a></li> -->
+						<li><a ng-if="checkAccess(439)" href="#/commonMaster/blockMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Block
+									Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(440)" href="#/commonMaster/slideProcedureMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Slide
+									Procedure Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(441)" href="#/specimanMapping"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Specimen Mapping
+									With Block </span><span class="alignmet-span-for-sidebar">& Slide Procedure</span>
+						</a></li>
+						<li><a ng-if="checkAccess(442)" href="#/organismMapping"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Organism Group Mapping </span> <span class="alignmet-span-for-sidebar"> With Organism
+									</span>
+						</a></li>
+						<li><a ng-if="checkAccess(443)" href="#/mappingofMicroorganism"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Mapping
+									of Micro-organism</span>
+						</a></li>
+						<li>
+							<a ng-if="checkAccess(444)" href="#/specimanMAster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> 
+								<span>Specimen Master</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(569)" href="#/commonMaster/biochemicalTest"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> 
+								<span>Biochemical Test Master</span>
+							</a>
+						</li>
+					</ul></li>
+					<li ng-if="checkAccess(445)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Billing</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a class="cursor-pointer" ng-if="checkAccess(446)"
+							href="#/patientCategory"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Patient
+									Category</span>
+						</a></li>
+					<!-- 	<li><a ng-if="checkAccess(709)" href="#/billingBedCategoryMasterUnit"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Billing
+									Bed Category</span>
+						</a></li> -->
+						<!-- <li><a class="cursor-pointer"
+							ng-click="getMasterPage('visit Type Master')"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Visit
+									Type Master</span>
+						</a></li> -->
+						<li ng-if="checkAccess(447)"><a class="cursor-pointer" href="#/commonMaster/visitType">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Visit
+									Type Master</span>
+						</a></li>
+						<!-- <li><a class="cursor-pointer"
+							ng-click="getMasterPage('Payment Mode Master')"><i
+								class="fa fa-pencil" aria-hidden="trContainerue"></i><span
+								style="margin-left: 26px;">Mode Of Payment</span></a></li> -->
+						<!-- <li>
+						<a  ng-if="checkAccess(448)" class="cursor-pointer" href="#/commonMaster/paymentMode">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Mode Of Payment</span>
+						</a></li> -->
+<!-- 						<li><a class="cursor-pointer" -->
+<!-- 							ng-click="getMasterPage('Payment Master')"> <i -->
+<!-- 								class="fa fa-pencil" aria-hidden="trContainerue"></i> <span> -->
+<!-- 									Payment Entitlement</span> -->
+<!-- 						</a></li> -->
+							<!-- <li><a ng-if="checkAccess(449)" class="cursor-pointer" href="#/commonMaster/paymentEntitment">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Payment Entitlement</span>
+						</a></li> -->
+						<!-- <li><a class="cursor-pointer"
+							ng-click="getMasterPage('Consultant Master')"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Consultant
+									Type</span></a></li> -->
+									<!-- <li><a  ng-if="checkAccess(450)" class="cursor-pointer" href="#/commonMaster/consultantType">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Consultant Type</span>
+						</a></li> -->
+						<li><a ng-if="checkAccess(451)" href="#/currencyMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Currency Master</span></a></li>
+						<li><a ng-if="checkAccess(452)" href="#/currencydenomination"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Currency
+									Denomination</span></a></li>
+						
+						<li><a class="cursor-pointer" ng-if="checkAccess(453)" href="#/doctorCategory"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Doctor
+									Category</span></a></li> 
+						<li><a class="cursor-pointer" ng-if="checkAccess(454)" href="#/employeeCategory">
+									<i class="fa fa-pencil" aria-hidden="true"></i> <span>Employee
+										Category</span>
+							</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(455)" href="#/bankBranch"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Bank
+									Branch</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(456)" href="#/bankMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Bank
+									Master</span>
+						</a></li>
+						<!-- <li><a class="cursor-pointer" href="#/cardTypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Card Type
+									Master</span>
+						</a></li> -->
+						<!-- <li><a class="cursor-pointer" href="#/transactionTypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Transaction Type
+									Master</span>
+						</a></li> -->
+					</ul></li>
+					<li ng-if="checkAccess(457)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Pharmacy</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a class="cursor-pointer" ng-if="checkAccess(458)"
+							href="#/pharmacyproductCategoryMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Product
+									Category</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(459)"
+							href="#/pharmacyformulationTypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Formulation
+									Type</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(826)"
+							href="#/commonMaster/scheduleMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Schedule Master
+									</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(827)"
+							href="#/genericScheduleMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Generic Schedule Master
+									</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(461)" href="#/manufacturerMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Manufacturer
+									Master</span>
+						</a></li>
+
+						<li><a class="cursor-pointer" ng-if="checkAccess(462)" href="#/supplyDaysMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Supply
+									Days Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(463)" ng-if="checkAccess('Manufacturer Master', 'screen')"href="#/genericMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Generic
+									Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(464)" href="#/itemMasterGlobal">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Item
+									Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(465)" href="#/packageMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Package Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(466)" href="#/unitofMeasurement"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Unit
+									Of Measurement</span>
+						</a></li>
+						<li><a ng-if="checkAccess(467)" href="#/pharmacyunitMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Unit
+									Master </span>
+						</a></li>
+						<li><a ng-if="checkAccess(468)" href="#/pharmacyStrengthUnitMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Strength Unit
+									Master </span>
+						</a></li>
+						<li><a ng-if="checkAccess(469)" href="#/dispensingMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Dispensing Master
+							</span>
+						</a></li>
+						<li><a ng-if="checkAccess(470)" class="cursor-pointer" href="#/storageunitMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Storage
+									Unit Master</span>
+						</a></li>
+						<!-- <li><a class="cursor-pointer" href="#/procurementunitMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span
+								>Procurement Unit</span>
+						</a></li> -->
+						<li><a class="cursor-pointer" ng-if="checkAccess(471)" href="#/kitMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Kit
+									Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(472)"
+							href="#/combinationMedicationMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Combination
+									Medication</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(473)"
+							href="#/taxComponentMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Tax Component Master
+									</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(474)"
+							href="#/taxMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Tax Master
+									</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(475)"
+							href="#/otherCharges"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Other Charges Master
+									</span>
+						</a></li>
+					</ul></li>
+					<li ng-if="checkAccess(476)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Clinical</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a class="cursor-pointer" ng-if="checkAccess(477)" href="#/routeAdministration">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Route
+									of Administration</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(478)" href="#/frequencyMaster"> <!-- ng-click="getMasterPage('frequency master')" -->
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Frequency
+									Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(479)"
+							href="#/formulationTypeROAMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Formulation Type &
+									ROA Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(480)" href="#/nursingOrderMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span
+								style="margin-left: 26px;">Nursing Order Master</span></a></li>
+						<!-- <li><a ng-if="checkAccess(481)" href="#/bloodComponent"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span style="margin-left: 26px;">Blood
+									Component</span></a></li> -->
+						<!-- <li><a ng-if="checkAccess(482)" href="#/vaccinationMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span style="margin-left: 26px;">Vaccination
+									Master</span></a></li> -->
+						<!-- <li><a ng-if="checkAccess(483)" href="#/immunizationSchedule"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span
+								style="margin-left: 26px;">Immunization Schedule</span></a></li> -->
+						<li><a ng-if="checkAccess(484)" href="#/systemMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span
+								style="margin-left: 26px;">System Master</span></a></li>
+						<li><a ng-if="checkAccess(485)" href="#/systemObservationMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span
+								style="margin-left: 26px;">System Observation Master</span></a></li>
+						<li><a ng-if="checkAccess(486)" href="#/surgeryGradeMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span
+								style="margin-left: 26px;">Surgery Grade Master</span></a></li>
+						<li><a ng-if="checkAccess(487)" href="#/surgeryMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span
+								style="margin-left: 26px;">Surgery Master</span></a></li>
+						<li><a ng-if="checkAccess(488)" href="#/allergyTypeMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span
+								style="margin-left: 26px;">Allergy Type Master</span></a></li>
+						<li><a ng-if="checkAccess(489)" href="#/allergyMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span
+								style="margin-left: 26px;">Allergy Master</span></a></li>
+						<!-- 	<li><a href="#/immuniztionHistory"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span
+								>Immunization History</span></a></li> -->
+								
+						<!-- ******** Site Of Adminstration added on - 10/oct/2018 start********** -->
+						<li>
+							<a href="#/siteOfAdministration" ng-if="checkAccess(753)">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span style="margin-left: 26px;">Site Of Administration</span>
+							</a>
+						</li>
+						<!-- ******** Site Of Adminstration added on - 10/oct/2018 end********** -->
+								
+					</ul></li>
+					<li ng-if="checkAccess(503)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>OPD</span>
+						</a>
+							<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+								style="list-style-type: none;">
+								<li><a class="cursor-pointer" ng-if="checkAccess(504)" href="#/clinicMaster"> <i
+										class="fa fa-pencil" aria-hidden="true"></i> <span>Clinic
+											Master</span>
+								</a></li>
+							</ul>
+					</li>
+					<li ng-if="checkAccess(505)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Baby
+							Registration</span>
+						</a>
+							<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+								style="list-style-type: none;">
+								<li><a ng-if="checkAccess(506)" href="#/deliveryTypeMaster"> <i
+										class="fa fa-pencil" aria-hidden="true"></i> <span>Delivery
+											Type Master</span>
+								</a></li>
+					</ul></li>
+					<li ng-if="checkAccess(507)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Diet
+							and Kitchen</span>
+					</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(508)" href="#/nutritionalMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Nutritional
+									Master</span></a></li>
+						<li><a ng-if="checkAccess(509)" href="#/keyIngredientsMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Key
+									Ingredients Master</span></a></li>
+						<li><a ng-if="checkAccess(510)" href="#/dietTypeMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Diet Type Master</span></a></li>
+						<li><a ng-if="checkAccess(511)" href="#/dishMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Dish Master</span></a></li>
+						<li><a ng-if="checkAccess(512)" href="#/mealMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Meal Master</span></a></li>
+						<li><a ng-if="checkAccess(513)" href="#/daywiseDietTemplate"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Day
+									Wise Diet Template</span></a></li>
+						<li><a href="#/tubeFeedingProducts"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Tube Feeding Products</span></a></li>
+						<!-- <li><a href="#/dietUnitMater"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Diet Unit Master</span></a></li> -->
+
+					</ul></li>
+					<li ng-if="checkAccess(514)">
+						<a class="cursor-pointer">
+							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							<span>OTIMS</span>
+						</a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+							<!-- <li>
+							ng-if="checkAccess(761)"
+								<a   href="#/resourceChargesConfiguration">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Resource Charges Configuration</span>
+								</a>
+							</li> -->
+						<!-- 	<li>
+								<a  ng-if="checkAccess(515)" href="#/procedureConfiguration">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Procedure Configuration</span>
+								</a>
+							</li> -->
+							<li>
+								<a ng-if="checkAccess(696)" href="#/procedureConfigurations">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Clinical Service Configuration</span>
+								</a>
+							</li>
+							
+							<!-- ng-if="checkAccess(515) -->
+							<li>
+								<a  href="#/additionalOtTimeConfiguration">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Additional OT Time Configuration</span>
+								</a>
+							</li>
+							<li><a  ng-if="checkAccess(516)" href="#/subsequentSurgeryConfiguration"> 
+								<i class="fa fa-pencil" aria-hidden="ture"></i> <span style="margin-left: 22px;">Subsequent Surgery</span> <span class="alignmet-span-for-sidebar">Configuration</span>
+							</a></li>
+							<li><a  ng-if="checkAccess(517)" href="#/resourceConfiguration"><i
+									class="fa fa-pencil" aria-hidden="true"></i><span>Resource Configuration
+										</span></a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(518)" href="#/cancellationMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Cancellation Master</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(519)" href="#/operation_Theatre">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Operation Theatrer</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(520)" href="#/procedureType">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Clinical Service Type</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(521)" href="#/operationTheatreType">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Operation Theatre Type</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(522)" href="#/operationTable">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Operation Table</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(523)" href="#/operationTableType">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Operation Table Type</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(524)" href="#/anaesthesiaType">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Anaesthesia Type</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(525)" ng-if="checkAccess('Anaesthesia Type', 'screen')"href="#/checklistItem">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Checklist Item</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(526)" ng-if="checkAccess('Anaesthesia Type', 'screen')"href="#/checklistMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Checklist Master</span>
+								</a>
+							</li>
+							<!-- <li>
+								<a href="#/staffRole">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Staff Role</span>
+								</a>
+							</li> -->
+							<li>
+								<a ng-if="checkAccess(527)" href="#/consentMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Consent Master</span>
+								</a>
+							</li>
+							<li>
+								<a ng-if="checkAccess(528)" ng-if="checkAccess('Anaesthesia Type', 'screen')"href="#/consentType">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Consent Type</span>
+								</a>
+							</li>
+							<!-- <li>
+								<a href="#/inventoryItem">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Inventory Item</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/inventoryItemType">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Inventory Item Type</span>
+								</a>
+							</li>
+							<li>
+								<a ng-click="getMasterPage('Equipment Master')" class="cursor-pointer" >
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Equipment Master</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/equipmentType">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Equipment Type</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/serviceMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Service Master</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/serviceType">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Service Type</span>
+								</a>
+							</li> -->
+							<li>
+								<a ng-if="checkAccess(529)" href="#/noteMaster"><!-- #/noteMaster -->
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Anaesthesia Note</span>
+								</a>
+							</li>
+							<!-- <li>
+								<a href="">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Surgery Note</span>
+								</a>
+							</li>
+							<li>
+								<a href="">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Discharge Note</span>
+								</a>
+							</li> -->
+							<!-- <li>
+								<a ng-if="checkAccess(530)" href="#/facultyMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Faculty</span>
+								</a>
+							</li> -->
+							<!-- <li>
+								<a href="#/OTIMSUser">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Otims User</span>
+								</a>
+							</li> 
+							<li>
+								<a href="#/uomMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Unit Of Measurements</span>
+								</a>
+							</li> 
+							<li>
+								<a href="#/countryMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Country Master</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/cityMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Town Master</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/insuranceCompany">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Insurance Company</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/typeOfStay">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Type Of Stay</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/generalPractitioner">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>General Practitioner</span>
+								</a>
+							</li> -->
+							
+							<li>
+								<a ng-if="checkAccess(710)" href="#/surgicalCalendar">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Surgical Calendar</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/notesMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Notes Master</span>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a class="cursor-pointer">
+							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							<span>Equipment Master</span>
+						</a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+							<li>
+								<a href="#/checklistEquipmentMaster">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Checklist Master</span>
+								</a>
+							</li>
+							<li>
+								<a href="#/checklistEquipmentMapper">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Checklist Equipment Mapper</span>
+								</a>
+							</li>
+					   </ul>
+				  </li>
+				  <li>
+						<a class="cursor-pointer">
+							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							<span>Promotion Configuration</span>
+						</a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+							<li>
+								<a href="#/promotionManagement">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<span>Promotion Management</span>
+								</a>
+							</li>
+					   </ul>
+				  </li>
+			</ul>
+		</li>
+		<!-- GLOBAL MASTER MAIN MENU END -->
+		
+		<!-- UNIT MASTER MAIN MENU START -->
+
+		<li><a class="cursor-pointer" ng-if="checkAccess(531)"> <i class="fa fa-object-group"
+				aria-hidden="true"></i> <span>Unit Master</span>
+		</a>
+			<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+				style="list-style-type: none;">
+				<li ng-if="checkAccess(532)"><a class="cursor-pointer" ><i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i><span
+						style="margin-left: 22px">Organization Structure</span></a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(533)" href="#/departmentMasterUnit"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Department
+									Master</span></a></li>
+						<li><a ng-if="checkAccess(534)" href="#/subDepartmentMasterUnit"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Sub
+									Department Master</span></a></li>
+						<!-- <li><a ng-if="checkAccess(535)" href="#/ICUtypeMasterUnit"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>ICU
+									Type Master</span>
+						</a></li> -->
+						<li><a class="cursor-pointer" ng-if="checkAccess(374)" href="#/icutypeMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>ICU
+									Type Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(536)" href="#/holidayCalendarMasterUnit"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Holiday
+									Calendar Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(697)" href="#/weekendMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Weekend
+									 Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(537)" href="#/floorMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Floor Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(538)" href="#/floorMapMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Floor Map Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(539)" href="#/amenityMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Amenity Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(540)" href="#/wingMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Wing Master</span>
+						</a></li>
+					<!-- 	<li><a ng-if="checkAccess(698)" href="#/orderSetMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Order Set Master</span>
+						</a></li> -->
+						<li><a  href="#/growthChartMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Growth Chart Master</span></a></li>	
+						<li>
+							<a ng-if="checkAccess(704)" href="#/counterMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span> Counter Master</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(705)" href="#/cabinMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Cabin Master</span>
+							</a>
+						</li>
+						
+					</ul></li>
+					<li ng-if="checkAccess(541)"><a class="cursor-pointer"><i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i><span>ADT</span></a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						
+						<li><a ng-if="checkAccess(544)" href="#/billingBedCategoryMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Billing
+									Bed Category</span>
+						</a></li>
+						
+						<li><a ng-if="checkAccess(543)" href="#/bedCategoryMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Bed
+									Category Master</span>
+						</a></li>
+						<!-- <li><a href="#/bedCategoryMapper"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span> Bed
+									Category Mapper</span>
+						</a></li> -->
+						<!-- <li><a href="#/bedClassMasterUnit"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Bed
+									Class Master</span>
+						</a></li> -->
+
+						<!-- <li><a href="#/bedClassMappingMasterUnit"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Bed
+									Class Mapping Master</span>
+						</a></li> -->
+						<li><a ng-if="checkAccess(545)" href="#/wardMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Ward Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(550)" href="#/roomMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Room Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(546)" href="#/bedMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Bed Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(547)" href="#/nursingStationMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Nursing
+									Station Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(548)" href="#/nursingStationWardMapping"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Nursing
+									Ward Mapping</span>
+						</a></li>
+						<li><a ng-if="checkAccess(549)" href="#/mealPreferenceMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Meal
+									Preference Master</span>
+						</a></li>
+						
+					</ul></li>
+					<li ng-if="checkAccess(551)"><a class="cursor-pointer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><span>CSSD</span></a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+							style="list-style-type: none;">
+							<li><a ng-if="checkAccess(552)" href="#/sterilizationTypeMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>
+								Sterilization Type Master</span></a></li>
+							<li><a ng-if="checkAccess(553)" href="#/autoclaveMaster"><i
+							class="fa fa-pencil" aria-hidden="true"></i><span>
+							Autoclave Master</span></a></li>
+							<li><a ng-if="checkAccess(554)" href="#/wrapperExpiryMaster"><i
+							class="fa fa-pencil" aria-hidden="true"></i><span>
+							 Wrapper expiry master</span></a></li>
+							 <li><a ng-if="checkAccess(555)" href="#/kitCreation"><i
+							class="fa fa-pencil" aria-hidden="true"></i><span>
+							 Kit Creation</span></a></li>
+						</ul></li>
+						<li ng-if="checkAccess(407)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Nursing</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<!-- all ADT scren added here -->
+						<li><a  class="cursor-pointer"
+							  ng-if="checkAccess(802)" href="#/nurseAllocationMsaster">
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+							 <span>Nurse Allocation Master</span>
+						</a></li>	
+						
+						<li><a class="cursor-pointer" href="#/diagnosis"> <i
+						class="fa fa-pencil" aria-hidden="true"></i> <span>Diagnosis</span>
+						</a></li>
+						<li><a class="cursor-pointer" href="#/careplan"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Care
+									Plan</span>
+						</a></li>
+						<li><a class="cursor-pointer" href="#/intervention"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Intervention</span>
+						</a></li>
+						<li><a class="cursor-pointer" href="#/activity"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Activity</span>
+						</a>
+						<li><a class="cursor-pointer" href="#/score"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Score Master</span>
+						</a></li>
+					</ul></li>
+					
+					<li ng-if="checkAccess(556)"><a class="cursor-pointer"><i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i><span>LIS</span></a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<!-- <li><a ng-if="checkAccess(557)" href="#/commonMaster/phlebotomyMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Phlebotomy</span></a></li> -->
+						<li><a ng-if="checkAccess(558)" href="#/testMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Test Master</span></a></li>
+						<li>
+							<a ng-if="checkAccess(559)" href="#/histopathologyTest">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Histopathology Test</span>
+							</a>
+						</li>
+						<li>
+							<a href="#/cytologyTest">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Cytology Test</span>
+							</a>
+						</li>
+					<!-- 	<li>
+							<a ng-if="checkAccess(560)" href="#/specimanType">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Specimen Type</span>
+							</a>
+						</li> -->
+						<li><a ng-if="checkAccess(798)"  href="#/commonMaster/serologyTestFindingMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Serology Test Finding
+									Master</span></a></li>
+						<li><a ng-if="checkAccess(561)"  href="#/commonMaster/headerMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Header
+									Master</span></a></li>
+									<li><a   href="#/serologyTestMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Serology Test 
+									Master</span></a></li>
+						<li><a ng-if="checkAccess(562)" href="#/parameterMaster"><i class="fa fa-pencil"
+								aria-hidden="true"></i><span>Parameter Master</span></a></li>
+						<li><a ng-if="checkAccess(563)" href="#/multiparameterTestMaster"><i
+								class="fa fa-pencil" aria-hidden="true"></i><span>Multiparameter Test Master</span> <!-- <span class="alignmet-span-for-sidebar"></span> --> </a></li>
+
+						<!-- <li><a href="#/outsourceTestMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span
+								>Out Source Test Master</span>
+
+						</a></li> -->
+						<li><a ng-if="checkAccess(564)" href="#/commonMaster/departmentMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Department
+									Master</span>
+						</a></li>
+<!-- 						<li><a  ng-if="checkAccess(565)"href="#/templateMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Template Master</span>
+						</a></li> -->
+						<li><a ng-if="checkAccess(566)" href="#/parameterFormulaMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Parameter
+									Formula</span>
+
+						</a></li>
+						<li><a ng-if="checkAccess(567)" href="#/profilepanelTestMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Profile/Panel
+									Test</span>
+
+						</a></li>
+						<!-- <li><a href="#/commonMaster/storageLocationMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Storage
+									Location Master</span>
+						</a></li> -->
+						
+						<li>
+							<a ng-if="checkAccess(568)" href="#/storageLocationMasterForSlideBlocks">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Storage Location Master</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(712)" href="#/costingParameter">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Costing Parameter</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(713)" href="#/costingSheet">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Costing Sheet</span>
+							</a>
+						</li>
+						<li>
+							<a href="#/testCostHead">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Test Cost Head</span>
+							</a>
+						</li>
+						<li>
+							<a href="#/testCosting">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Test Costing</span>
+							</a>
+						</li>
+						<li>
+							<a href="#/serviceProfitMargin">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Service Profit Margin</span>
+							</a>
+						</li>
+						<!-- <li>
+							<a ng-if="checkAccess(840)" href="#/machineMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Machine Master</span>
+							</a>
+						</li> -->
+						<!-- <li>
+							<a ng-if="checkAccess(839)" href="#/machineParameterMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Machine Parameter Master</span>
+							</a>
+						</li> -->
+						<!-- <li>
+							<a ng-if="checkAccess(841)" href="#/pathologyMachineParametersLinking">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Pathology Machine Parameter Linking</span>
+							</a>
+						</li> -->
+						
+					</ul></li>
+					<li ng-if="checkAccess(570)"><a class="cursor-pointer"><i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i><span>Billing</span></a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(584)" href="#/unitServiceMapping"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Unit
+									Service Mapping</span>
+						</a></li>
+						<li><a ng-if="checkAccess(583)" href="#/unitServiceMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Unit
+									Service Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(585)" href="#/unitServiceBasePrice"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Unit
+									Service Base Price</span>
+						</a></li>
+						<li><a ng-if="checkAccess(578)" href="#/variableSquencePricing/sequencePricing"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Variable
+									Pricing</span>
+						</a></li>
+						<li>
+							<a ng-if="checkAccess(609)" href="#/tariffMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Tariff Master</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(610)" href="#/serviceTariffMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Service Tariff Master</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(616)" href="#/ARmaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">AR Master</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(617)" href="#/APmaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">AP Master</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(618)" href="#/GLcode">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">GL Code</span>
+							</a>
+						</li>
+						<li>
+							<a class="cursor-pointer" ng-if="checkAccess(575)" href="#/gradeCreationMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Grade Creation Master</span>
+							</a>
+						</li>
+						<li>
+							<a class="cursor-pointer" href="#/discountCategoryMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Discount Category Master</span>
+							</a>
+						</li>
+						<li><a ng-if="checkAccess(571)" href="#/insuranceMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Insurance Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(572)" href="#/TPAmaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>TPA Master</span>
+						</a></li>
+						
+						<li>
+							<a ng-if="checkAccess(573)" class="cursor-pointer" href="#/InsuranceTPAMapping">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Insurance & TPA Mapping</span>
+							</a>
+						</li>
+						<li><a ng-if="checkAccess(574)" class="cursor-pointer" href="#/corporateMasterGlobal">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Corporate
+									Master</span>
+						</a></li>
+						<li><a  ng-if="checkAccess(608)"  href="#/companyContractMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Company
+									Contract</span>
+						</a></li>
+						<li><a ng-if="checkAccess(576)" href="#/billingGroupMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Billing
+									Group Master</span>
+						</a></li>
+						<li>
+							<a ng-if="checkAccess(611)" href="#/OPConsulationConfigurationMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">OP Consultation Configuration</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(684)" href="#/IPConsultationConfiguration">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">IP Consultation Configuration</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(612)" href="#/doctorConsulationMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Doctor Consultation</span>
+							</a>
+						</li>
+						<li>
+							<!-- ng-if="checkAccess(761)" -->
+								<a   href="#/resourceChargesConfiguration">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Resource Charges Configuration</span>
+								</a>
+							</li>
+						<li>
+							<a ng-if="checkAccess(613)" href="#/globalDoctorShare">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Global Doctor Share</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(614)" href="#/doctorWiseShare">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class=""> Doctorwise Share</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(615)" href="#/doctorReferralShareMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Doctor Referral Share</span>
+							</a>
+						</li>
+						<!-- <li><a href="#/packageDefEitherOr"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span >Package Definition - </span>
+								<span class="">Either Or Package</span>
+						</a></li> -->
+						<!-- <li><a href="#/allInclusivePackage"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">All
+									Inclusive Package</span>
+						</a></li> -->
+						<!-- <li><a ng-if="checkAccess(577)"href="#/packageList"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Package List</span>
+						</a></li> -->
+						
+						<li><a ng-if="checkAccess(579)" href="#/accountPayableMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Account
+									Payable Master</span>
+
+						</a></li>
+						<li><a ng-if="checkAccess(580)" href="#/accountPayable"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Account Payable</span>
+						</a></li>
+						<!-- <li><a ng-if="checkAccess(581)" href="#/accountPayableComparsion"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Account
+									Payable Comparsion</span>
+						</a></li>
+
+						<li><a ng-if="checkAccess(582)" href="#/accountPayableStatus"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Account
+									Payable Status</span>
+						</a></li>
+
+						
+						<li><a ng-if="checkAccess(586)" href="#/schedulePriceUnitService"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Schedule
+									Price Unit Service</span>
+						</a></li>  -->
+						<li><a ng-if="checkAccess(587)" href="#/orderSet"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Order Set</span>
+						</a></li>
+						<li><a ng-if="checkAccess(588)" href="#/orderSetList"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Order Set List</span>
+						</a></li>
+						<!-- <li><a ng-if="checkAccess(589)" href="#/admissionRejectionList"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Admission
+									Rejection List</span>
+						</a></li> -->
+						<!-- <li><a ng-if="checkAccess(590)" href="#/refundCRList/cashForRefund"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Refund
+									CR List</span>
+						</a></li> -->
+						<!-- <li><a href="#/deposit"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Deposit</span>
+						</a></li> -->
+						<!-- <li><a ng-if="checkAccess(591)" href="#/findBillList"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Find Bill List</span>
+						</a></li> -->
+						<!-- <li><a ng-if="checkAccess(592)" href="#/chargeConversion"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Charge Conversion</span>
+						</a></li>
+						<li><a ng-if="checkAccess(593)" href="#/entitlementCoversion"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Entitlement
+									Conversion</span>
+						</a></li>
+						<li><a ng-if="checkAccess(594)" href="#/autoChargeReview"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Auto Charge Review</span>
+						</a></li>
+						<li><a ng-if="checkAccess(595)" href="#/writeOff"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Write Off</span>
+						</a></li>
+						<li><a ng-if="checkAccess(596)" href="#/writeOffDetails"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Write Off Details</span>
+						</a></li>
+						<li><a ng-if="checkAccess(599)" href="#/roundOffConfiguration"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span class="">Round
+									Off Configuration</span>
+						</a></li>
+						<li><a ng-if="checkAccess(601)" href="#/reminderForNOK"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span class="">Remainder For NOK
+							</span>
+						</a></li> -->
+						 <li>
+							<a ng-if="checkAccess(619)" href="#/periodicityServiceConfig">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Periodicity Service</span>
+								<span style="margin-left:43px;">Configuration</span>
+							</a>
+						</li> 
+						<!-- <li>
+							<a ng-if="checkAccess(620)" href="#/IPdefaultServiceConfig">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">IP Default Service Configuration</span>
+							</a>
+						</li> -->
+						<li>
+							<a ng-if="checkAccess(621)" href="#/depositMatrixConfig">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Deposit Matrix Configuration</span>
+							</a>
+						</li>
+						<!-- <li>
+							<a  ng-if="checkAccess(685)" href="#/pendingForPOCreation">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Pending for PO Creation</span>
+							</a>
+						</li> -->
+						<!-- <li>
+							<a href="#/corporateEmployee">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Corporate Employee</span>
+							</a>
+						</li> -->
+						<li>
+							<a  ng-if="checkAccess(764)" href="#/patientType">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Patient Type</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(765)" href="#/patientTypeDetails">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Patient Type Details</span>
+							</a>
+						</li>
+							<li>
+							<a ng-if="checkAccess(788)" href="#/hospitalAccountMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span class="">Hospital Account Master</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li ng-if="checkAccess(622)">
+					<a class="cursor-pointer">
+						<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+						<span>Package Configuration</span>
+					</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+						<li>
+							<a ng-if="checkAccess(623)" href="#/EHCpackage">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>EHC Package</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(624)" href="#/packageWithCAP"> 
+								<i class="fa fa-pencil"	aria-hidden="true"></i>
+								<span>Package With CAP</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(625)" href="#/allExclusivePackage"> 
+								<i class="fa fa-pencil"	aria-hidden="true"></i>
+								<span>All Inclusive Package</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(626)" href="#/eitherOrPackage"> 
+								<i class="fa fa-pencil"	aria-hidden="true"></i>
+								<span>Either Or Package</span>
+							</a>
+						</li>
+						<li>
+							<a ng-if="checkAccess(627)" href="#/multicounterPackage"> 
+								<i class="fa fa-pencil"	aria-hidden="true"></i>
+								<span>Multi Visit Package</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+				
+				<li ng-if="checkAccess(628)" ><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i><span>Pharmacy</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a class="cursor-pointer" ng-if="checkAccess(629)" href="#/vendormaster"> <!-- ng-click="getMasterPage('vendor master')" -->
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Vendor
+									Master</span>
+						</a></li>
+						<!-- <li><a class="cursor-pointer"
+							ng-click="getMasterPage('rack master')"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span
+								>Rack Master</span>
+						</a></li> -->
+						<li><a class="cursor-pointer" ng-if="checkAccess(630)" href="#/rackMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Rack
+									Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(631)" href="#/mainstoremaster"> <!-- ng-click="getMasterPage('store master')" -->
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Main
+									Store Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(632)" href="#/substoremaster"> <!-- ng-click="getMasterPage('store master')" -->
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Store
+									Item Mapping Master</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(633)"
+							href="#/productRestriction/productCategoryMapping"> <!-- ng-click="getMasterPage('store master')" -->
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Product
+									Restriction</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(634)"
+							href="#/pharmacologicalClassificationMaster"> <!-- ng-click="getMasterPage('store master')" -->
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Pharmacological
+									Classification</span>
+						</a></li>
+						<li><a class="cursor-pointer" ng-if="checkAccess(635)" href="#/storewiseGenericMapper">
+								<i class="fa fa-pencil" aria-hidden="true"></i> <span>Storewise
+									Generic Mapper</span>
+						</a></li>
+						<li>
+							<a class="cursor-pointer" ng-if="checkAccess(636)" href="#/consumableBarcodeConfig">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Consumable Barcode </span>
+								<span style="margin-left:43px;">Configuration</span>
+							</a>
+						</li>
+						<li>
+							<a class="cursor-pointer" ng-if="checkAccess(637)" href="#/indentTemplateMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Indent Template Master</span>
+							</a>
+						</li>
+						<li>
+							<a class="cursor-pointer" ng-if="checkAccess(638)" href="#/ETOItemConfiguration">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>ETO Item Configuration</span>
+							</a>
+						</li>
+						<li>
+							<a class="cursor-pointer" ng-if="checkAccess(803)" href="#/pharmacyTariffMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Pharmacy Tariff Master</span>
+							</a>
+						</li>
+						<!-- <li>
+							<a class="cursor-pointer" href="#/KITmasterPharmacy">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Kit Master Pharmacy</span>
+							</a>
+						</li>
+						<li>
+							<a class="cursor-pointer" href="#/KitTypeMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Kit Type Master</span>
+							</a>
+						</li> -->
+					</ul></li>
+					<li ng-if="checkAccess(639)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i><span>Clinical</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(707)" href="#/orderSetMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Order Set Master</span>
+						</a></li>
+						<li>
+							<a href="#/dischargeSummaryTemplate">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Discharge Summary Template</span>
+							</a>
+						</li>
+						<li>
+							<a href="#/dischargeSummaryFieldMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Discharge Summary Field</span>
+								<span style="margin-left:43px;">Master</span>
+							</a>
+						</li>
+						<li>
+							<a href="#/icpcCodesConfiguration">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<span>ICPC Codes Configuration</span>
+							</a>
+						</li>
+						<li>
+						<a href="#/vaccinationMAster">
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+							<span>Vaccination Master</span>
+						</a>
+					</li>
+					<li><a ng-if="checkAccess(824)" href="#/RMOAllocationMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>RMO Allocation Master</span>
+						</a></li>
+						
+						<li>
+							<a class="cursor-pointer"  href="#/procedureConfig"> <i
+								class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Procedure Configuration</span>
+							</a>
+						</li>
+
+					</ul></li>
+					<li  ng-if="checkAccess(640)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Asset
+							Management</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(641)" href="#/assetTypeMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Asset Type Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(642)" href="#/assetCategoryMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Asset
+									Category Master</span>
+						</a></li>
+						<li><a ng-if="checkAccess(643)" href="#/productCategoryMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Product
+									Category Master</span>
+						</a></li>
+						<!-- <li><a href="#/fixedAssetType"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Fixed Asset Type</span>
+						</a></li> -->
+						<li><a ng-if="checkAccess(644)" href="#/fixedAssetMaster"> <i class="fa fa-pencil"
+								aria-hidden="true"></i> <span>Fixed Asset Master</span>
+						</a></li>
+						<!-- <li><a class="cursor-pointer" ng-if="checkAccess(645)"
+							ng-click="getMasterPage('Equipment Master')"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Equipment
+									Master</span>
+						</a></li> -->
+						
+						<li>
+							<a class="cursor-pointer" ng-if="checkAccess(646)" href="#/generalInsuranceMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i>
+								<span>General Insurace Master</span>
+							</a>
+						</li>
+						
+					</ul></li>
+					<li  ng-if="checkAccess(647)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Common</span>
+				         </a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li>
+							<a class="cursor-pointer" ng-if="checkAccess(408)" href="#/shiftMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i>
+								<span>Shift Master</span>
+							</a>
+						</li>
+						
+				</ul></li>
+				<li ng-if="checkAccess(648)"><a class="cursor-pointer"> <i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Mortuary</span>
+				</a>
+					<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+						style="list-style-type: none;">
+						<li><a ng-if="checkAccess(649)" href="#/mortuaryBedMaster"> <i
+								class="fa fa-pencil" aria-hidden="true"></i> <span>Mortuary
+									Bed Master</span>
+						</a></li>
+					</ul></li>
+					<li ng-if="checkAccess(650)"><a href="#/staffRegistration" class="cursor-pointer"> 
+						<i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Staff Registration</span>
+							</a>
+						</li>
+					<li ng-if="checkAccess(651)"><a href="#/doctorRegistration" class="cursor-pointer"> 
+						<i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Doctor Registration</span>
+						</a>
+					</li>
+					<li ng-if="checkAccess(652)"><a class="cursor-pointer"> <i
+							class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Scheduling</span>
+					</a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-3"
+							style="list-style-type: none;">
+							<li><a class="cursor-pointer" ng-if="checkAccess(653)"
+								href="#/appointmentSchedulingUnitMaster"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>Appointment
+										Scheduling</span>
+							</a></li>
+							<li><a class="cursor-pointer" ng-if="checkAccess(654)"
+								href="#/modalityTypeMaster"> <i class="fa fa-pencil"
+									aria-hidden="true"></i> <span>Modality Type Master</span>
+							</a></li>
+							<li><a class="cursor-pointer" ng-if="checkAccess(655)"
+								href="#/modalityMaster"> <i class="fa fa-pencil"
+									aria-hidden="true"></i> <span>Modality Master</span>
+							</a></li>
+					</ul></li>
+					<li ng-if="checkAccess(656)">
+						      <a class="cursor-pointer"> 
+						      		<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+						      		<span>Schedule Block Unblock</span>
+						      </a>
+						      <ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+							       	<li>
+								        <a ng-if="checkAccess(657)" href="#/scheduleWise" class="cursor-pointer">
+									         <i class="fa fa-pencil" aria-hidden="true"></i>
+									         <span> Specialty Wise</span>
+								        </a>
+								     </li>
+								     <li>
+								        <a ng-if="checkAccess(658)" href="#/doctorWise" class="cursor-pointer">
+									         <i class="fa fa-pencil" aria-hidden="true"></i>
+									         <span> Doctor Wise</span>
+								        </a>
+								     </li>
+						      </ul>
+					     </li>
+					     <li ng-if="checkAccess(659)">
+					      <a class="cursor-pointer"> 	
+					      		<i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span>Configuration</span>
+					      </a>
+					    <ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+					       <li>
+					        <a class="cursor-pointer" ng-if="checkAccess(660)" href="#/applicationConfiguration">
+					         <i class="fa fa-pencil" aria-hidden="true"></i>
+					         <span>Application Configuration</span>
+					        </a>
+					       </li>
+					       
+					       <li>
+					        <a class="cursor-pointer" ng-if="checkAccess(699)" href="#/prefixConfiguration">
+					         <i class="fa fa-pencil" aria-hidden="true"></i>
+					         <span>Prefix Configuration</span>
+					        </a>
+					       </li>
+					       
+					         <li>
+					        <a class="cursor-pointer" ng-if="checkAccess(775)" href="#/autoServicePostingConfiguration">
+					         <i class="fa fa-pencil" aria-hidden="true"></i>
+					         <span>Auto Service Posting Configuration</span>
+					        </a>
+					       </li>
+					       
+					       <li>
+					        <a class="cursor-pointer" ng-if="checkAccess(774)" href="#/smsConfiguration">
+					         <i class="fa fa-pencil" aria-hidden="true"></i>
+					         <span>SMS Configuration</span>
+					        </a>
+					       </li>
+					    </ul>
+				   </li>
+				   <li>
+				      <a class="cursor-pointer" ng-if="checkAccess(661)"> 	
+				      	<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+				      	<span>User Managment</span>
+				      </a>
+					    <ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+					       <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(672)" href="#/roleCreation">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Role Creation</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer"  href="#/OTIMSroleCreation">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>OTIMS Role Creation</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer"   ng-if="checkAccess(673)" href="#/accessControl1">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Role Permission</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(674)" href="#/userRoleManagement">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>User Role Management</span>
+					        	</a>
+					       </li>
+					        <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(675)" href="#/roleManagement">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Role Management</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(676)" href="#/userAuthentication">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>User Authentication</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer"   ng-if="checkAccess(677)" href="#/newAccessControl">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Access Control</span>
+					        	</a>
+					       </li>
+					         
+					         <!-- /************************ Mapping master added on 21/sep/2018 by Chetna start  *********************/ -->
+					         <li>
+					        	<a class="cursor-pointer"  ng-if="checkAccess(714)" href="#/doctorCabinMapper">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Doctor Cabin Mapper</span>
+					        	</a>
+					        </li>
+					        <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(715)"  href="#/userCounterMapper">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>User Counter Mapper</span>
+					        	</a>
+					       </li>
+					        <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(689)"  href="#/userNursingStationMapper">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>User Nursing Station Mapper</span>
+					        	</a>
+					       </li>
+					        <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(690)"  href="#/userStoreMapper">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>User Store Mapper</span>
+					        	</a>
+					       </li>
+					       <!-- ***************Department Nursing Station added on 19-10-18 by chetana*************** -->
+					       <li>
+					        	<a class="cursor-pointer"  ng-if="checkAccess(746)" href="#/departmentNursingStationMapper">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Department Nursing Station </span>
+						         	<span style="margin-left:43px;">Mapper</span>
+					        	</a>
+					       </li>
+					         <!-- /************************ Mapping master added on 21/sep/2018 by Chetna end  *********************/ -->
+					          <li>
+                                <a class="cursor-pointer" ng-if="checkAccess(836)" href="#/departmentStoreMapper">
+                                     <i class="fa fa-pencil" aria-hidden="true"></i>
+                                     <span>Department Store Mapper</span>
+                                </a>
+                           </li>
+					    </ul>
+				   </li>
+				   <li>
+				      <a class="cursor-pointer" ng-if="checkAccess(667)"> 	
+				      	<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+				      	<span>Template Utility</span>
+				      </a>
+					    <ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+					       <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(668)" href="#/dataObject">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Create Clinical Section </span>
+					        	</a>
+					       </li>
+					       
+					         <li>
+					        	<a class="cursor-pointer"  href="#/clinicalSectionSummary" >
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Clinical Section Summary</span>
+					        	</a>
+					       </li>
+					       
+					       <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(669)" href="#/templateUtility">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Create Clinical Form</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(670)" href="#/templates">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Clinical Form Summary</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" ng-if="checkAccess(688)" href="#/templateICDCodeMapping">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<!-- <span>Template Diagnosis Mapping</span> -->
+						         	<span>Clinical Form ICD Code Mapping</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer"  href="#/templateServiceMapping">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<!-- <span>Template Diagnosis Mapping</span> -->
+						         	<span>Clinical Form Service Mapping</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/icpcCodeTemplateMapping">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>ICPC Code Clinical Form Mapping</span>
+					        	</a>
+					       </li>
+					    </ul>
+				   </li>
+				   <li ng-if="checkAccess(730)">
+				      <a class="cursor-pointer" > 	
+				      	<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+				      	<span>Blood Bank</span>
+				      </a>
+					    <ul class="nav-pills nav-stacked sub-menu-side-bar-level-3" style="list-style-type: none;">
+					       <li>
+					        	<a class="cursor-pointer" href="#/bloodBagType" ng-if="checkAccess(731)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Blood Bag Type</span>
+					        	</a>
+					       </li>
+					    	<li>
+					        	<a class="cursor-pointer" href="#/bloodDonortype" ng-if="checkAccess(732)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Blood Donor Type</span>
+					        	</a>
+					       </li>
+					        <li>
+					        	<a class="cursor-pointer" href="#/bloodTestResult" ng-if="checkAccess(733)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Blood Test Result Master</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/bloodTest" ng-if="checkAccess(734)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>TTD Blood Test Master</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/bloodBagCapacity" ng-if="checkAccess(735)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Blood Bag Capacity</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/bloodComponentMaster" ng-if="checkAccess(736)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Blood Component</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/reasonOfDiscard" ng-if="checkAccess(737)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Reason Of Discard </span>
+					        	</a>
+					       </li>
+					      <li>
+					        	<a class="cursor-pointer" href="#/screeningTest" ng-if="checkAccess(738)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Screening Test Master</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/bloodBankTypeComponent" ng-if="checkAccess(739)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Blood Bag Type</span>
+						         	<span style="margin-left:43px;">Component Master</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/donorRejectionMaster" ng-if="checkAccess(740)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Donor Rejection Master</span>
+					        	</a>
+					       </li>
+					        <li>
+					        	<a class="cursor-pointer" href="#/bloodGroupMaster" >
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span> Blood Group Master</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/bloodGroupMatchingMaster" ng-if="checkAccess(741)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Blood Group Matching Master</span>
+					        	</a>
+					       </li>
+					      <li>
+					        	<a class="cursor-pointer" href="#/bloodBankMaster" ng-if="checkAccess(742)">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Blood Bank Master</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/donorScreeningMaster">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Donor Screening Master</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/campMaster">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Camp Master</span>
+					        	</a>
+					       </li>
+					       <li>
+					        	<a class="cursor-pointer" href="#/transfusionPrecheckMaster">
+						         	<i class="fa fa-pencil" aria-hidden="true"></i>
+						         	<span>Transfusion Precheck Master</span>
+					        	</a>
+					       </li>
+					    </ul>
+				   </li>
+				   <!-- loyalty Card Menu START -->
+				   <li ng-if="checkAccess(728)"><a class="cursor-pointer"> <i class="fa fa-credit-card"
+							aria-hidden="true"></i> <span>Loyalty Card</span>
+					</a> <!-- OPD Sub Menu One Start-->
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+							style="list-style-type: none;">
+							<li class="ng-scope">
+								<a href="#/loyaltyCardCreation" ng-if="checkAccess(729)">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Loyalty Card Creation</span></a></li>
+							<li class="ng-scope">
+								<a href="#/loyaltyCardConfiguration" ng-if="checkAccess(743)">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Loyalty Card Configuration</span></a></li>
+								
+							</ul></li>
+					<!-- loyalty Card Menu END -->
+					<!-- Inventory Menu START -->
+					<li><a class="cursor-pointer" ng-if="checkAccess(804)">
+						<i class="fa fa-barcode"
+							aria-hidden="true"></i> <span>Inventory</span>
+					</a> <!-- OPD Sub Menu One Start-->
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+							style="list-style-type: none;">
+							<li ng-if="checkAccess(805)" class="ng-scope">
+								<a href="#/storeTypeMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Store Type Master</span></a>
+							</li>
+							<li ng-if="checkAccess(806)" class="ng-scope">
+								<a href="#/implantMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Implant Master</span></a>
+							</li>
+						</ul>
+					</li>
+					<!-- Inventory Menu END -->
+					<!-- Fund Management Menu Start -->
+					<li><a class="cursor-pointer" ng-if="checkAccess(807)">
+						<i class="fa fa-barcode"
+							aria-hidden="true"></i> <span>Fund Management</span>
+					</a> <!-- OPD Sub Menu One Start-->
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+							style="list-style-type: none;">
+							<!-- <li class="ng-scope">
+								<a href="#/trustMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Trust Master</span></a>
+							</li>
+							<li class="ng-scope">
+								<a href="#/fundInflow">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Fund Inflow</span></a>
+							</li> -->
+							<li ng-if="checkAccess(808)" class="ng-scope">
+								<a href="#/fundReconciliation">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Fund Reconciliation</span></a>
+							</li>
+							<li ng-if="checkAccess(809)" class="ng-scope">
+								<a href="#/fundApproval">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Fund Approval</span></a>
+							</li>
+							<li ng-if="checkAccess(810)" class="ng-scope">
+								<a href="#/fundRequisition">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Fund Requisition</span></a>
+							</li>
+							<li ng-if="checkAccess(811)" class="ng-scope">
+								<a href="#/fundApprovedList">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Fund Approved List</span></a>
+							</li>
+						</ul>
+					</li>
+					<!-- Fund Management Menu END -->
+					<!-- Ambulance Service START -->
+					<li><a class="cursor-pointer" ng-if="checkAccess(812)">
+						<i class="fa fa-barcode"
+							aria-hidden="true"></i> <span>Ambulance Service</span>
+					</a> <!-- OPD Sub Menu One Start-->
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+							style="list-style-type: none;">
+							<li ng-if="checkAccess(813)"class="ng-scope">
+								<a href="#/ambulanceTypeMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Ambulance Type Master</span></a>
+							</li>
+							<li ng-if="checkAccess(814)" class="ng-scope">
+								<a href="#/ambulanceMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Ambulance Master</span></a>
+							</li>
+							<li ng-if="checkAccess(815)" class="ng-scope">
+								<a href="#/ambulanceServiceProviderMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Service Provider Master</span></a>
+							</li>
+							<li ng-if="checkAccess(816)" class="ng-scope">
+								<a href="#/ambulanceTarrifMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Ambulance Tariff Master</span></a>
+							</li>
+							<li ng-if="checkAccess(817)" class="ng-scope">
+								<a href="#/resourceAllocationMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Resource Allocation Master</span></a>
+							</li>
+							<li ng-if="checkAccess(818)" class="ng-scope">
+								<a href="#/ambulanceFacilitiesMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Ambulance Facilities Master</span></a>
+							</li>
+							<li ng-if="checkAccess(819)" class="ng-scope">
+								<a href="#/ambulanceCharges">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Ambulance Charges</span></a>
+							</li>
+						</ul>
+					</li>
+					<!-- Ambulance Service END -->
+					<!-- Visit Type START -->
+					<li><a class="cursor-pointer" ng-if="checkAccess(820)">
+						<i class="fa fa-barcode"
+							aria-hidden="true"></i> <span>Visitor Type</span>
+					</a> <!-- OPD Sub Menu One Start-->
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+							style="list-style-type: none;">
+							<li  ng-if="checkAccess(821)" class="ng-scope">
+								<a href="#/passTypeMaster">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Visitor Pass Type Master</span></a>
+							</li>
+							<li ng-if="checkAccess(822)" class="ng-scope">
+								<a href="#/passBedCategoryMapper">
+								<i class="fa fa-pencil" aria-hidden="true"></i><span>Visitor Pass Bed Category Mapper</span></a>
+							</li>
+						</ul>
+					</li>
+					<!-- Visit Type END -->
+					<!-- QMS Menu Start-->
+					<li><a class="cursor-pointer" ng-if="checkAccess(791)"> <i class="fa fa-bath"
+							aria-hidden="true"></i> <span>QMS</span>
+					</a>
+						<ul class="nav-pills nav-stacked sub-menu-side-bar-level-2"
+							style="list-style-type: none;">
+							<li ng-if="checkAccess(795)"><a href="#/QMSkioskMaster"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>QMS Kiosk Master
+									</span>
+							</a></li>
+							<li ng-if="checkAccess(796)"><a href="#/QMSdepartmentMaster"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>QMS Department Master
+									</span>
+							</a></li>
+							<li ng-if="checkAccess(797)"><a href="#/QMScounterMaster"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> <span>QMS Counter Master
+									</span>
+							</a></li>
+						</ul></li>
+					<!-- QMS Main Menu End-->
+						
+					</ul>
+				</li>
+		
+		
+	</ul>
+</div>
+
+<script>
+	$(document).ready(function() {
+		$('#menu ul').hide();
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		//var sideBarHeight = documentHeight - 99;
+		$("#sidebar-wrapper").css("height", sideBarHeight + "px");
+	});
+	
+	// $(".pharmacyPopup").click(function() {
+	// 	 $("#pharmacyPopupBeforLeftexpand").modal({
+	//             backdrop: 'static',
+	//             keyboard: false
+	//         });
+	// });
+
+	/* 
+	$('#pharmacyPopupBeforLeftexpand').on('shown', function () {
+		alert();
+		  $('body').on('click', function(e) {
+			  alert("in body");
+		    e.stopPropagation();
+		  });
+		}) */
+</script>

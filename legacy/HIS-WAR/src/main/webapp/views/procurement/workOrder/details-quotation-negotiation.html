@@ -1,0 +1,213 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class=""> <b class="padding-right10 ">VQR No.
+						&nbsp; :</b> {{vm.model.vqrNumber}}
+				</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"> <b class="padding-right10 ">VQR
+						Date &nbsp; :</b> {{vm.model.vqrDate | date:'dd/MM/yyyy' : 'UTC'}}
+				</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"> <b class="padding-right10 ">QR
+						No. &nbsp; :</b> {{vm.model.qrNumber}}
+				</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"> <b class="padding-right10 ">Store
+						&nbsp; : </b> {{vm.model.storeName}}
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class=""> <b class="padding-right10 ">Contract Type
+						&nbsp; : </b> {{vm.model.contractType}}
+				</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"> <b class="padding-right10 ">Vendor
+						&nbsp; : </b> {{vm.model.vendorName}}
+				</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"> <b class="padding-right10 ">Reference
+						No. &nbsp; :</b> {{vm.model.refNumber}}
+				</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"> <b class="padding-right10 ">Reference
+						Date &nbsp; :</b> {{vm.model.refDate | date:'dd/MM/yyyy' : 'UTC'}}
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class=""> <b class="padding-right10 ">Status &nbsp;
+						: </b> {{vm.model.status}}
+				</span>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10"> <b class="padding-right10 ">Added
+						By &nbsp; : </b> {{vm.model.addedBy}}
+				</span>
+			</div>
+		</div>
+		<div class="row margin-top10">
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+          <table ng-repeat="item in vm.model.itemInfo" class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width10 vertical-middle width15">Asset Details</th>
+							<th class="width10 vertical-middle width10">Terms</th>
+							<th class="width10">Comparison Details</th>
+							<th class="width20" colspan="{{item.negotiationDetails.length}}">Negotiated Details</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td rowspan="12" class="vertical-middle">
+								<div>Asset Code : {{item.itemCode}}</div>
+								<div>Asset Name : {{item.itemName}}</div>
+								<div>Serial No. : {{item.serialNumber}}</div></td>
+							<td>Date</td>
+							<td>{{item.negotiationDate | date:'dd/MM/yyyy' : 'UTC'}}</td>
+							<td ng-repeat="negotitateData in item.negotiationDetails">
+                <div>{{negotitateData.negotiationDate | date:'dd/MM/yyyy' : 'UTC'}}</div>
+              </td>
+						</tr>
+						<tr>
+							<td class="">Qty</td>
+							<td class="text-center">{{item.quantity}}</td>
+              <td ng-repeat="negotitateData in item.negotiationDetails">
+                <input type="text" autocomplete="off" ng-model="negotitateData.negotiationQuantity" ng-readonly="!!negotitateData.id" numbers-only class="w-100">
+              </td>
+						</tr>
+						<tr>
+							<td class="">Amount</td>
+							<td class="text-center">{{item.amount}}</td>
+              <td ng-repeat="negotitateData in item.negotiationDetails">
+                <input type="text" autocomplete="off" ng-model="negotitateData.negotiationAmount" allow-decimal-numbers ng-readonly="!!negotitateData.id" class="w-100">
+              </td>
+						</tr>
+						<tr>
+							<td class="">Inclusion Details</td>
+              <td class="text-center">
+                <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'inclusionDetails')" aria-hidden="true"></i>
+              </td>
+              <td ng-repeat="negotitateData in item.negotiationDetails">
+                <input type="text" autocomplete="off" ng-model="negotitateData.negotiationInclusion" ng-readonly="!!negotitateData.id" class="w-100">
+              </td>
+						</tr>
+						<tr>
+							<td class="">Exclusion Details</td>
+              <td class="text-center">
+                <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'exclusionDetails')" aria-hidden="true"></i>
+              </td>
+              <td ng-repeat="negotitateData in item.negotiationDetails">
+                <input type="text" autocomplete="off" ng-model="negotitateData.negotiationExclusion" ng-readonly="!!negotitateData.id" class="w-100">
+              </td>
+						</tr>
+						<tr>
+							<td class="">Payment Terms</td>
+              <td class="text-center">
+                <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'paymentTerms')" aria-hidden="true"></i>
+              </td>
+              <td ng-repeat="negotitateData in item.negotiationDetails">
+                <input type="text" autocomplete="off" ng-model="negotitateData.negotiationPaymentTerms" ng-readonly="!!negotitateData.id" class="w-100">
+              </td>
+						</tr>
+						<tr>
+							<td class="">Remarks</td>
+              <td class="text-center">
+                <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'remark')" aria-hidden="true"></i>
+              </td>
+              <td ng-repeat="negotitateData in item.negotiationDetails">
+                <input type="text" autocomplete="off" ng-model="negotitateData.negotiationRemark" ng-readonly="!!negotitateData.id" class="w-100">
+              </td>
+						</tr>
+						<tr>
+              <td></td>
+              <td></td>
+							<td ng-repeat="negotitateData in item.negotiationDetails">
+                <div class="row">
+                  <label class="radio-inline">
+                    <input type="radio" ng-model="negotitateData.negotitateStatus" ng-disabled="!!negotitateData.id" ng-value="1" name="{{item.id + 'data' + $index}}" ng-change="vm.model.ButtonVisible()">Accept
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" ng-model="negotitateData.negotitateStatus" ng-disabled="!!negotitateData.id" ng-value="2" name="{{item.id + 'data' + $index}}" ng-change="vm.model.ButtonVisible()">Reject
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" ng-model="negotitateData.negotitateStatus" ng-disabled="!!negotitateData.id" ng-value="3" name="{{item.id + 'data' + $index}}" ng-change="vm.model.ButtonVisible()">On Hold
+                  </label>
+                </div>
+                <div class="row margin-top4">
+                  <input type="text" autocomplete="off" ng-model="negotitateData.rejectNote" ng-readonly="!!negotitateData.id" ng-if="negotitateData.negotitateStatus == 2" class="w-100">
+                </div>
+              </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style padding-right20">
+				<div class="col-lg-8 col-md-7 col-sm-7"></div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+					<a href="" ng-click="vm.model.SaveRecord('send')" ng-class="{disabled: vm.model.buttonFlag}">
+						<input type="button" value="Send for Quotation Selection" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+					<a href="" ng-click="vm.model.SaveRecord('save')" ng-class="{disabled: !vm.model.buttonFlag}">
+						<input type="button" value="Save" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+          <a href="" ng-click="vm.model.NavigateToBack()">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<div id="commonComparisonDetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Comparison Details
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row padding-left-right-set4">
+          <div class="row">
+            <fieldset class="div-fieldset">
+              <legend class="heading-div">
+                <span>{{vm.model.title}}</span>
+              </legend>
+              <div class="row">
+                <textarea class="resize-set" rows="5" cols="50" readonly>{{vm.model.comparisonDetailsModal.term}}</textarea>
+              </div>
+            </fieldset>
+          </div>
+        </div>    
+      </div>
+    </div>
+  </div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>

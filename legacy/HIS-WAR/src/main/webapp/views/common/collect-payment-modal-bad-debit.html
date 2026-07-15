@@ -1,0 +1,146 @@
+<!-- COLLECT PAYMENT POPUP -->
+ <div id="collectPayment" class="common-large-popup modal fade ng-scope in" role="dialog" data-keyboard="false" data-backdrop="static" style="background: rgba(0, 0, 0, 0.33);padding-right:17px;">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Collect Payment
+						<button type="button" class="close"  ng-click="closePopup()">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body row">
+					<div class="col-md-12">
+							
+							
+					<div ng-include="'./views/common/payment-mode-modal-bad-debit.html'" ></div>
+					
+					<div class="col-md-12 col-lg-12 padding-bottom10">
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10" ng-if="showUserListFlag == 'N'">
+									<div class=" ">
+										<input type="button" value="Settle"  style="width:100%" class="btn btn-primary btn-save-box-shadow" title="Save" ng-disabled="listPaymentDetails.length == 0" ng-click="settleBill()"> 	
+									</div>
+							</div>
+							
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10" ng-if="showUserListFlag == 'Y'">
+									<div class=" ">
+										<input type="button" value="Send Approval"  style="width:100%" class="btn btn-primary btn-save-box-shadow" title="Send Approval" id="saveBtn" ng-disabled="listPaymentDetails.length == 0" ng-click="sendApproval()">
+									</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set padding-top10 float_right" ng-if="showUserListFlag =='Y'">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+													<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<select class="text-input floating-label ng-valid dirty ng-touched ng-not-empty ng-dirty ng-valid-parse" ng-disabled="listPaymentDetails.length == 0" ng-model="requestUserId" id="requestUserId" style="">
+															<option value="">Select User</option>
+																<option ng-repeat="info in userDiscountList" value="{{info.userId}}">{{info.employeeName}} </option>
+															</select> <label for="code">Select User</label>
+													</div>
+												</div>
+											</div>
+									</div>
+						</div>
+						
+						
+					</div>
+				</div>
+				
+							<div class="row" ng-if="requestApporivedDiscountDiv" style="background-color: #8080800d;">
+								<fieldset class="" style="border:1px solid #f1f1f1 !important; padding-bottom:5px;">
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<b>Requested Amount :</b> {{requestAmtApp}}
+													</div>
+												</div>
+											</div>
+									</div>
+									
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" >
+											<div class="row input-container">
+												
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+														<b>Approved Amount : </b>{{approvedAmtApp}}
+													</div>
+												</div>
+											</div>
+									</div>
+									
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="">
+												<b>Approved By :</b> {{requestAppUser}}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10" ng-if="requestAmtRemark != null">
+										<div class="row input-container">
+											<div class="">
+												<b>Remark :</b> {{requestAmtRemark}}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="">
+													<b>Status :</b> {{statusApp}}
+													</div>
+												</div>
+											</div>
+									</div>
+									
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class=" ">
+												<a title="Cancel" data-toggle="modal" data-target="#discountCancellationModalReq"   ><i class="fa fa-times"></i></a>
+											</div>
+										</div>
+									</div>
+									</fieldset>
+								</div><div class="padding-top10"></div>
+			</div>
+		</div>
+</div>
+
+
+<div id="discountCancellationModalReq" data-backdrop="static" class="modal fade ng-scope in common-small-popup" role="dialog" style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Cancel
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										Are you sure want to cancel?
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button"  class="btn btn-primary" ng-click="getCancelDiscountReq(1)">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>

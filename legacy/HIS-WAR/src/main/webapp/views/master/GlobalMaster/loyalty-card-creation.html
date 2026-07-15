@@ -1,0 +1,141 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div"> Document Type Master</legend> -->
+			<div class="row ">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 text-width-auto margin-top10">
+					<label for="code" class="LISDynamicLabelOne">Card No.</label>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 margin-top10">
+			      <input  type="text" autocomplete="off" class="form-control-plaintext w-100 text-center"  id="" ng-model="firstNo" disabled>
+			    </div>
+			    <div class="col-lg-1 col-md-1 col-sm-2 margin-top10">
+			      <input  type="text" autocomplete="off" class="form-control-plaintext w-100 text-center" id="" ng-model="secondNo" disabled>
+			    </div>
+			    <div class="col-lg-1 col-md-1 col-sm-2 margin-top10">
+			      <input  type="text" autocomplete="off" class="form-control-plaintext w-100 text-center" id="" ng-model="thirdNo" disabled>
+			    </div>
+			    <div class="col-lg-1 col-md-1 col-sm-2 margin-top10">
+			      <input  type="text" autocomplete="off" class="form-control-plaintext w-100 text-center" id="" ng-model="fourthNo 	" disabled>
+			    </div>
+			     <div class="col-lg-1 col-md-1 col-sm-2 margin-top5">
+			     		<button class="btn btn-primary btn-save-box-shadow text-width-auto padding-left-right-set4" id="saveBtn" ng-click="getGeneratedCardNumber(info.loyaltyCardId)" > Generate No.</button>
+			     </div>
+			</div>
+		</fieldset>
+		<!-- <div class="row">
+			<div class="col-md-8"></div>
+			<div class="col-md-4">
+				<div class="common-save-button">
+					<input type="button" value="Save"  
+					class="btn btn-primary btn-save-box-shadow search-button-style" ng-hide="saveBtnFlag" ng-click="saveDocumentType()" >
+					<input type="button" value="Update"  
+					class="btn btn-primary btn-save-box-shadow search-button-style" ng-hide="updateBtnFlag" ng-click="updateDocumentType()" >
+				</div>
+				<div class="width-div-for-patient-reg ">
+						<a href="" value="Save" ng-click="saveDocumentType()"  
+						class="btn btn-primary btn-save-box-shadow search-button-style text-width-auto" title="Save" ng-hide="saveBtnFlag"><i
+							class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+							
+						<a href="" value="Update" ng-click="updateDocumentType()"  
+						class="btn btn-primary btn-save-box-shadow search-button-style text-width-auto" title="Update" ng-hide="updateBtnFlag"><i
+							class="fa fa-refresh" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+		</div> -->
+		<modal visible="showModal"></modal> 
+			
+		<div class="row padding-top10">
+			<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+		        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+										ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		      </div>
+		     <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+					<input type="text" autocomplete="off" class="text-search-box oneeeee" placeholder="Search" style="margin-top: 0px;" ng-model="searchKeyword">
+					 <i class="fa fa-search common-search-text-icon padding-top2" aria-hidden="true"></i>
+				</div>
+		</div>
+			
+		<div class="row padding-left-right-set4 margin-top4">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+				<thead>
+					<tr class="">
+						<th class="width12">
+							 Card No.
+						</th>
+						<th class="text-center width1">
+							Status
+						</th>
+						<th class="text-center width1">
+							Action
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="info in commonList|orderBy:column:reverse|filter:searchKeyword">
+						<td>{{info.cardNo}}</td>
+						<td class="text-center">
+							<label class="switch" > 
+							<input type="checkbox" ng-model="info.status" ng-checked="info.status=='A'" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.loyaltyCardId,info.status)">
+							<div class="slider round"></div>
+							</label>
+						</td>
+						<td class="text-center"><a ng-click="printLoyaltyCardCreation(info)"><i class="fa fa-print" aria-hidden="true"></i></a>&nbsp;&nbsp;<a><i class="fa fa-times" aria-hidden="true" ng-click="getRemovedAction(info.loyaltyCardId)"></i></a></td>
+					</tr>
+					</tbody>
+				</table>
+					<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+});	
+	$(".selectedPageName").text("Loyalty Card Creation");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="loyaltyCardCreation"]').parents("li").addClass("active");
+	
+	
+</script>
+

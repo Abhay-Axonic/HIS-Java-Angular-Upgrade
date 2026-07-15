@@ -1,0 +1,51 @@
+package com.param.opd.coversheet.dao;
+
+
+import java.util.List;
+
+import com.param.global.common.Response;
+import com.param.global.dto.CoversheetTemplateMasterDto;
+import com.param.opd.coversheet.dto.ComplaintAppointmentDto;
+import com.param.opd.coversheet.dto.ComplaintAppointmentMapperDto;
+import com.param.opd.coversheet.model.ComplaintAppointmentMapper;
+
+import in.param.common.dao.IGenericDao;
+import in.param.exception.ApplicationException;
+
+public interface IComplaintAppointmentMapperDao extends IGenericDao<ComplaintAppointmentMapper, Integer>{
+
+	public Response saveComplaintAppointmentMapper(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+
+	public Response getListOfComplaintAppointmentMapper(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+	
+	public Response editListOfComplaintAppointmentMapper(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+	
+	public Response updateComplaintAppointmentMapper(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+	
+	public Response updateSaveNurseReviewedFlag(ComplaintAppointmentMapper complaintAppointmentMapper)throws ApplicationException;
+
+	public Response getComplaintAppointmentByPatientIdForBookView(ComplaintAppointmentMapperDto complaintAppointmentMapperDto);
+
+	public Response updateComplaintAppointmentStatusToRemoveComplaint( ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+
+	public Response getComplaintAppointmentByPatientId(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+
+	public Response getPastComplaintAppointmentByPatientId(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+
+	public Response saveResolvedComplaintAppointment(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+
+	public Response getComplaintsByPatientIdForBookView(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+
+	public Response getPastComplaintAppointmentForBookView(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+
+	public Response getMostSavedComplaint(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+
+	public Response savefComplaintAppointmentMapper(List<ComplaintAppointmentMapperDto> list, CoversheetTemplateMasterDto coversheetTemplateMasterDto);
+
+	public Response updateCovTempComplaintAppointmentMapper(List<ComplaintAppointmentDto> list,CoversheetTemplateMasterDto coversheetTemplateMasterDto);
+
+	public Response searchFreeTextComplaint(ComplaintAppointmentMapperDto complaintAppointmentMapperDto)throws ApplicationException;
+
+	
+
+}

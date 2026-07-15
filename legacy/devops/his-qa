@@ -1,0 +1,14 @@
+pwd && ls -la
+
+sed -i "s|^jdbc.url=.*|jdbc.url=${jdbc_url_qa}|g" ./HIS-WAR/src/main/resources/jdbc.properties
+sed -i "s|^jdbc.username=.*|jdbc.username=${jdbc_username_qa}|g" ./HIS-WAR/src/main/resources/jdbc.properties
+sed -i "s|^jdbc.password=.*|jdbc.password=${jdbc_password_qa}|g" ./HIS-WAR/src/main/resources/jdbc.properties
+
+sed -in 's/var ROOT_URL.*/var ROOT_URL=\"\"\;/g' ./HIS-WAR/src/main/webapp/resources/assets/js/config/url.config.js
+sed -in 's/var root =.*/var root=\"\"\;/g' ./HIS-WAR/src/main/webapp/resources/assets/js/constants/constants.js
+sed -in 's/public static final String ROOT_URL.*/	public static final String ROOT_URL = \"\/\";/g' ./Global/src/main/java/com/param/privilege/constants/Constants.java
+bash ./devops/write_tomcat_healthcheck_file
+
+
+mvn -U -ntp clean
+mvn -U -ntp package -Dmaven.test.skip=true

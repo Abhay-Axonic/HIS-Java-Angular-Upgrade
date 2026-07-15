@@ -1,0 +1,43 @@
+package com.param.service.dao;
+
+import com.param.global.common.Response;
+import com.param.opd.encounter.dto.FundSanctionRequestDocumentDto;
+import com.param.service.dto.BillFundSanctionDetailsDto;
+import com.param.service.dto.FundSanctionAcceptanceRequestDto;
+import com.param.service.dto.FundSanctionRequestDto;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface IFundSanctionRequestDao {
+
+	Response saveFundSanctionRequest(FundSanctionRequestDto fundSanctionRequestDto)throws ApplicationException;
+
+	Response fundSanctionRequestByPatientId(FundSanctionRequestDto fundSanctionRequestDto)throws ApplicationException;
+
+	Response fundSanctionRequestDocument(FundSanctionRequestDocumentDto fundSanctionRequestDocumentDto)throws ApplicationException;
+
+	Response getDocumentsByFundSanctionRequestId(FundSanctionRequestDocumentDto fundSanctionRequestDocumentDto)throws ApplicationException;
+
+	Response saveRequestApprovalFromFundinflow(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response saveRequestApprovalFromFundVirtual(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response saveRequestReject(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response getAllPendingVirtualAcceptance(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response getInflowAcceptedRequest(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response getVirtualRequestPayments(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response getAllFundApprovalRequestByPatient(FundSanctionAcceptanceRequestDto fundSanctionAcceptanceRequestDto)throws ApplicationException;
+
+	Response saveBillFundDetails(BillFundSanctionDetailsDto billFundSanctionDetailsDto)throws ApplicationException;
+
+	Response getBillFundDetailsByBillMasterId(BillFundSanctionDetailsDto billFundSanctionDetailsDto)throws ApplicationException;
+
+
+
+
+}

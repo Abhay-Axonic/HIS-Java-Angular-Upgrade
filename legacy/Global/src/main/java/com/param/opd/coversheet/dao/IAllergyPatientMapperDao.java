@@ -1,0 +1,58 @@
+package com.param.opd.coversheet.dao;
+
+import in.param.common.dao.IGenericDao;
+import in.param.exception.ApplicationException;
+
+import java.util.List;
+
+import com.param.global.common.Response;
+import com.param.global.dto.CoversheetTemplateMasterDto;
+import com.param.global.unit.dto.AllergyPatientMapperDto;
+import com.param.global.unit.dto.ClinicalHeaderTabDto;
+import com.param.opd.coversheet.model.AllergyPatientMapper;
+
+
+public interface IAllergyPatientMapperDao extends IGenericDao<AllergyPatientMapper, Integer>{
+
+	public Response saveAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getListOfAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+	
+	public Response cancelAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getOldAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+	
+	public Response getCurrentAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+	
+	public Response updateAllergyPatientMapper(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+	
+	public Response updateSaveNurseReviewedFlag(AllergyPatientMapper allergyPatientMapper)throws ApplicationException;
+	
+	public Response updateStatusEnterInError(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getGenericAutoFillSearch(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getCurrentAllergyPatientMapperForCoversheet(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getPatientAllergyListForIcon(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getAllergyPatientMapperForBookView(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response saveResolvedAllergyDate(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getResolvedAllergyPatientMapperForCoversheet(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getPatientAllergies(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response getActiveClinicalHeaderTabList(ClinicalHeaderTabDto clinicalHeaderTabDto)throws ApplicationException;
+
+	public Response getMappedCoversheetDataForUser(ClinicalHeaderTabDto clinicalHeaderTabDto)throws ApplicationException;
+
+	public Response getFrequentlyUsedAllergies(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response searchAllergenList(AllergyPatientMapperDto allergyPatientMapperDto)throws ApplicationException;
+
+	public Response saveCurrentAllergyPatientMapper(List<AllergyPatientMapperDto> list, CoversheetTemplateMasterDto resDto)throws ApplicationException;
+
+	public Response updateCovTempCurrentAllergyPatientMapper(List<AllergyPatientMapperDto> list, CoversheetTemplateMasterDto coversheetTemplateMasterDto);
+}

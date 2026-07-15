@@ -1,0 +1,30 @@
+package com.param.global.otims.dao;
+
+import com.param.global.common.Response;
+import com.param.global.otims.dto.ResourceChargeConfigurationDto;
+import com.param.otims.model.ResourceChargeConfiguration;
+
+import in.param.common.dao.IGenericDao;
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+public interface IResourceChargeConfigurationDao extends IGenericDao<ResourceChargeConfiguration, Integer>{
+
+	Character isResourceChargeConfigurationAlreadyExist(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+
+	Response saveResourceChargeConfiguration(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+
+	Character isResourceChargeConfigurationAlreadyExistNotById(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+
+	Response updateResourceChargeConfiguration(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+
+	Response getResourceChargeConfigurationById(Integer resourceChargeConfigurationId)throws ApplicationException;
+
+	Response getResourceChargeConfigurationList(Integer orgId, Integer unitId)throws ApplicationException;
+
+	Response updateResourceChargeConfigurationStatus(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+
+	Response getResourceChareges(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+	
+	Response getResourceCharegesByDoctor(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+
+}

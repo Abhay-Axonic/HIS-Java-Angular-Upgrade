@@ -1,0 +1,55 @@
+package com.param.opd.coversheet.dao;
+
+import in.param.common.dao.IGenericDao;
+import in.param.exception.ApplicationException;
+
+import java.util.List;
+
+import com.param.global.common.Response;
+import com.param.global.dto.CoversheetTemplateMasterDto;
+import com.param.opd.coversheet.dto.AppointmentVitalMapperDto;
+import com.param.opd.coversheet.dto.VitalAppointmentQualifierMapperDto;
+import com.param.opd.coversheet.model.AppointmentVitalMapper;
+
+public interface IAppointmentVitalMapperDao extends IGenericDao<AppointmentVitalMapper, Integer>{
+
+	public Response saveAppointmentVitalMapper(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+
+	public Response getListOfAppointmentVitalMapper(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+	
+	public Response updateAppointmentVitalMapper(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+	
+	public Response getListOfAppointmentVitalMapperByPatientId(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+	
+	public Response getOldAppointmentVitalMapper(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+	
+	public Response getCurrentAppointmentVitalMapper(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+	
+	public Response updateAppointmentVitalMapperDto(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+	
+	public Response updateSaveNurseReviewedFlag(AppointmentVitalMapper appointmentVitalMapper)throws ApplicationException;
+
+	public Response saveAppointmentVitalMapperFromAndroid(List<AppointmentVitalMapperDto> appointmentVitalMapperDto);
+
+	public Response getIsCriticalByPatientId(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+
+	public Response updateVitalForEnteredInError(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+
+	public Response getListOfVitalsByPatientIdForCoversheet(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+
+	public Response getListOfEnteredInErrorVitals(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+
+	public Response getListOfVitalsByPatientIdForBookView(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+
+	public Response getQualifiersListForPopUp(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+
+	public Response getListOfVitalsByPatientIdForDoctorApp(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+
+	public Response saveCurrentAppointmentVitals(List<AppointmentVitalMapperDto> list, CoversheetTemplateMasterDto resDto)throws ApplicationException;
+
+	public Response updateCovTempCurrentAppointmentVitals(List<AppointmentVitalMapperDto> list, CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+	public Response saveAppointmentVitalMapperEasyEmr(AppointmentVitalMapperDto appointmentVitalMapperDto)throws ApplicationException;
+
+
+}

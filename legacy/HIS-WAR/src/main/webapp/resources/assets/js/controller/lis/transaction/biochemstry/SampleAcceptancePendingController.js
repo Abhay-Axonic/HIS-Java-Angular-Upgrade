@@ -1,0 +1,887 @@
+
+/**
+ * @author Ganesh
+ */
+
+angular
+		.module('myApp')
+		.controller(
+				"sampleAcceptancePendingController",
+				[
+						'$scope',
+						'$rootScope',
+						'$state',
+						'$cookies',
+						'$filter',
+						'GenericService',
+						'PagerService',
+						'promiseFactoryWithObject',
+						'$sessionStorage',
+						'growl',
+						'subDeptId',
+						function($scope, $rootScope, $state, $cookies, $filter,
+								GenericService, PagerService, promiseFactoryWithObject,
+								$sessionStorage, growl,subDeptId) {
+
+							$rootScope.loginpage = true;
+							$scope.LISDynamicLabel = "Sample";
+
+							/** Variables for pagination */
+							$scope.offset = 0;
+							$scope.noOfRecordsPerPage = 50;
+							$scope.sampleAccPendingList = [];
+							$scope.totalNoOfRecords;
+							$scope.searchKeyword;
+							$scope.commonListCount;
+
+							/*** Check user is Loggedin */
+							
+							var cookieObject,cookieObjectAppConfig;
+							 
+							[cookieObject,cookieObjectAppConfig] = $scope.checkCookies();
+							$scope.orgUnitId = cookieObject.unitId;
+							$scope.orgId = cookieObject.organizationId;
+							$scope.userId = cookieObject.userId;
+							
+							/*** Lab Configuration */
+							var labConfig  =    $scope.checkLabConfig();
+							$scope.deptId = labConfig.labSpecialityId;
+							$scope.isSendToCrApplicable= labConfig.isSendToCrApplicable;
+							$scope.isSampleAcceptanceApplicable= labConfig.isSampleAcceptanceApplicable;
+							$scope.subDeptId = subDeptId;
+							$scope.getUnitByOrganization();
+							$scope.assignUnit = $scope.orgUnitId;
+							
+							$scope.visitTypeId = 1;
+							$scope.selectedVisitTypeIds = [1,2];
+							$scope.sampleStatusIds=[SEND_TO_DEPT];
+							$scope.departmentList= [];
+							$scope.visityTypeList = [];
+							$scope.testList = [];
+							
+							$scope.selectedVisitType = [];
+							$scope.selectedtestList = [];
+							$scope.selectedDepartMentList = [];
+							$scope.sampleRejectReasonId = "";
+							$scope.sampleRejectReason = "";
+							var ACCEPT = 'A';
+							var REJECT = 'R';
+							var cookieObjectAppConfigSecond = JSON.parse(localStorage.getItem('cookieObjectAppConfigSecond'));
+							if (cookieObjectAppConfigSecond != undefined) {
+							$scope.isBillManipulationAllowedUserLevel = cookieObject.isBillManipulationAllowedUserLevel;
+							$scope.isBillManipulationAllowedAppLevel = cookieObjectAppConfigSecond.isBillManipulationAllowedAppLevel;
+							}
+							$scope.isBillManipulationAllowed =  ($scope.isBillManipulationAllowedUserLevel && $scope.isBillManipulationAllowedAppLevel =='Y') ? true : false;
+							if($scope.isBillManipulationAllowed == true){
+								$scope.filterDummyService = 1;
+							}else{
+								$scope.filterDummyService = 2;
+							}
+							$scope.listLabSampleDtls = [];
+							$scope.labSampleDtls = {
+								"labSampleDtlsId" : "",
+								"orgId" : $scope.orgId,
+								"orgUnitId" : $scope.orgUnitId,
+								"testId" : "",
+								"deptId" : $scope.deptId,
+								"subDeptId" : $scope.subDeptId ,
+								"deptName" : "",
+								"labSampleId" : "",
+								"sampleBarcode" : "",
+								"sampleId" : "",
+								"sampleNo" : "",
+								"orderDetailsId" : "",
+								"orderId" : "",
+								"orderQty" : "",
+								"serviceId" : "",
+								"testCode" : "",
+								"testDesc" : "",
+								"sampleName" : "",
+								"sampleVolume" : "",
+								"unitName" : "",
+								"profileId" : "",
+								"panelCode":"",
+								"packageId" : "",
+								"isCentrifugationReq" : "",
+								"isAlliquoteReq" : "",
+								"sampleTypeId" : "",
+								"containerId" : "",
+								"containerName" : "",
+								"sampleReqCount" : "",
+								"samplePendingCount" : "",
+								"sampleGenDatetime" : "",
+								"sampleGenBy" : "",
+								"currStatus" : "",
+								"sampleStatusId" : "",
+								"sampWrkStatusId":"",
+								"isOutsourced" : "",
+								"outsourcedLabId" : "",
+								"sampleSendtocrDatetime" : "",
+								"sampleSendtocrBy" : "",
+								"sampleCollectionDatetime" : "",
+								"sampleCollectionBy" : "",
+								"sampleCentrifugationDatetime" : "",
+								"sampleCentrifugationBy" : "",
+								"sampleAcceptDatetime" : "",
+								"sampleAcceptBy" : "",
+								"sampleRejectDatetime" : "",
+								"sampleRejectBy" : "",
+								"sampleRejectReasonId" : "",
+								"sampleRejectReason" : "",
+								"sampleRecollectFlag" : "",
+								"sampleRecollectAgainstId" : "",
+								"createdBy" : $scope.userId,
+								"createdDate" : "",
+								"updatedBy" : "",
+								"updatedDate" : "",
+								"sampleTestTime":"",
+								"patientVisitAge":"",
+								"genderId":"",
+								"visitType":"",	
+								"listTMicroSampleMediaDto":[]	
+							}
+
+							
+								/**DatePicker Code  */
+							
+							$scope.fromDate = moment().toDate();
+						    $scope.toDate = moment().toDate();
+						    
+						    $scope.completed='N';
+							$scope.pending = 'N';
+							$scope.outsourced = 'N';
+							
+							$scope.dateOptions =
+							{
+								formatYear : 'yyyy',
+								showWeeks : false,
+								maxDate:new Date()
+							};
+
+							$scope.open = function() {
+								$scope.popup.opened = true;
+							};
+
+							$scope.popup =
+							{
+								opened : false
+							};
+							
+							$scope.popup1 =
+							{
+								opened : false
+							};
+							
+							$scope.open1 = function() 
+							{
+								$scope.popup1.opened = true;
+							};
+
+							$scope.saveBtn = false;
+							
+							
+
+							$scope.getRejectionList = function(orgId)
+							{
+								try {
+									var data = {
+											organizationId :orgId
+										};
+									var URI = BASE_URL + ROOT_URL
+									+ GETACTIVEREASONLIST;
+									GenericService
+									.serviceAction(METHOD_POST, URI,
+											data,
+											NOTIFICATION_MSG_STATUS_FALSE)
+									.then(
+													function(response) {
+														$scope.rejectionList = response.data.listObject;
+													});
+								} catch (e) {
+									console.log(e.message)
+								}
+
+							}
+							$scope.getRejectionList($scope.orgId);
+							
+							$scope.rejIndex = "";
+							$scope.showRejecPopup = function(isAccRej,index)
+							{
+								if(isAccRej=='R')
+								{
+							     	$scope.rejIndex = index;
+							     	 $scope.sampleRejectReasonId = "";
+									 $scope.sampleRejectReason = ""
+								    $("#pendingAcceptance").modal('show');
+								}
+							}
+							
+							$scope.saveBioRejectionDetails = function(){
+								
+								if($scope.sampleRejectReasonId == ""){
+									
+									growl.warning("Please select reason..!!",
+											{
+												title : 'warning!'
+											});
+									$scope.sampleAccPendingList[$scope.rejIndex].isAcceptOrReject = 'N';
+									
+								} else if($scope.sampleRejectReason == "")
+								{
+									growl.warning("Please Enter reason note..!!",
+											{
+												title : 'warning!'
+											});
+									$scope.sampleAccPendingList[$scope.rejIndex].isAcceptOrReject = 'N';
+									
+								} else {
+									
+									$scope.sampleAccPendingList[$scope.rejIndex].sampleRejectReasonId = $scope.sampleRejectReasonId;
+									$scope.sampleAccPendingList[$scope.rejIndex].sampleRejectReason = $scope.sampleRejectReason;
+									
+									 $scope.sampleRejectReasonId = "";
+									 $scope.sampleRejectReason = "";  
+								}
+								$scope.selectPatientForSave();	
+							}
+							
+							$scope.cancelBioRejectionDetails = function(){
+								
+								$scope.sampleAccPendingList[$scope.rejIndex].isAcceptOrReject = 'N';
+								
+								$scope.selectPatientForSave();
+							}
+
+							$scope.setNoOfRecords = function() {
+								$scope.initsampleAccPendingList($scope.orgId,
+										$scope.orgUnitId, $scope.offset,
+										$scope.noOfRecordsPerPage);
+							};
+
+							$scope.initsampleAccPendingList = function(orgId,
+									orgUnitId, offset, noOfRecordsPerPage) {
+								try {
+									$rootScope.startLoader();
+									var data = {
+											"orgId":orgId,
+											"orgUnitId":$scope.assignUnit,
+											"offset":offset,
+											"recordPerPage":noOfRecordsPerPage,
+											"deptId":$scope.deptId,
+											"subDeptId":$scope.subDeptId,
+											 "fromDt": $scope.fromDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.fromDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD"),
+											 "toDt":  $scope.toDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.toDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD"),
+											 "patientId" :  $scope.selectedPatient,
+											 "labSampleDtlsId" : $scope.labSampleDtlsId,
+											 "visitTypes" :$scope.selectedVisitType,
+											 "testTypes" : $scope.selectedtestList,
+											 "subDepts" : $scope.selectedDepartMentList,
+											 "isSendToCrApplicable":$scope.isSendToCrApplicable,
+											 "isSampleAcceptanceApplicable":$scope.isSampleAcceptanceApplicable,
+											 "assignUnit" :$scope.orgUnitId ,
+											 "uhidNumber" : ($scope.uhid==undefined ||$scope.uhid== null) ?"":$scope.uhid,
+											 "sampleNo" : ($scope.selectedSampleNo == undefined || $scope.selectedSampleNo==null)?"":$scope.selectedSampleNo,
+											 "offset":$scope.offset,
+											 "recordPerPage":$scope.noOfRecordsPerPage
+										};
+									var data1 = {
+											"orgId":orgId,
+											"orgUnitId":$scope.assignUnit ,
+											"deptId":$scope.deptId,
+											"subDeptId":$scope.subDeptId,
+											"assignUnit" :$scope.orgUnitId ,
+											"isSendToCrApplicable":$scope.isSendToCrApplicable,
+											"isSampleAcceptanceApplicable":$scope.isSampleAcceptanceApplicable,
+											"fromDate": $scope.fromDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.fromDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD"),
+											"toDate":  $scope.toDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.toDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD")
+										};
+									offset = offset != null ? offset : 0;
+									noOfRecordsPerPage = noOfRecordsPerPage != null ? noOfRecordsPerPage
+											: 50;
+									var URI1 = BASE_URL + ROOT_URL
+											+ LIS_BIOCHEMISTRY
+											+ BIOCHEMISTRY_LIST_SEARCH
+
+									var URI2 = BASE_URL
+											+ ROOT_URL
+											+ LIS_BIOCHEMISTRY
+											+ SAMPLE_ACCEPTANCE_PENDING_COUNT;
+
+									console.log("URI1", URI1);
+									console.log("URI2", URI2);
+									promiseFactoryWithObject
+											.setPromisesWithObject(URI1, URI2, METHOD_POST,
+													METHOD_POST,data,data1)
+											.then(
+													function(response) {
+														$rootScope.stopLoader();
+														$scope.sampleAccPendingList = response[0].listObject;
+														
+														$scope.sampleAccPendingListForFiltter = $scope.sampleAccPendingList;
+														$scope.filterByDummyServices();
+														$scope.commonListCount = response[1].object;
+														$scope.setPage(1,false);
+													});
+								} catch (e) {
+									console.log(e.message);
+								}
+							}
+
+							$scope.initsampleAccPendingList($scope.orgId,
+									$scope.orgUnitId, $scope.offset,
+									$scope.noOfRecordsPerPage);
+
+							
+							$scope.clearFields = function()
+							{
+								$scope.patientId = undefined;
+								$scope.selectedPatient = null;
+								$scope.selectedVisitType = [];
+								$scope.orderStatusId = '';
+								$scope.priorityId = '';
+								$scope.uhid = '';
+								$scope.selectedSampleNo="";
+								$scope.selectedtestList = [];
+								$scope.selectedDepartMentList = [];
+								$scope.fromDate = moment().toDate();
+							    $scope.toDate = moment().toDate();
+							    $scope.initsampleAccPendingList($scope.orgId,
+										$scope.orgUnitId, $scope.offset,
+										$scope.noOfRecordsPerPage);
+
+							};
+				
+
+							$scope.filterByDummyServices= function()
+                            {
+								
+								$scope.sampleAccPendingList  =[]
+                                if($scope.filterDummyService==1)//all 
+                                {
+                                	$scope.sampleAccPendingList = angular.copy($scope.sampleAccPendingListForFiltter);
+                                	
+                                }else if($scope.filterDummyService==2)//real
+                                {
+                                    angular.forEach($scope.sampleAccPendingListForFiltter, function (value, key) 
+                                    {
+                                        if(value.isDummyService==false)
+                                        	$scope.sampleAccPendingList.push(value);
+                                    });
+                                     
+                                    
+                                }else if($scope.filterDummyService==3 )//dummy
+                                {
+                                	  angular.forEach($scope.sampleAccPendingListForFiltter, function (value, key) 
+                                              {
+                                                  if(value.isDummyService==true)
+                                                	  $scope.sampleAccPendingList.push(value);
+                                              });
+                                               
+                                }
+                            }
+							
+							
+							
+							$scope.getSampleAccPendingList = function(orgId,
+									orgUnitId,offset,noOfRecordsPerPage) {
+								try {
+									$rootScope.startLoader();
+									var data = {
+											 "orgId" : $scope.orgId,
+											  "orgUnitId" :$scope.assignUnit,
+											  "fromDt": $scope.fromDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.fromDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD"),
+											  "toDt":  $scope.toDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.toDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD"),
+											  "patientId" :  $scope.selectedPatient,
+											  "labSampleDtlsId" : $scope.labSampleDtlsId,
+											  "visitTypes" :$scope.selectedVisitType,
+											  "testTypes" : $scope.selectedtestList,
+											  "deptId" : $scope.deptId,
+											  "subDeptId" : $scope.subDeptId,
+											  "subDepts" : $scope.selectedDepartMentList,
+											  "assignUnit" :$scope.orgUnitId ,
+											  "isSendToCrApplicable":$scope.isSendToCrApplicable,
+											  "isSampleAcceptanceApplicable":$scope.isSampleAcceptanceApplicable,
+											  "uhidNumber" : ($scope.uhid==undefined ||$scope.uhid== null) ?"":$scope.uhid,
+											  "sampleNo" : ($scope.selectedSampleNo == undefined || $scope.selectedSampleNo==null)?"":$scope.selectedSampleNo,
+											  "offset":offset,
+											  "recordPerPage":noOfRecordsPerPage
+										};
+									var URI = BASE_URL + ROOT_URL
+											+ LIS_BIOCHEMISTRY
+											+ BIOCHEMISTRY_LIST_SEARCH
+									console.log("URI", URI);
+
+									GenericService
+											.serviceAction(METHOD_POST, URI, data)
+											.then(
+													function(response) {
+														$rootScope.stopLoader();
+														$scope.sampleAccPendingList = response.data.listObject;
+														$scope.sampleAccPendingListForFiltter = $scope.sampleAccPendingList;
+														$scope.filterByDummyServices();
+													});
+								} catch (e) {
+									console.log(e.message)
+								}
+
+							}
+
+							$scope.pager = {};
+							$scope.page;
+
+							$scope.setPage = function(page, flag) {
+								if (page < 1 ) {
+									return;
+								}
+								$scope.pager = PagerService.GetPager(
+										$scope.commonListCount, page,
+										$scope.noOfRecordsPerPage);
+								if (flag) {
+									$scope.getSampleAccPendingList(
+											$scope.orgId, $scope.orgUnitId,
+											$scope.pager.startIndex,
+											$scope.pager.pageSize);
+								}
+							}
+
+							/** code for setting all checkboxes */
+							$scope.checkAll = function() {
+								if ($scope.selectedAll) {
+									$scope.selectedAll = true;
+								} else {
+									$scope.selectedAll = false;
+								}
+								angular
+										.forEach(
+												$scope.sampleAccPendingList,
+												function(labDetailsObj) {
+													labDetailsObj.isAcceptOrReject = $scope.selectedAll
+												});
+								 $scope.selectPatientForSave();
+							 }
+							
+							$scope.checkSample =function()
+							{
+								var listLabSampleDtls = [];
+								angular
+										.forEach(
+												$scope.sampleAccPendingList,
+												function(value, key) 
+												{
+													if (value.isAcceptOrReject == ACCEPT) 
+													{
+														var labSampleDtlsforAccept = angular
+																.copy($scope.labSampleDtls);
+														labSampleDtlsforAccept.labSampleDtlsId = value.labSampleDtlsId;
+														labSampleDtlsforAccept.createdBy = $scope.userId;
+														labSampleDtlsforAccept.currStatus = value.isAcceptOrReject;
+														labSampleDtlsforAccept.createdBy = $scope.userId;
+														labSampleDtlsforAccept.updatedBy = $scope.userId;
+														listLabSampleDtls.push(labSampleDtlsforAccept);
+													}
+													if (value.isAcceptOrReject == REJECT) 
+													{
+														var labSampleDtlsforReject = angular
+																.copy($scope.labSampleDtls);
+														labSampleDtlsforReject.labSampleDtlsId = value.labSampleDtlsId;
+														labSampleDtlsforReject.createdBy = $scope.userId;
+														labSampleDtlsforReject.currStatus = value.isAcceptOrReject;
+														labSampleDtlsforReject.sampleRejectReasonId = value.sampleRejectReasonId;
+														labSampleDtlsforReject.sampleRejectReason = value.sampleRejectReason;
+														labSampleDtlsforReject.sampleRejectBy =$scope.userId;
+														labSampleDtlsforReject.createdBy = $scope.userId;
+														labSampleDtlsforReject.updatedBy = $scope.userId;
+														listLabSampleDtls
+																.push(labSampleDtlsforReject);
+													}
+												});
+								if(listLabSampleDtls.length==0)
+								{
+									growl.warning('Please select sample.',
+											{
+												title : 'Warning!'
+											});
+									  return false;
+								}
+								else{
+									$("#sendToBioWorklist").modal('show');
+								 }
+							}
+
+							$scope.acceptRejectBioChemWorklist = function() {
+								$scope.listLabSampleDtls = [];
+								angular
+										.forEach(
+												$scope.sampleAccPendingList,
+												function(value, key) 
+												{
+													if (value.isAcceptOrReject == ACCEPT) 
+													{
+														var labSampleDtlsforAccept = angular
+																.copy($scope.labSampleDtls);
+														labSampleDtlsforAccept.labSampleDtlsId = value.labSampleDtlsId;
+														labSampleDtlsforAccept.createdBy = $scope.userId;
+														labSampleDtlsforAccept.currStatus = value.isAcceptOrReject;
+														labSampleDtlsforAccept.createdBy = $scope.userId;
+														labSampleDtlsforAccept.updatedBy = $scope.userId;
+														$scope.listLabSampleDtls.push(labSampleDtlsforAccept);
+													}
+													if (value.isAcceptOrReject == REJECT) 
+													{
+														var labSampleDtlsforReject = angular
+																.copy($scope.labSampleDtls);
+														labSampleDtlsforReject.labSampleDtlsId = value.labSampleDtlsId;
+														labSampleDtlsforReject.createdBy = $scope.userId;
+														labSampleDtlsforReject.currStatus = value.isAcceptOrReject;
+														labSampleDtlsforReject.sampleRejectReasonId = value.sampleRejectReasonId;
+														labSampleDtlsforReject.sampleRejectReason = value.sampleRejectReason;
+														labSampleDtlsforReject.sampleRejectBy =$scope.userId;
+														labSampleDtlsforReject.createdBy = $scope.userId;
+														labSampleDtlsforReject.updatedBy = $scope.userId;
+														$scope.listLabSampleDtls
+																.push(labSampleDtlsforReject);
+													}
+												});
+
+								try {
+									if($scope.listLabSampleDtls.length==0)
+									{
+										growl.error("Please select sample..!!",
+											{
+												title : 'Error!'
+											});
+									   $rootScope.stopLoader();
+									   return false;
+									}
+									$rootScope.startLoader();
+									console.log("$scope.listLabSampleDtls",JSON.stringify($scope.listLabSampleDtls));
+									var URI = BASE_URL + ROOT_URL
+									        + LIS_BIOCHEMISTRY
+											+ BIO_CHEM_SMP_ACCEPT_REJECT;
+									console.log("SEND_TO_BIOCHEMISTY WORKLIST", URI);
+									GenericService
+											.serviceAction(METHOD_POST, URI,
+													$scope.listLabSampleDtls)
+											.then(
+													function(response) {
+														if (response.data.status == 'success') {
+															$scope.initsampleAccPendingList(
+																			$scope.orgId,
+																			$scope.orgUnitId,
+																			$scope.offset,
+																			$scope.noOfRecordsPerPage);
+															growl.success(
+																			response.data.message,
+																			{
+																				title : 'Success!'
+																			});
+															$scope
+																	.$broadcast('show-errors-reset');
+
+														} else if (response.data.status == 'error') {
+															$rootScope.stopLoader();
+															growl.error(response.data.message,
+																			{
+																				title : 'Error!'
+																			});
+														}
+														$scope.initsampleAccPendingList($scope.orgId,
+																$scope.orgUnitId, $scope.offset,
+																$scope.noOfRecordsPerPage);
+													});
+									
+								} catch (e) {
+									console.log("Exception", e.message);
+								}
+							}
+							
+							/*====================================SEARCH DETAILS=====================================*/
+							
+						    $scope.dropDownSetting = {
+						    		scrollableHeight: '100px', 
+						    		scrollable: true
+						    }; 
+						    
+						    $scope.multiselectObj = {
+						    		"id":"",
+						    		"label":""
+						    }
+						    
+						/** Service Autocomplete List * */
+						$scope.getSendToCRList = function(searchKeyword)
+						{
+						    if(searchKeyword.length == 3)
+							{
+							try 
+							{
+								var data = { 
+										"orgId":$scope.orgId,
+										"orgUnitId":$scope.orgUnitId,
+										"visitTypes":$scope.selectedVisitTypeIds,
+										"sampleStatusIds":$scope.sampleStatusIds,
+										"searchKeyword":searchKeyword,
+										"deptId":$scope.deptId,
+										"subDeptId":$scope.subDeptId,
+								}
+								
+								var URI = BASE_URL 
+								        + ROOT_URL
+										+ LIS_BIOCHEMISTRY
+										+ BIOCHECMISTRY_PATIENT_LIST_SEARCH;
+								console.log("URI", URI);
+								return GenericService.serviceAction("POST", URI,
+										data).then(function(response) {
+									console.log("response.data.listObject",response.data.listObject);
+									$scope.patientListNew =response.data.listObject;
+									return response.data.listObject;
+								});
+							} catch (e) {
+								console.log(e.message)
+							}
+						}	else {
+					        var filteredList = $filter('filter')($scope.patientListNew, { $: searchKeyword });
+					        if (filteredList.length === 0) {
+					            $scope.filteredPatientList = null;
+					        } else {
+					            $scope.filteredPatientList = filteredList;
+					        }
+					        return $scope.filteredPatientList;
+					    }
+					};
+					
+						    $scope.selectPatient = function($item, $model,$label)
+							{
+						      $scope.selectedPatient = $item.id;
+						     // $scope.PatientName= $item.firstName +"  "+$item.lastName;
+						      $scope.uhid=$item.uhid;
+					        }
+						    
+						
+						    
+						    
+						/*get Visi tType List*/
+						$scope.getVisitTypeList = function()
+						{
+							try 
+							{
+								var data = {
+										"orgId":$scope.orgId,
+										"orgUnitId":$scope.orgUnitId,
+										"deptId":$scope.deptId,
+										"subDeptId":$scope.subDeptId,
+								}
+								
+								var URI = BASE_URL 
+								        + ROOT_URL
+										+ LIS_HISTOPATHOLOGY
+										+ HISTO_MICRO_VISIT_LIST
+								console.log("URI", URI);
+								 GenericService.serviceAction("POST", URI,
+										data).then(function(response) {
+									console.log("response.data.listObject",response.data.listObject);
+									angular.forEach(response.data.listObject, function(value, key) {
+										var multiselectObj = angular.copy($scope.multiselectObj);
+										multiselectObj.id = value.id;
+										multiselectObj.label = 	value.label;
+											$scope.visityTypeList.push(multiselectObj);
+										});
+									
+									
+								});
+							} catch (e) {
+								console.log(e.message)
+							}
+						}
+						
+						$scope.getVisitTypeList();
+						
+						
+						$scope.getTestList = function()
+						{
+							try 
+							{
+								var data = {
+										"orgId":$scope.orgId,
+										"orgUnitId":$scope.orgUnitId,
+										"deptId":$scope.deptId,
+										"subDeptId":$scope.subDeptId
+								}
+								
+								var URI = BASE_URL 
+								        + ROOT_URL
+										+ LIS_HISTOPATHOLOGY
+										+ HISTO_MICRO_TEST_LIST
+								console.log("URI", URI);
+								 GenericService.serviceAction("POST", URI,
+										data).then(function(response) {
+									console.log("response.data.listObject",response.data.listObject);
+									$scope.testList =  response.data.listObject;
+								});
+							} catch (e) {
+								console.log(e.message)
+							}
+						}
+						$scope.getTestList();
+						
+						$scope.getDepartMentList = function(orgId,orgUnitId) {
+							try {
+								var data = "";
+								var URI = BASE_URL + ROOT_URL
+										+ LIS_COMMON + GET_DEPARMENT_LIST
+										+ S + orgId + S + orgUnitId;
+								console.log("URI", URI);
+								GenericService.serviceAction("GET", URI, data)
+										  .then(function(response) {
+											  angular.forEach(response.data.listObject, function(value, key) {
+													var multiselectObj = angular.copy($scope.multiselectObj);
+													multiselectObj.id = value.id;
+													multiselectObj.label = 	value.name;
+														$scope.departmentList.push(multiselectObj);
+													});
+												});
+							   } catch (e) {
+								console.log(e.message)
+							}
+						}
+						$scope.getDepartMentList($scope.orgId,$scope.orgUnitId);
+						
+						
+						/*get Sample Number List*/
+						$scope.getSampleNoList = function(searchKeyword)
+						{
+							try 
+							{
+								var data = {
+										"orgId":$scope.orgId,
+										"orgUnitId":$scope.orgUnitId,
+										"visitTypes":$scope.selectedVisitTypeIds,
+										"sampleStatusIds":$scope.sampleStatusIds,
+										"searchKeyword":searchKeyword,
+										"deptId":$scope.deptId,
+										"subDeptId":$scope.subDeptId,
+								}
+								
+								var URI = BASE_URL 
+								        + ROOT_URL
+								    	+ LIS_BIOCHEMISTRY
+										+ BIOCHECMISTRY_SAMPLE_NO_LIST_SEARCH
+								console.log("URI", URI);
+								
+									return GenericService.serviceAction("POST", URI,
+											data).then(function(response) {
+										console.log("response.data.listObject",response.data.listObject);
+										return response.data.listObject;
+									});
+									
+							} catch (e) {
+								console.log(e.message)
+							}
+						}
+						
+						
+						 $scope.selectSampleNo= function($item, $model,$label)
+							{
+						      $scope.selectedSampleNo = $item.sampleNo;
+						      $scope.labSampleDtlsId = $item.labSampleDtlsId;
+						    
+					        }
+						 $scope.searchOutPatientList = function()
+							{
+								try 
+								{
+									 $rootScope.startLoader();
+									var searchObj = {
+												  "orgId" : $scope.orgId,
+												  "orgUnitId" :$scope.assignUnit,
+												  "fromDt": $scope.fromDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.fromDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD"),
+												  "toDt":  $scope.toDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.toDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD"),
+												  "patientId" :  $scope.selectedPatient,
+												  "labSampleDtlsId" : $scope.labSampleDtlsId,
+												  "visitTypes" :$scope.selectedVisitType,
+												  "testTypes" : $scope.selectedtestList,
+												  "deptId" : $scope.deptId,
+												  "subDeptId" : $scope.subDeptId,
+												  "subDepts" : $scope.selectedDepartMentList,
+												  "assignUnit" :$scope.orgUnitId ,
+												  "isSendToCrApplicable":$scope.isSendToCrApplicable,
+												  "isSampleAcceptanceApplicable":$scope.isSampleAcceptanceApplicable,
+												  "uhidNumber" : ($scope.uhid==undefined ||$scope.uhid== null) ?"":$scope.uhid,
+												  "sampleNo" : ($scope.selectedSampleNo == undefined || $scope.selectedSampleNo==null)?"":$scope.selectedSampleNo,
+												  "offset":$scope.offset,
+												  "recordPerPage":$scope.noOfRecordsPerPage
+									}
+									
+									var isValidDate = $rootScope.isValidDate(searchObj.fromDt,searchObj.toDt);
+									if(!isValidDate){
+										$rootScope.stopLoader();
+										growl.warning("From date can not be greater than to Date ",
+												{
+													title : 'warning!'
+												});
+										return false;
+									}
+									
+									console.log("$scope.selectedtestList",$scope.selectedtestList);
+									console.log("$scope.selectedDepartMentList",$scope.selectedDepartMentList);
+									console.log("collectedSampleList",JSON.stringify(searchObj));
+									var URI = BASE_URL 
+									        + ROOT_URL
+									    	+ LIS_BIOCHEMISTRY
+											+ BIOCHEMISTRY_LIST_SEARCH
+									console.log("URI", URI);
+									
+									var data1 = {
+											"orgId":$scope.orgId,
+											"orgUnitId":$scope.assignUnit,
+											"assignUnit" :$scope.orgUnitId ,
+											"deptId":$scope.deptId,
+											"subDeptId":$scope.subDeptId,
+											"isSendToCrApplicable":$scope.isSendToCrApplicable,
+											"isSampleAcceptanceApplicable":$scope.isSampleAcceptanceApplicable,
+											"fromDate": $scope.fromDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.fromDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD"),
+											"toDate":  $scope.toDate==undefined?moment(new Date()).format("YYYY-MM-DD"):moment(moment($scope.toDate,'YYYY-MM-DD').toDate()).format("YYYY-MM-DD")
+										};
+									var URI2 = BASE_URL
+											+ ROOT_URL
+											+ LIS_BIOCHEMISTRY
+											+ SAMPLE_ACCEPTANCE_PENDING_COUNT;
+
+									console.log("URI2", URI2);
+									promiseFactoryWithObject
+											.setPromisesWithObject(URI, URI2, METHOD_POST,
+													METHOD_POST,searchObj,data1)
+											.then(
+													function(response) {
+														 $scope.sampleAccPendingList=[];
+														$rootScope.stopLoader();
+														$scope.sampleAccPendingList = response[0].listObject;
+														$scope.commonListCount = response[1].object;
+														$scope.sampleAccPendingListForFiltter = $scope.sampleAccPendingList;
+														$scope.filterByDummyServices();
+														$scope.setPage(1,false);
+													});
+									
+									
+								} catch (e) {
+									console.log(e.message)
+								}
+							}
+						 
+						 $scope.selectPatientForSave = function(){
+		                	   
+		                	   var checkedCount = 0;
+		                       angular.forEach($scope.sampleAccPendingList, function(value, key) {
+		                      
+		                           if(value.isAcceptOrReject != 'N'  && value.isAcceptOrReject != null ){
+		                                checkedCount = checkedCount + 1;
+		                           }
+		                      });
+		                       
+		                       if(checkedCount > 0){
+		                           $scope.saveBtn = true;
+		                       }else{
+		                           $scope.saveBtn = false;
+		                       }
+		                   }
+
+						} ]);

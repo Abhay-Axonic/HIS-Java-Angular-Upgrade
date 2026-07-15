@@ -1,0 +1,1215 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* General page styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f9fb;
+            margin: 0;
+            padding: 0;
+        }
+
+        .his-style {
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        /* Title Styling */
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4a90e2;
+            border-bottom: 2px solid #4a90e2;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        /* Table Styling */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f5f5f5;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Entry Blocks */
+        .entry {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            background-color: #4a90e2;
+            color: white;
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        /* Diagnostic Report Styling */
+        .diagnostic-report {
+            background-color: #fef3e7;
+            padding: 4px;
+            
+        }
+
+        .diagnostic-report p {
+            margin: 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Document Reference Styling */
+        .document-reference {
+            background-color: #e7f4fe;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .document-reference p {
+            margin: 0;
+        }
+
+        /* Immunization Record Styling */
+        .immunization-record {
+            background-color: #f0ffe6;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* Prescription Record */
+        .prescription-record {
+            background-color: #f7e6ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* OPConsultNote Record */
+        .opconsult-note {
+            background-color: #fef9e7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* Strong elements */
+        p strong {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* PDF Viewer */
+        #pdfViewer {
+            border: none;
+            width: 100%;
+            height: 600px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        /* Sidebar-related styles */
+        .sidebar-nav li.active {
+            background-color: #4a90e2;
+        }
+
+        .sidebar-nav li a {
+            color: white;
+        }
+
+        /* Modal Styling */
+        modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        modal[visible="true"] {
+            display: block;
+        }
+
+        modal .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        tr.ng-scope td {
+    		border: none !important;
+		}
+		
+		.fw-bold{
+			font-weight:bold;
+		}
+		
+		.card{
+		padding-left: 35px;
+		margin: 25px;
+		
+		}
+		
+		.card-header{
+		font-weight: bold;
+    }
+    
+    hr{
+    margin: 5px;
+    }
+    </style>
+    
+</head>
+
+<div id="page-content-wrapper" style="height: 630px;">
+	<div class="container-fluid his-style">
+		<div>
+			<div class="title1">
+				<div class="row">
+				  <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10 pull-left">
+						<div class="">
+							<a>
+								<input type="button" value="Back" 
+								class="btn btn-primary btn-save-box-shadow" ng-click="goBack()">
+							</a>
+						</div>
+					</div>
+			    </div>
+			    <div class="row">
+			    	<div class="card"  ng-repeat="info in finalResultList" ng-if="info.entry.length>0">
+					  	<div class="card-header text-primary text-center h4">{{info.entry[0].resource.title}}</div>
+						   <div class="card-body">
+						   <div class="row"><div class="col-md-12"><hr></div></div>
+						   <div class="row">
+							    <div class="col-md-4">
+							 	  <div class="row">
+								 	  <div class="col-md-12 fw-bold text-success">Patient Details</div>
+								 	  <div class="col-md-12">Name : {{patientnamek}} </div>
+								 	  <div class="col-md-12">ABHA Address : {{healthIdSelectedPatient}} </div>
+								 	  <div class="col-md-12">ABHA Number : {{healthNumberSelectedPatient}}</div>
+								 	  <div class="col-md-12">Gender : {{genderOfPatient}}</div>
+								 	  <div class="col-md-12">Birth Date : {{birthDate}}</div>
+								 	  <div class="col-md-12">Mobile Number : {{mobileNumber}}</div>
+								  </div>
+							 	</div>
+							 	<div class="col-md-4">
+							 	  <div class="row">
+							 	  	  <div class="col-md-12 fw-bold text-success">Hospital Details</div>
+							 	  	  <div ng-repeat="entry in  info.entry">
+									 	  <div ng-if="entry.resource.resourceType=='Organization'">
+										 	  <div class="col-md-12">Name : {{entry.resource.name}} </div>
+										 	  <div ng-repeat="contact in  info.entry.resource.telecom">
+										 	  	<div class="col-md-12">{{contact.system}} : {{contact.value}} </div>
+										 	  </div>
+									 	  </div>
+								 	  </div>
+								  </div>
+							 	</div>
+							 	<div class="col-md-4">
+							 	  <div class="row">
+							 	  	  <div class="col-md-12 fw-bold text-success">Practitioner Details</div>
+							 	  	  <div ng-repeat="entry in  info.entry">
+									 	  <div ng-if="entry.resource.resourceType==='Practitioner'">
+									 	  		<div ng-repeat="docName in  entry.resource.name">
+										 	  		<div class="col-md-12">Name : {{docName.text}} </div>
+										 	  	</div>
+									 	  </div>
+								 	  		<div ng-repeat="identifier in  info.entry.resource.identifier">
+								 	  			<div class="col-md-12"> Medical License number : {{identifier.value}}</div>
+									 	  	</div>
+								 	  </div>
+								  </div>
+							 	</div>
+						   </div>
+						   
+						   
+						   <div class="row">
+							    <div class="col-md-4">
+							 	  <div class="row">
+								 	  
+								  </div>
+							 	</div>
+							 	<div class="col-md-4">
+							 	  <div class="row">
+							 	  	  
+								  </div>
+							 	</div>
+							 	<div class="col-md-4">
+							 	  <div class="row">
+							 	  	  <div class="col-md-12 fw-bold text-success">Record Date</div>
+							 	  	  <div ng-repeat="entry in  info.entry">
+									 	  <div ng-if="entry.resource.resourceType==='Encounter'">
+									 	  		<div>
+										 	  		<div class="col-md-12">Date : {{entry.resource.meta.lastUpdated | date:'dd MMM yyyy, hh:mm a'}} </div>
+										 	  	</div>
+									 	  </div>
+								 	  	
+								 	  </div>
+								  </div>
+							 	</div>
+						   </div>
+						   
+						   
+						   <div class="row">
+						   		<div class="col-md-12"><hr></div>
+						   </div>
+						   <div class="row">
+				   				<div class="col-md-12 fw-bold">{{info.entry[0].resource.type.text}} <span style="padding-left:75px">Status : {{info.entry[0].resource.status}}</span></div>
+						   </div>
+						   <div class="row">
+						   		<div class="col-md-12"><hr></div>
+						   </div>
+						   <div class="row">
+							   	<div class="col-md-12" ng-repeat="section in info.entry[0].resource.section">
+							   		<div class="row">
+							   				<div ng-repeat="entry in section.entry">
+									   			<div ng-repeat="entrysub in info.entry track by $index"  >
+									   			
+										   			<div ng-if="(entry.reference == entrysub.fullUrl || entry.reference == 'urn:uuid:' + entrysub.resource.id)">
+										   				<!-- lab Start -->
+										   				<div class="row">
+										   					<div class="col-md-4" ng-if="entrysub.resource.issued">
+										   						<span class="fw-bold">Issued Date</span> : {{entrysub.resource.issued | date:'dd MMM yyyy, hh:mm a'}}
+										   					</div>
+										   					<div class="col-md-4" ng-if="entrysub.resource.resultsInterpreter">
+										   						<span class="fw-bold">Results Interpreter</span> : <span ng-repeat="resultsInterpreter in entrysub.resource.resultsInterpreter">
+										   							{{resultsInterpreter.display}} &nbsp;
+										   						</span>
+										   					</div>
+										   					<div class="col-md-4" ng-if="entrysub.resource.specimen">
+										   						<span class="fw-bold">Specimen</span> : 
+										   						<span ng-repeat="specimen in entrysub.resource.specimen">
+										   							{{specimen.display}} &nbsp;
+										   						</span>
+										   					</div>
+										   				</div>
+										   				<div ng-repeat="result in entrysub.resource.result"  >
+										   				<div class="row"><hr></div>
+										   				  <div ng-repeat="entrysubs in info.entry"   ng-if="result.reference == entrysubs.fullUrl">
+										   				  		<div class="row">
+											   				      <div class="col-md-4">{{entrysubs.resource.code.text}}</div>
+															      <div class="col-md-4">
+															        {{entrysubs.resource.valueQuantity.value}}
+															        <span ng-if="entrysubs.resource.valueQuantity.unit">/{{entrysubs.resource.valueQuantity.unit}}</span>
+															      </div>
+															      <div class="col-md-4">
+															        <div ng-if="entrysubs.resource.referenceRange && entrysubs.resource.referenceRange.length > 0">
+															          <div ng-repeat="referenceRange in entrysubs.resource.referenceRange">
+															           Range: {{referenceRange.low.value}} -
+															            {{referenceRange.high.value}} {{referenceRange.high.unit}}
+															          </div>
+															        </div>
+															      </div>
+															    </div>
+														  </div>
+														 </div>
+														 <!-- lab end -->
+														 
+														 <!-- wellness -->
+												  		<div class="row">
+        														
+									   				      <div class="col-md-4" ng-if="section.title != ''">
+									   				     <!--  {{section.title }}: {{entrysub.resource.code.text}} {{ entrysub.resource.code && entrysub.resource.code.coding && entrysub.resource.code.coding[0] && entrysub.resource.code.coding[0].display ? entrysub.resource.code.coding[0].display : '' }}
+									   				       {{entrysub.resource.category && entrysub.resource.category[0] && entrysub.resource.category[0].text ? entrysub.resource.category[0].text : ''}} <br>
+									   				       -->
+									   				       
+									   				       {{section.title}}: 
+																{{ entrysub.resource.code && entrysub.resource.code.coding && entrysub.resource.code.coding[0] && entrysub.resource.code.coding[0].display 
+																    ? entrysub.resource.code.coding[0].display 
+																    : (entrysub.resource.code && entrysub.resource.code.text 
+																        ? entrysub.resource.code.text 
+																        : '') 
+																}}  {{ entrysub.resource.valueString != null ? entrysub.resource.valueString : '' }} <br>
+																{{ entrysub.resource.category && entrysub.resource.category[0] && entrysub.resource.category[0].text ? 'Category: ' + entrysub.resource.category[0].text : '' }}
+																									   				      
+									   				      </div>
+													      <div class="col-md-4">
+													        {{entrysub.resource.valueQuantity.value}}
+													        <span ng-if="entrysub.resource.valueQuantity.unit">/{{entrysub.resource.valueQuantity.unit}}</span>
+													      </div>
+													      <div class="col-md-4">
+													       <span ng-if="entrysub.resource.valueCodeableConcept && entrysub.resource.valueCodeableConcept">
+                                                       {{ entrysub.resource.valueCodeableConcept.text}}</br>
+                          										</span>	
+													      </div>
+													       <div class="col-md-4">
+														        <span ng-if="entrysub.resource.valueCodeableConcept && entrysub.resource.valueCodeableConcept.coding" 
+					                  				       					       ng-repeat="code in entrysub.resource.valueCodeableConcept.coding[0]">
+					                       						     {{ code.display }}</br>
+					                   					      		 </span>
+		                   					      		 
+													    <!-- Wellness End -->
+													    
+													    <div ng-if="entrysub.resource.medicationCodeableConcept && entrysub.resource.medicationCodeableConcept.coding" 
+							                                ng-repeat="code in entrysub.resource.medicationCodeableConcept.coding">
+							                            {{ code.display }} </br>
+							                           <!--  Authored Date : <span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br> -->
+							                          </div>
+							                             
+							                          <div ng-if="entrysub.resource.medicationReference && entrysub.resource.medicationReference.reference">
+							                         <div ng-repeat="entrysubNew in info.entry"  >
+								                          <div ng-if="entrysub.resource.medicationReference.reference == entrysubNew.fullUrl ">
+								                                {{entrysubNew.resource.code.text }}</br>
+								                            </div>
+								                          </div>
+							                          </div>
+							                          
+							                          <div ng-if="entrysub.resource.medicationCodeableConcept && entrysub.resource.medicationCodeableConcept" >
+							                            {{ entrysub.resource.medicationCodeableConcept.text }} 
+							                            Authored Date : <span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+							                          </div>
+							
+							                          <div ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].additionalInstruction" 
+							                                ng-repeat="code in entrysub.resource.dosageInstruction[0].additionalInstruction[0].coding">
+							                            {{ code.display }} -{{ entrysub.resource.dosageInstruction[0].text }}</br>
+							                          </div>
+							                             <div ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].route" 
+							                                ng-repeat="code in entrysub.resource.dosageInstruction[0].route.coding">
+							                            {{ code.display }}:{{ code.text }}</br>
+							                          </div>
+							                      
+							                          
+							                          <div  ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].route">
+							                            {{ entrysub.resource.dosageInstruction[0].text }}</br>
+							                          </div>
+							                         
+							                          <div  ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].route">
+							                            {{ entrysub.resource.dosageInstruction[0].route.text }}</br>
+							                          </div>
+							                          
+							                          <div ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].method" 
+							                                ng-repeat="code in entrysub.resource.dosageInstruction[0].method.coding">
+							                            {{ code.display }}</br>
+							                          </div>
+							                           <div ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].timing">
+							                             Timming (Repeat)- Frequency- ({{ entrysub.resource.dosageInstruction[0].timing.repeat.frequency }} ) </br>
+							                             Timming (Repeat)- Period- ({{ entrysub.resource.dosageInstruction[0].timing.repeat.period }} ) </br>
+							                             Timming (Repeat)- Period Unit- ({{ entrysub.resource.dosageInstruction[0].timing.repeat.periodUnit }} ) </br>
+							                             
+							                          </div>
+							                          
+							                          <div ng-if="entrysub.resource.code && entrysub.resource.code.coding"  ng-repeat="code in entrysub.resource.code.coding">
+								                             <div ng-if="entrysub.resource.recordedDate && entrysub.resource.recordedDate!=''"> <span ng-if="entrysub.resource.recordedDate!=''">Recorded Date: {{ entrysub.resource.recordedDate  | date:'dd MMM yyyy, hh:mm a' }}</span></br></div>
+								                             <div ng-if="entrysub.resource.performedDateTime">Performed On: <span>{{ entrysub.resource.performedDateTime  | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+								                              <!-- status: completed -->
+								                              </div>
+								                          </div>
+								                         </div> 
+                           							<div ng-if="entrysub.resource.data && entrysub.resource.resourceType =='Binary'">
+						                            <!-- <button class="btn btn-info padding-left-right-set" 
+						                            ng-click="openPdfInNewWindow(entrysub.resource.data, entrysub.resource.contentType)">
+												   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button> -->
+												   
+												    <div class="col-md-4">
+					   				      	<i class="fa fa-file-pdf-o"></i> <span class="text-primary" ng-click="openPdfInNewWindow(entrysub.resource.data, entrysub.resource.contentType,'base64')">Download File :Prescription Report </span>
+					   				      </div>
+												   
+												   
+												   </div>
+													    
+													    
+													    </div>
+													    
+													    <div class="row">
+													    
+													    <span ng-if="entrysub.resource.vaccineCode && entrysub.resource.vaccineCode.coding" 
+							                                ng-repeat="code in entrysub.resource.vaccineCode.coding">
+							                              {{ code.display }}</br>
+							                              Recorded Date: <span>{{ entrysub.resource.occurrenceDateTime | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+							                              Lot Number  Date: <span>{{ entrysub.resource.lotNumber}}</span></br>
+							                          </span>
+							                          
+							                          <span ng-if="entrysub.resource.recommendation.vaccineCode && entrysub.resource.recommendation.vaccineCode.coding" 
+							                                ng-repeat="code in entrysub.resource.recommendation.vaccineCode.coding">
+							                              {{ code.display }}</br>
+							                          </span>
+							                          
+							                           <div ng-if="entrysub.resource.recommendation">
+ 														 <div ng-repeat="recommend in entrysub.resource.recommendation">
+													    <!-- Display the Forecast Status -->
+													    <span ng-if="recommend.forecastStatus && recommend.forecastStatus.coding">
+													      <div ng-repeat="code in recommend.forecastStatus.coding">
+													        Forecast Status: {{ code.display }}</br>
+													      </div>
+													    </span>
+													    
+													    <!-- Display Vaccine Code -->
+													    <span ng-if="recommend.vaccineCode && recommend.vaccineCode[0].coding">
+													      <div ng-repeat="vaccine in recommend.vaccineCode[0].coding">
+													        Vaccine: {{ vaccine.display }} (Code: {{ vaccine.code }})</br>
+													      </div>
+													    </span>
+													
+													    <!-- Display Date Criterion -->
+													    <span ng-if="recommend.dateCriterion && recommend.dateCriterion[0].value">
+													    Date Vaccine Due: {{ recommend.dateCriterion[0].value }}</br>
+													    </span>
+													
+													    <!-- Display Description -->
+													    <span ng-if="recommend.description">
+													      Description:{{ recommend.description }}</br>
+													    </span>
+													
+													    <!-- Display Series -->
+													    <span ng-if="recommend.series">
+													     Series: {{ recommend.series }}</br>
+													    </span>
+													
+													    <!-- Display Dose Number -->
+													    <span ng-if="recommend.doseNumberPositiveInt">
+													      Dose Number: {{ recommend.doseNumberPositiveInt }}</br>
+													    </span>
+													
+													    <!-- Display Total Series Doses -->
+													    <span ng-if="recommend.seriesDosesPositiveInt">
+													      Total Series Doses: {{ recommend.seriesDosesPositiveInt }}</br>
+													    </span>
+													
+													    <br/>
+													  </div>
+													</div>
+
+													    
+													    </div>
+													    
+													    	<div ng-repeat="lineItem1 in entrysub.resource.lineItem"  ng-if="entrysub.resource.lineItem.length > 0">
+																<div class="row">
+																		<div ng-repeat="entrysubs1 in info.entry" ng-if="lineItem1.chargeItemReference.reference == entrysubs1.fullUrl">
+																				<div class="col-md-4">Item Quantity : {{entrysubs1.resource.quantity.value+' '+entrysubs1.resource.quantity.unit}}</div><br>
+																					
+																				 	 <div ng-repeat="entrysubNew1 in info.entry">
+																				 	
+																                          <div ng-if="entrysubs1.resource.productReference.reference == entrysubNew1.fullUrl">
+																                                Item Name : {{entrysubNew1.resource.code.text }}</br>
+																                                 <div ng-repeat="priceComponent in lineItem1.priceComponent">
+																									<div class="col-md-4">{{priceComponent.code.text}}: {{priceComponent.amount.value +' '+priceComponent.amount.currency}}</div><br>
+										
+																								</div>  
+																                            </div>
+																	                </div>  -
+																					  
+																	                
+																		</div>
+				
+																		
+																		
+																		
+																	<div class="col-md-12"><hr></div>
+				
+																</div>
+												
+												           </div>
+												
+																<div ng-if="entrysub.resource.lineItem.length > 0" >
+																	<div class="row">
+																		<div ng-if="entrysub.resource.totalNet">
+																			<div class="col-md-4">Total Net : {{entrysub.resource.totalNet.value +' '+entrysub.resource.totalNet.currency}}</div><br>
+				
+																		</div>
+																		
+																		<div ng-if="entrysub.resource.totalGross">
+																			<div class="col-md-4">Total Gross : {{entrysub.resource.totalGross.value +' '+entrysub.resource.totalGross.currency}}</div><br>
+				
+																		</div>
+																		
+																		</div>
+																	</div>
+																	    
+													    
+													    
+													    
+													    
+												 	 </div>
+												 	 
+												 	 
+											
+
+
+											</div>
+									   	</div>
+									   	
+									 
+							   		</div>
+							   	</div>
+						   	  	 <div class="row" ng-repeat="entryMain in info.entry">
+					   				<div ng-if="entryMain.resource.resourceType == 'DocumentReference'">
+				   						  <div class="col-md-4" ng-repeat="doc in entryMain.resource.content" ng-if="doc.attachment.data != undefined">
+					   				      	<i class="fa fa-file-pdf-o"></i> <span class="text-primary" ng-click="openPdfInNewWindow(doc.attachment.data,doc.attachment.contentType,'base64')">Download File :{{doc.attachment.title}} </span>
+					   				      </div>
+					   				       <div class="col-md-4" ng-repeat="doc in entryMain.resource.content" ng-if="doc.attachment.url!= undefined">
+					   				      	<i class="fa fa-file-pdf-o"></i> <span class="text-primary" ng-click="openPdfInNewWindow(doc.attachment.url,doc.attachment.contentType,'url')">Download File :{{doc.attachment.title}} </span>
+					   				      </div>
+					   				      
+					   				</div>
+				   				</div>
+						   </div>
+						</div>
+			    	</div>
+			    </div>
+		
+		
+			  </div>
+		</div>
+
+<!-- <div ng-repeat="info in finalResultList">
+<div class="title">
+    ========================
+    Diagnostic Records
+    ========================
+  </div>
+  <div class="diagnostic-report">
+  
+  Entry Iteration
+  <div ng-repeat="entry in info.entry">
+    Display Diagnostic Report
+    <div ng-if="entry.resource.resourceType === 'DiagnosticReport'">
+      <div ng-repeat="result in entry.resource.result">
+        <p>{{ result.display }}</p>
+      </div>
+       <p><strong>Conclusion:</strong> {{ entry.resource.conclusion }}</p>
+    </div>
+    Display Document Reference
+    <div ng-if="entry.resource.resourceType === 'DocumentReference'">
+      <p><strong>Document Type:</strong> {{ entry.resource.type.coding[0].display }}</p>
+      <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entry.resource.content[0].attachment.data)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+    </div>
+  </div> End of Entry Iteration
+</div>
+</div> -->
+<!-- <div ng-repeat="info in finalResultList">
+ <div class="title" ng-if="info.entry && info.entry[0] && info.entry[0].resource && info.entry[0].resource.title">
+   ========================
+   {{info.entry[0].resource.title}}
+    ========================
+  </div>
+  <div class="diagnostic-report">
+  <table class="table">
+    <tbody>
+      <tr ng-repeat="section in info.entry[0].resource.section" ng-if="section.entry.length > 0">
+        <td>{{ section.title }}</td>
+        <td>
+          <table class="table">
+            <tbody>
+              <tr ng-repeat="entry in section.entry">
+                <td>
+                <div class="diagnostic-report">
+                  <table class="table">
+                    <tbody>
+                      <tr ng-repeat="entrysub in info.entry"   ng-if="(entry.reference == entrysub.fullUrl)|| (entry.reference == 'urn:uuid:' + entrysub.resource.id)">
+                        <td>
+                        
+						    Display Diagnostic Report
+						    <div ng-if="entry.resource.resourceType === 'DiagnosticReport'">
+						  <div ng-repeat="result in entrysub.resource.result">
+						        <p>{{ result.display }} dfghjhgfd</p>
+						        
+						         <span ng-if="entrysub.resource.valueQuantity || entrysub.resource.referenceRange" >
+                              Result: {{entrysub.resource.valueQuantity.value}} //quantity &nbsp;{{ entrysub.resource.valueQuantity.unit}}  &nbsp; <span> {{entrysub.resource.referenceRange[0].high.value}} &nbsp;{{entrysub.resource.referenceRange[0].high.unit}}&nbsp;-{{entrysub.resource.referenceRange[0].low.value}} &nbsp;{{entrysub.resource.referenceRange[0].low.unit}} </span></br>
+                          </span>
+						        
+						      </div> 
+						      <p>{{ result.display }}</p>
+						       <p ng-if="entry.resource.conclusion != null"><strong>Conclusion:</strong> {{ entry.resource.conclusion }}</p>
+						    </div>
+						    Display Document Reference
+  
+                          <span ng-if="entrysub.resource.code && entrysub.resource.code.coding" 
+                                ng-repeat="code in entrysub.resource.code.coding">
+                              {{ code.display }} //quantity d &nbsp; {{ entrysub.resource.valueQuantity.value}} &nbsp;{{ entrysub.resource.valueQuantity.unit}}</br>
+                          </span>
+                          
+                           
+                          
+                             <span ng-if="entrysub.resource.valueCodeableConcept && entrysub.resource.valueCodeableConcept">
+                            {{ entrysub.resource.valueCodeableConcept.text}}</br>
+                          </span>	
+                             <span ng-if="entrysub.resource.code && entrysub.resource.code.coding" 
+                                ng-repeat="code in entrysub.resource.code.coding">
+                               {{ code.text }} </br>
+                          </span>
+                          
+                         <span ng-if="entrysub.resource.category && entrysub.resource.category.length > 0">
+						    <span ng-repeat="categoryItem in entrysub.resource.category">
+						        <span ng-repeat="codingItem in categoryItem.coding">
+						            {{ codingItem.display }} <br>
+						        </span>
+						    </span>
+						</span>
+                          
+                          <span ng-if="entrysub.resource.valueCodeableConcept && entrysub.resource.valueCodeableConcept.coding" 
+                                ng-repeat="code in entrysub.resource.valueCodeableConcept.coding[0]">
+                            {{ code.display }}</br>
+                          </span>
+                          
+                          <span ng-if="entrysub.resource.vaccineCode && entrysub.resource.vaccineCode.coding" 
+                                ng-repeat="code in entrysub.resource.vaccineCode.coding">
+                              {{ code.display }}</br>
+                              Recorded Date: <span>{{ entrysub.resource.occurrenceDateTime | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                              Lot Number  Date: <span>{{ entrysub.resource.lotNumber}}</span></br>
+                          </span>
+                          
+                          <span ng-if="entrysub.resource.code && entrysub.resource.code.coding" 
+                                ng-repeat="code in entrysub.resource.code.coding">
+                              {{ code.display }}</br>
+                            Recorded Date: <span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+                            
+                           Prescription Start
+                          <span ng-if="entrysub.resource.medicationCodeableConcept && entrysub.resource.medicationCodeableConcept.coding" 
+                                ng-repeat="code in entrysub.resource.medicationCodeableConcept.coding">
+                            {{ code.display }}</br>
+                            Authored Date : <span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+
+                          <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].additionalInstruction" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].additionalInstruction[0].coding">
+                            {{ code.display }}</br>
+                          </span>
+                             <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].route" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].route.coding">
+                            {{ code.display }}</br>
+                          </span>
+                           <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].timing">
+                             Timming (Repeat)- Frequency ({{ entrysub.resource.dosageInstruction[0].timing.repeat.frequency }} ) </br>
+                             Timming (Repeat)- Period ({{ entrysub.resource.dosageInstruction[0].timing.repeat.period }} ) </br>
+                             Timming (Repeat)- Period Unit ({{ entrysub.resource.dosageInstruction[0].timing.repeat.periodUnit }} ) </br>
+                             
+                          </span>
+                          
+                          
+                           <span ng-if="entrysub.resource.data && entrysub.resource.resourceType =='Binary'">
+                            <button class="btn btn-info padding-left-right-set" 
+                            ng-click="openPdfInNewWindow(entrysub.resource.data, entrysub.resource.contentType)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						   </span>
+						   
+						     <span ng-if="entrysub.resource.code && entrysub.resource.code.coding" 
+                                ng-repeat="code in entrysub.resource.code.coding">
+                              {{ code.display }}
+                              </br>
+                             <div ng-if="entrysub.resource.recordedDate && entrysub.resource.recordedDate!=''"> <span ng-if="entrysub.resource.recordedDate!=''">Recorded Date: {{ entrysub.resource.recordedDate  | date:'dd MMM yyyy, hh:mm a' }}</span></br></div>
+                             <div ng-if="entrysub.resource.performedDateTime">Performed On: <span>{{ entrysub.resource.performedDateTime  | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                              status: completed
+                              </div>
+                          </span>
+						   
+						   Prescription End
+                          
+                          <span ng-if="entrysub.resource.type && entrysub.resource.type.coding && entrysub.resource.authoredOn!='' " 
+                                ng-repeat="code in entrysub.resource.type.coding">
+                            {{ code.display }} //display
+                            </br>
+                            Recorded Date :<span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span> 
+                          <span ng-if="entrysub.resource.vaccineCode && entrysub.resource.vaccineCode.coding" 
+                                ng-repeat="code in entrysub.resource.vaccineCode.coding">
+                              {{ code.display }}</br>
+                              Recorded Date: <span>{{ entrysub.resource.occurrenceDateTime | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                              Lot Number  Date: <span>{{ entrysub.resource.lotNumber}}</span></br>
+                          </span>
+                          <span ng-if="entrysub.resource.content && entrysub.resource.content[0].attachment.data && entrysub.resource.meta.resourceType =='Binary'">
+                            <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entrysub.resource.content[0].attachment.data, entrysub.resource.meta.contentType)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						   </span>
+						   
+                            
+                          <span ng-if="entrysub.resource.medicationCodeableConcept && entrysub.resource.medicationCodeableConcept.coding" 
+                                ng-repeat="code in entrysub.resource.medicationCodeableConcept.coding">
+                            {{ code.display }}</br>
+                            Authored Date : <span>{{ entrysub.resource.recordedDate | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+
+                          <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].additionalInstruction" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].additionalInstruction[0].coding">
+                            {{ code.display }}</br>
+                          </span>
+                             <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].route" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].route.coding">
+                            {{ code.display }}</br>
+                          </span>
+                          
+                          <span ng-if="entrysub.resource.type && entrysub.resource.type.coding" 
+                                ng-repeat="code in entrysub.resource.type.coding">
+                            {{ code.display }}</br>
+                          </span>
+                          
+                          <span ng-if="entrysub1.resource.code && entrysub1.resource.code.coding" 
+                                   ng-repeat="code in entrysub1.resource.code.coding">
+                                  {{ code.display }}</br>
+                                 </span>
+                                 
+                                 <span ng-if="entrysub.resource.code && entrysub.resource.code.coding" 
+                                ng-repeat="code in entrysub.resource.code.coding">
+                              {{ code.display }}</br>
+                            Recorded Date: <span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+                            
+                          <span ng-if="entrysub.resource.medicationCodeableConcept && entrysub.resource.medicationCodeableConcept.coding" 
+                                ng-repeat="code in entrysub.resource.medicationCodeableConcept.coding">
+                            {{ code.display }}</br>
+                            Authored Date : <span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+
+                          <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].additionalInstruction" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].additionalInstruction[0].coding">
+                            {{ code.display }}</br>
+                          </span>
+                             <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].route" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].route.coding">
+                            {{ code.display }}</br>
+                          </span>
+                           <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].timing">
+                             Timming (Repeat)- Frequency ({{ entrysub.resource.dosageInstruction[0].timing.repeat.frequency }} ) </br>
+                             Timming (Repeat)- Period ({{ entrysub.resource.dosageInstruction[0].timing.repeat.period }} ) </br>
+                             Timming (Repeat)- Period Unit ({{ entrysub.resource.dosageInstruction[0].timing.repeat.periodUnit }} ) </br>
+                          </span>
+                          
+                          <span ng-if="entrysub.resource.type && entrysub.resource.type.coding" 
+                                ng-repeat="code in entrysub.resource.type.coding">
+                            {{ code.display }}</br>
+                            Recorded Date :<span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span> 
+                          <span ng-if="entrysub.resource.content && entrysub.resource.content[0].attachment.data">
+                          <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entrysub.resource.content[0].attachment.data,entrysub.resource.content[0].attachment.contentType)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						   </span>
+                          <div ng-if="entry.resource.resourceType === 'DocumentReference'">
+						      <p><strong>Document Type:</strong> {{ entry.resource.type.coding[0].display }}</p>
+						      <button class="btn btn-info padding-left-right-set" 
+						                           ng-click="openPdfInNewWindow(entry.resource.content[0].attachment.data,entry.resource.content[0].attachment.contentType)">
+												   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						    </div>
+                          
+                         
+						   
+                          
+                          <span ng-if="entrysub.resource.content && entrysub.resource.content[0].attachment.data">
+                            <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entrysub.resource.content[0].attachment.data)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						   </span>
+                          
+                           <span ng-if="entrysub.resource.content && entrysub.resource.content[0].attachment.data">
+                          <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entrysub.resource.content[0].attachment.data)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+                             </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>  -->
+
+<!-- <div ng-repeat="info in finalResultList">
+ <div class="title">
+     ========================
+    Immunizatio Record
+    ========================
+  </div>
+  <div class="diagnostic-report">
+  <table class="table">
+    <tbody>
+      <tr ng-repeat="section in info.entry[0].resource.section" ng-if="section.entry.length > 0">
+        <td>{{ section.title }}</td>
+        <td>
+          <table class="table">
+            <tbody>
+              <tr ng-repeat="entry in section.entry">
+                <td>
+                  <table class="table">
+                    <tbody>
+                      <tr ng-repeat="entrysub in info.entry" 
+                          ng-if="entry.reference && entrysub.resource.id && (entry.reference == 'urn:uuid:' + entrysub.resource.id)">
+                        <td>
+                          <span ng-if="entrysub.resource.vaccineCode && entrysub.resource.vaccineCode.coding" 
+                                ng-repeat="code in entrysub.resource.vaccineCode.coding">
+                              {{ code.display }}</br>
+                              Recorded Date: <span>{{ entrysub.resource.occurrenceDateTime | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                              Lot Number  Date: <span>{{ entrysub.resource.lotNumber}}</span></br>
+                          </span>
+                          <span ng-if="entrysub.resource.content && entrysub.resource.content[0].attachment.data">
+                            <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entrysub.resource.content[0].attachment.data)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						   </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>  -->
+
+<!-- <div ng-repeat="info in finalResultList">
+ <div class="title">
+     ========================
+     Health Document Record
+    ========================
+  </div>
+   <div class="diagnostic-report">
+  <table class="table">
+    <tbody>
+      <tr ng-repeat="section in info.entry[0].resource.section" ng-if="section.entry.length > 0">
+        <td>{{ section.title }}</td>
+        <td>
+          <table class="table">
+            <tbody>
+              <tr ng-repeat="entry in section.entry">
+                <td>
+                  <table class="table">
+                    <tbody>
+                      <tr ng-repeat="entrysub in info.entry" 
+                          ng-if="entry.reference && entrysub.resource.id && (entry.reference == 'urn:uuid:' + entrysub.resource.id)">
+                        <td>
+                          <span ng-if="entrysub.resource.type && entrysub.resource.type.text">
+                              {{ entrysub.resource.type.text }}</br>
+                          </span>
+                          <span ng-if="entrysub.resource.content && entrysub.resource.content[0].attachment.data">
+                           <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entrysub.resource.content[0].attachment.data, )">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						   </span>
+						   
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>  -->
+
+<!-- <div ng-repeat="info in finalResultList" >
+ <div class="title">
+     ========================
+     Prescription Record
+    ========================
+  </div>
+  <div class="diagnostic-report">
+  <table class="table">
+    <tbody>
+      <tr ng-repeat="section in info.entry[0].resource.section" ng-if="section.entry.length > 0">
+        <td>{{ section.title }}</td>
+        <td>
+          <table class="table">
+            <tbody>
+              <tr ng-repeat="entry in section.entry">
+                <td>
+                  <table class="table">
+                    <tbody>
+                      <tr ng-repeat="entrysub in info.entry" 
+                          ng-if="entry.reference && entrysub.resource.id && (entry.reference == 'urn:uuid:' + entrysub.resource.id)">
+                        <td>
+                          <span ng-if="entrysub.resource.code && entrysub.resource.code.coding" 
+                                ng-repeat="code in entrysub.resource.code.coding">
+                              {{ code.display }}</br>
+                            Recorded Date: <span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+                            
+                          <span ng-if="entrysub.resource.medicationCodeableConcept && entrysub.resource.medicationCodeableConcept.coding" 
+                                ng-repeat="code in entrysub.resource.medicationCodeableConcept.coding">
+                            {{ code.display }}</br>
+                            Authored Date : <span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+
+                          <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].additionalInstruction" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].additionalInstruction[0].coding">
+                            {{ code.display }}</br>
+                          </span>
+                             <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].route" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].route.coding">
+                            {{ code.display }}</br>
+                          </span>
+                           <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].timing">
+                             Timming (Repeat)- Frequency ({{ entrysub.resource.dosageInstruction[0].timing.repeat.frequency }} ) </br>
+                             Timming (Repeat)- Period ({{ entrysub.resource.dosageInstruction[0].timing.repeat.period }} ) </br>
+                             Timming (Repeat)- Period Unit ({{ entrysub.resource.dosageInstruction[0].timing.repeat.periodUnit }} ) </br>
+                          </span>
+                          
+                          <span ng-if="entrysub.resource.type && entrysub.resource.type.coding" 
+                                ng-repeat="code in entrysub.resource.type.coding">
+                            {{ code.display }}</br>
+                            Recorded Date :<span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span> 
+                          <span ng-if="entrysub.resource.content && entrysub.resource.content[0].attachment.data">
+                          <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entrysub.resource.content[0].attachment.data)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						   </span>
+                          
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>  -->
+
+
+ <!-- <div ng-repeat="info in finalResultList">
+ <div class="title">
+     ========================
+    OP Consultation Record
+    ========================
+  </div>
+ <div class="diagnostic-report">
+  <table class="table">
+    <tbody>
+      <tr ng-repeat="section in info.entry[0].resource.section" ng-if="section.entry.length > 0">
+        <td>{{ section.title }}</td>
+        <td>
+          <table class="table">
+            <tbody>
+              <tr ng-repeat="entry in section.entry">
+                <td>
+                  <table class="table">
+                    <tbody>
+                      <tr ng-repeat="entrysub in info.entry" 
+                          ng-if="entry.reference && entrysub.resource.id && (entry.reference == 'urn:uuid:' + entrysub.resource.id)">
+                        <td>
+                          <span ng-if="entrysub.resource.code && entrysub.resource.code.coding" 
+                                ng-repeat="code in entrysub.resource.code.coding">
+                              {{ code.display }}</br>
+                             <div ng-if="entrysub.resource.recordedDate">Recorded Date: <span>{{ entrysub.resource.recordedDate  | date:'dd MMM yyyy, hh:mm a' }}</span></br></div>
+                             <div ng-if="entrysub.resource.performedDateTime">Performed On: <span>{{ entrysub.resource.performedDateTime  | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                              status: completed
+                              </div>
+                          </span>
+                            
+                          <span ng-if="entrysub.resource.medicationCodeableConcept && entrysub.resource.medicationCodeableConcept.coding" 
+                                ng-repeat="code in entrysub.resource.medicationCodeableConcept.coding">
+                            {{ code.display }}</br>
+                            Authored Date : <span>{{ entrysub.resource.recordedDate | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+
+                          <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].additionalInstruction" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].additionalInstruction[0].coding">
+                            {{ code.display }}</br>
+                          </span>
+                             <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].route" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].route.coding">
+                            {{ code.display }}</br>
+                          </span>
+                          
+                          <span ng-if="entrysub.resource.type && entrysub.resource.type.coding" 
+                                ng-repeat="code in entrysub.resource.type.coding">
+                            {{ code.display }}</br>
+                          </span>
+                          
+                          <span ng-if="entrysub.resource.content && entrysub.resource.content[0].attachment.data">
+                            <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entrysub.resource.content[0].attachment.data)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						   </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>  -->
+
+
+<!-- <div ng-repeat="info in finalResultList">
+ <div class="title">
+     ========================
+    Discharge Summary Record
+    ========================
+  </div>
+ <div class="diagnostic-report">
+  <table class="table">
+    <tbody>
+    
+      <tr ng-repeat="section in info.entry[0].resource.section" ng-if="section.title == 'Investigations'">
+        <td>{{ section.title }}</td>
+        <td>
+          <table class="table">
+            <tbody>
+              <tr ng-repeat="entry in section.entry">
+                <td>
+                  <table class="table">
+                    <tbody>
+                      <tr ng-repeat="entrysub in info.entry"  ng-if="entry.reference && entrysub.resource.id && (entry.reference == 'urn:uuid:' + entrysub.resource.id)">
+                        <td >
+                         <div ng-if="entrysub.resource.resourceType === 'DiagnosticReport'" >
+                              <div ng-repeat="result in entrysub.resource.result"  >ng-if="(result.reference == 'urn:uuid:' + entrysub.resource.id)"
+                              <div ng-repeat="entrysub1 in info.entry" ng-if="(result.reference == 'urn:uuid:' + entrysub1.resource.id)" >
+                               <span ng-if="entrysub1.resource.code && entrysub1.resource.code.coding" 
+                                   ng-repeat="code in entrysub1.resource.code.coding">
+                                  {{ code.display }}</br>
+                                 </span>
+                              </div>
+						        
+						      </div>
+						    </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    
+    
+    
+      <tr ng-repeat="section in info.entry[0].resource.section" ng-if="section.title == 'Procedures' || section.title == 'Document Reference' || section.title == 'Medications'">
+        <td>{{ section.title }}</td>
+        <td>
+          <table class="table">
+            <tbody>
+              <tr ng-repeat="entry in section.entry">
+                <td>
+                  <table class="table">
+                    <tbody>
+                      <tr ng-repeat="entrysub in info.entry" 
+                          ng-if="entry.reference && entrysub.resource.id && (entry.reference == 'urn:uuid:' + entrysub.resource.id)">
+                        <td>
+                        
+                         <div ng-if="entrysub.resource.resourceType === 'DiagnosticReport'" >
+						      <div ng-repeat="result in entrysub.resource.result" ng-if="result.reference  && (result.reference == 'urn:uuid:' + entrysub.resource.id)">
+						        <span ng-if="entrysub.resource.code && entrysub.resource.code.coding" 
+                                   ng-repeat="code in entrysub.resource.code.coding">
+                                 {{ code.display }}</br>
+                              </span>
+						      </div>
+						    </div>
+    
+                           <span ng-if="entrysub.resource.code && entrysub.resource.code.coding" 
+                                ng-repeat="code in entrysub.resource.code.coding">
+                              {{ code.display }}</br>
+                             <div ng-if="entrysub.resource.recordedDate">Recorded Date: <span>{{ entrysub.resource.recordedDate  | date:'dd MMM yyyy, hh:mm a' }}</span></br></div>
+                             <div ng-if="entrysub.resource.performedDateTime">Performed On: <span>{{ entrysub.resource.performedDateTime  | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                              status: completed
+                              </div>
+                          </span>
+                            
+                          <span ng-if="entrysub.resource.medicationCodeableConcept && entrysub.resource.medicationCodeableConcept.coding" 
+                                ng-repeat="code in entrysub.resource.medicationCodeableConcept.coding">
+                            {{ code.display }}</br>
+                            Authored Date : <span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+
+                          <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].additionalInstruction" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].additionalInstruction[0].coding">
+                            {{ code.display }}</br>
+                          </span>
+                             <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].route" 
+                                ng-repeat="code in entrysub.resource.dosageInstruction[0].route.coding">
+                            {{ code.display }}</br>
+                          </span>
+                          
+                          <span ng-if="entrysub.resource.type && entrysub.resource.type.coding" 
+                                ng-repeat="code in entrysub.resource.type.coding">
+                            {{ code.display }}</br>
+                            Recorded Date :<span>{{ entrysub.resource.authoredOn | date:'dd MMM yyyy, hh:mm a' }}</span></br>
+                          </span>
+                          
+                           <span ng-if="entrysub.resource.dosageInstruction && entrysub.resource.dosageInstruction[0].timing">
+                             Timming (Repeat)- Frequency ({{ entrysub.resource.dosageInstruction[0].timing.repeat.frequency }} ) </br>
+                             Timming (Repeat)- Period ({{ entrysub.resource.dosageInstruction[0].timing.repeat.period }} ) </br>
+                             Timming (Repeat)- Period Unit ({{ entrysub.resource.dosageInstruction[0].timing.repeat.periodUnit }} ) </br>
+                          </span>
+                          
+                          <span ng-if="entrysub.resource.content && entrysub.resource.content[0].attachment.data">
+                            <button class="btn btn-info padding-left-right-set" 
+                           ng-click="openPdfInNewWindow(entrysub.resource.content[0].attachment.data)">
+						   <i class="fa fa-file-pdf-o" style="font-size:20px;color:red"></i></button>
+						   </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>  -->
+
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+<script>
+		$(".selectedPageName").text("Consent Request for DATA");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="consentDataABDM"]').parents("li").addClass("active");
+</script>

@@ -1,0 +1,183 @@
+ <div id="page-content-wrapper" class="">
+            <div class="container-fluid ">
+            	<fieldset>
+					<!-- <legend class="heading-div">Transfer Request</legend> -->
+					<div class="row margin-top4">
+						<div class="custom-sub-tab padding-left-right-set4 ">
+							<ul class="tabs nav nav-tabs">
+								<li ng-class="{ active : isSetFirstTabLevel(1) }" id="" class="width10 active" style="">
+									<a href="" ng-click="setFirstTabLevel(1)">Initiate Request</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">
+									<a href="" ng-click="setFirstTabLevel(2)" class="">Physical Transfer</a>
+								</li>
+							</ul>
+						</div>
+						<div class="row padding-left-right-set4">
+							<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+								<div ng-include="'./views/AdmissionDischarge/transfer-bed-initiate-request.html'" class="ng-scope" style=""></div>
+							</div>
+							<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+								<div ng-include="'./views/AdmissionDischarge/transfer-bed-physical.html'" class="ng-scope" style=""></div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="row margin-top4">
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set1">
+							<div class="tab-btn-primary">
+								<a class="btn btn-primary btn-save-box-shadow" ng-href="#/transferRequest/initiateRequestTransferBed">Initiate Request</a>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+							<div class="tab-btn-primary">
+								<a class="btn btn-primary  btn-save-box-shadow" ng-href="#/transferRequest/physicalTransferBed">Physical Transfer</a>
+							</div>
+						</div>
+					</div>
+            <div class="row">
+				<div class="" ui-view>
+			
+				</div>
+            </div> -->
+            <footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right15 padding-bottom10">
+				<div class="row padding-left-right15">
+					<div class="col-lg-11 col-md-11 col-sm-10"></div>
+						<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+							<div class=" ">
+								<a href="#/bedManagement" class="btn btn-primary btn-save-box-shadow" title="Back">Back</a>
+							</div>
+						</div> -->
+						<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right" style="padding-right:20px !important;">
+							<a href="#/bedManagement" >
+								<button class="btn btn-primary btn-save-box-shadow  width100" title="Back">
+								<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> </button>
+							</a>
+						</div>
+					</div>
+			</footer>
+            </fieldset>
+            </div>
+   </div> 
+<modal visible="showModal"></modal>
+  <div ng-include="'./views/common/accept-reject.html'"></div>
+ <div ng-include="'./views/common/note-save.html'"></div> 
+
+	<!-- REASON DETAILS POPUP -->
+<div id="reasonDetails" class="modal fade ng-scope in common-small-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="margin-left: -34px;background-size: 210px 72px !important;">
+					<div class="modal-title patient-details-row" >
+						IPD Rejection Details...!!<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-12 col-sm-12 col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<textarea name="code" rows="1" class="text-input floating-label" ng-disabled="true" ng-model="ADTRejectReason"></textarea>		
+											<label for="code">Reasons</label>
+										</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<textarea name="code" rows="4" class="text-input floating-label" ng-disabled="true" ng-model="ADTRejectionNote"></textarea>
+										<label for="code">Rejection Note</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width12" id="" ng-click="rejectRequestForICU()" value="Save">Save</button> -->
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal"  >
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<div id="reasonDetailsDoctor" class="modal fade ng-scope in common-small-popup" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Doctor Rejection Details<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-12 col-sm-12 col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<textarea name="code" rows="1" class="text-input floating-label" ng-disabled="true" ng-model="doctorRejectReason"></textarea>		
+											<label for="code">Reasons</label>
+										</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<textarea name="code" rows="4" class="text-input floating-label" ng-disabled="true" ng-model="doctorRejectionNote"></textarea>
+										<label for="code">Rejection Note</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<!-- <button type="button" data-dismiss="modal" class="btn btn-primary width12" id="" ng-click="rejectRequestForICU()" value="Save">Save</button> -->
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+							<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal"  >
+							<i class="fa fa-times" aria-hidden="true"></i> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+ 
+ <script type="text/javascript">
+	$( document ).ready(function() {
+	
+		/* var documentHeight= $(window).height();
+	    var sideBarHeight = documentHeight - 55;
+	 	$("#page-content-wrapper").css("height", sideBarHeight + "px" ); */
+		
+		$(".selectedPageName").text("Ward Transfer Request");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="transferRequest"]').parents("li").addClass("active");
+		
+	});
+	
+
+</script>

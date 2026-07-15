@@ -1,0 +1,313 @@
+<div id="page-content-wrapper" style="height:100%; overflow-y:auto ">
+	<div class="container-fluid his-style">
+		<fieldset class="" style="margin-top:-5px !important">
+
+			<div ng-include="'./views/common/patient-search-billing.html'"></div>
+			 	<div ng-include="'./views/common/patient-demography.html'" class="margin-top4"></div>
+			 		
+				 <div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" press-enter="searchDeposit()"
+													placeholder="DD/MM/YYYY" ng-model="billSearch.fromDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptionDebitTo" 
+													show-button-bar="false"	ng-click="openDatePicker()" required>
+										<label for="description" class="LISDynamicLabel">From Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" press-enter="searchDeposit()"
+													placeholder="DD/MM/YYYY" ng-model="billSearch.toDate" model-view-value="true" is-open="datepickerTo.opened" datepicker-options="dateOptionDebitTo" 
+													show-button-bar="false"	ng-click="openDatePickerTo()" required>
+										<label for="description" class="LISDynamicLabel">To Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container margin-top4">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-files-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label" ng-model="billSearch.visitTypeId">
+											<option value="">-</option>
+											<option value="1">OP</option>
+											<option value="2">IP</option>
+											<option value="3">Day Care</option>
+											<option value="4">ER</option>
+										</select> <label for="code">Visit Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-credit-card" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" press-enter="searchBills(billSearch)" ng-model="billSearch.billNo" class="text-input floating-label"> 
+										<label for="description" class="LISDynamicLabel">Debit Note No.</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-address-card-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" press-enter="searchBills(billSearch)" ng-model="billSearch.visitNo" class="text-input floating-label"> 
+										<label for="description" class="LISDynamicLabel">Visit No.</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label" ng-model="billSearch.billStatusId">
+											<option>-</option>
+											<option value="1">Pending</option>
+											<option value="2">OnHold</option>
+											<option value="3">Settled</option>
+										</select> <label for="code">Bill Status</label>
+									</div>
+								</div>
+							</div>
+						</div>
+				</div>
+				
+					<div class="row">
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 margin-top10 margin-left5">
+							<input type="checkbox" ng-model="billSearch.isOtcReg" name="registrationType"><span class="margin-left5">OTC</span>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right4 padding-top10 width4">
+							<div class=" ">
+								<a href="" class="btn btn-primary btn-save-box-shadow" ng-click="searchBills(billSearch)" title="Search" style="width:60%;">
+									<i class="fa fa-search" style="font-size: 16px" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+				</div>
+				<div class="row">
+					<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top5">
+				         <div class="search">
+				             <label class="show-entries">Show 
+				                 <select ng-init="vm.model.pagination.pageSize='10'" 
+				                     ng-model="vm.model.pagination.pageSize" 
+				                     ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+				                         <option value="10">10</option>
+				                         <option value="25">25</option>
+				                         <option value="50">50</option>
+				                         <option value="100">100</option>
+				                 </select> records 
+				             </label>
+				         </div>
+				     </div> -->
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchKeywordBillList"  style="margin-top:0px">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+				</div>
+				
+				<div class="row padding-top10 padding-left-right-set4">
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll340">
+					  <table id="main-table" class="main-table width100">
+					    <thead>
+							<tr>
+								<th class="width8"><span class="">DN Date</span></th>
+								<th class="width10"><span class="">DN No.</span></th>
+								<th class="width9">UHID</th>
+								<th class="width12">Patient Name</th>
+								<th class="width5">Visit Type</th>
+								<th class="width6">Visit Date</th>
+								<th class="width10">Visit No.</th>
+								<th class="width10">Against Bill No.</th>
+								<th class="width8">Total DN Amt</th>
+								<th class="width8">Net Payable</th>
+								<th class="width8">Amt Paid</th>
+								<th class="width8">Balance Amt</th>
+								<th class="width8">Status</th>
+								<th class="width8">Created By</th>
+								<th class="width1">Print</th>
+								<th class="width1">Action</th>
+							</tr>
+						</thead>
+					    <tbody>
+					      <tr
+							ng-repeat="bill in billList | filter:searchKeywordBillList track by $index">
+							<td>{{bill.billDate}}</td>
+							<td>{{bill.billNumber}}</td>
+							<td>{{bill.uhidNumber}}</td>
+							<td>{{bill.patientName}}</td>
+							<td>{{getVisitTypeById(bill.visitTypeId)}}</td>
+							<td>{{bill.visitDate}}</td>
+							<td>{{bill.visitNo}}</td>
+							<td>{{bill.againstbillNumber}}
+							<td class="text-right">{{parseFloatNum(bill.totalBillAmount)}}</td>
+							<td class="text-right">{{parseFloatNum(bill.netAmount)}}</td>
+							<td class="text-right">{{parseFloatNum(bill.amountPaid)}}</td>
+							<td class="text-right">{{parseFloatNum(bill.outstanding)}}</td>
+							<td>{{getBillStatusById(bill.billStatusId)}}</td>
+							<td>{{bill.userName}}</td>
+							<td class="text-center"><a href=""
+								ng-click="rePrintDebitNote(bill)"> <i class="fa fa-print"
+									title="Print" aria-hidden="true"></i>
+							</a></td>
+							<td class="width1"><a
+								ng-disabled="{{bill.billStatusId == 3 ? true : false}}"
+								ng-click="billDetails(bill)" data-toggle="modal"
+								data-target="#debitNoteListView">View</a></td>
+						</tr>
+					    </tbody>
+					  </table>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12 col-lg-12 margin-top10 padding-left-right-set4">
+						<table class="table table-bordered">
+						       
+					</table>
+				</div>
+			</div>
+			<!-- <div class="row padding-top5">
+		         <div class="col-md-12 col-lg-12 table-responsive padding-left-right-set4">
+		             <div class="row margin-bottom45 center-block">
+		                 <ul class="pagination table-list"
+		                     style="font-size: 14px; cursor: pointer;">
+		                     <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+		                         ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+		                     </li>
+		                     <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+		                         ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+		                     </li>
+		                     <li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+		                         ng-class="{active:vm.model.pagination.currentPage === page}"><a
+		                         ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+		                     </li>
+		                     <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+		                         <a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+		                     </li>
+		                     <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+		                         <a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+		                     </li>
+		                 </ul>
+		             </div>
+		         </div>
+		     </div> -->
+		</fieldset>
+	</div>
+	<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right15">
+				<div class="row padding-left-right15">
+					<div class="col-lg-11 col-md-11 col-sm-10"></div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set float_right text-width-auto">
+						<!-- 	<div class=" ">
+								<a href="#/debitNoteList" class="btn btn-primary btn-save-box-shadow" title="Back">Back</a>
+							</div> -->
+						</div>
+					</div>
+			</footer>
+</div>
+
+
+
+
+<!-- DEBIT NOTE LIST VIEW POPUP -->
+<div id="debitNoteListView" class="common-large-popup modal fade ng-scope in his-style" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Debit Note Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="row modal-body">
+					<div class="col-md-12">
+					    <div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										 <div class="">
+											<select class="text-input floating-label" convert-to-number  ng-model="payeeId" ng-change="changePayee(payeeId)">
+												<option>-</option>
+												<option ng-repeat="payee in payeeList" value="{{payee.payeeId}}" >{{payee.companyDesc}}</option>
+											</select> <label for="code">Payer</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						  </div>
+						<div class="row margin-top8">
+						<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 custom-sub-tab ">
+							<ul class="tabs nav nav-tabs">
+								<li ng-class="{ active : isSetFirstTabLevel(1) }" class="active width25" ><a href="" ng-click="setFirstTabLevel(1)">Service</a></li>
+								<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width25"><a href="" ng-click="setFirstTabLevel(2);">Package</a></li>
+							</ul>
+						</div>
+						
+						</div>
+						<div class="row ">
+							<div class="row padding-left-right-set4">
+								<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+									<div class="row his-style">
+								   <div ng-include="'views/master/UnitMaster/billingMaster/common/service-details.html'"></div>
+								   </div>
+								</div>
+							</div>
+							<div class="row padding-left-right-set4 ">
+								<div  ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+									<div class="row his-style">
+								  	<div ng-include="'views/master/UnitMaster/billingMaster/common/package-details.html'"></div>
+								  	</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+<div ng-include="'./views/common/collect-payment-modal.html'" ></div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+$(document).ready(function() {  
+	 $(".patienttSearchResult").show();
+	 $(".selectedPageName").text("Debit Note List");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="debitNoteList"]').parents("li").addClass("active");
+});
+</script>
+
+
+
+
+

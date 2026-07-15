@@ -1,0 +1,855 @@
+
+<style>
+.dropdown-menu {
+ max-width: 350px !important;
+}
+</style>
+<!-- Template -->
+<link rel="stylesheet" type="text/css" href="resources/assets/css/template/drag-drop.css"/>
+<div id="page-content-wrapper">
+<div  class="container-fluid his-style" >
+
+	<!-- ************ section one start ************** -->
+	<section>
+		<div class="row padding-top10  padding-left-right-set">
+		
+			<div class="col-md-2">
+				<input  type="radio" ng-model="vm.model.type" value="all" id="allSpec" name="templateType" ><label for="allSpec">All</label>
+			</div>
+			
+			<div class="col-md-2">
+				<input  type="radio" ng-model="vm.model.type" value="subSpc" id="subSpec" name="templateType" ><label for="subSpec">Sub Speciality</label>
+			</div>
+			
+			<div class="col-md-2">
+				<input  type="radio" ng-model="vm.model.type" value="doctor" id="doctor" name="templateType" ><label for="doctor">Doctor</label>
+			</div>
+		</div>
+		<div class="row padding-left-right-set">
+			<div class="col-md-3 form-group" style="margin-right:0px" >
+				<div class="" >
+			    	<label for="inputdefault">Speciality</label>
+			    	<!-- ng-disabled="vm.model.updateFlag" -->
+			    	<select class="form-control"  name="speciality" ng-model="vm.model.template.templateFormatId" style="width: 95%;height: 38px;border-radius: 10px;"  id="" convert-to-number>
+			    		<option selected value style="margin-left: 5px;">Select Template Format</option>
+<!-- 			    		<option value="1" >Data Object</option> -->
+			    		<option value="3" >Form Engine</option>
+			    		<option value="4" >Tabular Template</option>
+			    		<option value="2" >Word Template</option>
+			    	</select>
+				</div>
+			</div>
+			<div class="col-md-3 form-group" style="margin-right:0px" ng-show="vm.model.type == 'subSpc'" >
+				<div class="" >
+			    	<label for="inputdefault">Speciality</label>
+			    	<!-- ng-disabled="vm.model.updateFlag" -->
+			    	<select class="form-control"  name="speciality" ng-model="vm.model.template.specialityId" style="width: 95%;height: 38px;border-radius: 10px;" ng-change="vm.model.getSubSpecialityBySpecialityId(vm.model.template.specialityId)" id="" >
+			    		<option value="" selected style="margin-left: 5px;">Select Speciality</option>
+			    		<option value="{{spc.specialityId}}" ng-value="spc.specialityId" ng-repeat="spc in vm.model.specialityList">{{spc.specialityName}}</option>
+			    	</select>
+				</div>
+			</div>
+			<div class="col-md-3 form-group" style="margin-right:0px" ng-show="vm.model.type == 'subSpc'">
+				<div class="">
+			    	<label for="inputdefault">Sub Speciality</label>
+			    <!-- 	ng-disabled="vm.model.updateFlag" -->
+			    	<select class="form-control"  name="subSpeciality" ng-model="vm.model.template.subSpecialityId" style="width: 95%;height: 38px;border-radius: 10px;" required>
+			    		<option value="" selected style="margin-left: 5px;">Select SubSpeciality</option>
+			    		<option value="{{subspc.subSpecialityMasterId}}" ng-value="subspc.subSpecialityMasterId" ng-repeat="subspc in vm.model.subSpecialityList">{{subspc.subSpecialityMasterName}}</option>
+			    	</select>
+				</div>
+			</div>
+			<div class="col-md-3 form-group" style="margin-right:0px" ng-show="vm.model.type == 'doctor'">
+				<div class="">
+				<!-- ng-disabled="vm.model.updateFlag" -->
+			    	<label for="inputdefault">Doctor</label>
+			    	<select class="form-control" name=""  ng-model="vm.model.template.doctorId" style="width: 95%;height: 38px;border-radius: 10px;" required>
+			    		<option value="" selected style="margin-left: 5px;">Select Doctor</option>
+			    		<option value="{{doc.doctorId}}" ng-value="doc.doctorId" ng-repeat="doc in vm.model.doctorList">{{doc.firstName + ' ' + doc.middleName + ' ' +doc.lastName}}</option>
+			    	</select>
+				</div>
+			</div>
+			<div class="col-md-3 form-group padding-left-right-set4" style="margin-right:0px" >
+				<div class="">
+				<!-- ng-disabled="vm.model.updateFlag" -->
+			    	<label for="inputdefault">Template Type</label>
+			    	<select class="form-control" name=""  ng-model="vm.model.template.templateTypeId" style="width: 95%;height: 38px;border-radius: 10px;" ng-change = "getConsentType(vm.model.template.templateTypeId);" required>
+			    		<option value="" selected style="margin-left: 5px;">Select Type</option>
+			    		<option value="{{type.id}}" ng-value="type.id" ng-repeat="type in vm.model.templateTypes">{{type.name}}</option>
+			    	</select>
+				</div>
+			</div>
+			
+			
+			<div class="col-md-2 form-group padding-left-right-set4" style="margin-right:0px" ng-if = "vm.model.template.templateTypeId == 1 && vm.model.template.templateFormatId == 3">
+				<div class="">
+				<!-- ng-disabled="vm.model.updateFlag" -->
+			    	<label for="inputdefault">Consent Type</label>
+			    	<select class="form-control" name=""  ng-model="vm.model.consentTypeId" style="width: 95%;height: 38px;border-radius: 10px;" required>
+			    		<option value="" style="margin-left: 5px;" selected>Select Type</option>
+			    		<option value="{{type.consentTypeMasterId}}" ng-value="type.consentTypeMasterId" ng-repeat="type in consentTypeList">{{type.consentTypeMasterName}}</option>
+			    	</select>
+				</div>
+			</div>
+			
+			
+				<!-- ng-disabled="vm.model.updateFlag" -->
+			<div class="col-md-3 form-group" style="margin-right:0px" >
+				<div class="">
+			    	<label for="inputdefault">Template Title</label>
+			    	<!-- <input class="form-control"  id="templateTitle" type="text" autocomplete="off" placeholder="Template Title" name="templateTitle" ng-model="vm.model.template.title" required> -->
+				<!-- <input  class="form-control" id="templateTitle" type="text" placeholder="Search Template" ng-change="txt=0" name="templateTitle" ng-model="vm.model.template.title"   required>
+									<select class="form-control" name="category" ng-model="txt" ng-hide="!vm.model.template.title||txt" id="searchTemplateId"  ng-change="templateSelect(txt)" multiple >
+									<option ng-model="optionval"   value="{{temp}}" ng-repeat="temp in newTemplateList  | filter:searchText">{{temp.templateName}}</option>
+										</select > -->
+										
+					 <input ng-if="vm.model.template.templateFormatId==3" autocomplete="off" style="width: 95%;height: 38px;border-radius: 10px;"   class="form-control" id="templateTitle"
+					 type="text" ng-model="vm.model.template.title" placeholder=" Custom template"
+					  uib-typeahead="temp as temp.templateName for temp in newTemplateList | filter:{templateName:$viewValue}" 
+					  class="form-control"  
+					   typeahead-show-hint="true" typeahead-min-length="1"  typeahead-on-select="templateSelect($item)" required>
+				     
+				     <input ng-if="vm.model.template.templateFormatId==4" autocomplete="off" style="width: 95%;height: 38px;border-radius: 10px;"   class="form-control" id="templateTitle"
+				      type="text" ng-model="vm.model.template.title" placeholder=" Custom template"
+				      uib-typeahead="tabularTemplateDesc as temp.tabularTemplateDesc for temp in newTemplateListTabular | filter:{tabularTemplateDesc:$viewValue}" 
+					  class="form-control"   typeahead-show-hint="true" typeahead-min-length="1" 
+					   typeahead-on-select="templateSelectTabular($item)" required>
+					  
+					<input class="form-control" style="width: 95%;height: 38px;border-radius: 10px;" ng-if="vm.model.template.templateFormatId==1||vm.model.template.templateFormatId==2" id="templateTitle" type="text" placeholder=" Template Title" name="templateTitle" ng-model="vm.model.template.title" required>
+										
+				</div>
+			</div>
+			<div class="col-md-2 form-group padding-top10" style="margin-right:0px;margin-top: 4px;">
+				<div class="" style="margin-top:10px;margin-left:1vw">
+							<label class="checkbox-inline">
+								<input type="checkbox" value="vm.model.isHtmlPrint"  ng-checked="vm.model.isHtmlPrint" name="vm.model.isHtmlPrint" ng-model="vm.model.isHtmlPrint"><span></span>Is HTML Print</label>
+				</div>
+			</div>
+					<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right15 padding-top10">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow" style="margin-top:10px;" title="Help" ng-click="showpopup();"> Help </a>
+						</div>
+					</div>
+		</div>
+	</section>
+   <!--  ************ section one end ************** -->
+
+	<!-- ************ section two start ************** -->
+	<section>
+	
+		<div class="row" ng-show="vm.model.template.templateFormatId==1 && vm.model.template.templateFormatId !=3">  <!-- if we use ng-show than UI is disturb for first time  -->
+			<!-- <div class="row">
+				<div class="col-lg-4 col-md-4 col-sm-4  float_left" style="margin-left:20px;margin-top:10px;margin-bottom:5px;">
+								<input type="text" autocomplete="off" class="text-search-box oneeeee" placeholder="Search" ng-model="searchKeyword">
+								 <i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+		         </div>
+			</div> -->
+		<!-- 	<div class="w3-container padding-left-right-set4" >
+				<div id="sticky-anchor"></div>
+				  <div class="w3-accordion bg-lightgrey w3-card-4 w3-third w3-margin-top"  >id="sticky"
+				    <div class="w3" ng-click="getDataObjectList()">
+				    	 <button type="button" onclick="animation('dataObject')" class="w3-btn-block w3-left-align w3-teal">
+				     		Data Object's
+				    	</button>
+				    	<div  class="col-lg-12 col-md-12 col-sm-3 padding-left-right-set0 float_right w3">
+							<input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty search-popUp-ddl" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+				    	<div id="dataObject" class="w3-accordion-content w3-animate-left" style="overflow-y: scroll;height: 313px;">
+				    		<ul class="list-group">
+							    <div ng-repeat="dataObj in vm.model.dataObjects|orderBy:column:reverse|filter:searchKeyword">
+							    	<li id="{{dataObj.dataObjectId}}" class="list-group-item source-data data-object list-group-item" draggable="true" ondragstart="drag(event)">{{dataObj.title}}</li>
+							     </div >
+							  </ul>
+				    	</div>
+				    </div>	
+	  			</div>
+				<div class="w3-rest">
+					<div class="w3-card-4 card-margin" id="dropContainer">
+						<div class="bg-white ">
+							<input type="text" autocomplete="off"  class="w3-btn-block w3-left-align w3-teal" readonly/>
+						</div>
+						<div contenteditable="true" spellcheck="true" id="dynamicHtmlContent3" class="bg-lightgrey w3-container panel-height right-panel" ondrop="drop(event)" ondragover="allowDrop(event)" style="height:auto;min-height:600px;padding-bottom:80px;">
+							PLACE HOLDER CONTAINER
+						</div>
+					</div> 
+				</div>
+			</div> -->
+		</div>
+		<div class="row margin-top10 padding-left-right-set4">
+			<div class="col-lg-12 col-md-12" ng-show="vm.model.template.templateFormatId==2 && vm.model.template.templateFormatId !=3">
+		       <textarea contenteditable="true" spellcheck="true"  name="editor" type="text" autocomplete="off" id="editor"  rows="10" cols="50" ck-editor ng-model="value"></textarea>
+			</div>
+		</div>
+		
+	</section>
+	<!-- ************ section two end ************** -->
+	
+	<!-- ************ section two start ************** -->
+	<div class="row padd_top_bottom margin-top4">
+		<div class="col-md-12 col-sm-12">
+		<div class="submit-button" style="padding:1px !important">
+				<input  ng-show="vm.model.template.title && vm.model.template.templateFormatId==3" ng-show="updateBtn" type="submit" value="Preview Template" ng-click="previewTemplate();" class="btn btn-primary"   id="updateBtn">
+				<input  ng-show="vm.model.template.title && vm.model.template.templateFormatId==4" ng-show="updateBtn" type="submit" value="Preview Template" ng-click="previewTemplateTabularTamplate();" class="btn btn-primary"   id="updateBtn">
+			</div>
+			<div class="submit-button" style="padding:1px !important;width: 83px;">
+				<input ng-show="!updateBtn" type="button" value="{{vm.model.updateFlag ? 'Update' : 'Save'}}" class="btn btn-primary" ng-click="vm.model.saveTemplate()" id="submitBtn">
+				<input ng-show="updateBtn" type="submit" value="Update" class="btn btn-primary"   id="updateBtn">
+			</div>
+			<div class="submit-button" style="padding:1px !important;width: 83px;">
+				<input  type="button" value="Reset" class="btn btn-primary"  ng-click="vm.model.reset()" id="resetBtn">
+			</div>
+		</div>
+	</div>
+	<!-- ************ section three end ************** -->
+	
+	<div class="row margin-top10 padding-left-right-set4">
+			<div class="col-lg-12 col-md-12" ng-show="savedEditedList.length > 0">
+		       <div class="row margin-top10">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top8 ">
+								<table class="table table-bordered">
+						<thead>
+							<tr class="">
+								<th class="" style="width:2% !important;" ng-click="openInputBoxForTableName()">
+								<span>{{tableName}}</span>
+								  
+								</th>
+								<th class="width8" ng-repeat="info in columnHeaderList track by $index"  ng-click="openInputBox(info)">
+								 <span > {{info.columnName}}</span>
+							     
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="" ng-repeat="info1 in rowList track by $index"  value="bloodGroupId">
+								<th class="" style="width:2% !important;" ng-click="openInputBoxForRow(info1)">
+									<span>{{info1.rowName}}</span>
+								</th>
+								<td class="text-center" ng-repeat="item in columnList track by $index" >
+									<div ng-repeat="test in savedList">
+										<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+										  {{test.inputValue}}
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			</div>
+		</div>
+<!-- TEXT BOX EDIT MODAL -->
+<div class="modal fade" id="textbox-modal" tabindex="-1" role="dialog">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Text Box
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+						<input id="DynamicdivId" type="hidden" ></input>
+						<div>
+						<label class="w3-label">TextBox Label</label>
+						<input id="textboxLabel" ng-change="txtName = textBoxLbl.split(' ').join('');txtPlace = textBoxLbl" ng-model="textBoxLbl" name="textboxLabel" class="w3-input" type="text" autocomplete="off">
+						</div>
+						<div>
+						<label class="w3-label">TextBox Name</label>
+						<input id="textboxName" name="textboxName" ng-model="txtName" class="w3-input" type="text" autocomplete="off">
+						</div>
+						<!-- <div>
+						<label class="w3-label">TextBox Object</label>
+						<input id="textboxNg-Model" name="textboxObject" class="w3-input" type="text" autocomplete="off">
+						</div> -->
+						<div>
+						<label class="w3-label">TextBox Placeholder</label>
+						<!-- <input id="textboxPlaceholder" class="form-control textPlaceholder" type="text" autocomplete="off" /> -->
+						<input id="textboxPlaceholder" ng-model="txtPlace" class="w3-input" type="text" autocomplete="off">
+						</div>
+						<br>
+						<div>
+							<select class="w3-select padding-top" name="textboxColumn" id="textbox-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom padding-bottom10">
+						<div class="pull-right padding_bottom10">
+						<!-- <input id="btn-editTextboxDiv" type="button" value="Edit" />
+						<input class="btn" data-dismiss="modal" aria-hidden="true" value="Cancel"/> -->
+                		<button type="submit" id="btn-editTextboxDiv"  class="btn btn-primary">Save changes</button>
+                		<button type="button" class="btn btn-primary dismiss" data-dismiss="modal" aria-hidden="true">Cancel</button>
+						</div>
+						</div>
+	</div>
+</div>
+
+<!-- TEXT AREA EDIT MODAL -->
+<div class="modal fade" id="textarea-modal" tabindex="-1" role="dialog">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Textarea
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+						<input id="DynamictextareadivId" class="w3-input" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Textarea Label</label>
+							<input id="textareaLabel" ng-change="txtArName = textAreaLbl.split(' ').join('');txtArPlace = textAreaLbl" ng-model="textAreaLbl" class="w3-input" name="textareaLabel" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+							<label class="w3-label">Textarea Name</label>
+							<input id="textareaName" class="w3-input" ng-model="txtArName" name="textareaName" type="text" autocomplete="off"></input>
+						</div>
+						<!-- <div>
+							<label class="w3-label">Textarea Object</label>
+							<input id="textareaNg-model" class="w3-input" name="textareaObject" type="text" autocomplete="off"></input>
+						</div> -->
+						<div>
+							<label class="w3-label">TextBox Placeholder</label>
+							<input id="textareaPlaceholder"  ng-model="txtArPlace" class="w3-input" type="text" autocomplete="off" ></index>
+						</div>
+						<br>
+						<div>
+							<select class="w3-select padding-top" name="textareaColumn" id="textarea-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div class="pull-right padding_bottom10">
+							<button type="submit"  id="btn-editTextareaDiv" class="btn btn-primary" value="Edit">Save changes</button>
+							<button type="button"   data-dismiss="modal" class="btn btn-primary dismiss" value="Cancel">Cancel</button>
+						</div>
+						</div>
+	</div>
+</div>
+
+
+<!-- HEADING EDIT MODAL -->
+<div class="modal fade" id="heading-modal" tabindex="-1" role="dialog">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Heading
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+						<input id="DynamicHeadingdivId" class="w3-input" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Heading Contents</label>
+							<input id="heading-content" class="w3-input" name="headLabel" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+						<div class="">
+						<label class="w3-label padding-top3">Heading Class</label>
+						<!-- <input id="textboxLabel" class="w3-input" type="text" autocomplete="off" ></input> -->
+						<select class="w3-select padding-top" name="headstyle" id="heading-class">
+							<option value="header1">H1</option>
+							<option value="header2">H2</option>
+							<option value="header3">H3</option>
+							<option value="header4">H4</option>
+							<option value="header5">H5</option>
+						</select>
+						</div>
+						</div>
+						<div>
+						<div class="">
+						<label class="w3-label padding-top">Heading alignment</label>
+						<!-- <input id="textboxPlaceholder" class="w3-input" type="text" autocomplete="off" ></index> -->
+						<select class="w3-select padding-top" name="headAlign" id="heading-align-class">
+							<option value="heading-text-align-left">Left</option>
+							<option value="heading-text-align-center">Center</option>
+						</select>
+						</div>
+						</div>
+						<div>
+							<select class="w3-select padding-top" name="headColumn" id="heading-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div class="pull-right padding_bottom10">
+						<button type="button" id="btn-editHeadingDiv"  class="btn btn-primary" value="Edit">Save changes</button>
+						<button type="button"  class="btn btn-primary dismiss" data-dismiss="modal" value="Cancel">Cancel</button>
+						</div>
+						</div>
+	</div>
+</div>
+<!-- CHECKBOX EDIT MODAL -->
+<div class="modal fade" id="checkbox-modal" tabindex="-1" role="dialog">
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Checkbox
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+						<input id="DynamicCheckboxdivId" class="w3-input" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Checkbox Label</label>
+							<input id="checkboxLabel" class="w3-input" ng-change="chkName = chkLabel.split(' ').join('');chkVal = chkLabel" ng-model="chkLabel" name="checkBoxLabel" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+							<label class="w3-label">Checkbox Name</label>
+							<input id="checkboxName" class="w3-input" ng-model="chkName" name="checkBoxName" type="text" autocomplete="off"></input>
+						</div>
+						<!-- <div>
+							<label class="w3-label">Checkbox Object</label>
+							<input id="checkboxNg-model" class="w3-input" name="checkBoxObject" type="text" autocomplete="off"></input>
+						</div> -->
+						<div>
+							<label class="w3-label">Checkbox Value</label>
+							<input id="checkboxValue" class="w3-input" ng-model="chkVal" name="checkBoxValue" type="text" autocomplete="off" ></index>
+						</div>
+						
+						<div>
+							<select class="w3-select padding-top" name="checkBoxColumn" id="chk-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div class="pull-right padding_bottom10">
+							<button type="submit" id="btn-editCheckboxDiv" class="btn btn-primary" value="Edit">Save changes</button>
+							<button type="button"   data-dismiss="modal" class="btn btn-primary dismiss" value="Cancel">Cancel</button>
+						</div>
+						</div>
+	</div>
+</div>
+
+
+<!-- RADIO EDIT MODAL -->
+<div class="modal fade" id="radio-modal" tabindex="-1" role="dialog" >
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Radio
+	</div>
+	<div class="w3-container w3-center textbox-div" >
+						<input id="DynamicRadiodivId" class="form-control"  type="hidden" ></input>
+						<div>
+							<label class="w3-label">Radio Label</label>
+							<input id="radioLabel" class="w3-input" ng-change="radioName = radioLbl.split(' ').join('')" ng-model="radioLbl" name="radioLabel" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+							<label class="w3-label">Radio Name</label>
+							<input id="radioName" class="w3-input" ng-model="radioName" name="radioName" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+						<div class="row">
+						<div class="col-md-8" style="padding-left: 0px">
+							<!-- <label class="w3-label">Radio Object</label>
+							<input id="radioNg-model" class="w3-input" name="radioObject" type="text" autocomplete="off"></input> -->
+						</div>
+						<div class="col-md-4">
+							<label class="w3-label" style="margin-top: 20px;">Is Dynamic
+							<input id="isDynamicRadio" class="" type="checkbox"></input>
+							</label>
+						</div>	
+						</div>
+						</div>
+							<div class="col-md-10 padding0" >
+							<label class="w3-label">Radio option</label>
+							<input  class="radio-option w3-input" name="radioOption" type="text" autocomplete="off" ></input>
+							</div>
+							<div class="col-md-2 w3-padding-16">
+								<span class="pull-right"><button type="button" class="btn btn-primary Addradio">+</button> </span>
+							</div>
+					<div class="Addedradio">
+						
+					</div>
+
+					<div>
+							<select class="w3-select padding-top" name="radioColumn" id="radio-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+							<div class="pull-right padding_bottom10">
+								<button type="submit" id="btn-editRadioDiv" class="btn btn-primary"  value="Edit" >Save changes</button> 
+								<button type="button" class="btn btn-primary dismiss"  data-dismiss="modal" value="Cancel">Cancel</button>
+							</div>
+						</div>
+	</div>
+</div>
+
+<!-- SELECT EDIT MODAL -->
+<div class="modal fade" id="select-modal" tabindex="-1" role="dialog" >
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Select
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+						<input id="DynamicSelectdivId" class="w3-input" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Select Label</label>
+							<input id="selectLabel" class="w3-input" ng-change="selectName = selectLbl.split(' ').join('')" ng-model="selectLbl" name="selectLabel" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+							<label class="w3-label">Select Name</label>
+							<input id="selectName" class="w3-input" ng-model="selectName" name="selectName" type="text" autocomplete="off"></input>
+						</div>
+						<div class="row">
+						<div class="col-md-8" style="padding-left: 0px">
+							<!-- <label class="w3-label">Select Object</label>
+							<input id="selectNg-model" class="w3-input" name="selectObject" type="text" autocomplete="off"></input> -->
+						</div>
+						<div class="col-md-4">
+						<label class="w3-label" style="margin-top: 20px;">Is Dynamic
+						<input id="isDynamicSelect" class="" type="checkbox"></input>	
+						</label>
+						</div>	
+						</div>
+						<div id="selectOptions" class="option">
+						<div class="row">
+							<div class="col-md-10 padding0">
+							<label class="w3-label">Select option</label>
+							<input  class="select-option w3-input" name="selectOption" type="text" autocomplete="off" ></input>
+							</div>
+							<div class="col-md-2 w3-padding-16">
+							<span class="pull-right"><button type="button" id="addDropDown" class="btn btn-primary">+</button> </span>
+							</div>
+						</div>
+						</div>
+						
+						<div>
+							<select class="w3-select padding-top" name="selectColumn" id="select-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						
+						<div class="padd_top_bottom">
+						<div class="pull-right padding_bottom10">
+							<button id="btn-editSelectDiv" class="btn btn-primary" type="button" value="Edit" >Save changes</button>
+							<button  type="button" class="btn btn-primary dismiss" data-dismiss="modal" value="Cancel">Cancel</button>
+						</div>
+						</div>
+	</div>
+</div>
+
+<!-- SELECT EDIT MODAL -->
+<div class="modal fade" id="table-modal" tabindex="-1" role="dialog" >
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Table
+	</div>
+	<div class="w3-container  w3-center textbox-div" >
+						<input id="DynamicTabledivId" type="hidden" ></input>
+						<div>
+							<label class="w3-label">Table Label</label>
+							<input id="tableLabel" class="w3-input" ng-change="tableName = tableLbl"  ng-model="tableLbl" name="tableLabel" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+							<label class="w3-label">Table Name</label>
+							<input id="tableName" class="w3-input" ng-model="tableName" name="tableName" type="text" autocomplete="off"></input>
+						</div>
+						<div>
+							<label class="w3-label">Number of row</label>
+							<input  class="noRow w3-input" name="tableRow" type="text" autocomplete="off" ></index>
+						</div>
+						<div>
+							<label class="w3-label">Number of column</label>
+							<input  class="noCol w3-input" type="text" autocomplete="off"  name="tableColumnNo"></index>
+						</div>
+						<div>
+							<select class="w3-select padding-top" id="table-no-column" name="tableColumn">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div style="float:right">
+							<button class="btn btn-primary" id="btn-editTableDiv" type="button" value="Edit">Save changes</button>
+							<button class="btn btn-primary dismiss" type="button" data-dismiss="modal" value="Cancel">Cancel</button>
+						</div>
+						</div>
+	</div>
+</div>
+
+<div class="modal fade" id="data-object-modal" tabindex="-1" role="dialog" >
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Table
+	</div>
+	<div class="w3-container  w3-center " >
+						<input id="DynamicTabledivId" type="hidden" ></input>
+						<div>
+							<select class="w3-select padding-top" id="data-obj-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+						<div style="float:right">
+							<button class="btn btn-primary" id="saveDataObjCol" type="button" value="Edit">Save changes</button>
+							<button class="btn btn-primary dismiss" type="button" data-dismiss="modal" value="Cancel">Cancel</button>
+						</div>
+						</div>
+	</div>
+</div>
+
+<!-- FieldSet Modal -->
+<div class="modal fade" id="fieldset-modal" tabindex="-1" role="dialog" >
+	<div class="w3-btn-block w3-left-align w3-teal">
+		Edit Radio
+	</div>
+	<div class="w3-container w3-center textbox-div" >
+						<input id="DynamicfiledsetDivId" class="form-control"  type="hidden" ></input>
+						<div>
+							<label class="w3-label">Legend Label</label>
+							<input id="legendLabel" class="w3-input" name="" type="text" autocomplete="off"></input>
+						</div>
+
+						<div>
+							<select class="w3-select padding-top" name="radioColumn" id="fieldset-no-column">
+							<option value="" disabled selected>Select Column</option>
+							  <option value="col-md-12">1</option>
+							  <option value="col-md-6">2</option>
+							  <option value="col-md-4">3</option>
+							</select>
+						</div>
+						<div class="padd_top_bottom">
+							<div class="pull-right padding_bottom10">
+								<button type="submit" id="btn-editFieldsetDiv" class="btn btn-primary"  value="Edit" >Save changes</button> 
+								<button type="button" class="btn btn-primary dismiss"  data-dismiss="modal" value="Cancel">Cancel</button>
+							</div>
+						</div>
+	</div>
+</div>
+
+			
+<input type="hidden" id="accessToken" ng-model="accessToken" value="{{accessToken}}">
+</div>
+
+
+	<!-- CONFIRM POPUP FOR ALL -->
+<div id="tabularDataTemplate" data-backdrop="static" class="modal fade ng-scope in common-medium-popup" role="dialog" style="padding-left: 17px;margin-left: 97px !important;
+    margin-top: 252px !important;">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="row margin-top10">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top8 ">
+								<table class="table table-bordered">
+						<thead>
+							<tr class="">
+								<th class="" style="width:2% !important;" ng-click="openInputBoxForTableName()">
+								<span ng-show = "ForTableName == false">{{tableName}}</span>
+								<span ng-show = "ForTableName == true"> <input type="text" name="selectedForSave" ng-model="tableName"></span>
+								  
+								</th>
+								<th class="width8" ng-repeat="info in columnHeaderList track by $index"  ng-click="openInputBox(info)">
+								 <span ng-if="info.inputbox == false"> {{info.columnName}}</span>
+								 <span  ng-if="info.inputbox == true"><input type="text" name="selectedForSave"ng-model="info.columnName" ng-change="pushColumnName(info.coulmnId ,info.columnName)"></span>
+							     
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="" ng-repeat="info1 in rowList track by $index"  value="bloodGroupId">
+								<th class="" style="width:2% !important;" ng-click="openInputBoxForRow(info1)">
+									<span ng-show = "info1.inputbox == false">{{info1.rowName}}</span>
+									<span ng-show = "info1.inputbox == true">  <input type="text" name="selectedForSave" ng-model="info1.rowName" ng-change="pushRowName(info1.rowId ,info1.rowName)"></span>
+								</th>
+								<td class="text-center" ng-repeat="item in columnList track by $index" >
+									<div ng-repeat="test in savedList">
+										<div ng-if="(info1.rowId == test.rowId)&& (item.coulmnId==test.coulmnId)">
+										  <textarea type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+									       style="border-radius:0px !important;padding: 0 !important;" 
+									       name="selectedForSave" ng-model="test.inputValue"></textarea>
+										</div>
+									</div>
+									<div ng-if="(savedEditedList.length == undefined)|| (savedEditedList.length == 0)">
+									       <textarea type="text" autocomplete="off" name="" id="" class="text-input floating-label" rows="2" 
+									       style="border-radius:0px !important;padding: 0 !important;" name="selectedForSave" ng-model="inputValue" 
+									       ng-blur="getCurrentStatus(inputValue,item.coulmnId,item.columnName,info1.rowId,info1.rowName);"></textarea>
+							       </div>	
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+
+function animation(id) {
+    var x = document.getElementById(id);
+    if ($(x).hasClass("w3-show")) {
+	  $(x).removeClass('w3-show').addClass('w3-hide')
+    } else { 
+	  $(x).removeClass('w3-hide').addClass('w3-show')
+    }
+}
+function sticky_relocate() {
+    var window_top = $(window).scrollTop();
+    var div_top = $('#sticky-anchor').offset().top - 50;
+    if (window_top > div_top) {
+        $('#sticky').addClass('stick');
+        $('#sticky-anchor').height($('#sticky').outerHeight());
+        $('#dropContainer').removeClass("container-onstick").addClass("container-onstick");
+    } else {
+        $('#sticky').removeClass('stick');
+        $('#sticky-anchor').height(0);
+        $('#dropContainer').removeClass("container-onstick");
+    }
+}
+function hideEditDeleteOpt(){
+	$('.fa-trash-o').hide();
+	$('.fa-pencil-square-o').hide();
+}
+
+$('#submitBtn').click(function(){
+	$('.fa-pencil-square-o').each(function(){
+		$(this).parents().closest('span').hide();
+	});
+});
+
+$( document ).on('dblclick', ".dataObjectDiv", function() {
+	  var trash = $(this).find('.fa-trash-o:first').show();
+	  //$(edit).parent().closest('span').show();
+});
+
+
+$(".Addradio").click(function () {
+	  $(".Addedradio").append('<div class="row divaddedradio">'
+				+'<div class="col-md-10 padding0">'
+				+'<label class="w3-label">Radio option</label>'
+				+'<input class="radio-option w3-input" type="text" autocomplete="off">'
+			+'</div>'
+			+'<div class="col-md-2 w3-padding-16">'
+				+'<span class="pull-right removeradio"><button type="button" class="btn btn-primary">-</button> </span>'
+			+'</div>');
+	});
+ $(document).on('click','.removeradio',function() {
+	 $(this).parents().closest('.divaddedradio').remove();
+});  
+ 
+$('#addDropDown').click(function(){
+	var opt = "<div class='row addedDropDown'>"
+				+ "<div class='col-md-10 padding0'>"
+				+ "<label class='w3-label'>Select option</label>"
+				+ "<input  class='select-option w3-input' type='text' ></input>"
+				+ "</div>"
+				+ "<div class='col-md-2 w3-padding-16'>"
+				+ "<span class='pull-right'><button type='button' class='btn btn-primary removeDropDown'>-</button> </span>"
+				+ "</div>"
+				+ "</div>";
+	$('#selectOptions').append(opt);
+				
+});
+
+$(document).on('click','.removeDropDown',function() {
+	 $(this).parents().closest('.addedDropDown').remove();
+}); 
+
+$(document).ready(function(){
+	$('#dynamicHtmlFieldset').click(function(){
+		$(this).find('.w3-accordion-content').each(function(){
+			$(this).css({'display': 'none'});
+		});
+	});
+	hideEditDeleteOpt();
+	$('#sticky').stick_in_parent();
+});
+
+$(document).on('dblclick','.drag-data-object',function(){
+	$(this).children().find(".fa-pencil-square-o").show();
+	$(this).children().find(".fa-trash-o").show();
+});
+/* $('#submitBtn').click(function(){
+	window.location.href="patient-info.html";
+}); */
+
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Create Clinical Form ");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="templateUtility"]').parents("li").addClass("active");
+});
+</script>
+</div>		
+
+
+
+    <!--  Help Modal START  -->
+<div id="prefinedDataHintModal" class="modal fade ng-scope common-small-popup in" role="dialog">
+	<div class=""><!--  modal-dialog -->
+		<div class="modal-content">
+		<div class="modal-header">
+			<div class="modal-title patient-details-row">
+			 Certificate  And Letter
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			 <div class="modal-body">
+		        <div class="row padding-top8 padding-left-right-set4">
+		          <div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll500">
+						<div  class="guppy_help" style="padding: 10px; border: 1px solid black; background-color: #ffffff;  top: 285px; left: 751.5px; display: block;"><!-- position: absolute; -->
+						<p>To get predefined data on Certificate and letter use following criteria</p>
+						<table id="guppy_syms_table">
+						<tbody>
+						<tr>
+						<td style="width: 300px;"><strong>Parameter Name</strong></td>
+						<td style="width: 625px;"><strong>Parameter Value</strong></td>
+						</tr>
+						</tbody>
+						<tbody>
+						<tr >
+						 <td><span >Patient Name</span></td>
+						<td ><span >@patientName</span></td>
+						</tr>
+						<tr >
+						 <td><span >UHID Number</span></td>
+						<td ><span >@uhidNo</span></td>
+						</tr>
+						<tr >
+						 <td><span >Patient DOB</span></td>
+						<td ><span >@patientDob</span></td>
+						</tr>
+						<tr >
+						 <td><span >Patient Age/Gender</span></td>
+						<td ><span >@ageGender</span></td>
+						</tr>
+						<tr >
+						 <td><span >Admission Number</span></td>
+						<td ><span >@admissionNo</span></td>
+						</tr>
+						<tr >
+						 <td><span >Date Of Admission</span></td>
+						<td ><span >@dateOfAdmission</span></td>
+						</tr>
+						<tr >
+						 <td><span >Date Of Discharge</span></td>
+						<td ><span >@dateOfDischarge</span></td>
+						</tr>
+						
+						<tr >
+						 <td><span >Doctor Name</span></td>
+						<td ><span >@doctorName</span></td>
+						</tr>
+						
+						</tbody>
+						</table>
+						</div>	
+				   </div>
+				 </div>
+			</div>
+		</div>
+   </div>
+	</div>
+</div>
+<!--  Help Modal END  -->	

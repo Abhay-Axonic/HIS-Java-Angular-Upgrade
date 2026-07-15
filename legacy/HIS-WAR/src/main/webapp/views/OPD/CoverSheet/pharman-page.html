@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+<!--<meta name="viewport" content="width=device-width, user-scalable=no" />
+<meta name="viewport" content="width=device-width"/>  -->
+<meta name="viewport" id="viewport"
+	content="width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0" />
+<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<title>CHT</title>
+<!--<link rel="shortcut icon" href="HYPERLINK "images/favicon.ico">	-->
+<style>
+<style>
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	background: url(resources/assets/images/logo/Medicine_bg_page.jpg)
+		no-repeat center center fixed;
+	background-size: 100%;
+	background-position: top;
+	background-repeat: no-repeat;
+}
+.img-1,.img-2,.img-3,.img-4,.img-5,.img-6, img {
+    height: 175px !important;
+}
+.img-1 img {
+    background: #ff3f38 !important;
+    padding: 3px;
+}
+.img-2 img {
+    background: #006d09 !important;
+    padding: 3px;
+}
+.img-3 img {
+    background: #676767 !important;
+    padding: 3px;
+}
+.img-4 img {
+    background: #d78b00 !important;
+    padding: 3px;
+}
+.img-5 img {
+    background: white !important;
+    padding: 3px;
+}
+.img-6 img {
+   background: black !important;
+    padding: 3px;
+}
+.modal-content {
+    height: 690px !important;
+    overflow-y: scroll;
+}
+.login-html {
+    margin-left: -25px;
+    width: 100%;
+    height: 330px;
+    padding: 40px 10px 10px 10px;
+    background: rgb(57 115 114 / 63%);
+    text-align: center;
+    margin-top: 215px;
+    box-shadow: 2px 1px 21px 5px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+.login-html p {
+	font-size: 22px;
+	padding-bottom: 5px;
+	margin: 0 15px 10px 0;
+	display: inline-block;
+	border-bottom: 2px solid #00aad7;
+	text-align: center;
+	color: #fff;
+}
+.margin {
+	margin-top: 10px;
+	width: -webkit-fill-available;
+}
+.margin label {
+	text-align: left;
+	float: left;
+	margin-bottom: 10px !important;
+	font-size: 15px;
+	color: #e8e8e8;
+}
+.login-form {
+	margin-top: 30px;
+}
+.m-t {
+    margin: 55px 10px 10px 120px;
+}
+.btn-outline-primary {
+    width: 70%;
+    background: #249fc7;
+    border: none !important;
+    outline: none !important;
+    cursor: pointer !important;
+    color: #fff !important;
+    border-radius: 190px !important;
+    padding: 10px 15px 10px 15px !important;
+    font-size: 15px !important;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+.btn-outline-primary:hover {
+    background: #156f8c;
+    color: #fff;
+}
+.modal-header {
+    padding: 15px 5px 10px 10px !important;
+    margin-top: 0px !important;
+}
+h5 {
+    font-size: 15px;
+}
+.danger {
+    background: #eb0000;
+    border: none !important;
+    outline: none !important;
+    cursor: pointer !important;
+    color: #fff !important;
+    border-radius: 190px !important;
+    padding: 5px 15px 5px 15px !important;
+    font-size: 12px !important;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+.btn-primary-save {
+    background: #249fc7;
+    border: none !important;
+    outline: none !important;
+    cursor: pointer !important;
+    color: #fff !important;
+    border-radius: 190px !important;
+    padding: 5px 15px 5px 15px !important;
+    font-size: 12px !important;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+.btn-primary-save:hover {
+    background: #156f8c;
+    color: #fff;
+}
+.danger:hover {
+    background: #b90505;
+    color: #fff;
+}
+.heading-title h4 {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 5px 8px 15px;
+    border-bottom: 1px solid #ccc;
+    margin-left: 0px !important;
+}
+.heading-title p {
+    font-size: 14px;
+    text-align: justify;
+    padding: 5px 25px 10px 25px;
+}
+.heading-title1 h4 {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 5px 8px 15px;
+    border-bottom: 1px solid #ccc;
+    margin-left: 0px !important;
+}
+</style>
+<link rel="icon" type="image/png" href="images/roundal.png" />
+<link href="css/reset.css" rel="stylesheet" type="text/css">
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="css/indexcontent.css" rel="stylesheet" type="text/css">
+<link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
+<link href="css/fractionslider.css" rel="stylesheet" type="text/css" />
+<link href="css/custom.css" rel="stylesheet">
+<link href="css/carousel.css" rel="stylesheet">
+<link href="css/carousel.theme.css" rel="stylesheet">
+
+<script src="js/jquery-1.11.1.js" type="text/javascript"></script>
+
+
+<script src="styles/js/headscript.js"></script>
+
+<script src="js/jquery-ui.js" type="text/javascript"></script>
+<script src="js/jquery.fractionslider.js" type="text/javascript"></script>
+<script src="js/carousel.js"></script>
+<meta name="format-detection" content="telephone=no" />
+
+
+<script>
+    jQuery(document).ready(function ($) {
+        /* Slide transition script */
+        $('.slider').fractionSlider({
+            'slideTransition': 'fade'
+        });
+    });
+
+    $(document).ready(function ($) {
+        $("#carousel-outer").getCarousel({
+            items: 1, //10 items above 1000px browser width
+            itemsDesktop: [1100, 1], //5 items between 1100px and 901px
+            itemsDesktopSmall: [900, 2], // betweem 900px and 601px
+            itemsTablet: [480, 1], //2 items between 600 and 0
+            itemsMobile: [350, 1], // itemsMobile disabled - inherit from itemsTablet option
+            autoPlay: true
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#accordion").accordion({
+            heightStyle: "content"
+        });
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="css/template.css" />
+<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+
+<script>
+    $(function () {
+        $("#accordion").accordion({
+            heightStyle: "content"
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.slide').hover(
+		function () {
+		    $(this).find('.caption').slideDown(250);
+		},
+		function () {
+		    $(this).find('.caption').slideUp(250);
+		}
+	);
+    });
+</script>
+
+<script>
+$(document).ready(function() {
+	  var boolean = false;
+	  $(".dateOfBirth").click(function() {
+	    boolean = !boolean;
+	    if (boolean) {
+	      $(".dateOfBirth").animate({
+	        height: "+=360px"
+	      }, 200);
+	    } else {
+	      $(".dateOfBirth").animate({
+	        height: "-=360px"
+	      }, 200);
+	    }
+	  });
+	  
+	});
+	
+$(document).ready(function() {
+	  var boolean = false;
+	  $(".apointmentDate").click(function() {
+	    boolean = !boolean;
+	    if (boolean) {
+	      $(".apointmentDate").animate({
+	        height: "+=360px"
+	      }, 200);
+	    } else {
+	      $(".apointmentDate").animate({
+	        height: "-=360px"
+	      }, 200);
+	    }
+	  });
+	  
+	});
+</script>
+
+<link rel="Stylesheet" href="styles/css/jquery.fancybox.css"
+	type="text/css" />
+<link rel="stylesheet" href="styles/css/main.css" type="text/css" />
+<link rel="stylesheet" href="styles/css/common.css" type="text/css"
+	media="all" />
+<link type="text/css" rel="stylesheet" href="styles/css/mobile.css"
+	media="only screen and (max-width: 769px)" />
+<link rel="stylesheet" type="text/css" href="styles/css/mobileRIL.css" />
+<!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="styles/css/ie8.css" /><![endif]-->
+
+
+<script src="Scripts/commonScripts.js" type="text/javascript"></script>
+<script src="styles/js/hammer.min.js" language="javascript"
+	type="text/javascript"></script>
+<link rel="stylesheet" href="styles/css/drum.css"></link>
+<script src="styles/js/drum.js" language="javascript"
+	type="text/javascript"></script>
+<script src="styles/js/jquery.maskedinput.js" language="javascript"
+	type="text/javascript"></script>
+<script type="text/javascript">
+        var is_touch_device = 'ontouchstart' in document.documentElement;
+        is_touch_device = true;
+        //if(is_touch_device) alert("touch is enabled!");	   
+    </script>
+<style>
+@media screen and (max-width: 999px) {
+	span.call-on {
+		margin-top: 32px;
+	}
+}
+</style>
+</head>
+<body>
+	<form autocomplete="off">
+
+		<div id="some-element"></div>
+		<div class="maincntholder text-center" style="height: 600px; background-color:	#AFEEEE">
+			<h1 style="color:#20B2AA" class="text-center">Medicine Info</h1>
+			<div class="text-center ">
+				<div class="text-center" style="background-color:#40E0D0; width: 442px;">
+					<h3 class="text-center">Medicine Name</h3>
+				</div>
+				<input class="text-center" type="text" autocomplete="off"
+					class="text-input floating-label"
+					style="background-color: white; width: 442px;" tabindex="3"
+					ng-model="medicine" placeholder="Search"
+					ng-click="getMedName(medicine)"
+					uib-typeahead="group.medicine for group in searchPharmanDrugList($viewValue)"
+					typeahead-editable="false"
+					typeahead-on-select="selectDrug($item, $model, $label,initVal);"
+					ng-change="getFormsByName()"
+					name="groupName" typeahead-min-length="3">
+				<div class="text-center" style="background-color:#40E0D0; width: 442px;">
+					<h3 class="text-center">Medicine form</h3>
+				</div>
+				<!-- <input class="text-center" type="text" autocomplete="off"
+					class="text-input floating-label"
+					style="background-color: white; width: 442px;" tabindex="3"
+					ng-model="medicineForms" placeholder="Search"
+					uib-typeahead="group.medicineForms  for group in searchGroupListForFamily($viewValue)"
+					typeahead-editable="false"
+					typeahead-on-select="selectDignosisIdForFamily($item, $model, $label,initVal);"
+					name="groupName" typeahead-min-length="3"> -->
+				<select  class="text-center" name="" id="" ng-model="formulation"
+					ng-change="getMedForm(formulation)" style="background-color: white; width: 442px;"
+					class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-not-empty"
+					convert-to-number>
+					<option ng-repeat="info in medFormsList track by $index"
+						value="{{info.formulation}}" class="ng-binding ng-scope" ng-click="getMedForm(info.formulation)">
+						{{info.formulation}}</option>
+				</select>
+				<div class="row"></div>
+			</div>
+			<div class="text-center">Are you?</div>
+			<input class="text-center" type="button" name="" style="background-color:#40E0D0"
+				value="Doctor"  ng-model="type" ng-click="setType('Doctor')">
+			<input class="text-center" type="button" name=""  style="background-color:#40E0D0"
+				ng-model="type" value="Patient" ng-click="setType('Patient')">
+			<div class="text-center">
+				<div class="row"></div>
+				<button class="text-center" title="search" data-toggle="modal" data-target="#docFavDiagnosis" >search</button>
+			</div>
+		</div>
+
+	</form>
+	<!-- <form autocomplete="off">
+	
+<div class="form">
+  <img src="" alt="">
+  <h1>Medicine Info</h1>
+  <div class="content">
+    <div class="right">
+    <div>
+      <label for="">medicine Name</label>
+    </div>
+      <div>
+      <input type="text">
+      </div>
+    </div>
+    <div class="right">
+      <label for="">medicine Form</label>
+      <input type="text">
+    </div>
+  </div>
+  
+  <div>
+  <div class="are-you">
+    <quote>Are You?</quote>
+   </div>
+    <button>Doctor</button>
+    <button>Patent</button>
+  </div>
+  <button id="submit">submit</button>
+</div>
+	</form> -->
+	<div id="isMobile"></div>
+
+  <div id="docFavDiagnosis" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row" style="background-color:#40E0D0">
+						Details
+						<button type="button" class="close" data-dismiss="modal" ng-click="clear()">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+<!-- 					<div class="col-md-12 fix-height-scroll320 padding-left-right-set4 padding-top2"> -->
+						<div ng-repeat="info in list">
+						<b>Medicine:</b>{{info.medicine}}<br/><br/>
+						<b>Medicinal forms:</b>{{info.medicinalforms}}<br/><br/>
+						<b>Allergy and crosssensitivity </b>:{{info.allergyandcrosssensitivity}}<br/><br/>
+						<b>Cautions:</b>{{info.cautions}}<br/><br/>
+						<b>Hepatic impairment:</b>{{info.hepaticimpairment}}<br/><br/>
+						<b>Renal impairment:</b>{{info.renalimpairment}}<br/><br/>
+						<b>Indications and doses:</b>{{info.indicationsanddoses}}<br/><br/>
+						<b>Monitoring requirements:</b>{{info.monitoringrequirements}}<br/><br/>
+						<b>Patient and care advice:</b>{{info.patientandcareradvice}}<br/><br/>
+						<b>Prescribing and dispensing informations:</b>{{info.prescribinganddispensinginformations}}<br/><br/>
+						<b>Pretreatment Screening Information:</b>{{info.pretreatmentscreeninginformation}}<br/><br/>
+						<b>Side Effects:</b>{{info.sideeffects}}<br/></div>
+<!-- 					</div> -->
+			
+			
+		</div>
+		</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+			<div class="row" >
+				<div class="col-md-8 col-sm-8 padding-top8"></div>
+				<div class="col-md-4 col-sm-4">
+					<div class="row">
+						<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4 pull-right">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword">
+								<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>  
+					</div>
+				</div>
+			</div>
+			<div class="row padding-left-right-set4 table-container padding-top8">
+				<div class="table-container">
+					<div class="table-container-header">
+						<table
+							class="table table-striped table-hover table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="appointment-table-th width8" title="Patient Details">Registration No.</th>
+									<th class="appointment-table-th width18" title="Patient Name">Patient Name</th>
+									<th class="appointment-table-th width8" title="Nursing Station">Admission Number</th>
+									<th class="appointment-table-th width8" title="Ward">Ward</th>
+									<th class="appointment-table-th width8" title="Bed No.">Bed No.</th>
+									<th class="appointment-table-th width8" title="Specialty">Specialty</th>
+									<th class="appointment-table-th width8" title="Doctor">Doctor</th>
+									<th class="appointment-table-th width8" title="Status">PDD</th>
+									<th class="appointment-table-th width5" title="Action">Action</th>
+									<th class="appointment-table-th width5" title="Other App Data">Other App Data</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="table-container-body fix-height-scroll430" style="overflow: overlay; background: #ffffce;">
+						<table class="table table-striped table-hover table-condensed table-bordered">
+							<tbody>
+								<tr ng-if="(rmoVisitType ==2 && info.visitTypeId == 2) || (isRMO =='N' && info.visitTypeId == 2)" ng-repeat="info in patientBedList|filter:searchKeyword">
+									<td class="width8">{{info.uhidnumber}}</td>
+									<td class="text-center width18">
+										<div class="row patient-details cursor-pointer" id="45#1247#2_new">
+											<div class="col-lg-3 col-sm-12 col-md-3">
+												<div class=""  ng-click="info.statusId==5 && gotoCoverSheetIP(info)">
+													<a ng-click="generateIpdCoverSheetUrl(info);"><img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60"></a>
+												</div>
+											</div>
+											<div class="col-lg-8 col-sm-12 col-md-8">
+												 <div class="patient-name" >{{info.pFirstName}}</div> 
+												
+												
+												
+												<div class="patient">{{info.uhidnumber}}</div>
+												<div class="patient-details">
+													<span class="patient-details patient">{{info.genderCode}}</span>
+													<span class="patient-details patient">
+													<span  ng-show="{{info.patientId > 0}}" ng-init='age=getAge(info.dob)'>
+														<b>{{age}}</b>
+													</span>
+													<span  ng-show="{{info.tPatientId > 0}}">
+													<b>{{info.dob}}</b>
+													</span>
+<!-- 													<span class="patient-details patient" >|||||| -->
+<!-- 													<span class="patient-details patient" >info</span> -->
+													</span></span>
+												</div>
+												
+												<!-- <div class="patient-details">
+													<span class="patient-details patient ng-binding">M</span>
+													<span class="patient-details patient ng-binding">37Y 0M 30D 
+													<span class="patient-details patient">||||||
+													<span class="patient-details patient">info</span>
+													</span></span>
+												</div> -->
+												
+											</div>
+										</div>
+									</td>
+									<td class="width8">{{info.admissionNumber}}</td>
+									<td class="width8">{{info.wardName}}</td>
+									<td class="width8">{{info.bedNumber}}</td>
+									<td class="width8">{{info.specialityName}}</td>
+									<td class="width8">Dr. {{info.dFirstName}}</td>
+									<td class="width8">{{info.pdd}}</td>
+									<td class="width5">
+									<div class="text-center" ng-if="info.dischargeId == null" id="{{info.admissionNumber}}"><i class="fa fa-retweet" style="font-size:22px"aria-hidden="true" data-toggle="modal" data-target="#dueForDischarge" ng-click="dueForDischarge(info)"></i></div></td>
+									<td class="width5">
+							          <div class="font-size-10 text-center div-word-break cursor-pointer" ng-if="info.mpshahPatientId!=null">
+										<i class="fa fa-info-circle"  ng-click="getEncounterData(info.mpshahPatientId)"></i>
+								      </div>
+							        </td>
+								</tr>	
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>

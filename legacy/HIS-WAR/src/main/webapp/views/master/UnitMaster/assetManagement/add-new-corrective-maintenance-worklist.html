@@ -1,0 +1,614 @@
+
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset class="">
+			<div class="row">
+			
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label" ng-model="corectiveMaintenanceObj.storeId"  convert-to-number>
+										<option ng-repeat="info in storeList" value="{{info.storeId}}">{{info.storeName}}</option>
+								</select> 
+								<label for="description" class="LISDynamicLabel">Department <span class="star">*</span> </label>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+		           <div class="">
+		               <a href="">
+		                   <input type="button" id="updateBtn" value="Get Asset" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#addNewItemWasteStore" ng-click= "clearList()"  ng-disabled="corectiveMaintenanceObj.storeId == 0">
+		               </a>
+		           </div>
+		       </div>
+			</div>
+			<div class="row padding-top10">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="corectiveMaintenanceObj.requestTypeId" >
+									<option value="">Select Request Type</option>
+									<option value="3">As And When</option>
+									<option value="1">Breakdown</option>
+									<option value="2">Installation</option>
+								</select>
+								<label for="code">Request Type <span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="corectiveMaintenanceObj.requestCriticalityId"  ng-change ="getcriticality()" convert-to-number>
+									<option ng-value="" value="">Select Request Criticality</option>
+									<option ng-value="1" value="1">Normal</option>
+									<option ng-value="2" value="2">Urgent</option>
+								</select>
+								<label for="code">Request Criticality <span class="star">*</span> </label>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+			<div class="row padding-top10">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="corectiveMaintenanceObj.assetCode" ng-disabled="true" >
+								<label for="code">Asset Code</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty"  ng-model="corectiveMaintenanceObj.assetcategory" ng-disabled="true"  >
+								<label for="code">Asset Category</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="corectiveMaintenanceObj.assetName" ng-disabled="true" >
+								<label for="code">Asset Name</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<select name="batchList"class="text-input floating-label dirty" data-ng-options="x as x.serialNumber for x in serialNumberList track by x.batchId"
+										ng-model="serialNoObj"  ng-disabled="editflag">
+								</select>
+								<label for="code">Serial No. <span class="star">*</span> </label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-top10">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="corectiveMaintenanceObj.requestDateTime" disabled="disabled" >
+								<label for="code">Request Date Time</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+								<label class="switch"> 
+									<input type="checkbox" class="" id="1" ng-model="corectiveMaintenanceObj.isDown" ng-true-value="true" ng-false-value="false" ng-change ="getIsDownStatus()" >
+									<div class="slider round"></div>
+								</label>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top12" ><label class="cursor-pointer" for="1">Is NonOperative</label></div>
+					</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+							
+							<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="fromDatepicker" id="fromDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="fromDate"
+											model-view-value="true" is-open="fromDatepicker.opened"
+											datepicker-options="fromdateOptions" show-button-bar="false"
+											ng-click="openFromDatePicker()"   ng-disabled = "!corectiveMaintenanceObj.isDown">
+											<label for="description" class="" > 
+							<label for="description" class="LISDynamicLabel">Down Time Date</label> 
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-clock-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="clockpicker">
+								<input type="text" autocomplete="off" name="description" id="" ng-model="corectiveMaintenanceObj.downTime" class="text-input floating-label"  ng-init="initClockPicker()" ng-disabled = "!corectiveMaintenanceObj.isDown"> 
+								<label for="description" class="">Down Time</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+			</div>
+			<div class="row padding-top10">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+					<div class="row">
+						<div class="col-lg-1 col-md-3 col-sm-3 padding-left-right-set0">
+							<label class="padding-right10 padding-left10">Request Details: <span class="star">*</span> </label>
+						</div>
+						<div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set1 padding-right10">
+							<textarea name="editor" type="text" autocomplete="off" id="editor" rows="8" cols="50"  ck-editor ng-model="corectiveMaintenanceObj.requestDetails"></textarea>
+							<!-- <textarea rows="6" class="dirty" ng-model="corectiveMaintenanceObj.requestDetails" ></textarea> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-top10">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="toDatepicker" id="toDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="toDate"
+											model-view-value="true" is-open="toDatepicker.opened"
+											datepicker-options="todateOptions" show-button-bar="false"
+											ng-click="openToDatePicker()"   >
+							<label for="description" class="LISDynamicLabel">Resolution Expected Date <span class="star">*</span> </label> 
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="clockpicker">
+									<input type="text" autocomplete="off" name="description" id="" ng-model="corectiveMaintenanceObj.resolutionExpectedTime" class="text-input floating-label"  ng-init="initClockPicker()"> 
+									<label for="description" class="">Resolution Expected Time <span class="star">*</span> </label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</fieldset>
+		<br>
+		<br>
+		<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right0">
+			<div class="row his-style padding-right0">
+				
+						<div class="col-md-1 text-right">
+							<label>Remark:</label>
+						</div>
+						<div class="col-md-9 padding-left-right-set0">
+							<textarea row="1"  class="form-control" maxlength="100" ng-model="corectiveMaintenanceObj.remark" style="" ></textarea>
+						</div>
+			 		<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+			           <div class="">
+			               <a href="">
+			                   <input type="button" value="Save" ng-click="comformCorectiveMaintenance()"class="btn btn-primary btn-save-box-shadow">
+			               </a>
+			           </div>
+			       </div>
+			       
+			       <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+		           <div class="">
+		              <a href="#/correctiveMaintenance">
+		                   <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+		               </a>
+		           </div>
+		       </div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--  Accessories Details modal start -->
+<div ng-include="'./views/common/accessories-details.html'" class="ng-scope"></div>
+<!--  Accessories Details modal end -->
+<!-- PMS Details modal start -->
+<div ng-include="'./views/common/PMS-details.html'" class="ng-scope"></div>
+
+<!-- create checklist modal start -->
+<div id="ChecklistModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Check List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<!--  row start -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 padding-left-right-set4 common-table-height-250 margin-top4" id="">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr class="table-th-bg">
+									<th class="width1">
+										<input type="checkbox">
+									</th>
+									<th class="width20">
+										Name
+									</th>
+									<th class="width80">
+										Remark
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<input type="checkbox">
+									</td>
+									<td>
+										1
+									</td>
+									<td><textarea rows="2"></textarea></td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox">
+									</td>
+									<td>
+										2
+									</td>
+									<td><textarea rows="2"></textarea></td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox">
+									</td>
+									<td>
+										3
+									</td>
+									<td><textarea rows="2"></textarea></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="pull-right">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="saveBtn">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- create checklist modal end -->
+<!-- view create checklist modal start -->
+<div id="viewChecklistModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					View Check List
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<!--  row start -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 padding-left-right-set4 common-table-height-250 margin-top4" id="">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr class="table-th-bg">
+									<th class="width1">
+										<input type="checkbox" checked>
+									</th>
+									<th class="width20">
+										Name
+									</th>
+									<th class="width80">
+										Remark
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<input type="checkbox" checked>
+									</td>
+									<td>
+										1
+									</td>
+									<td>-</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" checked>
+									</td>
+									<td>
+										2
+									</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" checked>
+									</td>
+									<td>
+										3
+									</td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- view create checklist modal end -->
+
+<!-- addNewItemWasteStore START  -->
+<div id="addNewItemWasteStore" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Add Item List
+					<button type="button" ng-click="" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll	">
+				<fieldset>
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+									
+										<select name="assetCategory" id="assetCategory" class="text-input floating-label dirty" data-ng-options="category.category for category in assetCategoriesList"
+										 ng-model="assetCategoryObj" ng-change="getProductCategoryList(assetCategoryObj.id)">
+										</select>
+
+										<label for="code">Asset Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select name="productCategory" id="productCategory" class="text-input floating-label dirty" data-ng-options="x as x.category for x in productCategoriesList track by x.id"
+										 ng-model="productCategoryObj">
+										</select>
+										<label for="code">Product Category</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="itemObj.itemCode">
+										<label for="description" class="LISDynamicLabel">Item Code</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="itemObj.itemName">
+										<label for="description" class="LISDynamicLabel">Item Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 his-style">
+							<div class="common-save-button">
+								<a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" style="width: auto;" ng-click="searchNewItem()">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row common-popup-height-350">
+						<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="width1 text-center media-middle ">
+											<input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" ng-disabled="!vm.model.searchNewItemList.length" />
+										</th>
+										<th class="width10">Asset Category
+											<div class="float_right" ng-click="sortType = 'assetCategory'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Product Category
+											<div class="float_right" ng-click="sortType = 'productCategory'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Item Code
+											<div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Item Name
+											<div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in searchNewItemList | filter : itemObj.itemCode  | orderBy:sortType:sortReverse">
+										<td class="text-center">
+											<input id="isSelected" name="isSelected" ng-model="item.isSelected" type="radio" ng-value="true" ng-click="selectItem(item.isSelected);">
+										</td>
+										<td>{{item.assetCategory}}</td>
+										<td>{{item.productCategory}}</td>
+										<td>{{item.itemCode}}</td>
+										<td>{{item.itemName}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="modal-footer">
+				<div class="row his-style">
+					<div class="col-md-11"></div>
+					<div class="col-md-1 padding-left0px-right6px">
+						<div class="common-save-button">
+							<input type="button" value="Add" data-dismiss="modal" class="btn btn-primary btn-save-box-shadow" ng-disabled="!isSelected"
+							 ng-click="addItems()">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- addNewItemWasteStore END -->
+
+
+<!-- Comform Corrective Mainteanence  START -->
+<div id="correctiveMainteanence"class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					Corrective Maintenance
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top4">
+					<label for="description" class="LISDynamicLabel">Do you want to Generate Request ?</label>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="" ng-click="saveCorectiveMaintenance();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Conform Corrective Mainteanence END -->
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$( document ).ready(function() {
+	$(".selectedPageName").text("Add New Corrective Maintenance");
+});
+/* ************** radioRejected4 ********** */
+
+$( ".radioRejected4" ).change(function() {
+	if ($(this).is(":checked"))
+	{
+		$(this).closest(".row").siblings(".rejection-details-row4").show();
+		$(".approved-qty-remark").show();
+	}
+});
+$( ".radioAcceptedHold4" ).change(function() {
+	if ($(this).is(":checked"))
+	{
+		$(this).closest(".row").siblings(".rejection-details-row4").hide();
+		$(".approved-qty-remark").hide();
+	}
+});
+</script>

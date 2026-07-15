@@ -1,0 +1,200 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<legend class="heading-div">Insurance & TPA Mapping</legend>
+			<!-- checkbox block start -->
+			<div class="row margin-top8">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label" ng-model="masterObj.companyId" ng-change="getCompanyId(masterObj.companyId);">
+									<option value="">select TPA</option>
+									<option ng-repeat="info in TPAMasterList" value="{{info.companyId}}" > {{info.companyDesc}}</option>
+								</select>
+								<label for="code">TPA<span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+			<div class="row margin-top8">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"></div>
+				<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+					<div class="row col-md-5set" id="">
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set"> Available Insurance<span class="star">*</span></label>
+								<div class="masterborderScroll">
+										<div ng-repeat="speciality in insuranceNotMappedList">
+											<div class="checkbox">
+												<label class="common-lable-color-set">
+													<input type="checkbox" value="" ng-model="specialityMst[speciality.insuranceId]" ng-click="addTempItem(speciality.insuranceId,speciality.insuranceDesc)" value="{{speciality.insuranceDesc}}" ng-checked="selectedListItem.indexOf(speciality.insuranceId) != -1 ">{{speciality.insuranceDesc}}</label>
+											</div>
+											
+										</div>
+									</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+							<div class="text-center margintop120">
+								<button type="button" class="btn btn-primary text-width-auto btn-sm selectionBtn" ng-click="selectItem()">&lt;&lt;&gt;&gt; </button>
+<!-- 								<div class="padding-top10"><button type="button" class="btn btn-primary width40 btn-sm"><<</button></div> -->
+							</div>
+						</div>
+						<div class="col-lg-5 col-md-5 col-sm-5 padding-left-right-set4">
+							<div class="">
+								<label class="common-lable-color-set">Mapped Insurance</label>
+								<div class="masterborderScroll">
+									<div ng-repeat="info in selectedListItem"> 
+										<div class="checkbox">
+											<label class="common-lable-color-set">{{info.insuranceDesc}}</label>
+										</div>									
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4"></div>
+			</div>
+			<!-- checkbox block end -->
+			
+		</fieldset>
+		
+		<div class="row margin-top10 padding-left-right-10">
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div>
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save"
+						data-toggle="modal" ng-click="save()"
+						ng-if="saveBtnFlag"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a> <a href=""
+						class="btn btn-primary btn-save-box-shadow" title="Update"
+						data-toggle="modal" ng-click="update()"
+						ng-if="updateBtnFlag"> <i class="fa fa-floppy-o"
+						style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		
+		<div class="row padding-left-right-10 margin-top8">
+		<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+							<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12 col-sm-12 col-md-12">
+				<table class="table table-bordered">
+					<tr class="">
+					<th class="width40">
+							TPA
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th>
+						<!-- <th class="width40">
+							Insurance code
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th> -->
+						<th class="">
+							 Insurance Desc
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th>
+						<th class="width10">
+							Status(n)
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th>
+						<!-- <th class="width10 text-center">
+							Action taken
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th> -->
+					</tr>
+					<tr ng-repeat="info in insuranceList | filter:searchKeyword">
+					    <td>{{info.companyDesc}}</td>
+						<!-- <td>{{info.insuranceCode}}</td> -->
+						<td>{{info.insuranceDesc}}</td>
+						<td>
+							<label class="switch">
+								<input type="checkbox"
+								ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"
+								ng-change="updateStatus(info.insuranceTpaMapperId,info.status)">
+								<div class="slider round"></div>
+							</label>
+						</td>
+						<!-- <td class="text-center">
+							<a>
+								<i class="fa fa-pencil" aria-hidden="true" title="Edit"></i>
+							</a>
+						</td> -->
+					</tr>
+				</table>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Insurance & TPA Mapping");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="InsuranceTPAMapping"]').parents("li").addClass("active");
+});
+</script>

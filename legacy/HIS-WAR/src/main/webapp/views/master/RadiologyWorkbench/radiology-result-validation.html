@@ -1,0 +1,544 @@
+<link rel="stylesheet" type="text/css" href="resources/assets/css/template/drag-drop.css"/>
+ <style>
+ /***************** overlap class for drag-drop.css file*********************/
+ .modal {
+    background-color: transparent !important;
+    margin-left: inherit  !important;
+    width: -webkit-fill-available  !important;
+    height: inherit  !important;
+    margin-top: inherit  !important;
+    padding-right: 0 !important;
+}
+ /***************** *********************/
+	table>tbody>tr.td-bg-red > td
+	{
+		color : #ff0000d6 !important;
+	}
+	table>tbody>tr.td-bg-blue > td
+	{
+		color : #0000ffd6 !important;
+	}
+	table>tbody>tr.td-bg-green > td
+	{
+		color : #008000eb !important;
+	}
+/*****Class added by Priyanka on 08/10/2021*****/	
+	[uib-typeahead-popup].dropdown-menu
+    {
+	  display:block !important;
+	  max-height: 300px !important; 
+	  overflow-y: auto;
+	  width: 550% !important; /* -webkit-fill-available !important */
+    }
+/*****ended*****/	
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-left-right-set4 margin-top4">
+			<div class="col-lg-3 col-md-3 col-sm-6 padding-top10">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+			            	<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+			            </div> 
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datepickerFromDate" ng-change="getToDate()"
+									model-view-value="true" is-open="datepickerFromDate.opened" onkeydown="event.preventDefault()"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDatePickerFromDate()" > 
+									<label for="code">Date (From)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+			            	<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+			            </div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datepickerToDate"
+									model-view-value="true" is-open="datepickerToDate.opened" onkeydown="event.preventDefault()"
+									datepicker-options="todateOptions" show-button-bar="false"
+									ng-click="openDatePickerToDate()" > 
+								<label for="code">Date-Till</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="form-group" >
+									 <input type="text" autocomplete="off"  chars="alpha-numeric-hypen" class="text-input floating-label" tabindex="3" ng-model="patientName" placeholder="Search"
+                       uib-typeahead="group.patientName+'|'+group.uhidNumber+'|'+group.mobileNumber  for group in searchGroupList($viewValue)"
+                       typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  ng-blur="checkPatient();">
+									<label for="description" class="LISDynamicLabel">Patient Name/Mobile No.</label>
+								</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" chars="alpha-numeric-hypen" class="text-input floating-label" tabindex="3" ng-model="uhidNumber" placeholder="Search"
+                       uib-typeahead="group.patientName+'|'+group.uhidNumber+'|'+group.mobileNumber  for group in searchGroupList($viewValue)"
+                       typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName"  ng-blur="checkPatient();">
+								<label for="description" class="LISDynamicLabel">UHID</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 padding-top10">
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<label for="" class="LISDynamicLabel">Visit Type</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect=""
+										options="visitTypeList" selected-model="selectedVisitType">
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<label for="" class="LISDynamicLabel">Modality </label>
+								<div class="custom-drop-down-btn" ng-dropdown-multiselect="" ng-click="getSelectedValue()"
+										options="modalityList" selected-model="selectedModalityList">
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+	          <div class="row input-container padding-top10">
+	            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+	              <i class="fa fa-bullseye" aria-hidden="true"></i>
+	            </div>
+	            <div class="col-lg-11 col-sm-11 col-md-11">
+	              <div class="">
+	               <input type="text" autocomplete="off" name="description" id="searchServiceId" class="text-input floating-label ng-valid dirty ng-touched ng-not-empty ng-dirty ng-valid-parse" ng-model="serviceName" typeahead-min-length="2" uib-typeahead="serviceMaster.serviceStandardName + '|' +serviceMaster.serviceStandardCode for serviceMaster in searchServices($viewValue)" typeahead-on-select="addServiceToTempServiceList($item, $model, $label)" aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-392-9808" style=""  ng-blur="checkService();" >
+	                <label for="code" class="LISDynamicLabel">Hospital Service</label>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+	        <div class="col-lg-1 col-sm-1 col-md-1 text-width-auto pull-right padding-top10 padding-left-right-set1">
+              <div class="common-save-button padding-top8" style="padding-top:  0px;">
+                <a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" ng-click="searchEncounter()" style="width: auto;">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+            <div class="col-lg-1 col-sm-1 col-md-1 text-width-auto pull-right padding-top10 padding-left-right-set1 width4">
+					<div class="common-save-button padding-top8"><!-- width-div-for-patient-reg pull-left -->
+						<a href="" class="btn btn-primary btn-save-box-shadow" ng-click="clearSearchObject()" title="Clear">
+						<i class="fa fa-eraser" style="" aria-hidden="true"></i></a>
+					</div>
+			</div>
+		</div>
+        <div class="row padding-left-right-set4">
+        	<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+						</div>
+			<div ng-show="isBillManipulationAllowed" class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_left padding-top10 radio-container"  style="border: 1px solid #ccc;border-radius: 5px;margin-top:4px;width:180px;text-align:center">
+					<span >
+						<input id="all_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="otherRegistrationType trigger ng-pristine ng-untouched ng-valid ng-not-empty" value="1" ng-change="filterByDummyServices(isDummyService)">
+						<label for="all_Radio">All</label>
+					</span>
+				<span >
+						<input id="real_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="employeeRegRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="2" ng-change="filterByDummyServices(isDummyService)">
+						<label for="real_Radio">Real</label>
+					</span>
+				<span >
+						<input id="dummy_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="dependentRedRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="3" ng-change="filterByDummyServices(isDummyService)">
+						<label for="dummy_Radio">Dummy</label>
+					</span>
+			</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" ng-model="searchKeyword"  style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll450">
+			  <table id="main-table" class="main-table width110">
+			    <thead>
+			      <tr>
+					    <th class="width14">Patient Details</th>
+						<th class="width5">Visit Type</th>
+						<th class="width8">Order No.</th>
+						<th class="width6">Order Date</th>
+						<th class="width6">Service Code</th>
+						<th class="width8">Service Name</th>
+						<th class="width8">Modality Name</th>
+	<!-- 							<th class="width6">Priority</th> -->
+						<th class="width8">Final Release</th>
+						<th class="width10">Doctor </th><!-- Details -->
+	<!-- 							<th class="width6">Ward No.</th> -->
+						<th class="width6">Ward Bed No.</th>
+						<th class="width6">Payment Entitlement</th>
+						<th class="width6">Provisional Report Release By</th>
+						<th class="width6">Action taken</th>
+						<th class="width6 last-col-fixed">Report</th>
+						
+					</tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-repeat="info in pagination.data|filter:searchKeyword" ng-class="getClassForColor(info)">
+							<td class="text-center width18">
+									<div class="row patient-details cursor-pointer" id="45#1247#2_new">
+										<div class="col-lg-3 col-sm-12 col-md-3">
+											<div class="" ng-click="getReportDetails(info)">
+												<img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+											</div>
+										</div>
+										<div class="col-lg-8 col-sm-12 col-md-8">
+											<div class="patient-name">{{info.prefixCode+' '+info.patientName}}</div>
+											<div class="patient-details">
+												<span class="patient-details patient">{{info.ageString}} / </span>
+												<span class="patient-details patient">{{info.genderCode}}</span>												
+											</div>
+											<div class="patient">{{info.uhidNumber}}</div>
+										</div>
+									</div>
+							</td>
+							<td>
+							<div ng-if="info.visitTypeId ==1">
+										OP
+									</div>
+									<div ng-if="info.visitTypeId ==2">
+										IP
+									</div>
+									<div ng-if="info.visitTypeId ==3">
+										DC
+								  </div>
+								  <div ng-if="info.visitTypeId ==4">
+										ER
+								  </div>
+							</td>
+							<td>{{info.orderNo}}</td>
+							<td>{{info.orderDate}}</td>
+							<td>{{info.serviceCode}}</td>
+							<td>{{info.serviceName}}</td>
+							<td>{{info.modalityDesc}}</td>
+							<td>{{info.isFinalRelease == null || info.isFinalRelease==undefined ? 'N' : info.isFinalRelease}}</td>
+							<td>
+							       <div ng-if = "info.ordDoctorId > 0 && serviceWiseDoctorListReq == false" >
+										<select class="w-100" name="doctorId" ng-model="info.ordDoctorId" ng-change="getSpecialityByDoctorMainChange(info,$index);" ng-disabled="info.doctorShareId > 0 || info.creditNoteId > 0">
+												<option ng-repeat="doc in allDoctorsList" value="{{doc.doctorId}}" ng-value="doc.doctorId" >{{doc.doctorName}}</option>
+										</select>
+								   </div>
+								   <div ng-if = "info.ordDoctorId > 0 && serviceWiseDoctorListReq == true" >
+										<select class="w-100" name="doctorId" ng-model="info.ordDoctorId" ng-click = "checkServiceWiseDoctorsList(info,$index);"ng-change="getSpecialityByDoctorMainChange(info,$index);" ng-disabled="info.doctorShareId > 0 || info.creditNoteId > 0">
+												<option ng-repeat="doc in info.docList" value="{{doc.doctorId}}" ng-value="doc.doctorId" >{{doc.doctorName}}</option>
+										</select>
+								   </div>
+							</td>
+<!-- 							<td>-</td> -->
+<!-- 							<td>{{info.bedNumber}}</td> -->
+							<td>{{info.bedNumber=='0' ? '-' : info.bedNumber }}</td>
+							<!-- <td>{{info.entitlementDesc}}</td> -->
+							<td>
+								<div ng-if ="info.paymentEntitlementId == 1">Self</div>
+								<div ng-if ="info.paymentEntitlementId == 2">Insurance</div>
+								<div ng-if ="info.paymentEntitlementId == 3">Company</div>
+								</td>
+								<td>{{info.reportEntryByName}}</td>
+							<td>
+							<div ng-if="info.isMriModality == 'Y' || info.isCTModality =='Y' ">
+								<a  class="btn btn-primary btn-save-box-shadow" ng-click="getPatientDiagnosis(info);"  >Daignosis</a>
+							</div>
+									
+							</td>
+						<td class="last-col-fixed">
+								<div class="col-md-4" style=" padding-right: 0px;">
+										<span><i class="fa fa-upload" aria-hidden="true" title="upload" ng-click="getReportDetails(info);"></i></a></span>
+									</div>
+									<div class="col-md-4" style=" padding: 0px;">
+										<i class="fa fa-print" aria-hidden="true" title="Print With Header" ng-click="printReport(info,0);"></i>
+									</div> 
+									<div class="col-md-4" style=" padding: 0px;">
+										<i class="fa fa-print" aria-hidden="true" title="Print Without Header" ng-click="printReport(info,1);"></i>
+									</div> 
+							
+								</td>
+								
+							
+						</tr>
+			    </tbody>
+			  </table>
+			  <table class="table table-bordered">
+					<tr ng-if="(pagination.data|filter:searchKeyword)=='' || (pagination.data|filter:searchKeyword)==null ">
+						<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+					</tr>
+			   </table>
+			</div>
+						<div class="row margin-bottom45 center-block">
+						<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+							style="font-size: 14px; cursor: pointer;">
+							<li ng-class="{disabled:pagination.currentPage === 1}"><a
+								ng-click="pagination.setFirstPage(pagination)">First</a>
+							</li>
+							<li ng-class="{disabled:pagination.currentPage === 1}"><a
+								ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+							</li>
+							<li ng-repeat="page in pagination.getPagesList(pagination)"
+								ng-class="{active:pagination.currentPage === page}"><a
+								ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+							</li>
+							<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+								<a ng-click="pagination.setNextPage(pagination)">Next</a>
+							</li>
+							<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+								<a ng-click="pagination.setLastPage(pagination)">Last</a>
+							</li>
+						</ul>
+					</div>
+		</div>
+	</div>
+</div>
+<div id="confirmSaveSendDoctorShare" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.34);">
+		<div class="modal-dialog" style="width: 42% !important;"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal" ng-click="CloseDoctorShareRequest();">&times;</button>
+						<!-- <button type="button" class="close" ng-click="cancelExAmount();" >&times;</button>	 -->
+					</div>
+				</div>
+				<div class="modal-body">
+				<div class="margin-left10"><span>Are you sure do you want to save doctor?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button"  class="btn btn-primary width8" id="" ng-click="calculateShareAmount();">Ok</button>
+				<button type="button" class="btn btn-primary width8" data-dismiss="modal" ng-click="CloseDoctorShareRequest();" >Cancel</button>
+			</div>
+			</div>
+		</div>
+
+					
+	</div>
+	
+    
+ <div id="diagnosisPopRadiology" class="modal fade ng-scope in common-large-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog"> 
+        <div class="modal-content">
+            <div class="modal-header padding-zero" style="padding:0px;">
+                <div class="modal-title patient-details-row">
+                    Patient Diagnosis 
+                    <button type="button" class="close" data-dismiss="modal" ng-click="close();">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top15">
+                        <div class="row input-container padding-top4">
+                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-11 col-md-11">
+                                <div class="">
+                                    <input type="text" autocomplete="off" class="text-input floating-label"
+                                           tabindex="3" ng-model="patientDaignosisObj.diagnosisName" placeholder="Search"
+                                           uib-typeahead="group.diagnosisName+varOr+ group.code  for group in searchDaignosisList($viewValue)"
+                                           typeahead-editable="false"
+                                           typeahead-on-select="selectDignosisIdForDiagnosis($item, $model, $label,$index);"
+                                           name="groupName"
+                                           typeahead-min-length="3"> <label for="code">ICD
+                                    10<span class="star">*</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0">
+                        <div class="row padding-left-right-set4">
+                            <label for="code" class="LISDynamicLabel">Diagnosis Type</label>
+                            <div id="mediaType" class="row  customRadioBtn">
+                         <span>
+                            <input id="provisionalRadio" type="radio" name="" ng-model="patientDaignosisObj.type"
+                                           ng-value="1" val="yes" checked="checked" 
+                                           checked="checked"  class="otherRegistrationType trigger" ng-disabled = "true" >
+                            <label for="provisionalRadio">Provisional</label>
+                         </span>
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0">
+                        <div class="row padding-left-right-set4">
+                            <label></label>
+                            
+                            <div class="row input-container  ">
+                                <input type="radio" name="AllocationRadioBtn" id="Inhouse" class="" checked=""
+                                       ng-value="1"  ng-model="patientDaignosisObj.diagnosisType"
+                                       convert-to-number>
+                                <label for="code" class="LISDynamicLabel">Primary</label>
+
+                                <input type="radio" name="AllocationRadioBtn"
+                                       id="Outhouse" class=""  ng-value="2" ng-model="patientDaignosisObj.diagnosisType"
+                                       convert-to-number>
+                                <label for="code" class="LISDynamicLabel">Secondary</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                            class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15">
+                        <div class="row input-container padding-top4">
+                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                <div class="">
+                                        <textarea type="text" autocomplete="off" ng-model="patientDaignosisObj.remark"
+                                                              name="description" id=""
+                                                              class="text-input floating-label" rows="1"></textarea> <label
+                                        for="code" class="LISDynamicLabel" style="top: -14px !important;">Remarks</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right" style="margin-top: 10px;margin-right: 250px;">
+                            <button class="btn btn-primary btn-save-box-shadow  width100" title="Save"   ng-click="savepatientDaignosis();">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+                        </div>
+                </div>
+
+
+                <div class="row serachedPatientList">
+                    <div class="div" style=" margin-right: 10px; margin-left: 10px;">
+                    <div class="col-md-12 col-lg-12">
+                       <div >
+                           <div class="table-container">
+                               <div class="table-container-header">
+                                   <table class="table table-striped table-hover table-condensed table-bordered">
+                                       <thead>
+                                       <tr>
+                                           <th class="" title="Date">Date</th>
+                                           <th class="" title="Time"><span class="">Time</span></th>
+                                           <th class="" title="ICD code"><span class="">ICD code</span></th>
+                                           <th class="" title="Description"><span class="">Description</span></th>
+                                           <th class="" title="Diagnosis Type"><span class="">Diagnosis Type</span></th>
+                                           <th class="" title="Remark"><span class="">Remark</span> </th>
+                                           <th class="width5" title="Action taken">Action taken</th>
+
+                                       </tr>
+                                       </thead>
+
+                                   </table>
+
+                               </div>
+                               <div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll440">
+                                   <table class="table table-bordered" style="border-collapse: collapse !important;">
+                                       <tbody>
+
+                                       <tr ng-repeat="info in patientDiagnosisList">
+
+                                           <td class="">
+                                               {{info.createdDate}}
+                                           </td>
+                                           <td class="">
+                                               {{info.time}}
+                                           </td>
+                                           <td>{{info.code}}</td>
+                                           <td style="white-space: normal !important;">
+
+                                               <div>{{info.diagnosisDesc}}</div>
+
+                                           </td>
+                                           <td>Provisional</td>
+                                           <td><textarea type="text" autocomplete="off" class="text-input floating-label" rows="1" disabled="disabled">{{info.remark}}</textarea></td>
+                                           <td class="width5" style="text-align: center;">
+                                               <button type="button" ng-click="savepatientDaignosis(info)" style="width: 30px;" class="btn btn-primary btn-save-box-shadow" ng-if="info.fromData == 1 ">×</button>
+                                           </td>
+
+
+
+                                       </tr>
+
+
+                                       </tbody>
+                                   </table>
+                               </div>
+
+                           </div>
+                       </div>
+
+                    </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            <div class="modal-footer margin-top10" style="border:none;">
+                <div class="margin-top10 row">
+                    <div class="row">
+                        <div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+                            <button class="btn btn-primary btn-save-box-shadow  width100" title="Ok"  ng-click="close();">
+                                Ok</i> </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>   
+    	
+	
+	
+ <div ng-include="'./views/common/accept-reject.html'"></div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	 $(".selectedPageName").text("Radiology Result Validation");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="radiologyResultValidation"]').parents("li").addClass("active");
+});
+
+
+</script>

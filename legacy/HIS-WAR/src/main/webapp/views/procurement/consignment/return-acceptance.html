@@ -1,0 +1,1218 @@
+<!-- *****************************************************************************************************************************
+													Sales Return
+****************************************************************************************************************************** -->
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="row custom-sub-tab">
+			<ul class="tabs nav nav-tabs">
+				<!-- <li>
+					<a href ng-click="vm.model.SetFirstTabLevel = 1;">Medication</a>
+				</li>
+				<li >
+					<a href ng-click="vm.model.SetFirstTabLevel = 2;">Consumable</a>
+				</li> -->
+				<li>
+					<a href ng-click="vm.model.SetFirstTabLevel = 3;vm.model.PopulateDropdown()">Consignment</a>
+				</li>
+				<li>
+					<a href ng-click="vm.model.SetFirstTabLevel=4;vm.model.PopulateDropdown()">Implant</a>
+				</li>
+				<!-- <li >
+					<a href ng-click="vm.model.SetFirstTabLevel = 5;">Klt</a>
+				</li> -->
+			</ul>
+		</div>
+		<div class="row">
+
+			<!--******** CONTENT FOR 3rd TAB START ********-->
+			<div ng-show="vm.model.SetFirstTabLevel == 3" class="second-level-tab-display-div">
+				<div class="row serachedPatientList">
+					<div class="row padding-left-right-set4 margin-top10">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+										 placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+										 datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+										<label for="fromDate" class="">Date (From)</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy"
+										 placeholder="DD/MM/YYYY" ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened"
+										 datepicker-options="vm.model.toDateOptions" show-button-bar="false" ng-click="vm.model.OpenToDate()">
+										<label for="toDate" class="">Date-Till</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-11">
+									<div class="">
+										<select class="dirty text-input floating-label" ng-model="vm.model.visitType" name="visitType" ng-change="vm.model.ChangeVisitType()"
+										 data-ng-options="visitTypeData.type for visitTypeData in vm.model.visitTypeList">
+										</select>
+										<label for="visitType">Visit Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="patientName" id="patientName" class="text-input floating-label" ng-model="vm.model.patientName"
+										 ng-change="vm.model.isPatientNameValid = false" uib-typeahead="patientNames.patientName as patientNames.details for patientNames in vm.model.SearchpatientNames($viewValue)"
+										 typeahead-on-select="vm.model.AddPatientDetails($item); vm.model.search = '';" ng-change="vm.model.isPatientNameValid = false"
+										 data-ng-keyup="vm.model.PatientNameKeyPress($event)">
+										<label for="">Patient Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="uhid" ng-model="vm.model.uhid" id="" class="text-input floating-label" uib-typeahead="patientNames.uhid as patientNames.details for patientNames in vm.model.SearchUhid($viewValue)"
+										 ng-trim="false" typeahead-on-select="vm.model.AddPatientDetails($item); vm.model.search = '';" data-ng-keyup="vm.model.uHIDKeyPress($event)">
+										<label for="">UHID</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-11">
+									<div class="">
+										<select class="dirty text-input floating-label" ng-model="vm.model.ward" name="floor" ng-options="ward.wardName for ward in vm.model.wardList">
+										</select>
+										<label for="">Ward</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-user-md fa-color" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="doctorName" id="doctorName" class="text-input floating-label" ng-model="vm.model.doctorName"
+										 uib-typeahead="doctorNames.doctorName as doctorNames.details for doctorNames in vm.model.SearchdoctorNames($viewValue)">
+										<label for="doctorName">Doctor Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" ng-model="vm.model.returnNo" class="text-input floating-label">
+										<label for="code">Return No.</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto margin-top10">
+							<div class="common-save-button" style="padding-top:  0px;">
+								<a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" ng-click="vm.model.GetConsignmentReturnAcceptance()"
+								 style="width: auto;">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right margin-top10">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="search" style="margin-top: 0px">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+
+
+				</div>
+				<!-- ****************** table start ****************** -->
+				<div class="row">
+					<div class="table-container padding-left-right-set4 padding-top5">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr class="">
+										<th class="width8" title="Return No">Return No
+											<div class="float_right" ng-click="sortType = 'returnNo'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8" title="Return Date">Return Date
+											<div class="float_right" ng-click="sortType = 'returnDate'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8" title="Visit Type">Visit Type
+											<div class="float_right" ng-click="sortType = 'visitType'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<!-- <th class="width8" title="Visit No">Visit No</th> -->
+										<th class="UHID-width" title="UHID">UHID
+											<div class="float_right" ng-click="sortType = 'uhid'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width15" title="Patient Details">Patient Details
+											<div class="float_right" ng-click="sortType = 'patientDetail'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width15" title="Doctor Details">Doctor Details
+											<div class="float_right" ng-click="sortType = 'doctorDetail'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8" title="Store">Store
+											<div class="float_right" ng-click="sortType = 'store'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8" title="Ward Name">Ward Name
+											<div class="float_right" ng-click="sortType = 'wardName'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8" title="Ward Bed No.">Ward Bed No.
+											<div class="float_right" ng-click="sortType = 'bedNo'; sortReverse = !sortReverse">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width6 text-center vertical-middle" title="Action taken">Action taken</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="height:400px; overflow-y: scroll;">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-if="vm.model.ConsignmentReturnItemAcceptancelist == null || !vm.model.ConsignmentReturnItemAcceptancelist.length">
+										<td col-span="14">
+											<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+										</td>
+									</tr>
+									<tr ng-repeat="returnItem in vm.model.ConsignmentReturnItemAcceptancelist | filter : search |   orderBy:sortType:sortReverse">
+										<td class="width8" title="{{returnItem.returnNo}}">{{returnItem.returnNo}}</td>
+										<td class="width8" title="{{returnItem.returnDate | date:'dd/MM/yyyy' }}">{{returnItem.returnDate
+											| date:'dd/MM/yyyy' }}</td>
+										<td class="width8" title="{{returnItem.visitType}}">{{returnItem.visitType}}</td>
+										<td class="UHID-width" title="{{returnItem.uhid}}">{{returnItem.uhid}}</td>
+										<td class="width15" title="{{returnItem.patientDetail}}">{{returnItem.patientDetail}}</td>
+										<td class="width15" title="{{returnItem.doctorDetail}}">{{returnItem.doctorDetail}}</td>
+										<!-- <td class="width15" title="{{returnItem.visitType}}">{{returnItem.visitType}}</td> -->
+										<td class="width8" title="{{returnItem.store}}">{{returnItem.store}}</td>
+										<td class="width8" title="{{returnItem.wardName}}">{{returnItem.wardName}}</td>
+										<td class="width8" title="{{returnItem.bedNo}}">{{returnItem.bedNo}}</td>
+
+										<td class="vertical-middle text-center cursor-pointer" style="width: 5.65% !important" title="Details">
+											<a href ng-click="vm.model.NavigateToDetail(returnItem, vm.model.SetFirstTabLevel)">Details</a>
+											<!-- <a href="#/detailsReturnAcceptance">Details</a> -->
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- ****************** table end ********************* -->
+			</div>
+			<!--******** CONTENT FOR 3rd TAB END ********-->
+			<!--******** CONTENT FOR 4th TAB START ********-->
+			<div ng-show="vm.model.SetFirstTabLevel == 4" class="second-level-tab-display-div">
+				<div class="row serachedPatientList">
+					<div class="row padding-left-right-set4 margin-top10">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+										 placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+										 datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+										<label for="fromDate" class="">Date (From)</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy"
+										 placeholder="DD/MM/YYYY" ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened"
+										 datepicker-options="vm.model.toDateOptions" show-button-bar="false" ng-click="vm.model.OpenToDate()">
+										<label for="toDate" class="">Date-Till</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-11">
+									<div class="">
+										<select class="dirty text-input floating-label" ng-model="vm.model.visitType" name="visitType"
+										 data-ng-options="visitTypeData.type for visitTypeData in vm.model.visitTypeList" ng-change="vm.model.ChangeVisitType()">
+										</select>
+										<label for="visitType">Visit Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="patientName" id="patientName" class="text-input floating-label" ng-model="vm.model.patientName"
+										 ng-change="vm.model.isPatientNameValid = false" uib-typeahead="patientNames.patientName as patientNames.details for patientNames in vm.model.SearchpatientNames($viewValue)"
+										 typeahead-on-select="vm.model.AddPatientDetails($item); vm.model.search = '';" ng-change="vm.model.isPatientNameValid = false"
+										 data-ng-keyup="vm.model.PatientNameKeyPress($event)">
+
+										<label for="">Patient Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="uhid" ng-model="vm.model.uhid" id="" class="text-input floating-label" uib-typeahead="patientNames.uhid as patientNames.details for patientNames in vm.model.SearchUhid($viewValue)"
+										 ng-trim="false" typeahead-on-select="vm.model.AddPatientDetails($item); vm.model.search = '';" data-ng-keyup="vm.model.uHIDKeyPress($event)">
+										<label for="">UHID</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-11">
+									<div class="">
+										<select class="dirty text-input floating-label" ng-model="vm.model.ward" name="ward" ng-options="ward.wardName for ward in vm.model.wardList">
+										</select>
+										<label for="">Ward</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-user-md fa-color" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="doctorName" id="doctorName" class="text-input floating-label" ng-model="vm.model.doctorName"
+										 uib-typeahead="doctorNames.doctorName as doctorNames.details for doctorNames in vm.model.SearchdoctorNames($viewValue)">
+										<label for="doctorName">Doctor Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" ng-model="vm.model.returnNo" class="text-input floating-label">
+										<label for="code">Return No.</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto margin-top10">
+							<div class="common-save-button" style="padding-top:  0px;">
+								<a href="" class="btn btn-primary btn-save-box-shadow" ng-click="vm.model.GetImplantReturnAcceptance()" style="width: auto;">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="vm.model.pagination.pageSize='10'" 
+										ng-model="vm.model.pagination.pageSize" 
+										ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> (records) 
+									</label>
+								</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right margin-top10">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="vm.model.pagination.search" style="margin-top: 0px"
+							ng-change="vm.model.pagination.searchData(vm.model.ImplantReturnAcceptancelist, vm.model.pagination)" ng-class="{dirty: vm.model.storeIndentType}">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+
+
+				</div>
+				<!-- ****************** table start ****************** -->
+				<div class="row">
+					<div class="table-container padding-left-right-set4 padding-top5">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr class="">
+										<th class="width8" title="Return No">Return No
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'returnNo', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="width8" title="Return Date">Return Date
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'returnDate', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="width8" title="Visit Type">Visit Type
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'visitType', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="width8" title="Visit No">Visit No
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'visitNo', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="UHID-width" title="UHID">UHID
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'uhid', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="width15" title="Patient Details">Patient Details
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'patientDetail', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="width15" title="Doctor Details">Doctor Details
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'doctorDetail', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="width8" title="Store">Store
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'store', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="width8" title="Ward Name">Ward Name
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'wardName', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="width8" title="Ward Bed No.">Ward Bed No.
+												<div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'bedNo', sortReverse = !sortReverse)">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+										</th>
+										<th class="width6 text-center vertical-middle" title="Action taken">Action taken</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="height:350px; overflow-y: scroll;">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-if="vm.model.pagination.data == null || !vm.model.pagination.data.length">
+										<td col-span="14">
+											<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+										</td>
+									</tr>
+									<tr ng-repeat="returnItem in vm.model.pagination.data">
+										<td class="width8" title="{{returnItem.returnNo}}">{{returnItem.returnNo}}</td>
+										<td class="width8" title="{{returnItem.returnDate | date:'dd/MM/yyyy' : 'UTC'}}">{{returnItem.returnDate
+											| date:'dd/MM/yyyy' : 'UTC'}}</td>
+										<td class="width8" title="">{{returnItem.visitType}}</td>
+										<td class="width8" title="">{{returnItem.visitNo}}</td>
+										<td class="UHID-width" title="">{{returnItem.uhid}}</td>
+										<td class="width15" title="">{{returnItem.patientDetail}}</td>
+										<td class="width15" title="">{{returnItem.doctorDetail}}</td>
+										<!-- <td class="width15" title="{{medicationReturnItem.visitType}}">{{medicationReturnItem.visitType}}</td> -->
+										<td class="width8" title="">{{returnItem.store}}</td>
+										<td class="width8" title="">{{returnItem.wardName}}</td>
+										<td class="width8" title="">{{returnItem.bedNo}}</td>
+
+										<td class="vertical-middle text-center cursor-pointer" style="width: 5.65% !important" title="Details">
+												<a href ng-click="vm.model.NavigateToDetail(returnItem, vm.model.SetFirstTabLevel)">Details</a>
+
+<!-- 											<a href="#/detailsReturnAcceptance">Details</a>
+ -->										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row margin-bottom45 center-block">
+							<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+							  style="font-size: 14px; cursor: pointer;">
+							  <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+							  </li>
+							  <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+								ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+							  </li>
+							  <li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+								ng-class="{active:vm.model.pagination.currentPage === page}"><a
+								ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+							  </li>
+							  <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+							  </li>
+							  <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+								<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+							  </li>
+							</ul>
+						  </div>
+				</div>
+				<!-- ****************** table end ********************* -->
+			</div>
+			<!--******** CONTENT FOR 4th TAB END ********-->
+			<!--******** CONTENT FOR 5th TAB START ********-->
+			<div ng-show="vm.model.SetFirstTabLevel == 5" class="second-level-tab-display-div">
+				<div class="row serachedPatientList">
+					<div class="row padding-left-right-set4 margin-top10">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+										    placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+										    datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()"> -->
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" placeholder="DD/MM/YYYY" />
+										<label for="fromDate" class="">Date (From)</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+										    ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"
+										    show-button-bar="false" ng-click="vm.model.OpenToDate()"> -->
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" placeholder="DD/MM/YYYY" />
+										<label for="toDate" class="">Date-Till</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-11">
+									<div class="">
+										<select class="dirty text-input floating-label">
+											<option></option>
+										</select>
+										<label for="visitType">Visit Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label">
+										<label for="">Patient Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label" />
+										<label for="">UHID</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-10 col-md-11">
+									<div class="">
+										<select class="dirty text-input floating-label">
+											<option></option>
+										</select>
+										<label for="">Ward</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row padding-left-right-set4">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-user-md fa-color" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="doctorName" id="" class="text-input floating-label">
+										<label for="doctorName">Doctor Name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+									<i class="fa fa-bullseye" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label">
+										<label for="code">Return No.</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto margin-top10">
+							<div class="common-save-button" style="padding-top:  0px;">
+								<a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right margin-top10">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px">
+							<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+					</div>
+
+
+				</div>
+				<!-- ****************** table start ****************** -->
+				<div class="row">
+					<div class="table-container padding-left-right-set4 padding-top5">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead>
+									<tr class="">
+										<th class="width8" title="Return No">Return No</th>
+										<th class="width8" title="Return Date">Return Date</th>
+										<th class="width8" title="Visit Type">Visit Type</th>
+										<th class="width8" title="Visit No">Visit No</th>
+										<th class="UHID-width" title="UHID">UHID</th>
+										<th class="width15" title="Patient Details">Patient Details</th>
+										<th class="width15" title="Doctor Details">Doctor Details</th>
+										<th class="width8" title="Store">Store</th>
+										<th class="width8" title="Ward Name">Ward Name</th>
+										<th class="width8" title="Ward Bed No.">Ward Bed No.</th>
+										<th class="width6 text-center vertical-middle" title="Action taken">Action taken</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="height:400px; overflow-y: scroll;">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<!-- <tr >
+											<td col-span="14">
+												<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+											</td>
+										</tr> -->
+									<tr>
+										<td class="width8">RT-1611</td>
+										<td class="width8">12/11/2018</td>
+										<td class="width8" title=""></td>
+										<td class="width8" title=""></td>
+										<td class="UHID-width" title=""></td>
+										<td class="width15" title=""></td>
+										<td class="width15" title=""></td>
+										<!-- <td class="width15" title="{{medicationReturnItem.visitType}}">{{medicationReturnItem.visitType}}</td> -->
+										<td class="width8" title=""></td>
+										<td class="width8" title=""></td>
+										<td class="width8" title=""></td>
+
+										<td class="vertical-middle text-center cursor-pointer" style="width: 5.65% !important" title="Details">
+											<a href="#/detailsReturnAcceptance">Details</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- ****************** table end ********************* -->
+			</div>
+			<!--******** CONTENT FOR 5th TAB END ********-->
+						<!--******** CONTENT FOR FIRST TAB START ********-->
+						<div ng-show="vm.model.SetFirstTabLevel == 1" class="second-level-tab-display-div">
+								<div class="row serachedPatientList">
+									<div class="row padding-left-right-set4 margin-top10">
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-calendar" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+															placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+															datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()"> -->
+														<input type="text" autocomplete="off" class="text-input floating-label dirty" placeholder="DD/MM/YYYY" />
+														<label for="fromDate" class="">Date (From)</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-calendar" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+															ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"
+															show-button-bar="false" ng-click="vm.model.OpenToDate()"> -->
+														<input type="text" autocomplete="off" class="text-input floating-label dirty" placeholder="DD/MM/YYYY" />
+														<label for="toDate" class="">Date-Till</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+													<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-10 col-md-11">
+													<div class="">
+														<select class="dirty text-input floating-label">
+															<option></option>
+														</select>
+														<label for="visitType">Visit Type</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-user" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" class="text-input floating-label">
+														<label for="">Patient Name</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+													<i class="fa fa-bullseye" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" class="text-input floating-label" />
+														<label for="">UHID</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+													<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-10 col-md-11">
+													<div class="">
+														<select class="dirty text-input floating-label">
+															<option></option>
+														</select>
+														<label for="">Ward</label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row padding-left-right-set4">
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-user-md fa-color" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" name="doctorName" id="" class="text-input floating-label">
+														<label for="doctorName">Doctor Name</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+													<i class="fa fa-bullseye" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label">
+														<label for="code">Return No.</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto margin-top10">
+											<div class="common-save-button" style="padding-top:  0px;">
+												<a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;">
+													<i class="fa fa-search" aria-hidden="true"></i>
+												</a>
+											</div>
+										</div>
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right margin-top10">
+											<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px">
+											<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+										</div>
+									</div>
+									<!-- ****************** table start ****************** -->
+									<div class="row">
+										<div class="table-container padding-left-right-set4 padding-top5">
+											<div class="table-container-header">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<thead>
+														<tr class="">
+															<th class="width8" title="Return No">Return No</th>
+															<th class="width8" title="Return Date">Return Date</th>
+															<th class="width8" title="Visit Type">Visit Type</th>
+															<th class="width8" title="Visit No">Visit No</th>
+															<th class="UHID-width" title="UHID">UHID</th>
+															<th class="width15" title="Patient Details">Patient Details</th>
+															<th class="width15" title="Doctor Details">Doctor Details</th>
+															<th class="width8" title="Store">Store</th>
+															<th class="width8" title="Ward Name">Ward Name</th>
+															<th class="width8" title="Ward Bed No.">Ward Bed No.</th>
+															<th class="width6 text-center vertical-middle" title="Action taken">Action taken</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="table-container-body" style="height:400px; overflow-y: scroll;">
+												<table class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<!-- <tr >
+															<td col-span="14">
+																<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+															</td>
+														</tr> -->
+														<tr>
+															<td class="width8">RT-1211</td>
+															<td class="width8">12/11/2018</td>
+															<td class="width8" title=""></td>
+															<td class="width8" title=""></td>
+															<td class="UHID-width" title=""></td>
+															<td class="width15" title=""></td>
+															<td class="width15" title=""></td>
+															<!-- <td class="width15" title="{{medicationReturnItem.visitType}}">{{medicationReturnItem.visitType}}</td> -->
+															<td class="width8" title=""></td>
+															<td class="width8" title=""></td>
+															<td class="width8" title=""></td>
+				
+															<td class="vertical-middle text-center cursor-pointer" style="width: 5.65% !important" title="Details">
+																<a href="#/detailsReturnAcceptance">Details</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+									<!-- ****************** table end ********************* -->
+								</div>
+							</div>
+							<!--******** CONTENT FOR FIRST TAB END ********-->
+							<!--******** CONTENT FOR 2nd TAB START ********-->
+							<div ng-show="vm.model.SetFirstTabLevel == 2" class="second-level-tab-display-div">
+								<div class="row serachedPatientList">
+									<div class="row padding-left-right-set4 margin-top10">
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-calendar" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+															placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+															datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()"> -->
+														<input type="text" autocomplete="off" class="text-input floating-label dirty" placeholder="DD/MM/YYYY" />
+														<label for="fromDate" class="">Date (From)</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-calendar" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+															ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"
+															show-button-bar="false" ng-click="vm.model.OpenToDate()"> -->
+														<input type="text" autocomplete="off" class="text-input floating-label dirty" placeholder="DD/MM/YYYY" />
+														<label for="toDate" class="">Date-Till</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+													<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-10 col-md-11">
+													<div class="">
+														<select class="dirty text-input floating-label">
+															<option></option>
+														</select>
+														<label for="visitType">Visit Type</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-user" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" class="text-input floating-label">
+														<label for="">Patient Name</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+													<i class="fa fa-bullseye" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" class="text-input floating-label" />
+														<label for="">UHID</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+													<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-10 col-md-11">
+													<div class="">
+														<select class="dirty text-input floating-label">
+															<option></option>
+														</select>
+														<label for="">Ward</label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row padding-left-right-set4">
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+													<i class="fa fa-user-md fa-color" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" name="doctorName" id="" class="text-input floating-label">
+														<label for="doctorName">Doctor Name</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+											<div class="row input-container">
+												<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+													<i class="fa fa-bullseye" aria-hidden="true"></i>
+												</div>
+												<div class="col-lg-11 col-sm-11 col-md-11">
+													<div class="">
+														<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label">
+														<label for="code">Return No.</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto margin-top10">
+											<div class="common-save-button" style="padding-top:  0px;">
+												<a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;">
+													<i class="fa fa-search" aria-hidden="true"></i>
+												</a>
+											</div>
+										</div>
+										<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right margin-top10">
+											<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px">
+											<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+										</div>
+									</div>
+				
+				
+								</div>
+								<!-- ****************** table start ****************** -->
+								<div class="row">
+									<div class="table-container padding-left-right-set4 padding-top5">
+										<div class="table-container-header">
+											<table class="table table-striped table-hover table-condensed table-bordered">
+												<thead>
+													<tr class="">
+														<th class="width8" title="Return No">Return No</th>
+														<th class="width8" title="Return Date">Return Date</th>
+														<th class="width8" title="Visit Type">Visit Type</th>
+														<th class="width8" title="Visit No">Visit No</th>
+														<th class="UHID-width" title="UHID">UHID</th>
+														<th class="width15" title="Patient Details">Patient Details</th>
+														<th class="width15" title="Doctor Details">Doctor Details</th>
+														<th class="width8" title="Store">Store</th>
+														<th class="width8" title="Ward Name">Ward Name</th>
+														<th class="width8" title="Ward Bed No.">Ward Bed No.</th>
+														<th class="width6 text-center vertical-middle" title="Action taken">Action taken</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="table-container-body" style="height:400px; overflow-y: scroll;">
+											<table class="table table-striped table-hover table-condensed table-bordered">
+												<tbody>
+													<!-- <tr >
+															<td col-span="14">
+																<p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+															</td>
+														</tr> -->
+													<tr>
+														<td class="width8">RT-1311</td>
+														<td class="width8">12/11/2018</td>
+														<td class="width8" title=""></td>
+														<td class="width8" title=""></td>
+														<td class="UHID-width" title=""></td>
+														<td class="width15" title=""></td>
+														<td class="width15" title=""></td>
+														<!-- <td class="width15" title="{{medicationReturnItem.visitType}}">{{medicationReturnItem.visitType}}</td> -->
+														<td class="width8" title=""></td>
+														<td class="width8" title=""></td>
+														<td class="width8" title=""></td>
+				
+														<td class="vertical-middle text-center cursor-pointer" style="width: 5.65% !important" title="Details">
+															<a href="#/detailsReturnAcceptance">Details</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<!-- ****************** table end ********************* -->
+							</div>
+							<!--******** CONTENT FOR 2nd TAB END ********-->
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".selectedPageName").text("Return Acceptance");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		/*************************** rejection radio button function*********************************/
+		$(".rejection-details-row").hide();
+		$(".radioRejected").change(function () {
+			if ($(this).is(":checked")) {
+				$(this).closest(".row").siblings(".rejection-details-row").show();
+			}
+		});
+		$(".radioAccepted").change(function () {
+			if ($(this).is(":checked")) {
+				$(this).closest(".row").siblings(".rejection-details-row").hide();
+			}
+		});
+	});
+
+</script>

@@ -1,0 +1,316 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<legend class="heading-div">Vital Observations Qualifier Mapper</legend>
+			<div class="row margin-top4">
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 margin-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="form-group" >
+								<select  class="text-input floating-label" ng-model="common.vitalId">
+									<option ng-repeat="info in vitalsList" ng-value="{{info.vitalId}}" value="{{info.vitalId}}">{{info.vitalName}}</option>
+								</select>
+								<label for="code">Vital Observations<span class="star">*</span></label>
+							</div>
+							
+						</div>
+						
+					</div>
+				</div>
+			
+			
+			</div>
+			
+			
+			<div class="row padding-left-right-set4 margin-top4">
+				<div class="col-lg-12 col-md-12 col-sm-12 fix-height-scroll200">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="width6 " colspan="6">Qualifiers</th>
+							</tr>
+							<tr class="">
+								<th class="width6 ">Position</th>
+								<th class="width6 ">Location</th>
+								<th class="width6 ">Method</th>
+								<th class="width6 ">Site</th>
+								<th class="width6 ">Quality </th>
+								<th class="width6 ">Cuff Size</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="text-center">
+									<!-- Position table  -->
+									<div class="row">
+										<table class="table table-bordered">
+											<tbody ng-repeat="position in vitalQualifireList">
+												<tr ng-repeat="pos in position.listOfVitalQualifires" ng-if="position.vitalCategoryId == 2">
+													<td><input type="checkbox" ng-model="selectedQualifire[pos.vitalQualifireId]"
+													ng-click="addPosition(pos.vitalQualifireId,2)" ng-true-value="'Y'" ng-false-value="'N'"
+													value="{{pos.vitalQualifireId}}" name="">
+													{{pos.vitalQualifireDesc}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</td>
+								<td class="text-center">
+									<!-- Position table  -->
+									<div class="row">
+										<table class="table table-bordered">
+											<tbody ng-repeat="location in vitalQualifireList">
+												<tr ng-repeat="loc in location.listOfVitalQualifires" ng-if="location.vitalCategoryId == 1">
+													<td><input type="checkbox" name=""ng-model="selectedQualifire[loc.vitalQualifireId]"
+													ng-click="addPosition(loc.vitalQualifireId,1)" ng-true-value="'Y'" ng-false-value="'N'" 
+													value="{{loc.vitalQualifireId}}">{{loc.vitalQualifireDesc}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</td>
+								<td class="text-center">
+									<!-- Position table  -->
+									<div class="row">
+										<table class="table table-bordered">
+											<tbody ng-repeat="method in vitalQualifireList">
+												<tr ng-repeat="met in method.listOfVitalQualifires" ng-if="method.vitalCategoryId == 3">
+													<td><input type="checkbox" name="" ng-model="selectedQualifire[met.vitalQualifireId]"
+													ng-click="addPosition(met.vitalQualifireId,3)" ng-true-value="'Y'" ng-false-value="'N'"
+													value="{{met.vitalQualifireId}}">{{met.vitalQualifireDesc}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div> 	
+								</td>
+								<td class="text-center">
+									<!-- Position table  -->
+									<div class="row">
+										<table class="table table-bordered">
+											<tbody ng-repeat="site in vitalQualifireList">
+												<tr ng-repeat="sit in site.listOfVitalQualifires" ng-if="site.vitalCategoryId == 4">
+													<td><input type="checkbox" name="" ng-model="selectedQualifire[sit.vitalQualifireId]"
+													ng-click="addPosition(sit.vitalQualifireId,4)" ng-true-value="'Y'" ng-false-value="'N'"
+													value="{{sit.vitalQualifireId}}">{{sit.vitalQualifireDesc}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</td>
+								<td class="text-center">
+									<!-- Position table  -->
+									<div class="row">
+										<table class="table table-bordered">
+											<tbody ng-repeat="quality in vitalQualifireList">
+												<tr ng-repeat="qua in quality.listOfVitalQualifires" ng-if="quality.vitalCategoryId == 5">
+													<td><input type="checkbox" name="" ng-model="selectedQualifire[qua.vitalQualifireId]"
+													ng-click="addPosition(qua.vitalQualifireId,5)" ng-true-value="'Y'" ng-false-value="'N'"
+													value="{{qua.vitalQualifireId}}">{{qua.vitalQualifireDesc}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</td>
+								<td class="text-center">
+									<!-- Position table  -->
+									<div class="row">
+										<table class="table table-bordered">
+											<tbody ng-repeat="cuffSize in vitalQualifireList">
+												<tr ng-repeat="cuf in cuffSize.listOfVitalQualifires" ng-if="cuffSize.vitalCategoryId == 6">
+													<td><input type="checkbox" name="" ng-model="selectedQualifire[cuf.vitalQualifireId]"
+													ng-click="addPosition(cuf.vitalQualifireId,6)" ng-true-value="'Y'" ng-false-value="'N'"
+													value="{{cuf.vitalQualifireId}}">{{cuf.vitalQualifireDesc}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div> 	
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			
+			<div class="row padding-left-right-set1">
+				<div class="col-md-6 col-sm-7 padding-left-right-set4">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+							<div class="search">
+							<label class="show-entries">Show 
+							<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+						</div>
+					</div>
+				</div>
+			   <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto margin-top10">
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class="">
+							 <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+											ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+											
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="update()"
+											ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			      		</div>
+				    </div>
+				</div>
+				 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right margin-top10">
+					     <input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" ng-model="searchKeyword">
+					      <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				 </div>
+			</div>
+			
+			
+			<div class="row padding-left-right-set4 margin-top4">
+				<div class="col-lg-12 col-md-12 col-sm-12"><!-- fix-height-scroll110 -->
+						
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width15">Vital Name</th>
+									<th class="width55">Qualifier</th>
+									<th class="width15">Status(n)</th>
+									<th class="width15">Action taken</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in listOfQualifireMapper|orderBy:column:reverse|filter:searchKeyword">
+									<td >{{info.vitalName}}</td>
+									<td style="padding:0px !important">
+										<div class="row">
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<th class="width40">Category</th>
+														<th class="width50">Description</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="data in info.listOfVitalQualifiresForCategory"><!--  ng-if="data.vitalCategoryId==2" -->
+														<td class="width40">{{data.vitalCategoryDesc}}</td>
+														<td class="width50">
+														<div class="row">
+																<table class="table table-bordered">
+																	<tbody>
+																		<tr ng-repeat="qualifier in data.listOfVitalQualifiresMapperForQualifires">
+																			<td >{{qualifier.vitalQualifireDesc}}</td> <!-- ng-if="data.vitalCategoryId==2" -->
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>
+									<td class="text-center width15">
+									<label class="switch">
+									<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.vitalId,info.status)">
+									<div class="slider round"></div>
+									</label>
+								</td>
+								<td class="padding-edit-button-table text-center vertical-middle width15">
+									<a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.vitalId)"></i></a>
+								</td>
+								</tr>
+								<!-- <tr ng-repeat="info in listOfQualifireMapper" >
+									<td ng-if="info.status=='I'" class="width15">{{info.vitalName}}</td>
+									<td style="padding:0px !important" ng-if="info.status=='I'" class="width55">
+										<div class="row">
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<th class="width40">Category</th>
+														<th class="width50">Description</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="data in info.listOfVitalQualifiresForCategory"> ng-if="data.vitalCategoryId==2"
+														<td ng-if="data.status=='I'" class="width40">{{data.vitalCategoryDesc}}</td>
+														<td ng-if="data.status=='I'" class="width50">
+														<div class="row">
+																<table class="table table-bordered">
+																	<tbody>
+																		<tr ng-repeat="qualifier in data.listOfVitalQualifiresMapperForQualifires">
+																			<td ng-if="qualifier.status=='I'">{{qualifier.vitalQualifireDesc}}</td> ng-if="data.vitalCategoryId==2"
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>
+									<td class="text-center width15" ng-if="info.status=='I'">
+									<label class="switch">
+									<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.vitalId,info.status)">
+									<div class="slider round"></div>
+									</label>
+								</td>
+								<td class="padding-edit-button-table text-center vertical-middle width15" ng-if="info.status=='I'">
+									<a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.vitalId)" ></i></a>
+								</td>
+								</tr> -->
+							</tbody>
+						</table>
+						<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+					</div>
+			</div>
+		<!-- 	<div class="row margin-top10 padding-left-right-10">
+				<div class="col-lg-11 col-md-11 col-sm-10 padding-left-right-set4">
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal">
+							<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true" ></i>
+						</a>
+					</div>
+				</div>
+			</div> -->
+		</fieldset>
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$(".selectedPageName").text("Vital Qualifier Mapper");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="vitalQualifierMapper"]').parents("li").addClass("active");
+	});
+</script>

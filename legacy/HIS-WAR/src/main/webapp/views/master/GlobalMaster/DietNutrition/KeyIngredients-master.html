@@ -1,0 +1,302 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Key Ingredient Master</legend> -->
+			 <form name="keyIngredientForm" novalidate >
+			<div class="row">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group" show-errors>
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label" ng-model="keyIngredientMasterObj.ingredientCode" required> <label for="code">
+									Code</label>
+						 		<p class="help-block" ng-if="keyIngredientForm.ingredientCode.$error.required">Code is required</p> 
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group" show-errors>
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label" ng-model="keyIngredientMasterObj.ingredientDescription" required>
+									 <label for="code">Description</label>
+									 <p class="help-block" ng-if="keyIngredientForm.ingredientDescription.$error.required">Description is required</p> 
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="form-group" show-errors>
+								<input type="number" name="code" id=""
+									class="text-input floating-label dirty" ng-model="keyIngredientMasterObj.ingredientValue" >
+									 <label for="code">Value</label>
+							 		<p class="help-block" ng-if="keyIngredientForm.ingredientValue.$error.required">Value is required</p> 
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-th" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="form-group" show-errors>
+								<select class="text-input floating-label dirty" name="code" ng-model="keyIngredientMasterObj.uomId" required 
+									ng-options="item.uomId as item.uomDescription for item in unitMeasurementList">
+								</select> <label for="code">Clinical Unit</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-md-3 col-sm-3  padding-left-right-set4 padding-top10">
+					<div class="">
+						<table class="table table-bordered" id="delta">
+							<tbody>
+								<tr class="">
+									<th class="width10">Nutrition</th>
+									<th class="width1">Value</th>
+									<th class="width5">Unit of Measurement</th>
+									<th class="width1">Action taken</th>
+								</tr>
+								<tr ng-repeat="data in nutrationPropertyObjList">
+									<td><select class="border-dropdown" ng-model="data.nutritionId" ng-options="item.nutritionId as item.nutritionName for item in nutritionList">
+											
+									</select></td>
+									<td><input type="number" placeholder="" ng-model="data.value"
+										class="table-input-text-width w-100"></td>
+									<td><select class="border-dropdown" ng-model="data.uomId" ng-options="item.uomId as item.uomDescription for item in unitMeasurementList">
+											
+									</select></td>
+									<td>
+										<input type="button" name="" id="refranceRangeAgeGroup1" value="+" ng-click="add($index)" class="btn btn-info add-dynamic-row" style="padding: 0 2px !important;">
+										<input type="button" name="" id="refranceRangeAgeGroup2" value="-" ng-click="remove($index+1)" class="btn btn-info add-dynamic-row" style="padding: 0 2px !important;">
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-3 col-sm-3 col-md-3 polymer-icon"> 
+							<i class="fa fa-stop-circle-o" aria-hidden="true"> Unit :-</i>
+						</div>
+						<div class="col-lg-9 col-sm-9 col-md-9 polymer-icon text-left" style="    word-wrap: break-word;">
+								<label for="code"></label>
+						</div> 
+					</div>
+				</div> -->
+			</div>
+			</form> 
+			<div class="row"></div>
+			</form>
+		</fieldset>
+		<modal visible="showModal"></modal> 
+		<div class="row margin-top10 padding-left-right-set1">
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						 <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal"
+						   ng-click="saveKeyIngredients()" ng-if="saveBtnFlag">
+		        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		      
+		        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal"
+		         ng-click="updateKeyIngredients()" ng-if="updateBtnFlag">
+		        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model='searchText'
+					style="margin-top: 0px"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<tr class="">
+						<th class="width5">Code
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width20">Description
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width5">Clinical Unit
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width5">Value
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width5">Status(n)
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width5 text-center">Action taken
+							<div class="float_right">
+								<div>
+									<i class="fa fa-caret-up" aria-hidden="true"></i>
+								</div>
+								<div class="margin-top-8">
+									<i class="fa fa-caret-down" aria-hidden="true"></i>
+								</div>
+							</div>
+						</th>
+						<th class="width1"></th>
+					</tr>
+					<tr ng-repeat="info in keyIngredientMasterList | orderBy : 'ingredientDescription' | filter:searchText">
+						<td>{{info.ingredientCode}}</td>
+						<td>{{info.ingredientDescription}}</td>
+						<td>{{info.uomName}}</td>
+						<td>{{info.ingredientValue | number:2}}</td>
+						<td>
+						<label class="switch"> 
+					    <!-- <input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  data-toggle="modal" data-target="#confirmPopupOnStatus" ng-change="updateStatus(info)"> -->
+					    <input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'" ng-change="updateStatus(info)">
+								<div class="slider round"></div>
+						</label></td>
+						<td class="padding-edit-button-table text-center"><a>
+						<i class="fa fa-pencil" aria-hidden="true" ng-click="editIngredient(info)" title="Edit"></i>						 
+						</a></td>
+						<td class="text-center padding-edit-button-table"><a><i
+								class="fa fa-info-circle" aria-hidden="true" title="Details"
+								data-toggle="modal" data-target="#nutritionDetails"
+								ng-click="showKeyIngredientDetails(info)"></i></a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Confirmation PopUp To Add worklist -->
+<!-- 	<div id="confirmPopupOnStatus" class="modal fade ng-scope in"
+		role="dialog" style="padding-left: 17px;">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal"
+							ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>Are you sure you want to save?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+						id="" ng-click="saveCleanedWorklist();">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
+
+<div id="nutritionDetails" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div
+						class="col-lg-12 col-md-12 common-table-height-250 padding-top10"
+						id="">
+						<!-- pharmacologyDetailsTableId id for the table td fix height -->
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width15">Nutrition</th>
+									<th class="width8">Value</th>
+									<th class="width8">Unit of Measurement</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in modalNutriciansList">
+									<td>{{info.nutritionName}}</td>
+									<td class="text-center">{{info.value }}</td>
+									<td class="text-center">{{info.uomName}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+		$(".selectedPageName").text("Key Ingredients Master");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="keyIngredientsMaster"]').parents("li").addClass("active");
+	});	
+</script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 

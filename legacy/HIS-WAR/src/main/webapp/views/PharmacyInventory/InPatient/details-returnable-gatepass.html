@@ -1,0 +1,432 @@
+<div id="page-content-wrapper" class="ng-scope">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class=""><b class="padding-right10 ">Ret
+							GP No. :</b> <label>{{vm.model.returnableGatepassData.gatepassNo}}</label></span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Ret
+							GP Date:</b><label>{{vm.model.returnableGatepassData.gatepassDate | date:'dd/MM/yyyy'}}</label> </span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">
+							Store :</b><label>{{vm.model.returnableGatepassData.store}}</label> </span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">
+							Vendor :</b><label>{{vm.model.returnableGatepassData.vendor}}</label> </span>
+				</div>
+
+			</div>
+			<div class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class=""><b class="padding-right10 ">
+							Type :</b><label>{{vm.model.returnableGatepassData.assetType}}</label></span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Against:</b>
+						<label>{{vm.model.returnableGatepassData.requestedType}}</label>
+					</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Reference
+							No:</b><label>{{vm.model.returnableGatepassData.referenceNo}}</label> </span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Requested
+							By:</b><label>{{vm.model.returnableGatepassData.requestedBy}}</label> </span>
+				</div>
+			</div>
+			<div class="padding-top10">
+				<!-- Item Details -->
+				<div class="row table-scroll" ng-show="vm.model.returnableGatepassData.assetType == 'Consumable'">
+					<div class="col-lg-12 col-md-12 table-wrap fixed-thead-tfoot-scroll fix-height-scroll400">
+						<table class="table table-bordered main-table">
+							<thead>
+
+								<tr>
+									<th class="width6">Item Code</th>
+									<th class="width8">Item Name</th>
+									<th class="width5">UOM</th>
+									<th class="width5">UOM Unit</th>
+									<th class="width5">Batch No.</th>
+									<th class="width5">Expiry Date</th>
+									<th class="width5">Lot No.</th>
+									<th class="width5">Vendor</th>
+									<th class="width5">Total GRN Qty</th>
+									<th class="width5">Returned Qty</th>
+									<th class="width5">Available For Return Qty</th>
+									<th class="width5">Current Stock Available</th>
+									<th class="width5">Return Qty</th>
+									<th class="width6">Bonus Return Qty</th>
+									<th class="width6">Bonus Returned Qty</th>
+									<th class="width5">COP</th>
+									<th class="width8">Discount %</th>
+									<th class="width5">Tax Code</th>
+									<th class="width5">Tax %</th>
+									<th class="width5">Total Amount</th>
+									<th class="width8">Total Discount</th>
+									<th class="width5">Tax Amount</th>
+									<th class="width5">Net Amount</th>
+									<!-- <th class="width5">LCOP</th> -->
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="greturn in vm.model.returnableGatepassData.items | orderBy:sortType:sortReverse">
+									<td>{{greturn.itemCode}}</td>
+									<td>{{greturn.itemName}}</td>
+									<td>{{greturn.uomType}}</td>
+									<td>
+										<span ng-if="greturn.receivedQtyCon!=''" title="{{greturn.receivedQtyCon}}">({{greturn.receivedQtyCon}}) = </span><br/>
+										<span> {{greturn.receivedQtyCalculation}} {{greturn.uomList[2].uomUnit}}</span>
+									</td>
+									<td>{{greturn.batchNo}}</td>
+									<td>{{greturn.expiry| date:'MMM-yyyy' }}</td>
+									<td>{{greturn.lotNo}}</td>
+									<td>{{greturn.vendor}}</td>
+									<td class="width5" title="{{greturn.totalGRNQuantity}}">{{greturn.totalGRNQuantity}}</td>
+										<td ng-if="greturn.approvedQuantity==0" class="width5" title="{{greturn.approvedQuantity}}">{{greturn.approvedReturnedQty 
+											}}</td>
+										<td ng-if="greturn.approvedQuantity!=0"class="width5" title="{{greturn.approvedQuantity}}">{{greturn.approvedReturnedQty 
+											}}</td>
+										<!-- <td  ng-if="greturn.approvedQuantity==0" title="{{greturn.availableQuantity-greturn.approvedQuantity}}">{{greturn.availableQuantity-greturn.approvedReturnedQty}}</td>
+										<td  ng-if="greturn.approvedQuantity!=0" title="{{greturn.availableQuantity-greturn.approvedQuantity}}">{{greturn.availableQuantity-greturn.approvedQuantity}}</td> -->
+										<td  ng-if="greturn.approvedQuantity==0 " title="{{greturn.availableQuantity-greturn.returnQuantity}}">{{(greturn.totalGRNQuantity>0 ? greturn.totalGRNQuantity-greturn.approvedReturnedQty:greturn.availableQuantity)}}</td>
+										<td  ng-if="greturn.approvedQuantity!=0" title="{{greturn.availableQuantity}}">{{greturn.availableQuantity}}</td>
+				                        <td ng-if="requestTypeToCheck!='Rejected Against GRN'" title="{{greturn.availableQuantity}}">{{greturn.availableQuantity}}</td>
+                                        <td ng-if="requestTypeToCheck=='Rejected Against GRN'" title="{{greturn.availableQuantity}}">{{(greturn.availableQuantity>0 ? greturn.availableQuantity:0)}}</td>
+										
+								       <td>{{greturn.returnQuantity}}</td>
+								       <td>
+								        <input type="text" autocomplete="off" ng-model="greturn.bonusReturnQuantity" numbers-only class="w-100" 
+											 disabled>
+                                        <span data-ng-class="{disabled:returnable.returnableBonusBatchExpiry.length == 0 || vm.model.returnableGatepassData.requestedType != 'Against GRN' || greturn.bonusReturnQuantity >= 0}" class="pull-right text-right">
+                                        <a data-target="#bouns_selectBatchExpiry_modal" ng-click="vm.model.bonusBatchExpiryInfoOnClick(greturn, $index)"
+                                        data-toggle="modal" title="Bonus Qty Batch And Expiry">
+                                          <i class="fa fa-plus-circle"></i>
+                                        </a>
+                                      </span>
+                                        </td>
+									<td>{{greturn.bonusReturnedQuantity}}</td>
+									<td>{{greturn.cop}}</td>
+										<td class="width5" title="{{greturn.discountPercentage | number:2 }}" ng-model="greturn.discountPercentage">{{
+										greturn.discountPercentage=
+										(greturn.totalDiscount) |
+											number:2}} %</td>
+									<td>{{greturn.taxName}}</td>
+									<td>{{greturn.taxPercentage}}</td>
+									<td>{{greturn.totalAmount | number: 2}}</td>
+									<td class="width5" title=" {{vm.model.Currency}} {{greturn.discountAmount | number:2}}" ng-model="greturn.discountAmount">
+											{{vm.model.Currency}} {{ greturn.discountAmount=(greturn.totalAmount-(greturn.totalAmount-(greturn.actualDiscountPercentage*greturn.totalAmount)/100))| number:2}}
+										</td>
+									
+									<td class="width5" title=" {{vm.model.Currency}} {{greturn.totalTaxAmount | number:2}}" ng-model="greturn.totalTaxAmount">
+											{{vm.model.Currency}} {{greturn.totalTaxAmount = (((greturn.totalAmount || 0)-
+											greturn.discountAmount) * (greturn.taxPercentage ||
+											0)/100)| number:2}}
+										</td>
+									
+									<td class="width5" title=" {{vm.model.Currency}} {{greturn.netAmount | number:2}}" ng-model="greturn.netAmount">
+                                            {{vm.model.Currency}} {{greturn.netAmount = (((greturn.totalAmount || 0)-greturn.discountAmount)+ (greturn.totalTaxAmount || 0)) | number:2 }}</td>
+								
+									<!-- <td></td> -->
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- ************ Asset table Start ************ -->
+				<div class="row table-scroll" ng-show="vm.model.returnableGatepassData.assetType == 'Fixed'">
+					<div class="col-lg-12 col-md-12 table-wrap fixed-thead-tfoot-scroll fix-height-scroll400">
+						<table class="table table-bordered main-table">
+							<thead>
+								<tr class="table-th-bg">
+									<th colspan="18" class="font-weight700">Asset Details</th>
+								</tr>
+								<tr>
+									<th class="width6">Asset Code</th>
+									<th class="width6">Asset Details</th>
+									<th class="width6">Serial No.</th>
+									<th class="width6">Lot No.</th>
+									<th class="width6">Vendor Name</th>
+									<th class="width6">Total Available Qty</th>
+									<th class="width6">Returned Qty</th>
+									<th class="width6">Available For Return Qty</th>
+									<th class="width6">Return Qty</th>
+									<th class="width6">Bonus Return Qty</th>
+									<th class="width6">Bonus Returned Qty</th>
+									<th class="width6">Assessories</th>
+									<th class="width6">COP</th>
+									<th class="width8">Discount %</th>
+									<th class="width6">Tax Code</th>
+									<th class="width6">Tax %</th>
+									<th class="width6">Total Amount</th>
+									<th class="width8">Total Discount</th>
+									<th class="width6">Tax Amount</th>
+									<th class="width6">Net Amount</th>
+									<th class="width6">Expected Return Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="greturn in vm.model.returnableGatepassData.items | orderBy:sortType:sortReverse">
+									<td>{{greturn.itemCode}}</td>
+									<td>{{greturn.itemName}}</td>
+									<td>{{greturn.batchNo}}</td>
+									<td>{{greturn.lotNo}}</td>
+									<td>{{greturn.vendor}}</td>
+									<td>{{greturn.availableQuantity}}</td>
+									<td>{{greturn.approvedReturnedQty}}</td>
+									<td>{{greturn.availableQuantity-greturn.approvedReturnedQty}}</td>
+								    <td>{{greturn.returnQuantity}}</td>
+								     <td>
+								     <input type="text" autocomplete="off" ng-model="greturn.bonusReturnQuantity" numbers-only class="w-100" 
+											 disabled>
+                                         <span class="pull-right text-right">
+                                        <a data-target="#bouns_selectBatchExpiry_modal" ng-click="vm.model.bonusBatchExpiryInfoOnClick(greturn, $index)"
+                                        data-toggle="modal" title="Bonus Qty Batch And Expiry">
+                                          <i class="fa fa-plus-circle"></i>
+                                        </a>
+                                      </span>
+                                        </td>
+                                        <td>{{greturn.bonusReturnedQuantity}}</td>
+								     <td>
+									<td class="text-center">
+										<a class="cursor-pointer" title="View" ng-click="vm.model.accessoryModal(greturn)">View</a>
+									</td>
+									<td>{{greturn.cop}}</td>
+                                    
+											<td class="width5" title="{{greturn.discountPercentage | number:2 }}" ng-model="greturn.discountPercentage">{{
+										greturn.discountPercentage=
+										(greturn.totalDiscount) |
+											number:2}} %</td>
+									<td>{{greturn.taxName}}</td>
+									<td>{{greturn.taxPercentage}}</td>
+									<td>{{greturn.totalAmount | number: 2}}</td>
+									<td class="width5" title=" {{vm.model.Currency}} {{greturn.discountAmount | number:2}}" ng-model="greturn.discountAmount">
+											{{vm.model.Currency}} {{ greturn.discountAmount=(greturn.totalAmount-(greturn.totalAmount-(greturn.actualDiscountPercentage*greturn.totalAmount)/100))| number:2}}
+										</td>
+									<td class="width5" title=" {{vm.model.Currency}} {{greturn.totalTaxAmount | number:2}}" ng-model="greturn.totalTaxAmount">
+											{{vm.model.Currency}} {{greturn.totalTaxAmount = (((greturn.totalAmount || 0)-
+											greturn.discountAmount) * (greturn.taxPercentage ||
+											0)/100)| number:2}}
+										</td>
+									
+									<td class="width5" title=" {{vm.model.Currency}} {{greturn.netAmount | number:2}}" ng-model="greturn.netAmount">
+                                            {{vm.model.Currency}} {{greturn.netAmount = (((greturn.totalAmount || 0)-greturn.discountAmount)+ (greturn.totalTaxAmount || 0)) | number:2 }}</td>
+								
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- ************ Asset table End ************ -->
+			</div>
+		</fieldset>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-left-right-set4">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+					<table class=" table table-bordered">
+						<tbody>
+							<tr>
+								<th class="width7">
+									<label>Total Amount</label>
+								</th>
+								<td class="width8">
+									{{vm.model.Currency}} {{ vm.model.returnableGatepassData.totalAmount = (vm.model.returnableGatepassData.items | sumByColumn: 'totalAmount') | number:2}}
+								</td>
+								<th class="width7">
+									<label>Total Discount</label>
+								</th>
+								<td class="width8">
+									{{vm.model.Currency}} {{ vm.model.returnableGatepassData.discountAmount = (vm.model.returnableGatepassData.items | sumByColumn: 'discountAmount') | number:2}}
+								</td>
+								<th class="width7">
+									<label>Tax Amount</label>
+								</th>
+								<td class="width8">
+									{{vm.model.Currency}} {{ vm.model.returnableGatepassData.totalTaxAmount = (vm.model.returnableGatepassData.items | sumByColumn: 'totalTaxAmount') | number:2}}
+								</td>
+								<th class="width8">
+									<label>Net Amount</label>
+								</th>
+								<td class="width8">
+									{{vm.model.Currency}} {{ vm.model.returnableGatepassData.netAmount = (vm.model.returnableGatepassData.items | sumByColumn: 'netAmount') | number:2}}
+								</td>
+							</tr>
+							<tr>
+								<th class="width7 vertical-top">
+									<label>Remarks</label>
+								</th>
+								<td class="width8" colspan="5">{{vm.model.returnableGatepassData.remark}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="row padding-top5 margin-top10 padding-right20" ng-if="vm.model.returnableGatepassAppprovalDetailData.approvalStatus == 'Pending Approval'">
+				<div class="col-md-1 text-right">
+					<b>
+						<label>Remark:</label>
+					</b>
+				</div>
+				<div class="col-lg-9 col-md-9 padding-left-right8">
+					<textarea row="1" class="form-control" ng-model="vm.model.remark"></textarea>
+				</div>
+			</div>
+			<div class="row padding-top5 margin-top10 padding-right20">
+				<div class="col-lg-11 col-sm-11"></div>
+				<div class="col-lg-1 col-md-1 padding-left-right-set4">
+					<a href="#/returnableGatepass"> <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<!-- ***************** View Modal start ******************** -->
+<div id="bouns_selectBatchExpiry_modal" class="modal fade ng-scope in" role="dialog" data-backdrop="static">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<div class="modal-title patient-details-row">
+          			Bonus Batch & Expiry
+          			<button type="button" ng-click="closeBonusBatchExpiry()" class="close" data-dismiss="modal">&times;</button>
+        		</div>
+      		</div>
+      		<div class="modal-body">
+        		<div class="row">
+          			<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            			<table class="table table-bordered">
+              				<thead>
+                				<tr>
+                  					<th class="width6" ng-if="vm.model.returnableGatepassData.assetTypeId != 2">
+                    					Batch No. 
+                  					</th>
+                  					<th class="width6" ng-if="vm.model.returnableGatepassData.assetTypeId == 2">
+                    					Serial No. 
+                  					</th>
+                  					<th class="width6" ng-show="vm.model.returnableGatepassData.assetTypeId != 2">
+                    					Expiry
+                  					</th>
+				  					<th class="width6" ng-show="vm.model.returnableGatepassData.assetTypeId != 2">
+										Bonus Uom
+				  					</th>
+                  					<th class="width6">
+                    					Qty
+                  					</th>
+                  					<th class="width6">
+                    					Returned Qty
+                  					</th>
+                  					<th class="width6">
+                    					Return Qty
+                  					</th> 
+                				</tr>
+              				</thead>
+              				<tbody>
+                				<tr ng-repeat="bonus in vm.model.bonusBatchExpiryData">
+                  					<td>
+										<input type="text" autocomplete="off" ng-model="bonus.batchNo" ng-class="{borderRed: vm.model.batchNumber[$index]}" ng-change="vm.model.batchNumber[$index] = false"
+                   						class="select-box ng-pristine ng-valid dirty ng-not-empty ng-valid-maxlength ng-touched" id="batch_1" maxlength="12" disabled>
+									</td>
+                  					<td ng-show="vm.model.returnableGatepassData.assetTypeId != 2">
+                    					<input type="text" autocomplete="off" class="w-100 text-center ng-pristine ng-valid ng-isolate-scope dirty ng-not-empty ng-valid-date ng-touched" name="item.expiryDate" id="item.expiryDate"
+                     					uib-datepicker-popup="MMM-yyyy" ng-model="bonus.expiryDate" model-view-value="true" ng-change="vm.model.setSelectedDate(item); item.isExpiryDateValid = false;" 
+                     					is-open="vm.model.bonusDateOpen[$index]" datepicker-options="vm.model.expiryDateOptions" show-button-bar="false" ng-click="vm.model.OpenBonusExpiryDate($index, item)"
+                      					data-ng-class="{tableError: item.isExpiryDateValid}" ng-keypress="expiryDateVal($event , item)" ng-blur="batchExpiryMsgShow(item);" disabled>
+                  					</td>
+									<td ng-show="vm.model.returnableGatepassData.assetTypeId != 2">
+										{{bonus.bonusUom}}
+									</td>
+                  					<td>
+                    					<input type="text" autocomplete="off" ng-model="bonus.bonusQuantity" class="select-box" numbers-only disabled>
+                  					</td>
+                  					<td class="width3" style="width: 2.8% !important">
+                  						<input type="text" autocomplete="off" ng-model="bonus.bonusReturnedQuantity" class="select-box" numbers-only disabled>
+                  					</td>
+                  					<td class="width3" style="width: 2.8% !important">
+                  						<input type="text" autocomplete="off" ng-model="bonus.bonusReturnQuantity" class="select-box" numbers-only disabled>
+                  					</td> 
+                				</tr>
+              				</tbody>
+            			</table>
+          			</div>
+        		</div>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
+<div id="viewDetailsAccessoriesModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					View
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 height-table-with-scroll">
+						<div class="row">
+							<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th class="width10">Accessory Code
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+											<th class="width15">Accessory Description
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+										
+											<th class="width15">Quantity
+												<div class="float_right">
+													<div>
+														<i class="fa fa-caret-up" aria-hidden="true"></i>
+													</div>
+													<div class="margin-top-8">
+														<i class="fa fa-caret-down" aria-hidden="true"></i>
+													</div>
+												</div>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in vm.model.accessoryList">
+											<td>{{item.itemCode}}</td>
+											<td>{{item.itemName}}</td>
+											<td>{{item.returnQuantity}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Ok</button>
+				</div> -->
+		</div>
+	</div>
+</div>
+<!-- ***************** View Modal End   ******************** -->

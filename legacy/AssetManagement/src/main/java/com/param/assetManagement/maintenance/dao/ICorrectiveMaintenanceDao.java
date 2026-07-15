@@ -1,0 +1,28 @@
+package com.param.assetManagement.maintenance.dao;
+
+import com.param.assetManagement.maintenance.dto.CorrectiveMaintenanceDto;
+import com.param.global.common.Response;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface ICorrectiveMaintenanceDao {
+
+	Response saveCorrectiveMaintenance(CorrectiveMaintenanceDto correctiveMaintenanceDto) throws ApplicationException;
+
+	Response getCorrectiveMaintenanceListByMultipleCriteria(CorrectiveMaintenanceDto correctiveMaintenanceDto)  throws ApplicationException;
+
+	Response getSerialNoByItemId(Integer itemId, Integer unitId, Integer organizationId) throws ApplicationException;
+
+	Response ExportedToCorrectiveMaintenanceWorklist(CorrectiveMaintenanceDto correctiveMaintenanceDto)throws ApplicationException;
+
+	Response CorrectiveMaintenanceRequestCompleteByRequester(CorrectiveMaintenanceDto correctiveMaintenanceDto)throws ApplicationException;
+
+	Response updateCorrectiveMaintenancePendingToNewRequest(CorrectiveMaintenanceDto dto)throws ApplicationException;
+
+	Response cancelCorrectiveMaintenanceRequest(CorrectiveMaintenanceDto correctiveMaintenanceDto)throws ApplicationException;
+
+	Response checkForUniqueItemRequest(CorrectiveMaintenanceDto correctiveMaintenanceDto) throws ApplicationException;
+
+	Response updateReopen(Integer referenceId)throws ApplicationException;
+}

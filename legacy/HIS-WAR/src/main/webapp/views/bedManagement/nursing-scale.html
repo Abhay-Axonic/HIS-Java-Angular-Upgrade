@@ -1,0 +1,1373 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">		
+		
+		<fieldset>
+			<!-- <legend class="heading-div">Nursing Scale</legend> -->
+			<div class="row">
+				<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+					<div ng-include="'./views/common/patient-demography.html'"></div>	
+				</div>
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-top10 padding-left-right-set4">	
+						<!-- <div>
+									<a ng-href="#/nursingScale/FallRiskHistory" data-toggle="modal" data-target="#fallRiskScoreModal" href="#/nursingScale/FallRiskHistory">
+   										<h4>Fall Risk Score</h4>
+									</a>
+						</div> -->
+<!--						<table class="table table-bordered">-->
+<!--							<tbody>-->
+<!--								<tr>-->
+<!--									<td>-->
+<!--										<a ng-href="#/nursingScale/FallRiskHistory" data-toggle="modal" data-target="#fallRiskScoreModal" href="#/nursingScale/FallRiskHistory">-->
+<!--    										<h5>Fall Risk Score</h5>-->
+<!--										</a>-->
+<!--									</td>-->
+<!--								</tr>-->
+<!--							</tbody>-->
+<!--						</table>-->
+						<div class="row his-style margin-top5 ">
+							<div class="col-md-10"></div>
+							<div class="col-md-2">
+								<a ng-href="#/nursingScale/FallRiskHistory" data-toggle="modal" id="saveBtn" ng-click="setTabForSpecialityNursingScore();" ng-disa href="#/nursingScale/FallRiskHistory">
+									<input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" style="margin-bottom: 5px">
+								</a>
+							</div>
+						</div>
+                        <table class="table table-bordered">
+							<thead>
+                            <tr>
+                                <th class="width15">
+                                    <span class="">Nursing Score</span>
+                                </th>
+                                <th class="width15">
+                                    <span class="">Date and Time</span>
+                                </th>
+                                <th class="width5">
+                                    Score
+                                </th>
+                                <th class="width5">
+                                    History
+                                </th>
+<!--                                <th class="width5">-->
+<!--                                    History-->
+<!--                                </th>-->
+                            </tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in getAllNursingScaleScoreList">
+									<td>{{info.nursingScoreName}}</td>
+									<td>{{info.updatedDate}}</td>
+									<td>{{info.nursingScaleTotalScore}}</td>
+									<td ><a data-toggle="modal" ng-click="getAllNursingScoreById(info)" data-target="#getAllScore">view</a></td>
+								</tr>
+							</tbody>
+                        </table>
+
+                        <div id="getAllScore" class="modal fade ng-scope in common-samall-popup" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div class="modal-title patient-details-row">
+                                            Get All Scores
+                                            <button type="button" ng-click="closeAllScorePop()" class="close" data-dismiss="getAllScore">&times;</button>
+                                        </div>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10" id=""><!-- pharmacologyDetailsTableId id for the table td fix height -->
+                                                <table class="table table-striped table-hover table-condensed table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="width15">Date & Time</th>
+                                                        <th class="width15">Score</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody >
+                                                    <tr ng-repeat="info in getAllNursingScoreByIdList" id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll240">
+                                                        <td style="text-align:center">
+                                                            {{info.createdDate}}
+                                                        </td>
+                                                        <td style="text-align:center">
+                                                            {{info.nursingScaleTotalScore}}
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-right10">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-11 col-md-11 col-sm-10 padding-left-right-set4"></div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset  padding-right20" ng-if="!patientFromEr">
+					<a href="#/bedManagement">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset  padding-right20" ng-if="patientFromEr">
+					<a href="#/mapOfBedForER">
+						<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<!--**************************  MEWS details modal start ************************** -->
+<div id="fallRiskScoreModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Nursing Score
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="row">
+						<div class="custom-sub-tab padding-left-right-set4 ">
+							<ul class="tabs nav nav-tabs" >
+								<div ng-repeat="nursingScore in getSpecialityMappedNursingScoreTabsList">
+
+
+								<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width10 active" style="" ng-if = "nursingScore.nursingScaleScoreId === 1">
+									<a href="" ng-click="setFirstTabLevel(1)" >Fall Risk Score</a>
+								</li>
+<!--								<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="">-->
+<!--									<a href="" ng-click="setFirstTabLevel(2)" class=""  >Add</a>-->
+<!--								</li>-->
+								<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 2">
+									<a href="" ng-click="setFirstTabLevel(3); getAllAsDraftGcsScaleScore()" class=""  >GCS</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 3">
+									<a href="" ng-click="setFirstTabLevel(2); getAllAsDraftApacheScaleScore()" class=""  >APACHE-II</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(4) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 4">
+									<a href="" ng-click="setFirstTabLevel(4); getAllAsDraftSofaScaleScore()" class=""  >SOFA</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(5) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 5">
+									<a href="" ng-click="setFirstTabLevel(5); getAllAsDraftBradenScaleScore()" class=""  >Braden</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(6) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 6">
+									<a href="" ng-click="setFirstTabLevel(6)" class=""  >NPUAP</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(7) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 7">
+									<a href="" ng-click="setFirstTabLevel(7)" class=""  >MEWS</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(8) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 8">
+									<a href="" ng-click="setFirstTabLevel(8)" class=""  >BISHOP SCORE</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(9) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 9">
+									<a href="" ng-click="setFirstTabLevel(9)" class=""  >ALDRETE</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(10) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 10">
+									<a href="" ng-click="setFirstTabLevel(10)" class=""  >APGAR SCORE</a>
+								</li>
+								<li ng-class="{ active : isSetFirstTabLevel(11) }" class="width10" style="" ng-if = "nursingScore.nursingScaleScoreId === 11">
+									<a href="" ng-click="setFirstTabLevel(11)" class=""  >MALLAMPATTI</a>
+								</li>
+								</div>
+							</ul>
+						</div>
+						<div class="row padding-left-right-set4">
+							<!-- tab 1 - Add start  -->
+							<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">Add</legend> -->
+										<div class="row height420 ">
+											<div class="row">
+												<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+													<table class="table  table-bordered" id=""><!-- table-striped -->
+														<tbody class="label-color-grey">
+														<tr>
+															<td class="width60">
+																<label>History Of Falling</label>
+															</td>
+															<td>
+																<select class="custom-dropdown select-box width75" ng-model = "initFallRiskObj.first" ng-change ="calculateFallRisk()">
+																	<option value="">Choose</option>
+																	<option value="0">No &nbsp; &nbsp; &nbsp; 0 </option>
+																	<option value="25">Yes  &nbsp; &nbsp; &nbsp;  25</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td class="width60">
+																<label>Secondary Diagnosis</label>
+															</td>
+															<td>
+																<select class="custom-dropdown select-box width75" ng-model = "initFallRiskObj.second" ng-change ="calculateFallRisk()">
+																	<option value="">Choose</option>
+																	<option value="0"> No&nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="15"> Yes &nbsp; &nbsp; &nbsp; 15</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td class="width60">
+																<label>Ambulatory Aid</label>
+															</td>
+															<td>
+																<select class="custom-dropdown select-box width75" ng-model = "initFallRiskObj.third" ng-change ="calculateFallRisk()">
+																	<option value="">Choose</option>
+																	<option value="0"> None/ Bed rest/ Nurse Assist&nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="15">Crutches/ Cane / Walker&nbsp; &nbsp; &nbsp; 15</option>
+																	<option value="30">Furniture&nbsp; &nbsp; &nbsp; 30</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td class="width60">
+																<label>IV or IV Access</label>
+															</td>
+															<td>
+																<select class="custom-dropdown select-box width75" ng-model = "initFallRiskObj.four" ng-change ="calculateFallRisk()">
+																	<option value="">Choose</option>
+																	<option value="0">No &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="20">Yes&nbsp; &nbsp; &nbsp; 20</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td class="width60">
+																<label>Gait</label>
+															</td>
+															<td>
+																<select class="custom-dropdown select-box width75" ng-model = "initFallRiskObj.five" ng-change ="calculateFallRisk()">
+																	<option value="">Choose</option>
+																	<option value="0">Normal/ Bed rest/ Wheel Chair &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="10">Weak&nbsp; &nbsp; &nbsp; 10</option>
+																	<option value="20">Impaired	&nbsp; &nbsp; &nbsp; 20</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td class="width60">
+																<label>Mental Status</label>
+															</td>
+															<td>
+																<select class="custom-dropdown select-box width75" ng-model = "initFallRiskObj.six" ng-change ="calculateFallRisk()">
+																	<option value="">Choose</option>
+																	<option value="0">Knows Own Limits &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="15">Overestimates or forgets limits&nbsp; &nbsp; &nbsp; 15</option>
+																</select>
+															</td>
+														</tr>
+														</tbody>
+														<tfoot>
+														<tr class="header-tr-color" colspan="2">
+															<th><span style="font-weight: 700">Total Score</span></th>
+															<th><span style="font-weight: 700">{{totalFallRiskScore}}</span></th>
+														</tr>
+														</tfoot>
+													</table>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-lg-11 col-md-10 col-sm-10 margin-top10"></div>
+												<div class="col-lg-1 col-md-2 col-sm-2 padding-left0px-right6px margin-top10 text-right">
+													<div class="common-save-button">
+														<button class="btn btn-primary btn-save-box-shadow text-width-auto" id="saveBtn" ng-click="saveTotalFallRiskScore()" ng-disabled = "saveFallRiskBtn">Save</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 1 - End  -->
+							<!-- tab 2 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">History</legend> -->
+										<div class="row height420">
+											<div class="row">
+												<div class="col-lg-12 col-md-12 padding-left-right-set0">
+													<table class="table table-bordered">
+														<thead>
+														<tr>
+															<th class="width10">
+																<label>Parameter</label>
+															</th>
+															<th class="width15">
+																<label>Findings and Points</label>
+															</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr ng-repeat="info in apacheTwoScoreList.nursingScaleValue">
+															<td>
+																<label>
+																	<input type="checkbox" ng-model="info.selected" ng-true-value="true" ng-false-value="false" ng-change="parameterCheckboxChanged(info,2)">
+																	<!--<input type="checkbox" ng-model="info.selected" ng-true-value="'selected'" ng-false-value="'not-selected'" ng-change="parameterCheckboxChanged(info, 2)">-->
+																	<strong>{{info.parameterName}}</strong>
+																</label>
+															</td>
+															<td class="parent">
+																<div class="row">
+																	<div class="col-md-9">
+																		<table class="table table-bordered">
+																			<thead>
+																			<tr>
+																				<th class="width25">
+																					<label>Findings</label>
+																				</th>
+																				<th class="width10">
+																					<label>Points</label>
+																				</th>
+																			</tr>
+																			</thead>
+																			<tbody>
+																			<tr ng-repeat="finding in info.findings">
+																				<td class="child">
+																					<input type="radio" ng-model="finding.selectedFindingId" ng-value="finding.findingValue" ng-true-value="finding.test"
+																						   ng-click="calculateApacheTotalScore(finding, index, info)" name="{{info.parameterName}}" ng-disabled="!info.selected"/>
+																					{{finding.findingValue}}
+																				</td>
+																				<td class="child">
+																					{{finding.findingPoints}}
+																				</td>
+																			</tr>
+																			</tbody>
+																		</table>
+																	</div>
+																	<div class="col-md-3" ng-show="info.parameterScaleId==13" style="margin-top: 130px">
+																		<!-- Move the button column to the right -->
+																		<div class="col-md-2">
+																			<a data-toggle="modal" ng-show="info.parameterScaleId==13" data-target="#getGCSScore">
+																				<input type="button" value="Get GCS Score" id="saveBtn" ng-click="getTotalGcsScaleScore()" ng-disabled="!info.selected" class="btn btn-primary btn-save-box-shadow" style="margin-bottom: 5px">
+																			</a>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 col-md-12 padding-left-right-set0">
+												<table class="table table-bordered">
+													<tbody>
+														<tr>
+															<th class="width10">
+																<strong>Total</strong>
+															</th>
+															<th class="width15 text-left">
+																<strong >{{totalApacheScore}}</strong>
+															</th>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="row his-style margin-top10">
+											<div class="col-lg-11 col-md-11 col-sm-10 padding-left-right-set4"></div>
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Save" ng-click="saveTotalApacheScaleScore()" id="saveBtn" data-target="#fallRiskScoreModal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Save As Draft" data-dismiss="modal" ng-click="saveAsDraftApacheScore()"  style="width: 110px;" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Cancel" ng-click="setFirstTabLevel(2); getAllAsDraftGcsScaleScore()" data-dismiss="modal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+										</div>
+
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 2 - End  -->
+							<!-- tab 3 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">History</legend> -->
+										<div class="row height420 ">
+											<div class="row">
+												<div class="col-lg-12 col-md-12 padding-left-right-set0">
+													<table class="table table-bordered">
+														<thead>
+														<tr>
+															<th class="width10">
+																<label>Parameter</label>
+															</th>
+															<th class="width15">
+																<label>Findings and Points</label>
+															</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr ng-repeat="info in gcsScoreList.nursingScaleValue">
+															<td>
+																<label>
+																	<input type="checkbox" ng-model="info.selected" ng-true-value="true" ng-false-value="false" ng-change="parameterCheckboxChanged(info,3)">
+																	<strong>{{info.parameterName}}</strong>
+																</label>
+															</td>
+															<td class="parent">
+																<table class="table table-bordered">
+																	<thead>
+																	<tr>
+																		<th class="width25">
+																			<label>Findings</label>
+																		</th>
+																		<th class="width10">
+																			<label>Points</label>
+																		</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr ng-repeat="finding in info.findings">
+																		<td class="child">
+																			<input type="radio" ng-model="finding.selectedFindingId" ng-value="finding.findingValue" ng-true-value="finding.test" ng-click="calculateTotalGcsScore(finding,index,info)"  name="{{info.parameterName}}" ng-disabled="!info.selected">
+																			{{finding.findingValue}}
+																		</td>
+																		<td class="child">
+																			{{finding.findingPoints}}
+																		</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</td>
+														</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 col-md-12 padding-left-right-set0">
+												<table class="table table-bordered">
+													<tbody>
+													<tr>
+														<th class="width10">
+															<strong>Total</strong>
+														</th>
+														<th class="width15 text-left">
+															<strong >{{ gcsCountFlag == true ? msg : totalGCSScore}}</strong>
+														</th>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="row his-style margin-top10">
+
+											<div class="col-lg-11 col-md-11 col-sm-10 padding-left-right-set4"></div>
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Save" ng-click="saveTotalGcsScaleScore()" id="saveBtn" data-target="#fallRiskScoreModal" class="btn btn-primary btn-save-box-shadow btn-block"ng-disabled = "gcsCountFlag == true || isSaving;">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Save As Draft" data-dismiss="modal" ng-click="saveAsDraftGcsScore()" style="width: 110px;" class="btn btn-primary btn-save-box-shadow btn-block"ng-disabled = "gcsCountFlag == true">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Cancel" ng-click="setFirstTabLevel(3); getAllAsDraftGcsScaleScore()" data-dismiss="modal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 3 - End  -->
+							<!-- tab 4 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(4)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">History</legend> -->
+										<div class="row height420">
+											<div class="row">
+												<div class="col-lg-12 col-md-12 padding-left-right-set0">
+													<table class="table table-bordered">
+														<thead>
+														<tr>
+															<th class="width10">
+																<label>Parameter</label>
+															</th>
+															<th class="width15">
+																<label>Findings and Points</label>
+															</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr ng-repeat="info in sofaScoreList.nursingScaleValue">
+															<td>
+																<label>
+																	<input type="checkbox" ng-model="info.selected" ng-true-value="true" ng-false-value="false" ng-change="parameterCheckboxChanged(info,4)">
+<!--																	<input type="checkbox" ng-model="info.selected" ng-true-value="'selected'" ng-false-value="'not-selected'"  ng-change="parameterCheckboxChanged(info,4)">-->
+																	<strong>{{info.parameterName}}</strong>
+																</label>
+															</td>
+															<td class="parent">
+																<table class="table table-bordered">
+																	<thead>
+																	<tr>
+																		<th class="width25">
+																			<label>{{info.parameterDesc}}</label>
+																		</th>
+																		<th class="width10">
+																			<label>{{info.parameterScoreDesc}}</label>
+																		</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr ng-repeat="finding in info.findings">
+																		<td class="child">
+																			<input type="radio" ng-model="finding.selectedFindingId" ng-value="finding.findingValue" ng-true-value="finding.test" ng-click="calculateTotalSofaScore(finding,index,info)" name="{{info.parameterName}}" ng-disabled="!info.selected">
+																			{{finding.findingValue}}
+																		</td>
+																		<td class="child">
+																			{{finding.findingPoints}}
+																		</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</td>
+														</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 col-md-12 padding-left-right-set0">
+												<table class="table table-bordered">
+													<tbody>
+													<tr>
+														<th class="width10">
+															<strong>Total</strong>
+														</th>
+														<th class="width15 text-left">
+															<strong >{{totalSofaScore}}</strong>
+														</th>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="row his-style margin-top10">
+											<div class="col-lg-11 col-md-11 col-sm-10 padding-left-right-set4"></div>
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Save" ng-click="saveTotalSofaScaleScore()" id="saveBtn" data-target="#fallRiskScoreModal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Save As Draft" data-dismiss="modal" style="width: 110px;" ng-click="saveAsDraftSofaScore()" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Cancel" ng-click="setFirstTabLevel(4); getAllAsDraftSofaScaleScore()" data-dismiss="modal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 4 - End  -->
+							<!-- tab 5 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(5)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">History</legend> -->
+										<div class="row height420">
+											<div class="row">
+												<div class="col-lg-12 col-md-12 padding-left-right-set0">
+													<table class="table table-bordered">
+														<thead>
+														<tr>
+															<th class="width10">
+																<label>Risk Factor</label>
+															</th>
+															<th class="width25">
+																<label>Descriptions</label>
+															</th>
+														</tr>
+														</thead>
+														<tbody>
+														<tr ng-repeat="info in bradenScoreList.nursingScaleValue">
+															<td>
+																<label>
+																	<input type="checkbox" ng-model="info.selected" ng-true-value="true" ng-false-value="false" ng-change="parameterCheckboxChanged(info,5)">
+<!--																	<input type="checkbox" ng-model="info.selected" ng-true-value="'selected'" ng-false-value="'not-selected'"  ng-change="parameterCheckboxChanged(info,5)">-->
+																	<strong>{{info.parameterName}}</strong>
+																</label>
+															</td>
+															<td class="parent">
+																<table class="table table-bordered">
+																	<thead>
+																	<tr>
+																		<th class="width15">
+																			<label>Observation</label>
+																		</th>
+																		<th class="width20">
+																			<label>Description</label>
+																		</th>
+																		<th class="width10">
+																			<label>Score</label>
+																		</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr ng-repeat="finding in info.findings">
+																		<td class="child">
+																			<input type="radio" ng-model="finding.selectedFindingId" ng-value="finding.findingValue" ng-true-value="finding.test" ng-click="calculateTotalBradenScore(finding,index,info)" name="{{info.parameterName}}" ng-disabled="!info.selected">
+																			{{finding.findingValue}}
+																		</td>
+																		<td class="child">
+																			{{finding.findingDescription}}
+																		</td>
+																		<td class="child">
+																			{{finding.findingPoints}}
+																		</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</td>
+														</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 col-md-12 padding-left-right-set0">
+												<table class="table table-bordered">
+													<tbody>
+														<tr>
+															<th class="width10">
+																<strong>Total</strong>
+															</th>
+															<th class="width25 text-left">
+																<strong >{{totalBradenScore}}</strong>
+															</th>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="row his-style margin-top10">
+											<div class="col-lg-11 col-md-11 col-sm-10 padding-left-right-set4"></div>
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Save" ng-click="saveTotalBradenScaleScore()" id="saveBtn" data-target="#fallRiskScoreModal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Save As Draft" data-dismiss="modal" ng-click="saveAsDraftBradenScore()" style="width: 110px;" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+												<a>
+													<input type="button" value="Cancel" ng-click="setFirstTabLevel(5); getAllAsDraftBradenScaleScore()" data-dismiss="modal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 5 - End  -->
+							<!-- tab 6 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(6)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">History</legend> -->
+										<div class="row height420">
+											<div class="row">
+												<div class="col-md-3">
+													<label for="description" class="" style="color: black;">NPUAP</label>
+													<select class="custom-dropdown select-box" name="npuapScaleId" ng-model="npuapScaleId" name="code" ng-change="getNpuapDataBySelect(npuapScaleId)">
+														<option data-ng-repeat="info in npuapScoreList.nursingScaleValue" value="{{info.parameterScaleId}}">{{info.npuap}}</option>
+													</select>
+												</div>
+												<div class="col-md-6">
+													<label for="description" class="" style="color: black;">EPUAP</label>
+													<input type="text" autocomplete="off" ng-model="selectedEpuap" class="form-control" disabled name="code" id="requiredOn" class="text-input floating-label">
+												</div>
+											</div>
+											<div class="row" style="margin-top: 10px">
+												<div class="col-md-3">
+												</div>
+												<div class="col-md-7">
+													<label for="description" class="" style="color: black;">DEFINING CHARACTERISTICS</label>
+													<textarea class="form-control" disabled ng-model="selectedDefiningChar" style="height: 150px; color: black;"></textarea>
+												</div>
+											</div>
+											<div class="row" style="margin-top: 40px">
+												<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4  text-width-auto" style=" margin-left: 1100px;">
+													<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="saveNpuapScaleScore()" data-target="#fallRiskScoreModal">
+														Save</a>
+												</div>
+												<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4  text-width-auto">
+													<button type="submit" href="" class="btn btn-primary btn-save-box-shadow" title="Cancel" ng-click="cancelNpuapScore()" data-dismiss="modal">
+														Cancel</button>
+												</div>
+											</div>
+										</div>
+
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 6 - End  -->
+							<!-- tab 7 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(7)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">History</legend> -->
+										<div class="row height420">
+											<div class="row margin-top4">
+												<div class="col-lg-12 col-md-12 col-sm-12">
+													<table class="table table-bordered" ><!-- table-striped -->
+														<tbody class="label-color-grey" id="form1">
+														<tr>
+															<td>
+																<label> Systolic Blood Pressure</label>
+															</td>
+															<td>
+																<select ng-model="systolic" name="systolic" id="systolic" class="custom-dropdown select-box width50" ng-change="commnadditionSys(systolic,'{{systolic}}')" convert-to-number>
+																	<option ng-selected="true"  value="">Choose</option>
+																	<option value="3"> = 70 mmHg  &nbsp; &nbsp; &nbsp; +3</span></option>
+																	<option value="2"> 71-80 mmHg  &nbsp; &nbsp; &nbsp; +2 </option>
+																	<option value="1"> 81-100 mmHg  &nbsp; &nbsp; &nbsp; +1</option>
+																	<option value="0"> 101-199 mmHg  &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="2">  >=200 mmHg   &nbsp; &nbsp; &nbsp; +2</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Heart Rate</label>
+															</td>
+															<td>
+																<select ng-model="heart" name="heart" id="heart" class="custom-dropdown select-box width50" ng-change="commnadditionHeart(heart,'{{heart}}')" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="2"> 40 bpm  &nbsp; &nbsp; &nbsp; +2 </option>
+																	<option value="1"> 41-50 bpm   &nbsp; &nbsp; &nbsp; +1</option>
+																	<option value="0"> 51-100 bpm   &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="1"> 101-110 bpm   &nbsp; &nbsp; &nbsp; +1</option>
+																	<option value="2"> 111-129 bpm   &nbsp; &nbsp; &nbsp; +2</option>
+																	<option value="3"> >=130 bpm   &nbsp; &nbsp; &nbsp; +3</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Respiratory Rate</label>
+															</td>
+															<td>
+																<select ng-model="respiratory" name="respiratory" id="respiratory" class="custom-dropdown select-box width50" ng-change="commnadditionrespiratory(respiratory,'{{respiratory}}')" convert-to-number>
+																	<option ng-selected="true"   value="">Choose</option>
+																	<option value="2" > <9 bpm  &nbsp; &nbsp; &nbsp; +2 </option><!-- +2 -->
+																	<option value="0"> 9-14 bpm  &nbsp; &nbsp; &nbsp; 0</option><!-- 0 -->
+																	<option value="1"> 15-20 bpm  &nbsp; &nbsp; &nbsp; +1</option><!-- +1 -->
+																	<option value="2"> 21-29 bpm &nbsp; &nbsp; &nbsp; +2</option><!-- +2 --> 
+																	<option value="3"> >29 bpm &nbsp; &nbsp; &nbsp; +3</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Temperature</label>
+															</td>
+															<td>
+																<select  ng-model="selectedTemperature" name="temperature" id="temperature" class="custom-dropdown select-box width50" ng-change="commnadditiontemperature(selectedTemperature,'{{selectedTemperature}}')" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option  value="2"> < 35 C/95 F &nbsp; &nbsp; &nbsp; +2</option><!-- +2 -->
+																	<option value="0"> 35-38.4 C/95-101.1 F &nbsp; &nbsp; &nbsp; 0</option><!-- 0-->
+																	<option value="2"> >=38.5 C/101.3F &nbsp; &nbsp; &nbsp; +2</option><!-- +2 -->
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>AVPU Score</label>
+															</td>
+															<td>
+																<select ng-model="avpu" name="avpu" id="avpu" class="custom-dropdown select-box width50" ng-change="commnadditionavpu(avpu,'{{avpu}}')" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option  value="0"> Alert &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="1"> Reacts to Voice &nbsp; &nbsp; &nbsp;+1 </option>
+																	<option value="2"> Reacts to Pain &nbsp; &nbsp; &nbsp; +2</option>
+																	<option value="3"> Unresponsive &nbsp; &nbsp; &nbsp; +3</option>
+																</select>
+															</td>
+														</tr>
+														</tbody>
+														<tfoot>
+														<tr class="header-tr-color" colspan="2">
+															<th><span style="font-weight: 700">Total Score</span></th>
+															<th>  <span style="font-weight: 700" id="sum" ng-if="sum">{{sum}}</span>
+        													<span style="font-weight: 700" ng-if="!sum"></span></th>
+														</tr>
+														</tfoot>
+													</table>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-lg-11 col-md-10 col-sm-10 margin-top10"></div>
+												<div class="col-lg-1 col-md-2 col-sm-2 padding-left0px-right6px margin-top10 text-right">
+													<div class="common-save-button">
+														<button class="btn btn-primary btn-save-box-shadow text-width-auto" id="saveBtn" data-target="#fallRiskScoreModal" ng-click="save()" ng-disabled="saveMewsBtn">Save</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 7 - End  -->
+							<!-- tab 8 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(8)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">History</legend> -->
+										<div class="row" style="height:270px;">
+											<div class="row margin-top4">
+												<div class="col-lg-12 col-md-12 col-sm-12">
+													<table class="table table-bordered" ><!-- table-striped -->
+														<thead>
+															<tr class="header-tr-color" >
+																<td></td>
+																<td></td>
+																<td class="text-center" >Score</td>
+															</tr>
+														</thead>
+														<tbody class="label-color-grey" id="form1">
+														<tr>
+															<td class="width5">
+																<label> Dilation (cm)</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="selectedDilation" name="dilation" id="dilation" class="custom-dropdown select-box width50" ng-change="commonAdditionBishopScore();" convert-to-number>
+																	<option ng-selected="true"  value="">Choose</option>
+																	<option value="2"> 1-2 &nbsp; &nbsp; &nbsp; +2 </option>
+																	<option value="4"> 3-4 &nbsp; &nbsp; &nbsp; +4</option>
+																	<option value="6"> >4  &nbsp; &nbsp; &nbsp; +6</option>
+																</select>
+															</td>
+															<td class="width5">
+																{{selectedDilation}}
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Length (cm)</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="selectedLength" name="length" id="length" class="custom-dropdown select-box width50" ng-change="commonAdditionBishopScore();" convert-to-number>
+																	<option ng-selected="true"   value="">Choose</option>
+																	<option value="0">  3  &nbsp; &nbsp; &nbsp;  0 </option><!-- +2 -->
+																	<option value="1">  2  &nbsp; &nbsp; &nbsp; +1</option><!-- 0 -->
+																	<option value="2">  1  &nbsp; &nbsp; &nbsp; +2</option><!-- +1 -->
+																	<option value="3"> <1  &nbsp; &nbsp; &nbsp; +3</option><!-- +2 -->
+																</select>
+															</td>
+															<td class="width5">
+																{{selectedLength}}
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Station (cm)</label>
+															</td>
+															<td class="width8 text-center">
+																<select  ng-model="selectedStation" name="station" id="station" class="custom-dropdown select-box width50" ng-change="commonAdditionBishopScore();" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="0">  -3  &nbsp; &nbsp; &nbsp; 0 </option><!-- +2 -->
+																	<option value="1">  -2  &nbsp; &nbsp; &nbsp; +1</option><!-- 0 -->
+																	<option value="2">  -1/0  &nbsp; &nbsp; &nbsp; +2</option><!-- +1 -->
+																	<option value="3"> +1/+2  &nbsp; &nbsp; &nbsp; +3</option><!-- +2 -->
+																</select>
+															</td>
+															<td class="width5">
+																{{selectedStation}}
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Consistency</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="selectedConsistency" name="consistency" id="consistency" class="custom-dropdown select-box width50" ng-change="commonAdditionBishopScore();" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="0"> Firm   &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="1"> Medium &nbsp; &nbsp; &nbsp;+1 </option>
+																	<option value="2"> Soft   &nbsp; &nbsp; &nbsp;+2</option>
+																</select>
+															</td>
+															<td class="width5">
+																{{selectedConsistency}}
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Position</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="selectedPosition" name="position" id="position" class="custom-dropdown select-box width50" ng-change="commonAdditionBishopScore();" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="0"> Posterior  &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="1"> Mid &nbsp; &nbsp; &nbsp;+1</option>
+																	<option value="2"> Anterior   &nbsp; &nbsp; &nbsp;+2</option>
+																</select>
+															</td>
+															<td class="width5">
+																{{selectedPosition}}
+															</td>
+														</tr>
+														</tbody>
+														<tfoot>
+														<tr class="header-tr-color" colspan="3">
+															<th></th>
+															<th><span style="font-weight: 700">Total Score</span></th>
+															<th class="text-left"><span style="font-weight: 700" ng-model="sum" id="sum">{{sumOfBishopScore}}</span></th>
+														</tr>
+														</tfoot>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="row his-style margin-top10" style="margin-bottom: 10px;">
+
+											<div class="col-lg-9 col-md-9 col-sm-6 padding-left-right-set4"></div>
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" ng-disabled ="BishopScoreSaveBtn" value="Save" data-dismiss="modal" ng-click="saveBishopScoreClick('F')" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" value="Save As Draft" style="width: 110px;" data-dismiss="modal" ng-click="saveBishopScoreClick('D');" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" value="Cancel" data-dismiss="modal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 8 - End  -->
+							<!-- tab 9 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(9)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">History</legend> -->
+										<div class="row" style="height:245px;">
+											<div class="row margin-top4">
+												<div class="col-lg-12 col-md-12 col-sm-12">
+													<table class="table table-bordered" ><!-- table-striped -->
+														<tbody class="label-color-grey" id="form1">
+														<tr>
+															<td class="width5">
+																<label>Activity Level</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="aldreteActivity" name="aldreteActivity" id="aldreteActivity" class="custom-dropdown select-box width50" ng-change="commonAdditionAldreteScore();" convert-to-number>
+																	<option ng-selected="true"  value="">Choose</option>
+																	<option value="2"> Moves all extremities voluntarily / on command  &nbsp; &nbsp; &nbsp; 2</span></option>
+																	<option value="1"> Moves 2 extremities  &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="0"> Cannot move extremities  &nbsp; &nbsp; &nbsp; 0</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Respirations</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="aldreteRespiration" name="aldreteRespiration" id="aldreteRespiration" class="custom-dropdown select-box width50" ng-change="commonAdditionAldreteScore();" convert-to-number>
+																	<option ng-selected="true"   value="">Choose</option>
+																	<option value="2">Breathes deeply and coughs freely  &nbsp; &nbsp; &nbsp; 2</option>
+																	<option value="1">Is dyspneic with shallow limited breathing  &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="0">Is apneic  &nbsp; &nbsp; &nbsp; 0</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Circulation (Blood Pressure)</label>
+															</td>
+															<td class="width8 text-center">
+																<select  ng-model="aldreteCirculation" name="circulation" id="circulation" class="custom-dropdown select-box width50" ng-change="commonAdditionAldreteScore();" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="2">Is <20 mmHg of Pre-anesthetic level   &nbsp; &nbsp; &nbsp; 2</option>
+																	<option value="1">Is 20 - 50 mmHg of Pre-anesthetic level   &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="0">Is > 50 mmHg of Pre-anesthetic level   &nbsp; &nbsp; &nbsp; 0</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Consciousness</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="aldreteConsciousness" name="consciousness" id="consciousness" class="custom-dropdown select-box width50" ng-change="commonAdditionAldreteScore();" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="2">Is fully awake  &nbsp; &nbsp; &nbsp; 2</option>
+																	<option value="1">Is arousable on calling  &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="0">Is not responding  &nbsp; &nbsp; &nbsp; 0</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Oxygen saturation as determined by pulse oximetry</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="aldreteOxygen" name="aldreteOxygen" id="aldreteOxygen" class="custom-dropdown select-box width50" ng-change="commonAdditionAldreteScore();" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="2">Has level >92% when breathing room air  &nbsp; &nbsp; &nbsp; 2</option>
+																	<option value="1">Requires supplemental oxygen to maintain level >90%  &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="0">Has level < 90% with oxygen supplement  &nbsp; &nbsp; &nbsp; 0</option>
+																</select>
+															</td>
+														</tr>
+														</tbody>
+														<tfoot>
+														<tr class="header-tr-color" colspan="2">
+															<th><span style="font-weight: 700">Total Score</span></th>
+															<th class="text-centre"><span style="font-weight: 700" ng-model="sum" id="sum">{{sumOfALDRETEScore}}</span></th>
+														</tr>
+														</tfoot>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="row his-style margin-top10" style="margin-bottom: 10px;">
+
+											<div class="col-lg-9 col-md-9 col-sm-6 padding-left-right-set4"></div>
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" ng-disabled="AldreteSaveBtn" title="Save" value="Save" data-dismiss="modal" ng-click="saveAldreteScoreClick('F')" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" title="Save As Draft" value="Save As Draft" data-dismiss="modal" style="width: 110px;" ng-click="saveAldreteScoreClick('D')" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" title="Cancel" value="Cancel" ng-click="setFirstTabLevel(9); getAllAsDraftAldreteScore()" data-dismiss="modal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 9 - End  -->
+							<!-- tab 10 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(10)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<!-- <legend class="heading-div">History</legend> -->
+										<div class="row" style="height:245px;">
+											<div class="row margin-top4">
+												<div class="col-lg-12 col-md-12 col-sm-12">
+													<table class="table table-bordered" ><!-- table-striped -->
+														<tbody class="label-color-grey" id="form1">
+														<tr>
+															<td class="width5">
+																<label>Appearance (Skin Colour)</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="selectedAppearance" name="appearance" id="appearance" class="custom-dropdown select-box width50" ng-change="commonAgparScore();" convert-to-number>
+																	<option ng-selected="true"  value="">Choose</option>
+																	<option value="0"> Cyanotic/Pale all over  &nbsp; &nbsp; &nbsp; 0</span></option>
+																	<option value="1"> Peripheral Cynosis only  &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="2"> 2 Pink  &nbsp; &nbsp; &nbsp; 2</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Pulse (Heart Rate)</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="selectedPulse" name="pulse" id="pulse" class="custom-dropdown select-box width50" ng-change="commonAgparScore();" convert-to-number>
+																	<option ng-selected="true"   value="">Choose</option>
+																	<option value="0">Zero  &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="1"><100  &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="2">100-400  &nbsp; &nbsp; &nbsp; 2</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Grimace (Reflex Irritability)</label>
+															</td>
+															<td class="width8 text-center">
+																<select  ng-model="selectedGrimace" name="grimace" id="grimace" class="custom-dropdown select-box width50" ng-change="commonAgparScore();" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="0">No response to stimulation  &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="1">Grimace or weak cry when stimulated  &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="2">Cry when stimulated  &nbsp; &nbsp; &nbsp; 2</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Activity (Tone)</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="selectedActivity" name="activity" id="activity" class="custom-dropdown select-box width50" ng-change="commonAgparScore();" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="0">Floppy  &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="1">Some flexion  &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="2">Well flexed and resisiting extension  &nbsp; &nbsp; &nbsp; 2</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label>Respiration</label>
+															</td>
+															<td class="width8 text-center">
+																<select ng-model="selectedRespiration" name="respiration" id="respiration" class="custom-dropdown select-box width50" ng-change="commonAgparScore();" convert-to-number>
+																	<option ng-selected="true" value="">Choose</option>
+																	<option value="0">Apenic  &nbsp; &nbsp; &nbsp; 0</option>
+																	<option value="1">Slow irregular breathing &nbsp; &nbsp; &nbsp; 1</option>
+																	<option value="2">Strong Cry &nbsp; &nbsp; &nbsp; 2</option>
+																</select>
+															</td>
+														</tr>
+														</tbody>
+														<tfoot>
+														<tr class="header-tr-color" colspan="2">
+															<th><span style="font-weight: 700">Total Score</span></th>
+															<th class="text-centre"><span style="font-weight: 700" ng-model="sum" id="sum">{{sumOfAGPARScore}}</span></th>
+														</tr>
+														</tfoot>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="row his-style margin-top10" style="margin-bottom: 10px;">
+
+											<div class="col-lg-9 col-md-9 col-sm-6 padding-left-right-set4"></div>
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" ng-disabled="APGARSaveBtn" title="Save" value="Save" data-dismiss="modal" ng-click="saveAPGARScoreClick('F')" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" title="Save As Draft" value="Save As Draft" data-dismiss="modal" style="width: 110px;" ng-click="saveAPGARScoreClick('D')" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" title="Cancel" value="Cancel" ng-click="setFirstTabLevel(9); getAllAsDraftApgarScore()" data-dismiss="modal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 10 - End  -->
+							<!-- tab 11 - Start  -->
+							<div  ng-show="isSetFirstTabLevel(11)" class="second-level-tab-display-div" style="">
+								<div class="row">
+									<fieldset>
+										<div class="row" style="padding-left:150px;">
+											<div class="row margin-top4">
+												<div class="col-lg-12 col-md-12 col-sm-12">
+													<div class="col-md-3">
+														<div>
+															<img src="resources/assets/images/logo/class-I.jpeg" class="" style="height: 245px"><br>
+														</div>
+													</div>
+													<div class="col-md-3">
+														<div>
+															<img src="resources/assets/images/logo/class-II.jpeg" class="" style="height: 245px"><br>
+														</div>
+													</div>
+													<div class="col-md-3">
+														<div>
+															<img src="resources/assets/images/logo/class-III.jpeg" class="" style="height: 245px"><br>
+														</div>
+													</div>
+													<div class="col-md-3">
+														<div>
+															<img src="resources/assets/images/logo/class-IV.jpeg" class="" style="height: 245px"><br>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 col-md-12 col-sm-12">
+												<div class="col-md-3 text-center">
+													<div style="padding-left: 50px;">
+														<span><input type="radio" id="Remember_me" name="classRadio" ng-model="selectedClass" ng-click="commonMallampattiScore();" value="1" class="radio">
+														<label for="Remember_me">Class I</label></span>
+													</div>
+												</div>
+												<div class="col-md-3 text-center">
+													<div style="padding-left: 23px;">
+														<span><input type="radio" id="Remember_me1" name="classRadio" ng-model="selectedClass" ng-click="commonMallampattiScore();" value="2" class="radio">
+														<label for="Remember_me1">Class II</label></span>
+													</div>
+												</div>
+												<div class="col-md-3 text-center">
+													<div style="padding-right: 50px;">
+														<span><input type="radio" id="Remember_me2" name="classRadio" ng-model="selectedClass" ng-click="commonMallampattiScore();" value="3" class="radio">
+														<label for="Remember_me2">Class III</label></span>
+													</div>
+												</div>
+												<div class="col-md-3 text-center">
+													<div style="padding-right: 115px;">
+														<span><input type="radio" id="Remember_me3" name="classRadio" ng-model="selectedClass" ng-click="commonMallampattiScore();" value="4" class="radio">
+														<label for="Remember_me3">Class IV</label></span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row his-style margin-top10" style="margin-bottom: 10px;">
+
+											<div class="col-lg-10 col-md-10 col-sm-8 padding-left-right-set4"></div>
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" ng-disabled="MallampattiBtn" title="Save" value="Save" data-dismiss="modal" ng-click="saveMallampattiClassClick('F')" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+<!--											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">-->
+<!--												<a>-->
+<!--													<input type="button" title="Save As Draft" value="Save As Draft" ng-click="saveMallampattiClass('D')" class="btn btn-primary btn-save-box-shadow btn-block">-->
+<!--												</a>-->
+<!--											</div>-->
+											<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right set padding-right20">
+												<a>
+													<input type="button" title="Cancel" value="Cancel" ng-click="setFirstTabLevel(9); getAllAsDraftSaveMallampatti()" data-dismiss="modal" class="btn btn-primary btn-save-box-shadow btn-block">
+												</a>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+							<!-- tab 11 - End  -->
+						</div>
+					</div>
+					<div id="getGCSScore" class="modal fade ng-scope in common-medium-popup" role="dialog" >
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<div class="modal-title patient-details-row">
+										GCS Scores
+										<button type="button" ng-click="closePop()" class="close" data-dismiss="getGCSScore">&times;</button>
+									</div>
+								</div>
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10" id=""><!-- pharmacologyDetailsTableId id for the table td fix height -->
+											<table class="table table-striped table-hover table-condensed table-bordered">
+												<thead>
+												<tr>
+													<th class="width15">GCS Score</th>
+													<th class="width15">Date & Time</th>
+												</tr>
+												</thead>
+												<tbody>
+												<tr ng-repeat="info in gcsTotalGcsScoreList">
+													<td>
+														<input type="radio" ng-model="selectedGcsScaleScoreId" ng-value="info.gcsScaleScoreId" ng-click="compareGcsScore(info)">
+														{{info.totalGcsScore}}
+													</td>
+													<td>
+														{{info.createdDate}}
+													</td>
+												</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="padding-top4"></div>
+					<!-- <div class="row margin-top4">
+						<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="tab-btn-primary">
+								<a class="btn btn-primary btn-save-box-shadow" ng-href="#/nursingScale/FallRiskHistory">History</a>
+							</div>
+						</div>
+						<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="tab-btn-primary">
+								<a class="btn btn-primary  btn-save-box-shadow" ng-href="#/nursingScale/FallRiskNew">Add</a>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 col-sm-12 margin-top10" ui-view>fix-height-scroll500
+							
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--**************************  MEWS details modal start ************************** -->
+<script type="text/javascript">
+$(document).ready(function(){
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+ 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );  
+ 	
+	$(".selectedPageName").text("Nursing Scale");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="nursingScale"]').parents("li").addClass("active");
+	
+});
+</script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>-->
+

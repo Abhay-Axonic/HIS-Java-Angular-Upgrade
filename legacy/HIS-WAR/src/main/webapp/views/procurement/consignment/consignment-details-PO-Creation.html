@@ -1,0 +1,239 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Purchase Date :
+					</b> <label
+						class="ng-binding">{{vm.model.purchaseOrders.purchaseDate | date : 'dd/MM/yyyy'}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Purchase No. :
+					</b> <label class="ng-binding">{{vm.model.purchaseOrders.purchaseNo}}</label> </span>
+			</div>
+			<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Purchase Type :
+					</b> <label class="ng-binding"></label> </span>
+			</div> -->
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Vendor Name :
+					</b> <label class="ng-binding">{{vm.model.purchaseOrders.vendorName}}</label> </span>
+			</div>
+		</div>
+		<!-- <div class="row padding-top5">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px"> <i
+					class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div> -->
+		<div class="row padding-left-right-set4 padding-top10">
+
+			<div class="table-container padding-top5">
+				<div class="table-container-header">
+					<table class="table table-striped table-hover table-condensed table-bordered">
+						<tbody>
+							<tr class="table-th-bg cursor-pointer">
+								<th class="width2 text-center vertical-middle"></th>
+								<th class="width5 vertical-middle" title="Store">Store</th>
+								<th class="width5 vertical-middle" title="Item Code">Item Code</th>
+								<th class="width5 vertical-middle" title="Item Name">Item Name</th>
+								<th class="width5 vertical-middle" title="Batch Code">Batch Code</th>
+								<th class="width5 vertical-middle" title="Expiry Date">Expiry Date</th>
+								<th class="width4 vertical-middle" title="Qty">Qty</th>
+								<th class="width5 vertical-middle" title="COP">COP</th>
+								<th class="width5 vertical-middle" title="MRP">MRP</th>
+								<th class="width5 vertical-middle" title="GST Code">GST Code</th>
+								<th class="width5 vertical-middle" title="GST %">GST %</th>
+								<!-- <th class="width5 vertical-middle" title="Discount %">Disc %</th>
+								<th class="width5 vertical-middle" title="Discount Amount">Disc Amt</th> -->
+								<th class="width5 vertical-middle" title="GST Amount">GST Amt</th>
+								<th class="width5 vertical-middle" title="Total Amount">Total Amt</th>
+								<th class="width5 vertical-middle" title="Net Amount">Net Amt</th>
+								<th class="width5 vertical-middle" title="Remarks">Remarks</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="table-container-body" style="height: 330px; overflow-y: overlay;">
+					<table class="table table-striped table-hover table-condensed table-bordered">
+						<tbody ng-repeat="item in vm.model.purchaseOrders.items">
+							<tr class="table-th-bg cursor-pointer">
+								<td class="width2 text-center vertical-middle">
+									<a class="cursor-pointer"
+										ng-click="vm.model.activeItem = (vm.model.activeItem == item.itemId ? 0 : item.itemId)">
+										<i
+											class="fa fa-{{vm.model.activeItem == item.itemId ? 'minus' : 'plus'}}-circle"></i>
+									</a>
+								</td>
+								<td class="width5" title="{{item.store}}">{{item.store}}</td>
+								<td class="width5" title="{{item.itemCode}}">{{item.itemCode}}</td>
+								<td class="width5" title="{{item.itemName}}">{{item.itemName}}</td>
+								<td class="width5" title="{{item.batchNo}}">{{item.batchNo}}</td>
+								<td class="width5" title="{{item.expiry | date:'dd/MM/yyyy'}}">
+									{{item.expiry | date:'dd/MM/yyyy'}}</td>
+								<td class="width4" title="{{item.quantity}}">{{item.quantity}}</td>
+								<td class="width5" title="{{item.cop}}">{{vm.model.Currency}} {{item.cop| number:2}}
+								<td class="width5" title="{{item.mrp}}">{{vm.model.Currency}} {{item.mrp| number:2}}
+								<td class="width5" title="{{item.taxCode}}">{{item.taxCode}}</td>
+								<td class="width5" title="{{item.taxPercentage || 0| number:2}}">
+									{{item.taxPercentage || 0| number:2}}</td>
+								<!-- <td class="width5" title="{{item.discountPercentage || 0| number:2}}">
+									{{item.discountPercentage || 0| number:2}}</td>
+								<td class="width5" title="{{vm.model.Currency}} {{item.discountAmnt || 0| number:2}}">
+									{{vm.model.Currency}} {{item.discountAmnt || 0| number:2}}</td> -->
+								<td class="width5" title="{{item.taxAmount}}">{{vm.model.Currency}} {{ (item.taxAmount = (((item.totalAmnt) *
+											(item.taxPercentage/100) || 0))) | number:2}} </td>
+								<td class="width5" title="{{item.totalAmnt}}">{{vm.model.Currency}}
+									{{ ((item.totalAmnt =(item.quantity * item.cop)) || 0) | number:2}}</td>
+								<td class="width5" title="{{item.netAmount}}">
+									{{vm.model.Currency}} {{((item.netAmount = ((item.totalAmnt -
+												item.discountAmnt) + (item.taxAmount) ) || 0)) | number:2}}
+								</td>
+								<td class="width5" title="{{item.remark}}">{{item.remark}}</td>
+
+								</td>
+							</tr>
+							<tr>
+								<td colspan="15" ng-show="vm.model.activeItem == item.itemId">
+									<div>
+										<div class="table-container padding-zero">
+											<div class="table-container-header">
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr>
+															<th class="width6">Issue No.</th>
+															<th class="width6">Issue Date</th>
+															<th class="width6">Visit Type</th>
+															<th class="width6">Visit No.</th>
+															<th class="width6">Patient Details</th>
+															<th class="width6">Item Code</th>
+															<th class="width6">Item Name</th>
+															<th class="width6">Batch Code</th>
+															<th class="width6">Expiry Date</th>
+															<th class="width6">Qty</th>
+															<th class="width6">COP</th>
+															<th class="width6">GST Code</th>
+															<th class="width6">GST %</th>
+															<th class="width6">MRP</th>
+															<th class="width6">Net Amt</th>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="table-container-body"
+												style="max-height: 112px;overflow: overlay;height: auto;">
+												<table
+													class="table table-striped table-hover table-condensed table-bordered">
+													<tbody>
+														<tr ng-repeat="issue in item.issueList">
+															<td class="width6">{{issue.issueNo}}</td>
+															<td class="width6">{{issue.issueDate | date:'dd/MM/yyyy'}}
+															</td>
+															<td class="width6">{{issue.visitType}}</td>
+															<td class="width6">{{issue.visitNo}}</td>
+															<td class="width6">{{issue.patientDetails}}</td>
+															<td class="width6">{{issue.issueItemCode}}</td>
+															<td class="width6">{{issue.issueItemName}}</td>
+															<td class="width6">{{issue.batchNo}}</td>
+															<td class="width6">{{issue.issueExpiry | date:'dd/MM/yyyy'}}
+															</td>
+															<td class="width6">{{issue.issueQty}}</td>
+															<td class="width6">{{vm.model.Currency}} {{issue.issueCop| number:2}}</td>
+															<td class="width6">{{issue.issueTaxCode}}</td>
+															<td class="width6">{{issue.issueTaxPercentage}}</td>
+															<td class="width6">{{vm.model.Currency}} {{issue.issueMrp| number:2}}</td>
+															<td class="width6">{{vm.model.Currency}} {{issue.issueNetAmount}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row padding-left-right-set4">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+					<table class=" table table-bordered">
+						<tbody>
+							<tr>
+
+								<th class="width6"><label>Total Amount</label></th>
+								<td class="width6 ng-binding vertical-middle">{{vm.model.Currency}} {{(vm.model.totalAmount = (vm.model.purchaseOrders.items |
+												sumByColumn:
+												'totalAmnt') || 0) | number:2}}
+
+
+								<th class="width6"><label>Total Tax Amount</label></th>
+								<td class="width6 ng-binding vertical-middle">{{vm.model.Currency}} {{(vm.model.totalTaxAmount = (vm.model.purchaseOrders.items |
+												sumByColumn:
+												'taxAmount') || 0) | number:2}}</td>
+								<th class="width6"><label>Net Amount</label></th>
+								<td class="width6 ng-binding vertical-middle">{{vm.model.Currency}} {{(vm.model.totalAmount = (vm.model.purchaseOrders.items |
+																sumByColumn:
+																'netAmount') || 0) | number:2}}</td>
+							</tr>
+							<tr>
+									<th class="width8 padding-top10">
+											<label>Remark</label>
+										</th>
+										<td class="width8" colspan="5">
+											<textarea ng-model="vm.model.purchaseOrders.remark" rows="2" readonly
+												maxlength="100"></textarea>
+										</td>
+		
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-md-1 text-right"></div>
+				<div class="col-md-9 padding-left-right8"></div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div class="">
+						<!-- common-save-button -->
+						<!-- <input type="button" value="Save" ng-click="" class="btn btn-primary btn-save-box-shadow"> -->
+					</div>
+				</div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div class="">
+						<!-- common-save-button -->
+						<a href="#/consignmentPOCreation"> <input type="button" value="Back"
+								class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(".selectedPageName").text("Consignment PO Creation");
+	$(".sidebar-nav li").each(function () {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="consignmentPOCreation"]').parents("li").addClass("active");
+	$(".selectedServicesList").hide();
+	$(".indent-details").click(function () {
+		$(this).next().find(".selectedServicesList").toggle();
+	});
+	$(".table-th-bg").click(function () {
+		$(this).next().find(".selectedServicesList").toggle();
+	});
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

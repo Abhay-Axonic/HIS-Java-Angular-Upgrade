@@ -1,0 +1,983 @@
+ <style>
+/* .th-border-none{
+    border-top: 1px solid transparent !important;
+    border-left: 1px solid transparent !important;
+} */
+.editDishicon{
+	    position: unset;
+    top: 0px;
+    right: 0;
+    left: 0;
+    /* width: 0; */
+   /* height: 0; */
+}
+
+</style>
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+
+<fieldset class="normalRegistration sub-fieldset main-fieldset">
+					<legend class="main-heading-div commonPatientSearch cursor-pointer">
+					Patient Search
+					<span class="billing-counter-no">Counter No.</span>	
+					</legend>
+						<div class="row patienttSearchResult">
+							<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<input type="text" autocomplete="off" name="registrationNumber" ng-model="patientSearchObj.uhIdNumber" id="" class="text-input floating-label" press-enter="searchPatient(patientSearchObj)">
+												<label for="description" class="LISDynamicLabel">Registration No.</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" ng-model="patientSearchObj.patientName" class="text-input floating-label" press-enter="searchPatient(patientSearchObj)"> 
+												<label for="description" class="LISDynamicLabel">Patient Name</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<select class="text-input floating-label" ng-model="patientSearchObj.genderId" press-enter="searchPatient(patientSearchObj)">
+													<option></option>
+													<option ng-repeat="sex in sexMasterList" value="{{sex.id}}">{{sex.desc}}</option>
+												</select> <label for="code">Gender</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input type="text" autocomplete="off" numbers-only name="description" id="" class="text-input floating-label" ng-model="patientSearchObj.mobileNo" press-enter="searchPatient(patientSearchObj)"> <label for="description" class="">Mobile No.</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+										<input type="text" autocomplete="off" class="text-input floating-label dirty" name="birthDate" id="birthDate" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+												placeholder="DD/MM/YYYY" ng-model="patientSearchObj.birthDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptions" 
+												show-button-bar="false"	ng-click="openDatePicker()" required>
+												<!-- <input type="text" autocomplete="off" ng-model="patientSearchObj.birthDate"  name="description" id="" class="text-input floating-label" press-enter="searchPatient(patientSearchObj)">--> <label for="birthDate" class="">Birth Date</label> 
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<select class="text-input floating-label" ng-model="ide" >
+													<option></option>
+													<option ng-repeat="id in identificationTypeList" value="{{id.identificationId}}">{{id.identificationName}}</option>
+												</select> <label for="code">Identification Type</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" ng-model="patientSearchObj.identificationNo" class="text-input floating-label" press-enter="searchPatient(patientSearchObj)"> <label for="description" class="">Identification No..</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10">
+									<div class="width-div-for-patient-reg ">
+										<a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" ng-click="searchPatient(patientSearchObj)">
+										<i class="fa fa-search" style="font-size: 21px" aria-hidden="true"></i></a>
+									</div>
+								</div>
+							</div>
+							<fieldset class="normalRegistration sub-fieldset border-none padding-top10">
+							<!-- <legend class="main-heading-div border-bottom-none">List</legend> -->
+								<div class="row serachedPatientList">
+									<div class="col-md-12 col-lg-12 headerHeight padding-left-right-set4">
+										<table class="table table-bordered">
+											<tr>
+												<th class="width1">
+												</th>
+												<th class="width15">
+													<span class="">Registration Number</span>
+												</th>
+												<th class="width15">
+													 <span class="">Patient's Name</span>
+												</th>
+												<th class="width5">
+													Gender
+												</th>
+												<th class="width15">
+													Mobile Number
+												</th>
+												<th class="date-column">
+													Birth Date
+												</th>
+												<th class="width15">
+													Identification Type
+												</th>
+												<th class="width15">
+													Identification No..
+												</th>
+											</tr>
+											<tr class="cursor-pointer" ng-repeat="patient in patientList" ng-click="getPatientDetailsByIndex($index);selectedPatientRadioCommon($index)">
+												<td>
+													<input type="radio" name="patient-list-radio" 
+													ng-click="getPatientDetailsByIndex($index);" 
+													id="patientSelectRadioCommon_{{$index}}">
+												</td>
+												<td>
+													{{patient.uhIdNumber}}
+												</td>
+												<td>
+													{{patient.patientName}}
+												</td>
+												<td>
+													{{patient.genderName}}
+												</td>
+												<td>
+													{{patient.mobileNo}}
+												</td>
+												<td>
+													{{patient.birthDate | date :  "dd-MM-y" }}
+												</td>
+												<td>
+													{{patient.identificationName}}
+												</td>
+												<td>
+													{{patient.identificationNo}}
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								</form>
+						</fieldset>
+						
+						
+				</div>
+			</fieldset>
+<!-- <script> -->
+
+
+
+
+
+
+
+
+<!-- <div id="page-content-wrapper">
+	<div class="container-fluid his-style"> -->
+		<fieldset class="padding-left-right-set4">
+		<form name="daywiseDietForm">
+				<!-- <div ng-include="'./views/common/common-patient-search-opd.html'"></div> -->
+				 <div ng-include="'./views/common/patient-demography-info.html'" class="ng-scope padding-left-right-set1 padding-top4"></div> 
+		
+			<div class="row">
+	
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-cutlery" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+							<select name="hosp" class="text-input floating-label"
+														name="mealPreferenceDesc" ng-model="dietOrderObj.mealPreferenceId" ng-change="selectedDietPrefNew(dietOrderObj.mealPreferenceId)"
+														>
+														<option ng-repeat="info in getDietPreferenceList" ng-if="info.status=='A'" ng-value="{{info.mealPreferenceId}}" value="{{info.mealPreferenceId}}">{{info.mealPreferenceDesc}}</option>
+													</select> 
+								<label for="code">Diet Preference</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-th" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label" name="code"
+								 ng-model="selectedDietTypeId" ng-change="selectedDietTypeFun(selectedDietTypeId)"
+								 >
+									<option ng-repeat="data in dietList" ng-value="{{data.dietTypeId}}" value="{{data.dietTypeId}}">{{data.dietTypeDescription}}</option>
+								</select> <label for="code">Diet Type</label>
+							</div>
+						</div>
+					</div>
+				</div>
+		
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+						
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datepicker" id="datepicker" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForDietPlan" model-view-value="true" is-open="datePickerForDietPlan1.opened"
+									   datepicker-options="dateOptionsForDietPlan" show-button-bar="false"
+									    ng-click="openDatePickerForDietPlan()" required="" style="" ng-change="datePickerChange()">
+									
+									<label for="code" class="">
+									Date</label> <!-- Date should be selected from-to Date  -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-md-1 padding-left0px-right6px">
+					<div class="common-save-button">
+						<a href="" class="btn btn-primary btn-save-box-shadow btn-padding">Edit</a>
+					</div>
+				</div> -->
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 float_right text-width-auto">
+                <div class=" ">
+                    <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="saveMealMaster()"  data-toggle="modal"
+                    ng-if="saveBtnFlag"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+               </div>
+            </div>
+				
+				<div class="col-md-1 pull-right padding-top5 text-width-auto padding-left-right-set1">
+					<div class="common-save-button">
+						<a href="" class="btn btn-primary btn-save-box-shadow btn-padding" id="updateBtn" ng-click="getDietTemplateByDietPrefId();" ng-disabled="daywiseDietFormView">View</a>
+					</div>
+				</div>
+				<div class="col-md-1 pull-right padding-top5 text-width-auto padding-left-right-set1">
+					<div class="common-save-button">
+						<a href="" class="btn btn-primary btn-save-box-shadow btn-padding" id="updateBtn" data-toggle="modal" ng-click="getCopyDiet();"  title="Copy diet to other patient." ng-disabled="daywiseDietFormCopy">Copy</a>
+					</div>
+				</div>
+			
+				<!-- <div class="col-md-1 padding-left0px-right6px">
+					<div class="common-save-button">
+						<a href="" data-toggle="modal" data-target="#DietTemplate" class="btn btn-primary btn-save-box-shadow btn-padding">View</a>
+					</div>
+			</div> -->
+			</div>
+			</form>
+		</fieldset>
+			<modal visible="showModal"></modal>
+		<div class="row padding-left-right-set4 padding-top10">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered" id="AddDish">
+					<tr>
+						<th class="th-border-none width7"></th>
+						<th  scope="col" class="text-uppercase text-center width13 vertical-middle" ng-repeat="day in dayPickerDynamicValues">{{ day }}</th>
+					</tr>
+					<tr>
+						<th class="th-border-none width7"></th>
+						<th  scope="col" class="text-uppercase text-center width13 vertical-middle" ng-repeat="date in datePickerDynamicValues">{{ date | date: "dd-MM-yyyy" }}</th>
+					</tr>
+					
+					
+					
+					<tr ng-repeat="data in dietTemplate.mealDetailsList">
+					
+							<th scope="row" >{{data.mealName}}<br>{{data.servingTime}}</th>
+
+						<td class="text-center padding-zero">
+							<div  ng-repeat="meal in data.mealsList[0].dishList">
+								{{meal.dishDescription}}
+								{{meal.quantity}}
+							</div>
+							<div class="float_right editDishicon">
+								<div class="margin-top2">
+									<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" ng-if="data.mealsList[0].isExpiredMealTime == false"
+									   data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[0].dishList,0,$index,data.servingTime,datePickerDynamicValues[0])">
+									</i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero">
+						 	<div  ng-repeat="meal in data.mealsList[1].dishList">
+								 {{meal.dishDescription}}
+								 {{meal.quantity}}
+						 	</div>
+						    <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" ng-if="data.mealsList[1].isExpiredMealTime == false"
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[1].dishList,1,$index,data.servingTime,datePickerDynamicValues[1])">
+								</i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero">
+						 <div  ng-repeat="meal in data.mealsList[2].dishList">
+						 {{meal.dishDescription}}
+						 {{meal.quantity}}
+						 </div>
+						  <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" ng-if="data.mealsList[2].isExpiredMealTime == false"
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[2].dishList,2,$index,data.servingTime,datePickerDynamicValues[2])">
+								</i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero">
+						 <div  ng-repeat="meal in data.mealsList[3].dishList">
+						 {{meal.dishDescription}}
+						 {{meal.quantity}}
+						 </div>
+						  <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" ng-if="data.mealsList[3].isExpiredMealTime == false"
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[3].dishList,3,$index,data.servingTime,datePickerDynamicValues[3])">
+								</i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero">
+						 <div  ng-repeat="meal in data.mealsList[4].dishList">
+						 {{meal.dishDescription}}
+						 {{meal.quantity}}
+						 </div>
+						  <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" ng-if="data.mealsList[4].isExpiredMealTime == false"
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[4].dishList,4,$index,data.servingTime,datePickerDynamicValues[4])">
+								</i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero">
+						 <div  ng-repeat="meal in data.mealsList[5].dishList">
+						 {{meal.dishDescription}}
+						 {{meal.quantity}}
+						 </div>
+						  <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" ng-if="data.mealsList[5].isExpiredMealTime == false"
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[5].dishList,5,$index,data.servingTime,datePickerDynamicValues[5])">
+								</i>
+								</div>
+							</div>
+						</td>
+						<td class="text-center padding-zero">
+						 <div  ng-repeat="meal in data.mealsList[6].dishList">
+						 {{meal.dishDescription}}
+						 {{meal.quantity}}
+						 </div>
+						  <div class="float_right editDishicon">
+								<div class="margin-top2">
+								<i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit" ng-if="data.mealsList[6].isExpiredMealTime == false"
+								data-toggle="modal" data-target="#editDietTemplate" ng-click="selectMeal(data.mealsList[6].dishList,6,$index,data.servingTime,datePickerDynamicValues[6])">
+								</i>
+								</div>
+							</div>
+						</td>
+					</tr>
+				
+				
+					<tfoot>
+						<tr class="table-th-bg text-center">
+							<th class="text-uppercase text-center">Total Nutrition</th>
+							<td>
+							<div ng-repeat="info in dayWiseNutritionalList[0].nutritionList">
+							{{info.name}}
+							{{info.value| number:2}}
+							{{info.uomName}}
+							</div>
+							</td>
+							<td><div ng-repeat="info in dayWiseNutritionalList[1].nutritionList">
+							{{info.name}}
+							{{info.value| number:2}}
+							{{info.uomName}}
+							</div></td>
+							<td><div ng-repeat="info in dayWiseNutritionalList[2].nutritionList">
+							{{info.name}}
+							{{info.value| number:2}}
+							{{info.uomName}}
+							</div></td>
+							<td><div ng-repeat="info in dayWiseNutritionalList[3].nutritionList">
+							{{info.name}}
+							{{info.value| number:2}}
+							{{info.uomName}}
+							</div></td>
+							<td><div ng-repeat="info in dayWiseNutritionalList[4].nutritionList">
+							{{info.name}}
+							{{info.value| number:2}}
+							{{info.uomName}}
+							</div></td>
+							<td><div ng-repeat="info in dayWiseNutritionalList[5].nutritionList">
+							{{info.name}}
+							{{info.value| number:2}}
+							{{info.uomName}}
+							</div></td>
+							<td><div ng-repeat="info in dayWiseNutritionalList[6].nutritionList">
+							{{info.name}}
+							{{info.value| number:2}}
+							{{info.uomName}}
+							</div></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+		
+		
+	</div>
+</div>
+
+<!-- Edit Diet Template Start -->
+<div id="editDietTemplate" class="common-small-popup modal fade ng-scope common-popup-header-content in " role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Edit Diet Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon float-right">
+					
+                    <a href="" class="btn btn-primary btn-save-box-shadow"  id="updateBtn" title="copy" ng-click="copySelectedMeal()"
+                     ng-disabled="!copyFromDay" style="margin-left: 100%;width:262%">
+						Copy</a>                   
+						</div>
+						
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							 <div class="">
+								<select class="text-input floating-label dirty" name="code" ng-model="copyFromDay">
+									<option value=""></option>
+									<option value="monday">MONDAY</option>
+									<option  value="tuesday">TUESDAY</option>
+									<option value="wednesday">WEDNESDAY</option>
+									<option value="thursday">THURSDAY</option>
+									<option value="friday">FRIDAY</option>
+									<option value="saturday">SATURDAY</option>
+									<option value="sunday">SUNDAY</option>
+									
+								</select> 
+								<label for="code">Copy From</label>
+							</div> 
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10" id="">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="width25">Dish</th>
+									<th class="width15">Qty</th>
+									<th class="width5">Action</th>
+								</tr>
+							</thead>
+							<tbody id="AddDishQty">
+								<!-- <tr >
+									<td class=""><select class="border-dropdown"><option value="">Select Dish</option></select></td>
+									<td class=""><input type="text" autocomplete="off" placeholder="Qty" class="w-100"></td>
+									<td class=""><input type="button" name="" id="" value="+" onclick="addDishRow()" class="btn btn-info add-dynamic-row addbtn"></td>
+								</tr> -->
+								<tr ng-repeat="meal in selectedMeal">
+									<td><select class="border-dropdown" ng-model="meal"
+									 ng-change="onChangeDish(this, $index)" 
+									 ng-options="dish as dish.dishDescription for dish in dishMasterList track by dish.dishId">
+											
+									</select></td>
+									<td><input type="number" placeholder="" ng-model="meal.quantity"
+										class="table-input-text-width w-100"></td>
+									
+									<td>
+										<input type="button" name="" id="refranceRangeAgeGroup1" value="+" ng-click="add($index)" class="btn btn-info add-dynamic-row" style="padding: 0 2px !important;">
+										<input type="button" name="" id="refranceRangeAgeGroup2" value="-" ng-click="remove($index+1)" class="btn btn-info add-dynamic-row" style="padding: 0 2px !important;">
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="col-lg-8 col-md-8 col-sm-2 text-right text-width-auto padding-left-right-set4">
+					<label>Remark:&nbsp;</label>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-10 padding-left-right8">
+					<textarea style="height: 50px !important;width: 350px;" class="form-control" ng-model="mealNotes"></textarea>
+				</div>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveDishDetails()">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Edit Diet Template End -->
+
+
+<!-- VIEW DIET Start -->
+<div id="breakfastTemplate" class="modal fade ng-scope common-popup-header-content in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					View Breakfast Diet Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10" id="">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="width25">Dish</th>
+									<th class="width15">Qty</th>
+									<th class="width5">Action</th>
+								</tr>
+							</thead>
+							<tbody id="AddDishQty">
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Tea" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="1 Cup" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- VIEW DIET End -->
+
+
+
+
+<!-- VIEW DIET Start -->
+<div id="lunchTemplate" class="modal fade ng-scope common-popup-header-content in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					View Lunch Diet Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10" id="">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="width25">Dish</th>
+									<th class="width15">Qty</th>
+									<th class="width5">Action</th>
+								</tr>
+							</thead>
+							<tbody id="AddDishQty">
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Roti" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="2" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Chikan Curry" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="1 Bowl" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Rice" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="1 Bowl" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Apple" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="1" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Dal" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="1 Bowl" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- VIEW DIET End -->
+
+
+
+
+<!-- VIEW DIET Start -->
+<div id="snacksTemplate" class="modal fade ng-scope common-popup-header-content in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					View Snacks Diet Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10" id="">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="width25">Dish</th>
+									<th class="width15">Qty</th>
+									<th class="width5">Action</th>
+								</tr>
+							</thead>
+							<tbody id="AddDishQty">
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Tea" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="1" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Cookies" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="5 " class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- VIEW DIET End -->
+
+
+<!-- VIEW DIET Start -->
+<div id="dinnerTemplate" class="modal fade ng-scope common-popup-header-content in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					View Dinner Diet Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10" id="">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="width25">Dish</th>
+									<th class="width15">Qty</th>
+									<th class="width5">Action</th>
+								</tr>
+							</thead>
+							<tbody id="AddDishQty">
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Chapati" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="1" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Potato Curry" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="1 Bowl" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Rice" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="Half Bowl" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Dal" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="Half Bowl" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- VIEW DIET End -->
+
+<!-- VIEW DIET Start -->
+<div id="goodNightDrinkTemplate" class="modal fade ng-scope common-popup-header-content in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					View Drink Diet Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 common-table-height-250 padding-top10" id="">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="width25">Dish</th>
+									<th class="width15">Qty</th>
+									<th class="width5">Action</th>
+								</tr>
+							</thead>
+							<tbody id="AddDishQty">
+								<tr>
+									<td class=""><input type="text" autocomplete="off" value="Milk" class="w-100"></td>
+									<td class=""><input type="text" autocomplete="off" value="1 Glass" class="w-100"></td>
+									<td class=""><i class="fa fa-pencil" aria-hidden="true"></i></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- VIEW DIET End -->
+
+<!-- VIEW Copy DIET Start -->
+<div id="copyDietToOtherPatientModal" class="modal fade ng-scope common-popup-header-content in common-small-popup" role="dialog">
+	<div class="modal-dialog" style="    width: 86% !important;">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Diet Template
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div class="row">
+				<div class="row padding-top10">
+							<div class="col-md-6 col-sm-7 padding-left-right-set4">
+								<div class="row">
+									<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+										<div class="search">
+										<label class="show-entries">Show 
+										<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+											ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+											ng-change="setNoOfRecords();" class="search-popUp-ddl">
+												<option value="10">10</option>
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+										</select> entries
+										</label>
+									</div>
+									</div>
+								</div>
+						</div>
+						
+							<!-- CommonSearch -->
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+										<input type="text" autocomplete="off" class="text-search-box oneeeee" placeholder="Search" style="margin-top: 0px;" ng-model="searchKeyword">
+										 <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+							</div>
+						</div>
+					<div class="row padding-top10 padding-left-right-set0">
+							<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll430 common-table-alignment">
+							  <table id="main-table" class="main-table width100 table-th">
+							    <thead>
+										<tr>
+											<th class="fixed text-center width2"></th>
+											<th class="width15 ">Patient Details</th>
+											<th class="width10 ">Admission Details</th>
+											<th class="width10 ">Doctor </th>
+											<th class="width8 ">Specialty</th>
+											<th class="width5">Floor/Ward/Bed</th>
+<!-- 											<th class="width8 ">Payment Entitlement</th> -->
+											<th class="width5 ">DOA</th>
+											<th class="width5 ">PDD</th>
+<!-- 											<th class="width5 ">Reference Number</th> -->
+											
+										</tr>
+									</thead>
+							    <tbody>
+							      <tr ng-repeat="info in listOfAdmittedPatientListforAddmitted |orderBy:column:reverse|filter:searchKeyword" ng-if="patientDetails.patientId != info.patientId" ng-class="getClassForColor(info)">
+														<!-- <td class="width3" ng-init='age=getAge(info.dob)'>
+															<div>{{info.uhidnumber}}</div>
+														</td>  -->
+														<!-- <td class="width5" ng-init='age=getAge(info.dob)'>
+															<div ng-if="info.patientId > 0">{{info.pFirstName+' '+age+'/'+info.genderCode}}</div>
+														</td>  -->
+														<td class="fixed text-center media-middle">
+															<input type="checkbox" ng-model="info.isSelected" ng-true-value="'Y'" ng-false-value="'N'" ng-click="changeDate(info)">
+														</td>
+														<td class="text-center width15">
+															<div class="row patient-details" id="45#1247#2_new" >
+																<div class="col-lg-3 col-sm-12 col-md-3">
+																	<div class="" >
+																		<img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+																	</div>
+																</div>
+																<div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+																	<div class="patient-name">{{info.pFirstName}}</div>
+																	<div class="patient-details">
+																		<span class="patient-details patient">{{info.ageStr}}/ </span>
+																		<span class="patient-details patient">{{info.genderCode}}</span>
+																		<!-- <span class="patient-details patient" >||||||
+																		<span class="patient-details patient" >info</span> -->
+																	</div>
+																	<div class="patient">{{info.uhidnumber}}</div>
+																</div>
+															</div>
+										   				</td>
+										   				<td class=" "><span>{{info.admissionNumber}}</span>
+														 <p>{{info.datepicker}} | {{info.createdTime}}</p></td>
+														<td class="width10 ">
+															<div>Dr.{{info.doctorFullName}}</div>
+														</td>
+														<td class="width8 ">
+															<div>{{info.specialityName}}</div>
+														</td>
+														<td class="width5 "><div>{{info.floorName}} / {{info.wardName}} / {{info.bedNumber}}</div></td>
+<!-- 														<td class="width8 "><div>{{info.paymentEntitlementDesc}}</div></td> -->
+														<td class="width5 "><div>{{info.datepicker}}</div></td>
+														<td class="width5 "><div>{{info.datepickerPdd}}</div></td>
+<!-- 														<td class="width5 "><div>{{info.referenceNumber}}</div></td> -->
+														
+													</tr>
+													
+													</tbody>
+							  </table>
+							</div>
+						</div>
+						<div class="row padding-left-right-set4 table-container padding-top10 ">
+							<div class="row margin-bottom45 sss">
+										<ul ng-if="pager.pages.length" class="pagination table-list"
+											style="font-size: 14px;">
+											<li ng-class="{disabled:pager.currentPage === 1}"><a
+												ng-click="setPage(1,'true')">First</a></li>
+											<li ng-class="{disabled:pager.currentPage === 1}"><a
+												ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+											<li ng-repeat="page in pager.pages"
+												ng-class="{active:pager.currentPage === page}"><a
+												ng-click="setPage(page,'true')">{{page}}</a></li>
+											<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+												<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+											</li>
+											<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+												<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+											</li>
+										</ul>
+									</div>
+						</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click ="saveCopiedMealMasterToAllPatient()">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- VIEW Copy DIET End -->
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+		$(".selectedPageName").text("Diet Planning");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="dietPatientRequest"]').parents("li").addClass("active");
+	});
+	function addDishRow() {
+		  //alert();
+		  var n = document.getElementById("AddDishQty").rows.length;
+		  var id = Number(n);
+		  //alert(id);
+		  var test =
+
+		  '<tr>'
+		    +'<td class=""><select class="border-dropdown"><option value="">Select Dish</option></select></td>'
+		    +'<td class=""><input type="text" autocomplete="off" class="w-100" placeholder="Qty"></td>'
+		    +'<td class="">'
+		    + '<input type="button" name="" id="addr" value="+" onclick="addDishRow()" class="btn btn-info add-dynamic-row addbtn" style="padding: 0 2px;">&nbsp;'
+		    + '<input type="button" name="" id="delrow" value="-" onclick="delRow(this)" class="btn btn-info addbtn" style="padding: 0 4px;">'
+		    + '</td>'
+		    + '</tr>';
+
+		  $("#AddDishQty").append(test);
+
+		 }
+
+		 function delRow(r) {
+		  var i = r.parentNode.parentNode.rowIndex;
+		  document.getElementById("AddDishQty").deleteRow(i);
+		 }
+</script>

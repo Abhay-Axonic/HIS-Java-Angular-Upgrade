@@ -1,0 +1,191 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<form name="surgeryMasterForm" novalidate>
+				<div class="row margin-top10 padding-left-right-set4">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" show-errors>
+									<select class="text-input floating-label dirty" 
+										ng-model="SurgeryMasterObj.specialityId" name="specialityName" required="required">
+										<option ng-repeat="x in specialityList"
+											value={{x.specialityId}}>{{x.specialityName}}</option>
+									</select>  <label for="code">Specialty</label>
+									<p class="help-block" ng-if="surgeryMasterForm.specialityName.$error.required">Speciality is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label dirty"
+										ng-model="SurgeryMasterObj.surgeryCode" required> <label
+										for="code">Surgery Code<span class="star">*</span></label>
+										<p class="help-block" ng-if="surgeryMasterForm.code.$error.required">Surgery Code is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="codeCPT4" id=""
+										class="text-input floating-label dirty"
+										ng-model="SurgeryMasterObj.surgeryCodeCpt" required> <label
+										for="code" >Surgery Code CPT4<span class="star">*</span></label>
+										<p class="help-block" ng-if="surgeryMasterForm.codeCPT4.$error.required">Surgery Code CPT4 is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" show-errors>
+									<input type="text" autocomplete="off" name="surgeryName" id=""
+										class="text-input floating-label dirty"
+										ng-model="SurgeryMasterObj.surgeryName" required> <label
+										for="code">Name<span class="star">*</span></label>
+										<p class="help-block" ng-if="surgeryMasterForm.surgeryName.$error.required">Name is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="form-group" show-errors>
+									<select class="text-input floating-label dirty"
+										ng-model="SurgeryMasterObj.surgeryGradeId" name="gradeName" required="required">
+										<option ng-repeat="x in surgeryGradeList"
+											value={{x.surgeryGradeId}}>{{x.surgeryGrade}}</option>
+									</select> <label for="code">Grade<span class="star">*</span></label>
+									<p class="help-block" ng-if="surgeryMasterForm.gradeName.$error.required">Grade is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right text-width-auto">
+						<a href="" class="btn btn-primary btn-save-box-shadow"
+							title="Save" data-toggle="modal" ng-click="saveSurgeryMaster()"
+							ng-hide="saveBtnFlag"> <i class="fa fa-floppy-o"
+							style="font-size: 21px" aria-hidden="true"></i></a> <a href=""
+							class="btn btn-primary btn-save-box-shadow" title="Update"
+							data-toggle="modal" ng-click="updateSurgeryMaster()"
+							ng-hide="updateBtnFlag"> <i class="fa fa-floppy-o"
+							style="font-size: 21px" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</form>
+		</fieldset>
+		
+		<div class="row padding-top10">
+			<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+				</div>
+				
+			      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+			        <input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty search-popUp-ddl" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+			        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			      </div>
+			</div>
+			
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<tbody>
+						<tr class="">
+							<th class="width10">Specialty</th>
+							<th class="width10">Surgery Code</th>
+							<th class="width10">Surgery Code CPT4</th>
+							<th class="width10">Name</th>
+							<th class="width10">Grade</th>
+							<th class="width10">status(n)</th>
+							<th class="width3 text-center">Action taken</th>
+						</tr>
+						<tr ng-repeat="info in pagination.data|filter:searchKeyword">
+							<td>{{info.specialityName}}</td>
+							<td>{{info.surgeryCode}}</td>
+							<td>{{info.surgeryCodeCpt}}</td>
+							<td>{{info.surgeryName}}</td>
+							<td>{{info.surgeryGrade}}</td>
+							<td>
+							<label class="switch"> 
+								 <input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updateStatus(info.surgery_id,info.status)">
+								<div class="slider round"></div>
+							</label>
+						</td>
+							<td class="text-center"><a class="cursor-pointer"><i class="fa fa-pencil" aria-hidden="true" title="Edit"
+									ng-click="showUpdateBtn(info.surgery_id)"></i></a></td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+			<div class="row margin-bottom45 center-block">
+				<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+					style="font-size: 14px; cursor: pointer;">
+					<li ng-class="{disabled:pagination.currentPage === 1}"><a
+						ng-click="pagination.setFirstPage(pagination)">First</a>
+					</li>
+					<li ng-class="{disabled:pagination.currentPage === 1}"><a
+						ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+					</li>
+					<li ng-repeat="page in pagination.getPagesList(pagination)"
+						ng-class="{active:pagination.currentPage === page}"><a
+						ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+					</li>
+					<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+						<a ng-click="pagination.setNextPage(pagination)">Next</a>
+					</li>
+					<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+						<a ng-click="pagination.setLastPage(pagination)">Last</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<modal visible="showModal"></modal>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$(".selectedPageName").text("Surgery Master");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="surgeryMaster"]').parents("li").addClass("active");
+	});
+</script>

@@ -1,0 +1,188 @@
+#image: rtcamp/gitlab-aws-codecommit-mirror
+stages:
+  - codecommit-sync
+  - maven-package-war
+  - build-docker-images
+  - deploy
+
+sync-to-codecommit:
+  tags:
+    - codecommit
+  stage: codecommit-sync
+  script:
+    - bash ./devops/setup_ssh
+    - ssh-keyscan -t rsa 54.213.207.47 >> ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa git-codecommit.ap-south-1.amazonaws.com >> ~/.ssh/known_hosts
+    - git clone --mirror $SOURCE_REPO HIS
+    - cd HIS
+    - git branch -a
+    - git push --mirror $SCHEME://$REPO_URL
+  only:
+    refs:
+      - qa
+      - staging
+
+maven-package-war:
+  tags:
+    - his-war-docker
+  stage: maven-package-war
+  script:
+    - bash ./devops/test_build_docker
+    - jdbc_env=${CI_COMMIT_REF_NAME}_jdbc
+    - jdbc_url=${!jdbc_env}
+    - jdbc_username_env=${CI_COMMIT_REF_NAME}_jdbc_username
+    - jdbc_username=${!jdbc_username_env}
+    - jdbc_password_env=${CI_COMMIT_REF_NAME}_jdbc_password
+    - jdbc_password=${!jdbc_password_env}
+    - sed -in 's/var ROOT_URL.*/var ROOT_URL=\"\"\;/g' ./HIS-WAR/src/main/webapp/resources/assets/js/config/url.config.js
+    - sed -in 's/var root =.*/var root=\"\"\;/g' ./HIS-WAR/src/main/webapp/resources/assets/js/constants/constants.js
+    - sed -in 's/public static final String ROOT_URL.*/	public static final String ROOT_URL = \"\/\";/g' ./Global/src/main/java/com/param/privilege/constants/Constants.java
+    - sed -in "s~jdbc.url.*~jdbc.url=$jdbc_url~g" ./HIS-WAR/src/main/resources/jdbc.properties
+    - sed -in "s~jdbc.username.*~jdbc.username=$jdbc_username~g" ./HIS-WAR/src/main/resources/jdbc.properties
+    - sed -in "s~jdbc.password.*~jdbc.password=$jdbc_password~g" ./HIS-WAR/src/main/resources/jdbc.properties
+    - bash ./devops/write_tomcat_healthcheck_file
+    - mvn -o clean package -Dmaven.test.skip=true
+  artifacts:
+    paths:
+      - HIS-WAR/target/HIS-WAR.war
+    expire_in: 30 mins
+  only:
+    refs:
+      - dev
+      - intdev
+      - qa
+      - qaerp
+      - staging
+
+build-docker-tomcat:
+  tags:
+    - local-shell2
+  stage: build-docker-images
+  script:
+    - pwd
+    - ls -la
+    - docker build -t his-war-tomcat:${CI_COMMIT_REF_NAME} -f ./devops/tomcat/${CI_COMMIT_REF_NAME}.Dockerfile .
+  only:
+    refs:
+      - intdev
+      - qa
+      - qaerp
+      - staging
+
+build-docker-nginx:
+  tags:
+    - local-shell2
+  stage: build-docker-images
+  script:
+    - pwd
+    - ls -la
+    - sed -in 's/var ROOT_URL.*/var ROOT_URL=\"\"\;/g' ./HIS-WAR/src/main/webapp/resources/assets/js/config/url.config.js
+    - sed -in 's/var root =.*/var root=\"\"\;/g' ./HIS-WAR/src/main/webapp/resources/assets/js/constants/constants.js
+    - bash ./devops/write_nginx_healthcheck_file
+    - docker build -t his-war-nginx:${CI_COMMIT_REF_NAME} -f ./devops/nginx/${CI_COMMIT_REF_NAME}.Dockerfile .
+  only:
+    refs:
+      - intdev
+      - qa
+      - qaerp
+      - staging
+
+.deploy-dev:
+  tags:
+    - local-shell2
+  stage: deploy
+  script:
+    - a=$(docker ps -aqf "name=his-war-tomcat-dev")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-tomcat-dev -p 10002:8080 his-war-tomcat:dev
+    - docker logs -f his-war-tomcat-dev > /home/rohan/logs/his-war-tomcat-dev.log 2>&1 &
+    - a=$(docker ps -aqf "name=his-war-nginx-dev")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-nginx-dev -p 10003:80 his-war-nginx:dev
+    - docker logs -f his-war-nginx-dev > /home/rohan/logs/his-war-nginx-dev.log 2>&1 &
+
+  only:
+    refs:
+      - dev
+  environment:
+    name: dev
+    url: https://dev.his.clinivantage.dev/
+
+deploy-intdev:
+  tags:
+    - local-shell2
+  stage: deploy
+  script:
+    - a=$(docker ps -aqf "name=his-war-tomcat-intdev")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-tomcat-intdev -p 10004:8080 his-war-tomcat:intdev
+    - docker logs -f his-war-tomcat-intdev > /home/rohan/logs/his-war-tomcat-intdev.log 2>&1 &
+    - a=$(docker ps -aqf "name=his-war-nginx-intdev")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-nginx-intdev -p 10005:80 his-war-nginx:intdev
+    - docker logs -f his-war-nginx-intdev > /home/rohan/logs/his-war-nginx-intdev.log 2>&1 &
+
+  only:
+    refs:
+      - intdev
+  environment:
+    name: intdev
+    url: https://intdev.his.clinivantage.dev/
+
+deploy-qa:
+  tags:
+    - local-shell2
+  stage: deploy
+  script:
+    - a=$(docker ps -aqf "name=his-war-tomcat-qa")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-tomcat-qa -p 10006:8080 his-war-tomcat:qa
+    - docker logs -f his-war-tomcat-qa > /home/rohan/logs/his-war-tomcat-qa.log 2>&1 &
+    - a=$(docker ps -aqf "name=his-war-nginx-qa")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-nginx-qa -p 10007:80 his-war-nginx:qa
+    - docker logs -f his-war-nginx-qa > /home/rohan/logs/his-war-nginx-qa.log 2>&1 &
+
+  only:
+    refs:
+      - qa
+  environment:
+    name: qa
+    url: https://qa.his.clinivantage.dev/
+
+deploy-qaerp:
+  tags:
+    - local-shell2
+  stage: deploy
+  script:
+    - a=$(docker ps -aqf "name=his-war-tomcat-qaerp")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-tomcat-qaerp -p 10010:8080 his-war-tomcat:qaerp
+    - a=$(docker ps -aqf "name=his-war-nginx-qaerp")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-nginx-qaerp -p 10011:80 his-war-nginx:qaerp
+  only:
+    refs:
+      - qaerp
+  environment:
+    name: qaerp
+    url: https://qaerp.his.clinivantage.dev/
+
+deploy-staging:
+  tags:
+    - local-shell2
+  stage: deploy
+  script:
+    - a=$(docker ps -aqf "name=his-war-tomcat-staging")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-tomcat-staging -p 10008:8080 his-war-tomcat:staging
+    - a=$(docker ps -aqf "name=his-war-nginx-staging")
+    - docker rm -f $a
+    - docker run --rm -d --name his-war-nginx-staging -p 10009:80 his-war-nginx:staging
+  only:
+    refs:
+      - staging
+  environment:
+    name: staging
+    url: https://staging.his.clinivantage.dev/
+  when: manual

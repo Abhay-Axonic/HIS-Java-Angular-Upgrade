@@ -1,0 +1,46 @@
+package com.param.global.unit.service;
+
+import javax.transaction.Transactional;
+
+import com.param.global.common.Response;
+import com.param.global.unit.dto.OutsideHospitalDoctorMapperDto;
+import com.param.global.unit.dto.OutsideHospitalMasterDto;
+
+import in.param.exception.ApplicationException;
+
+@Transactional
+@SuppressWarnings({"rawtypes"})
+
+public interface IOutsideHospitalMasterService {
+
+	public Response saveOutsideHospitalMaster(OutsideHospitalMasterDto outsideHospitalMasterDto)throws ApplicationException;
+
+	public Response updateOutsideHospitalMaster(OutsideHospitalMasterDto outsideHospitalMasterDto)throws ApplicationException;
+
+	public Response updateOutsideHospitalMasterStatus(OutsideHospitalMasterDto outsideHospitalMasterDto)throws ApplicationException;
+
+	public Response getOutsideHospitalMasterById(Integer outsideHospitalId, Integer organizationId, Integer unitId)throws ApplicationException;
+
+	public Response getOutsideHospitalMasterList(OutsideHospitalMasterDto outsideHospitalMasterDto)throws ApplicationException;
+
+	public Response getOutsideHospitalMasterCount(OutsideHospitalMasterDto outsideHospitalMasterDto)throws ApplicationException;
+
+	public Response getActiveOutsideHospitalMaster(Integer organizationId)throws ApplicationException;
+
+	public Response getOutsideHospitalMasterByName(OutsideHospitalMasterDto outsideHospitalMasterDto) throws ApplicationException;
+
+	public Response getOutsideHospitalMasterByNameNotId(OutsideHospitalMasterDto outsideHospitalMasterDto) throws ApplicationException;
+
+	public Response saveOutsideHospitalDoctorMapper(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto)throws ApplicationException;
+
+	public Response getOutsideHospitalDoctorMapperList(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto)throws ApplicationException;
+
+	public Response updateOutsideHospitalDoctorMapperStatus(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto) throws ApplicationException;
+
+	public Response getOutsideHospitalDoctorMapperById(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto) throws ApplicationException;
+
+	public Response searchOutsideHospitalDoctorList(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto)throws ApplicationException;
+
+	public Response getAllOutsideHospitalDoctorList(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto)throws ApplicationException;
+
+}

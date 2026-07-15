@@ -1,0 +1,399 @@
+<style>
+	.fixed-thead-tfoot-scroll .th-bg {
+    background: #e0f2f3 !important;
+}
+</style>
+<div class="row">
+		 <div class="col-lg-8 col-mg-8 col-sm-8 padding-top15 padding-left-right-set4">
+		 	<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width20 active" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Service wise Details</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width20" style="">
+						<a href="" ng-click="setFirstTabLevel(2)" class="">Item wise Details</a>
+					</li>
+				</ul>
+			</div>
+		 </div>
+		 <div class="col-lg-2 col-md-2 col-sm-2 float-right second-level-tab-display-div-PkgCAP text-width-auto padding-left-right-set1 padding-top10">
+				<span class="padding-left-right-set4">
+					<a href="" class="btn btn-primary btn-save-box-shadow text-width-auto" data-toggle="modal" data-target="#tableExpandModal" title="" id="expandBtn">
+						<i class="fa fa-arrows-alt" style="font-size: 17px !important" aria-hidden="true"></i>
+       				</a>
+       			</span>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 float-right second-level-tab-display-div-PkgCAP text-width-auto padding-top10 padding-left-right-set1">
+				<div class=""  ng-show="isSetFirstTabLevel(1)" >
+					<input type="button" value="Get Service" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" ng-click="getServices();" ng-disabled="fetchValidate">
+				</div>
+				
+				<div class=""  ng-show="isSetFirstTabLevel(2)" >
+					<input type="button" value="Get Item" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" ng-click="getItems();" ng-disabled="fetchValidate">
+				</div>
+			</div>
+		</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					<div class="row padding-top0 padding-left-right-set4"  ng-show="packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageServicesDetailsDto.length>0">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll450">
+						  <table id="main-table" class="main-table pull-left">
+						       <thead>
+						      <tr>
+						        <th class="fixed width10" style="white-space: nowrap;z-index:1023 !important;">
+						        	<label class="checkbox-inline" title="Select All Services">Services</label>
+							         <table class="w-100">
+							        <thead >
+							           <th class="color-white" style="white-space: nowrap;">&nbsp;
+							           <table class="w-100">
+							               <thead>
+							                <td class="color-black">&nbsp;
+							                    <table class="w-100" style="background:white;">
+							                    <tbody>
+								                      <tr ng-repeat="services in packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageServicesDetailsDto track by $index">
+
+								                      	<td class="width10" style="background: white;float: inline-start;border:none !important ">
+								                      	 <span style=" border-right: 2px solid #2e6ea2; padding: 4px;"><a  ng-click="removeService(services.serviceId,$index);" ><i class="fa fa-times "></i></a></span>&nbsp;
+															<label class="color-black" title="{{services.serviceName}}">
+																{{ services.serviceName | limitTo:25 }}
+																<span ng-if="services.serviceName.length > 25">...</span>
+															</label>
+								                      		<span ng-if="services.specialityId==consultationSpecialityId">
+										 		   			 <a>
+										 						<i class="fa fa-info-circle pull-right"  ng-click="getDepartmentBySpeacialityId(services.serviceId,$index)" aria-hidden="true"></i>
+										 		  		     </a>
+									 		               </span>
+								                      	 </td>
+
+								                      </tr>
+							                     </tbody>
+							                      <tfoot>
+							                      	<tr style="height: 30px;">
+
+							                      	</tr>
+							                      	<tr>
+							                      	   <td class="color-black"  style="background: #e0f2f3;border-top: 2px solid #e0f2f3 !important;">
+							                      	   	<label class="color-white">Service Wise Summary</label>
+							                      	   	<!-- <input type="text" autocomplete="off" value="Service Wise Summary" disabled="disabled"></td> -->
+								                     </tr>
+								                     <tr>
+							                      	   <td class="color-black"  style="background: #e0f2f3;border-top: 2px solid #e0f2f3 !important;">
+							                      	   	<label class="color-white">Item Wise Summary</label>
+							                      	   	<!-- <input type="text" autocomplete="off" value="Service Wise Summary" disabled="disabled"></td> -->
+								                     </tr>
+								                      <tr >
+								                          <td class="color-black" style="background: #e0f2f3;border-top: 2px solid #e0f2f3 !important;">
+								                          	<label class="color-white">Package Cost</label>
+								                          	<!-- <input type="text" autocomplete="off" value="Package Cost" disabled="disabled"></td> -->
+								                      </tr>
+								                       <tr >
+								                         <td class="color-black" style="background: #e0f2f3;border-top: 2px solid #e0f2f3 !important;">
+								                         	<label class="color-white">Validity(Days)</label>
+								                         	<!-- <input type="text" autocomplete="off" disabled="disabled" value=" Validity(Days)"></td> -->
+								                      </tr>
+								                      <tr >
+								                         <td class="color-black" style="background: #e0f2f3;border-top: 2px solid #e0f2f3 !important;">
+								                         	<label class="color-white">No of Encounters</label>
+								                         	<!-- <input type="text" autocomplete="off" disabled="disabled" value=" No of Encounters"></td> -->
+								                      </tr>
+								                      <tr>
+								                         <td class="color-black" style="background: #e0f2f3;border-top: 2px solid #e0f2f3 !important;">
+								                         	<label class="color-white">Final Package Price</label>
+								                         	<!-- <input type="text" autocomplete="off" disabled="disabled" value=" Final Package Price"></td> -->
+								                      </tr>
+							                      </tfoot>
+							                   </table>
+							                 </td>
+							        	    <thead>
+							              </table>
+							           </th>
+							         <thead>
+							     </table>
+						        </th>
+
+						        <th style="z-index : 1022 !important" ng-repeat="paymentEnt in packageObjResponse.paymentEntitlement track by $index" ng-init="pEntIndex=$index"><label class="checkbox-inline padding-left0" title="">{{paymentEnt.paymentEntitlement}}</label>
+						        <table class="w-100">
+							        <thead>
+							           <th class="color-white" ng-repeat="patientCat in paymentEnt.patientCategoryList track by $index" ng-init="peIndex=$index">{{patientCat.patientType}}
+							           <table class="w-100" style="background:white;">
+							               <thead>
+							                <td class="color-white width8 th-bg" ng-repeat="billingBedCat in patientCat.billingBedCategoryList  track by $index" ng-init="bBedIndex=$index">{{billingBedCat.billingBedCategory}}
+							                    <table class="w-100">
+
+							                    <tbody>
+							                    	  <tr>
+							                    	  	<th class="width5 th-bg color-white">Qty</th>
+							                    	  	<th class="width5 th-bg color-white">Rate</th>
+							                    	  	<th class="width5 th-bg color-white">Amount</th>
+							                    	  </tr>
+								                      <tr style="background: white;" ng-repeat="services in billingBedCat.mPackageMasterDto.listTPackageServicesDetailsDto track by $index" ng-init="serviceIdx=$index">
+								                      	<th  class="width5"><input type="text" autocomplete="off" ng-model="services.numberToBeUse" name="numberToBeUse" placeholder="quantity" ng-change="calculatePackageAmounts(undefined,serviceIdx);" is-quantity></th>
+								                      	<th  class="width5"><input type="text" autocomplete="off" name="serviceId" is-number ng-model="services.servicePrice"    placeholder="rate"  ng-blur="calculatePackageAmounts(undefined,serviceIdx);"/></th>
+								                      	<th  class="width5"><input type="text" autocomplete="off" name="serviceId" is-number ng-model="services.total"    placeholder="rate" disabled/></th>
+								                     </tr>
+							                     </tbody>
+							                     <tfoot>
+							                     	<tr style="height: 30px;">
+							                      		<td style="background : white !important"></td>
+							                      		<td style="background : white !important"></td>
+							                      		<td style="background : white !important;"></td>
+							                      	</tr>
+							                      	<tr>
+							                      	   <td style="border-top: 2px solid #2e6ea2 !important;background: white !important;"></td>
+							                      	   <td style="border-top: 2px solid #2e6ea2 !important;background: white !important;"></td>
+							                      	   <td style="border-top: 2px solid #2e6ea2 !important;background: white !important;" class="color-black"><input type="text" autocomplete="off" name="serviceId"  is-number  ng-model="billingBedCat.mPackageMasterDto.serviceWiseSummary" disabled/></td>
+								                     </tr>
+								                     <tr>
+							                      	   <td style="background: white !important;"></td>
+							                      	   <td style="background: white !important;"></td>
+							                      	   <td style="background: white !important;" class="color-black"><input type="text" autocomplete="off" name="serviceId"  is-number  ng-model="billingBedCat.mPackageMasterDto.itemWiseSummary" disabled/></td>
+								                     </tr>
+								                      <!-- <tr>
+								                         <td></td>
+								                         <td class="color-black"><input type="text" autocomplete="off" name="serviceId"  ng-decimal="200"   ng-model="billingBedCat.mPackageMasterDto.grandTotal" readonly/></td>
+								                      </tr> -->
+								                      <tr>
+								                         <td style="background : white !important"></td>
+								                         <td style="background : white !important"></td>
+								                        <td style="background: white !important;">
+															<input type="text" autocomplete="off" name="serviceId"   is-number  ng-model="billingBedCat.mPackageMasterDto.packageCost" disabled/>
+						                                   </td>
+								                      </tr>
+								                      <!-- <tr>
+								                         <td></td>
+								                         <td class="color-black"><input type="text" autocomplete="off" name="serviceId"  ng-decimal="200"   ng-model="billingBedCat.mPackageMasterDto.manualRoundoffAmount"/></td>
+								                      </tr> -->
+								                      <tr>
+								                         <td style="background : white !important"></td>
+								                         <td style="background : white !important"></td>
+								                         <td class="color-black" style="background: white !important;"><input type="text" autocomplete="off" name="validityPeriodIndays"   ng-model="billingBedCat.mPackageMasterDto.validityPeriodIndays" is-quantity/></td>
+								                      </tr>
+								                      <tr>
+								                         <td style="background : white !important"></td>
+								                         <td style="background : white !important"></td>
+								                         <td class="color-black" style="background: white !important;"><input type="text" autocomplete="off" name="noOfEncounters"  ng-model="billingBedCat.mPackageMasterDto.noOfEncounters" is-quantity/></td>
+								                      </tr>
+								                      <tr>
+								                        <td style="background : white !important"></td>
+								                        <td style="background : white !important"></td>
+								                       	<td class="width8" style="background: white !important;">
+									 							<input type="text" autocomplete="off" name="serviceId"  is-number    ng-model="billingBedCat.mPackageMasterDto.packagePrice" ng-blur="checkPackagePrice(billingBedCat.mPackageMasterDto.packageCost,billingBedCat.mPackageMasterDto.packagePrice,pEntIndex,peIndex,bBedIndex);"/>
+														</td>
+								                      </tr>
+							                      </tfoot>
+							                   </table>
+							                 </td>
+							        	    <thead>
+							              </table>
+							           </th>
+							         <thead>
+							     </table>
+						        </th>
+						     </tr>
+						    </thead>
+
+						  </table>
+						</div>
+					</div>
+					<div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td ng-if="(packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageServicesDetailsDto==null||packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageServicesDetailsDto.length==0) && isSetFirstTabLevel(1) ">
+                                    <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+				</div>
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					  <div class="row padding-top0 padding-left-right-set4"  ng-show="packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageItemDetailsDto.length>0">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll450">
+						  <table id="main-table" class="main-table pull-left">
+						       <thead>
+						      <tr>
+						        <th class="fixed width10" style="white-space: nowrap;z-index:1023 !important;">
+						        	<label class="checkbox-inline" title="Select All Services"><input type="checkbox" value="">Items</label>
+							         <table class="w-100">
+							        <thead >
+							           <th class="color-white" style="white-space: nowrap;">&nbsp;
+							           <table class="w-100">
+							               <thead>
+							                <td class="color-black">&nbsp;
+							                    <table class="w-100" style="background:white;">
+							                    <tbody>
+							                    	  <tr>
+							                    	 	<td class="th-bg">&nbsp;</td>
+							                    	 </tr>
+								                      <tr ng-repeat="items in packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageItemDetailsDto track by $index">
+<!-- 								                      	<td class="width10" style="background: white; "><input type="text" autocomplete="off" value="{{items.itemName}}" disabled="disabled"></td> -->
+														 <td class="width10" style="background: white;float: inline-start;border: none !important;">
+								                      		<span style=" border-right: 2px solid #2e6ea2; padding: 4px;"><a  ng-click="removeItems(items.itemId);" ><i class="fa fa-times "></i></a></span>&nbsp;
+															 <label class="color-black" title="{{items.itemName}}">
+																 {{ items.itemName | limitTo:20 }}
+																 <span ng-if="items.itemName.length > 20">...</span>
+															 </label>
+								                      	</td>
+								                      </tr>
+							                     </tbody>
+							                      <tfoot>
+							                      	<tr style="height: 30px;">
+
+							                      	</tr>
+							                      	<tr>
+							                      	   <td class="color-black"  style="background: #e0f2f3;;border-top: 2px solid #e0f2f3; !important;">
+							                      	   <label class="color-white">Service Wise Summary</label>
+							                      	   <!-- <input type="text" autocomplete="off" disabled="disabled" value="Summary"></td> -->
+								                     </tr>
+								                     <tr>
+							                      	   <td class="color-black"  style="background: #e0f2f3;;border-top: 2px solid #e0f2f3; !important;">
+							                      	   <label class="color-white">Item Wise Summary</label>
+							                      	   <!-- <input type="text" autocomplete="off" disabled="disabled" value="Summary"></td> -->
+								                     </tr>
+								                      <!-- <tr>
+								                         <td class="color-black" style="background: white; "><input type="text" autocomplete="off" disabled="disabled" value="Grand Total"></td>
+								                      </tr>
+								                      <tr>
+								                        <td>
+															<span class="">
+																<select class="select-box dirty width60" ng-model="isMarkupDown" ng-change="calculatePackageAmounts()" convert-to-number>
+																	<option value="1">Mark Up</option>
+																	<option value="2">Mark Down</option>
+																</select>
+						                                   </span>
+						                                   <span class="">
+						                                   	<input type="text" autocomplete="off" ng-model="markupDownInPercentage" class="select-box dirty width30" ng-decimal="200" ng-change="calculatePackageAmounts()">
+						                                   </span>
+						                                   </td>
+								                      </tr> -->
+								                      <tr >
+								                         <td class="color-black" style="background: #e0f2f3;;border-top: 2px solid #e0f2f3; !important;" >
+								                         <label class="color-white">Package Cost</label></td>  
+								                      </tr>
+								                     
+								                      <!-- <tr>
+								                       	<td class="width8">
+									 							<span class="">	
+								                                   <input  type="text" autocomplete="off" value="Round Off" disabled="disabled" class="width60">
+								                               </span>
+																<span class="">
+																	<select class="select-box dirty width30" ng-model="roundOffPositNeg" ng-change="calculatePackageAmounts()" convert-to-number>
+																		<option value="1"> + </option>
+																		<option value="2"> - </option>
+																	</select>
+							                                    </span>
+														</td>
+								                      </tr> -->
+								                      <tr >
+								                         <td class="color-black" style="background: #e0f2f3;;border-top: 2px solid #e0f2f3; !important;">
+								                         <label class="color-white">Validity(Days)</label>
+								                         <!-- <input type="text" autocomplete="off" disabled="disabled" value=" Validity(Days)"></td> -->  
+								                      </tr>
+								                      <tr >
+								                         <td class="color-black" style="background: #e0f2f3;;border-top: 2px solid #e0f2f3; !important;" >
+								                         <label class="color-white">No of Encounters</label>
+								                         <!-- <input type="text" autocomplete="off" disabled="disabled" value=" No of Encounters"></td> -->  
+								                      </tr>
+								                      <tr>
+								                         <td class="color-black" style="background: #e0f2f3;;border-top: 2px solid #e0f2f3; !important;" >
+								                         <label class="color-white">Final Package Price</label>
+								                         <!-- <input type="text" autocomplete="off" disabled="disabled" value=" Final Package Price"></td> -->  
+								                      </tr>
+							                      </tfoot>
+							                   </table>
+							                 </td>
+							        	    <thead> 
+							              </table> 
+							           </th>
+							         <thead> 
+							     </table> 
+						        </th>
+						         
+						        <th style="z-index : 1022 !important" ng-repeat="paymentEnt in packageObjResponse.paymentEntitlement track by $index" ng-init="pEntIndex=$index"><label class="checkbox-inline padding-left0" title="">{{paymentEnt.paymentEntitlement}}</label>	
+						        <table class="w-100">
+							        <thead>
+							           <th class="color-white" ng-repeat="patientCat in paymentEnt.patientCategoryList track by $index" ng-init="peIndex=$index">{{patientCat.patientType}}
+							           <table class="w-100" style="background:white;">
+							               <thead>
+							                <td class="color-white width8 th-bg" ng-repeat="billingBedCat in patientCat.billingBedCategoryList  track by $index" ng-init="bBedIndex=$index">{{billingBedCat.billingBedCategory}}
+							                    
+							                    <table class="w-100">
+							                    
+							                    <tbody>
+							                    	  <tr>
+							                    	  	<th class="th-bg color-white" style="color:white;">Qty</th>
+							                    	  	<th class="width5 th-bg color-white">Amount</th>
+							                    	  </tr>
+								                      <tr style="background: white;" ng-repeat="items in billingBedCat.mPackageMasterDto.listTPackageItemDetailsDto track by $index" ng-init="serviceIdx=$index">
+								                        <th  class="width5"><input type="text" autocomplete="off" ng-model="items.numberToBeUse"  ng-init="items.numberToBeUse > 0 ? items.numberToBeUse : items.numberToBeUse=''" placeholder="quantity"   number-blank></th>
+								                      	<th  class="width5"><input type="text" autocomplete="off" ng-model="items.servicePrice" ng-init="items.servicePrice > 0 ? items.servicePrice : items.servicePrice=0" placeholder="amount" ng-change="calculatePackageAmounts(undefined,serviceIdx);" is-quantity></th>
+<!-- 								                      	<th  class="width5"><input type="text" autocomplete="off" name="itemTotal" ng-model="items.total"    placeholder="rate"  readonly/></th> -->
+								                     </tr>								                      
+							                     </tbody>
+							                     <tfoot >
+							                     	<tr style="height: 30px;">
+
+							                      	</tr>
+							                      	<tr>
+							                      	   <td style="background:white;border-top: 2px solid #2e6ea2 !important;"></td>
+							                      	   <td class="color-black" style="border-top: 2px solid #2e6ea2 !important;background:white">
+							                      	   	<input type="text" autocomplete="off" name="serviceId"  is-number  ng-model="billingBedCat.mPackageMasterDto.serviceWiseSummary" disabled/></td>
+								                     </tr>
+								                     
+								                     <tr>
+														 <td style="background:white;"></td>
+							                      	   <td class="color-black" style="background:white">
+							                      	   	<input type="text" autocomplete="off" name="serviceId"  is-number  ng-model="billingBedCat.mPackageMasterDto.itemWiseSummary" disabled/></td>
+								                     </tr>
+								                      <!-- <tr>
+								                         <td class="color-black"><input type="text" autocomplete="off" name="serviceId"  ng-decimal="200"   ng-model="billingBedCat.mPackageMasterDto.grandTotal" readonly/></td>
+								                      </tr> -->
+								                      <tr>
+														  <td style="background:white;"></td>
+								                        <td style="background:white">
+															<input type="text" autocomplete="off" name="serviceId"  is-number   ng-model="billingBedCat.mPackageMasterDto.packageCost" disabled/>
+						                                   </td>
+								                      </tr>
+								                      <!-- <tr>
+								                         <td class="color-black"><input type="text" autocomplete="off" name="serviceId"  ng-decimal="200"   ng-model="billingBedCat.mPackageMasterDto.manualRoundoffAmount" /></td>  
+								                      </tr> -->
+								                      <tr>
+														  <td style="background:white;"></td>
+								                         <td style="background:white" class="color-black"><input type="text" autocomplete="off" name="validityPeriodIndays"  is-quantity  ng-model="billingBedCat.mPackageMasterDto.validityPeriodIndays" /></td>  
+								                      </tr>
+								                      <tr>
+														  <td style="background:white;"></td>
+								                         <td style="background:white" class="color-black"><input type="text" autocomplete="off" name="noOfEncounters"  is-quantity   ng-model="billingBedCat.mPackageMasterDto.noOfEncounters" /></td>  
+								                      </tr>
+								                      <tr>
+														  <td style="background:white;"></td>
+								                       	<td style="background:white" class="width8">
+									 							<input type="text" autocomplete="off" name="serviceId"  is-number   ng-model="billingBedCat.mPackageMasterDto.packagePrice"  ng-blur="checkPackagePrice(billingBedCat.mPackageMasterDto.packageCost,billingBedCat.mPackageMasterDto.packagePrice,pEntIndex,peIndex,bBedIndex);"/>
+														</td>
+								                      </tr>
+							                      </tfoot>
+							                   </table>
+							                 </td>
+							        	    <thead> 
+							              </table> 
+							           </th>
+							         <thead> 
+							     </table> 
+						        </th>
+						     </tr>
+						    </thead>
+						  
+						  </table>
+						</div>
+					</div>
+					<div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td ng-if="(packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageItemDetailsDto==null||packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageItemDetailsDto.length==0) && isSetFirstTabLevel(2) ">
+                                    <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+					  
+				</div>
+			</div>

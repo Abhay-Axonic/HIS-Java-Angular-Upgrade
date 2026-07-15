@@ -1,0 +1,448 @@
+
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		
+		<fieldset>
+			
+			<!-- demography -->
+				<div class="row searched-patient-details-row">
+					<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+						<span class="profile_pic"> 
+						<img alt="" ng-src="{{(billDetailsPatientInfo.imagePath!=null&&billDetailsPatientInfo.imagePath!='')?billDetailsPatientInfo.imagePath:(billDetailsPatientInfo.genderId==2)?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" class="img-circle" style="width:30px;height:30px">
+						</span>
+						<span class="margin-left10"> </span>
+						<span class="margin-left10"><span class="padding-right5 font-weight600">UHID: {{bill.uhidNumber}} </span> </span>
+						<span class="margin-left10"><span class="padding-right5 font-weight600">Name: {{bill.patientName}} </span> </span>
+						<span class="margin-left10"><span class="padding-right5 font-weight600">Bill No: {{bill.billNumber}} </span> </span>
+						<span class="margin-left10"><span class="padding-right5 font-weight600">Admission Date: {{bill.visitDateNew | date :dateFormat}} </span> </span>
+						<span class="margin-left10" ng-if="!bill.isFromIPDCharges"><span class="padding-right5 font-weight600">Date of Discharge: {{bill.pddNew | date :dateFormat}} </span> </span>
+						<span class="margin-left10" ng-if="bill.isFromIPDCharges"><span class="padding-right5 font-weight600">PDD: {{bill.pddNew | date :dateFormat}} </span> </span>
+					</div>
+					
+				</div>
+				<!-- end demography -->
+			<div class="row padding-left-right-set4 margin-top8 custom-sub-tab">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetSecondTabLevel(1) }" class="active width18 margin-left-right-set0" style="border-right: 1px solid #2E6EA2;" >
+						<a href="" ng-click="setSecondTabLevel(1);">Medicine Issue</a>
+					</li>
+					<li ng-class="{ active : isSetSecondTabLevel(2) }" class="width18 margin-left-right-set0" style="border-right: 1px solid #2E6EA2;">
+						<a href="" ng-click="setSecondTabLevel(2); getorderedMedicationList(bill);">Medicine Return</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row padding-left-right-set4">
+			
+				<!-- ************* Blocking content row start *********************** -->
+				<div ng-show="isSetSecondTabLevel(1)" class="second-level-tab-display-div" style="height:650px;">
+					<div class="row	">
+						<div class="row margin-top8">
+						<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="col-lg-10 col-sm-10 col-md-10 ">
+												<input type="text" autocomplete="off"  
+												name="item-name" id="item-name" typeahead-min-length="3"
+												class="text-input floating-label" ng-model="medicationSearch"
+												uib-typeahead="items.details for items in searchItems($viewValue)"
+												typeahead-on-select="addItemToBill(medicationSearch);">
+											  	<label for="itemName">Medicine Name</label>
+										   </div>
+										</div>
+									</div>
+								</div>
+						</div>
+							<div class="col-md-12 col-lg-12  table-responsive padding-left-right-set4" style="height:200px;">
+								<table class="table table-bordered  common-tbody-scroll">
+									<thead>
+										<tr>
+											<th class="width1">
+												
+											</th>
+											<th class="width4">
+												Item Code.
+											</th>
+											<th class="width4">
+												Item Name
+											</th>
+											<th class="width4">
+												Batch No.
+											</th>
+											<th class="width4">
+												Expiry Date
+											</th>
+											<th class="width4">
+												Current QTY
+											</th>
+											<th class="width4">
+												Unit Price
+											</th>
+											
+										</tr>
+									</thead>
+									<tbody class="scrollable">
+										
+										<tr ng-repeat="item in newMedicationList  track by $index " >
+												<td><input type="checkbox"  ng-model = "item.selected"  ng-true-value = true ng-false-value = false ng-click = "selectRecord(item,$index)"/></td>
+												<td>{{item.itemCode}}</td>
+												<td>{{item.itemName}}</td>
+												<td>{{item.batchNo}}</td>
+												<td>{{item.expiryDateNew | date: dateFormat}}</td>
+												<td>{{item.avilableQuantity}}</td>
+												<td>{{item.mrp}}</td>
+											</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="row">
+								<div class="col-lg-6 col-md-6 col-sm-6">
+										<div class="col-lg-6 col-md-6 col-sm-6 ">
+											<div class="row input-container">
+												<div class="col-lg-3 col-sm-3 col-md-3 " style="    margin-left: -16px !important;">
+													Item Name :
+												</div>
+												<div class="col-lg-6 col-sm-6 col-md-6">
+													 {{testObj.itemName}} 
+												</div>
+										
+											</div>
+										</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6">
+										<div class="col-lg-6 col-md-6 col-sm-6 " style="margin-left: 224px !important;">
+											<div class="row input-container">
+													<div class="col-lg-3 col-sm-3 col-md-3 ">
+														Batch No. :
+													</div>
+													<div class="col-lg-6 col-sm-6 col-md-6">
+														{{testObj.batchNo}}
+													</div>
+											</div>
+										</div>
+									
+								</div>
+							</div>
+							<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 ">
+											From Date
+										</div>
+										<div class="col-lg-3 col-sm-3 col-md-3">
+											<div class="">
+												<input type="text" autocomplete="off"
+													class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+													name="datepicker" id="datepicker"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions" show-button-bar="false"
+													ng-click="open()" required="" style="">
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div  class="col-lg-6 col-md-6 col-sm-6">
+									<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto" style="margin-left: 234px;">
+									<div class="width-div-for-patient-reg ">
+										<input type="button" value="Add" class="btn btn-primary" style="width:95px;" ng-click = getdates();>
+									</div>
+								</div>
+								</div>
+							</div>
+							<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 ">
+											To Date
+										</div>
+										<div class="col-lg-3 col-sm-3 col-md-3">
+											<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											name="datepicker" id="datepicker"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY"  ng-model="toDate"
+											model-view-value="true" is-open="popup1.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="open1();" required="" style="">
+										
+									</div>
+										</div>
+									</div>
+								</div>
+								
+								
+							</div>  
+							<div class="row">
+							
+								<div class="col-lg-3 col-md-3 col-sm-3">
+									<div class="row input-container">
+										<div class="col-lg-4 col-sm-4 col-md-4 ">
+											Enter Quantity 
+										</div>
+										<div class="col-lg-6 col-sm-6 col-md-6">
+											<div class="">
+										<input type="text" autocomplete="off" name="name" onkeypress="return /[0-9]/i.test(event.key)" id="name" ng-model = "enterQty" class="text-input floating-label"  style="width: 150px !important;">
+									</div>
+										</div>
+									</div>
+								</div>
+							
+									<div class="col-md-9 col-lg-9  table-responsive padding-left-right-set4" style=" height: 250px;width: 39%;margin-left: 100px;">
+								<table class="table table-bordered  common-tbody-scroll">
+									<thead>
+										<tr>
+											<th class="width4">
+												Date
+											</th>
+											<th class="width4">
+												Order Qty
+											</th>
+											<th class="width1">
+												Action
+											</th>
+										</tr>
+									</thead>
+									<tbody class="scrollable">
+										
+											<tr ng-repeat="item in dateList  track by $index ">
+												<td>{{item.orderDateNew | date :dateFormat}}</td>
+												<td>
+												<input type="text" autocomplete="off" name="name" id="name" onkeypress="return /[0-9]/i.test(event.key)"ng-model="item.orderQty"  class="text-input floating-label" style="width: 150px !important;">
+												</td>
+												<td><a class="" title="Remove"><i class="fa fa-times" ng-click="removeDate($index);"></i></a> </td>
+											</tr>
+											
+									</tbody>
+								</table>
+								</div>
+							</div>
+							<!-- <div class="row">
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 ">
+											Enter Quantity 
+										</div>
+										<div class="col-lg-6 col-sm-6 col-md-6">
+											<div class="">
+										<input type="text" autocomplete="off" name="name" id="name" ng-model = "enterQty" class="text-input floating-label" ng-change= "changeQty()" style="width: 150px !important;">
+									</div>
+										</div>
+									</div>
+								</div>
+							</div> -->
+							<!-- <div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="row input-container">
+										<div class="col-lg-2 col-sm-2 col-md-2 ">
+											Enter Date
+										</div>
+										<div class="col-lg-3 col-sm-3 col-md-3">
+											<div class="">
+										<input type="text" autocomplete="off"
+											class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											name="datepicker" id="datepicker"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY"  ng-model="enterDate"
+											model-view-value="true" is-open="popup2.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="open2();" required="" ng-change= "changeQty()">
+										
+									</div>
+										</div>
+									</div>
+								</div>
+							</div> -->
+							<div class="row">
+								<div class="col-lg-1 col-md-1 col-sm-1" style="float: right !important;    margin-right: 64px !important;">
+									<div class="">
+										 <button type="button"  ng-click="saveItemAndPlaceOrder();" class="btn btn-primary btn-save-box-shadow">Save</button>
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+							
+					<div class="row">
+						<footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+							
+						</footer>
+					</div>
+					
+				</div>
+				<!-- ************* Blocking content row start *********************** -->
+				<!-- ************* Unblocking content row start *********************** -->
+				<div ng-show="isSetSecondTabLevel(2)" class="second-level-tab-display-div" style="height:650px;">
+					<div class="row	">
+						<div class="row margin-top8">
+							<div class="col-md-12 col-lg-12  table-responsive padding-left-right-set4" style="height:550px;">
+								<table class="table table-bordered  common-tbody-scroll">
+									<thead>
+										<tr>
+											<th class="width4">
+												Order Date
+											</th>
+											<th class="width4">
+												Order No.
+											</th>
+											<th class="width4">
+												Item Name
+											</th>
+											<th class="width4">
+												Item Code
+											</th>
+											<th class="width4">
+												Batch No.
+											</th>
+											<th class="width4">
+												Unit
+											</th>
+											<th class="width4">
+												Expiry Date
+											</th>
+											<th class="width4">
+												Issued Quantity
+											</th>
+											<th class="width3">
+												Returned Qty
+											</th>
+											<th class="width3">
+												Return Qty
+											</th>
+											<th class="width4">
+												Return Date
+											</th>
+											<th class="width2">
+												Unit Price
+											</th>
+											<th class="width2">
+												Total Price
+											</th>
+											
+										</tr>
+									</thead>
+									<tbody class="scrollable">
+										
+										<tr ng-repeat="item in orderedMedicationList  track by $index " >
+												<td>{{item.orderDateStringNew | date:dateFormat}}</td>
+												<td>{{item.orderNo}}</td>
+												<td>{{item.itemName}}</td>
+												<td>{{item.itemCode}}</td>
+												<td>{{item.batchNo}}</td>
+												<td>{{item.uomName}}</td>
+												<td>{{item.expiryDateNew | date:dateFormat}}</td>
+												<td>{{item.orderQty}}</td>
+												<td>{{item.returnQuantity}}</td>
+												<td><input type="text" autocomplete="off" name="name" onkeypress="return /[0-9]/i.test(event.key)" id="name" ng-model ="item.returnQty" class="text-input floating-label" ng-blur= "rejectPopup(item,$index);"></td>
+												<td>
+												<input type="text" autocomplete="off"
+														class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+														name="datepicker" id="datepicker"
+														uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+														placeholder="DD/MM/YYYY"  ng-model="item.returnDate"
+														model-view-value="true" is-open="ordRenderDatetime.opened[$index]"
+														datepicker-options="dateOptions" show-button-bar="false"
+														ng-click="openRenderedDate($index);" ng-change="checkreturnDate($index);">
+												</td>
+												<td>{{item.rate}}</td>
+												<td>{{item.netAmount}}</td>
+											</tr>
+									</tbody>
+								</table>
+							</div>
+							
+							<div class="row">
+								
+							</div>
+								<div class="row" style="padding-top: 40px;">
+								<div class="col-lg-1 col-md-1 col-sm-1" style="float: right !important;    margin-right: 64px !important;">
+									<div class="">
+										 <button type="button"  ng-click="returnItems();" class="btn btn-primary btn-save-box-shadow">Save</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+							
+						</footer>
+					</div>
+					
+				</div>
+				
+				<!-- ************* Unblocking content row start *********************** -->
+		
+		</fieldset>
+	</div>
+</div>
+<!--************************** Blocking - details POPUP start **************************-->
+
+<div id="accptRejInPatient" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 400px !important;">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal" ng-click="clear();" >&times;</button>
+				</div>
+        </div>
+       <div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<select class="text-input floating-label" name="code"
+										ng-model="returnReasonId">
+										<option selected value = "0">Please Select Reason</option>
+										<option ng-repeat="rej in reasonList"
+											value="{{rej.reasonMasterId}}" >{{rej.reasonDesc}}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+       	<div class="modal-footer" style="border: none;">
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal"  ng-click="clear();">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Save" data-dismiss="modal" ng-click="saveReturn();">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+      </div>
+
+    </div>
+  </div>
+
+<!--************************** Blocking - details POPUP start **************************-->
+
+<script type="text/javascript">
+$( document ).ready(function() {
+	$(".selectedPageName").text("Medicines Issue And Return");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	
+});
+</script>

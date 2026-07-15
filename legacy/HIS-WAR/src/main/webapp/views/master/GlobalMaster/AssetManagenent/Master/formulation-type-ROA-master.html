@@ -1,0 +1,256 @@
+<style>
+	.tableError {
+		border: 2px solid red !important;
+	}
+
+	.tableError select.w-100.ng-pristine.ng-empty,
+	.tableError input.w-100.ng-valid.ng-empty,
+	.borderRed {
+		border: 2px solid red;
+	}
+
+	.font-W600 td {
+		font-weight: 600 !important;
+	}
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Formulation Type And ROA Master</legend> -->
+			<div class="row">
+				<div class="col-lg-4 col-md-3 col-sm-4 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select name="formulationType" id="formulationType" class="text-input floating-label" ng-model="vm.model.formulationType"
+								 data-ng-options="formulationType.type for formulationType in vm.model.formulationTypes" ng-change="vm.model.isformulationTypeValid = false;">
+								</select>
+								<p ng-if="vm.model.isformulationTypeValid" class="errorMsg">Formulation Type is required</p>
+								<label for="code">Formulation Type<span class="star">*</span></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set text-width-auto padding-top10">
+					<button type="button" ng-disabled="!vm.model.formulationType.id" data-toggle="modal" ng-click="vm.model.onAddButtonClick()" id="addBtn"
+					 class="btn btn-primary" title="Add Route of Administration">Add</button>
+
+				</div>
+			</div>
+		</fieldset>
+		<div class="row margin-top10">
+			
+			<div class="col-md-8 col-sm-8">
+						<div>
+							<div class="row">
+								<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 10px;">
+										<div class="search">
+											<label class="show-entries">Show 
+											<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+												ng-init="vm.model.noOfRecordsPerPage='10'" ng-model="vm.model.noOfRecordsPerPage"
+												ng-change="vm.model.setNoOfRecords();" class="search-popUp-ddl">
+													<option value="10">10</option>   	
+													<option value="25">25</option>
+													<option value="50">50</option>
+													<option value="100">100</option>
+											</select> entries
+											</label>
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+				<div class="col-md-1 col-sm-2 padding-left-right-set4 text-width-auto pull-right">
+					<div class="width-div-for-patient-reg padding-top4">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" data-target="#confirmSave" type="submit"
+						 ng-class="{disabled: !vm.model.formulationType.id}">
+							<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>					
+				<div class="col-lg-3 col-md-3 col-sm-3 pull-right">
+					
+					<input type="text" autocomplete="off" class="text-search-box" ng-model="vm.model.search" placeholder="Search">
+					<i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+				</div>
+				<!-- <div class="col-md-2 col-sm-3  padding-leftright15" style="margin-top: 5px;">
+					<input type="button" value="Clear" class="btn btn-primary btn-save-box-shadow" ng-click="vm.model.ClearFields(); vm.model.clearSearch();">
+				</div> -->
+				
+			</div>
+		</div>
+		<div class="row table-container padding-left-right-set4 padding-top5">
+			<div class="col-md-12 col-lg-12 col-sm-8 table-container-header">
+				<table class="table table-striped table-hover table-condensed table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width15" title="Formulation Type">Formulation Type
+								<div class="float_right" ng-click="sortType = 'formulationType'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width20" title="Route Of Administration">Route Of Administration
+								<div class="float_right" ng-click="sortType = 'routeOfAdministration'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5 text-center" title="Status">Status(n) </th>
+							<th class="width3 text-center" title="Action">Action taken </th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div class="table-container-body" style="height: 430px; overflow-y: scroll;">
+				<table class="table table-striped table-hover table-condensed table-bordered">
+					<tbody>
+						<tr ng-repeat="roa in vm.model.roaList | filter : vm.model.search | orderBy:sortType:sortReverse">
+							<td class="width15" title="{{roa.formulationType}}">{{roa.formulationType}}</td>
+							<td class="width20" title="{{roa.routeOfAdministration}}">{{roa.routeOfAdministration}}</td>
+							<td class="width5 text-center">
+								<label class="switch switch-small" title="{{roa.status == true ? 'Active' : 'Inactive'}}">
+									<input type="checkbox" class="switchInput" ng-model="roa.status" ng-change="vm.model.ToggleStatus(roa)">
+									<div class="slider round slider-small"></div>
+								</label>
+							</td>
+							<td class="text-center" style="width:2.83% !important">
+								<a ng-click="vm.model.getDetail(roa.id)" ng-class="{disabled: !roa.status}" title="Edit">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+								</a>
+							</td>
+						</tr>
+						<tr ng-if="!vm.model.roaList || vm.model.roaList == false">
+							<td colspan="4" class="text-center">
+								<p>No Record Found</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="row margin-bottom45 sss">
+				<ul ng-if="vm.model.pager.pages.length" class="pagination table-list"
+					style="font-size: 14px;">
+					<li ng-class="{disabled:vm.model.pager.currentPage === 1}"><a
+						ng-click="vm.model.setPage(1,'true')">First</a></li>
+					<li ng-class="{disabled:vm.model.pager.currentPage === 1}"><a
+						ng-click="vm.model.setPage(vm.model.pager.currentPage - 1,'true')">Previous</a></li>
+					<li ng-repeat="page in vm.model.pager.pages"
+						ng-class="{active:vm.model.pager.currentPage === page}"><a
+						ng-click="vm.model.setPage(page,'true')">{{page}}</a></li>
+					<li ng-class="{disabled:vm.model.pager.currentPage === vm.model.pager.totalPages}">
+						<a ng-click="vm.model.setPage(vm.model.pager.currentPage + 1,'true')">Next</a>
+					</li>
+					<li ng-class="{disabled:vm.model.pager.currentPage === vm.model.pager.totalPages}">
+						<a ng-click="vm.model.setPage(vm.model.pager.totalPages,'true')">Last</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- TaxComponent Modal -->
+<div id="addFormulationRoa" class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row" style="    margin-left: 17px;">
+					Administration Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid his-style">
+					<div class="table-container padding-left-right-set4 padding-top5">
+						<div class="table-container-header">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<thead class="mainServiceTableCommon">
+									<tr class="">
+										<th class="width8">Route Of Administration
+										</th>
+										<th class="width4 vertical-middle" ng-show="vm.model.isEdit == false">Action</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div class="table-container-body" style="height:240px; overflow-y: scroll;">
+							<table class="table table-striped table-hover table-condensed table-bordered">
+								<tbody>
+									<tr ng-repeat="item in vm.model.formROADetailList">
+
+										<td class="width8">
+											<select ng-model="item.formRoa" class="w-100" data-ng-options="roa.description for roa in vm.model.roaDropdownList" ng-change="item.isRoaValid = false"
+											 data-ng-class="{tableError: item.isRoaValid}" ng-blur="vm.model.ValidateRoa(item);"></select>
+										</td>
+
+										<td class="width4" style="width: 3.9% !important" ng-show="vm.model.isEdit == false">
+											<input type="button" name="" id="" value="+" ng-click="vm.model.AddDuplicateRow(item);" class="btn btn-info add-dynamic-row addbtn">
+											<input type="button" name="" id="" value="-" ng-show="vm.model.formROADetailList.length > 1" ng-click="vm.model.removeRowData(item);"
+											 class="btn btn-info addbtn">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="modal-footer" style="border:none;padding:5px !important">
+					<button type="button" ng-click="vm.model.onAddClick()" class="btn btn-primary">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--  confirmSave modal start -->
+
+<div id="confirmSave" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to Save?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="vm.model.SaveFormulationROA()">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+		$(".selectedPageName").text("Formulation Type And ROA Master");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="formulationTypeROAMaster"]').parents("li").addClass("active");
+	});
+</script>

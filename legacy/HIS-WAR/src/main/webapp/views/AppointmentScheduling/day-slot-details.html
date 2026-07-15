@@ -1,0 +1,84 @@
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 margin-top fix-height-scroll500">
+	<table class="table table-bordered">
+		<tr >
+			<th class="text-center" colspan="9">
+				<div class="width30">
+					<!-- <span class="float_left"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span> -->
+					<span ng-if="doctorId !=null">{{doctorName}}</span>
+					<span ng-if="doctorId ==null && specialityId!=null ">{{specialityName}}</span>
+					<!-- <span class="float_right"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></span> -->
+				</div>
+			</th>
+		</tr>
+		<tr >
+			<th class="text-center" colspan="9">
+				
+				<div class="width30">
+								<label class=""><input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datepicker" id="datepicker" style="background: white;"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datepicker"
+									model-view-value="true" is-open="popup.opened"
+									datepicker-options="dateOptions" show-button-bar="false"
+									ng-click="openDt()"  ng-change="getSlotsOfDate()"></label>
+				</div>
+						
+			</th>
+			
+		</tr>
+	</table>
+	
+	<div class="row" >
+		<div ng-repeat="info in slotDetailsList">
+		<div class="col-lg-1 col-md-1 col-sm-2 margin-top2 padding-left-right-set1 width10" >
+			<div class="row"   >
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set1">
+							<div ng-if="info.isBlockedUnblocked == '2' && info.slotPatientDetailsListsSize > '0' && info.slotPatientDetailsListsSize < info.allowedOverBookingSlots && info.isVip=='N'"  ng-class="checkDateIsBefore(info);"  style="padding:0px !important;" data-toggle="modal" ng-click="getOverBookSlotCheckPopup(info) && checkDateIsBefore(info)!='bg-grey cursor-pointer day-slot-div'">
+								<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" data-toggle="modal" data-target="#patientDetailsForAppointments" style="margin-right: 4px;color: #212121;" ng-click="getBookSlotDetails(info)"></i>{{info.uhidNumber}}</div>
+							</div>
+							<div ng-if="info.isBlockedUnblocked == '2' && info.allowedOverBookingSlots > '0' && info.isVip=='Y' "  ng-class="checkDateIsBefore(info);"  style="padding:0px !important;" >
+								<div class="font-size-12 text-center">{{info.fromTimeString}}</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" data-toggle="modal" data-target="#patientDetailsForAppointments" style="margin-right: 4px;color: #212121;" ng-click="getBookSlotDetails(info)"></i>{{wkSlots.uhidNumber}}</div>
+							</div>
+							<div ng-if="info.isBlockedUnblocked == '2' &&  info.slotPatientDetailsListsSize > '0' && info.slotPatientDetailsListsSize == info.allowedOverBookingSlots "  ng-class="checkDateIsBefore(info);"   style="padding:0px !important;" >
+								<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" data-toggle="modal" data-target="#patientDetailsForAppointments" style="margin-right: 4px;color: #212121;" ng-click="getBookSlotDetails(info)"></i>{{info.uhidNumber}}</div>
+							</div>
+							<div ng-if="info.isBlockedUnblocked == '2' &&  info.slotPatientDetailsListsSize > '0' && info.allowedOverBookingSlots=='0' "  ng-class="checkDateIsBefore(info);"   style="padding:0px !important;" >
+								<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" data-toggle="modal" data-target="#patientDetailsForAppointments" style="margin-right: 4px;color: #212121;" ng-click="getBookSlotDetails(info)"></i>{{info.uhidNumber}}</div>
+							</div>
+							<div ng-if="info.isBlockedUnblocked == '2' && info.slotPatientDetailsListsSize == '0' && checkDateIsBefore(info)=='bg-grey cursor-pointer day-slot-div'"  ng-class="checkDateIsBefore(info);"   style="padding:0px !important;">
+								<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+							</div>
+							<div ng-if="info.isBlockedUnblocked == '2' && info.slotPatientDetailsListsSize == '0' && checkDateIsBefore(info)=='bg-green cursor-pointer day-slot-div'"  ng-class="checkDateIsBefore(info);"   style="padding:0px !important;" data-toggle="modal" data-target="{{info.slotPatientDetailsListsSize == '0' ?'#patientSearchForRegistration':''}}" ng-click="getSlotDetailsPopup(info)" >
+								<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+							</div>
+							<div  ng-if="info.isBlockedUnblocked == '1' && info.slotPatientDetailsListsSize == '1'" ng-class="checkDateIsBefore(info);"  style="padding:0px !important;">
+								<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+								<div class="font-size-10 text-center div-word-break cursor-pointer" >
+								<i class="fa fa-info-circle" data-toggle="modal" data-target="#patientDetailsForAppointments" style="margin-right: 4px;color: #212121;" ng-click="getBookSlotDetails(info)"></i>{{info.uhidNumber}}</div>
+							</div>
+							<div  ng-if="info.isBlockedUnblocked == '1' && info.slotPatientDetailsListsSize == '0'" ng-class="checkDateIsBefore(info);"  style="padding:0px !important;" > <!-- data-toggle="modal" data-target="{{info.slotPatientDetailsListsSize == '0' ?'#patientSearchForRegistration':''}}" ng-click="getSlotDetailsPopup(info)"	 -->
+								<div class="font-size-12 text-center">{{info.fromTimeString2}}</div>
+							</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+</div></div>

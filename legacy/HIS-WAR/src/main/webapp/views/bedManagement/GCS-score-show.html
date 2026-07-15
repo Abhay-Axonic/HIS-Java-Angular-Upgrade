@@ -1,0 +1,77 @@
+<fieldset>
+    <!-- <legend class="heading-div">History</legend> -->
+    <div class="row height420 ">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 padding-left-right-set0">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th class="width10">
+                            <label>Parameter</label>
+                        </th>
+                        <th class="width10">
+                            <label>Findings and Points</label>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="info in gcsScoreList.nursingScaleValue">
+                        <td>
+                            <label>
+                                <input type="checkbox" ng-model="info.selected" ng-true-value="'selected'" ng-false-value="'not-selected'">
+                                <strong>{{info.parameterName}}</strong>
+                            </label>
+                        </td>
+                        <td class="parent">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="width10">
+                                        <label>Findings</label>
+                                    </th>
+                                    <th class="width10">
+                                        <label>Points</label>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="finding in info.findings">
+                                    <td class="child">
+                                        <!-- Display the value next to the radio button -->
+                                        <input type="radio" ng-model="info.selectedFindingId" ng-value="finding.findingValue">
+                                        {{finding.findingValue}}
+                                    </td>
+                                    <td class="child">
+                                        {{finding.findingPoints}}
+                                    </td>
+                                </tr>
+                                <tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row his-style margin-top10">
+        <div class="col-lg-11 col-md-11 col-sm-10 padding-left-right-set4"></div>
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+            <a>
+                <input type="button" value="Save" class="btn btn-primary btn-save-box-shadow btn-block">
+            </a>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+            <a>
+                <input type="button" value="Save As Draft" class="btn btn-primary btn-save-box-shadow btn-block">
+            </a>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-rightset padding-right20">
+            <a>
+                <input type="button" value="Cancel" class="btn btn-primary btn-save-box-shadow btn-block">
+            </a>
+        </div>
+    </div>
+</fieldset>

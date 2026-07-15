@@ -1,0 +1,110 @@
+<!-- FAVORITES POPUP -->
+ <div id="favoritesDetails" class="common-large-popup modal fade ng-scope in" role="dialog" data-backdrop="static">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Favorites Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+<!-- 					<div class="margin-div">
+				        <div class="row">
+				         	<div class="col-md-6 col-sm-6">
+					          	<button type="button" class="btn btn-primary"  data-dismiss="modal">Add</button>
+					         </div>
+				        </div>
+		        	</div>
+ -->		        	
+		        	<div class="row his-style padding-top4">
+		        		<!-- <div class="col-md-12 col-sm-6">
+		        			<input type="text" autocomplete="off" name="searchfavourites" ng-model="favouriteMedicationSearchString">
+		        			<i class="fa fa-search"></i>
+		        		</div> -->
+		        		<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+							<input type="text" autocomplete="off" name="searchfavourites" ng-model="favouriteMedicationSearchString" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div> -->
+						
+						<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right margin-top5 padding-bottom5">
+											<input type="text" autocomplete="off" class="text-search-box dirty ng-valid ng-dirty ng-valid-parse ng-touched ng-not-empty" placeholder="Search" ng-model="searchKeyword" style="margin-top: 0px;">
+											<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+										</div>
+		        	</div>
+		        	
+					<div class="col-md-12 fix-height-scroll320 padding-left-right-set4 padding-top2">
+						<table class="table table-bordered  margin-top8">
+								<tr>
+									<th class="width1">Select</th>
+									<th class="width10">
+										<span class="">Brand Name</span>
+									</th>
+									<th class="width10">
+										 <span class="">Generic Name</span>
+									</th>
+									<th class="width8">
+										<span class="">ROA</span>
+									</th>
+									<th class="width8">
+										 <span class="">Strength</span>
+									</th>
+									<th class="width8">
+										 <span class="">Prescribed Dose</span>
+									</th>
+									<th class="width10">
+										 <span class="">Frequency</span>
+									</th>
+									<th class="width8">
+										 <span class="">Instruction</span>
+									</th>
+								</tr>
+								<tr ng-repeat="medication in favouriteMedications |orderBy:column:reverse|filter:searchKeyword">
+									<td>
+<!-- 										<input type="checkbox" name="radioName" value="medication.doctorFavoriteId" ng-model="itemSelectedList.items" ng-click="selectItem(medication)" /> -->
+											<input type="checkbox" 
+										checklist-model="itemSelectedList.items" 
+										checklist-value="medication">
+									</td>
+									<td>{{medication.itemName}}</td>
+									<td>{{medication.genericName}}</td>
+									<td>{{medication.roaDesc}}</td>
+									<td>{{medication.dose +' '+medication.doseDesc}}</td>
+									<td  ng-if="medication.factorId!=null && medication.factorId==1">{{medication.prescribeDose}} {{medication.prescribeDoseUnit}}</td>
+								    <td  ng-if="medication.factorId!=null && medication.factorId==2">{{medication.prescribeDose}}{{medication.dosageForm}}</td>
+									<td class="vertical-top" ng-if="medication.factorId==null" >
+									<div ng-if="activeMedication.dosageForm == null">{{medication.prescribeDose}}</div>
+									<div  ng-if="activeMedication.dosageForm != null">{{medication.dosageForm}}</div></td>
+									<td>{{medication.frequencyDesc}}</td>
+									<td>
+									       <div ng-if="medication.instructionDesc != null">
+											{{medication.instructionDesc}}
+											</div>
+											<div ng-if="medication.instructionText != null">
+											{{medication.instructionText}}
+											</div>
+                                    </td>
+								</tr>
+						</table>
+					</div>
+				</div>
+
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="addFavouriteMedication()"  id="complaint-add-btn">Add</button>
+				<button type="button" class="btn btn-primary" ng-click="removeFavouriteMedication()"  id="complaint-add-btn">Remove</button> -->
+				 <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Remove" ng-click="removeFavouriteMedication()" id="complaint-add-btn">
+						<i class="fa fa-minus" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Add" data-dismiss="modal" ng-click="addFavouriteMedication()"  id="complaint-add-btn">
+						<i class="fa fa-plus" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		</div>
+</div> 
+
+

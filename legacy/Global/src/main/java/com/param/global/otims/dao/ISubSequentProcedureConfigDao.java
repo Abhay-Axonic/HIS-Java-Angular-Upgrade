@@ -1,0 +1,35 @@
+package com.param.global.otims.dao;
+
+import com.param.global.common.Response;
+import com.param.global.otims.dto.SubSequentProcedureConfigDto;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings({"rawtypes"})
+public interface ISubSequentProcedureConfigDao {
+	
+	public Response saveSubSequentProcedureConfig(SubSequentProcedureConfigDto subSequentProcedureConfigDto) throws ApplicationException;
+	
+	public Response updateSubSequentProcedureConfig(SubSequentProcedureConfigDto subSequentProcedureConfigDto) throws ApplicationException;
+	
+	public Response updateSubSequentProcedureConfigStatus(SubSequentProcedureConfigDto subSequentProcedureConfigDto) throws ApplicationException;
+	
+	public Response getSubSequentProcedureConfigList(SubSequentProcedureConfigDto subSequentProcedureConfigDto) throws ApplicationException;
+	
+	public Response getSubSequentProcedureConfigById(Integer subSequentProcConfigId, Integer orgId, Integer unitId) throws ApplicationException;
+	
+	public Response getActiveSubSequentProcedureConfigList(SubSequentProcedureConfigDto subSequentProcedureConfigDto) throws ApplicationException;
+	
+	public Response getSubSequentProcedureConfigCount(SubSequentProcedureConfigDto subSequentProcedureConfigDto) throws ApplicationException;
+	
+	public Response getSubSequentProcedureConfigByIdNotName(SubSequentProcedureConfigDto subSequentProcedureConfigDto) throws ApplicationException;
+	public Response getSubSequentProcedureConfigByOrgUnitStatus(int orgId,int unitId,char status)throws ApplicationException;
+
+	public Response getSubSequentDetailsListById(SubSequentProcedureConfigDto subSequentProcedureConfigDto)throws ApplicationException;
+
+	public Response getSubSequentDetailsListBySpecialityId(SubSequentProcedureConfigDto subSequentProcedureConfigDto)throws ApplicationException;
+
+	public Response getSubSequentDetailsAndInfoListBySpecialityId(
+			SubSequentProcedureConfigDto subSequentProcedureConfigDto)throws ApplicationException;
+	
+}

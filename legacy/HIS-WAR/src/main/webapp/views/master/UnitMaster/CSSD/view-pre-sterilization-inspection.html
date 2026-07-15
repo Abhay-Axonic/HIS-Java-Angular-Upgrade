@@ -1,0 +1,458 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style" ng-if="viewPreKitObj.status == 'Completed' && viewPreKitObj.transition =='Inspected'">
+	
+	<div class="main-heading-div">
+				<div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div>
+			</div>
+			
+	<form name="viewPreSterilizationInspectionForm" novalidate>
+		<div class="row padding-top8">
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id=""
+								class="text-input floating-label dirty" ng-model="viewPreKitObj.code"> <label
+								for="code">Kit Code/Instrument Code</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id=""
+								class="text-input floating-label dirty" ng-model="viewPreKitObj.name"> <label
+								for="code">Kit Name/Instrument Name</label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow"
+						title="Print Barcode"> <i class="fa fa-barcode"
+						aria-hidden="true"></i></a>
+				</div>
+			</div>
+		</div>
+		<!-- <modal visible="showModal"></modal> -->
+		
+		<div class="row padding-left-right-set4 margin-top10 ng-scope">
+			<div class="col-md-12 common-table-height-250">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<!-- <th class="width1 text-center"><input type="checkbox"></th> -->
+							<th class="width10">Instrument Code
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width10">Instrument Name
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5">Qty
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+																	
+							<th class="width5"><span>
+							<input type="checkbox" name="checkStatus" id="Inspected" ng-disabled="true" data-toggle="modal" data-target="#sliderPopup" 
+							data-ng-model="selectedAll" ng-click="changeInspectInstrumentStatus()"></span>
+							<b><label class="checkbox-margin-left-right" for="Inspected" style="color: white !important;font-size: 13px !important;font-weight: inherit !important;">
+										Inspected</label></b></th>
+										
+							<!-- <th class="width8"></th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in viewPreKitObj.kitInstrumentList" ng-if="info.status == 'Inspected'">
+							<!-- <td class="width1 text-center"><input type="checkbox"></td> -->
+							<td>{{info.instrumentCode}}</td>
+							<td>{{info.instrumentName}}</td>
+							<td>{{info.quantity}}</td>
+							<td class="">
+								
+								<label class="switch"> 
+									<input type="checkbox" name="status" class="ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.status" ng-disabled="true"
+									data-toggle="modal" data-target="#sliderPopup" ng-true-value="'Inspected'"  
+									ng-false-value="'Cleaned'" ng-change="inspectionStatus(info)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<!-- <td class="text-center"><a data-toggle="modal" data-target="#replaceModal" class="cursor-pointer">Replace</a></td> -->
+						</tr>
+						<tr ng-repeat="info in viewPreKitObj.kitInstrumentList" ng-if="info.status != 'Inspected'">
+							<!-- <td class="width1 text-center"><input type="checkbox"></td> -->
+							<td>{{info.instrumentCode}}</td>
+							<td>{{info.instrumentName}}</td>
+							<td>{{info.quantity}}</td>
+							<td class="">
+																
+								<label class="switch"> 
+									<input type="checkbox" name="status" class="ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.status"
+									data-toggle="modal" data-target="#sliderPopup" ng-true-value="'Inspected'"  
+									ng-false-value="'Cleaned'" ng-change="inspectionStatus(info)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<!-- <td class="text-center"><a ng-disabled="isDisabled(info)" data-toggle="modal" data-target="#replaceModal" class="cursor-pointer">Replace</a></td> -->
+						</tr>						
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<footer
+			class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+					<a href="#/preSterilizationInspection"> <input type="button"
+						value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<!--<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+					<a href=""> <input type="button"
+						value="Save" class="btn btn-primary btn-save-box-shadow" ng-click="inspectEquipments()">
+					</a>
+				</div> -->
+			</div>
+		</footer>
+		</form>
+		
+		
+	</div>
+	
+	
+	<div class="container-fluid his-style" ng-if=" (viewPreKitObj.status == 'Completed' && viewPreKitObj.transition == 'Cleaned') || ( viewPreKitObj.status =='Pending' && viewPreKitObj.transition =='Inspected' ) ">
+	
+	<div class="main-heading-div">
+				<div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div>
+			</div>
+			
+	
+	<form name="viewPreSterilizationInspectionForm" novalidate>
+		<div class="row padding-top8">
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id=""
+								class="text-input floating-label dirty" ng-model="viewPreKitObj.code"> <label
+								for="code">Kit Code/Instrument Code</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id=""
+								class="text-input floating-label dirty" ng-model="viewPreKitObj.name"> <label
+								for="code">Kit Name/Instrument Name</label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow"
+						title="Print Barcode"> <i class="fa fa-barcode"
+						aria-hidden="true"></i></a>
+				</div>
+			</div>
+		</div>
+		<!-- <modal visible="showModal"></modal> -->
+		
+		<div class="row padding-left-right-set4 margin-top10 ng-scope">
+			<div class="col-md-12 common-table-height-250">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<!-- <th class="width1 text-center"><input type="checkbox"></th> -->
+							<th class="width10">Instrument Code
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width10">Instrument Name
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5">Qty
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+																	
+							<th class="width5"><span>
+							<input type="checkbox" name="checkStatus" id="Inspected" data-toggle="modal" data-target="#sliderPopup" 
+							data-ng-model="selectedAll" ng-click="changeInspectInstrumentStatus()"></span>
+							<b><label class="checkbox-margin-left-right" for="Inspected" style="color: white !important;font-size: 13px !important;font-weight: inherit !important;">
+										Inspected</label></b></th>
+										
+							<!-- <th class="width8"></th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in viewPreKitObj.kitInstrumentList" ng-if="info.status == 'Inspected'">
+							<!-- <td class="width1 text-center"><input type="checkbox"></td> -->
+							<td>{{info.instrumentCode}}</td>
+							<td>{{info.instrumentName}}</td>
+							<td>{{info.quantity}}</td>
+							<td class="">
+								
+								<label class="switch"> 
+									<input type="checkbox" name="status" class="ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.status" ng-disabled="true"
+									data-toggle="modal" data-target="#sliderPopup" ng-true-value="'Inspected'"  
+									ng-false-value="'Cleaned'" ng-change="inspectionStatus(info)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<!-- <td class="text-center"><a ng-click="selectToBeReplacedInst(info)" data-toggle="modal" data-target="#replaceModal" class="cursor-pointer">Replace</a></td> -->
+						</tr>
+						<tr ng-repeat="info in viewPreKitObj.kitInstrumentList" ng-if="info.status != 'Inspected'">
+							<!-- <td class="width1 text-center"><input type="checkbox"></td> -->
+							<td>{{info.instrumentCode}}</td>
+							<td>{{info.instrumentName}}</td>
+							<td>{{info.quantity}}</td>
+							<td class="">
+																
+								<label class="switch"> 
+									<input type="checkbox" name="status" class="ng-pristine ng-untouched ng-valid ng-empty" ng-model="info.status"
+									data-toggle="modal" data-target="#sliderPopup" ng-true-value="'Inspected'"  
+									ng-false-value="'Cleaned'" ng-change="inspectionStatus(info)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<!-- <td class="text-center"><a ng-click="selectToBeReplacedInst(info)" data-toggle="modal" data-target="#replaceModal" class="cursor-pointer">Replace</a></td> -->
+						</tr>						
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<footer
+			class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+					<a href="#/preSterilizationInspection"> <input type="button"
+						value="Back" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+				<!-- <div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+					<a href=""> <input type="button"
+						value="Save" class="btn btn-primary btn-save-box-shadow" ng-click="inspectEquipments()">
+					</a>
+				</div> -->
+			</div>
+		</footer>
+		</form>
+		
+		
+	</div>
+	
+	
+	
+</div>
+
+
+<!-- Confirmation PopUp For Accept Kit -->
+	<div id="sliderPopup" class="modal fade ng-scope in"
+		role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal"
+							ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>Are you sure you want to perform this action?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+						id="" ng-click="updateInspectionStatus();">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+
+<!-- Replaced Modal START -->
+<div id="replaceModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Replace
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label dirty" ng-model="instCodeToReplace"> <label
+										for="code" class="LISDynamicLabelOne">Code</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label dirty" ng-model="instNameToReplace"> <label
+										for="code" class="LISDynamicLabelOne">Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label dirty" ng-model="instNoToReplace"> <label
+										for="code" class="LISDynamicLabelOne">Instrument No.</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-8 col-sm-8 col-md-7 padding-left-right-set4">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label dirty"> <label
+										for="code">Search</label>
+								</div>
+							</div>
+							<div class="col-lg-2 col-sm-2 col-md-2 ">
+								<div class="common-save-button" style="padding-top: 0px;">
+									<a href="" class="btn btn-primary btn-save-box-shadow"
+										style="width: auto;" ng-click="searchInstrumentByMultipleFields()"> <i class="fa fa-search"
+										aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row margin-top4 padding-left-right-10">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width1 text-center"> <!-- <input type="checkbox"></th> -->
+									<th class="width8">Code</th>
+									<th class="width8">Name</th>
+									<th class="width8">Instrument No.</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="inst in instrumentListForReplcement">
+									<td class="vertical-align text-center"><input type="radio" name="selectedInstInfo" ng-click="selectInstInfo(inst)" ng-model="selectedInstInfo" value={{inst}}></td>
+									<td>{{inst.instrumentCode}}</td>
+									<td>{{inst.instrumentName}}</td>
+									<td>{{inst.instrumentId}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="replaceInstrument()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Replaced Modal END -->

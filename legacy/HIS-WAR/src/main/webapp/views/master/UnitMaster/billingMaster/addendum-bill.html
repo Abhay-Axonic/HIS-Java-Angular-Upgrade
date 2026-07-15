@@ -1,0 +1,884 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+					<div ng-include="'./views/common/patient-search-billing.html'"></div>
+			 		<div ng-include="'./views/common/patient-demography.html'"></div>
+				</div>
+				
+				
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 custom-sub-tab padding-left-right-set4">
+				<ul class="tabs nav nav-tabs">
+					<li  ng-class="{ active : isSetFirstTabLevel(1) }" class="width12 active" >
+						<a href="" ng-click="setFirstTabLevel(1)">Service Bill</a>
+					</li>
+					<!-- <li ng-class="{ active : isSetFirstTabLevel(2) }" class="width12" >
+						<a href="" ng-click="setFirstTabLevel(2)" class="">Pharmacy Bill</a>
+					</li> -->
+				</ul>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4">
+			<!--  ******** tab 1 - Service Bill content start ******** -->
+			<div ng-show="isSetFirstTabLevel(1)" class="row second-level-tab-display-div" style="">
+				
+				<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-calendar-plus-o " aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input   class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" press-enter="searchDeposit()"
+													placeholder="DD/MM/YYYY" ng-model="billSearch.fromDate" model-view-value="true" is-open="datepicker.opened" datepicker-options="dateOptions" 
+													show-button-bar="false"	ng-click="openDatePicker()"   ng-change="changeToDate()" ng-blur="checkDateValid()" required>
+										<label for="description" class="LISDynamicLabel">From Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+									<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input  class="text-input floating-label dirty" name="" id="" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999" press-enter="searchDeposit()"
+													placeholder="DD/MM/YYYY" ng-model="billSearch.toDate" model-view-value="true" is-open="datepickerTo.opened" datepicker-options="dateOptions" 
+													show-button-bar="false"	ng-click="openDatePickerTo()"   ng-blur="checkDateValidTo()" required>
+										<label for="description" class="LISDynamicLabel">To Date</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-files-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label" ng-model="billSearch.visitTypeId">
+											<option value="1">OP</option>
+											<option value="2">IP</option>
+											<option value="3">Day Care</option>
+											<option value="4">ER</option>
+										</select> <label for="code">Visit Type</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-file-text-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input  name="description" id="" press-enter="searchBills(billSearch)" ng-model="billSearch.billNo" class="text-input floating-label dirty"> 
+										<label for="description" class="LISDynamicLabel">Bill No.</label>
+									</div>
+								</div>
+							</div>
+						</div>
+							
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-files-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<select class="text-input floating-label" ng-model="billSearch.billStatusId">
+											<option value="1">Pending</option>
+											<option value="2">OnHold</option>
+											<!-- <option value="3">Settled</option> -->
+										</select> <label for="code">Bill Status</label>
+									</div>
+								</div>
+							</div>
+						</div>
+									
+									<!-- <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-10  width4">
+										<div class=" ">
+											<a href="" class="btn btn-primary btn-save-box-shadow" ng-click="searchBills(billSearch)" title="Search" style="width:60% !important;">
+												<i class="fa fa-search" style="font-size: 16px" aria-hidden="true"></i>
+											</a>
+										</div>
+									</div> -->
+									<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-10 margin-top0 padding-top8 text-width-auto">
+										<div class="">
+											<a href="" class="btn btn-primary btn-save-box-shadow width100" ng-click="searchBills(billSearch)" title="Search">
+												<i class="fa fa-search" aria-hidden="true"></i>
+											</a>
+										</div>
+									</div>
+				</div>
+				
+				
+				<div class="row margin-top10">
+				      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+			        <input  class="text-search-box" ng-model="searchBillFilter" placeholder="Search" title="Search" style="margin-top:0px">
+			        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			      </div>
+		      
+	   			 </div>
+	   			 
+	   			 <div class="row padding-top10 padding-left-right-set0" id="billListTable">
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll440">
+					  <table id="main-table" class="main-table width100">
+					    <thead>
+							<tr>
+								<th class="width6 text-center"><span class="">Bill Date</span></th>
+								<th class="width8 text-center"><span class="">Bill No.</span></th>
+								<th class="width10 text-center">UHID</th>
+								<th class="width15 text-center">Patient Name</th>
+								<th class="width5 text-center">Visit Type</th>
+								<th class="width6 text-center">Visit Date</th>
+								<th class="width8 text-center">Visit No.</th>
+								<th class="width8 text-center">Total Bill Amt</th>
+								<th class="width8 text-center">Net Payable</th>
+								<th class="width10 text-center">Amt Paid</th>
+								<th class="width8 text-center">Balance Amt</th>
+								<th class="width6 text-center">Status</th>
+								<th class="width8 text-center">Created By</th>
+								<th class="width2 text-center">Print</th>
+								<th class="width1 text-center">Details</th>
+								<th class="width1 text-center">Edit</th>
+							</tr>
+						</thead>
+					    <tbody>
+							<tr ng-repeat="bill in billList | filter:searchBillFilter">
+								<td class="width6 text-right">{{bill.billDate}}</td>
+								<td class="width8 text-left">{{bill.billNumber}}</td>
+								<td class="width10 text-left">{{bill.uhidNumber}}</td>
+								<td class="width15 text-left">{{bill.patientName}}</td>
+								<td class="width5 text-left">{{getVisitTypeById(bill.visitTypeId)}}</td>
+								<td class="width6 text-right">{{bill.visitDate}}</td>
+								<td class="width8 text-left">{{bill.visitNo}}</td>
+								<td class="width8 text-right">{{parseFloatNum(bill.totalBillAmount)}}</td>
+								<td class="width8 text-right">{{parseFloatNum(bill.netAmount)}}</td>
+								<td class="width10 text-right">{{parseFloatNum(bill.amountPaid)}}</td>
+								<td class="width8 text-right">{{parseFloatNum(bill.outstanding)}}</td>
+								<td class="width6 text-left">{{getBillStatusById(bill.billStatusId)}}</td>
+								<td class="width8 text-left">{{bill.userName}}</td>
+								<td class="text-center width2"><span> <a href=""
+										ng-click="printBill(bill,'N');" ng-if="bill.visitTypeId==1">
+											<i class="fa fa-print" title="Print" aria-hidden="true"></i>
+									</a>
+								</span> <span> <a href="" ng-click="printBill(bill,'N');"
+										ng-if="bill.visitTypeId==2 || bill.visitTypeId==3 || bill.visitTypeId==4"> <i
+											class="fa fa-print" title="Details" aria-hidden="true"></i>
+									</a>
+								</span> <span> <a href="" ng-click="printBill(bill,'Y');"
+										ng-if="bill.visitTypeId==2 || bill.visitTypeId==3 || bill.visitTypeId==4"> <i
+											class="fa fa-print" title="Summary" aria-hidden="true"></i>
+									</a>
+								</span></td>
+								<td class="width1 text-center"><a href="#/addendumBill/serviceDetails"
+									ng-disabled="{{bill.billStatusId == 3 ? true : false}}"
+									ng-click="billDetails(bill)" data-toggle="modal"
+									data-target="#billListDetails">View</a>
+								</td>
+								<td class="width1 text-center">
+								<a ng-click="redirectToNewOPDBilling(bill)">Edit</a>
+								</td>
+							</tr>
+						</tbody>
+					  </table>
+					</div>
+				</div>
+			</div>
+			<!--  ******** tab 1 - Service Bill content end ******** -->
+			<!--  ******** tab 2- Pharmacy Bill content start ******** -->
+			<div ng-show="isSetFirstTabLevel(2)" class=" row second-level-tab-display-div" style="">
+				<div class="row">
+					<div class="padding-top10">
+						
+								<!-- <div class="col-lg-2 col-md-2 col-sm-2">
+							<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select name="saleType" id="saleType" class="text-input floating-label dirty"
+												ng-model="pharmacyBillSearchObj.salesTypeId" >
+												<option value="">All </option>
+												<option ng-repeat="info in salesTypeList" value="{{info.id}}">{{info.type}}</option>
+											</select>
+											
+											<label for="saleType">Sales Type</label>
+										</div>
+									</div>
+								</div> 
+							</div>-->
+							<div class="col-lg-2 col-md-2 col-sm-2">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off" ng-model="pharmacyBillSearchObj.billNo" name="description" id="" 
+												press-enter="searchBillspharmacy(pharmacyBillSearchObj)" class="text-input floating-label" >
+											<label for="description" class="LISDynamicLabel">Bill No.</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" ng-model="pharmacyBillSearchObj.visitNo" name="description" id=""
+												class="text-input floating-label">
+											<label for="description" class="LISDynamicLabel">Visit No.</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10">
+										<div class="">
+											<select name="status" id="status" class="text-input floating-label dirty"
+												ng-model="pharmacyBillSearchObj.statusId">
+												<option value="">All</option>
+												<option ng-repeat="info in statusDataList" value="{{info.id}}">{{info.status}}</option>
+											</select>
+											<label for="billStatus" class="">Bill Status</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- <div class="col-lg-1 col-md-1 col-sm-1 width8">
+								<div class=" margin-left22">
+									<a href="" class="btn btn-primary btn-save-box-shadow margin-left10"
+										ng-click="vm.model.GetBillList()" title="Search" data-toggle="modal">
+										<i class="fa fa-search" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div> -->
+							<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-10 margin-top0 text-width-auto">
+								<div class="">
+									<a href="" id="searchBtn" class="btn btn-primary btn-save-box-shadow width-100" ng-click="searchBillspharmacy(pharmacyBillSearchObj)" title="Search">
+										<i class="fa fa-search" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+			</div>
+			</div>
+			<div class="row margin-top4">
+				<div class="col-lg-7 col-md-7 col-sm-7">
+					<div class="search">
+						<label class="show-entries">Show
+							<select ng-init="vm.model.pagination.pageSize='10'" ng-model="vm.model.pagination.pageSize"
+								ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)"
+								class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+							</select> records
+						</label>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+					<!-- <input type="text" autocomplete="off" ng-model="vm.model.pagination.search" class="text-search-box" placeholder="Search"
+					ng-change="vm.model.pagination.searchData(vm.model.bills, vm.model.pagination)" style="margin-top:0px">
+					<i class="fa fa-search common-search-text-icon margin-left5" aria-hidden="true"></i> -->
+					
+					<input type="text" autocomplete="off" ng-model="searchPhar" class="text-search-box" placeholder="Search" style="margin-top:0px">
+					<i class="fa fa-search common-search-text-icon margin-left5" aria-hidden="true"></i>
+				</div>
+			</div>
+
+				<div class="row padding-top10 padding-left-right-set4">
+					<div id="fixed-thead-tfoot-scroll"
+						class="fixed-thead-tfoot-scroll fix-height-scroll400">
+						<table id="main-table" class="main-table width100">
+							<thead>
+								<tr>
+									<th title="Bill Date" class="width7 text-center"><span
+										class="">Bill Date</span></th>
+									<th title="Bill No." class="width7 text-center"><span
+										class="">Bill No.</span>
+										</div></th>
+									<th title="UHID" class="width8 text-center"
+										ng-if="vm.model.salesTypeId !== 3">UHID</th>
+									<th title="Patient Details" class="width12 text-center">
+										Patient Details</th>
+									<th title="Sales Type" class="width7 text-center">Sales
+										Type</th>
+									<th title="Total Bill Amount" class="width8 text-center">
+										Total Bill Amt</th>
+									<th title="Net Payable" class="width8 text-center">Net
+										Payable</th>
+									<th title="Amount Paid" class="width8 text-center">Amt
+										Paid</th>
+									<th title="Balance Amount" class="width8 text-center">
+										Balance {{vm.model.Currency}}</th>
+									<th title="Refund Amount" class="width8 text-center">
+										Refund {{vm.model.Currency}}</th>
+									<th title="Status" class="width6 text-center">Status</th>
+									<th title="Order By" class="width7 text-center">Order By</th>
+									<th title="Action" class="width8 text-center">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									ng-if="searchBadDebtList == null || !searchBadDebtList.length">
+									<td colspan="14">
+										<p
+											style="text-align: center; margin-top: 0px !important; margin-bottom: 1px !important;">
+											No Records Found</p>
+									</td>
+								</tr>
+								<tr ng-repeat="bill in searchBadDebtList"
+									ng-if="bill.balanceAmt > 0.00">
+									<td title="{{bill.billDate | date:'dd/MM/yyyy hh:mm:ss'}}"
+										class="">{{bill.billDate | date:'dd/MM/yyyy'}}</td>
+									<td title="{{bill.billNo}}" class="width7 text-left">
+										{{bill.billNo}}</td>
+									<td title="{{bill.uhid}}" class="text-left"
+										ng-if="vm.model.salesTypeId != 3">
+										<div style="text-align: center;" ng-if="!bill.uhid">-</div>
+										<div ng-if="!!bill.uhid">{{bill.uhid}}</div>
+									</td>
+									<td title="{{bill.patientDetails}}" class="text-left">
+										{{bill.patientDetails}}</td>
+									<td title="{{bill.salesType}}" class="text-left">
+										{{bill.salesType}}</td>
+									<td
+										title="{{vm.model.Currency}} {{bill.totalAmount | number:2}}"
+										class="text-right" style="text-align: right;">
+										{{vm.model.Currency}} {{bill.totalAmount | number:2}}</td>
+									<td title="{{vm.model.Currency}} {{bill.netAmount | number:2}}"
+										class="text-right" style="text-align: right;">
+										{{vm.model.Currency}} {{bill.netAmount | number:2}}</td>
+									<td title="{{vm.model.Currency}} {{bill.paidAmt | number:2}}"
+										class="text-right" style="text-align: right;">
+										{{vm.model.Currency}} {{bill.paidAmt | number:2}}</td>
+									<td
+										title="{{vm.model.Currency}} {{bill.balanceAmt | number:2}}"
+										class="text-right" style="text-align: right;">
+										{{vm.model.Currency}} {{bill.balanceAmt | number:2}}</td>
+									<td title="{{vm.model.Currency}} {{bill.refundAmt | number:2}}"
+										class="text-right" style="text-align: right;">
+										{{vm.model.Currency}} {{bill.refundAmt | number:2}}</td>
+									<td title="{{bill.status}}" class="text-left">
+										{{bill.status}}</td>
+									<td title="{{bill.orderBy}}" class="text-left">
+										{{bill.orderBy}}</td>
+									<td class="text-center">
+										<!-- <div class="col-lg-3 col-md-3 padding-left-right-set4">
+									<a title="Print" ng-click="vm.model.rePrintBillSlip(bill)">
+										<i class="fa fa-print" aria-hidden="true"></i>
+									</a>
+								</div> -->
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="row margin-top8">
+				<div class="col-md-12 col-lg-12 table-responsive ">
+							<div class="row margin-bottom45 center-block">
+								<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+									style="font-size: 14px; cursor: pointer;">
+									<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+											ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+									</li>
+									<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+											ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+									</li>
+									<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+										ng-class="{active:vm.model.pagination.currentPage === page}"><a
+											ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+									</li>
+									<li
+										ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+										<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+									</li>
+									<li
+										ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+										<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+			</div>
+			<!--  ******** tab 2- Pharmacy Bill content end ******** -->
+		</div>
+	   			 
+		
+	</div>
+</div>
+<!-- CONFIRM POPUP FOR SAVE START-->
+<div id="bill" class="modal fade ng-scope in common-small-popup" role="dialog" style="background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog" style="margin-top:16% !important"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Confirm
+<!-- 					<button type="button" class="close" data-dismiss="modal" ng-click="cancel();"></button> -->
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10"><span>{{msg}} Do you want to Print?</span></div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" id="button" title="Cancel" data-dismiss="modal">
+						<i class="fa fa-times" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Yes" data-dismiss="modal" ng-click="printBillNew()">
+						<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- CONFIRM POPUP FOR SAVE END -->
+
+<!-- counterDetailsModal START -->
+<div id="counterDetailsModal" class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Counter Details
+					<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10 row padding-top10">
+					<div class="col-md-3 col-lg-3 col-sm-3">
+						<span>Select Counter</span> 
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6">
+						<select class="dirty" style="width:100%" ng-change="selectCounter(counterMstObj);" ng-model="counterMstObj" >
+						<option selected value>Select Counter</option>
+							<option value="{{counter}}" ng-repeat="counter in counterList">{{counter.name}}</option>
+						</select>
+					</div>
+					
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" class="btn btn-primary width13" id="otpOk" ng-click="confirmCounter();">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ***********Pharmacy Bill List Details modal start ************ -->
+<div id="pahrmacy_billListDetails" class="common-large-popup modal fade ng-scope in his-style" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Pharmacy Bill List Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row patient-details-row">
+					<div class="col-md-11 col-sm-11 col-xs-11 ">
+						<span class="profile_pic margin-left10">
+							<img alt="" src="resources/assets/images/tempImages/m.jpg" class="img-circle" style="width:30px">
+						</span>
+						<span class="margin-left10" ng-if="pharmacybillDetailsList.uhid">
+							<b class="padding-right5">UHID :</b>{{ pharmacybillDetailsList.uhid }}</span>
+						<span class="margin-left10">{{ pharmacybillDetailsList.patientDetails }} </span>
+						<span class="margin-left10">Dr. {{ pharmacybillDetailsList.doctorName }}</span>
+					</div>
+				</div>
+				<div class="row padding-top10 padding-left-right-set4"><!-- id="pharmacologyDetailsTableId" -->
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll350">
+					  <table id="main-table" class="main-table width100">
+					    <thead>
+							<tr class="table-th-bg">
+								<th  title="Medication Name" class="width6 text-center">
+									Medication
+								</th>
+								<!-- <th title="Generic Name" class="width6">
+									Generic Name
+									<div class="float_right" ng-click="sortType = 'genericName'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th> -->
+								<th title="Manufacture" class="width6 text-center">
+									Manufacture
+								</th>
+								<!-- <th title="Quantity Prescribed" class="width6" ng-if="vm.model.billDetailList.saleTypeId !== 3">
+									Quantity Prescribed
+								</th> -->
+								<th title="Quantity Dispensed" class="width6 text-center">
+									Quantity Dispensed
+								</th>
+								<th title="Batch No." class="width6 text-center">
+									Batch No.
+								</th>
+								<th title="Expiry Date" class="width6 text-center">
+									Expiry Date
+								</th>
+								<th title="Price" class="width5 text-center">
+									Price
+								</th>
+								<th title="Total Amount" class="width6 text-center">
+									Total {{vm.model.Currency}}
+								</th>
+								<th title="Discount" class="hideClass width6 text-center">
+									Discount
+								</th>
+								<!-- <th title="Tax" class="width5">
+									Tax
+								</th> -->
+								<th title="Tax %" class="width5 text-center">
+									Tax %
+								</th>
+								<th title="Tax  Amount" class="width5 text-center">
+									Tax {{vm.model.Currency}}
+								</th>
+								<th title="Net Amount" class="width6 hideClass text-center">
+									Net {{vm.model.Currency}}
+								</th>
+								<th title="Self Payable" class="width6 hideClass text-center">
+									Self Payable  {{vm.model.Currency}}
+								</th>
+								<th title="Credit Payable" class="width6 hideClass text-center">
+									Credit Payable {{vm.model.Currency}}
+								</th>
+								<th title="Package Payable" class="width6 hideClass text-center">
+									Package Payable {{vm.model.Currency}}
+								</th>
+								<th title="Is Combination" class="width5 text-center">Is Combination</th>
+							</tr>
+						</thead>
+					    <tbody>
+							<tr ng-repeat="billDetail in pharmacybillDetailsList.items | filter : search | orderBy:sortType:sortReverse">
+								<td title="{{billDetail.itemName}}" class="width6 text-left">
+									{{billDetail.itemName}}
+								</td>
+								<!-- <td title="{{billDetail.genericName}}" class="width6">
+									{{billDetail.genericName}}
+								</td> -->
+								<td title="{{billDetail.manufacturer}}" class="width6 text-left">
+									{{billDetail.manufacturer}}
+								</td>
+								<!-- <td title="{{billDetail.quantityPrescribed}}" class="width6" ng-if="vm.model.billDetailList.saleTypeId !== 3">
+									{{billDetail.quantityPrescribed}}
+								</td> -->
+								<td title="{{billDetail.quantity}}" class="width6 text-right">
+									{{billDetail.quantity}}
+								</td>
+								<td title="{{billDetail.batchCode}}" class="width6">
+									{{billDetail.batchCode}}
+								</td>
+								<td title="{{billDetail.expiryDate | date:'MMM-yyyy'}}" class="width6">
+									{{billDetail.expiryDate | date:'MMM-yyyy'}}
+								</td>
+								<td title="{{vm.model.Currency}} {{billDetail.rate | number:2}}" class="width5 text-right">
+									{{vm.model.Currency}} {{billDetail.rate | number:2}}
+								</td>
+								<td title="{{vm.model.Currency}} {{billDetail.totalAmount | number:2}}" class="width6 text-right">
+									{{vm.model.Currency}} {{billDetail.totalAmount | number:2}}
+								</td>
+								<td title="{{vm.model.Currency}} {{billDetail.discount | number:2}}" class="hideClass width6 text-right">
+									{{vm.model.Currency}} {{billDetail.discount | number:2}}
+								</td>
+								<!-- <td title="{{billDetail.taxName}}" class="width5">
+									{{billDetail.taxName}}
+								</td> -->
+								<td title="{{billDetail.taxPercent | number:2}} %" class="width5 text-right">
+									{{billDetail.taxPercent | number:2}} %
+								</td>
+								<td title="{{vm.model.Currency}} {{billDetail.taxAmount | number:2}}" class="width5 text-right">
+									{{vm.model.Currency}} {{billDetail.taxAmount | number:2}}
+								</td>
+								<td title="{{vm.model.Currency}} {{billDetail.netAmount | number:2}}" class="hideClass width6 text-right">
+									{{vm.model.Currency}} {{billDetail.netAmount | number:2}}
+								</td>
+								<td title="{{vm.model.Currency}} {{billDetail.selfPayable | number:2}}" class="hideClass width6 text-right">
+									{{vm.model.Currency}} {{billDetail.selfPayable | number:2}}
+								</td>
+								<td title="{{vm.model.Currency}} {{billDetail.creditPayable| number:2}}" class="hideClass width6 text-right">
+									{{vm.model.Currency}} {{billDetail.creditPayable | number:2}}
+								</td>
+								<td title="{{vm.model.Currency}} {{billDetail.packageConsumptionAmt| number:2}}" class="hideClass width6 text-right">
+									{{vm.model.Currency}} {{billDetail.packageConsumptionAmt | number:2}}
+								</td>
+								<td class="text-center">
+									<a ng-click="vm.model.ViewCombinationDetails(billDetail)" title="View Combination Details">
+										<i class="fa fa-info-circle" aria-hidden="true"></i>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr class=" font-W600 table-th-bg">
+								<td title="{{vm.model.Currency}} {{pharmacybillDetailsList.paidAmnt | number:2}}" >
+										Paid Amt :	{{vm.model.Currency}} {{pharmacybillDetailsList.paidAmt | number:2}}
+								</td>
+								<td title="{{vm.model.Currency}} {{pharmacybillDetailsList.balanceAmt  | number:2}}" >
+										Balance Amnt :	{{vm.model.Currency}} {{pharmacybillDetailsList.balanceAmt | number:2}}
+								</td>	
+								<td></td>
+								<td></td>
+								<td></td>											<!-- <td colspan="6" class="text-right"></td> -->
+								<td title="Total">
+									<label class="color-white">
+										Total :
+									</label>
+								</td>
+								<td title="{{vm.model.Currency}} {{pharmacybillDetailsList.totalAmount | number:2}}" class="width6 text-right">
+									{{vm.model.Currency}} {{pharmacybillDetailsList.totalAmount | number:2}}
+								</td>
+								<td title="{{vm.model.Currency}} {{pharmacybillDetailsList.totalDiscount | number:2}}" class="width6 text-right">
+									{{vm.model.Currency}} {{pharmacybillDetailsList.totalDiscount ? pharmacybillDetailsList.totalDiscount : 0 | number:2}}
+								</td>
+								<td></td>
+								<td title="{{vm.model.Currency}} {{pharmacybillDetailsList.taxAmount | number:2}}"  style="text-align: right; width: 5% !important;">
+									{{vm.model.Currency}} {{pharmacybillDetailsList.taxAmount | number:2}}
+								</td>
+							
+								
+								<td style="text-align: right;" title="{{vm.model.Currency}} {{pharmacybillDetailsList.netAmount | number:2}}">
+									{{vm.model.Currency}} {{pharmacybillDetailsList.netAmount | number:2}}
+								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								
+							</tr>
+							<tr class=" font-W600 table-th-bg ">
+								<td colspan="15" class="text-right spanClass color-label">
+									<span ng-if="vm.model.billDetailList.discount">
+										<label>Discount :</label>
+									</span>
+									<span style="text-align: right;" ng-if="pharmacybillDetailsList.discount">
+										<span ng-if="vm.model.radio == 2">{{vm.model.Currency}}</span>
+										<span>{{pharmacybillDetailsList.discount | number:2}}</span>
+										<span ng-if="vm.model.radio == 1"> % </span>
+									</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<span>
+										<span ng-if="pharmacybillDetailsList.discountCategory">
+											<label for="discountCategory">Discount Category : </label>
+											<span>{{pharmacybillDetailsList.discountCategory}}</span>
+										</span>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									</span>
+									<span title="{{vm.model.Currency}} {{pharmacybillDetailsList.roundOff | number:2}}" style="text-align: right;">
+										<label style="">Round Off :</label>
+										<span style="">{{vm.model.Currency}} {{pharmacybillDetailsList.roundOff | number:2}}</span>
+									</span> &nbsp;&nbsp;&nbsp;
+								</td>
+							</tr>
+							
+							
+		
+						</tfoot>
+					  </table>
+					</div>
+				</div>
+				
+			</div>
+			<div class="modal-footer" style="border:none;">
+			<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+			<fieldset class="normalRegistration sub-fieldset bill-details-summery" >
+				<legend class="sub-legend border-bottom-none text-left">Payer Summary</legend>
+					<table class="table table-bordered ">
+						<tr>
+							<!-- <th class=" width15"><b>Payer Code</b></th> -->
+							<th class=" width15"><b>Payer Name</b></th>
+							<th class=" width15"><b>Total Amt</b></th>
+							<th class=" width15"><b>Paid Amt</b></th>
+							<th class=" width15"><b>Balance Amt</b></th>
+							<th class=" width15"><b>Disallowed Amt</b></th>
+							<th class=" width15"><b>Action</b></th>
+						</tr>
+						 <tr ng-repeat="payee in payeePharmacyList">
+							<!-- <td >{{payee.companyCode}}</td> -->
+							<td>{{payee.companyDesc}}</td>
+							<td >{{parseFloatNum(payee.billAmount)}}</td>
+							<td >{{parseFloatNum(payee.paidAmount)}}</td>
+							<td >{{parseFloatNum(payee.dueAmount)}}</td>
+							<td >{{parseFloatNum(payee.crAmount)}}</td>
+							<td ><center ng-if="payee.dueAmount > 0"><input type="button" class="btn btn-primary btn-save-box-shadow width50"  data-toggle="modal" data-target="#collectPayment" ng-click="settlementClick(payee);selectedSalesObject(payee)" value="Settlement"></center></td>
+						</tr>
+					</table>
+			</fieldset>
+		</div></div>
+				<div class="row">
+					<div class="col-lg-1 col-md-1 col-sm-2 pull-right padding-left-right-set0">
+<!-- 						<button type="button" ng-click="vm.model.settlementClick()" class="btn btn-primary" ng-class="{disabled:vm.model.billDetailList.status == 'Completed'}">Settlement</button> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ***********Pharmacy Bill List Details modal end ************ -->
+<div ng-include="'./views/master/UnitMaster/billingMaster/common/bill-list-details-bill-cancellation-addendum.html'" ></div>
+
+
+<div id="accepatRejectReceipt" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Rejection
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" title="Reason Type -'Rejection'" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label dirty"  id="rejectReasonIdDrpDN" name="code" ng-model="cancelReasonId">
+											<option value="">Select Reason</option>
+											<option ng-repeat="info in reasonList" ng-if="info.reasonTypeId == 8" value="{{info.reasonMasterId}}"  >{{info.reasonDesc}}</option>
+											</select>		
+											<label for="code">Select Reasons</label>
+										</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-sticky-note" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<textarea name="code" rows="4" id="noteRejectDrpDN"
+													class="text-input floating-label" ng-model="cancelRemark"></textarea>
+												<label for="code">Remark</label>
+											</div>
+										</div>
+									</div>
+									<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<div class="row">
+						<div class="col-lg-4 col-md-3 col-sm-3 float-right">
+							<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn" ng-click="cancelBillOrReceipt('R')">Cancel Receipt</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div id="accepatReject" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Rejection
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" title="Reason Type -'Rejection'" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label dirty"  id="rejectReasonIdDrpDN" name="code" ng-model="cancelReasonId">
+											<option value="">Select Reason</option>
+											<option ng-repeat="info in reasonList" ng-if="info.reasonTypeId == 8" value="{{info.reasonMasterId}}"  >{{info.reasonDesc}}</option>
+											</select>		
+											<label for="code">Select Reasons</label>
+										</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-sticky-note" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<textarea name="code" rows="4" id="noteRejectDrpDN"
+													class="text-input floating-label" ng-model="cancelRemark"></textarea>
+												<label for="code">Remark</label>
+											</div>
+										</div>
+									</div>
+									<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 float-right">
+							<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="cancelBillOrReceipt('B')">Cancel Bill</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<modal visible="showModal"></modal>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+
+$(document).ready(function() {  
+	 $(".patienttSearchResult").show();
+	 $(document).on('click', '.commonPatientSearch', function(){
+			//alert()
+			$(this).closest(".patienttSearchResult").toggle();
+		});
+	 $(".selectedPageName").text("Bad title: 'Bad Debts List");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="badDebitListController"]').parents("li").addClass("active");
+});
+$("#button").click(function() {
+	$("#bill").hide();
+
+});
+
+
+
+</script>
+
+
+
+
+

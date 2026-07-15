@@ -1,0 +1,143 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			
+		</fieldset>
+		<div class="row padding-top10">
+		<form action="" name="cabinMasterForm" novalidate>
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors >  
+							<input type="text" autocomplete="off" name="code" id="incidentCategoryCode" ng-model="common.incidentCategoryCode" class="text-input floating-label dirty"> 
+							<label for="Code" class="">Code<span class="star">*</span></label>
+							<p class="help-block" ng-if="cabinMasterForm.incidentCategoryCode.$error.required">Code is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors >  
+							<input type="text" autocomplete="off" name="description" id="incidentCategoryDesc" ng-model="common.incidentCategoryDesc" class="text-input floating-label dirty"> 
+							<label for="description" class="">Description<span class="star">*</span></label>
+							<p class="help-block" ng-if="cabinMasterForm.incidentCategoryDesc.$error.required">Description is required</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="row">
+			<div class="col-md-6 col-sm-7 padding-left-right-set4 padding-top10">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top5">
+		        <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()" ng-if="saveBtnFlag"> 
+					<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+				</a>
+
+				<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="update()" ng-if="updateBtnFlag">
+					<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+				</a>
+		      </div>
+		     <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box oneeeee" placeholder="Search" ng-model="searchKeyword">
+				 <i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+			</div>
+		</div>
+			
+		<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+			  <table id="main-table" class="main-table width100">
+				<thead>
+					<tr class="">
+						<th class="width6">
+							 Code
+						</th>
+						<th class="width10">
+							Description
+						</th>
+						<th class="width3 text-center">
+							Status(n)
+						</th>
+						<th class="width3 text-center">
+							Action taken
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="info in commonList|orderBy:column:reverse|filter:searchKeyword">
+						<td>{{info.incidentCategoryCode}}</td>
+						<td>{{info.incidentCategoryDesc}}</td>
+								<td>
+								<label class="switch"> 
+									<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.incidentCategoryId,info.status)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<td class="padding-edit-button-table text-center">
+								<a>
+									<i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.incidentCategoryId)" ></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<modal visible="showModal"></modal> 
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+});	
+	$(".selectedPageName").text("Incident Category Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="incidentCategoryMaster"]').parents("li").addClass("active");
+</script>

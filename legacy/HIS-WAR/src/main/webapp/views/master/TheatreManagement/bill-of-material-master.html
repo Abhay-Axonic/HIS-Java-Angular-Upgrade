@@ -1,0 +1,329 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">		
+		<div class="row padding-top0 padding-left-right-set4">
+			<div class="col-md-12 col-sm-12">
+				<div class="row">
+				        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10 padding-top4" ng-if="gradeWiseSeviceApplicable == true">
+							<span>
+							 <label class="checkbox-inline padding-top10"> 
+								<input id="radio12" name="radio12" ng-click="checkedFlag(commonObj.gradeSearch,1 )" ng-true-value="true" 
+								ng-false-value="false" ng-checked="commonObj.gradeSearch == true"
+									type="radio"  ng-model="commonObj.gradeSearch" > 
+								Grade</label>
+							</span> 
+							<span> 
+							<label class="checkbox-inline padding-top10">
+								<input id="radio13" name="radio13" ng-click="checkedFlag(commonObj.gradeSearch,2)" ng-true-value="true" ng-false-value="false" 
+								ng-checked="commonObj.procSearch == true"
+									type="radio"  ng-model="commonObj.procSearch" > 
+								Clinical Service</label>
+							</span>
+											
+					     </div>
+					
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+					
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="" ng-if="commonObj.gradeSearch == false">
+									<input type="text" autocomplete="off" name="description" id="procedure"
+										class="text-input floating-label" ng-model="procedure.serviceName"
+										uib-typeahead="procedure.serviceStandardName + '|' +procedure.serviceStandardCode for procedure in searchprocedure($viewValue)"
+										typeahead-on-select="selectProcedureName($item, $model, $label)" >
+									<label for="description" class="">Clinical Service<span class="star">*</span></label>
+								</div>
+								<div class="" ng-if="commonObj.gradeSearch == true">
+								<select class="text-input floating-label dirty" id="surgeryGradeId" ng-model="procedure.surgeryGradeId" >
+									<option ng-repeat="info in gradeList" ng-value="{{info.surgeryGradeId}}" value="{{info.surgeryGradeId}}">{{info.surgeryGrade}}</option>
+								</select>
+									<label for="description" class="">Clinical Service<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4" ng-if="commonObj.gradeSearch == false">
+						<div class="row input-container padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="description" id="procedure"
+										class="text-input floating-label" ng-model="procedure.serviceCode"
+										uib-typeahead="procedure.serviceStandardName + '|' +procedure.serviceStandardCode for procedure in searchprocedure($viewValue)"
+										typeahead-on-select="selectProcedureName($item, $model, $label)" >
+									<label for="description" class="">Clinical Service Code<span class="star">*</span></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+						<div class="row input-container  padding-top12">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="" >
+									<select name="bedCategoryId" class="text-input floating-label dirty" ng-model="procedure.billingBedCategoryId" >
+										<option value="">-</option>
+										<option ng-repeat="bed in listBedCategory" value="{{bed.billingBedCategoryId}}">{{bed.billingBedDesc}}</option>
+									</select> 
+									   <label>Billing Bed Category</label>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top15">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="getBillOdMaterialListByProcId();">
+							<i class="fa fa-search" aria-hidden="true"></i></a>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top15">
+						<div class="">
+							<a href="#/OTbillOfMaterial">
+								<input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow" ng-click="addNew();">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row margin-top10 padding-left-right-10">
+			<div class="row padding-left-right-set1">
+				<div class="col-md-6 col-sm-7 padding-left-right-set4">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+							<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-10 margin-top8" >
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width15">Clinical Service 
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Clinical Service Code
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8"> Tariff 
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Payment entitlement 
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Visit type
+								<div class="float_right">
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Patient Category
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th> 
+							<th class="width8">View Bill Of Material
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Status(n)
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in pagination.data">
+							<td>
+								<div ng-if="info.serviceName != null"> {{info.serviceName}} </div>
+								<div ng-if="info.surgeryGrade != null"> {{info.surgeryGrade}} </div>
+							</td>
+							<td>{{info.serviceCode}}</td>
+							<td>{{info.tariffDesc}}</td>
+							<td>{{info.paymentEntitlementDesc}}</td>
+							<td>{{info.visitTypeName}}</td>
+							<td>{{info.patientCategory}}</td> 
+							<td>
+							   <a class="cursor-pointer" data-toggle="modal" ng-click="serviceDetails(info)" data-target="#addNotesModal1"><i class="fa fa-info-circle"></i></a>
+							</td>
+							<td>
+								<label class="switch"> 
+									<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info,info.status)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							
+						</tr>
+					</tbody>
+				</table>
+					<div class="row margin-bottom45 center-block">
+					<ul  class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<div id="addNotesModal1" class="modal fade ng-scope in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Notes
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set0 padding-top0">
+					<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll550">
+					  <table id="main-table" class="table table-bordered"><!-- Add this class if you need horizontal scroll "width200" and remove "width100" -->
+					    <thead>
+					      <tr >
+					       <th class="fixed" scope="col"></th>
+					        <th class="fixed" scope="col" ng-repeat="info1 in listBillOfMaterialServices">{{info1.serviceName}}</th>
+					      </tr>
+					    </thead>
+					    <tbody>
+					      <tr  ng-repeat="info in listBedCategory">
+					        <th class="fixed width8" scope="col" >{{info.billingBedDesc}}</th>
+					       <td class="fixed width10" scope="col" ng-repeat="info1 in listBillOfMaterialServices">
+					       		<div ng-repeat="itm in serviceAmtList track by $index">
+						       		<div ng-if="(info1.serviceId == itm.serviceId) && (info.billingBedCategoryId == itm.billingBedCatId)">
+						       		<!-- {{itm.visitTypeId}} -->
+							       		<div ng-if="itm.amount != null && itm.amount != 0">
+							       		   <input type="text" autocomplete="off" ng-model="itm.amount" disabled="disabled" is_number>
+							       		</div>
+										<div ng-if="itm.amount == '' || itm.amount == 0 || itm.amount == undefined">
+							       		  -
+							       		</div>
+							       		
+									</div>
+								</div>
+					       	</td>
+					      </tr>
+					    </tbody>
+					  </table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="Cancel" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("OT Bill Of Material");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="OTbillOfMaterial"]').parents("li").addClass("active");
+});
+</script>

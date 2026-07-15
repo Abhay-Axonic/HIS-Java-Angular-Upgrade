@@ -1,0 +1,860 @@
+<style>
+    .tableError {
+        border: 2px solid red !important;
+    }
+
+    .tableError select.w-100.ng-pristine.ng-empty,
+    .tableError input.w-100.ng-valid.ng-empty,
+    .borderRed {
+        border: 2px solid red;
+    }
+
+    .font-W600 td {
+        font-weight: 400 !important;
+    }
+</style>
+    <!-- *****************************************************************************************************************************
+                                                        Walk In Sales Prescription
+        ****************************************************************************************************************************** -->
+    <!-- Page Content start-->
+    <div id="page-content-wrapper">
+        <div class="container-fluid his-style" >
+            <legend class="main-heading-div commonPatientSearch cursor-pointer">
+                <div class="row" id="storeSelection">
+                    <!--<div ng-include src="'./views/common/selectedStore.html'"></div>-->
+                    <div class="col-lg-10 col-md-9 col-sm-6"></div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set1 pull-right">
+                        <span class="heading-name-font">{{getStoreName()}} </span>
+                        <!--<span class="heading-name-font pull-right" title="Change Store" data-toggle="modal" ng-click=storePopup();>-->
+                        <span class="heading-name-font pull-right" title="Change Store" data-toggle="modal" ng-click=vm.model.isStoreChanged();>
+                        <i class="fa fa-stack-exchange" aria-hidden="true"></i>
+                            </span>
+                    </div>
+                </div>
+            </legend>
+            <!-- <div ng-include="'./views/common/common-patient-search-opd.html'"></div> -->
+            <fieldset class="normalRegistration sub-fieldset main-fieldset">
+                <legend class="main-heading-div commonPatientSearch cursor-pointer">
+                    Patient Search
+                    <span class="billing-counter-no">Counter No. {{counterMstObj.counterDesc}}</span>
+                </legend>
+                <div class="row patienttSearchResult">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                    <i class="fa fa-bullseye" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11">
+                                    <div class="">
+                                        <input type="text" autocomplete="off" name="registrationNumber"
+                                            ng-model="vm.model.patientSearchObj.uhIdNumber" id=""
+                                            class="text-input floating-label"
+                                            press-enter="vm.model.searchPatient(vm.model.patientSearchObj)">
+                                        <label for="description" class="LISDynamicLabel">UHID No.</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                    <div class="">
+                                        <input type="text" autocomplete="off" name="description" id=""
+                                            ng-model="vm.model.patientSearchObj.patientName"
+                                            class="text-input floating-label"
+                                            press-enter="vm.model.searchPatient(vm.model.patientSearchObj)">
+                                        <label for="description" class="LISDynamicLabel">Patient Name</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+                            <div class="row input-container margin-top4">
+                                <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                    <i class="fa fa-venus-mars" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-10 col-sm-10 col-md-10">
+                                    <div class="">
+                                        <select class="text-input floating-label dirty" name="patientGender"
+                                            ng-model="vm.model.patientSearchObj.gender"
+                                            ng-options="patientGender.gender for patientGender in vm.model.patientGenderList">
+                                        </select>
+                                        <label for="code">Gender</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                    <i class="fa fa-mobile" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                    <div class="">
+                                        <input type="text" autocomplete="off" numbers-only name="description" id=""
+                                            class="text-input floating-label" ng-model="vm.model.patientSearchObj.mobileNo"
+                                            press-enter="vm.model.searchPatient(vm.model.patientSearchObj)">
+                                        <label for="description" class="">Mobile No.</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+                            <div class="row input-container">
+                                <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                    <i class="fa fa-calendar " aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-10 col-sm-10 col-md-10">
+                                    <div class="">
+                                        <input type="text" autocomplete="off" class="text-input floating-label dirty" name="birthDate"
+                                            id="birthDate" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                                            placeholder="DD/MM/YYYY" ng-model="vm.model.patientSearchObj.birthDate"
+                                            model-view-value="true" is-open="datepicker.opened"
+                                            datepicker-options="birthDateOptions" show-button-bar="false"
+                                            ng-click="openDatePicker()" required>
+                                        <label for="birthDate" class="">Birth Date</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                            <div class="row input-container margin-top4">
+                                <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-10 col-sm-10 col-md-10">
+                                    <div class="">
+                                        <select class="text-input floating-label" ng-model="ide"
+                                            ng-model="vm.model.patientSearchObj.identificationType">
+                                            <option></option>
+                                            <option ng-repeat="id in identificationTypeList"
+                                                value="{{id.identificationId}}">{{id.identificationName}}</option>
+                                        </select>
+                                        <label for="code">Identification Type</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 dynamicLabelForEmployeeText">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                    <div class="">
+                                        <input type="text" autocomplete="off" name="description" id=""
+                                            ng-model="vm.model.patientSearchObj.identificationNo"
+                                            class="text-input floating-label"
+                                            press-enter="vm.model.searchPatient(vm.model.patientSearchObj)">
+                                        <label for="description" class="">Identification No..</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10 text-width-auto">
+                            <div class="width-div-for-patient-reg ">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Search"
+                                    ng-click="vm.model.searchPatient(vm.model.patientSearchObj)">
+                                    <i class="fa fa-search" style="font-size: 21px" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div
+                            class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10 text-width-auto">
+                            <div class="width-div-for-patient-reg ">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Fingerprint"
+                                    ng-click="thumbSearch();">
+                                    <i class="fa fa-podcast" style="font-size: 17px" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <fieldset class="normalRegistration sub-fieldset border-none padding-top10">
+                        <div class="row serachedPatientList">
+                            <div class="col-md-12 col-lg-12 headerHeight padding-left-right-set4">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th class="width1">
+                                        </th>
+                                        <th class="width15">
+                                            <span class="">UHID No.</span>
+                                        </th>
+                                        <th class="width15">
+                                            <span class="">Patient's Name</span>
+                                        </th>
+                                        <th class="width5">
+                                            Gender
+                                        </th>
+                                        <th class="width15">
+                                            Mobile Number
+                                        </th>
+                                        <th class="date-column">
+                                            Birth Date
+                                        </th>
+                                        <th class="width15">
+                                            Identification Type
+                                        </th>
+                                        <th class="width15">
+                                            Identification No..
+                                        </th>
+                                    </tr>
+                                    <tr class="cursor-pointer" ng-repeat="patient in vm.model.patientSearchData"
+                                        ng-if="(vm.model.patientSearchFlag)" ng-click="vm.model.SelectPatientById(patient);selectedPatientRadioCommon($index)">
+                                        <td>
+                                            <input type="radio" name="patient-list-radio"
+                                                ng-click="vm.model.SelectPatientById(patient)" id="patientSelectRadioCommon_{{$index}}">
+                                        </td>
+                                        <td>
+                                            {{patient.uhIdNumber}}
+                                        </td>
+                                        <td>
+                                            {{patient.patientName}}
+                                        </td>
+                                        <td>
+                                            {{patient.genderName}}
+                                        </td>
+                                        <td>
+                                            {{patient.mobileNo}}
+                                        </td>
+                                        <td>
+                                            {{patient.birthDate | date : "dd/MM/yyyy" }}
+                                        </td>
+                                        <td>
+                                            {{patient.identificationName}}
+                                        </td>
+                                        <td>
+                                            {{patient.identificationNo}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </fieldset>
+            <!-- <div ng-include="'./views/common/patient-demography-opd.html'" class="padding-left-right-set4 padding-top4"></div> -->
+            <form name="myForm">
+                <div class="row padding-top10 padding-left-right-set4">
+                <div class=''  ng-include="'./views/common/patient-demography-ipd-coversheet.html'"></div>
+                    <!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width7" style="margin-top: -10px;">
+                        <label for="WalkInSalesCheckbox" style="font-size: 12px; color:black;">Walk In Sales</label>
+                        <label class="switch switch-small">
+                            <input type="checkbox" class="switchInput" ng-model="vm.model.walkInSale.isWalkInSales"
+                                name="WalkInSalesCheckbox" ng-change="vm.model.WalkInSalesFlagStatus(bill)">
+                            <div class="slider round slider-small"></div>
+                        </label>
+                    </div> -->
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+                        <div class="col-lg-4 col-md-4 row input-container margin-top4">
+                            <div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+                                <i class="fa fa-mars-stroke-v" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-10 col-md-10 ">
+                                <div class="form-group padding-left5">
+                                    <select class="text-input floating-label dirty"
+                                        ng-disabled="!(vm.model.walkInSale.isWalkInSales)"
+                                        ng-class="{dirty: vm.model.walkInSale.prefix}" name="prefix"
+                                        ng-model="vm.model.walkInSale.prefix"
+                                        data-ng-options="prefix.prefix for prefix in vm.model.prefixList"
+                                        ng-change="vm.model.isPrefixValid = false">
+                                    </select>
+                                    <p ng-if="vm.model.isPrefixValid" class="errorMsg">Prefix is required</p>
+                                    <label for="prefix">Prefix</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-6 row input-container">
+                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                <div class="form-group">
+                                    <input type="text" autocomplete="off"  ng-disabled="!(vm.model.walkInSale.isWalkInSales)"
+                                        ng-model="vm.model.walkInSale.patientName" name="patientName"
+                                        ng-class="{dirty: vm.model.walkInSale.patientName}"
+                                        class="text-input floating-label" maxlength="100"
+                                        ng-change="vm.model.isPatientNameValid = false">
+                                    <label for="patientName">Patient Name</label>
+                                    <p ng-if="vm.model.isPatientNameValid" class="errorMsg">Patient Name is required</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+                        <div class="row input-container">
+                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                <div class="form-group">
+                                    <input type="text" autocomplete="off"  ng-disabled="!(vm.model.walkInSale.isWalkInSales)"
+                                        ng-model="vm.model.walkInSale.patientAddress" name="patientAddress"
+                                        ng-class="{dirty: vm.model.walkInSale.patientAddress}"
+                                        class="text-input floating-label" maxlength="500"
+                                        ng-change="vm.model.isPatientAddressValid = false">
+                                    <label for="patientAddress">Patient Address</label>
+                                    <p ng-if="vm.model.isPatientAddressValid" class="errorMsg">Patient Address is required
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                   <!--  <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+                        <div class="row input-container">
+                            <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                <div class="form-group">
+                                    <input numbers-only type="text" autocomplete="off"  ng-disabled="!(vm.model.walkInSale.isWalkInSales)"
+                                        ng-model="vm.model.walkInSale.mobileNumber" name="mobileNumber"
+                                        ng-class="{dirty: vm.model.walkInSale.mobileNumber}"
+                                        class="text-input floating-label"
+                                        ng-change="vm.model.isPatientMobileNumberValid = false">
+                                    <label for="mobileNumber">Mobile No.</label>
+                                    <p ng-if="vm.model.isPatientMobileNumberValid" class="errorMsg">Patient Mobile number is required
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+                        <div class="col-lg-7 col-md-7 row input-container margin-top4">
+                            <div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+                                <i class="fa fa-mars-stroke-v" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-10 col-md-10 ">
+                                <div class="form-group padding-left5">
+                                    <select class="text-input floating-label dirty"
+                                        ng-disabled="!(vm.model.walkInSale.isWalkInSales)"
+                                        ng-class="{dirty: vm.model.walkInSale.patientGender}" name="patientGender"
+                                        ng-model="vm.model.walkInSale.patientGender"
+                                        ng-options="patientGender.gender for patientGender in vm.model.patientGenderList"
+                                        ng-change="vm.model.isPatientGenderNewValid = false">
+                                    </select>
+                                    <p ng-if="vm.model.isPatientGenderNewValid" class="errorMsg">Gender is required</p>
+                                    <label for="Gender">Gender</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 row input-container">
+                            <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                <i class="fa fa-repeat font-size12" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-10 col-sm-10 col-md-10 ">
+                                <div class="form-group padding-left5">
+                                    <input type="text" autocomplete="off"  ng-disabled="!(vm.model.walkInSale.isWalkInSales)"
+                                        ng-model="vm.model.walkInSale.age" name="age" class="text-input floating-label"
+                                        ng-class="{dirty: vm.model.walkInSale.age}" maxlength="3"
+                                        ng-change="vm.model.checkAgeValid()" numbers-only>
+                                    <label for="age" class="my-profile-icon">Age</label>
+                                    <p ng-if="vm.model.isAgeValid" class="errorMsg">Age is required</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+                        <div class="row input-container">
+                            <div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+                                <i class="fa fa-user-md fa-color" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-10 col-md-10 ">
+                                <div class="form-group">
+                                    <input type="text" autocomplete="off" 
+                                        ng-disabled="!(vm.model.walkInSale.isWalkInSales) && (vm.model.isOTC) && !(vm.model.isDoctorNameValid)"
+                                        ng-model="vm.model.walkInSale.doctorName" name="doctorName"
+                                        class="text-input floating-label" maxlength="100"
+                                        ng-change="vm.model.isDoctorNameValid = false"
+                                        ng-class="{dirty: vm.model.walkInSale.doctorName}">
+                                    <label for="doctorName">Doctor Name</label>
+                                    <p ng-if="vm.model.isDoctorNameValid" class="errorMsg">Doctor Name is required</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+                        <div class="row input-container">
+                            <div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-lg-11 col-sm-10 col-md-10 ">
+                                <div class="form-group">
+                                    <input type="text" autocomplete="off" 
+                                        ng-disabled="!(vm.model.walkInSale.isWalkInSales) && (vm.model.isOTC) && !(vm.model.isDoctorAddressValid)"
+                                        ng-model="vm.model.walkInSale.doctorAddress"
+                                        ng-class="{dirty: vm.model.walkInSale.doctorAddress}" name="doctorAddress" id=""
+                                        class="text-input floating-label" maxlength="100"
+                                        ng-change="vm.model.isDoctorAddressValid = false">
+                                    <label for="doctorAddress">Doctor Address</label>
+                                    <p ng-if="vm.model.isDoctorAddressValid" class="errorMsg">Doctor Address is required</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </form>
+            <div class="row padding-top10  padding-left-right-set4">
+                <!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 width7" style="margin-top: -10px;">
+                    <label for="OTC_Checkbox" style="font-size: 12px; color:black;">OTC</label>
+                    <label class="switch switch-small" style="display: block;">
+                        <input type="checkbox" class="switchInput" name="OTC_Checkbox" ng-model="vm.model.isOTC"
+                            ng-change="vm.model.OtcFlag()">
+                        <div class="slider round slider-small"></div>
+                    </label>
+                </div> -->
+                <div class="col-lg-2 col-md-2 col-sm-2 margin-top-5" style="width:155px;margin-left: 10px;">
+                    <div class="row">
+                        <label><b>Search By</b></label>
+                    </div>
+                    <label class="radio-inline"><input type="radio" ng-click="showItemsearch()" ng-model="entitlementObj.searchbyTypeId" name="searchbyType" value="1" checked="checked">Item</label>
+                    <label class="radio-inline"><input type="radio" ng-click="showGenericsearch()" ng-model="entitlementObj.searchbyTypeId" name="searchbyType" value="2">Generic</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" id="itemsearch" style="margin-left: -15px;">
+                    <div class="row input-container">
+                        <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-11 ">
+                            <div class="walkinsale-dropdown">
+                                <input type="text" autocomplete="off"  name="item-name" id="item-name"
+                                    class="text-input floating-label" ng-model="vm.model.search"
+                                    uib-typeahead="items.details for items in vm.model.SearchItems($viewValue)"
+                                    typeahead-on-select="vm.model.AddItemToBill(vm.model.walkInSale, $item, $model, $label); vm.model.search = '';" ng-disabled="isValidated">
+                                <label for="item-name">Item Name</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!--                                              KIT ITEMS CODE                             -->
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 ">
+                    <div class="row input-container">
+                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                            <i class="fa fa-building-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-md-10">
+                            <div>
+                                <select class="text-input floating-label dirty" ng-model="kitId" >
+                                    <option value="null">select</option>
+                                    <option ng-repeat="info in kitMasterList" value="{{info.id}}">{{info.description}}</option>
+                                </select>
+                                <label for="code"> Item Kit </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top12">
+                    <div class="checkbox">
+                        <button type="button" ng-disabled="kitId == null || kitId == 'null'"  class="btn btn-primary"
+                                style="margin-top: -9px;" id="updateBtn"  ng-click="addKitItems(vm.model.walkInSale, $item, $model, $label);">Add Kit
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top12">
+                    <div class="checkbox">
+                        <button type="button" id="updateBtn" ng-disabled="kitId == null || kitId == 'null'"  class="btn btn-primary"
+                                style="margin-top: -9px;"  ng-click="kitItemDetails();"> Kit Details
+                        </button>
+                    </div>
+                </div>
+<!--                 KIT ITEMS CODE END-->
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4" id="genericsearch" style="display: none; margin-left: -15px;">
+                    <div class="row input-container">
+                        <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                            <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-11 ">
+                            <div class="walkinsale-dropdown">
+                                <input type="text" autocomplete="off"  name="generic-name" id="generic-name"
+                                    class="text-input floating-label" ng-model="vm.model.search"
+                                    uib-typeahead="generics.details for generics in vm.model.SearchGenerics($viewValue)"
+                                    typeahead-on-select="vm.model.AddItemToBill(vm.model.walkInSale, $item, $model, $label); vm.model.search = '';" ng-disabled="isValidated">
+                                <label for="generic-name">Generic Name</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="saveMedicationPopUp()">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+                <!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Clear" ng-click="vm.model.ConfirmationPopup(vm.model.walkInSale)">
+						<i class="fa fa-eraser" style="font-size: 18px" aria-hidden="true"></i></a> 
+					</div>
+				</div> -->
+                <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_right" style="width:180px">
+                    <div class="row input-container">
+                        <!-- <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                            <i class="fa fa-barcode" aria-hidden="true"></i>
+                        </div> -->
+                        <!-- <div class="col-lg-11 col-sm-11 col-md-11 ">
+                            <div ng-init="alert('init')">
+                                <input type="text" autocomplete="off" id="barcode"  name="barcode"
+                                    class="text-input floating-label" ng-model="vm.model.barcode"
+                                    ng-keypress="vm.model.BarcodeScan($event)">
+                                <label for="barcode">Barcode</label>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row padding-top10 padding-left-right-set4">
+                <div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll280"
+                    style="height: 350px !important;">
+                    <table id="main-table" class="main-table" style="width: 125%;">
+                        <thead>
+                            <tr>
+                                <th class="width2" title="Item Code">
+                                    Item Code
+                                    <div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+                                        <div>
+                                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="margin-top-8">
+                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="width2" title="Item Name">
+                                    Item Name
+                                    <div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+                                        <div>
+                                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="margin-top-8">
+                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="width2" title="Formulation Type">
+                                    Formulation Type
+                                    <div class="float_right"
+                                        ng-click="sortType = 'formulationType'; sortReverse = !sortReverse">
+                                        <div>
+                                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="margin-top-8">
+                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="width2" title="Generic Name">
+                                    Generic Name
+                                    <div class="float_right"
+                                        ng-click="sortType = 'genericName'; sortReverse = !sortReverse">
+                                        <div>
+                                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="margin-top-8">
+                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="width3" title="UOM">
+                                    <span class="">Unit of Measurement</span>
+                                </th>
+                                <th class="width2" title="Dose">
+                                    <span class="">Dose</span>
+                                </th>
+                                <th class="width2" title="Dose Unit">
+                                    <span class="">Dose Unit</span>
+                                </th>
+                                <th class="width2" title="Frequency">
+                                    <span class="">Frequency</span>
+                                </th>
+                                <th class="width2" title="Duration">
+                                    <span class="">Duration</span>
+                                </th>
+                                <th class="width2" title="Qty">
+                                    <span>Quantity</span>
+                                </th>
+                                <th class="width2" title="Instruction">
+                                    <span class="">Instruction</span>
+                                </th>
+                                <th class="width2" title="Action">
+                                    Action taken
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="item in vm.model.walkInSale.items | filter : search | orderBy:sortType:sortReverse track by $index "
+							class="repeat-row" data-ng-class="{tableError: item.isItemValid}">
+                                <td title="{{item.itemCode}}">
+                                    <div>{{item.itemCode}}</div>
+                                </td>
+                                <td title="{{item.itemName}}">
+                                    <div>{{item.itemName}}</div>
+                                </td>
+                                <td title="{{item.formulationType}}">
+                                    <div>{{item.formulationType}}</div>
+                                </td>
+                                <td title="{{item.genericName}}">
+                                    <div>{{item.genericName}}</div>
+                                </td>
+                                <td>
+                                    <div class=""  title="{{item.selectedUom.unit}}">{{item.selectedUom.unit}}</div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <input type="text" ng-model="item.dose" class="width100 w-100" min="0" numbers-only>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <select class="w-100" style="height:30px;" ng-model="item.doseUnit">
+                                            <option ng-repeat="dose in doseList" value="{{dose.id}}">{{dose.unit}}</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <input onkeyup="this.value = this.value.replace(/[^a-z0-9 .]/gi, '')" type="text" autocomplete="off" name="description" class="w-100" ng-model="item.searchItem"
+											uib-typeahead="serviceMaster.frequency for serviceMaster in searchMedicationFreItems($viewValue)"
+											typeahead-on-select="addFrequencyHistoryItemList($item, $model, $label,$index)">
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div>
+                                        <input type="text" numbers-only onkeyup="this.value = this.value.replace(/[^a-z0-9 .]/gi, '')" autocomplete="off" ng-model="item.durationCount" maxlength="3"
+                                            ng-change="addDurationItemList(item, $model, $label,$index)" class="width40 w-100"> 
+                                        <select ng-model="item.durationUnit" class="width50 w-100"
+                                            ng-change="addDurationItemList(item, $model, $label,$index)" style="height: 30px;" >
+                                            <option value="Day">Day</option>
+                                            <option value="Week">Week</option>
+                                            <option value="Month">Month</option> 
+                                            <option value="Year">Year</option> 
+                                        </select>
+                                    </div>
+                                </td>
+                                <td title="">
+                                    <div>
+                                        <input onkeyup="this.value = this.value.replace(/[^a-z0-9 .]/gi, '')" type="text" numbers-only ng-model="item.quantity">
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="w-100" style="height:30px;" ng-model="item.instruction">
+                                        <option ng-repeat="mediIns in medicationInstructions"
+                                            value="{{mediIns.instructionId}}">{{mediIns.instructionDesc}}</option>
+                                    </select>
+                                </td>
+                                <td class="vertical-middle" style="text-align: center">
+<!--                                    <input type="button" name="" id="addr" value="+"-->
+<!--                                        ng-click="vm.model.AddItem($index, vm.model.walkInSale)"-->
+<!--                                        class="btn btn-info add-dynamic-row" style="padding: 2px 10px !important; margin-left : 10px;" />-->
+                                    <i class="fa fa-times btn btn-info add-dynamic-row" id="cancelBtn" ng-click="vm.model.RemoveItem($index);" title="Remove"
+                                       aria-hidden="true" style="padding: 2px 10px !important; margin-left: 5px;"></i>
+<!--                                    <input type="button" value=""-->
+<!--                                        ng-click="vm.model.RemoveItem($index);"-->
+<!--                                        class="btn btn-info add-dynamic-row"-->
+<!--                                        style="padding: 2px 10px !important; margin-left: 5px;" />-->
+                                    <span  name="" title="LASA" style="padding: 2px 4px !important;" ng-show="item.isLasa">
+											<img alt="" src="resources/assets/images/icon/capsulePill.png" class="" style="width:23px">
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Content-->
+    
+    
+    <!--  confirmSave modal start -->
+    
+    <div id="confirmSave" class="modal fade ng-scope in" role="dialog">
+        <div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+            <div class="modal-content" style="border-radius: 0px !important;">
+                <div class="modal-header" style="padding: 0px!important;">
+                    <div class="modal-title patient-details-row">
+                        Confirm
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="margin-left10">
+                        <span>{{confirmMessage}}</span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" style="font-size: 18px" aria-hidden="true"></i></a> 
+						</div>
+					</div>
+                    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Ok" data-dismiss="modal" ng-click="saveWalkInPrescription()">
+							<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+						</div>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--  confirmSave modal end -->
+
+    <!--  confirmationPopUp modal start -->
+
+<div id="confirmationPopUp" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content" style="border-radius: 0px !important;">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to Clear the Medication?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"
+					ng-click="vm.model.ClearBill(vm.model.walkInSale)">
+					Ok </button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--  confirmationPopUp modal end -->
+    
+    <!--  Store Change modal start -->
+    
+    <div id="storeChangePopUp" class="modal fade ng-scope in" role="dialog">
+        <div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+            <div class="modal-content" style="border-radius: 0px !important;">
+                <div class="modal-header" style="padding: 0px!important;">
+                    <div class="modal-title patient-details-row">
+                        Confirm
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="margin-left10">
+                        <span>Are you sure you want to change the store ? This will remove the selected items ?</span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                    <button type="button" data-dismiss="modal" class="btn btn-primary"
+                            ng-click="vm.model.resetStore()">
+                        Ok </button>
+                    <button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--  Store Change modal end -->
+<!-- ******************* Pharmacy Details - Modal start ************************* -->
+<div id="itemDetailsModalWalkIn" class="modal fade ng-scope in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 0px !important;">
+            <div class="modal-header" style="padding: 0px!important;">
+                <div class="modal-title patient-details-row">
+                    Item Details
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row table-container padding-left-right-set4 padding-top4">
+                    <div class="col-md-12 col-lg-12 col-sm-8 table-container-header">
+                        <table class="table table-striped table-hover table-condensed table-bordered">
+                            <thead>
+                            <tr class="">
+                                <th class="width8" title="Item Code">Item Code</th>
+                                <th class="width10" title="Item Name">Item Name</th>
+                                <th class="width10" title="Generic Name">Generic Name</th>
+                                <th class="width10" title="Manufacturer Name">Manufacturer Name</th>
+                                <th class="width8" title="UOM">UOM</th>
+                                <th class="width8" title="UOM Unit">UOM Unit</th>
+                                <th class="width5" title="Qty">Qty</th>
+                                <th class="width10" title="Available Stock">Available Stock</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="table-container-body fix-height-scroll380" style="overflow-y: overlay;">
+                        <table class="table table-striped table-hover table-condensed table-bordered">
+                            <tbody>
+                            <tr ng-repeat="datum in kitMasterItemsList">
+                                <td class="width8" title="{{datum.itemCode}}">{{datum.itemCode}} </td>
+                                <td class="width10" title="{{datum.itemName}}">{{datum.itemName}}</td>
+                                <td class="width10" title="{{datum.genericName}}">{{datum.genericName  ? datum.genericName: '-'}} </td>
+                                <td class="width10" title="{{datum.manufacturerName}}">{{datum.manufacturerName ? datum.manufacturerName: '-'}} </td>
+                                <td class="width8" title="{{datum.uomType}}">{{datum.uomType}} </td>
+                                <td class="width8" title="{{datum.uomUnit}}">{{datum.uomUnit}} </td>
+                                <td class="width5" title="{{datum.quantity}}"> {{datum.quantity}}</td>
+                                <td class="width10" title="{{datum.availableQty}}">{{(datum.availableQty != null ? datum.availableQty : 0)}}</td>
+                            </tr>
+                            <tr ng-if="!kitMasterItemsList || kitMasterItemsList == false">
+                                <td colspan="7" class="text-center">
+                                    <p>No Record Found</p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="border:none;">
+            </div>
+        </div>
+    </div>
+</div>
+    
+    <script type="text/javascript">
+        var documentHeight = $(window).height();
+        var sideBarHeight = documentHeight - 55;
+        $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    
+        $(document).ready(function () {
+    
+            //$(".hideClass").addClass("hide-td");
+    
+            $(".selectedPageName").text("Walk In Prescription");
+            $(".sidebar-nav li").each(function () {
+                $(this).find("a").parents("li").removeClass("active");
+            });
+            $('a[href$="walkInSales"]').parents("li").addClass("active");
+    
+            $("#discountButtonId").hide();
+            $(".hideClass").show();
+            /*************** discount and total amt column hide-show function *******************/
+            $("#discountButtonId").click(function () {
+                if ($('.hideClass').first().css('display') == 'none')
+                    $('.hideClass').css("display", "table-cell");
+                else
+                    $('.hideClass').css("display", "none");
+            });
+        });
+    
+        $(document).ready(function () {
+            $(".patienttSearchResult").show();
+        });
+    
+        $(document).on('click', '.commonPatientSearch', function () {
+            //alert()
+            $(this).closest(".patienttSearchResult").toggle();
+        });
+    </script>

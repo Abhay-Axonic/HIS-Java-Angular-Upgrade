@@ -1,0 +1,42 @@
+
+<style>
+.transaction-msg-box{
+	border: 1px solid grey;
+    box-shadow: 0px 4px 4px 4px #99a4b8;
+    margin-top: 5%;
+    padding: 10px !important;
+}
+
+</style>
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<!-- <div ng-include="'./views/common/kiosk-top-bar.html'"></div> -->
+		<div class="col-lg-4 col-md-4 col-sm-4"></div>
+		<div class="col-lg-6 col-md-6 col-sm-6 transaction-msg-box">
+			<div class="text-center ">
+		    	<h3 align="center">Transaction Id-<b>{{transactionId}}</b></h3>
+				<h4 align="center">Wait your payment is in process....</h4>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+<!-- </div> -->
+<modal visible="showModal"></modal>
+<script type="text/javascript">
+$(document).ready(function(){
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+ 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+	
+$(".selectedPageName").text("Pesapal");
+$(".sidebar-nav li").each(function() {
+	$(this).find("a").parents("li").removeClass("active");
+});
+$('a[href$="pesapalProcessPage"]').parents("li").addClass("active");
+
+});	
+	
+</script>

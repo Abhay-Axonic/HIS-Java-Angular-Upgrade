@@ -1,0 +1,267 @@
+<div id="page-content-wrapper" class="ng-scope">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row margin-top10">
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<!-- <div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label">
+								<label for="code">From Date</label>
+							</div> -->
+							<div class="">
+						
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForFromDate" id="datePickerForFromDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForFromDate" model-view-value="true" is-open="datePickerForFromDate.opened"
+									   datepicker-options="datePickerForFromDate2" show-button-bar="false"
+									    ng-click="openDatePickerForFromDate()" required="" style="">
+									
+									<label for="code" class="">
+									Date (From)</label> <!-- Date should be selected from-to Date  -->
+							  </div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<!-- <div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label">
+								<label for="description" class="LISDynamicLabel">To Date</label>
+							</div> -->
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datepicker" id="datepicker" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									   ng-model="datePickerForToDate" model-view-value="true" is-open="datePickerForToDate.opened"
+									   datepicker-options="datePickerForToDate" show-button-bar="false"
+									    ng-click="openDatePickerForToDate()" required="" style=""> <label
+								for="code">Date-Till</label>
+						   </div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-tasks" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="">
+								<select class="text-input floating-label" name="fromStore"
+								ng-model="selectedKitIssueFromStoreId"
+								ng-options="data.storeId as data.storeName for data in kitIssueFromStoreList" required>
+								</select> <label for="fromStore">Store (Origin)</label>
+				  	 </div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-tasks" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="">
+								<select class="text-input floating-label" name="toStore"
+								ng-model="selectedKitIssueToStoreId"
+								 ng-options="data.storeId as data.storeName for data in kitIssueToStoreList" required>
+								</select> <label for="toStore">Store (Destination)</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-bullseye" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="indentNo">
+								<label for="code">Issued Number</label>
+							</div>
+						</div>
+					</div>
+				</div>
+		
+				<div class="col-lg-2 col-md-2 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<!-- <select class="text-input floating-label">
+									<option value=""></option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Status</label> -->
+								<select class="text-input floating-label dirty" name="code" ng-model="selectedKitIndentStatus" required>
+										<option value="">All</option>
+										<!-- <option value="all">All</option> -->
+										<!-- <option value="New">New</option> -->
+										<option value="Pending">Pending</option>
+										<option value="Cancelled">Cancelled</option>
+										<option value="Closed">Closed</option>
+								</select> <label for="code">Status(n)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set1">
+					<div class="padding-top10">
+						<a class="btn btn-primary btn-save-box-shadow width30" ng-click="getKitIssueListByMultipleFields()">
+						 <i class="fa fa-search" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+        </fieldset>	
+        <div class="row margin-top8">
+			<div class="col-md-12 col-lg-12 col-sm-12 padding-left-right-set4" id="nonBillableTableHt">
+				<fieldset>
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 height500-table-with-scroll">
+					<table class="table table-bordered first-checkBox-padding">
+						<thead class="mainServiceTableCommon">
+							<tr>
+								<th class="width8">
+									Issued Number
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width7">
+									Issued (Date)
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8">
+									Store (Origin)
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8">
+									Store (Destination)
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">
+									Priority
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width12">
+									Remark
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width5 text-center">
+									 Action taken
+									<div class="float_right">
+										<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+										<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+									</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- <tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td class="text-center vertical-middle">
+									<span><a title="Print">
+										<i class="fa fa-print" aria-hidden="true"></i>
+									</a></span>
+									<span class="padding-left10"><a href="#/detailsKitIndentAcceptance">Details</a></span></td>
+							</tr> -->
+					 <tr ng-if="kitIssueList.length==0"><td class="text-center" colspan="7">{{loadingMessage}}</td></tr>
+						<tr ng-repeat="info in kitIssueList">
+							<td>{{info.issueNo}}</td>
+							<td>{{info.createdDate}}</td>
+							<td>{{info.fromStore}}</td>
+							<td>{{info.toStore}}</td>
+							<td>{{info.priority}}</td>
+							<td>{{info.remark}}</td>
+							<td class="padding-edit-button-table text-center">
+											<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+												<a title="Print "><i class="fa fa-print" aria-hidden="true"></i></a>
+											</div>
+											<div class="col-lg-6 col-md-6 padding-left-right-set4 text-right">
+												<a ui-sref="detailsKitIndentAcceptance({issueNo: info.issueNo})" title="View">Details</a>
+											</div>
+							</td>
+						</tr>
+							
+						</tbody>
+					</table>
+					</div>
+				</div>
+				</fieldset>
+			</div>
+		</div>
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+});
+  
+  $(".selectedPageName").text("Kit Issue Acceptance");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="KitIndentAcceptance"]').parents("li").addClass("active");
+
+</script>

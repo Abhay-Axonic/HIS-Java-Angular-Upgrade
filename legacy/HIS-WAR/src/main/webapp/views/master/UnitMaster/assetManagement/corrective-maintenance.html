@@ -1,0 +1,433 @@
+<div id="page-content-wrapper" >
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- row 1 -->
+			<div class="row">
+				
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									 <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="fromDatepicker" id="fromDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="fromDate"
+											model-view-value="true" is-open="fromDatepicker.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openFromDatePicker()"  required >
+											<label for="description" class=""> Date (From) </label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="toDatepicker" id="toDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="toDate"
+											model-view-value="true" is-open="toDatepicker.opened"
+											datepicker-options="toDateOptions" show-button-bar="false"
+											ng-click="openToDatePicker()"  required >
+											<label for="description" class=""> Date-Till </label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="storeId"  convert-to-number>
+									<option value="0">All</option>
+									<option ng-repeat="info in storeList" value="{{info.storeId}}">{{info.storeName}}</option>
+								</select> 
+								<label for="description" class="LISDynamicLabel">Department</label>
+							</div>
+						</div>
+					</div>
+				</div>
+	
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 " >
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="statusId"  convert-to-number>
+									<option value="0">All</option>
+									<option value="3">Assigned</option>
+									<option value="6">Cancelled</option>
+									<option value="2">Completed</option>
+									<option value="5">Pending</option>
+									<option value="7">Reopen</option>
+									<option value="1">Requested</option>
+									<option value="4">Work In Progress</option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Status(n) </label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="getCorectiveMaintenance()">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10">
+					<div class=" ">
+						<a href="#/addNewCorrectiveMaintenance">
+							<input type="button" value="Add New"  class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- //row 1 -->
+		</fieldset>
+		<div class="row margin-top4">
+			<div class="col-lg-8 col-md-8 col-sm-8">
+					<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="pagination.pageSize='10'" 
+								ng-model="pagination.pageSize" 
+								ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				</div>
+				
+			<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto float_right">
+				<div class="">
+					<button type="button" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="updateCorectiveMaintenance();" ng-disabled = "counter == 0" >
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top10">
+			<div class="col-lg-12 col-md-12 ">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width2"></th>
+							<th class="width6">Request No.</th>
+							<th class="width7">Request (Date)</th>
+							<th class="width6">Request (Type)</th>
+							<th class="width6">Asset Code</th>
+							<th class="width8">Asset Name</th>
+							<th class="width8">Request Criticality</th>
+							<th class="width8">Requestor</th>
+							<th class="width8">Reopen Request No</th>
+							<th class="width8">Completion Details</th>
+							<th class="width8">Reopen Details</th>
+							<th class="width5">Status(n)</th>
+							<th class="width3">Action taken</th>
+						</tr>
+					</thead>
+					<tbody>	
+						<tr ng-repeat="info in pagination.data | filter:searchKeyword">
+							<td ng-style="setColor(info.referenceId)" ng-style="set_color(info.referenceId)"><input type="checkbox" ng-model="info.check" ng-true-value="true" ng-false-value="false" ng-disabled="info.maintenanceStatusId != 5 || info.maintenanceStatusId == 6" ng-click = "getcountofcheck(info.check);"></td>
+							<td ng-style="setColor(info.referenceId)">{{info.callLogNumber}}</td>
+							<td ng-style="setColor(info.referenceId)">{{info.requestDateTime}}</td>
+							<td ng-style="setColor(info.referenceId)">
+								<div ng-if="info.requestTypeId == 1">Breakdown</div>
+								<div ng-if="info.requestTypeId == 2">Installation</div>
+								<div ng-if="info.requestTypeId == 3">As And When</div>
+							</td>
+							<td ng-style="setColor(info.referenceId)">{{info.assetCode}}</td>
+							<td ng-style="setColor(info.referenceId)">{{info.assetName}}</td>
+							<td ng-style="setColor(info.referenceId)">
+								<div ng-if="info.requestCriticalityId == 1">Normal</div>
+								<div ng-if="info.requestCriticalityId == 2">Urgent</div>
+							</td>
+							<td ng-style="setColor(info.referenceId)">{{info.userName}}</td>
+							<td ng-style="setColor(info.referenceId)">
+								<div ng-if="info.referenceLogNumber!=null">{{info.referenceLogNumber}}</div>
+								<div ng-if="info.referenceLogNumber==null">-</div>
+							</td>
+							<td class="padding-edit-button-table" ng-style="setColor(info.referenceId)">
+								<div class=" text-center" ng-if="info.maintenanceStatusId == 2">
+									<a><i class="fa fa-info-circle" aria-hidden="true" title="Completion Details" data-toggle="modal" data-target="#completionDetailsModal" ng-click="getCurrentIndex($index);"></i></a>
+								</div>
+								
+								<div class=" text-center" ng-if="info.maintenanceStatusId != 2">
+									-
+								</div>
+								
+							</td>
+							<td class="padding-edit-button-table" ng-style="setColor(info.referenceId)">
+								<div class=" text-center" ng-if="info.isComplete">
+									<a><i class="fa fa-info-circle" aria-hidden="true" title="Reopen" data-toggle="modal" data-target="#reopenModal" ng-click="getReopenReqIndex($index);"></i></a>
+								</div>
+								
+								<div class=" text-center" ng-if="!info.isComplete">
+									-
+								</div>
+							
+							</td>
+							<td ng-style="setColor(info.referenceId)">
+								<div ng-if="info.maintenanceStatusId == 3">Assigned</div>
+								<div ng-if="info.maintenanceStatusId == 2">Completed</div>
+									<div ng-if="info.maintenanceStatusId == 6">Cancelled</div>
+									<div ng-if="info.maintenanceStatusId == 5">Pending</div>
+									<div ng-if="info.maintenanceStatusId == 7">Reopen</div>
+									<div ng-if="info.maintenanceStatusId == 1">Requested</div>
+								<div ng-if="info.maintenanceStatusId == 4">Work In Progress</div>
+							</td>
+							
+							
+							<td style="  width: 8.35% !important;" ng-style="setColor(info.referenceId)">
+		                          <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%; " ng-show="(info.maintenanceStatusId == 5)">
+		                            <a title="Edit" ng-click="getDetails(info,0)">
+		                              <i class="fa fa-pencil" aria-hidden="true"></i>
+		                            </a>
+		                          </div>
+		                          
+		                           <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%; " ng-show="(info.maintenanceStatusId != 5)">
+		                            <a title="Edit">
+		                              <i class="fa fa-pencil disabled" aria-hidden="true"></i>
+		                            </a>
+		                          </div>
+		                           
+		                          <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%;">
+		                            <a title="Print ">
+		                              <i class="fa fa-print" aria-hidden="true"></i>
+		                            </a>
+		                          </div>
+		                          
+		                          <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%; "  ng-show="info.maintenanceStatusId != 6 &&  info.maintenanceStatusId !=2">
+		                            <a title="Cancel ">
+		                              <i class="fa fa-ban" aria-hidden="true" ng-click="cancelRequest(info.correctiveMaintenanceId);"></i>
+		                            </a>
+		                          </div>
+		                          
+		                           <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%; " ng-show="info.maintenanceStatusId == 6 || info.maintenanceStatusId ==2">
+		                            <a title="Cancel">
+		                              <i class="fa fa-ban disabled" aria-hidden="true"></i>
+		                            </a>
+		                          </div>
+		                          
+		                          <div class="col-lg-6 col-md-6 padding-left-right-set4 " style="width: 20%;"><!-- text-right -->
+		                            <a href="" ng-click="getDetails(info,1)" ><i class="fa fa-eye"></i></a>
+		                          </div>
+                      	 	 </td>
+						</tr>
+					</tbody>
+				</table> 
+			</div>
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+		</div>
+	</div>
+</div>
+<!-- completion details modal start -->
+<div id="completionDetailsModal" class="modal fade ng-scope in common-medium-popup" data-backdrop="static"  role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Completion Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<!--  row start -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 padding-left-right-set4 common-table-height-250 margin-top4" id="">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr class="table-th-bg">
+									<th class="width8">
+										Completion Date
+									</th> 
+									<th class="width8">
+										Completion Time
+									</th> 
+									<th class="width70">
+										Remark
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="completionDate" id="completionDate"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="completionObj.completionDate"
+											model-view-value="true" is-open="completionDate.opened"
+											datepicker-options="completionDateOptions" show-button-bar="false"
+											ng-click="openCompletionDatePicker()"  required  ng-disabled="corectiveMaintenanceList[currentIndex].isComplete">
+									</td>
+									<td>
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description" id="" ng-model="completionObj.completionTime" class="text-input floating-label"  ng-init="initClockPicker()" ng-disabled="corectiveMaintenanceList[currentIndex].isComplete"> 
+											<label for="description" class="LISDynamicLabel">Schedule Time</label>
+										</div>	
+									</td>
+									<td><textarea rows="2" ng-model="completionObj.completionRemak" ng-disabled="corectiveMaintenanceList[currentIndex].isComplete"></textarea></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="pull-left">
+					<input type="checkbox" id="completeChk" ng-model="completionObj.isComplete" ng-disabled="corectiveMaintenanceList[currentIndex].isComplete">
+					<label for="completeChk" class="margin-left5" >Complete</label>
+				</div>
+				<div class="pull-right">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="updateCompletionDetails();" ng-disabled="corectiveMaintenanceList[currentIndex].isComplete">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- completion details modal end -->
+<!-- reopen modal start -->
+<div id="reopenModal" class="modal fade ng-scope in common-medium-popup" data-backdrop="static"  role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Reopen Details 
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<!--  row start -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 padding-left-right-set4 common-table-height-230 margin-top4" id="">
+						<div class="row ">
+							<div class="col-lg-4 col-md-3 col-sm-3 padding-left-right-10 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+										<i class="fa fa-calendar-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" class="text-input floating-label"  ng-model ="reopenDate" ng-disabled = "reOpenstatus == true">
+											<label for="description" class="LISDynamicLabel">Reopen Date </label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- <div class="col-lg-2 col-md-2 col-sm-1 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+										<i class="fa fa-clock-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-10 col-md-10">ng-model="corectiveMaintenanceObj.downTime"
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description" id=""  class="text-input floating-label"  ng-init="initClockPicker()" > 
+											<label for="description" class="">Reopen Time</label>
+										</div>
+									</div>
+								</div>
+							</div> -->
+						</div>
+						<div class="row margin-top4">
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10">
+								<b class="padding-right10 ">Remark:</b>
+							</div>
+							<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4">
+								<textarea rows="4" ng-model ="reopenRemark"  ng-disabled = "reOpenstatus == true"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<div class="pull-right">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="reopenRequest();"  ng-disabled = "reOpenstatus == true">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- reopen details modal end -->
+
+
+
+<!-- Comform cancleCorrectiveMainteanence Mainteanence  START -->
+<div id="cancleCorrectiveMainteanence"class="modal fade ng-scope in common-small-popup" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 1300 !important; background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Corrective Maintenance
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 table-container padding-top4">
+					<label for="description" class="LISDynamicLabel">Do you want to cancel Request ?</label>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="" ng-click="finalCancelReq();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary"id="">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Conform cancleCorrectiveMainteanence Mainteanence END -->
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Corrective Maintenance Request");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="correctiveMaintenance"]').parents("li").addClass("active");
+});
+</script>

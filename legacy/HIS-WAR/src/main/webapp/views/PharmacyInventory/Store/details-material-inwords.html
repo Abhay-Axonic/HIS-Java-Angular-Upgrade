@@ -1,0 +1,289 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<!-- Replacement Table START -->
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Inward No. :</b>
+					<label>{{vm.model.inwardDetailData.inwardNo}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Inward Date:
+					</b>
+					<label>{{vm.model.inwardDetailData.inwardDate | date:'dd/MM/yyyy'}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Store :
+					</b>
+					<label>{{vm.model.inwardDetailData.store}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">
+						Vendor:</b>
+					<label>{{vm.model.inwardDetailData.vendor}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Type :
+					</b>
+					<label>{{vm.model.inwardDetailData.assetType}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Replacement Type :
+					</b>
+					<label>{{vm.model.inwardDetailData.replacementType}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Ret GP No. :
+					</b>
+					<label>{{vm.model.inwardDetailData.returnableGatePassNo}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">
+						Added By:</b>
+					<label>{{vm.model.inwardDetailData.addedBY}}</label>
+				</span>
+			</div>
+		</div>
+		<!-- 		vm.model.inwardDetailData.replacementTypeId == 8
+ -->
+		<div class="row padding-left-right-set4 padding-top10" ng-show="vm.model.inwardDetailData.assetType =='Consumable' && vm.model.inwardDetailData.replacementTypeId != 9">
+			<div id="" class="table-scroll hideClass">
+				<!-- height-table-with-scroll -->
+				<div class="table-wrap" style="overflow: auto;">
+					<table id="" class="table table-bordered main-table">
+						<!-- mainServiceTable -->
+						<thead class="mainServiceTableCommon">
+							<tr>
+								<th class="width10">Item Code</th>
+								<th class="width10">Item Name</th>
+								<th class="width10">UOM</th>
+								<th class="width10">UOM Unit</th>
+								<th class="width10">Batch</th>
+								<th class="width10">Exp. Date</th>
+								<th class="width10">COP</th>
+								<th class="width10">Tax Code</th>
+								<th class="width10">Tax %</th>
+								<th class="width10">Pending Return Qty</th>
+								<th class="width10">Received Qty</th>
+								<th class="width10">Total {{vm.model.Currency}}</th>
+								<th class="width10">Tax {{vm.model.Currency}}</th>
+								<th class="width10">Net {{vm.model.Currency}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="inward in vm.model.inwardDetailData.items | orderBy:sortType:sortReverse | filter:search"ng-class="{'disabled': inward.netAmount == 0 }" >
+								<td>{{inward.itemCode}}</td>
+								<td>{{inward.itemName}}</td>
+								<td>{{inward.uomType}}</td>
+								<td>
+									<span ng-if="inward.receivedQtyCon!=''" title="{{inward.receivedQtyCon}}">({{inward.receivedQtyCon}}) = </span><br/>
+									<span> {{inward.receivedQtyCalculation}} {{inward.uomUnitData}}</span>
+								</td>
+								<td>{{inward.batchNo}}</td>
+								<td>{{inward.expiryDate | date:'MMM-yyyy'}}</td>
+								<td>{{vm.model.Currency}} {{inward.cop}}</td>
+								<td>{{inward.taxName}}</td>
+								<td>{{inward.taxPercent}} %</td>
+								<td>{{inward.returnQuantity}}</td>
+								<td>{{inward.receivedQuantity}}</td>
+								<td>{{vm.model.Currency}} {{inward.totalAmount}}</td>
+								<td>{{vm.model.Currency}} {{inward.taxAmount}}</td>
+								<td>{{vm.model.Currency}} {{inward.netAmount}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- Replacement Table END -->
+		<!-- Credit Note Table START -->
+		<!-- 	|| 
+ -->
+		<div class="row padding-left-right-set4 padding-top10" ng-show="vm.model.inwardDetailData.replacementTypeId == 9 ">
+			<div id="" class="table-scroll ">
+				<!-- height-table-with-scroll -->
+				<div class="table-wrap" style="overflow: auto;">
+					<table id="" class="table table-bordered main-table">
+						<!-- mainServiceTable -->
+						<thead class="mainServiceTableCommon">
+							<tr>
+								<th class="width18">Returnable Gate Pass No.</th>
+								<th class="width18">Returnable Gate Pass Date</th>
+								<th class="width15">Vendor</th>
+								<th class="width10">Total {{vm.model.Currency}}</th>
+								<th class="width10">Tax {{vm.model.Currency}}</th>
+								<th class="width10">Net {{vm.model.Currency}}</th>
+								<th class="width10">Credit Note {{vm.model.Currency}}</th>
+								<th class="width10">Credit Tax {{vm.model.Currency}}</th>
+								<th class="width10">Credit Net {{vm.model.Currency}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="inward in vm.model.inwardDetailData.items | orderBy:sortType:sortReverse | filter:search">
+								<td>{{inward.returnableGatePassNo}}</td>
+								<td>{{inward.returnableGatepassDate | date:'dd/MM/yyyy'}}</td>
+								<td>{{vm.model.inwardDetailData.vendor}}</td>
+								<td>{{inward.totalAmount}}</td>
+								<td>{{inward.taxAmount}}</td>
+								<td>{{inward.netAmount}}</td>
+								<td>{{inward.creditNoteAmount}}</td>
+								<td>{{inward.creditTaxAmount}}</td>
+								<td>{{inward.creditNetAmount}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- Credit Note Table END -->
+		<div class="row padding-left-right-set4 padding-top10">
+			<div class="row table-scroll" ng-show="vm.model.inwardDetailData.assetTypeId == 2 ">
+				<div class="col-lg-12 col-md-12 table-wrap">
+					<table class="table table-bordered main-table">
+						<thead>
+							<tr class="table-th-bg">
+								<th colspan="7" class="font-weight700">Pending Return Asset Details</th>
+								<th colspan="11" class="font-weight700">Received Return Asset Details</th>
+							</tr>
+							<tr>
+								<th class="width6">Asset Code</th>
+								<th class="width6">Asset Details</th>
+								<th class="width6">Serial No.</th>
+								<th class="width6">Return Qty</th>
+								<th class="width6">Assessories</th>
+								<th class="width6">Expected Return</th>
+								<th class="width6">Return Amount</th>
+								<th class="width6">Received Qty</th>
+								<th class="width6">COP $</th>
+								<th class="width6">Tax Code</th>
+								<th class="width6">Tax %</th>
+								<th class="width6">Tax Amount</th>
+								<th class="width6">Total Amount</th>
+								<th class="width6">Net Amount</th>
+								<th class="width6">Specification</th>
+								<th class="width6">Upload</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="inward in vm.model.inwardDetailData.items | orderBy:sortType:sortReverse | filter:search">
+								<td>{{inward.itemCode}}</td>
+								<td>{{inward.itemName}}</td>
+								<td>{{inward.batchNo}}</td>
+								<td>{{inward.returnQuantity}}</td>
+								<td class="text-center">
+									<a class="cursor-pointer" title="View" ng-click="vm.model.accessoryModal(greturn)">View</a>
+								</td>
+								<td></td>
+								<td>{{inward.returnAmount}}</td>
+								<td>{{inward.receivedQuantity}}</td>
+								<td>{{inward.cop}}</td>
+								<td>{{inward.tax}}</td>
+								<td>{{inward.taxPercentage}}</td>
+								<td>{{inward.taxAmount}}</td>
+								<td>{{inward.totalAmount}}</td>
+								<td>{{inward.netAmount}}</td>
+								<td>{{inward.specification}}</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- Asset Details Table END -->
+		<footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+			<fieldset>
+			  <div class="row padding-left-right-set4">
+				<div class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+				  <table class=" table table-bordered">
+					<tbody>
+					  	<tr ng-hide="vm.model.inwardDetailData.replacementTypeId == 9">
+							<th class="width7">
+								<label>Total Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardDetailData.totalAmount}}</td>
+							<th class="width7 text-right">
+								<label>Tax Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardDetailData.totalTaxAmount}}</td>
+							<th class="width8 text-right">
+								<label>Net Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardDetailData.totalNetAmount}}</td>
+							<th class="width8"></th>
+							<td class="width8"></td>
+						</tr>
+						<tr ng-hide="vm.model.inwardDetailData.replacementTypeId == 9">
+							<th class="width7">
+								<label>Returnable GatePass Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardDetailData.returnAmount}}</td>
+							<th class="width7 text-right">
+								<label>Material Inward Amount</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardDetailData.totalNetAmount}}</td>
+							<th class="width8 text-right">
+								<label>Vendor Payable</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardDetailData.vendorPayable}}</td>
+							<th class="width8 text-right">
+								<label>Credit Note</label>
+							</th>
+							<td class="width8">{{vm.model.Currency}} {{vm.model.inwardDetailData.creditNote | number:2}}</td>
+
+						</tr>
+						<tr>
+							<th class="width7">
+								<label>Document Date</label>
+							</th>
+							<td class="width8">{{vm.model.inwardDetailData.documentDate | date:'dd/MM/yyyy' }}</td>
+							<th class="width7 text-right">
+								<label>Document No.</label>
+							</th>
+							<td class="width8">{{vm.model.inwardDetailData.documentNo}}</td>
+							<th class="width8 text-right">
+								<label>Remarks</label>
+							</th>
+							<td class="width16">{{vm.model.inwardDetailData.remarks}}</td>
+						</tr>
+					</tbody>
+				  </table>
+				</div>
+			  </div>
+			</fieldset>
+			<div class="row his-style margin-top10 padding-right20">
+				<div class="col-md-1 text-right"></div>
+				<div class="col-md-9 padding-left-right8"></div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div class="">
+						
+					</div>
+				</div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div class="">
+						<a href="#/materialInwards">
+							<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>

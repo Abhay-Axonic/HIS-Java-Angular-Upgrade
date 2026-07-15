@@ -1,0 +1,184 @@
+<style>
+.heading-padding {
+	padding-top: 20px;
+}
+
+.heading-padding label {
+	font-size: 26px !important;
+}
+
+.btn1 {
+	padding: 20px 0px !important;
+	user-select: none;
+	background-image: none;
+	border: 1px solid transparent;
+	color: white;
+	font-size: 26px !important;
+	border-radius: 4px;
+	touch-action: manipulation;
+	font-weight: 400;
+	line-height: 1.42857143;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	display: inline-block;
+	height: auto;
+}
+
+.dropdown-menu {
+	min-width: 140px !important;
+	font-size: 18px !important;
+	padding: 5px 0px 5px 0px !important;
+	margin: 2px 0 0 -152px !important;
+	text-align: right !important;
+}
+
+.card {
+    border: 2px solid #ccc;
+    height: auto;
+}
+
+.card label {
+	font-size: 25px !important;
+	color: #2e6ea2;
+}
+
+.card span {
+	font-size: 18px;
+	color: #2f2482 !important;;
+}
+
+.border-bottom {
+	border-bottom: 1px solid rgba(0, 0, 0, .2);
+}
+
+.kiosk_bg {
+	/* background: url(resources/assets/images/logo/Client/Kiosk M.P.SHAHA/Kiosk M.P.SHAHA Logo.png) no-repeat center center; */
+	background: url(resources/assets/images/logo/kiosk_bg.png) no-repeat
+		center center;
+	position: absolute;
+	top: 60px;
+	opacity: 0.3;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+.bg-tabel-qms {
+    background-color: #2e6ea2 !important;
+    color: #fff !important;
+    height: 35px;
+    padding: 4px;
+    font-weight: bold;
+}
+
+.bg-tabel-qms span {
+    color: #fff !important;
+}
+.p-t-0 {
+    padding: 0px;
+}
+.background-set {
+	background: url(resources/assets/images/logo/kiosk_bg.png) no-repeat
+		center center fixed;
+	/* 	z-index : 999; */
+	background-size: initial;
+}
+
+.box-border-bottom {
+	box-shadow: 0px 0.5px 0.5px 0px #ddd;
+}
+
+.blink {
+	animation: blinker 1.5s linear infinite;
+	color: red;
+	font-family: sans-serif;
+}
+
+@
+keyframes blinker { 50% {
+	opacity: 0;
+}
+}
+. label-size {
+	font-size:30px;
+}
+.fix-height-scroll570 {
+    height: 581px !important;
+    overflow: auto;
+}
+</style>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div
+			class="col-lg-3 col-md-4 col-sm-4 padding-left-right-set padding-top10">
+			<span class="heading-name-font" style="color: grey">Kiosk :
+				{{kioskName}}</span><span class="heading-name-font"> <span
+				class="heading-name-font" style="color: grey" title="Kiosk Details"
+				data-toggle="modal" data-target="#qmsKioskDetailsModal"> <i
+					class="fa fa-stack-exchange" aria-hidden="true"></i>
+			</span>
+		</div>
+		<div class="row padding-top5 padding-left-right-set">
+			<div
+				class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto ng-scope">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow dropdown" id="linkBtn"
+						title="" data-toggle="dropdown"> <i class="fa fa-link"
+						style="font-size: 21px;color:#2A83F2 !important;" aria-hidden="true"></i></a>
+					<ul class="dropdown-menu">
+						<li><a href="#QMS">Issue Token URL</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2"></div>
+		</div>
+	</div>
+</div>
+
+
+<div id="qmsKioskDetailsModal"class="modal fade ng-scope common-small-popup in" role="dialog"
+	data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Kiosk Details
+					<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10 row padding-top10">
+					<div class="col-md-3 col-lg-3 col-sm-3">
+						<span>Select Kiosk</span>
+					</div>
+					<div class="col-md-6 col-lg-6 col-sm-6">
+						<select class="dirty" style="width: 100%"
+							ng-change="selectQMSKiosk(common.qmsKioskMasterId);"
+							ng-model="common.qmsKioskMasterId">
+							<option selected value>Select Kiosk</option>
+							<option value="{{qms.qmsKioskMasterId}}"
+								ng-repeat="qms in activeQMSList">{{qms.qmsDesc}}</option>
+						</select>
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" data-dismiss="modal"
+					class="btn btn-primary width13" id="otpOk" ng-click="confirmQMS();">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- QMS kiosk DetailsModal END -->
+<script>
+	$(document).ready(function() {
+		// $(".patienttSearchResult").hide();
+		$(".selectedPageName").text("QMS Token Display");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="display"]').parents("li").addClass("active");
+	});
+</script>

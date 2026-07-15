@@ -1,0 +1,269 @@
+<!-- *****************************************************************************************************************************
+													
+****************************************************************************************************************************** -->
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<!-- ********* row one start ******** -->
+		<div class="row margin-top10">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+							    placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened" datepicker-options="vm.model.fromDateOptions"
+							    show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+							<label for="code">Date (From)</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+							    ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"
+							    show-button-bar="false" ng-click="vm.model.OpenToDate()">
+							<label for="code">Date-Till</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-building-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<select name="store" id="store" class="text-input floating-label dirty" ng-model="vm.model.store" data-ng-options="store.store for store in vm.model.storeList">
+							</select>
+							<label for="code">Store</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11 ">
+						<div class="">
+							<select name="status" id="status" class="text-input floating-label dirty" ng-model="vm.model.status" data-ng-options="status.status for status in vm.model.statuses">
+							</select>
+							<label for="code">Status(n)</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-search" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" ng-model="search" class="text-input floating-label">
+							<label for="code">Search</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1  padding-top8">
+				<div class="width-div-for-patient-reg " style="float:  initial;">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="vm.model.GetAuctionVendorApproval()">
+						<i class="fa fa-search" style="font-size: 21px" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top8">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" data-target="#collectPayment">
+						<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		<!-- ********* row one end ******** -->
+		
+		<div class="row margin-top4 padding-left-right-set0">
+				<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+						<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="vm.model.pagination.pageSize='10'" 
+								ng-model="vm.model.pagination.pageSize" 
+								ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 float_right">
+					<input type="text" autocomplete="off" class="text-search-box ng-pristine ng-valid dirty ng-empty ng-touched" 
+					placeholder="Search" ng-model="search" style="margin-top: 0px;">
+					<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+				</div>
+		</div>
+		
+		<!-- ********* row two start ******** -->
+		<div class="row padding-left-right-set0 margin-top4">
+			<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0" id="nonBillableTableHt">
+				<fieldset class="main-fieldset">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 height500-table-with-scroll">
+							<table class="table table-bordered first-checkBox-padding">
+								<!-- mainServiceTable -->
+								<thead class="mainServiceTableCommon">
+									<tr>
+										<th class="width1 text-center">
+											<input type="checkbox" />
+										</th>
+										<th class="width9">
+											Request No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Request (Date)
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Requisition No.
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">
+											Request by
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width4 text-center">
+											Status(n)
+										</th>
+										<th class="width4 text-center vertical-middle">Action taken</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="approvalItem in vm.model.pagination.data">
+										<td class="text-center">
+											<input type="checkbox" />
+										</td>
+										<td title="{{approvalItem.requestNo}}">{{approvalItem.requestNo}}</td>
+										<td title="{{approvalItem.requestDate | date:'DD/MM/YYYY':'UTC'}}">{{approvalItem.requestDate | date:'DD/MM/YYYY':'UTC'}}</td>
+										<td title="{{approvalItem.requisitionNo}}">{{approvalItem.requisitionNo}}</td>
+										<td title="{{approvalItem.requestedBy}}">{{approvalItem.requestedBy}}</td>
+										<td title="{{approvalItem.status}}">{{approvalItem.status}}</td>
+
+										<td class="text-center vertical-middle">
+											<!-- <span>
+											<a title="Print">
+												<i class="fa fa-print" aria-hidden="true"></i>
+											</a>
+										</span> -->
+											<span class="padding-left10">
+												<a href ng-click="vm.model.NavigateToDetails(approvalItem)">Details</a>
+											</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+							<div class="row margin-bottom45 center-block">
+								<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+									style="font-size: 14px; cursor: pointer;">
+									<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+										ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+									</li>
+									<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+										ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+									</li>
+									<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+										ng-class="{active:vm.model.pagination.currentPage === page}"><a
+										ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+									</li>
+									<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+										<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+									</li>
+									<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+										<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+									</li>
+								</ul>
+							</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+		<!-- ********* row two end ******** -->
+	</div>
+</div>
+
+<!-- details modal end -->
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".selectedServicesList").hide();
+		$(".selectedPageName").text("Auction Vendor Approval");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+			$('a[href$="witnessApproval"]').parents("li").addClass("active");
+			$(".radioRejected").change(function () {
+				if ($(this).is(":checked")) {
+					$("#accepatReject").modal();
+				}
+			});
+
+		});
+		// $(".table-th-bg").click(function () {
+		// 	$(this).next().find(".selectedServicesList").toggle();
+		// });
+		/*************************** rejection radio button function*********************************/
+		$(".rejection-details-row").hide();
+		$(".radioRejected").change(function () {
+			if ($(this).is(":checked")) {
+				$(this).closest(".row").siblings(".rejection-details-row").show();
+			}
+		});
+		$(".radioAccepted").change(function () {
+			if ($(this).is(":checked")) {
+				$(this).closest(".row").siblings(".rejection-details-row").hide();
+			}
+		});
+	});
+	/*************************** add button function start*********************************/
+</script>

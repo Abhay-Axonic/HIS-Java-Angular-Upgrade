@@ -1,0 +1,492 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row padding-left-right-set4">
+			<div class="second-level-tab-display-div">
+				<fieldset class="main-fieldset">
+				<legend class="main-heading-div">Donor Screening</legend>
+					<div class="row ">
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<span class="margin-left10">
+								<b class="padding-right10">Donor Number:</b> 
+								<label>{{common.donorNumber}}</label>
+							</span>
+						</div>
+						<div class="col-lg-2 col-md-3 col-sm-3padding-left-right-set4 padding-top10">
+							<span class="margin-left10">
+								<b class="padding-right10">Donor Name:</b>
+								<label>{{common.donorName}}</label>
+							</span>
+						</div>
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<span class="margin-left10">
+								<b class="padding-right10"> Gender:</b>
+								<label>{{common.gender}}</label>
+							</span>
+						</div>
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<span class="margin-left10">
+								<b class="padding-right10">Mobile Number:</b>
+								<label>{{common.mobileNumber}}</label>
+							</span>
+						</div>	
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<span class="margin-left10">
+								<b class="padding-right10">Birth Date:</b>
+								<label>{{common.dob}}</label>
+							</span>
+						</div>
+					</div>	
+					<div class="row">
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<span class="margin-left10">
+								<b class="padding-right10">Identification Type:</b>
+								<label>{{common.identificationName}}</label>
+							</span>
+						</div>
+						<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+							<span class="margin-left10">
+								<b class="padding-right10">Identification No:</b>
+								<label>{{common.identificationNumber}}</label>
+							</span>
+						</div>
+					</div>
+					
+					
+					<form>
+					<!-- <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label"> 
+										<label for="description" class="LISDynamicLabel">-</label>
+									</div>
+								</div>
+							</div>
+						</div> -->
+					<fieldset class="main-fieldset">
+						<legend class="main-heading-div">Donor Details</legend>
+						<div class="row">
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set1 margin-top10">
+								<div class="row input-container margin-top2">
+									<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div
+										class="col-lg-6 col-sm-6 col-md-6 padding-left-right-set0">
+										<div class="">
+											<input type="text" autocomplete="off" name="description" id=""
+												class="text-input floating-label ng-valid dirty ng-touched ng-dirty ng-valid-parse ng-empty"
+												ng-model="donorDetailsObj.age" style="" ng-blur="ageValidation();"> <label
+												for="description" class="LISDynamicLabel">Age<span class="star">*</span></label>
+										</div>
+									</div>
+									<div
+										class="col-lg-3 col-sm-3 col-md-3 padding-left-right-set4 padding-top5">
+										<div class="">
+											<label for="description" class="">Years</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set1 margin-top10">
+									<div class="row input-container margin-top2">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div
+											class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set0">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id=""
+													class="text-input floating-label ng-valid dirty ng-touched ng-dirty ng-valid-parse ng-empty"
+													ng-model="donorDetailsObj.donorTemperature" ng-blur="getin()" style=""
+													> <label
+													for="description" class="LISDynamicLabel">Temperature<span class="star">*</span></label>
+											</div>
+										</div>
+										<div class="col-lg-6 col-sm-6 col-md-6 padding-top10 padding-left-right-set1">
+											<div class="">
+											<label class="radio-inline"><input type="radio" name="Temperature" ng-model="donorDetailsObj.temperatureType" ng-click="calculateTemeperature()" ng-value="'C'" checked>&#8451;</label>
+												<label class="radio-inline"><input type="radio" name="Temperature" ng-model="donorDetailsObj.temperatureType" ng-click="calculateTemeperature()" ng-value="'F'" checked>&#8457;</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set1 margin-top10">
+								<div class="row input-container margin-top2">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div
+										class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set0">
+										<div class="">
+											<input type="number" type="text" autocomplete="off" name="description" id=""
+												class="text-input floating-label ng-valid dirty ng-touched ng-dirty ng-valid-parse ng-empty"
+												ng-model="donorDetailsObj.donorPulse" style="" ng-blur="pulseValidation();"> <label
+												for="description" class="LISDynamicLabel">Pulse<span class="star">*</span></label>
+										</div>
+									</div>
+									<div
+										class="col-lg-6 col-sm-6 col-md-6 padding-left-right-set4 padding-top5">
+										<div class="">
+											<label for="description" class="">bpm</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-sm-1 col-md-1 padding-left-right-set4 padding-top10 text-right">
+								<div class="">
+									<label for="description" class="padding-top10" style="color: #3f51b5 !important">Blood Pressure<span class="star">*</span></label>
+								</div>
+							</div>
+							
+								<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set1 margin-top10">
+									<div class="row input-container margin-top2">
+										<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set0">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="donorDetailsObj.donorBPSystolic" style="" ng-blur="sBPValidation();">
+												<label for="description" class="LISDynamicLabel">SBP</label>
+											</div>
+										</div>
+										<div class="col-lg-4 col-sm-4 col-md-4 padding-left-right-set4 padding-top5">
+											<div class="">
+												<label for="description" class="">mm/Hg</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set1 margin-top10">
+									<div class="row input-container margin-top2">
+										<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set0">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="donorDetailsObj.donorBpDiastolic" style="" ng-blur="dSPValidation();">
+												<label for="description" class="LISDynamicLabel">DBP</label>
+											</div>
+										</div>
+										<div class="col-lg-4 col-sm-4 col-md-4 padding-left-right-set4 padding-top5">
+											<div class="">
+												<label for="description" class="">mm/Hg</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-sm-1 col-md-1 padding-left-right-set4 padding-top10 text-right">
+									<div class="">
+										<label for="description" class="padding-top10" style="color: #3f51b5 !important">Height<span class="star">*</span></label>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set1 margin-top10">
+										<div class="row input-container margin-top2">
+											<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div
+												class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set0">
+												<div class="">
+													<input type="text" autocomplete="off" name="description" id=""
+														class="text-input floating-label ng-valid dirty ng-touched ng-dirty ng-valid-parse ng-empty"
+														ng-model="donorDetailsObj.heightInFt" style=""> <label
+														for="description" class="LISDynamicLabel" ng-blur="heightValidation()"></label>
+												</div>
+											</div>
+											<div
+												class="col-lg-4 col-sm-4 col-md-4 padding-left-right-set4 padding-top5">
+												<div class="">
+													<label for="description" class="">Ft</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set1 margin-top10">
+										<div class="row input-container margin-top2">
+											<div class="col-lg-2 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div
+												class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set0">
+												<div class="">
+													<input type="text" autocomplete="off" name="description" id=""
+														class="text-input floating-label ng-valid dirty ng-touched ng-dirty ng-valid-parse ng-empty"
+														ng-model="donorDetailsObj.heightInInches" style=""> <label
+														for="description" class="LISDynamicLabel"></label>
+												</div>
+											</div>
+											<div
+												class="col-lg-4 col-sm-4 col-md-4 padding-left-right-set4 padding-top5">
+												<div class="">
+													<label for="description" class="">Inches</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								
+						</div>
+						<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set1 margin-top10">
+									<div class="row input-container margin-top2">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div
+											class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set0">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id=""
+													class="text-input floating-label ng-valid dirty ng-touched ng-dirty ng-valid-parse ng-empty"
+													ng-model="donorDetailsObj.donorWeight" style="" ng-blur="weightValidation();"> <label
+													for="description" class="LISDynamicLabel">Weight<span class="star">*</span></label>
+											</div>
+										</div>
+										<div class="col-lg-6 col-sm-6 col-md-6 padding-top10 padding-left-right-set1">
+											<div class="">
+												<label class="radio-inline"><input type="radio" name="weightType" ng-model="donorDetailsObj.weightType" ng-value="'Kg'" checked>Kg</label>
+												<label class="radio-inline"><input type="radio" name="weightType" ng-model="donorDetailsObj.weightType" ng-value="'lbs'" checked>lbs</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set1 margin-top10">
+										<div class="row input-container margin-top2">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div
+												class="col-lg-5 col-sm-5 col-md-5 padding-left-right-set0">
+												<div class="">
+													<input type="text" autocomplete="off" name="description" id=""
+														class="text-input floating-label ng-valid dirty ng-touched ng-dirty ng-valid-parse ng-empty"
+														ng-model="donorDetailsObj.donorHB" style="" ng-blur="hBValidation();"> <label
+														for="description" class="LISDynamicLabel">HB<span class="star">*</span></label>
+												</div>
+											</div>
+											<div class="col-lg-6 col-sm-6 col-md-6 padding-top10 padding-left-right-set1">
+												<div class="">
+													<label class="radio-inline"><input type="radio" name="HB" ng-model="donorDetailsObj.hBType" ng-value="'dl'" checked>g/dl</label>
+													<label class="radio-inline"><input type="radio" name="HB" ng-model="donorDetailsObj.hBType" ng-value="'g'" checked>g%</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								
+						</div>
+					</fieldset>
+					
+					
+					<fieldset class="main-fieldset">
+						<legend class="main-heading-div">Temporary Deferral Screening Test</legend>
+						
+						<div class="row padding-left-right-set0 table-container padding-top0">
+							<div class="table-container">
+								<div class="table-container-header">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<thead>
+											<tr>
+												<th class="width20">Parameter</th>
+												<th class="width4">Result</th>
+												<th class="width4">Deferral Till</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr ng-repeat="info in temporaryList">
+												<td class="width20">{{info.parameter}}</td>
+												<td class="width4" >
+												
+													<label class="radio-inline"><input type="radio"  name="{{info.id}}"  ng-model="info.radioId" ng-value="true" ng-click="getSelectedParameter(info,info.radioId,'T');" >Yes</label>
+													<label class="radio-inline"><input type="radio"  name="{{info.id}}"  ng-model="info.radioId"  ng-value="false" ng-click="getSelectedParameter(info,info.radioId,'T');" >No</label>
+												</td>
+												<td class="width4">
+											<input type="text" autocomplete="off" class="text-input floating-label dirty"
+												uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"  
+														name="datepickervaccine" id="datepickervaccine"
+														 ng-model="info.donorDeferralTillDate"
+														model-view-value="true"
+														is-open="datepickervaccine.opened[$index]"
+														datepicker-options="dateOptionsVacc"
+														show-button-bar="false"
+														ng-click="datepickervaccinePicker($index)" ng-disabled="(!info.radioId)" 
+														style="background: transparent !important;">
+													</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						</fieldset>
+						<fieldset class="main-fieldset">
+						<legend class="main-heading-div">Permanent Deferral Screening Test</legend>
+						
+						<div class="row padding-left-right-set0 table-container padding-top0">
+							<div class="table-container">
+								<div class="table-container-header">
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<thead>
+											<tr>
+												<th class="width20">Parameter</th>
+												<th class="width4">Result</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body fix-height-scroll230" style="overflow: overlay;"> <!-- fix-height-scroll230, background: #fff; -->
+									<table
+										class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr ng-repeat="info1 in permanentList">
+												<td class="width20">{{info1.parameter}}</td>
+												<td class="width4">
+													<label class="radio-inline"><input type="radio" name="{{info1.id}}" ng-model="info1.radioId" ng-value="true" ng-click="getSelectedParameter(info1,info1.radioId,'P');">Yes</label>
+													<label class="radio-inline"><input type="radio" name="{{info1.id}}" ng-model="info1.radioId"    ng-value="false" ng-click="getSelectedParameter(info1,info1.radioId,'P');">No</label>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						</fieldset>
+						
+						<fieldset class="main-fieldset">
+							<legend class="main-heading-div">Technician Details</legend>
+							<div class="row">
+								<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<select class="text-input floating-label dirty " name = "empList" ng-model="donorDetailsObj.hbDoneById" required >
+													<option ng-repeat="info in usersList" ng-value="{{info.userId}}" value="{{info.userId}}"> {{info.userName}}</option>
+												</select> 
+												<label for="" class="">Screening & HB Done By</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<!-- <input type="text" autocomplete="off"  id="" class="text-input floating-label" ng-model="donorDetailsObj.bleedingDoneBy"> -->
+												<select class="text-input floating-label dirty " name = "empList" ng-model="donorDetailsObj.bleedingDoneById" required >
+													<option ng-repeat="info in usersList" ng-value="{{info.userId}}" value="{{info.userId}}"> {{info.userName}}</option>
+												</select> 
+												<label for="" class="">Bleeding Done By</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 text-center margin-top4">
+									<label>Collected From</label>
+								</div>
+								<div class="col-lg-3 col-md-4 col-sm-5 padding-left-right-set4 text-width-auto margin-top4">
+									<div id="mediaType" class="customRadioBtn">
+										<span>
+											<input id="AcceptRdoBtn" name="AcceptRdoBtnGroup" type="radio" ng-value="1" ng-model="screeningResultStatusId" checked="checked" ng-click="manageDays(screeningResultStatusId)">
+											<label for="AcceptRdoBtn">Accept</label>
+										</span>
+										<span>
+											<input id="RejectRdoBtn" name="AcceptRdoBtnGroup" type="radio" ng-value="2" ng-model="screeningResultStatusId" ng-click="manageDays(screeningResultStatusId)">
+											<label for="RejectRdoBtn">Reject</label>
+										</span>
+										<span>
+											<input id="permanentRejectionRdoBtn" name="AcceptRdoBtnGroup" type="radio" ng-value="3" ng-model="screeningResultStatusId" ng-click="manageDays(screeningResultStatusId)">
+											<label for="permanentRejectionRdoBtn">Permanent Rejection</label>
+										</span>
+									</div>
+								</div>	
+								<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-10 padding-top4 margin-top4">
+									<span>
+									<!-- ng-value="{{donorDetailsObj.deferralDays}}" -->
+									<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="fromDatepicker1" id="fromDatepicker1"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											 ng-model="donorDetailsObj.deferralDays"
+											model-view-value="true" is-open="fromDatepicker1.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openFromDatePicker1()"  
+											ng-disabled="screeningResultStatusId==3 || screeningResultStatusId==1 " required>
+											<label for="description" class="">Days</label>
+										
+									</span>
+									<!-- <span>
+										<label>Days</label>
+									</span> -->
+								</div>
+							</div>
+						</fieldset>
+						
+						<div class="row margin-top4">
+							<div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<label>Remarks</label>
+							</div>
+							<div class="col-lg-9 col-md-8 col-sm-6 padding-left-right-set4">
+								<textarea rows="2" class="form-control" ng-model="donorDetailsObj.screeningRemarks"></textarea>
+							</div>	
+							
+							<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right">
+								<div class="common-save-button">
+					                <button value="Save" class="btn btn-primary btn-save-box-shadow" ng-click="saveDonorScreeningDetails();">Save</button>
+					             </div>
+					        </div>	
+					        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 ">
+								<div class="common-save-button">
+									<a href="#/donorScreeningWorklist">
+					                	<button value="Back" class="btn btn-primary btn-save-box-shadow">Back</button>
+					                </a>
+					             </div>
+					        </div>	
+						</div>
+						
+				</form>
+			</fieldset>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".dropDownDivOne").hide();
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Donor Screening");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="donorScreening"]').parents("li").addClass("active");
+});
+ $(document).on('click','.heading-div', function(){
+	 //alert();
+	$(this).next(".serachedPatientList").toggle();
+});
+$(document).on('click','.resultLabelDivTwo',function(){
+	$(this).next(".dropDownDivOne").toggle();
+	
+	$(".resultLabelDivTwo").hide();
+});
+
+</script>

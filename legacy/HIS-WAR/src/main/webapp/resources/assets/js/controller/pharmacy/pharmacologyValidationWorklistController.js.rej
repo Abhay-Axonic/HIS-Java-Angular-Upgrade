@@ -1,0 +1,28 @@
+diff a/HIS-WAR/src/main/webapp/resources/assets/js/controller/pharmacy/pharmacologyValidationWorklistController.js b/HIS-WAR/src/main/webapp/resources/assets/js/controller/pharmacy/pharmacologyValidationWorklistController.js	(rejected hunks)
+@@ -371,22 +371,25 @@
+                          self.model.rejectNote = undefined;
+                          self.model.cancelReason = undefined;
+                          // 
+ -//                        FixedAssetSearch();
+ -                        initialCall();
+ +                      //  FixedAssetSearch();
+ +                        GetPharmacologyValidationWorklist();
+                          $rootScope.stopLoaderPopup();
+ -                        growl.success(response.data.message);
+ -                       
+ +                        if(response.statusText == "OK"){
+ +                            growl.success("Status Cancelled Successfully");	
+ +                        }
+ +                        
+                      },
+                      function (err) {
+-                         $rootScope.stopLoaderPopup();
++                        
+                          growl.error(err.data.message);
++                         $rootScope.stopLoaderPopup();
+                      });
++                 
++                
+              }
+          }
+          var GetPharmacologyValidationWorklist = function () {

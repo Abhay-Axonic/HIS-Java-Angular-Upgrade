@@ -1,0 +1,321 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	
+	<div class="main-heading-div">
+				<div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div>
+			</div>
+	
+	
+	 <form name="addNewSterilizationLoadBatchForm" novalidate>
+		<div class="row padding-top8">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+							 <select class="text-input floating-label" name="code"
+								ng-model="selectedMachine"
+								 ng-options="data.id as data.machine_name for data in autoClaveList" ng-change="showSterilizaitonType()">
+								</select>
+								<label for="code">Machine</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="padding-top10">
+						<label>Sterilization Type :-</label>
+						<span>{{selectedAutoclave.sterilization_type}}</span>
+					</div>
+				</div>
+				
+				
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="padding-top10">
+						<label>Biological Indicator Due Date :-</label>
+						<span>{{dueDate}}</span>
+					</div>
+				</div>
+				
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Search Kit" data-toggle="modal" ng-click="clearPreviousSearch()"  data-target="#detailedAddNewSearchKit">
+						Search Kit</a>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-left-right-set4 padding-top4">
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+									<th class="vertical-align text-center width1"><input type="checkbox" ng-model="IsAllKitsChecked" ng-change="checkUncheckAllKitsToLoad()"></th>
+									<th class="width10">Transition No.</th>
+									<th class="width10">Kit Code</th>
+									<th class="width10">Kit Name</th>
+									<th class="width8">Wrapper Name</th>
+									<th class="width8">Formation Date</th>
+									<th class="width8">Expiry Duration</th>
+									<!-- <th class="width3">Status</th> -->
+								</tr>
+						</thead>
+						<tbody>
+							<!-- <tr>
+								<td class="vertical-align text-center"><input type="checkbox"></td>
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
+							</tr> -->
+							<tr ng-repeat="data in kitList">
+								<td class="vertical-align text-center"><input type="checkbox" id="checkKitDetails_{{data.kitId}}" ng-model="data.Selected" ng-change="checkUncheckKitToLoad()"></td>
+								<td>{{data.transitionNumber}}</td>
+								<td>{{data.code}}</td>
+								<td>{{data.name}}</td>
+								<td>{{data.wrapperName}}</td>
+								<td>{{data.formation_date}}</td>
+								<td>{{data.expiryDuration}}</td>
+								<!-- <td>{{data.code}}</td> -->
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row padding-top10">
+				<fieldset class="">
+					<legend class="heading-div">Biological Indicator</legend>
+				</fieldset>
+			</div>
+			<!-- <div class="row margin-top10">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Due Date:</b> </span>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+					<div class="row input-container">
+						
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label"> <label for="dueDate"></label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			<div class="row margin-top10">
+			<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set16 padding-top10 text-center">
+					<div class="row input-container padding-top10">
+						<input type="checkbox" name="" id="isBiological" class="" ng-model="biologicalIndicator">
+							<label for="isBiological" class="checkbox-margin-left-right">Biological Indicator Needed</label>
+					</div>
+			</div>
+			</div>
+			
+			<div class="row margin-top10">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Control  (Enter Batch No.):</b> </span>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+					<div class="row input-container">
+						
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="control" 
+									class="text-input floating-label" ng-model="control" disabled> <label for="control"></label>
+							</div>
+							<!-- <div class="">
+								<select class="text-input floating-label dirty" name="code">
+									<option value="">Select Batch No.</option>
+								</select>
+								<label for="code"></label>
+							</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row margin-top10">
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Test  (Enter Batch No.):</b> </span>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+					<div class="row input-container">
+						
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id="test"
+									class="text-input floating-label" ng-model="test" disabled> <label for="test"></label>
+							</div>
+							<!-- <div class="">
+								<select class="text-input floating-label dirty" name="code">
+									<option value="">Select Batch No.</option>
+								</select>
+								<label for="code"></label>
+							</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+				<div class="row his-style margin-top10 padding-right20">
+					
+					<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+						<a href="#/sterilizationLoadBatch">
+							<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+					<div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+						<a href="">
+							<input type="button" value="Load Batch" ng-disabled="isLoadBatchDisabled()" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" data-target="#confirmPopupOnLoadBatch">
+						</a>
+					</div>
+				</div>			
+			</footer>
+		</form>	
+			
+	</div>
+</div>
+
+<!-- Confirmation PopUp To Add worklist -->
+	<div id="confirmPopupOnLoadBatch" class="modal fade ng-scope in"
+		role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal"
+							ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>Are you sure you want to load this batch?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+						id="" ng-click="loadBatch();">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>	
+	
+	
+	
+	
+		<!-- Search Kit Modal Start -->
+<div id="detailedAddNewSearchKit" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					 Search Kit
+					<button type="button" class="close" id="closeBtnKitModal" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top8">
+					<div class="col-lg-8 col-md-8 col-sm-10 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="code" id=""
+										class="text-input floating-label" ng-model="searchKitField" ng-keyup="searchKitByName()"> <label for="code">Search Kit</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-1 padding-left-right-set4 padding-top4">
+						<div class="common-save-button"> 
+							 <a href="" class="btn btn-primary btn-save-box-shadow text-width-auto pull-left" ng-click="searchKitByName()"> 
+							 	<i class="fa fa-search" aria-hidden="true"></i> 
+							 </a> 
+						</div>
+					</div>
+				</div>
+				<div class="row padding-left-right-10 margin-top10">
+					<div class="col-md-12 common-table-height-250">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="vertical-align text-center width1"><input type="checkbox"  ng-model="IsAllChecked" ng-change="checkUncheckAll()"></th>
+									<th class="width10">Transition No.</th>
+									<th class="width10">Kit Code</th>
+									<th class="width10">Kit Name</th>
+									<th class="width8">Wrapper Name</th>
+									<th class="width8">Formation Date</th>
+									<th class="width8">Expiry Duration</th>
+									<!-- <th class="width3">Status</th> -->
+								</tr>
+							</thead>
+							<tbody>
+								<!-- <tr>
+									<td class="vertical-align text-center"><input type="checkbox"></td>
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+								</tr> -->
+								<tr ng-if="kitDetailsList.length==0 && showLoadingMsg=='Y' "><td colspan="7" class="text-center">{{loadingMsg}}</td></tr>
+								<tr ng-repeat="kitInfo in kitDetailsList">
+									<!-- <td class="vertical-align text-center"><input type="checkbox" ng-model="selectedKitInfo" ng-checked="selectedKitIndent" ng-click="selectKitInfo(kitInfo)" value={{kitInfo}} multiple></td> -->
+									<td class="vertical-align text-center"><input type="checkbox" id="chkKitDetails_{{kitInfo.kitId}}" ng-model="kitInfo.Selected" ng-change="checkUncheckKit()"></td>
+									<td>{{kitInfo.transitionNumber}}</td>
+									<td>{{kitInfo.code}}</td>
+									<td>{{kitInfo.name}}</td>
+									<td>{{kitInfo.wrapperName}}</td>
+									<td>{{kitInfo.formation_date}}</td>
+									<td>{{kitInfo.expiryDuration}}</td>
+									<!-- <td>-</td> -->
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary"  ng-click="showKitInfo()">Select</button>
+					<span><button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button></span>
+				</div>
+		</div>
+	</div>
+</div>
+<!-- Search Kit Modal End -->
+
+<!-- verify kit selection popup -->
+<div id="verifyKitModal" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" id="closeBtnVerifyModal" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+						<div class="margin-left10">
+						<span>Do you want to replace previous selected kit?</span>
+					    </div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button"  class="btn btn-primary" id="" ng-click="closeVerifyModalFun();">Yes</button>
+				   <button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>

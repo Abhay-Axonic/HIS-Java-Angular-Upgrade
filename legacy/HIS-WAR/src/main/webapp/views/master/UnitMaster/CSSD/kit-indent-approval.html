@@ -1,0 +1,634 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<div class="row margin-top10 padding-left-right-set1">
+				<div
+					class="col-lg-1 col-md-2 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datePickerForFromDate" id="datePickerForFromDate"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datePickerForFromDate"
+									model-view-value="true" is-open="datePickerForFromDate.opened"
+									datepicker-options="dateOptions"
+									show-button-bar="false" ng-click="openDatePickerForFromDate()"
+									required="" style=""> <label for="code" class="">
+									Date (From)</label>
+								<!-- Date should be selected from-to Date  -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-1 col-md-2 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" class="text-input floating-label dirty"
+									name="datePickerForToDate" id="datePickerForToDate"
+									uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+									placeholder="DD/MM/YYYY" ng-model="datePickerForToDate"
+									model-view-value="true" is-open="datePickerForToDate.opened"
+									datepicker-options="dateOptions"
+									show-button-bar="false" ng-click="openDatePickerForToDate()"
+									required="" style=""> <label for="code">Date-Till</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="">
+								<select class="text-input floating-label" name="fromStore"
+									ng-model="selectedKitIndentFromStoreId"
+									ng-options="data.storeId as data.storeName for data in kitIndentFromStoreList"
+									required>
+
+								</select> <label for="fromStore">Store (Origin)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-tasks" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<select class="text-input floating-label" name="toStore"
+									ng-model="selectedKitIndentToStoreId"
+									ng-options="data.storeId as data.storeName for data in kitIndentToStoreList"
+									required>
+
+								</select> <label for="toStore">Store (Destination)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-bullseye" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label" ng-model="indentNo">
+								<label for="code">Indent No.</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<!-- <select class="text-input floating-label">
+									<option value=""></option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Status</label> -->
+								<select class="text-input floating-label dirty" name="code"
+									ng-model="selectedKitIndentStatus" required>
+									<option value="">All</option>
+									<option value="Approved">Approved</option>
+									<option value="Issued">Issued</option>
+									<option value="Partially Approved">Partially Approved</option>
+									<option value="Partially Issued">Partially Issued</option>
+									<option value="Pending">Pending</option>
+									<option value="Rejected">Rejected</option>
+									
+									
+									<!-- <option value="Pending">Pending</option>
+									<option value="Approved">Approved</option>
+									<option value="Partially Approved">Partially Approved</option>
+									<option value="Cancelled">Cancelled</option>
+									<option value="Closed">Closed</option> -->
+								</select> <label for="code">Status(n)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="col-lg-2 col-sm-2 col-md-1 text-right padding-left-right-set1">
+					<div class="common-save-button">
+						<a href="" class="btn btn-primary btn-save-box-shadow"
+							style="width: auto;" id="searchBtn"
+							ng-click="getKitIndentApprovalByMultipleFields()"> <i
+							class="fa fa-search" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+				<!-- <div class="col-lg-3 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-9 col-sm-8 col-md-8 padding-left-right-set4">
+							<div class="">
+								<select class="text-input floating-label">
+									<option value=""></option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Status</label>
+							</div>
+						</div>
+						<div class="col-lg-2 col-sm-2 col-md-2 text-right">
+							<div class="common-save-button" style="padding-top:  0px;"> 
+								 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;"> 
+								 	<i class="fa fa-search" aria-hidden="true"></i> 
+								 </a> 
+							</div> 
+						</div>
+					</div>
+				</div> -->
+			</div>
+		</fieldset>
+		<div class="row padding-left-right-set4 padding-top8">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered first-checkBox-padding">
+					<!-- mainServiceTable -->
+					<thead class="mainServiceTableCommon">
+
+						<tr>
+							<th class="width1"></th>
+							<th class="width8">Indent No.
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Indent (Date)
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Store (Origin)
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Store (Destination)
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width6">Requestor
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width4">Status(n)
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width6 text-center">Action taken
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<!-- <th class="width1"></th> -->
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-if="kitIndentList.length==0"><td class="text-center" colspan="8">{{loadingMessage}}</td></tr>	
+						<tr ng-repeat="info in kitIndentList">
+							<td class="text-center"><input type="checkbox"
+								ng-disabled="isDisabled(info)"
+								ng-click="kitIndentSelection(info)"></td>
+							<td>{{info.indentNo}}</td>
+							<td>{{info.indentDate}}</td>
+							<td>{{info.fromStore}}</td>
+							<td>{{info.toStore}}</td>
+							<td>{{info.userName}}</td>
+							<td>{{info.status}}</td>
+							<td class="padding-edit-button-table text-center">
+								<!-- <div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+											   <a title="Edit" ui-sref="updateKitIndent({indentNo: info.indentNo})"><i class="fa fa-pencil" ng-class="{disabled: isDisabled(info)}" aria-hidden="true"></i></a>
+												<a title="Edit" ><i class="fa fa-pencil" ng-class="{disabled: isDisabled(info)}" aria-hidden="true"></i></a>
+											</div> -->
+								<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+									<a title="Print "><i class="fa fa-print" aria-hidden="true"></i></a>
+								</div>
+								<div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+									<!-- <a title="Cancel" ><i class="fa fa-times-circle-o" ng-click="toCancel(info)" ng-change="getReasonsForCancel()" ng-class="{disabled: isDisabled(info)}" aria-hidden="true" data-toggle="modal" data-target="#CancelModal"></i></a> -->
+									<a title="Cancel "><i class="fa fa-times-circle-o" style="color: red !important;"
+										ng-click="getReasonsForCancel()"
+										ng-class="{disabled: isDisabled(info)}" aria-hidden="true"
+										data-toggle="modal" data-target="#CancelModal"></i></a>
+								</div>
+								<div
+									class="col-lg-6 col-md-6 padding-left-right-set4 text-right">
+									<a href="" data-toggle="modal" data-target="#KitInfoModal"
+										ng-click="getKitListByIndentNo(info)">Details</a>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- KitApproval Modal Start -->
+	<div id="KitInfoModal"
+		class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-left-right-set4 padding-top4">
+						<div class="col-md-12 common-table-height-250">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+										<th class="width8">Kit Code/Instrument Code
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width8">Kit Name/Instrument Name
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width3">Quantity
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width3">Action taken</th>
+										<th class="width1"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="kitInfo in kitInKitIndentList">
+										<td>{{kitInfo.code}}</td>
+										<td>{{kitInfo.name}}</td>
+										<td>{{kitInfo.quantity}}</td>
+										<td class="vertical-middle">
+											<div class="row">
+												<label class="cursor-pointer"><input type="radio"
+													name="optradio_{{$index}}"
+													ng-disabled= "isDisabled()"
+													ng-checked="kitInfo.status == 'Accepted'"
+													data-toggle="modal" data-target="#confirmPopupOnAccept"
+													ng-click="setAcceptItem(kitInfo)">Accept</label> 
+													
+												<label
+													class="cursor-pointer"><input type="radio"
+													name="optradio_{{$index}}"
+													data-toggle="modal" data-target="#rejectionModal"
+													ng-disabled= "isDisabled()"
+													ng-checked="kitInfo.status == 'Rejected'"
+													ng-click="toReject(kitInfo)">Reject</label>
+											</div>
+										</td>
+										<td class="text-center"><a href="" data-toggle="modal"
+											data-target="#instrumentInfoModal"
+											ng-click="getInstrumentInfo(kitInfo)"><i
+												class="fa fa-info-circle"></i></a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--  kitApproval kitInfo Modal End -->
+
+	<!-- Confirmation PopUp For Accept Kit -->
+	<div id="confirmPopupOnAccept" class="modal fade ng-scope in"
+		role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal"
+							ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>Are you sure you want to perform this action?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+						id="" ng-click="approveKit();">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- instrumentInfo Modal Start -->
+	<div id="instrumentInfoModal"
+		class="modal fade ng-scope in common-medium-popup" role="dialog"
+		style="z-index: 9999; background: rgba(0, 0, 0, 0.33)" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row padding-left-right-set4 padding-top4">
+						<div class="col-md-12 common-table-height-250">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+										<th class="width15">Instrument Code
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width15">Instrument Name
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width5">Quantity
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr
+										ng-repeat="instrumentInfo in indentKitInstrumentInfo.kitInstrumentList">
+										<td>{{instrumentInfo.instrumentCode}}</td>
+										<td>{{instrumentInfo.instrumentName}}</td>
+										<td>{{instrumentInfo.quantity}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--  instrumentInfo Modal End -->
+
+	<!-- CanellationModal Start -->
+	<div id="CancelModal" class="modal fade ng-scope in common-small-popup"
+		role="dialog"
+		style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Cancellation
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+
+
+										<select class="text-input floating-label"
+											name="canncellationReason" ng-model="cancelReasonId"
+											ng-options="data.id as data.reason for data in cancelReasonsList"
+											required>
+
+											<!-- ng-options="item.id as item.reason for item in rejectReasonsList" -->
+
+										</select> <label for="cancellationReason">Select Reason</label>
+
+
+
+										<!-- <select class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" id="rejectReasonId"
+											ng-options="data.id as data.reason for data in rejectReasonsList" name="code" ng-model="rejectReasonId">
+											<option value="">Select Reason</option>
+											ngRepeat: info in reasonList
+											</select>		
+											<label for="reason">Select Reasons</label> -->
+									</div>
+								</div>
+							</div>
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<textarea name="code" rows="4" id="noteReject"
+											class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+											ng-model="noteOnCancellation"></textarea>
+										<label for="code">Note</label>
+									</div>
+								</div>
+							</div>
+							<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+						id="" ng-click="cancelKitIndent()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- CanellationModal END -->
+
+
+	<!-- Rejection Modal Start -->
+	<div id="rejectionModal"
+		class="modal fade ng-scope in common-small-popup" role="dialog"
+		style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Rejection
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+
+
+										<select class="text-input floating-label"
+											name="rejectionReason" ng-model="rejectReasonId"
+											ng-options="data.id as data.reason for data in rejectReasonsList"
+											required>
+
+											<!-- ng-options="item.id as item.reason for item in rejectReasonsList" -->
+
+										</select> <label for="rejectionReason">Select Reason</label>
+
+
+
+										<!-- <select class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-empty" id="rejectReasonId"
+											ng-options="data.id as data.reason for data in rejectReasonsList" name="code" ng-model="rejectReasonId">
+											<option value="">Select Reason</option>
+											ngRepeat: info in reasonList
+											</select>		
+											<label for="reason">Select Reasons</label> -->
+									</div>
+								</div>
+							</div>
+							<div class="row input-container margin-top10">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<textarea name="code" rows="4" id="rejectReasonNote"
+											class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+											ng-model="rejectReasonNote"></textarea>
+										<label for="code">Note</label>
+									</div>
+								</div>
+							</div>
+							<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+						id="" ng-click="rejectKit()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Rejection Modal End -->
+
+</div>
+<div ng-include="'./views/common/accept-reject.html'" class="ng-scope"
+	style=""></div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var documentHeight = $(window).height();
+		var sideBarHeight = documentHeight - 55;
+		$("#page-content-wrapper").css("height", sideBarHeight + "px");
+	});
+
+	$(".selectedPageName").text("Kit Indent Approval");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="KitIndentApproval"]').parents("li").addClass("active");
+</script>

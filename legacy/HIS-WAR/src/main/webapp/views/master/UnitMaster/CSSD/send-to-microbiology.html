@@ -1,0 +1,205 @@
+<div id="page-content-wrapper" class="ng-scope" style="height: 417px;">
+	<div class="container-fluid his-style">
+	
+		<fieldset>
+		
+		<div class="main-heading-div">
+				<div class="row">
+					<div ng-include="'./views/common/select-cssd-store.html'"></div>
+				</div>
+			</div>
+		
+			<!-- <legend class="heading-div">Package Master</legend> -->
+			<div class="row padding-top8">
+				
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+						
+									<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForFromDate" id="datePickerForFromDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForFromDate" model-view-value="true" is-open="datePickerForFromDate.opened"
+									   datepicker-options="dateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForFromDate()" required="" style="">
+									
+									<label for="code" class="">
+									Date (From)</label> <!-- Date should be selected from-to Date  -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-calendar" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" 
+									name="datePickerForToDate" id="datePickerForToDate" uib-datepicker-popup="dd/MM/yyyy"
+									 ui-mask="99/99/9999" placeholder="DD/MM/YYYY"
+									 
+									  ng-model="datePickerForToDate" model-view-value="true" is-open="datePickerForToDate.opened"
+									   datepicker-options="toDateOptions" show-button-bar="false"
+									    ng-click="openDatePickerForToDate()" required="" style=""> <label
+								for="code">Date-Till</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<input type="text" autocomplete="off" name="code" id=""
+									class="text-input floating-label" ng-model="batchNo"> <label for="code">Batch No.</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10">
+							<div class="">
+								<select class="text-input floating-label dirty" name="code" ng-model="selectedStatusForSendToMicrobiology">
+									<option value="">All</option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Status(n)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+					<div class=" ">
+						<a href="#/detailsSendtoMicrobiology" class="btn btn-primary btn-save-box-shadow" title="Add New">Add New</a>
+					</div>
+				</div> -->
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto padding-top10">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="getSendToMicrobiologyListByMultipleFields()"><i class="fa fa-search" aria-hidden="true" ></i></a>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<div class="row margin-top8 padding-left-right-set4">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width12">
+								Batch No.
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								Autoclave No.
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width12">
+								Autoclave Date
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<!-- <th class="width12">
+								Expiry Date
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th> -->
+							<th class="width3 text-center vertical-middle">
+								Status(n)
+							</th>
+							<th class="width8 text-center vertical-middle">
+								Action taken
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- <tr>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td class="text-center vertical-middle">
+							<span class="padding-right10"><a href="#/detailsSendtoMicrobiology" title="View"><i class="fa fa-eye "></i></a></span>
+							<span class="cursor-pointer"><a>Send to Microbiology</a></span></td>
+						</tr> -->
+						<tr ng-if="sendToMicrobiologyList.length==0"><td class="text-center" colspan="5">{{loadingMessage}}</td></tr>
+						<tr ng-repeat="info in sendToMicrobiologyList">
+							<td>{{info.batchNumber}}</td>
+							<td>{{info.autoclaveNumber}}</td>
+							<td>{{info.autoclaveDate}}</td>
+							<!-- <td>{{info.expiryDate}}</td> -->
+							<td>{{info.status}}</td>
+							<td class="text-center"><a ui-sref="detailsSendtoMicrobiology({batchNo: info.batchNumber})" title="View"><i class="fa fa-eye"></i></a>
+							<span class="cursor-pointer"><a data-toggle="modal" data-target="#confirmPopupOnSendToMicrobiology" ng-click="setCurrentLoadBatchItem(info)" ng-class="{disabled: isDisabled(info)}">Send to Microbiology</a></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Confirmation PopUp On Send to microbiology-->
+	<div id="confirmPopupOnSendToMicrobiology" class="modal fade ng-scope in"
+		role="dialog" style="padding-left: 17px;">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal"
+							ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>Are you sure you want to perform this action?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+						id=""  ng-click="sendToMicrobiology()">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Update Status Modal Ends -->
+	
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+});
+  
+  $(".selectedPageName").text("Send to Microbiology");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="sendtoMicrobiology"]').parents("li").addClass("active");
+
+</script>

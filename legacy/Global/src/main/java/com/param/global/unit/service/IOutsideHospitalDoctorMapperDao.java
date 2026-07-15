@@ -1,0 +1,24 @@
+package com.param.global.unit.service;
+
+import com.param.global.common.Response;
+import com.param.global.unit.dto.OutsideHospitalDoctorMapperDto;
+
+import in.param.exception.ApplicationException;
+
+public interface IOutsideHospitalDoctorMapperDao {
+
+	public Response getOutsideHospitalDoctorMapperByName(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto) throws ApplicationException;
+
+	public Response saveOutsideHospitalDoctorMapper(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto) throws ApplicationException;
+
+	public Response getOutsideHospitalDoctorMapperList(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto)throws ApplicationException;
+
+	public Response updateOutsideHospitalDoctorMapperStatus(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto)throws ApplicationException;
+
+	public Response getOutsideHospitalDoctorMapperById(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto)throws ApplicationException;
+
+	public Response searchOutsideHospitalDoctorList(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto)throws ApplicationException;
+
+	public Response getAllOutsideHospitalDoctorList(OutsideHospitalDoctorMapperDto outsideHospitalDoctorMapperDto)throws ApplicationException;
+
+}

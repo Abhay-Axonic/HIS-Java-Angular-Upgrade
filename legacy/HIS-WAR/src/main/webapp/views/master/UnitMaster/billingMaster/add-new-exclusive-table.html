@@ -1,0 +1,412 @@
+<div class="row">
+			<div class="custom-sub-tab padding-left-right-set4 ">
+				<ul class="tabs nav nav-tabs">
+					<li ng-class="{ active : isSetFirstTabLevel(3) }" class="width20 active" > <!-- Added on: 20.dec.2019 -->
+						<a href="" ng-click="setFirstTabLevel(3)">Group Wise Exclusion</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor" class="width20" style="">
+						<a href="" ng-click="setFirstTabLevel(1)">Service Wise Exclusion</a>
+					</li>
+					<li ng-class="{ active : isSetFirstTabLevel(2) }" class="width20" style="">
+						<a href="" ng-click="setFirstTabLevel(2)" class="">Item Wise Exclusion</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 float-right second-level-tab-display-div-PkgCAP text-width-auto padding-top10 padding-left-right-10">
+								<div class="common-save-button"  ng-show="isSetFirstTabLevel(1)" >
+									<input type="button" value="Get Service" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" ng-click="getServices();" ng-disabled="fetchValidate">
+								</div>
+								
+								<div class="common-save-button"  ng-show="isSetFirstTabLevel(2)" >
+									<input type="button" value="Get Item" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" ng-click="getItems();" ng-disabled="fetchValidate">
+								</div>
+							</div>
+			<div class="row padding-left-right-set4">
+				<div ng-show="isSetFirstTabLevel(3)" class="second-level-tab-display-div">
+					<div class="row"><!-- padding-bottom10 padding-top1 -->
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container test-master-sample">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" class="text-input floating-label" ng-model="speciality.specialityName" placeholder="Search" uib-typeahead=" spec.specialityName for spec in specialityGroupList | filter:$viewValue | limitTo:5" typeahead-editable="false" typeahead-on-select="selectSpeciality($item, $model, $label);" ng-keyup="speciality.specialityId = $event.keyCode == 8 ? '' : speciality.specialityId" name="" autocomplete="on">
+                                            <label for="code">Group</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container test-master-sample">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" class="text-input floating-label" ng-model="subSpeciality.subSpecialityName" placeholder="Search" uib-typeahead=" subsp.subSpecialityMasterName for subsp in subSpecialityList | filter:$viewValue | limitTo:5" typeahead-editable="false" typeahead-on-select="selectSubSpeciality($item, $model, $label);" ng-keyup="subSpeciality.subSpecialityId = $event.keyCode == 8 ? '' : subSpeciality.subSpecialityId" name="" autocomplete="on">
+                                            <label for="code">Sub Group </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 text-width-auto text-center">
+                                <div class="common-save-button">
+                                    <input type="button" value="Add" class="btn btn-primary btn-save-box-shadow" ng-click="addGroupDetails()" ng-disabled="fetchValidate">
+                                    <!-- data-toggle="modal" data-target="#addDepartmentModal" -->
+                                </div>
+                            </div>
+					</div>
+					<div class="row">
+						<div class="row padding-top4 padding-left-right-set4" ng-show="(packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcServiceDetailsDto|filter:{isGroupwiseExlusion:2}).length>0" >
+							<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+							  <table id="main-table" class="main-table">
+							       <thead>
+							      <tr>
+							        <th class="fixed width10">
+							        	<label class="checkbox-inline" title="Select All Services"><input type="checkbox" value="">Group/Sub Group</label>
+								         <table class="w-100">
+								        <thead >
+								           <th class="color-white" style="white-space: nowrap;z-index:1023 !important;">&nbsp;
+								           <table class="w-100">
+								               <thead>
+								                <td class="color-white">
+								                    <table class="w-100" style="background:white;">&nbsp; 
+								                    <tbody>
+									                      <tr ng-repeat="grpDtls in packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcServiceDetailsDto track by $index" ng-if="grpDtls.isGroupwiseExlusion=='2'">
+									                      	<td class="width10" style="background: white;">
+                                                                <span style="border-right: 2px solid #2e6ea2; padding: 4px;"><a ng-click="removeGroups($index);"><i class="fa fa-times"></i></a></span>&nbsp;
+                     											<span>{{grpDtls.groupName}}/{{grpDtls.subGroupName}}</span>
+                                                             </td>
+									                      </tr>
+									                      
+								                     </tbody>
+								                      <tfoot>
+								                      	<tr style="height: 30px;">
+								                      		<td style="background:white;"></td>
+								                      	</tr>
+								                      	
+									                     <tr>
+								                      	   <td class="color-black"  style="background: #2e6ea2;">
+								                      	   	<label class="color-white">Validity(Days)</label>
+								                      	   	<!-- <input type="text" autocomplete="off" value="Validity(Days)" disabled="disabled"> -->
+								                      	   </td>
+									                     </tr>
+									                     
+									                       <tr>
+									                         <td class="color-black" style="background: #2e6ea2;">
+									                         	<label class="color-white">Final Package Price</label>
+									                         	<!-- <input type="text" autocomplete="off" value="Final Package Price" disabled="disabled"> -->
+									                         </td>
+									                      </tr>
+								                      </tfoot>
+								                   </table>
+								                 </td>
+								        	    <thead> 
+								              </table> 
+								           </th>
+								         <thead> 
+								     </table> 
+							        </th>
+							         
+							        <th style="z-index:1022 !important;" ng-repeat="paymentEnt in packageObjResponse.paymentEntitlement track by $index" ng-init="pEntIndex=$index"><label class="checkbox-inline padding-left0" title="">{{paymentEnt.paymentEntitlement}}</label>	
+							        <table class="w-100">
+								        <thead>
+								           <th class="color-white" ng-repeat="patientCat in paymentEnt.patientCategoryList track by $index" ng-init="peIndex=$index">{{patientCat.patientType}}
+								           <table class="w-100" style="background:white;">
+								               <thead>
+								                <td class="color-white th-bg width12" style="white-space: nowrap;" ng-repeat="billingBedCat in patientCat.billingBedCategoryList  track by $index" ng-init="bBedIndex=$index">{{billingBedCat.billingBedCategory}}
+								                    <table class="w-100">
+								                    <tbody>
+									                      <tr style="background: white;" ng-repeat="services in billingBedCat.mPackageMasterDto.listTPackageIncExcServiceDetailsDto track by $index" ng-init="serviceIdx=$index" ng-if="services.isGroupwiseExlusion=='2'">
+									                      	<th  class="width5 text-left"><input type="checkbox" ng-model="services.isSelected"  ng-init="services.isSelected=true"></th>
+									                     </tr>								                      
+								                     </tbody>
+								                     <tfoot>
+								                     	<tr style="height: 30px;">
+								                      		<td style="background : white"></td>
+								                      	</tr>
+								                     	
+									                     <tr>
+									                       <td class="width5" style="border-top: 2px solid #2e6ea2 !important;background:white">
+									                       	<input type="text" autocomplete="off" placeholder="validity Period In days color-black" class="dirty" is-quantity ng-model="billingBedCat.mPackageMasterDto.validityPeriodIndays" name="validityPeriodIndays"></td>
+									                     </tr>
+									                     <tr>
+									                       <td class="width5" style="background:white">
+									                       	<input type="text" autocomplete="off" placeholder="packagePrice" class="dirty color-black" is-number  ng-model="billingBedCat.mPackageMasterDto.packagePrice" name="packagePrice" ng-blur=""></td>
+									                     </tr>
+								                     </tfoot>
+								                   </table>
+								                 </td>
+								        	    <thead> 
+								              </table> 
+								           </th>
+								         <thead> 
+								     </table> 
+							        </th>
+							     </tr>
+							    </thead>
+							  </table>
+							</div>
+						</div>
+						 <div class="row">
+	                        <table class="table table-bordered">
+	                            <tr>
+	                                <td ng-if="(packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcServiceDetailsDto==null|| (packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcServiceDetailsDto|filter:{isGroupwiseExlusion:2}).length==0) && isSetFirstTabLevel(3) ">
+	                                    <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </div>
+					</div>
+				</div>
+				<div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div" style="">
+					<div class="row padding-top0 padding-left-right-set4" ng-show="(packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcServiceDetailsDto|filter:{isGroupwiseExlusion:1}).length>0">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+						  <table id="main-table" class="main-table">
+						       <thead>
+						      <tr>
+						        <th class="fixed width10">
+						        	<label class="checkbox-inline" title="Select All Services"><input type="checkbox" value="">Services</label>
+							         <table class="w-100">
+							        <thead >
+							           <th class="color-white" style="white-space: nowrap;z-index:1023 !important;">&nbsp;
+							           <table class="w-100">
+							               <thead>
+							                <td class="color-white">&nbsp;
+							                    <table class="w-100" style="background:white;">
+							                    <tbody>
+								                      <tr ng-repeat="services in packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcServiceDetailsDto track by $index"  ng-if="services.isGroupwiseExlusion=='1'">
+								                      	<td class="width10" style="background: white;">
+								                      		<!-- <input type="text" autocomplete="off" value="{{services.serviceName}}" disabled="disabled"> -->
+								                      		<span style=" border-right: 2px solid #2e6ea2; padding: 4px;"><a  ng-click="removeService(services.serviceId);" ><i class="fa fa-times "></i></a></span>&nbsp;
+								                      		<span>{{services.serviceName}}</span>
+								                      	</td>
+								                      </tr>
+								                      
+							                     </tbody>
+							                      <tfoot>
+							                      	<tr style="height: 30px;">
+							                      		<td style="background:white;"></td>
+							                      	</tr>
+							                      	<!-- <tr>
+							                      	   <td class="color-black"  style="background: #2e6ea2;border-top: 2px solid #2e6ea2 !important;">
+							                      	   		<label class="color-white">Service Wise Summary</label>
+							                      	   		<input type="text" autocomplete="off" value="Service Wise Summary" disabled="disabled">
+							                      	   </td>
+								                     </tr>
+								                      <tr>
+								                         <td class="color-black" style="background: #2e6ea2;">
+								                         	<label class="color-white">Package Cost</label>
+								                         	<input type="text" autocomplete="off" value="Package Cost" disabled="disabled">
+								                         </td>
+								                      </tr>	 -->
+								                     <tr>
+							                      	   <td class="color-black"  style="background: #2e6ea2;">
+							                      	   	<label class="color-white">Validity(Days)</label>
+							                      	   	<!-- <input type="text" autocomplete="off" value="Validity(Days)" disabled="disabled"> -->
+							                      	   </td>
+								                     </tr>
+								                     
+								                       <tr>
+								                         <td class="color-black" style="background: #2e6ea2;">
+								                         	<label class="color-white">Final Package Price</label>
+								                         	<!-- <input type="text" autocomplete="off" value="Final Package Price" disabled="disabled"> -->
+								                         </td>
+								                      </tr>
+							                      </tfoot>
+							                   </table>
+							                 </td>
+							        	    <thead> 
+							              </table> 
+							           </th>
+							         <thead> 
+							     </table> 
+						        </th>
+						         
+						        <th style="z-index:1022 !important;" ng-repeat="paymentEnt in packageObjResponse.paymentEntitlement track by $index" ng-init="pEntIndex=$index"><label class="checkbox-inline padding-left0" title="">{{paymentEnt.paymentEntitlement}}</label>	
+						        <table class="w-100">
+							        <thead>
+							           <th class="color-white" ng-repeat="patientCat in paymentEnt.patientCategoryList track by $index" ng-init="peIndex=$index">{{patientCat.patientType}}
+							           <table class="w-100" style="background:white;">
+							               <thead>
+							                <td class="color-white th-bg width12" style="white-space: nowrap;" ng-repeat="billingBedCat in patientCat.billingBedCategoryList  track by $index" ng-init="bBedIndex=$index">{{billingBedCat.billingBedCategory}}
+							                    <table class="w-100">
+							                    <tbody>
+								                      <tr style="background: white;" ng-repeat="services in billingBedCat.mPackageMasterDto.listTPackageIncExcServiceDetailsDto track by $index" ng-init="serviceIdx=$index" ng-if="services.isGroupwiseExlusion=='1'">
+								                      	<th  class="width5 text-left"><input type="checkbox" ng-model="services.isSelected"  ng-init="services.isSelected=true"></th> <!-- {{services.serviceName}} -->
+<!-- 								                      	<th  class="width5 text-left"><input type="text" autocomplete="off" name="price" ng-model="services.servicePrice" ng-decimal="200" placeholder="price" disabled/></th> -->
+								                     </tr>								                      
+							                     </tbody>
+							                     <tfoot>
+							                     	<tr style="height: 30px;">
+<!-- 							                      		<td style=""></td> -->
+							                      		<td style="background : white"></td>
+							                      	</tr>
+							                     	<!-- <tr>
+							                     	<td style="border-top: 2px solid #2e6ea2 !important;"></td>
+								                       <td style="border-top: 2px solid #2e6ea2 !important;" class="width5">
+								                       	<input type="text" autocomplete="off" placeholder="Service Wise Summary" class="dirty" ng-decimal="200" ng-model="billingBedCat.mPackageMasterDto.serviceWiseSummary" name="serviceWiseSummary" disabled>
+								                       </td>
+								                     </tr> -->
+								                     <!-- <tr>
+								                     	<td></td>
+								                       <td class="width5"><input type="text" autocomplete="off" placeholder="packagePrice" class="dirty" is-number  ng-model="billingBedCat.mPackageMasterDto.packageCost" name="packageCost" disabled></td>
+								                     </tr> -->
+								                     <tr>
+<!-- 								                     	<td></td> -->
+								                       <td class="width5" style="border-top: 2px solid #2e6ea2 !important;background:white">
+								                       	<input type="text" autocomplete="off" placeholder="validity Period In days color-black" class="dirty" is-quantity ng-model="billingBedCat.mPackageMasterDto.validityPeriodIndays" name="validityPeriodIndays"></td>
+								                     </tr>
+								                     <tr>
+<!-- 								                     <td></td> -->
+								                       <td class="width5" style="background:white">
+								                       	<input type="text" autocomplete="off" placeholder="packagePrice" class="dirty color-black" is-number  ng-model="billingBedCat.mPackageMasterDto.packagePrice" name="packagePrice" ng-blur="chejck"></td>
+								                     </tr>
+							                     </tfoot>
+							                   </table>
+							                 </td>
+							        	    <thead> 
+							              </table> 
+							           </th>
+							         <thead> 
+							     </table> 
+						        </th>
+						     </tr>
+						    </thead>
+						  </table>
+						</div>
+					</div>
+					 <div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td ng-if="(packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcServiceDetailsDto==null|| (packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcServiceDetailsDto|filter:{isGroupwiseExlusion:1}).length==0) && isSetFirstTabLevel(1) ">
+                                    <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+				</div>
+				<div ng-show="isSetFirstTabLevel(2)" class="second-level-tab-display-div" style="">
+					  <div class="row padding-top0 padding-left-right-set4" ng-show="packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcItemDetailsDto.length>0">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll340">
+						  <table id="main-table" class="main-table">
+						       <thead>
+						      <tr>
+						        <th class="fixed width10">
+						        	<label class="checkbox-inline" title="Select All Items"><input type="checkbox" value="">Items</label>
+							         <table class="w-100">
+							        <thead >
+							           <th class="color-white" style="white-space: nowrap;z-index:1023 !important;">&nbsp;
+							           <table class="w-100">
+							               <thead>
+							                <th class="color-white" >&nbsp;
+							                    <table class="w-100">
+							                    <tbody>
+								                      <tr ng-repeat="items in packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcItemDetailsDto track by $index">
+<!-- 								                      	<td style="background: white;"><input type="text" autocomplete="off" value="{{items.itemName}}" disabled="disabled"></td> -->
+															<td class="width10" style="background: white;">
+								                      		<span style=" border-right: 2px solid #2e6ea2; padding: 4px;"><a  ng-click="removeItems(items.itemId);" ><i class="fa fa-times "></i></a></span>&nbsp;
+								                      		<span>{{items.itemName}}</span>
+								                      	</td>
+															
+								                      </tr>
+								                      
+							                     </tbody>
+							                      <tfoot>
+							                      	<tr style="height: 30px;">
+							                      		<td style="background : white !important;"></td>
+							                      	</tr>
+								                     <!-- <tr>
+								                         <td class="color-black"  style="background: #2e6ea2;border-top: 2px solid #2e6ea2 !important;">
+								                         	<label class="color-white">Service Wise Summary</label>
+								                         	<input type="text" autocomplete="off" value="Service Wise Summary" disabled="disabled">
+								                         </td>  
+								                      </tr>
+								                      <tr>
+								                         <td class="color-black" style="background: #2e6ea2;">
+								                         	<label class="color-white">Package Cost</label>
+								                         	<input type="text" autocomplete="off" value="Package Cost" disabled="disabled">
+								                         </td>  
+								                      </tr> -->
+								                      <tr>
+							                      	   <td class="color-black"  style="background: #2e6ea2;">
+							                      	   		<label class="color-white">Validity(Days)</label>
+							                      	   		<!-- <input type="text" autocomplete="off" value="Validity(Days)" disabled="disabled"> -->
+							                      	   </td>
+								                     </tr>
+								                      <tr>
+								                         <td class="color-black" style="background: #2e6ea2;">
+								                         	<label class="color-white">Final Package Price</label>
+								                         	<!-- <input type="text" autocomplete="off" value="Final Package Price" disabled="disabled"> -->
+								                         </td>  
+								                      </tr>
+							                      </tfoot>
+							                   </table>
+							                 </th>
+							        	    <thead> 
+							              </table> 
+							           </th>
+							         <thead> 
+							     </table> 
+						        </th>
+						         
+						        <th style="z-index:1022 !important;"  ng-repeat="paymentEnt in packageObjResponse.paymentEntitlement track by $index" ng-init="pEntIndex=$index"><label class="checkbox-inline padding-left0" title="">{{paymentEnt.paymentEntitlement}}</label>	
+						        <table class="w-100">
+							        <thead>
+							           <td class="color-white" ng-repeat="patientCat in paymentEnt.patientCategoryList track by $index" ng-init="peIndex=$index">{{patientCat.patientType}}
+							           <table class="w-100" style="background:white;">
+							               <thead>
+							                <td class="color-white th-bg" style="white-space: nowrap;" ng-repeat="billingBedCat in patientCat.billingBedCategoryList  track by $index" ng-init="bBedIndex=$index">{{billingBedCat.billingBedCategory}}
+							                    <table class="w-100">
+							                    <tbody>
+								                      <tr ng-repeat="items in billingBedCat.mPackageMasterDto.listTPackageIncExcItemDetailsDto track by $index" ng-init="serviceIdx=$index">
+								                      
+								                      	<td class="width3 text-left" style="background: white;"><input type="checkbox" ng-model="items.isSelected"  ng-init="items.isSelected=true"></td><!-- {{items.itemName}} -->
+								                     </tr>								                      
+							                     </tbody>
+							                     <tfoot>
+							                     	<tr style="height: 30px;">
+							                      		<td style="background:white;"></td>
+							                      	</tr>
+							                     <!-- 	<tr>
+								                       <td style="border-top: 2px solid #2e6ea2 !important;" class="width5">
+								                       	<input type="text" autocomplete="off" placeholder="Service Wise Summary" class="dirty" is-number  ng-model="billingBedCat.mPackageMasterDto.serviceWiseSummary" name="serviceWiseSummary" disabled></td>
+								                     </tr>
+								                     <tr>
+								                       <td><input type="text" autocomplete="off" placeholder="packagePrice" class="dirty" is-number ng-model="billingBedCat.mPackageMasterDto.packageCost" name="packagePrice" disabled></td>
+								                     </tr> -->
+								                     <tr>
+								                       <td class="width5" style="border-top: 2px solid #2e6ea2 !important;" >
+								                       	<input type="text" autocomplete="off" placeholder="validity Period In days" class="dirty color-black" is-quantity ng-model="billingBedCat.mPackageMasterDto.validityPeriodIndays" name="validityPeriodIndays"></td>
+								                     </tr>
+								                     <tr>
+								                       <td class=""><input type="text" autocomplete="off" placeholder="packagePrice" class="dirty color-black" is-number  ng-model="billingBedCat.mPackageMasterDto.packagePrice" name="packagePrice"></td>
+								                     </tr>
+							                     </tfoot>
+							                   </table>
+							                 </td>
+							        	    <thead> 
+							              </table> 
+							           </td>
+							         <thead> 
+							     </table> 
+						        </th>
+						     </tr>
+						    </thead>
+						  
+						  </table>
+						</div>
+					</div>
+					 <div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td ng-if="(packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcItemDetailsDto==null||packageObjResponse.paymentEntitlement[0].patientCategoryList[0].billingBedCategoryList[0].mPackageMasterDto.listTPackageIncExcItemDetailsDto.length==0) && isSetFirstTabLevel(2) ">
+                                    <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+				</div>
+			</div>
+		</div>

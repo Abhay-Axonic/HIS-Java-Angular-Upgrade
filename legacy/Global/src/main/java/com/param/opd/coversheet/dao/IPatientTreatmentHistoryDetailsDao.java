@@ -1,0 +1,45 @@
+package com.param.opd.coversheet.dao;
+
+import java.util.List;
+
+import com.param.global.common.Response;
+import com.param.global.dto.CoversheetTemplateMasterDto;
+import com.param.opd.coversheet.dto.PatientTreatmentHistoryDetailsDto;
+import com.param.opd.coversheet.model.PatientTreatmentHistoryDetails;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings({ "rawtypes"})
+
+public interface IPatientTreatmentHistoryDetailsDao {
+
+	public Response getCurrentListOfPatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException;
+
+	public Response updateEnterErrorStatusPatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException;
+
+	public Response updatePatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException;
+
+	public Response savePatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException;
+
+	public Response getOldListOfPatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException;
+
+	public Response updateSaveNurseReviewedFlag(PatientTreatmentHistoryDetails patientTreatmentHistoryDetails)throws ApplicationException;
+
+	public Response getCurrentPatientTreatmentHistoryDetailsForCoversheet(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	public Response getPatientTreatmentHistoryForBookView(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	public Response getCompletedDiagnosticsProcedures(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	public Response getCompletedMedicalProcedures(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	public Response updateStatusRemoveMedicalHistory( PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	public Response getPatientTreatmentHistoryForDischargeSummary(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	public Response getInvestigationHistory(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	public Response savePatientTreatmentHistoryDetails(List<PatientTreatmentHistoryDetailsDto> list,CoversheetTemplateMasterDto resDto)throws ApplicationException;
+
+	public Response updateCovTempPatientTreatmentHistoryDetails(List<PatientTreatmentHistoryDetailsDto> list, CoversheetTemplateMasterDto coversheetTemplateMasterDto);
+
+}

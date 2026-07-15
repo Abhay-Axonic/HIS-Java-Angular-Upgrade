@@ -1,0 +1,28 @@
+package com.param.procurement.quotation.dao.consignmentPOInvoice;
+
+import java.math.BigInteger;
+import java.util.List;
+
+import com.param.entity.model.procurement.ConsignmentStockPOInvoice;
+import com.param.procurement.quotation.dto.consignmentPOInvoice.ConsignmentStockPODetailResponseDto;
+import com.param.procurement.quotation.dto.consignmentPOInvoice.ConsignmentStockPORequestDto;
+import com.param.procurement.quotation.dto.consignmentPOInvoice.ConsignmentStockPOResponseDto;
+
+public interface IConsignmentStockPOInvoiceDao {
+	
+	List<ConsignmentStockPOResponseDto> getConsignmentPOInvoiceList(ConsignmentStockPORequestDto consignmentStockPORequestDto);
+	
+	List<ConsignmentStockPOResponseDto> searchConsignmentPOBP(ConsignmentStockPORequestDto consignmentStockPORequestDto);
+	List<ConsignmentStockPODetailResponseDto> getConsignmentPoDetails(List<Integer> poIds);
+	ConsignmentStockPOInvoice saveConsignmentPOInvoice(ConsignmentStockPOInvoice consignmentStockPOInvoice);
+	List<ConsignmentStockPODetailResponseDto> getConsignmentStockPOInvoiceDetail(ConsignmentStockPOResponseDto consignmentStockPOResponseDto);
+	
+	Integer updateConsignmentStockPOInvoiceDetail(ConsignmentStockPODetailResponseDto consignmentStockPODetailResponseDto);	
+	ConsignmentStockPOInvoice updateConsignmentStockPOInvoice(ConsignmentStockPOResponseDto consignmentStockPOResponseDto);
+	BigInteger getInvoiceNumberCount(String invoiceNumber);
+
+	ConsignmentStockPOInvoice getPurchaseOrderInvoice(Integer id);
+
+	void update(ConsignmentStockPOInvoice consignmentStockPOInvoice);
+	
+}

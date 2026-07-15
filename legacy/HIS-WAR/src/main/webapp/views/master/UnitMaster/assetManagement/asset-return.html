@@ -1,0 +1,420 @@
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<div class="row margin-top10">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" 
+							id="fromDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" 
+							model-view-value="true" is-open="vm.model.fromDateOpened" datepicker-options="vm.model.fromDateOptions" 
+							show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+							<label for="code">Date (From)</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+						<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" 
+							uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY" ng-model="vm.model.toDate" 
+							model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions" 
+							show-button-bar="false" ng-click="vm.model.OpenToDate()">
+							<label for="description" class="LISDynamicLabel">Date-Till</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+						<i class="fa fa-tasks" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<select name="fromStore" id="fromStore" class="text-input floating-label dirty" ng-model="vm.model.fromStore"
+							 data-ng-options="fromStore.store for fromStore in vm.model.fromStores">
+							</select>
+							<label for="code">Accepting Store</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+						<i class="fa fa-tasks" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<select name="toStore" id="toStore" class="text-input floating-label dirty" ng-model="vm.model.toStore"
+							 ng-change="vm.model.storeChange();" data-ng-options="toStore.store for toStore in vm.model.toStores">
+							</select>
+
+							<label for="code">Returning Store</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon">
+						<i class="fa fa-bullseye" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off" ng-model="vm.model.returnNo" class="text-input floating-label">
+							<label>Return No.</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-2 col-md-2 col-sm-2 polymer-icon ">
+						<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div>
+							<select name="status" id="status" class="text-input floating-label dirty" ng-model="vm.model.status"
+							 data-ng-options="status.status for status in vm.model.statuses">
+							</select>
+							<label for="description" class="LISDynamicLabel">Status(n)</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1">
+				<div class="common-save-button">
+					<a class="btn btn-primary btn-save-box-shadow text-width-auto" id="searchBtn">
+						<i class="fa fa-search" ng-click="vm.model.AssetReturnSearch()" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		
+	<div class="row margin-top10 padding-left-right-1">
+		<div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set4">
+						<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="vm.model.pagination.pageSize='10'" 
+								ng-model="vm.model.pagination.pageSize" 
+								ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class="padding-top4 ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" ng-class="{disabled: !vm.model.isItemChecked }" title="Approve"
+					ng-click="vm.model.ValidateAndUpdate('Update','confirmLogout1', {})">
+					<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+				  </a>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class="padding-top4 ">
+					<a>
+						<input type="button" value="Add New" ng-click="vm.model.AddAssetReturnDetails()" class="btn btn-primary btn-save-box-shadow">
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="row margin-top8">
+			<div class="col-md-12 col-lg-12 col-sm-8 ">
+				<fieldset>
+					<div class="row">
+						<div class="container-fluid his-style">
+							<div class="table-container padding-left-right-set4 padding-top5">
+								<div class="table-container-header">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<thead class="mainServiceTableCommon">
+											<tr>
+												<th class="width2 text-center">
+													<input type="checkbox" ng-click="vm.model.SelectAllRequests()" ng-model="vm.model.selectAllRows"
+													 ng-disabled="!vm.model.assetReturnData.length" />
+												</th>
+												<th class="width5">
+													Return No.
+													<div class="float_right" ng-click="sortType = 'returnNo'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width7">
+													Return Date
+													<div class="float_right" ng-click="sortType = 'returnDate'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width7">
+													Returning Store
+													<div class="float_right" ng-click="sortType = 'fromStore'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width7">
+													Accepting Store
+													<div class="float_right" ng-click="sortType = 'toStore'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width4">
+													Type
+													<div class="float_right" ng-click="sortType = 'type'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width7">
+													Returned By
+													<div class="float_right" ng-click="sortType = 'returnedBy'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width10">
+													Remarks
+													<div class="float_right" ng-click="sortType = 'remark'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width5">
+													Status(n)
+													<div class="float_right" ng-click="sortType = 'status'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width8">
+													Approval Status
+													<div class="float_right" ng-click="sortType = 'approvalStatus'; sortReverse = !sortReverse">
+														<div>
+															<i class="fa fa-caret-up" aria-hidden="true"></i>
+														</div>
+														<div class="margin-top-8">
+															<i class="fa fa-caret-down" aria-hidden="true"></i>
+														</div>
+													</div>
+												</th>
+												<th class="width8">
+													Action taken
+												</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table-container-body" style="height:400px; overflow-y: scroll;">
+									<table class="table table-striped table-hover table-condensed table-bordered">
+										<tbody>
+											<tr ng-repeat="item in vm.model.pagination.data | orderBy:sortType:sortReverse | filter: search">
+												<td class="width2 text-center">
+													<input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectAssetReturn(item)" ng-disabled="vm.model.isDisable(item)" />
+												</td>
+												<td class="width5">{{item.returnNo}}</td>
+												<td class="width7">{{item.returnDate | date:'dd/MM/yyyy' }}</td>
+												<td class="width7">{{item.toStore}}</td>
+												<td class="width7">{{item.fromStore}}</td>
+												
+												<td class="width4">{{item.type}}</td>
+												<td class="width7">{{item.returnBy}}</td>
+												<td class="width10">{{item.remark}}</td>
+												<td class="width5">{{item.status}}</td>
+												<td class="width8">{{item.approvalStatus}}</td>
+												<td style="width: 8.3%!important;">
+													<div class="col-lg-2 col-md-3 padding-left-right-set4">
+														<a title="Edit" ng-click="vm.model.EditAssetReturnDetails(item)"ng-class="{disabled: vm.model.isDisable(item)}" >
+															<i class="fa fa-pencil" aria-hidden="true"></i>
+												
+														</a>
+													</div>
+													<div class="col-lg-2 col-md-3 padding-left-right-set4 ">
+														<a title="Print " ng-click="assetReturn(item)">
+														<i class="fa fa-print" aria-hidden="true"></i></a>
+													</div>
+													<div class="col-lg-2 col-md-3 padding-left-right-set4" style="width: 20%; ">
+														<a title="Cancel">
+														  <i class="fa fa-ban" aria-hidden="true" ng-class="{disabled: vm.model.isDisable(item)}"
+															ng-click="vm.model.ValidateAndUpdate('Cancel','confirmCancel', item.id)"></i>
+														  <!-- ShowRejectDismiss -->
+														</a>
+													  </div>
+													<div class="col-lg-2 col-md-3 padding-left-right-set4 text-right">
+														<a href="" ng-click="vm.model.AssetReturnDetails(item)">Details</a>
+													</div>
+												</td>
+											</tr>
+
+											<tr ng-if="!vm.model.assetReturnData || vm.model.assetReturnData == false  && vm.model.assetReturnData != 'undefined'">
+												<td class="text-center" colspan="11">
+													<p>No Record Found</p>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="row margin-bottom45 center-block">
+									<ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+										style="font-size: 14px; cursor: pointer;">
+										<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+											ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+										</li>
+										<li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+											ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+										</li>
+										<li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+											ng-class="{active:vm.model.pagination.currentPage === page}"><a
+											ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+										</li>
+										<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+											<a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+										</li>
+										<li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+											<a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+<div id="confirmLogout1" class="modal fade ng-scope in" role="dialog" style="padding-left: 17px;">
+	<div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+	  <!-- style="width: 25% !important;margin: 200px 0 0 510px !important;" -->
+	  <div class="modal-content">
+		<div class="modal-header" style="padding: 0px!important;">
+		  <div class="modal-title patient-details-row">
+			Confirm
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+		  </div>
+		</div>
+		<div class="modal-body">
+		  <div class="margin-left10">
+			<span>Are you sure you want to Approve?</span>
+		  </div>
+		</div>
+		<div class="modal-footer" style="border:none;">
+		  <button type="button" data-dismiss="modal" class="btn btn-primary" id="okBtn" ng-click="vm.model.ApproveAssetReturn();">Ok</button>
+		  <button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div id="confirmCancel" class="modal fade ng-scope in common-small-popup" role="dialog" style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;">
+	<div class="modal-dialog">
+	  <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <div class="modal-title patient-details-row">
+			Cancellation
+			<button type="button" class="close" data-dismiss="modal" ng-click="vm.model.ModalDismiss('confirmCancel')">&times;</button>
+		  </div>
+		</div>
+		<div class="modal-body">
+		  <div class="row">
+			<div class="col-md-12 padding-left-right-set">
+			  <div class="row input-container margin-top10">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+				  <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11 ">
+				  <div class="">
+					<select name="cancelReason" id="cancelReason" class="text-input floating-label" ng-model="vm.model.cancelReason"
+					  ng-class="{dirty: vm.model.cancelReason}" ng-change="vm.model.isReasonValid = false">
+					  <!-- ng-options="cancelReason.reason for cancelReason in vm.model.reasons" -->
+					  <option value="">Select Reason</option>
+					  <option ng-repeat="reason in vm.model.reasons" value="{{reason.id}}">{{reason.reason}}</option>
+					</select>
+					<label for="code" style="top: -10px;">Select Reasons</label>
+				  </div>
+				  <p ng-if="vm.model.isReasonValid" class="errorMsg">Select Reason</p>
+				</div>
+			  </div>
+			  <div class="row input-container margin-top10">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+				  <i class="fa fa-sticky-note" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11 ">
+				  <div class="">
+					<textarea name="cancelNote" rows="4" id="cancelNote" maxlength="100" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+					  ng-model="vm.model.cancelNote" ng-class="{dirty: vm.model.cancelNote}"></textarea>
+					<label for="cancelNote">Note</label>
+				  </div>
+				</div>
+			  </div>
+			  <!-- <input type="text" autocomplete="off" id="commonId" /> -->
+			</div>
+		  </div>
+		</div>
+		<div class="modal-footer" style="border:none;">
+		  <button type="button" ng-disabled="cancelNote == ''" class="btn btn-primary" ng-click="vm.model.ApproveAssetReturn();">Save</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script>
+	$(document).ready(function () {
+		// $(".patienttSearchResult").hide();
+		$(".selectedPageName").text("Asset Return");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="assetReturn"]').parents("li").addClass("active");
+	});
+</script>

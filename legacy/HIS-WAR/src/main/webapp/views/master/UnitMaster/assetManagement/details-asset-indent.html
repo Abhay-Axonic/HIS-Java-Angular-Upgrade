@@ -1,0 +1,190 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+    <div class="container-fluid his-style">
+        <div class="row margin-top10">
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <span class="margin-left10">
+                    <b class="padding-right10">Indent No. :</b>
+                    <label>{{vm.model.assetIndentDetailsData.indentNo}}</label>
+                </span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <span class="margin-left10">
+                    <b class="padding-right10">Indent Date:</b>
+                    <label>{{vm.model.assetIndentDetailsData.indentDate  | date:'dd/MM/yyyy'}}</label>
+                </span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <span class="margin-left10">
+                    <b class="padding-right10">Requesting store:</b>
+                    <label>{{vm.model.assetIndentDetailsData.fromStore}}</label>
+                </span>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <span class="margin-left10">
+                    <b class="padding-right10">Issuing Store:</b>
+                    <label>{{vm.model.assetIndentDetailsData.toStore}}</label>
+                </span>
+            </div>
+        </div>
+        <div class="row margin-top4">
+
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <span class="margin-left10">
+                    <b class="padding-right10">Priority:</b>
+                    <label>{{vm.model.assetIndentDetailsData.priority}}</label>
+                </span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                <span class="margin-left10">
+                    <b class="padding-right10">Type:</b>
+                    <label>{{vm.model.assetIndentDetailsData.type}}</label>
+                </span>
+            </div>
+        </div>
+        <div class="row padding-left-right-set4 padding-top4 padding-top10 height500-table-with-scroll">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <table class="table table-bordered first-checkBox-padding">
+                    <thead class="mainServiceTableCommon">
+                        <tr>
+                            <th class="width8">
+                                Asset Code
+                                <div class="float_right">
+                                    <div>
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="margin-top-8">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="width8">
+                                Asset Name
+                                <div class="float_right">
+                                    <div>
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="margin-top-8">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </th>
+                           <!--  <th class="width6">
+                                Accessories
+                                <div class="float_right">
+                                    <div>
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="margin-top-8">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </th> -->
+                            <th class="width6">
+                                Indent Qty
+                                <div class="float_right">
+                                    <div>
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="margin-top-8">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="width7">
+                                Stock Available
+                                <div class="float_right">
+                                    <div>
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="margin-top-8">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="width10">
+                                Specification
+                                <div class="float_right">
+                                    <div>
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="margin-top-8">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="asset in vm.model.assetIndentDetailsData.items | orderBy:sortType:sortReverse">
+                            <td>{{asset.itemCode}}</td>
+                            <td>{{asset.itemName}}</td>
+                           <!--  <td>
+                                <input type="button" value="View" class="btn btn-primary btn-save-box-shadow" data-toggle="modal" ng-click="vm.model.accessoryModal(asset)">
+                            </td> -->
+                            <td>{{asset.quantity}}</td>
+                            <td>{{asset.stockAvailable}}</td>
+                            <td>{{asset.specification}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+            <div class="row his-style margin-top10 padding-right20"> 
+                <div class="col-md-11"></div>
+                <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+                    <a href="#/assetIndent">
+                        <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow ">
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<!-- view details modal start -->
+<div id="viewDetailsAccessoriesModal" class="modal fade ng-scope in common-medium-popup" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Accessory Details
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 padding-left-right-set4 margin-top4 height420-table-with-scroll" id="">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+
+                                    <th class="width8">
+                                        <div>Accessory Code </div>
+                                    </th>
+                                    <th class="width12">
+                                        <div>Accessory Description</div>
+                                    </th>
+                                    <th class="width12">
+                                        <div>Specification</div>
+                                    </th>
+                                    <th class="width8">
+                                        <div>Quantity</div>
+                                    </th>
+                                </tr>
+                                <tr  ng-repeat="acessory in vm.model.acessoryList | orderBy:sortType:sortReverse">
+
+                                    <td>{{acessory.itemCode}}</td>
+                                    <td>{{acessory.itemName}}</td>
+                                    <td>{{acessory.specification}}</td>
+                                    <td>{{acessory.quantity}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>

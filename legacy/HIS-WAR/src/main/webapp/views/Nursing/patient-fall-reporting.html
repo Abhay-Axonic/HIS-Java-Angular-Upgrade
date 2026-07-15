@@ -1,0 +1,536 @@
+<style>
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+      border-radius: 10px;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    .container {
+      padding: 2px 16px;
+    }
+    .card-body{
+    margin-left:6px;
+    }
+    .labelName{
+    color:#212325;
+    }
+    .singleLineInput{
+     border: none;
+      border-bottom: 1px solid black; /* Adding a bottom border for visual distinction */
+      outline: none;
+    }
+</style>
+
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <div class="padding-top4" ng-include="'./views/common/nutritional-patient-search.html'" style="margin-top:-5px"></div>
+        <div class="padding-top8 padding-left-right-set4" ng-include="'./views/common/nabh-patient-demography-info.html'"></div>
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+                <div class="" style="margin-left: 5px;margin-right: 5px">
+                    <form name="medicationErrorReporting" novalidate ng-submit="submitForm()">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12 col-md-12 padding-left-right-set4 padding-top10">
+                                <label class="labelName" style="display: inline-block; margin-right: 10px;">Time and date of incident: at</label>
+                                <div class="input-group" style="display: inline-block;">
+                                    <input type="text" autocomplete="off" class="text-input floating-label dirty"
+                                           name="datepickerDOB" id="datepickerDOB"
+                                           uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                                           placeholder="DD/MM/YYYY" ng-model="datepickerDOB"
+                                           model-view-value="true" is-open="datepickerDOBOpen.opened"
+                                           datepicker-options="dateOptions" show-button-bar="false"
+                                           ng-click="openDatePickerDOB()" required>
+                                </div>
+                                <label class="labelName" style="display: inline-block; margin-left: 10px;">hrs on</label>
+<!--                                <input type="number" class="singleLineInput" name="hoursInput" style="width: 6%;" min="0" max="23"-->
+<!--                                       ng-change = "checkValidHour(incidentHour);" placeholder="Hour" ng-model="incidentHour" oninput="this.value = Math.abs(parseInt(this.value) || 0).toString().slice(0, 2)">-->
+                                <input type="text" class="singleLineInput" placeholder="Hour" ng-model="incidentHour" name="hoursInput" style="width: 6%;">
+                                <input type="text" class="singleLineInput" placeholder="Minute" ng-model="incidentMinute" ng-change="convertDateTime()" name="minutesInput" style="width: 6%;">
+
+<!--                                <input type="text" class="singleLineInput" placeholder="Second" ng-model="incidentSecond" ng-change="convertDateTime()" name="secondsInput" style="width: 6%;">-->
+                                <label class="labelName" style="display: inline-block; margin-left: 10px;">Diagnosis before incident:</label>
+                                <input type="text" style="width: 400px;" class="singleLineInput" name="diagnosisInput" ng-model="diagnosisName">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card" style="margin-top:20px">
+                                    <div class="card-body">
+                                        <label class="labelName"><b>Patient Assessment</b></label><br>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Conscious Level</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+<!--                                                            <select class="text-input floating-label" name="doctorId"  >-->
+<!--                                                                <option value=""> Before Incident</option>-->
+<!--                                                                <option ng-repeat="info in labInspectionList[0].fallList" value="" ng-model="consciousBefore" ng-change="selectAssessment(0,info)">{{info.name}}</option>-->
+<!--                                                            </select>-->
+                                                            <select class="text-input floating-label" name="consciousBefore" ng-options="info as info.name for info in labInspectionList[0].fallList" ng-model="consciousBefore" ng-change="selectAssessment(0, consciousBefore)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <select class="text-input floating-label" name="consciousAfter" ng-options="info as info.name for info in labInspectionList[1].fallList" ng-model="consciousAfter" ng-change="selectAssessment(1, consciousAfter)">
+                                                                    <option value="">After Incident</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">GCS (If applicable)</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="text" class="singleLineInput" name="singleLineInput" ng-model="gcsScoreBefore">
+                                                            <label class="labelName">/15</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="text" class="singleLineInput" name="singleLineInput" ng-model="gcsScoreAfter">
+                                                            <label class="labelName">/15</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Mental State</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="mentalStateBefore" ng-options="info as info.name for info in labInspectionList[2].fallList" ng-model="mentalStateBefore" ng-change="selectAssessment(2, mentalStateBefore)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="mentalStateAfter" ng-options="info as info.name for info in labInspectionList[3].fallList" ng-model="mentalStateAfter" ng-change="selectAssessment(3, mentalStateAfter)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Ambulation</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="ambulationBefore" ng-options="info as info.name for info in labInspectionList[4].fallList" ng-model="ambulationBefore" ng-change="selectAssessment(4, ambulationBefore)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="ambulationAfter" ng-options="info as info.name for info in labInspectionList[5].fallList" ng-model="ambulationAfter" ng-change="selectAssessment(5, ambulationAfter)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Disability</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="disabilityBefore" ng-options="info as info.name for info in labInspectionList[6].fallList" ng-model="disabilityBefore" ng-change="selectAssessment(6, disabilityBefore)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="disabilityAfter" ng-options="info as info.name for info in labInspectionList[7].fallList" ng-model="disabilityAfter" ng-change="selectAssessment(7, disabilityAfter)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Fall Risk</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="FallRiskBefore" ng-options="info as info.name for info in labInspectionList[8].fallList" ng-model="FallRiskBefore" ng-change="selectAssessment(8, FallRiskBefore)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="FallRiskAfter" ng-options="info as info.name for info in labInspectionList[9].fallList" ng-model="FallRiskAfter" ng-change="selectAssessment(9, FallRiskAfter)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">History of fall</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="historyFallBefore" ng-options="info as info.name for info in labInspectionList[10].fallList" ng-model="historyFallBefore" ng-change="selectAssessment(10, historyFallBefore)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <select class="text-input floating-label" name="historyFallAfter" ng-options="info as info.name for info in labInspectionList[11].fallList" ng-model="historyFallAfter" ng-change="selectAssessment(11, historyFallAfter)">
+                                                                <option value="">Before Incident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Others Remarks</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="text" class="singleLineInput" name="singleLineInput" ng-model="assessmentOtherRemarkBefore">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="text" class="singleLineInput" name="singleLineInput" ng-model="assessmentOtherRemarkAfter">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card" style="margin-top:20px">
+                                    <div class="card-body">
+                                        <label class="labelName"><b>Medication before incident within 24 hrs</b></label><br>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox1" ng-click="prescribing(1)"><label class="labelName" style="padding: 5px">Analgesics</label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox2" ng-click="prescribing(2)"><label class="labelName" style="padding: 5px"> Anti-hypertensives</label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox3" ng-click="prescribing(3)"><label class="labelName" style="padding: 5px"> Diuretics</label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox4" ng-click="prescribing(4)"><label class="labelName" style="padding: 5px"> Narcotics/Sedatives</label>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox5" ng-click="prescribing(5)"><label class="labelName" style="padding: 5px">Anti-convulsants
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox6" ng-click="prescribing(6)"><label class="labelName" style="padding: 5px">Anti-psychotics
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox7" ng-click="prescribing(7)"><label class="labelName" style="padding: 5px">Hypoglycaemics
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox8" ng-click="prescribing(8)"><label class="labelName" style="padding: 5px">Others
+                                            </label><br>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox9" ng-click="prescribing(9)"><label class="labelName" style="padding: 5px">Anti-depressant
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox10" ng-click="prescribing(10)"><label class="labelName" style="padding: 5px">Cardiac drugs
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox11" ng-click="prescribing(11)"><label class="labelName" style="padding: 5px">Laxatives
+                                            </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="margin-top:20px">
+                                    <div class="card-body">
+                                        <label class="labelName"><b>Specific preventive measures taken before incident</b></label><br>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox12" ng-click="prescribing(12)"><label class="labelName" style="padding: 5px">Accompanied care
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox13" ng-click="prescribing(13)"><label class="labelName" style="padding: 5px">Regular toileting</label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox14" ng-click="prescribing(14)"><label class="labelName" style="padding: 5px">Not indicated</label>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox15" ng-click="prescribing(15)"><label class="labelName" style="padding: 5px">Bedside rail
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox16" ng-click="prescribing(16)"><label class="labelName" style="padding: 5px">Verbal advice
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox17" ng-click="prescribing(17)"><label class="labelName" style="padding: 5px">Others
+                                            </label>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox18" ng-click="prescribing(18)"><label class="labelName" style="padding: 5px">Call bell
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox19" ng-click="prescribing(19)"><label class="labelName" style="padding: 5px">Physical restraint device
+                                            </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="margin-top:20px">
+                                    <div class="card-body">
+                                        <label class="labelName"><b>Location of incident occurred</b></label><br>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox20" ng-click="prescribing(20)"><label class="labelName" style="padding: 5px">Bathroom
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox21" ng-click="prescribing(21)"><label class="labelName" style="padding: 5px">Toilet</label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox22" ng-click="prescribing(22)"><label class="labelName" style="padding: 5px">Other</label>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox23" ng-click="prescribing(23)"><label class="labelName" style="padding: 5px">Bedside
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox24" ng-click="prescribing(24)"><label class="labelName" style="padding: 5px">Corridor
+                                            </label>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox25" ng-click="prescribing(25)"><label class="labelName" style="padding: 5px">Chair - side
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox26" ng-click="prescribing(26)"><label class="labelName" style="padding: 5px">Staircase
+                                            </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card" style="margin-top:20px">
+                                    <div class="card-body">
+                                        <label class="labelName"><b>Factors attributing to incident</b></label><br>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Physiological</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox27" ng-click="prescribing(27)"><label class="labelName" style="padding: 5px">Unsteady gait</label><br>
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox28" ng-click="prescribing(28)"><label class="labelName" style="padding: 5px">Visual impairment</label><br>
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox29" ng-click="prescribing(29)"><label class="labelName" style="padding: 5px">Others</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox30" ng-click="prescribing(30)"><label class="labelName" style="padding: 5px">Lost balance</label><br>
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox31" ng-click="prescribing(31)"><label class="labelName" style="padding: 5px">Bowel & bladder need
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Environment</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox32" ng-click="prescribing(32)"><label class="labelName" style="padding: 5px">Lighting</label><br>
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox33" ng-click="prescribing(33)"><label class="labelName" style="padding: 5px">Cluttered area</label><br>
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox34" ng-click="prescribing(34)"><label class="labelName" style="padding: 5px">Others</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox35" ng-click="prescribing(35)"><label class="labelName" style="padding: 5px">Floor</label><br>
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox36" ng-click="prescribing(36)"><label class="labelName" style="padding: 5px">Needed item out of reach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Equipment & furniture</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox37" ng-click="prescribing(37)"><label class="labelName" style="padding: 5px">Bed</label><br>
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox38" ng-click="prescribing(38)"><label class="labelName" style="padding: 5px">Others</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox39" ng-click="prescribing(39)"><label class="labelName" style="padding: 5px">Wheelchair</label><br>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="labelName" style="padding:5px">Others</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row input-container">
+                                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                                        <div class="form-group">
+                                                            <textarea class="form-control" ng-model="factorOtherText" style="height: 90px;width: 400px;color: black;"></textarea>
+<!--                                                            <input type="text" class="singleLineInput" name="singleLineInput">-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card" style="margin-top:20px">
+                                    <div class="card-body">
+                                        <label class="labelName"><b>Physical injury sustained</b></label><br>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox40" ng-click="prescribing(40)"><label class="labelName" style="padding: 5px">No apparent physical injury
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox41" ng-click="prescribing(41)"><label class="labelName" style="padding: 5px"> Haematoma</label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox42" ng-click="prescribing(42)"><label class="labelName" style="padding: 5px"> Sprain/Strain</label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox43" ng-click="prescribing(43)"><label class="labelName" style="padding: 5px"> Others</label>
+                                                <label class="labelName" style="padding: 5px"> Description of injury (size and site)</label>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox44" ng-click="prescribing(44)"><label class="labelName" style="padding: 5px">Pain
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox45" ng-click="prescribing(45)"><label class="labelName" style="padding: 5px">Abrasion
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox46" ng-click="prescribing(46)"><label class="labelName" style="padding: 5px">Dislocation
+                                            </label><br>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4 col-md-4">
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox47" ng-click="prescribing(47)"><label class="labelName" style="padding: 5px">Bruising
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox48" ng-click="prescribing(48)"><label class="labelName" style="padding: 5px">Laceration
+                                            </label><br>
+                                                <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox49" ng-click="prescribing(49)"><label class="labelName" style="padding: 5px">Fracture
+                                            </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="margin-top: 140px">
+                                <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                    <button type="submit" href=""  class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveFallReporting('N')">
+                                        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                    <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveFallReporting('Y')">
+                                        Draft</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

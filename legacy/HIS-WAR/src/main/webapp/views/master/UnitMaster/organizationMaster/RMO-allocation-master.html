@@ -1,0 +1,486 @@
+<div id="page-content-wrapper" class="ng-scope">
+	<div class="container-fluid his-style">
+	  <!-- <div class="row padding-left-right-set4 padding-top10">
+		CheckBox
+		<label class="radio-inline"><input type="radio" name="q" ng-model="visitTypeId" value="1" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);" >OP</label>
+		<label class="radio-inline"><input type="radio" name="q" ng-model="visitTypeId" value="2" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);">IP</label>
+		<label class="radio-inline"><input type="radio" name="q" ng-model="visitTypeId" value="3" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);">Day Care</label>
+		<label class="radio-inline"><input type="radio" name="q" ng-model="visitTypeId" value="4" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);">ER</label>
+	</div> -->
+  <!--  ****************************************************************** -->
+  	<div class="row">
+		<div id="mediaType" class="customRadioBtn col-lg-4 col-md-6 col-sm-6 padding-left-right-10 padding-top4">									
+			<span>
+				<input id="OP_rdobtn" name="q" type="radio"  class=""  ng-model="visitTypeId" value="1" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);" >
+				<label for="OP_rdobtn">OP</label>
+			</span>
+			<span>
+				<input id="IP_rdobtn" name="q" type="radio" class=""  ng-model="visitTypeId" value="2" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);">
+				<label for="IP_rdobtn">IP</label>
+			</span>
+			<span title="Day Care">
+				<input id="DayCare_rdobtn" name="q" type="radio" class=""  ng-model="visitTypeId" value="3" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);">
+				<label for="DayCare_rdobtn">DC</label>
+			</span>
+			<span>
+				<input id="ER_rdobtn" name="q" type="radio" class="" ng-model="visitTypeId" value="4" ng-click="initMasterList(organizationId,offset, noOfRecordsPerPage,unitId);">
+				<label for="ER_rdobtn">ER</label>
+			</span>	
+		</div>
+	</div>
+   <!-- ****************************************************************** -->
+	
+	 <form action="" name="rmoAllocOp" novalidate="novalidate">
+	<div class="row" ng-show="visitTypeId ==1 ">
+	  <div class="row padding-top12">
+		
+		 <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top12">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="rmoDoctorId" ng-model="commonObj.rmoDoctorId" required="required">
+						          <option value=""  > Select RMO </option>
+							     <option ng-repeat="info in rmoDoctorList" ng-value="{{info.doctorId}}"  value="{{info.doctorId}}">{{info.doctorName}}</option>
+						</select> <label for="code">RMO<span class="star">*</span></label>
+						<p class="help-block" ng-if="rmoAllocOp.rmoDoctorId.$error.required">RMO is required</p>
+					</div>
+				</div>
+			</div>
+		</div> 
+	
+		
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top12">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="specId" ng-model="rmoAllocOpObj.specialityId" ng-change="getDoctorBySpeciality(rmoAllocOpObj.specialityId)" required="required">
+							<option value=""></option>
+							<option ng-repeat="info in specialityList" ng-if="info.isClinicalSpeciality =='Y'" ng-value="{{info.specialityId}}" value="{{info.specialityId}}">{{info.specialityName}}</option>
+						</select> <label for="code">Specialty<span class="star">*</span></label>
+						<p class="help-block" ng-if="rmoAllocOp.specId.$error.required">Speciality is required</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 ">
+			<div class="row input-container">
+				<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-10 col-sm-10 col-md-10">
+					<div class="">
+					<label for="" class="LISDynamicLabel">Doctor<span class="star">*</span></label>
+					          <div class="custom-drop-down-btn" name="selDoctor" ng-dropdown-multiselect="" class="LISDynamicLabel"
+										options="doctorIdList" selected-model="selectedDoctorList"  >
+						<!-- <select class="text-input floating-label" ng-model="rmoAllocOpObj.doctorId" ng-change="getDoctorCabinMapperByDoctorId(rmoAllocOpObj.doctorId);">
+							<option value=""></option>
+							<option ng-repeat="info in doctorList" ng-value="{{info.doctorId}}" value="{{info.doctorId}}">{{info.firstName+' '+info.lastName}}</option>
+						</select> <label for="code">Doctor</label> -->
+					</div>
+				</div>
+			</div>
+		</div>
+		   
+	  </div>
+	  
+	  <div ng-if="updateBtnFlag==true && isActiveForOp=='Y' " class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="">
+						<select class="text-input floating-label" ng-model="com.opvisitTypeIdForUpdate"  ng-change="getVisitTypeForOp(com.opvisitTypeIdForUpdate);">
+						<!--  <option ng-value="" value=""></option> -->
+							<option ng-repeat="info in finalVisitTypeList" ng-value="info.visitTypeId" value="info.visitTypeId">{{info.visitType}}</option>
+						</select> <label for="code">Visit Type</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	  </div>
+	  
+	  <div class="row padding-top10">
+	   	<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					 <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+										ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+										
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="update()"
+										ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		      		</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px"  ng-model="searchKeyword">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 padding-top10">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width10">RMO</th>
+							<th class="width10">Specialty</th>
+							<th class="width3">Doctor</th>
+							<th class="width5 text-center">
+									Status(n)
+								</th>
+							<th class="width5 text-center">Action taken</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in rmoAllocationOpList|orderBy:column:reverse|filter:searchKeyword">
+							<td>{{info.rmoDoctorName}}</td>
+							<td>{{info.specialityName}}</td>
+							<td class="width3 text-center">
+										<a data-toggle="modal" data-target="#fieldDetailsModal">
+											<i class="fa fa-info-circle" aria-hidden="true" ng-click="showMappedDoctorList(info.rmoAllocationId)" ></i>
+										</a>
+							</td>
+							<td class="vertical-middle text-center">
+											<label class="switch">
+											<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.rmoAllocationId,info.status)">
+											<div class="slider round"></div>
+										</label>
+										</td>
+							<td class="padding-edit-button-table text-center"> 
+								  <a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.rmoAllocationId)" ></i></a>
+								<!-- <span><a href=""><i class="fa fa-times" aria-hidden="true" title="Cancel"></i></a></span> -->
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div  ng-show="visitTypeId ==1" class="row margin-bottom45 sss">
+					     <ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					    </ul>
+				   </div>
+			</div>
+		</div>
+	</div>	
+	</form>
+	
+	 <form action="" name="rmoAllocIp" novalidate="novalidate">
+	<div class="row"  ng-show="visitTypeId !=1 ">
+	  <div class="row padding-top10">
+		
+		<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top12">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="form-group" show-errors>
+						<select class="text-input floating-label" name="rmoDoctorId" ng-model="commonObj.rmoDoctorId" required="required">
+						          <option value=""  > Select RMO </option>
+							     <option ng-repeat="info in rmoDoctorList" ng-value="{{info.doctorId}}"  value="{{info.doctorId}}">{{info.doctorName}}</option>
+						</select> <label for="code">RMO<span class="star">*</span></label>
+						<p class="help-block" ng-if="rmoAllocIp.rmoDoctorId.$error.required">RMO is required</p>
+					</div>
+				</div>
+			</div>
+		</div> 
+		<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 "><!-- padding-top7 -->
+			<div class="row input-container">
+				<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-10 col-sm-10 col-md-10">
+					<div class="">
+					<label for="" class="LISDynamicLabel">Select Ward<span class="star">*</span></label>
+					         <!--  <div class="custom-drop-down-btn" ng-dropdown-multiselect="" class="LISDynamicLabel"
+										options="wardIdList" selected-model="selectedWardList"  >
+						      </div> -->				
+					
+					         <div ng-if="visitTypeId==2" class="custom-drop-down-btn" ng-dropdown-multiselect="" class="LISDynamicLabel"
+										options="wardIdListIp" selected-model="selectedIpWardList"  >
+						      </div>
+						      
+						         <div ng-if="visitTypeId==3" class="custom-drop-down-btn" ng-dropdown-multiselect="" class="LISDynamicLabel"
+										options="wardIdListDayCare" selected-model="selectedDayCareWardList"  >
+						      </div>
+						      
+						          <div ng-if="visitTypeId==4" class="custom-drop-down-btn" ng-dropdown-multiselect="" class="LISDynamicLabel"
+										options="wardIdListEr" selected-model="selectedErWardList"  >
+						      </div>	
+						<!-- <select class="text-input floating-label" ng-model="rmoAllocIpObj.wardId" ng-change="getNursingStationByWardId(rmoAllocIpObj.wardId);">
+							  <option value=""  > Select Ward </option>
+							     <option ng-repeat="info in wardList" ng-value="{{info.wardId}}"  value="{{info.wardId}}">{{info.wardName}}</option>
+						</select> <label for="code">Ward</label> -->
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		 <div ng-if="updateBtnFlag==true && isActiveForIp=='Y' " class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+			<div class="row input-container">
+				<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+				</div>
+				<div class="col-lg-11 col-sm-11 col-md-11">
+					<div class="">
+						<select class="text-input floating-label" ng-model="com.ipVisitUpdate" ng-change="getVisitType(com.ipVisitUpdate)">
+						     <option ng-value="" value=""></option>
+							<option ng-repeat="info1 in finalVisitTypeList"  ng-value="{{info1.visitTypeId}}" value="{{info1.visitTypeId}}">{{info1.visitType}}</option>
+						</select> <label for="code">Visit Type</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	  </div>
+	  <div class="row padding-top10">
+	  	<div class="col-md-6 col-sm-7 padding-left-right-set4">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6" style="padding-left: 0px;">
+						<div class="search">
+						<label class="show-entries">Show 
+						<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+							ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+							ng-change="setNoOfRecords();" class="search-popUp-ddl">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+						</select> entries
+						</label>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					 <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="save()"
+										ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+										
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="update()"
+										ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		      		</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search" style="margin-top: 0px"  ng-model="searchKeyword">
+				<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 padding-top10">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width10">RMO</th>
+							<th class="width10">Ward</th>
+							<th class="width5 text-center">
+									Status(n)
+								</th>
+							<th class="width5 text-center">Action taken</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in rmoAllocationIpList|orderBy:column:reverse|filter:searchKeyword">
+							<td>{{info.rmoDoctorName}}</td>
+							<td class="text-center">
+										<a data-toggle="modal" data-target="#fieldDetailsModalForWard">
+											<i class="fa fa-info-circle" aria-hidden="true" ng-click="showMappedWardList(info.rmoAllocationId)" ></i>
+										</a>
+							</td>
+							<!-- <td>{{info.wardName}}</td> -->
+							<td class="vertical-middle text-center">
+											<label class="switch">
+											<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.rmoAllocationId,info.status)">
+											<div class="slider round"></div>
+										</label>
+										</td>
+							<td class="padding-edit-button-table text-center"> 
+								  <a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.rmoAllocationId)" ></i></a>
+								<!-- <span><a href=""><i class="fa fa-times" aria-hidden="true" title="Cancel"></i></a></span> -->
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div   ng-show="visitTypeId !=1 " class="row margin-bottom45 sss">
+					     <ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					    </ul>
+				   </div>
+			</div>
+		</div>
+	</div>	
+	</form>
+	
+	
+	</div>
+</div>
+
+<!-- ********** fieldDetailsModal POPUP start **********  -->
+<div id="fieldDetailsModal" class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+				Doctor Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row serachedPatientList padding-left-right-set4">
+					<div class="col-md-12 col-lg-12  fix-height-scroll230">
+						<table class="table table-bordered  margin-top4">
+							<thead>
+								<tr>
+							 		<th><span class="">Sr No.</span></th>
+									<th><span class="">Doctor Name</span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in mappedDoctorList track by $index">
+									<td>{{$index+1}}</td>
+									<td>{{info.doctorName}}</td>
+									
+								</tr>
+							</tbody>
+						</table>
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ********** fieldDetailsModal POPUP End **********  -->
+
+<!-- ********** fieldDetailsModal POPUP start **********  -->
+<div id="fieldDetailsModalForWard" class="modal fade ng-scope in common-small-popup" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+				Ward Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row serachedPatientList padding-left-right-set4">
+					<div class="col-md-12 col-lg-12  fix-height-scroll230">
+						<table class="table table-bordered  margin-top4">
+							<thead>
+								<tr>
+							 		<th><span class="">Sr No.</span></th>
+									<th><span class="">Ward Name</span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="info in mappedWardList track by $index">
+									<td>{{$index+1}}</td>
+									<td>{{info.wardName}}</td>
+									
+								</tr>
+							</tbody>
+						</table>
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ********** fieldDetailsModal POPUP End **********  -->
+
+
+<div id="allocationTransferPopup" class="modal fade ng-scope in  common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+				</div>
+				<div class="modal-body">
+					<!-- <div class="col-md-12 ">
+						<div class="common-small-popup-body">
+							<div><b>Are you sure you want to continue?</b> <span style=" margin-left: 20px;">: Johan Hosy, <span>29 Y Male</span>{{tokenNumber}}</span></div>
+						</div>
+						
+					</div> -->
+					<div class="margin-left10 padding-bottom30"><span>RMO is already allocated to {{visitTypeList[visitTypeId-1].visitType}}, .Do you want to change the allocation?</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="allocationTransfer()">Yes</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="stillOnSameAllocation()">No</button>
+				</div>
+			</div>
+		</div>
+</div>
+<modal visible="showModal"></modal> 
+<script type="text/javascript">
+function handleChange(checkbox) {
+    if(checkbox.checked == true){
+    	$("#op").attr('style','display:block');	
+    	
+    }else    if(checkbox.checked == false){
+    	$("#ip").attr('style','display:none');	
+    	
+    }
+}
+$( document ).ready(function() {
+	$(".selectedServicesList").hide();
+	$(".selectedPageName").text("RMO Allocation Master");
+	$(".sidebar-nav li").each(function() {
+	$(this).find("a").parents("li").removeClass("active");
+	$('a[href$="nurseAllocationMaster"]').parents("li").addClass("active");
+	});
+});
+</script>

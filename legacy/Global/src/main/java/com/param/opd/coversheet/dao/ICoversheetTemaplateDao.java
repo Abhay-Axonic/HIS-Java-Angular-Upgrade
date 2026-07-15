@@ -1,0 +1,27 @@
+package com.param.opd.coversheet.dao;
+
+import com.param.global.common.Response;
+import com.param.global.dto.CoversheetTemplateMasterDto;
+import com.param.global.model.CoversheetTemplateMaster;
+import com.param.global.unit.dto.CoversheetAccessMasterDto;
+
+import in.param.exception.ApplicationException;
+
+public interface ICoversheetTemaplateDao {
+
+
+	Response saveCoversheetAsTemaplate(CoversheetTemplateMasterDto coversheetTemplateMasterDto) throws ApplicationException;
+
+	Response getCoversheetAsTemaplateList(CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+	Response checkAvailableCoversheetAsTemaplate(CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+	Response getAllCoversheetListsByTemplateId(CoversheetTemplateMasterDto coversheetTemplateMasterDto) throws ApplicationException;
+
+	Response getTemplateDataByCovTempId(CoversheetTemplateMasterDto coversheetTemplateMasterDto) throws ApplicationException;
+
+	Response saveCovTemplateDataForPatient(CoversheetTemplateMasterDto coversheetTemplateMasterDto) throws ApplicationException;
+
+	Response getCoversheetListData(CoversheetTemplateMasterDto coversheetTemplateMasterDto)throws ApplicationException;
+
+}

@@ -1,0 +1,27 @@
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style text-center" style="padding-top: 20%;">
+        
+        <h2>Access Denied</h2>
+        <h3>You do not have permission to access this page.</h3>
+
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var documentHeight = $(window).height();
+        var sideBarHeight = documentHeight - 55;
+        $("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+        $(".selectedPageName").text("Access Control");
+        $(".sidebar-nav li").each(function() {
+            $(this).find("a").parents("li").removeClass("active");
+        });
+        $('a[href$="accessControl"]').parents("li").addClass("active");
+    });
+</script>

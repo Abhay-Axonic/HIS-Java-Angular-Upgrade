@@ -1,0 +1,529 @@
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+    <div class="container-fluid his-style">
+      <fieldset>
+        <div class="row margin-top10">
+          <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+            <div class="row input-container">
+              <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-11 col-sm-11 col-md-11">
+                <div class="">
+                  <!-- <input type="text" autocomplete="off" name="fromDate" ng-model="vm.model.fromDate" class="text-input floating-label" ng-class="{dirty: vm.model.fromDate}" value="{{ vm.model.fromDate | date:'medium' }}"> -->
+                  <input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+                    placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+                    datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+                  <label for="code">Date (From)</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+            <div class="row input-container">
+              <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-11 col-sm-11 col-md-11 ">
+                <div class="">
+                  <!-- <input type="text" autocomplete="off" name="toDate" ng-model="vm.model.toDate" id="" class="text-input floating-label" ng-class="{dirty: vm.model.toDate}"> -->
+                  <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+                    ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"
+                    show-button-bar="false" ng-click="vm.model.OpenToDate()">
+                  <label for="description" class="LISDynamicLabel">Date-Till</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+            <div class="row input-container">
+              <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                <i class="fa fa-building-o" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-11 col-sm-11 col-md-11 ">
+                <div class="">
+                  <!-- <select name="Store" id="Store" class="text-input floating-label dirty" ng-model="vm.model.store" data-ng-options="store.store for store in vm.model.Stores"> </select>
+     -->
+  
+                  <select name="store" id="store" class="text-input floating-label dirty" data-ng-options="store.storeName for store in vm.model.stores"
+                    ng-model="vm.model.store">
+                  </select>
+                  <!-- <select class="text-input floating-label" ng-model="vm.model.storeNameList" >
+                      <option></option>
+                      <option ng-repeat="item in vm.model.storeList" value="{{item.storeId}}">{{item.storeName}} </option>
+                    </select> -->
+                  <label for="description" class="LISDynamicLabel">Store</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1">
+            <div class="common-save-button">
+              <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;    margin-top: 10px;" id="searchBtn" ng-click="vm.model.SearchByStore()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="vm.model.pagination.pageSize='10'" 
+								ng-model="vm.model.pagination.pageSize" 
+								ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				  </div>
+          <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+            <div class=" " style="    margin-top: 4px;">
+              <a href="" class="btn btn-primary btn-save-box-shadow" ng-class="{disabled: !vm.model.isItemChecked }" title="Approve" ng-click="vm.model.ValidateAndUpdate('Update','confirmLogout1', {})">
+                <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-2 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+            <div class="padding-top4 ">
+              <a ng-click="vm.model.OpeningBalanceDetailsAddNew()">
+                <input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow">
+              </a>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+  
+      <div class="row margin-top8">
+        <div class="col-md-12 col-lg-12 col-sm-8 padding-left-right-set4" id="nonBillableTableHt">
+          <fieldset>
+            <div class="row">
+              <div class="container-fluid his-style">
+                <div class="table-container padding-left-right-set4 padding-top5">
+                  <div class="table-container-header">
+                    <table class="table table-striped table-hover table-condensed table-bordered">
+                      <thead class="mainServiceTableCommon">
+                        <tr>
+                          <th class="width1 text-center">
+                            <input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllRequests()" ng-disabled="vm.model.opStoreIndentData == false"
+                            />
+                          </th>
+                          <th class="width6" title="Opening Balance Date">
+                            OPB Date
+                            <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'opbDate', sortReverse = !sortReverse)">
+                              <div>
+                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                              </div>
+                              <div class="margin-top-8">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </th>
+                          <th class="width6" title="Opening Balance Number">
+                            OPB No
+                            <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'opbNo', sortReverse = !sortReverse)">
+                              <div>
+                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                              </div>
+                              <div class="margin-top-8">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </th>
+                          <th class="width10" title="Store Name">
+                            Store Name
+                            <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'storeName', sortReverse = !sortReverse)">
+                              <div>
+                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                              </div>
+                              <div class="margin-top-8">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </th>
+                          <th class="width8" title="Requested By">
+                            Requested By
+                            <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'requestedBy', sortReverse = !sortReverse)">
+                              <div>
+                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                              </div>
+                              <div class="margin-top-8">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </th>
+                          <th class="width8" title="Status(n)">
+                            Status(n)
+                            <div class="float_right" ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'status', sortReverse = !sortReverse)">
+                              <div>
+                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                              </div>
+                              <div class="margin-top-8">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </th>
+                          <th class="width6" title="Action taken">
+                            Action taken
+                          </th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                  <div class="table-container-body" style="height:400px; overflow-y: scroll;">
+                    <table class="table table-striped table-hover table-condensed table-bordered">
+                      <tbody>
+                        <tr ng-repeat="item in vm.model.pagination.data">
+                          <td class="width1 text-center">
+                            <input type="checkbox" ng-click="vm.model.SelectOpeningBalance(item)" ng-model="item.isSelected" ng-disabled="vm.model.isDisable(item)"
+                            />
+                          </td>
+                          <td class="width6" title="{{item.opbDate | date:'dd/MM/yyyy'}}"> {{item.opbDate | date:'dd/MM/yyyy'}} </td>
+                          <td class="width6" title="{{item.opbNo}}"> {{item.opbNo}} </td>
+                          <td class="width10" title="{{item.storeName}}">{{item.storeName}} </td>
+                          <td class="width8" title="{{item.requestedBy}}"> {{item.requestedBy}} </td>
+                          <td class="width8" title="{{item.status}}"> {{item.status}} </td>
+                          <td style="width: 5.85% !important;">
+                            <div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+                              <a title="Edit">
+                                <i class="fa fa-pencil" ng-class="{disabled: vm.model.isDisable(item)}" ng-click="vm.model.EditOpeningBalanceDetails(item)"
+                                  aria-hidden="true"></i>
+                              </a>
+                            </div>
+                            <div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+                              <a title="Print " ng-click="vm.model.printOpeningBalanceReport(item)">
+                                <i class="fa fa-print" aria-hidden="true"></i>
+                              </a>
+                            </div>
+                            <div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+                              <a title="Cancel ">
+                                <i class="fa fa-ban" aria-hidden="true" ng-class="{disabled: vm.model.isDisable(item)}" ng-click="vm.model.ValidateAndUpdate('Cancel','confirmCancel', item.id)"></i>
+                                <!-- ShowRejectDismiss -->
+                              </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 padding-left-right-set4 text-right">
+                              <a href="#/DetailsOpeningBalance" ng-click="vm.model.OpeningBalanceDetails(item)">Details</a>
+  
+                              <!-- <a data-toggle="modal" ng-click="vm.model.OpeningBalanceDetails(item.id)" data-target="#wasteStoreDetailsModal1" ng-model="vm.model.opbDetails">Details</a> -->
+                            </div>
+                          </td>
+                        </tr>
+                        <tr ng-if="(!vm.model.pagination.data || vm.model.pagination.data == false) && vm.model.pagination.data != undefined ">
+                          <td colspan="7" class="text-center">
+                            <p>No Record Found</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="row margin-bottom45 center-block">
+                  <ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+                    style="font-size: 14px; cursor: pointer;">
+                    <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+                      ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+                    </li>
+                    <li ng-class="{disabled:vm.model.pagination.currentPage === 1}"><a
+                      ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+                    </li>
+                    <li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+                      ng-class="{active:vm.model.pagination.currentPage === page}"><a
+                      ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+                    </li>
+                    <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+                      <a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+                    </li>
+                    <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+                      <a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+        </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+  <!-- details modal start -->
+  <div id="wasteStoreDetailsModal1" class="modal fade ng-scope in" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+      <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+            Opening Balance Details
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 common-popup-height-350 padding-top10">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <!-- <th>
+                        <input type="checkbox" ng-model="vm.model.selectAllApprove" ng-click="vm.model.SelectAllApprove()">
+                      </th> -->
+                    <th>Asset Category
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th>Product Category
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width6 vertical-middle">Item Code
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width7 vertical-middle">Item Name
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width6 vertical-middle">UOM Unit
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width4 vertical-middle">Qty
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th>COP
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width7 vertical-middle">Available Qty
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th title="Available Qty">Amount At COP
+                      <div class="float_right">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="item in vm.model.detailsOpeningBalance">
+                    <!-- <td>
+                        <input type="checkbox" ng-model="item.isApprove" /> </td> -->
+                    <td> {{item.assetCatName}} </td>
+                    <td> {{item.productCategoryName}} </td>
+                    <td> {{item.itemCode}} </td>
+                    <td> {{item.itemName}} </td>
+                    <td> {{item.uomList[0].puomUnitDesc}} </td>
+                    <td> {{item.quantity}} </td>
+                    <td> {{item.cop}} </td>
+                    <td> {{item.availabaleQty}} </td>
+                    <td> {{item.copAmount}} </td>
+                  </tr>
+                  <tr ng-if="!vm.model.detailsOpeningBalance || vm.model.detailsOpeningBalance == false">
+                    <td class="text-center">
+                      <p>No Record Found</p>
+                    </td>
+                  </tr>
+  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="row his-style">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 padding-left0px-right6px text-right">
+              <div class="common-save-button">
+                <!-- <input type="button" value="Returnable Gatepass" class="btn btn-primary btn-save-box-shadow text-width-auto"> -->
+              </div>
+            </div>
+            <div class="col-md-1 padding-left-right-10 text-center">
+              <div class="common-save-button">
+                <!-- <input type="button" value="Scrap" class="btn btn-primary btn-save-box-shadow"> -->
+              </div>
+            </div>
+            <div class="col-md-1 padding-left0px-right6px">
+              <div class="common-save-button">
+                <input type="button" value="Approved" data-dismiss="modal" ng-click="vm.model.ApproveOpb()" class="btn btn-primary btn-save-box-shadow">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- confirm save -->
+  
+  <div id="confirmLogout1" class="modal fade ng-scope in" data-backdrop="static" data-keyboard="false" role="dialog" style="padding-left: 17px;">
+    <div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+      <!-- style="width: 25% !important;margin: 200px 0 0 510px !important;" -->
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 0px!important;">
+          <div class="modal-title patient-details-row">
+            Confirm
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="margin-left10">
+            <span>Are you sure you want to Approve?</span>
+          </div>
+        </div>
+        <div class="modal-footer" style="border:none;">
+          <button type="button" data-dismiss="modal" data-ng-class="{disabled:saveBtnDisabled==true}" id="okBtn"  class="btn btn-primary" id="" ng-click="vm.model.ApproveOpb();">Ok</button>
+          <button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- confirm save end -->
+  
+  
+  <!-- details modal end -->
+  <!-- <div ng-include="'./views/common/accept-reject.html'" class="ng-scope" style=""></div> -->
+  <!-- <div ng-include="'./views/common/note-save.html'" class="ng-scope"></div> -->
+  
+  
+  <!-- confirmCancel Start -->
+  <div id="confirmCancel" class="modal fade ng-scope in common-small-popup" data-backdrop="static" data-keyboard="false" role="dialog" style="background: rgba(0, 0, 0, 0.33); z-index: 1300 !important;">
+    <div class="modal-dialog">
+      <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+            Cancellation
+            <button type="button" class="close" data-dismiss="modal" ng-click="vm.model.ModalDismiss('confirmCancel')">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 padding-left-right-set">
+              <div class="row input-container margin-top10">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                  <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                  <div class="">
+                    <select name="cancelReason" id="cancelReason" class="text-input floating-label" ng-model="vm.model.cancelReason" 
+                      ng-change="vm.model.isReasonValid = false">
+                      <!-- ng-options="cancelReason.reason for cancelReason in vm.model.reasons" -->
+                      <!-- <option value="">Select Reason</option> -->
+                      <option ng-repeat="reason in vm.model.reasons" value="{{reason.id}}">{{reason.reason}}</option>
+                    </select>
+                    <label for="code">Select Reasons</label>
+                  </div>
+                  <p ng-if="vm.model.isReasonValid" class="errorMsg">Select Reason</p>
+                </div>
+              </div>
+              <div class="row input-container margin-top10">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                  <i class="fa fa-sticky-note" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                  <div class="">
+                    <textarea name="cancelNote" rows="4" maxlength="100" id="cancelNote" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+                      ng-model="vm.model.cancelNote" ng-class="{dirty: vm.model.cancelNote}"></textarea>
+                    <label for="cancelNote">Note</label>
+                  </div>
+                </div>
+              </div>
+              <!-- <input type="text" autocomplete="off" id="commonId" /> -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border:none;">
+          <button type="button" ng-disabled="cancelNote == ''" class="btn btn-primary" ng-click="vm.model.ApproveOpb();">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- cancelPurchaseReqest END -->
+  
+  <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $(".selectedPageName").text("Opening Balance");
+      $(".sidebar-nav li").each(function () {
+        $(this).find("a").parents("li").removeClass("active");
+      });
+      $('a[href$="openingBalance"]').parents("li").addClass("active");
+      /*************************** rejection radio button function*********************************/
+      $(".add-new-item-row").hide();
+      $(".get-request-row").hide();
+      $(".addNewItemRadioBtnClass").change(function () {
+        if ($(this).is(":checked")) {
+          $(".add-new-item-row").show('slow');
+          $(".get-request-row").hide('slow');
+        }
+      });
+      $(".getRequestListBtnClass").change(function () {
+        if ($(this).is(":checked")) {
+          $(".add-new-item-row").hide('slow');
+          $(".get-request-row").show('slow');
+        }
+      });
+  
+    });
+    /*************************** add button function start*********************************/
+    $(".table-th-bg").click(function () {
+      /* alert(); */
+      $(this).next().find(".selectedServicesList").toggle();
+    });
+  </script>

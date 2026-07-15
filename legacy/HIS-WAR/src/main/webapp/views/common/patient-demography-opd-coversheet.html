@@ -1,0 +1,75 @@
+<div class="row searched-patient-details-row">
+					
+					<!-- Static Data -->
+					<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+						<div class="row">
+							<div class=" col-lg-10 col-md-10 col-sm-4 padding-left-right-set4 text-width-auto">
+								<span class="profile_pic"> 
+									<img ng-if="patientDetails.genderCode =='M'" alt="" src="resources/assets/images/tempImages/m.jpg" class="img-circle" style="width: 30px; height: 30px; margin-bottom: 0px;" >
+									<img ng-if="patientDetails.genderCode =='F'" ng-src="resources/assets/images/tempImages/patient.png" class="img-circle" style="width: 30px; height: 30px; margin-bottom: 0px;>
+									<!--  data-toggle="modal" data-target="#patientDetailsModal" -->
+								</span>
+								<span class="margin-left10"><span class="padding-right5 font-weight600"></span> {{patientDetails.patientName}}</span>
+								
+								<span class=""><span class=" font-weight600">/</span> {{patientDetails.age}}</span>
+								<span class=""><span class=" font-weight600">/</span> {{patientDetails.genderCode}}</span>
+								<span class="margin-left10"><span class="padding-right5 font-weight600">UHID:</span> {{patientDetails.uhIdNumber}}</span>
+								<!--<span class="margin-left10"><span class="padding-right5 font-weight600">DOB:</span> {{patientDetails.birthDate}}</span> -->
+				                <span class="margin-left10"><b class="padding-left10 " ng-if="patientDetails.visitTypeId != 1">Admission Date:</b>{{patientDetails.dateOfAdmission}}</span>
+								<span class="margin-left10"><b class="padding-left10 " ng-if="patientDetails.visitTypeId != 1">Planned Discharge Date:</b><!-- 02/05/2017 11:16am -->{{patientDetails.patientDischargeDate}} </span>
+								<span class="margin-left10"  ng-if="patientDetails.visitTypeId != 1"><b class="padding-left10 " ng-if="patientDetails.visitTypeId != 1">LOS: </b>{{patientDetails.los}} Days </span>
+								<span class="margin-left10"><b class="padding-left10 " ng-if="patientDetails.visitTypeId != 1">Bed No:</b> {{patientDetails.bedNumber}}</span>
+								<span class="margin-left10" ng-if="patientDetails.visitTypeId != 4 && patientDetails.visitTypeId != 1 ">Dr.{{patientDetails.doctorFullName}}</span>
+								<span class="margin-left10" ng-if="patientDetails.visitTypeId == 4">{{patientDetails.doctorFullName}}</span>
+								<span class="margin-left10" ng-if="patientDetails.visitTypeId == 1 && (patientDetails.doctorFullName != null || patientDetails.doctorFullName != '')">{{patientDetails.doctorFullName}}</span>
+								<span class="margin-left10"><b class="padding-left10 " ng-if="patientDetails.inputOutputchart">Admission Date:</b> {{patientDetails.dateOfAdmissionInput}}</span>
+								   <span class="margin-left10"><b class="padding-left10 " ng-if="patientDetails.inputOutputchart">Planned Discharge Date:</b> {{patientDetails.pdd}}</span>
+								   <span class="margin-left10"><b class="padding-left10 " ng-if="patientDetails.inputOutputchart">Bed No.:</b> {{patientDetails.bednumber}}</span>
+								   <span class="margin-left10"><b class="padding-left10 " ng-if="patientDetails.inputOutputchart">Ward:</b> {{patientDetails.wardName}}</span>
+								   <span class="margin-left10"><b class="padding-left10 " ng-if="patientDetails.initiateTransferOfCare">Ward:</b> {{patientDetails.wardNameInitiate}}</span>
+								   <span class="margin-left10" ng-if="patientDetails.inputOutputchart">{{patientDetails.doctorFullname}}</span>
+							</div>
+							<div class=" col-lg-2 col-md-2 col-sm-8 padding-left-right-set4 text-width-auto">
+								<span class="margin-left10 bed-mang-box-icon" ng-show="allergyFlag" ><!-- ng-if="allergyFlag == true" -->
+									<img src="resources/assets/images/icon/bed/Allergies-Revised.png" title="Allergies" alt="Allergy" style="width:20px" class="popper" data-toggle="popover" data-trigger="hover">
+									<div class="popper-content hide">
+										<div ng-repeat="info in activeAllergyListForIcon">{{info.allergyDesc}}</div>
+										<div ng-repeat="info in activeAllergyListForIcon">{{info.genericName}}</div>
+									</div>
+								</span>
+								<span class="margin-left10 bed-mang-box-icon" ng-if="patientDetails.medicoLegalId > 0" title="MLC Details">
+									<a  data-toggle="modal" data-target="#medicolegalModal" ng-click="getMedicolegalDetails()" title="MLC Details">
+										<img src="resources/assets/images/icon/bed/medicoLegal.png" title="Medicolegal" alt="MedicoLegal" style="width:20px" class="popper" ></a><!-- data-toggle="popover" data-trigger="hover" -->
+									<div class="popper-content hide">
+										<div>list</div>
+									</div>
+								</span>
+							</div>
+						</div>
+						<div class="row" >
+							<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4">
+								<span class="margin-left10 bed-mang-box-icon"  ng-show="comorbidityFlag"><b class="padding-left10">Diagnosis:</b> {{finalString}}</span>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2">
+							
+							</div>
+						</div>
+						
+							<span class="margin-left10 pull-right padding-right5 margin-top4 IPDdiv" style="margin-right: 5px;"></span>
+					
+			
+					</div>
+				</div>
+			
+
+				<script>
+$('.popper').popover({
+    placement: 'bottom',
+    container: 'body',
+    html: true,
+    content: function () {
+        return $(this).next('.popper-content').html();
+    }
+});
+$(".IPDdiv").hide();
+</script>

@@ -1,0 +1,308 @@
+
+<style>
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+      border-radius: 10px;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    .container {
+      padding: 2px 16px;
+    }
+    .card-body{
+    margin-left:6px;
+    }
+    .labelName{
+    color:#212325;
+    }
+</style>
+
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+                <div class="card" style="margin-left: 5px;margin-right: 5px">
+                    <form name="laboratoryInspectionChecklist" novalidate ng-submit="submitForm()">
+                         <div class="row">
+                             <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                 <div class="row input-container">
+                                     <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                         <i class="fa fa-flag" aria-hidden="true"></i>
+                                     </div>
+                                     <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                         <div class="form-group"  show-errors>
+                                             <select class="text-input floating-label" name="department" ng-model="id" ng-change="getSaveAsDraftLabInspections(id)" required>
+                                                 <option ng-repeat="info in departmentList" value="{{info.id}}">{{info.name}}</option>
+                                             </select> <label for="code">Department<span class="star">*</span></label>
+                                             <p class="help-block" ng-if="bedForm.ward.$error.required">Department is required</p>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="col-lg-2 col-sm-2 col-md-2 padding-left-right-set4 padding-top10">
+                                 <div class="row input-container test-master-sample">
+                                     <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                         <i class="fa fa-calendar" aria-hidden="true"></i>
+                                     </div>
+                                     <div class="col-lg-10 col-sm-10 col-md-10">
+                                         <div class="">
+                                             <input type="text" autocomplete="off"  class="text-input floating-label dirty"
+                                                    name="datepickerDOB" id="datepickerDOB"
+                                                    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                                                    placeholder="DD/MM/YYYY" ng-model="datepickerDOB"
+                                                    model-view-value="true" is-open="datepickerDOBOpen.opened"
+                                                    datepicker-options="dateOptions" show-button-bar="false"
+                                                    ng-click="openDatePickerDOB()" ng-blur="calculateAge()" ng-disabled="true" required>
+                                             <label for="description" class="">Date</label>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-4 col-md-4 padding-left-right-set4 padding-top10" >
+                                <div class="card">
+                                    <label class="labelName"><b>General Safety and Hygiene</b></label><br>
+                                    <div id="fixed-tead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll60">
+                                        <table id="main-table" class="main-table width100 ">
+                                            <thead>
+                                            <tr>
+                                                <th>General Safety and Hygiene</th>
+                                                <th>YES</th>
+                                                <th>NO</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="info in labInspectionList[0].labList track by $index" >
+                                                <td>
+                                                    {{info.name}}
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index}}" value="1" ng-model="generalSafety[0][info.id]" ng-click="addLabList(0,info,1,$index)">
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index}}" value="0" ng-model="generalSafety[0][info.id]" ng-click="addLabList(0,info,0,$index)">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card" style="margin-top: 20px">
+                                    <label class="labelName"><b>Fume Hoods</b></label><br>
+                                    <div  class="fixed-thead-tfoot-scroll fix-height-scroll60">
+                                        <table  class="main-table width100 ">
+                                            <thead>
+                                            <tr>
+                                                <th>Fume Hoods</th>
+                                                <th>YES</th>
+                                                <th>NO</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="info in labInspectionList[1].labList track by $index" >
+                                                <td>
+                                                    {{info.name}}
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+9}}" value="1" ng-model="generalSafety[1][info.id]" ng-click="addLabList(1,info,1,$index+9)">
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+9}}"value="0" ng-model="generalSafety[1][info.id]" ng-click="addLabList(1,info,0,$index+9)">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-4 col-sm-4 col-md-4 padding-left-right-set4 padding-top10" >
+
+                                <div class="card" >
+                                    <label class="labelName"><b>Training</b></label><br>
+                                    <div  class="fixed-thead-tfoot-scroll fix-height-scroll60">
+                                        <table  class="main-table width100 ">
+                                            <thead>
+                                            <tr>
+                                                <th>Training</th>
+                                                <th>YES</th>
+                                                <th>NO</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="info in labInspectionList[2].labList" >
+                                                <td>
+                                                    {{info.name}}
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+13}}" value="1" ng-model="generalSafety[2][info.id]" ng-click="addLabList(2,info,1,$index+13)">
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+13}}" value="0" ng-model="generalSafety[2][info.id]" ng-click="addLabList(2,info,0,$index+13)">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card" style="margin-top: 20px">
+                                    <label class="labelName"><b>Emergency Equipment and Procedures</b></label><br>
+                                    <div  class="fixed-thead-tfoot-scroll fix-height-scroll60">
+                                        <table  class="main-table width100 ">
+                                            <thead>
+                                            <tr>
+                                                <th>Emergency Equipment and Procedures</th>
+                                                <th>YES</th>
+                                                <th>NO</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="info in labInspectionList[3].labList" >
+                                                <td>
+                                                    {{info.name}}
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+19}}" value="1" ng-model="generalSafety[3][info.id]" ng-click="addLabList(3,info,1,$index+19)">
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+19}}" value="0" ng-model="generalSafety[3][info.id]" ng-click="addLabList(3,info,0,$index+19)">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                 <div class="card" >
+                                    <label class="labelName"><b> </b></label><br>
+                                    <div  class="fixed-thead-tfoot-scroll fix-height-scroll60">
+                                        <table  class="main-table width100 ">
+                                            <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>YES</th>
+                                                <th>NO</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="info in labInspectionList[6].labList" >
+                                                <td>
+                                                    {{info.name}}
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+36}}" value="1" ng-model="generalSafety[6][info.id]" ng-click="addLabList(6,info,1,$index+36)">
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+36}}" value="0" ng-model="generalSafety[6][info.id]" ng-click="addLabList(6,info,0,$index+36)">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="col-lg-4 col-sm-4 col-md-4 padding-left-right-set4 padding-top10" >
+
+                                <div class="card" >
+                                    <label class="labelName"><b>Chemical Storage</b></label><br>
+                                    <div  class="fixed-thead-tfoot-scroll fix-height-scroll60">
+                                        <table  class="main-table width100 ">
+                                            <thead>
+                                            <tr>
+                                                <th>Chemical Storage</th>
+                                                <th>YES</th>
+                                                <th>NO</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="info in labInspectionList[4].labList" >
+                                                <td>
+                                                    {{info.name}}
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+26}}" value="1" ng-model="generalSafety[4][info.id]" ng-click="addLabList(4,info,1,$index+26)">
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+26}}" value="0" ng-model="generalSafety[4][info.id]" ng-click="addLabList(4,info,0,26)">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <label class="labelName"><b>Compressed Gas Cylinders</b></label><br>
+                                    <div  class="fixed-thead-tfoot-scroll fix-height-scroll60">
+                                        <table  class="main-table width100 ">
+                                            <thead>
+                                            <tr>
+                                                <th>Compressed Gas Cylinders</th>
+                                                <th>YES</th>
+                                                <th>NO</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="info in labInspectionList[5].labList">
+                                                <td>
+                                                    {{info.name}}
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+32}}" value="1" ng-model="generalSafety[5][info.id]" ng-click="addLabList(5,info,1,$index+32)">
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="generalSafety{{$index+32}}" value="0" ng-model="generalSafety[5][info.id]" ng-click="addLabList(5,info,0,$index+32)">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                        <div class="row" style="margin-top: 10px">
+
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveRack()">
+                                    Disable</a>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <button type="submit" href="" ng-disabled="nutritionalAssessment.$invalid" class="btn btn-primary btn-save-box-shadow"
+                                        title="Save" data-toggle="modal" ng-click="saveLabInspections('N')" >
+                                    <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveLabInspections('Y')">
+                                    Draft</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

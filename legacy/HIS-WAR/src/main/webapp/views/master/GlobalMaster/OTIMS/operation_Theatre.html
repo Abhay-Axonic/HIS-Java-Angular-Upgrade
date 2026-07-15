@@ -1,0 +1,309 @@
+<style>
+.text-search-box{
+	border: 1px solid #f9f9f9 !important;
+    padding-left: 25px !important;
+    font-size: 13px !important;
+    color: #272325 !important;
+    background-color: #fff !important;
+    -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.25) !important;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16) !important;
+    -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.25) !important;
+    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16) !important;
+    transition: all 0.2s linear !important;
+    -moz-transition: all 0.2s linear !important;
+    -webkit-transition: all 0.2s linear !important;
+    -o-transition: all 0.2s linear !important;
+    width: 100% !important;
+    margin-bottom: -8px !important !important;
+    height: 32px !important;
+    margin-top: 6px !important;
+    border-radius: 4px !important;
+}
+</style>
+
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<form name="operation_Theatreform" novalidate >
+			<div class="row padding-top8">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group" show-errors>
+								<input required type="text" autocomplete="off" name="theatreCode" class="text-input floating-label" ng-model="common.theatreCode"> 
+								<label for="code">Code<span class="star">*</span></label>
+								<p class="help-block" ng-if="operation_Theatreform.theatreCode.$error.required">Code is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group" show-errors>
+								<input required type="text" autocomplete="off" name="theatreName" class="text-input floating-label" ng-model="common.theatreName">
+								<label for="code">Name<span class="star">*</span></label>
+								<p class="help-block" ng-if="operation_Theatreform.theatreName.$error.required">Name is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group" show-errors>
+									<select required class="text-input floating-label dirty" ng-model="common.theatreTypeId" name="theatreTypeId">
+										<option>Select Theatre Type</option>
+										<option ng-repeat="info in theatreTypeList" value="{{info.operationTheatreTypeId}}">{{info.theatreTypeName}}</option>
+									</select>
+									<label for="code">Type<span class="star">*</span></label>
+									<p class="help-block" ng-if="operation_Theatreform.theatreTypeId.$error.required">Type is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="form-group" show-errors>
+									<input required type="text" autocomplete="off" name="theatreDesc" class="text-input floating-label" ng-model="common.theatreDesc"> 
+									<label for="code">Description<span class="star">*</span></label>
+									<p class="help-block" ng-if="operation_Theatreform.theatreDesc.$error.required">Description is required</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" name="" class="text-input floating-label" > 
+								<label for="code">Operation Tables</label>
+							</div>
+						</div>
+					</div> -->
+				</div>
+				
+				<!-- <div class="row padding-top8">
+					<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<input type="text" autocomplete="off" name="" class="text-input floating-label" > 
+								<label for="code">Description</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				
+				
+			<div class="row margin-top10 padding-left-right-set1">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<div class="form-group" show-errors>
+								<select required class="text-input floating-label" name="storeId" ng-model="common.storeId">
+									<option ng-repeat="info in storeList" value="{{info.id}}">{{info.store}}</option>
+								</select> 
+								<label for="code">Store<span class="star">*</span></label>
+								<p class="help-block" ng-if="operation_Theatreform.storeId.$error.required">Store is required</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11">
+							<select class="text-input floating-label">
+								<option></option>
+							</select> 
+							<label for="code">Store Type</label>
+						</div>
+					</div>
+				</div> -->
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" padding-top4">
+						 <a href="" class="btn btn-primary btn-save-box-shadow text-width-auto" title="Save" data-toggle="modal" ng-click="save()"
+										ng-if="saveBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+						<a href="" class="btn btn-primary btn-save-box-shadow text-width-auto" title="Update" data-toggle="modal" ng-click="update()"
+										ng-if="updateBtnFlag"> <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		      		</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+					<input type="text" autocomplete="off" class="text-search-box oneeeee" placeholder="Search" style="margin-top: 0px;" ng-model="searchKeyword">
+					 <i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+				</div>
+			</div>
+			
+			
+			<div class="row padding-left-right-set4 margin-top8">
+			
+				<div class="col-md-6 col-sm-7 padding-left-right-set4">
+							<div class="row">
+								<div class="col-lg-3 col-md-6 col-sm-6" style="padding-left: 0px;">
+									<div class="search">
+										<label class="show-entries">Show <select
+											name="DataTables_Table_0_length"
+											aria-controls="DataTables_Table_0"
+											ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+											ng-change="setNoOfRecords();" class="search-popUp-ddl">
+												<option value="10">10</option>
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+										</select> entries
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+				<div class="col-md-12">
+					<table class="table table-bordered">
+						<tr class="">
+							<th class="width5">Code
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width12">Name
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width8">Type
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width18">Description
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width18">Store
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width1">Status(n)
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width1 text-center">Action taken
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+						</tr>
+					   <tr ng-repeat="info in commonList|orderBy:column:reverse|filter:searchKeyword">
+							<td>{{info.theatreCode}}</td>
+							<td>{{info.theatreName}}</td>
+							<td>{{info.theatreTypeName}}</td>
+							<td>{{info.theatreDesc}}</td>
+							<td>{{info.storeName}}</td>
+							<td>
+								<label class="switch"> 
+									<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'"
+														ng-change="updateStatus(info.operationTheatreId,info.status)">
+									<div class="slider round"></div>
+								</label>
+							</td>
+							<td class="text-center">
+								<a><i class="fa fa-pencil" aria-hidden="true" ng-click="showUpdateBtn(info.operationTheatreId)"></i></a>
+							</td>
+						</tr>
+					</table>
+								<div class="row margin-bottom45 sss">
+									<ul ng-if="pager.pages.length" class="pagination table-list"
+										style="font-size: 14px;">
+										<li ng-class="{disabled:pager.currentPage === 1}"><a
+											ng-click="setPage(1,'true')">First</a></li>
+										<li ng-class="{disabled:pager.currentPage === 1}"><a
+											ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+										<li ng-repeat="page in pager.pages"
+											ng-class="{active:pager.currentPage === page}"><a
+											ng-click="setPage(page,'true')">{{page}}</a></li>
+										<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+											<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+										</li>
+										<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+											<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+										</li>
+									</ul>
+								</div>
+				</div>
+			</div>	
+		</form>
+	</div>
+</div>
+<modal visible="showModal"></modal>
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Operation Theatre");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="operation_Theatre"]').parents("li").addClass("active");
+});
+</script>

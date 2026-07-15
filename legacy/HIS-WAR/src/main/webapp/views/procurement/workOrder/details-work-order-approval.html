@@ -1,0 +1,457 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+      <fieldset>
+         <div class="row margin-top10">
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+               <span class="margin-left10">
+                  <b class="padding-right10 ">WO No. :</b> {{common.workorderRequestNumber}} </span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+               <span class="margin-left10">
+                  <b class="padding-right10 ">WO Date:
+                  </b> {{common.workorderRequestDate}}</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+               <span class="margin-left10">
+                  <b class="padding-right10 ">Store:
+                  </b>  {{common.storeName}}</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+               <span class="margin-left10">
+                  <b class="padding-right10 ">Vendor :
+                  </b> {{common.vendorName}}</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+               <span class="margin-left10">
+                  <b class="padding-right10 ">Against :
+                  </b>  {{common.againstTypeName}}</span>
+            </div>
+         </div>
+         <div class="row margin-top10">
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+               <span class="margin-left10">
+                  <b class="padding-right10 ">Status :
+                  </b> 	{{common.status}}
+                  <!-- <span ng-if="common.workorderRequestStatusId==2">Pending Approval</span> 
+                  <span ng-if="common.workorderRequestStatusId==3">Cancelled</span>
+                  <span ng-if="common.workorderRequestStatusId==4">Rejected</span>
+                  <span ng-if="common.workorderRequestStatusId==5">Approved</span> -->
+                  </span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+               <span class="margin-left10">
+                  <b class="padding-right10 "> Approved By :</b>  {{common.approvedName}}</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+               <span class="margin-left10">
+                  <b class="padding-right10 ">Added By :</b> {{common.userName}} </span>
+            </div>
+         </div>
+      </fieldset>
+		<div class="row padding-top10 padding-left-right-set4"><!-- padding-left-right-set4 -->
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll350">
+			  <table id="main-table" class="main-table"  style="max-width: 150%;min-width:150%">
+			    <thead>
+			    	<tr>
+                        <th colspan="4" scope="col">Item Details</th>
+                      	<th colspan="4" scope="col">WO Qty Details</th>
+                      	<th colspan="4" scope="col">WO Amount Details</th>
+                      	<th class="width8" colspan="3" scope="col">WO Total Amount Details</th>
+                      	<th colspan="" scope="col">Other Details</th>
+                     </tr>
+                     <tr>
+                     		<!--******* Item Details column start *******-->
+                     	<th class="width1 text-center" scope="col">
+                           <input type="checkbox" ng-model="selectAllRows" ng-click="SelectAllItems()"
+                           ng-disabled="approvalStatus == 'Approved' || common.status == 'Cancelled' || common.status == 'Closed'">
+                        </th>
+                        <!-- <th class="width5" scope="col">Code</th> -->
+                        <th class="width5" scope="col">Name</th>
+                        
+                        <!--******* Work Order Qty Details column start *******-->
+                        <th class="width5" scope="col">WO Qty  </th>
+                        <th class="width5" scope="col">Staged Work Order  </th>
+                         <th class="width5" scope="col">Approved Qty</th>
+                        <th class="width5" scope="col">Rejected Qty </th>
+                        <th class="width5" scope="col">Reject </th>
+                        
+                        <!--*******Work Order Amount Details column start *******-->
+                       <th class="width5" scope="col">Rate INR </th>
+                         <th class="width5" scope="col">Total Amount </th>
+                        <th class="width5" scope="col">Tax Code</th>
+                        <th class="width5" scope="col">Tax %</th>
+                       
+                        <th class="width5" scope="col">Discount % </th>
+                        
+                        <!--*******Work Order Total Amount Details column start *******-->
+                       <!--  <th class="width8" scope="col"> Amount INR </th> -->
+                        <th class="width8" scope="col"> Discount INR</th>
+                        <th class="width8" scope="col"> Tax Amount INR</th>
+                        <th class="width5" scope="col">Net Amount INR </th>
+                         
+                        <!--*******Other Details column start *******-->
+                        <th class="width15" scope="col"> Remark </th>
+                     </tr>
+			    	</thead>
+			    	<tbody>
+                   		<tr ng-repeat="info in workOrderItemDetailsList">
+                   			<!--******* Item Details column start *******-->
+                   			<td class="width1 text-center" scope="col">
+                           		<input type="checkbox"  ng-model="info.isSelected" ng-disabled="approvalStatus == 'Approved' || common.status == 'Cancelled' || common.status == 'Closed'"  ng-click="selectedRow(info,$index)">
+                   			</td>
+                   			<!-- <td>Code</td> -->
+                   			<td>{{info.itemName!=null ? info.itemName : info.serviceName}}</td>
+                   			
+                   			<!--******* Work Order Qty Details column start *******-->
+                   			<td >{{info.itemQuantity}}</td>
+                   			<td><button style="background:none;border:none;color:#23527c" data-target="#staged_Workorder_Creation" ng-click="stagedWorkOrderInfoOnClick(info, $index)"
+				                data-toggle="modal" title="Staged WorkOrder">
+				                  <i class="fa fa-info-circle"></i>
+				                </button></td>
+                   			<td><input numbers-only type="text" autocomplete="off" class="select-box"  ng-disabled="(readOnlyApproved==true ||info.isSelected==false) || approvalStatus == 'Approved'"  ng-model="info.approvedQty" ng-blur="calculate(info,$index,'')"></td>
+                   			<td >{{info.rejectedQty}}</td>
+                   			<td><div class="row">
+							<label class="switch switch-small">
+								<input type="checkbox" class="switchInput"  ng-disabled="(readOnlyApproved==true ||info.isSelected==false) || approvalStatus == 'Approved'"  ng-model="info.isRejectedQty" ng-true-value="true" ng-false-value="false" ng-value="info.isRejectedQty!=0 ? true : false"  ng-click="showRejectionPopup(info,$index)">
+								<div class="slider round slider-small"></div>
+							</label><!-- Reject_modal modal name for rejection -->
+						</div></td>
+                   			
+                   			<!--*******Work Order Amount Details column start *******-->
+                   			<td>{{parseFloatNum(info.itemRate)}}</td>
+                   			<td>{{parseFloatNum(info.itemMrp)}}</td>
+                        	<td><select ng-model="info.taxpercentObj" class="text-input floating-label"
+										ng-options="x as x.name for x in selectedTaxList track by x.id" ng-disabled="(readOnlyApproved==true ||info.isSelected==false) || approvalStatus == 'Approved'"
+										ng-change="setTaxWorkorderItem(info.taxpercentObj,info,$index)"
+										class="form-control" 
+										ng-required="true">
+						         </select>
+						         
+						</td>
+						<td>{{info.itemTax}}</td>
+                        	<td>{{parseFloatNum(info.itemDiscPercentage)}}%</td>
+                   			
+                   			<!--*******Work Order Total Amount Details column start *******-->
+                         	<!-- <td> Amount INR </td> -->
+                        	<td> {{parseFloatNum(info.itemDiscAmount)}}</td>
+                        	<td>{{parseFloatNum(info.itemTaxAmount)}}</td>
+                        	<td> {{parseFloatNum(info.itemNetAmount)}}</td>
+                         	
+                            <!--*******Other Details column start *******-->
+                   			<td>
+                   				<textarea rows="2" ng-if="info.approvalDetailRemark" ng-disabled="readOnlyApproved==true ||info.isSelected==false" 
+                               ng-model="info.approvalDetailRemark"></textarea>
+                               <textarea rows="2" ng-disabled="readOnlyApproved==true ||info.isSelected==false" 
+                               ng-model="info.itemRemark"></textarea>
+                   			</td>
+                   		</tr>
+                   </tbody>
+			   </table>
+			</div>
+		</div>
+		
+      
+      	<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20 padding-top20">
+         <!-- ************** Footer Block start ************** -->
+         <div class="row padding-left-right-set4">
+            <div class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+               <table class=" table table-bordered">
+                  <tbody>
+                     <tr>
+                        <th class="width7">
+                           <label>Total Amount</label>
+                        </th>
+                        <td class="width8">
+		                    {{parseFloatNum(totalAmount)}}
+                        </td>
+                        <th class="width7">
+                           <label>Total Discount</label>
+                        </th>
+                        <td class="width8">
+                           
+                            {{parseFloatNum(totalDiscAmount)}}
+                        </td>
+                        <th class="width8">
+                           <label>Total Tax Amount</label>
+                        </th>
+                        <td class="width8">
+                           
+                             {{parseFloatNum(totalTaxAmount)}}
+                        </td>
+                     </tr>
+                     <tr>
+                        <th class="width7">
+                           <label>Total Other Charges</label>
+                        </th>
+                        <td class="width8">
+                           <div class="col-md-8">
+		                    {{parseFloatNum(otherChargeAmount)}}
+                           </div>
+                           <div class="col-md-1 text-left vertical-middle padding-top5" >
+                              <a data-target="#otherCharges_Modal"  data-toggle="modal" title="Other Charges">
+                                 <i class="fa fa-plus-circle"></i>
+                              </a>
+                           </div>
+                        </td>
+                        <!-- <th class="width7">
+                           <label>Credit Note Amount</label>
+                        </th>
+                        <td class="width8">
+                           <div class="col-md-8">
+                              {{vm.model.Currency}} {{vm.model.grnList.totalCreditNoteAmount | number:2}}
+                           </div>
+                           <div class="col-md-1 text-left vertical-middle padding-top5">
+                              <a data-target="#creditNoteAmount_Modal" data-toggle="modal"
+                                 title="Credit Note Amount"><i class="fa fa-info-circle"></i></a>
+                           </div>
+                        </td> -->
+                        <th class="width8">
+                           <label>Round Off</label>
+                        </th>
+                        <td class="width8">{{parseFloatNum(roundoff)}}</td>
+                         <th class="width7">
+                           <label>Net Amount</label>
+                        </th>
+                        <td class="width8">
+                              {{parseFloatNum(totalNetAmount)}}
+                        </td>
+                     </tr>
+                     <tr>
+                     <th class="width7 padding-top10">
+                           <label>Reverse Charge Applicable</label>
+                        </th>
+                        <td  class="width8">
+                           <input type="checkbox" name="isReverseTax" ng-model="common.isReverseTax" id="isReverseTax" ng-disabled="Readonlybtn==true" class="ng-pristine ng-untouched ng-valid ng-empty">
+                        </td>
+                        <!-- <th colspan="3"> -->
+                        <th class="width7 padding-top10">
+                           <label>Remark</label>
+                        </th>
+                        <td  colspan="6">
+                           <input type="text" autocomplete="off" ng-disabled="readOnlyApproved==true" ng-model="StoreWorkOrder.approvalRemark"  class="select-box">
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+         <!-- ************** Footer Block end ************** -->
+         <div class="row his-style padding-right20">
+             <div class="row">
+				<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+					<a class="btn btn-primary btn-save-box-shadow  width100" title="Back" href="#/workOrderApproval">
+					Back </a>
+				</div>
+				<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+					<button class="btn btn-primary btn-save-box-shadow  width100" ng-disabled="approvalStatus == 'Approved' || common.status == 'Cancelled' || common.status == 'Closed'" 
+               ng-click="saveApprovalData()" title="Save">
+					{{btnText}} </button>
+				</div>
+			</div>
+         </div>
+      </footer>
+	</div>
+</div>
+<!-- ************* other charges modal start ********** -->
+<div id="otherCharges_Modal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Other Charges
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">Other Charges</th>
+                  <th class="width6">Amount</th>
+                  <th class="width2">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="AddOtherchargesObj in AddOtherchargesList">
+                  <td>
+                    <!-- <select ng-model="charges.otherCharge" class="select-box floating-label"
+                      data-ng-options="otherCharge.otherCharges for otherCharge in getAllOtherChargesList"
+                      ng-change="charges.isChargesValid=false" ng-class="{borderRed: charges.isChargesValid}"></select> -->
+                      
+                      <select class="text-input floating-label dirty" ng-model="AddOtherchargesObj.otherchargeTypeId" convert-to-number  ng-disabled="true"  >
+												<option selected value>Select OtherCharges</option>
+												<option ng-repeat="otherchargeType in getAllOtherChargesDropDownList" value="{{otherchargeType.id}}">{{otherchargeType.description}}</option>
+					   </select> 
+                  </td>
+                  <td>
+                    <input is-number type="text" autocomplete="off" ng-model="AddOtherchargesObj.otherChargeAmount" ng-blur="getOtherchargeamountPopup()"
+                      class="select-box" convert-to-number ng-disabled="true"  >
+                  </td>
+                  <td>
+                    <div>
+                    <!--   <input type="button" ng-click="AddOtherChargeObj()" ng-disabled="Readonlybtn==true" value="+"
+                        class="btn btn-primary btn-save-box-shadow width35"
+                        > -->
+                      <!-- <input type="button" ng-click="RemoveOtherChargeObj( $index)" ng-disabled="Readonlybtn==true"  value="-"
+                        class="btn btn-primary btn-save-box-shadow width35" ng-if="$index !== 0"> -->
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th class="text-right">Total Amount</th>
+                  <th>{{parseFloatNum(otherChargeAmount)}}</th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row his-style">
+          <div class="col-md-10"></div>
+          <div class="col-md-2 padding-left0px-right6px">
+            <div class="common-save-button">
+             <!--  <input type="button" ng-click="AddOtherchargeSave()" value="Save"
+                class="btn btn-primary btn-save-box-shadow"> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ************* other charges modal end ********** -->
+<!--  -->
+<div id="qtyaccepatReject" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-backdrop="static">
+    <div class="modal-dialog">
+		<div class="modal-content">
+        	<div class="modal-header">
+          		<div class="modal-title patient-details-row">
+            		Rejection
+            		<button type="button" ng-click="cancelRejectionPopup()" class="close">&times;</button>
+          		</div>
+        	</div>
+        	<div class="modal-body">
+          		<div class="row">
+            		<div class="col-md-12 padding-left-right-set">
+              			<div class="row input-container margin-top10">
+                  			<div class="col-lg-6 col-md-6 col-sm-12">
+                    			<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                      				<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                    			</div>
+                    			<div class="col-lg-11 col-sm-11 col-md-11">
+                        			<input type="text" autocomplete="off" ng-model="itemRejectionObject.rejectedQty" class="text-input floating-label" numbers-only>
+									<label for="rejectQty">Qty</label>
+                    			</div>
+                  			</div>
+                  			<div class="col-lg-6 col-md-6 col-sm-6">
+                    			<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+                    				<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                  				</div>
+                  				<div class="col-lg-11 col-sm-11 col-md-11">
+                    			<div>
+                      			<select name="cancelReason" id="cancelReason" class="text-input floating-label"
+										ng-model="itemRejectionObject.cancelReasonId"  convert-to-number
+										>
+										<option></option>
+										<option ng-repeat="reason in rejectionReasonList" value="{{reason.id}}">{{reason.reason}}</option>
+									</select>
+                      			<label for="rejectReason">Select Reason</label>
+                    		</div>
+                  		</div>
+                  	</div>
+                </div>
+                <div class="row input-container margin-top10">
+                  	<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                    	<i class="fa fa-sticky-note" aria-hidden="true"></i>
+                  	</div>
+                  	<div class="col-lg-11 col-sm-11 col-md-11">
+                    	<textarea rows="4" class="text-input floating-label" ng-model="itemRejectionObject.rejectNote" maxlength="100"></textarea>
+                    	<label for="rejectNote">Note</label>
+                  	</div>
+                </div>
+            </div>
+		</div>
+	</div>
+	<div class="modal-footer" style="border:none;">
+		<button type="button" class="btn btn-primary" ng-click="comfirmRejection()">Save</button>
+	</div>
+</div>
+</div>
+</div>
+<div id="staged_Workorder_Creation" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Workorder Amount Splitwise
+          <button type="button" ng-click="closeStagedPopUp()" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">
+                    Working Stage 
+                  </th>
+                  <th class="width3">
+                    Percentage 
+                  </th>
+                  <th class="width6">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="stagedWorkOrder in workOrderCreationStagedListData">
+                  <td><input type="text" autocomplete="off" ng-model="stagedWorkOrder.stageName" ng-blur="checkBatch(bonus,$index)" ng-class="{borderRed: vm.model.batchNumber[$index]}" ng-change="vm.model.batchNumber[$index] = false"
+                   class="select-box ng-pristine ng-valid dirty ng-not-empty ng-valid-maxlength ng-touched" id="batch_1" maxlength="20" style="" ></td>
+                  <td>
+                    <input type="text" autocomplete="off" ng-blur="calculatePercentage()" ng-model="stagedWorkOrder.percentage" class="select-box" maxlength="5" allow-decimal-numbers >
+                  </td>
+                  <td class="width3" style="width: 2.8% !important">
+                  <input type="button" value="+" ng-click="addStage()" class="btn btn-primary btn-save-box-shadow width35"  >
+                  <input type="button" value="-" ng-click="lessStage(stagedWorkOrder)" class="btn btn-primary btn-save-box-shadow width35" ng-if="$index != 0 " >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row his-style">
+          <div class="col-md-10"></div>
+          <div class="col-md-2 padding-left0px-right6px">
+            <div class="common-save-button">
+              <input type="button" value="Save" ng-click="stagedWorkOrderModalOnClick()"
+                class="btn btn-primary btn-save-box-shadow" >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  -->
+
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {  
+	// $(".patienttSearchResult").hide();
+	//$(".icon-span").hide();
+	 $(".selectedPageName").text("Details Work Order Approval");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="deatilsWorkorderApproval"]').parents("li").addClass("active");
+});
+</script>

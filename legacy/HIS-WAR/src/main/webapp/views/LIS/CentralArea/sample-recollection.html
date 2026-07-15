@@ -1,0 +1,508 @@
+
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		
+		
+		<div class="row padding-left-right-set4 margin-top4">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0">
+						<div class="row input-container padding-top2">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-dot-circle-o ddp-padding-top" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 padding-left-right-set4">
+								<div class="">
+									<label for="" class="LISDynamicLabel multi-select-label">Clinical Unit</label>
+									<select class="text-input floating-label ng-touched dirty"
+											ng-model="assignUnit" name="unitId" required convert-to-number  ng-change="searchOutPatientList();">
+											<option ng-repeat="unitObj in unitMasterList" value="{{unitObj.unitId}}">{{unitObj.unitName}}</option>
+										</select>
+								</div>
+							</div>			
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-3 padding-top10">
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input name="fromDate"
+										id="date1" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+										uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+										placeholder="DD/MM/YYYY" tabindex="13" ng-model="fromDate" ng-change="getToDate()"
+										model-view-value="true" is-open="popup.opened"  onkeydown="event.preventDefault()"
+										datepicker-options="dateOptions" show-button-bar="false" ng-click="open()" /> 
+										<label for="description" class="">Date (From)</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+									<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input name="toDate"
+											id="date2" type="text" autocomplete="off" class="text-input floating-label dirty ng-pristine ng-isolate-scope ng-valid-mask ng-empty ng-invalid ng-invalid-date ng-invalid-required ng-touched"
+											uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" tabindex="13" ng-model="toDate"
+											model-view-value="true" is-open="popup1.opened"  onkeydown="event.preventDefault()"
+											datepicker-options="todateOptions" show-button-bar="false" ng-click="open1()"/> 
+										<label for="description" class="">Date-Till</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="form-group" >
+										 <input type="text" autocomplete="off"
+											 class="text-input floating-label" tabindex="3"
+											 ng-model="patientId"
+											 placeholder="Search"
+											 uib-typeahead=" patient.patientWithUhid for patient in getSendToCRList($viewValue)"
+											 typeahead-editable="false"
+											 typeahead-on-select="selectPatient($item, $model, $label);"
+											 name="patientName"  />
+										<label for="description" class="LISDynamicLabel">Patient Name /UHID</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" ng-model="uhid"  class="text-input floating-label">
+										<label for="description" class="LISDynamicLabel">UHID</label>
+									</div>
+								</div>
+							</div>
+						</div> -->
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-6 padding-left-right-set4 padding-top10">
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-dot-circle-o padding-top10" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<label for="" class="LISDynamicLabel multi-select-label">Visit Type</label>
+										 <div class="custom-drop-down-btn"
+											ng-dropdown-multiselect="" options="visityTypeList"
+											selected-model="selectedVisitType"
+											>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+									<i class="fa fa-dot-circle-o padding-top10" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-10 col-sm-10 col-md-10">
+									<div class="">
+										<label for="" class="LISDynamicLabel multi-select-label">Department</label>
+										<div class="custom-drop-down-btn" ng-dropdown-multiselect="" options="departmentList" 
+											 selected-model="selectedDepartMentList" extra-settings="dropDownSetting">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+						<div class="row input-container">
+							<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+								<i class="fa fa-dot-circle-o padding-top12" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-10 col-sm-10 col-md-10">
+								<div class="">
+									<label for="" class="LISDynamicLabel multi-select-label">Test</label>
+									<div class="custom-drop-down-btn" ng-dropdown-multiselect="" options="testList" 
+										selected-model="selectedtestList" extra-settings="dropDownSetting">
+									</div>
+								</div>
+							</div>			
+						</div>
+					</div>
+						
+						
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15 text-width-auto pull-right">
+						<div class="common-save-button" style="padding-top:0px;"> 
+								 <a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn"  style="width: auto;" ng-click="searchOutPatientList();">
+								 	<i class="fa fa-search"   aria-hidden="true"></i> 
+								 </a> 
+							</div> 
+						</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top15 text-width-auto pull-right">
+						<div class="common-save-button" style="padding-top:0px;"> 
+								 <a href="" class="btn btn-primary btn-save-box-shadow" style="width: auto;" ng-click="clearFields();" title="Clear"> 
+								 	<i class="fa fa-eraser"   aria-hidden="true"></i> 
+								 </a> 
+							</div> 
+						</div>
+						
+				</div>
+		<div class="row margin-top8 padding-left-right-set4">
+			<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-10">
+				<div class="row"  ng-show="isPaginationReq">
+					<div class="col-lg-4 col-md-6"
+						style="padding-left: 0px;">
+						<div class="search">
+							<label class="show-entries">Show <select
+								name="DataTables_Table_0_length"
+								aria-controls="DataTables_Table_0"
+								ng-init="noOfRecordsPerPage='50'" ng-model="noOfRecordsPerPage"
+								ng-change="setNoOfRecords();" class="search-popUp-ddl">
+									<!-- <option value="10">10</option> -->
+									<option value="50">50</option>
+									<option value="75">75</option>
+									<option value="100">100</option>
+							</select> entries
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div  ng-show="isBillManipulationAllowed"  class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 float_left padding-top10 radio-container"  style="border: 1px solid #ccc;border-radius: 5px;margin-top:15px;width:180px;text-align:center">
+						<span >
+							<input id="all_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="otherRegistrationType trigger ng-pristine ng-untouched ng-valid ng-not-empty" value="1" ng-change="filterByDummyServices(isDummyService)">
+							<label for="all_Radio">All</label>
+						</span>
+								<span >
+							<input id="real_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="employeeRegRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="2" ng-change="filterByDummyServices(isDummyService)">
+							<label for="real_Radio">Real</label>
+						</span>
+								<span >
+							<input id="dummy_Radio" name="filterRadio" style="margin-bottom:10px" type="radio" ng-model="filterDummyService" class="dependentRedRadio ng-pristine ng-untouched ng-valid ng-not-empty" value="3" ng-change="filterByDummyServices(isDummyService)">
+							<label for="dummy_Radio">Dummy</label>
+						</span>
+			</div>
+					
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+				<div class=" ">
+					<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="saveSample()" ng-hide="checkFlag"><i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				 <input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top:0px" ng-model="searchKeyword" >
+				        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+		
+		<div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll380">
+			  <table id="main-table" class="main-table width180">
+			    <thead>
+			      <tr class="">
+			      	<th class="width7 vertical-top fixed" title="Collect again (All)">Collect again (All)<span class="th-checkbox">
+						<label class="checkbox-inline" style=" margin-top: -6px;">
+							<input type="checkbox"
+								   ng-model="selectedAll" ng-click="checkAll();"
+								   class="ng-pristine ng-untouched ng-valid ng-empty">
+							    <span></span>
+						</label>
+					</span>
+					</th>
+					<th class="width8 vertical-top" title="Reason For Collect again">Reason For Collect again</th>
+					<th class="width4 vertical-top" title="Visit Type">Visit Type</th>
+					<th class="width6 vertical-top" title="Sample No.">Sample No.</th>
+					<th class="width6 vertical-top" title="UHID">UHID</th>
+					<th class="width6 vertical-top" title="Bill No.">Bill No.</th>
+					<th class="width6 vertical-top" title="Patient Details">Patient Details</th>
+					<th class="width6 vertical-top" title="Test Name">Test Name</th>
+					<th class="width6 vertical-top" title="Test Code">Test Code</th>
+					<th class="width6 vertical-top" title="Profile Code">Profile Code</th>
+					<!-- <th class="width6 vertical-top" title="Priority">Priority</th> -->
+					<th class="width6 vertical-top" title="Doctor Details">Doctor Details</th>
+					<th class="width6 vertical-top" title="Sample">Sample</th>
+					<th class="width6 vertical-top" title="Min Sample">Min Sample</th>
+					<th class="width6 vertical-top" title="Container">Container</th>
+					<th class="width6 vertical-top" title="Ward">Ward</th>
+					<th class="width6 vertical-top" title="Ward Bed No.">Ward Bed No.</th>
+					<th class="width8 vertical-top" title="Payment Entitlement">Payment Entitlement</th>
+					<th class="width6 vertical-top" title="Department">Department</th>
+				</tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-repeat="rejSample in rejectedSampleList|orderBy:column:reverse|filter:searchKeyword track by $index">
+					<td class="padding-edit-button-table text-center fixed">
+						<label class="checkbox-inline">
+							<input type="checkbox" ng-model="rejSample.sampleRecollectFlag" ng-click="checkCheckedList()">
+							<span></span>
+						</label>
+					</td>
+					<td class=""  title="{{rejSample.sampleRejectReason}}">{{rejSample.sampleRejectReason}}</td>
+					<td class=""  title="{{rejSample.visitType}}">{{rejSample.visitType}}</td>
+					<td class=""  title="{{rejSample.labSampleNo}}">{{rejSample.labSampleNo}}</td>
+					<td class=""  title="{{rejSample.uhid}}">{{rejSample.uhid}}</td>
+					<td class=""  title="{{rejSample.billNumber}}">{{rejSample.billNumber}}</td>
+					<td class=""  title="{{rejSample.patientDetails}}">{{rejSample.patientDetails}}</td>
+					<td class=""  title="{{rejSample.testDesc}}">{{rejSample.testDesc}}</td>
+					<td class=""  title="{{rejSample.testCode}}">{{rejSample.testCode}}</td>
+					<td class=""  title="">{{(rejSample.panelCode==null)?"-":rejSample.panelCode}}</td>
+					<!-- <td class=""  title="">{{rejSample.priorityName}}</td> -->
+					<td class=""  title="{{rejSample.doctorDetails}}">{{rejSample.doctorDetails}}</td>
+					<td class=""  title="{{rejSample.sampleType}}">{{rejSample.sampleType}}</td>
+					<td class=""  title="{{rejSample.sampleVolume}}{{rejSample.unitName}}">{{rejSample.sampleVolume}}{{rejSample.unitName}}</td>
+					<td class=""  title="{{rejSample.containerName}}">{{rejSample.containerName}}</td>
+					<td class=""  title="">{{(rejSample.wardCode==null)?"-":rejSample.wardCode}}</td>
+					<td class=""  title="">{{(rejSample.bedNumber==null)?"-":rejSample.bedNumber}}</td>
+					<!-- <td class=""  title="{{rejSample.entitlementDesc}}">{{rejSample.entitlementDesc}}</td> -->
+					<td>
+											<div ng-if ="rejSample.paymentEntitlementId == 1">Self</div>
+											<div ng-if ="rejSample.paymentEntitlementId == 2">Insurance</div>
+											<div ng-if ="rejSample.paymentEntitlementId == 3">Company</div>
+										</td>
+					<td class=""  title="{{rejSample.deptName}}">{{rejSample.deptName}}</td>
+				</tr>
+				<tr ng-if="(rejectedSampleList|filter:searchKeyword)=='' || (rejectedSampleList|filter:searchKeyword)==null">
+					<td colspan="18"><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+				</tr>
+			    </tbody>
+			  </table>
+			</div>
+		</div>
+		
+		
+		
+		<div class="row padding-left-right-set4 padding-top4">
+			<div class="col-lg-12 col-md-12 col-sm-12"  ng-show="isPaginationReq">
+				<table class="table table-bordered">
+
+				</table>
+				<div class="row margin-bottom45 sss">
+					<ul ng-if="pager.pages.length" class="pagination table-list"
+						style="font-size: 14px;">
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(1,'true')">First</a></li>
+						<li ng-class="{disabled:pager.currentPage === 1}"><a
+							ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+						<li ng-repeat="page in pager.pages"
+							ng-class="{active:pager.currentPage === page}"><a
+							ng-click="setPage(page,'true')">{{page}}</a></li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+						</li>
+						<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+							<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- CONFIRM POPUP FOR ALL -->
+
+<div id="sampleRecollect" class="modal fade ng-scope in" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="width: 560px !important;margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header padding-zero">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Are you sure you want to Save?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<!-- <button type="button" data-dismiss="modal" class="btn btn-primary" ng-click="sampleRecollect();">Ok</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button> -->
+				 <div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" title="No" data-dismiss="modal">
+						<i class="fa fa-times" aria-hidden="true"></i> </button>
+					</div>
+					<div class="col-lg-1 col-md-2 col-sm-2  padding-left-right-set4 text-width-auto float-right">
+						<button class="btn btn-primary btn-save-box-shadow  width100" data-dismiss="modal" title="Yes" ng-click="sampleRecollect();" ng-disabled="recollectionBtn">
+						<i class="fa fa-check" aria-hidden="true"></i> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="sampleBarCodeRecollect" class="modal fade ng-scope in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog" style="width: 26% !important;"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px!important;">
+				<div class="modal-title patient-details-row">
+					Barcode	Preview
+					<span class="padding-left10"><i style="font-size:16px;align:right" class="fa" ng-click="printBarCode()">&#xf02f;</i></span>			
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body his-style">
+				<div id="barcodePrintingId" style="background:#fff;padding:10px;height: 191px !important;overflow-y: scroll;">
+						<div class="row">
+						<!--  -->
+							<!--  <div class="col-lg-4 col-md-4 col-sm-4"  ng-repeat="barcode in barcodeList track by $index">
+								<table style="font: 14px monospace !important;">
+									<tbody>
+										<tr style="font: 14px monospace !important; font-weight: bold !important;">
+											<td colspan="2">
+												<span>Sample No. : </span><span>{{barcode.code}}</span>
+											</td>
+										</tr>
+										<tr style="font: 14px monospace !important; font-weight: bold !important;">
+											<td colspan="2">
+												<span class="ng-binding">UHID : </span>
+												<span class="ng-binding">{{barcode.uhid}}</span>
+											</td>
+										</tr>
+										<tr style="font: 14px monospace !important; font-weight: bold !important;">
+											<td>
+												<span class="ng-binding">Name :</span>
+												<span class="ng-binding">{{barcode.patientDetails}}</span>
+											</td>
+										</tr>
+										<tr style="font: 14px monospace !important; font-weight: bold !important;">
+											<td>
+												<span class="ng-binding">Date :</span>
+												<span class="ng-binding">{{barcode.generationDateTime}}</span>
+											</td>
+										</tr>
+										<tr style="font: 15px monospace !important; font-weight: bold !important;">
+											<td colspan="2">
+												<barcode type="{{barcode.type}}" string="{{barcode.code}}" options="options" render="img"></barcode>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div> -->
+													<div class="col-lg-12 col-md-12 col-sm-12"  ng-repeat="barcode in barcodeList track by $index">
+								<table style="font: 14px monospace !important;padding-left: 25px !important;">
+									<tbody><!-- font-weight: bold !important; -->
+										<!-- <tr style="font: 19px monospace !important;">
+											<td colspan="2">
+												<span style="font-weight: bold !important;">Sample No. : </span><span style="font-weight: bold !important;">{{barcode.code}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td colspan="2">
+												<span class="ng-binding" style="font-weight: bold !important;">UHID : </span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.uhid}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="font-weight: bold !important;">Name :</span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.patientDetails}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="font-weight: bold !important;">Date :</span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.generationDateTime}}</span>
+											</td>
+										</tr>
+										<tr style="font: 15px monospace !important; ">
+											<td colspan="2">
+												<barcode type="{{barcode.type}}" string="{{barcode.code}}" options="options" render="img"></barcode>
+											</td>
+										</tr> -->
+										<tr style="font: 19px monospace !important;">
+											<td colspan="2" style="padding-left: 10px !important;">
+												<span style="font-weight: bold !important;">{{barcode.patientDetails}}</span>
+											</td>
+										</tr>
+										<tr style="font: 15px monospace !important;">
+											<td colspan="2" style="padding-left: 20px !important;">
+												<barcode type="{{barcode.type}}" string="{{barcode.code}}" options="options" render="img"></barcode>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<!-- <span class="ng-binding" style="font-weight: bold !important;">UHID : </span> -->
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.code}}</span>
+											</td>
+											<td>
+												<!-- <span class="ng-binding" style="font-weight: bold !important;">Date :</span> -->
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.generationDateTime}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="padding-left: 40px !important;font-weight: bold !important;text-align: center;">{{barcode.sampleName}}</span>
+											</td>
+										</tr>
+										<!-- <tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="font-weight: bold !important;">Date :</span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.generationDateTime}}</span>
+											</td>
+										</tr>
+										<tr style="font: 19px monospace !important;">
+											<td>
+												<span class="ng-binding" style="font-weight: bold !important;">Name :</span>
+												<span class="ng-binding" style="font-weight: bold !important;">{{barcode.sampleName}}</span>
+											</td>
+										</tr> -->
+									</tbody>
+								</table>
+							<!-- barcode - code --></div>
+					</div>
+						</div>
+					</div>
+					<!-- <div class="row padding-top10 text-left padding-left-right-10">
+						<div class="col-lg-4 col-md-4 col-sm-4">
+							<div class="">
+								<label>Sample No. : </label><span></span>
+							</div>
+							<div class="">
+								<label>UHID : </label><span></span>
+							</div>
+							<div class="">
+								<label>Name   : </label><span></span>
+							</div>
+							<div class="">
+								<label>Date : </label><span></span>
+							</div>
+							<div class="">
+								<barcode type="" string="" options="options" render="img" class="ng-isolate-scope"><img></barcode>
+							</div>
+						</div>
+					</div> -->
+				</div>
+			<!-- <div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="otpOk">Ok</button>
+			</div> -->
+		</div>
+	</div>
+<script type="text/javascript">
+	var documentHeight = $(window).height();
+	var sideBarHeight = documentHeight - 55;
+	$("#page-content-wrapper").css("height", sideBarHeight + "px");
+
+	$(".selectedPageName").text("Sample Recollection");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="sampleRecollection"]').parents("li").addClass("active");
+</script>

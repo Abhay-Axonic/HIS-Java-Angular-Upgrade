@@ -1,0 +1,421 @@
+
+		<!-- Page Content -->
+		<div id="page-content-wrapper">
+			<div class="container-fluid his-style">
+				<fieldset>
+					<legend class="heading-div">Account Payable Master</legend>
+					<div class="row margin-top10">
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" ng-model="accountPay.accCode" class="text-input floating-label">
+										<label for="code">Code<span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa fa-file-text-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<textarea name="code" rows="1" id="" ng-model="accountPay.accDesc" class="text-input floating-label"></textarea>
+										<label for="code">Description<span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 ">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-flask" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" ng-model="accountPay.accPayableCode" class="text-input floating-label">
+										 <label for="code">Account Payable Code<span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+							<div class="row input-container">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+									<i class="fa  fa-envelope-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<input type="text" autocomplete="off" name="code" id="" ng-model="accountPay.accEmail" class="text-input floating-label">
+										<label for="code">Email<span class="star">*</span></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-mobile" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" ng-model="accountPay.accMobile" class="text-input floating-label">
+											<label for="code">Mobile<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label" ng-model="accountPay.accDay">
+													<option></option>
+													<option>Monday</option>
+													<option>Tuesday</option>
+													<option>Wednesday</option>
+													<option>Thursday</option>
+													<option>Friday</option>
+													<option>Sunday</option>
+											</select>
+											<label for="code">Day <span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+						</div>
+					</div>
+					<div class="row margin-top10 padding-bottom5">
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+										<input type="text" autocomplete="off" name="description" id="" ng-model="accountPay.accWorkFromTime" class="text-input floating-label" ng-init="initClockPicker()">
+										<label for="description" class="LISDynamicLabel">Time Working -From</label>
+										</div>
+											<!-- <input type="text" autocomplete="off" name="code" id="" ng-model="accountPay.accWorkFromTime" class="text-input floating-label">
+											<label for="code">Time Working -From <span class="star">*</span></label> -->
+										
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="clockpicker">
+										<input type="text" autocomplete="off" name="description" id="" ng-model="accountPay.accWorkToTime" class="text-input floating-label" ng-init="initClockPicker()">
+										<label for="description" class="LISDynamicLabel">Working To Time</label>
+											<!-- <input type="text" autocomplete="off" name="code" id="" ng-model="accountPay.accWorkToTime" class="text-input floating-label">
+											<label for="code">Working To Time <span class="star">*</span></label> -->
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="">
+										 <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="fromDatepicker" id="fromDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="accountPay.accValidityFromDate"
+											model-view-value="true" is-open="fromDatepicker.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openFromDatePicker()"  required>
+											<label for="description" class="LISDynamicLabel">Validity From Date</label>
+											<!-- <input type="text" autocomplete="off" name="code" id="" ng-model="accountPay" class="text-input floating-label">
+											<label for="code">Validity From Date<span class="star">*</span></label> -->
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="">
+										 <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="fromDatepicker" id="fromDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="accountPay.accValidityToDate"
+											model-view-value="true" is-open="toDatepicker.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openToDatePicker()"  required>
+											<label for="description" class="LISDynamicLabel">Validity To Date</label>
+											<!-- <input type="text" autocomplete="off" name="code" id="" ng-model="accountPay" class="text-input floating-label">
+											<label for="code">Validity From To<span class="star">*</span></label> -->
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" ng-model="accountPay.accCreditLimit" class="text-input floating-label">
+											<label for="code">Credit Limit<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="row input-container test-master-sample">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-10 col-sm-11 col-md-11 ">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" ng-model="accountPay.accPaymentTerms" class="text-input floating-label">
+											<label for="code">Payment Terms<span class="star">*</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+					<fieldset class="normalRegistration sub-fieldset ">
+						<legend class="sub-legend">Contact details</legend>		
+							<div class="row">
+									<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-10 padding-top10" style="margin-left: -17px;">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-tasks" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11">
+												<div class="">
+													<input type="text" autocomplete="off" name="description" id="" ng-model="accountPay.accAddress" class="text-input floating-label">
+													<label for="description" class="">Address<span class="star">*</span></label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="row input-container margin-top4">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="form-group">
+													<select class="text-input floating-label" name="countryId"
+														ng-model="accountPay.accCountryId" convert-to-number
+														ng-change="getStateByCountry(accountPay.accCountryId)" required>
+														<option ng-repeat="info in countryList"
+															value="{{info.countryId}}">{{info.countryName}}</option>
+													</select> <label for="code">Country</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="row input-container margin-top4">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+												<div class="col-lg-11 col-sm-11 col-md-11 ">
+													<div class="form-group">
+														<select class="text-input floating-label" name="stateId"
+															ng-model="accountPay.accStateId" convert-to-number
+															ng-change="getDistrictByState(accountPay.accStateId)" required>
+															<option ng-repeat="info in stateList" value="{{info.stateId}}">{{info.stateName}}</option>
+														</select> <label for="code">State</label>
+					
+													</div>
+												</div>
+											</div>
+									</div> 
+									<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="row input-container margin-top4">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="form-group">
+													<select class="text-input floating-label" name="districtId" ng-model="accountPay.accDistrictId" convert-to-number ng-change="getCityByDistrict(accountPay.accDistrictId)" required >
+														<option ng-repeat="info in districtList"  value="{{info.districtId}}">{{info.districtName}}</option>
+													</select> <label for="code">District</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+										<div class="row input-container margin-top4">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="form-group">
+													<select class="text-input floating-label" name="cityId" ng-model="accountPay.accCityId"  convert-to-number ng-change="getAreaByCity(accountPay.accCityId)" required>
+														<option ng-repeat="info in cityList" value="{{info.cityId}}">{{info.cityName}}</option>
+													</select> <label for="code">City</label>
+												</div>
+											</div>
+										</div>
+									</div>
+							</div>
+							<div class="row ddp-margin-bottom padding-top5">
+								<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-10 padding-top10">
+									<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+										<div class="row input-container margin-top4">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="form-group">
+													<select class="text-input floating-label" name="areaId" ng-model="accountPay.accAreaId" convert-to-number required>
+														<option ng-repeat="info in areaList" value="{{info.areaId}}">{{info.areaName}}</option>
+													</select> <label for="code">Area</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+												<div class="">
+													<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="accountPay.accZipcode"> <label for="description" class="">Zip Code</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10" style="margin-left: -17px;">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<input type="text" autocomplete="off" name="description" id="" ng-model="accountPay.accContactNumber"
+													class="text-input floating-label dirty"> <label
+													for="description" class="LISDynamicLabel">Contact No.</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							
+							</div>
+				</fieldset>
+				</fieldset>
+				
+				<div class="row padding-top8">
+				
+					<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> (records) 
+									</label>
+								</div>
+				</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow" title="Save" ng-click="saveAccountPay();">
+							<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+						<input type="text" autocomplete="off" class="text-search-box dirty" placeholder="Search"  ng-model="searchKeyword"  style="margin-top: 0px"> 
+						<i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+					
+				</div>
+				<div class="row padding-left-right-set4 margin-top8">
+					<div class="col-md-12">
+						<table class="table table-bordered ">
+							<tr class="">
+								<th class="width6">Code</th>
+								<th class="width10">Description</th>
+								<th class="width10">Address</th>
+								<th class="width8">Mobile</th>
+								<th class="width12">Email</th>
+								<th class="width5">Day</th>
+								<th class="width6">From Time</th>
+								<th class="width6">To Time</th>
+								<th class="width5">Status(n)</th>
+								<th class="width5 text-center">Action taken</th>
+							</tr>
+								<tr ng-repeat=" info in pagination.data |orderBy:column:reverse|filter:searchKeyword">
+									<td>{{info.accCode}}</td>
+									<td>{{info.accDesc}}</td>
+									<td>{{info.accAddress}}</td>
+									<td>{{info.accMobile}}</td>
+									<td>{{info.accEmail}}</td>
+									<td>{{info.accDay}}</td>
+									<td>{{info.accWorkFromTime}}</td>
+									<td>{{info.accWorkToTime}}</td>
+									<td>
+									<label class="switch">
+									<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.accPayableMstId,info.status)">
+									<div class="slider round"></div> </label>
+									</td>
+									<td class="text-center"><a ng-class="{disabled: info.status=='I'}"><i class="fa fa-pencil" aria-hidden="true" ng-click="updateAccount(info);"></i></a></td>
+								</tr>
+							</table> 
+						</div>
+						<div class="row margin-bottom45 center-block">
+							<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+								style="font-size: 14px; cursor: pointer;">
+								<li ng-class="{disabled:pagination.currentPage === 1}"><a
+									ng-click="pagination.setFirstPage(pagination)">First</a>
+								</li>
+								<li ng-class="{disabled:pagination.currentPage === 1}"><a
+									ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+								</li>
+								<li ng-repeat="page in pagination.getPagesList(pagination)"
+									ng-class="{active:pagination.currentPage === page}"><a
+									ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+								</li>
+								<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+									<a ng-click="pagination.setNextPage(pagination)">Next</a>
+								</li>
+								<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+									<a ng-click="pagination.setLastPage(pagination)">Last</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+			</div>
+		</div>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var documentHeight= $(window).height();
+		    var sideBarHeight = documentHeight - 55;
+		 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+			
+			$(".selectedPageName").text("Account Payable Master");
+			$(".sidebar-nav li").each(function() {
+				$(this).find("a").parents("li").removeClass("active");
+			});
+			$('a[href$="accountPayableMaster"]').parents("li").addClass("active");
+		});
+		</script>

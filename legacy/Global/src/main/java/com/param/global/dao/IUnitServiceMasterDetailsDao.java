@@ -1,0 +1,38 @@
+package com.param.global.dao;
+
+import java.util.List;
+
+import com.param.global.billing.dto.TContractServiceDetailsDto;
+import com.param.global.common.Response;
+import com.param.global.dto.UnitServiceMasterDetailsDto;
+import com.param.global.model.UnitServiceMasterDetails;
+
+import in.param.common.dao.IGenericDao;
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+public interface IUnitServiceMasterDetailsDao extends IGenericDao<UnitServiceMasterDetails, Integer>{
+	public Response saveUnitServiceMasterDetails(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getPaginatedUnitServiceMasterDetailsList(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getUnitServiceMasterDetailsCount(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getUnitServiceMasterDetailsById(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response updateUnitServiceMasterDetails(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getAllActiveTax(Integer organizationId) throws ApplicationException;
+	public Response searchPeriodicityServices(int orgId, int unitId, String serviceName)throws ApplicationException;
+	public Response searchProcedureServices(int orgId, int unitId, String serviceName, int specialityId)throws ApplicationException;
+	public Response getProcedureTypeList()throws ApplicationException;
+	public Response getProcedureListByProcedureType(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getPaginatedUnitServiceMasterDetailsListSearch(
+			UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getUnitServiceMasterDetailsListForCyclic(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response getUnitServiceMasterQtyDetailsByServiceId(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response updateUnitServiceMasterDetailsStatus(Integer serviceId, Integer orgId,
+			Integer orgUnitid, Character status);
+	public Response getUnitServiceMasterDetailsByServiceId(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	Response saveContractServiceDetails(List<TContractServiceDetailsDto> masterDtoList) throws ApplicationException;
+	public Response updateTestByServiceMaster(Integer unitId, Integer serviceMasterId, char isOutsource)throws ApplicationException;
+	public Response UnitServiceMasterDetailsForSchedulingWorking(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+	public Response unitServiceMasterDetailsForSchedulingWorkingDetails(
+			UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)throws ApplicationException;
+
+    public Response getAdminServicesForConfiguration(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto) throws ApplicationException;
+}

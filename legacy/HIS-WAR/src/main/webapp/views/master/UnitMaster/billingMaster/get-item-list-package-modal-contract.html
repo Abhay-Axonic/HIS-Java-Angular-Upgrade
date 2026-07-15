@@ -1,0 +1,71 @@
+<div class="row common-popup-height-350">
+<div class="row his-style" >
+<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right margin-top5">
+							<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchServiceFilterPharmacy" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+						</div>
+	</div>
+						<div class="col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="width1 text-center media-middle ">
+											<input type="checkbox" ng-model="selectAllItem" ng-change="selectAllItems(selectAllItem)" />
+										</th>
+										<th class="width10">Asset Category
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Product Category
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Item Code
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+										<th class="width10">Item Name
+											<div class="float_right">
+												<div>
+													<i class="fa fa-caret-up" aria-hidden="true"></i>
+												</div>
+												<div class="margin-top-8">
+													<i class="fa fa-caret-down" aria-hidden="true"></i>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in searchItemList | filter:searchServiceFilterPharmacy">
+										<td class="text-center">
+											<input ng-model="item.isSelected" type="checkbox"  />
+										</td>
+										<td>{{item.assetCategory}}</td>
+                    					<td>{{item.productCategory}}</td>
+										<td>{{item.itemCode}}</td>
+                    					<td>{{item.itemName}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+<!-- **************************************  get item list Modal END  ************************************** -->

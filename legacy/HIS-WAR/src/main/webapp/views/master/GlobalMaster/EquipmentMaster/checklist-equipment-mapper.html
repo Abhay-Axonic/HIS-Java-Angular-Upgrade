@@ -1,0 +1,186 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Consent Master</legend> -->
+			<div class="row margin-top10">
+			<form name="checklistEquipmentMapperForm" novalidate>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-th-list" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10 ">
+							<div><!-- class="form-group"   show-errors -->
+								<select class="text-input floating-label" name="checklistEquipmentMasterId" ng-model="checklistMapperObj.checklistEquipmentMasterId" convert-to-number>
+									<option ng-repeat="info in checklistEquipmentList" ng-if="info.status=='A'" value="{{info.checklistEquipmentMasterId}}">{{info.checklistName}}</option>
+								</select>
+								<label for="code">Checklist Name</label>
+								<!-- <p class="help-block" ng-if="checklistEquipmentMapperForm.checklistEquipmentMasterId.$error.required">Checklist Name is required</p> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-th-list" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10 ">
+							<div><!-- class="form-group"   show-errors -->
+								<select class="text-input floating-label" ng-model="checklistMapperObj.assetCategoryId" ng-change="getProductCategoryList(checklistMapperObj.assetCategoryId)" convert-to-number>
+									<option ng-repeat="info in assetCategoriesList" value="{{info.id}}">{{info.category}}</option>
+								</select>
+								<label for="code">Asset Category</label>
+								<!-- <p class="help-block" ng-if="checklistEquipmentMapperForm.assetCategoryId.$error.required">Asset Category is required</p> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-th-list" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10 ">
+							<div><!-- class="form-group"   show-errors -->
+								<select class="text-input floating-label" ng-model="checklistMapperObj.productCategoryId" convert-to-number>
+									<option ng-repeat="info in productCategoriesList" value="{{info.id}}">{{info.category}}</option>
+								</select>
+								<label for="code">Product Category</label>
+								<!-- <p class="help-block" ng-if="checklistEquipmentMapperForm.assetCategoryId.$error.required">Product Category is required</p> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10 ">
+							<div><!-- class="form-group"   show-errors -->
+								<input type="text" autocomplete="off" name="" class="text-input floating-label" ng-model="checklistMapperObj.itemCode"> 
+								<label for="code">Item Code</label>
+								<!-- <p class="help-block" ng-if="checklistEquipmentMapperForm.consentTypeId.$error.required">Item Code is required</p> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-10 col-md-10 ">
+							<div><!-- class="form-group"   show-errors -->
+								<input type="text" autocomplete="off" name="" class="text-input floating-label" ng-model="checklistMapperObj.itemName"> 
+								<label for="code">Item Name</label>
+								<!-- <p class="help-block" ng-if="checklistEquipmentMapperForm.consentTypeId.$error.required">Item Name is required</p> -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			</div>
+		</fieldset>
+		
+			
+			<div class="row padding-top10">
+				<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+								<div class="search">
+									<label class="show-entries">Show 
+									<select ng-init="pagination.pageSize='10'" 
+										ng-model="pagination.pageSize" 
+										ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+											<option value="10">10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+									</select> records 
+									</label>
+								</div>
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto"> <!-- add by minesh for dynamic button -->
+			    	<a href="" class="btn btn-primary btn-save-box-shadow" title="{{saveBtnFlag ? 'Save' : 'Update' }}" ng-click="saveChecklistEquipmentMapperMaster();">
+			    	<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			    </div>
+			    <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+			    	<input type="text" autocomplete="off" class="text-search-box ng-pristine ng-untouched ng-valid ng-empty search-popUp-ddl" 
+			    	placeholder="Search" style="margin-top:0px" ng-model="searchKeyword">
+			        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			    </div>
+			</div>
+			
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="width12">Checklist Name</th>
+							<th class="width10">Asset Category</th>
+							<th class="width10">Product Category</th>   
+							<th class="width8">Item Code</th>
+							<th class="width10">Item Name</th>
+							<th class="width5">Status(n)</th>
+							<th class="width5 text-center">Action taken</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in pagination.data|filter:searchKeyword">
+							<td class="width12">{{info.checklistEquipmentName}}</td>
+							<td class="width10">{{info.assetCategoryName}}</td>
+							<td class="width10">{{info.productCategoryName}}</td>
+							<td class="width8">{{info.itemCode}}</td>
+							<td class="width10">{{info.itemName}}</td>
+							<td  class="width5">
+								<label class="switch vertical-middle"> 
+										<input type="checkbox" ng-model="info.status" ng-true-value="'A'" ng-false-value="'I'" ng-change="updateStatus(info.checklistEquipmentMapperMasterId,info.status)">
+										<div class="slider round"></div>
+									</label>
+							</td>
+							<td class="text-center width5">
+							  <a>
+								<a><i class="fa fa-pencil" aria-hidden="true" ng-click="update(info,2);"></i></a>
+							  </a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+		</div>
+		<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+	</div>
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+ 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+});	
+	$(".selectedPageName").text("Checklist Equipment Mapper");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="checklistEquipmentMapper"]').parents("li").addClass("active");
+</script>

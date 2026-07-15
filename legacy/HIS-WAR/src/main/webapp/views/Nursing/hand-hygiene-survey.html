@@ -1,0 +1,182 @@
+<style>
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+      border-radius: 10px;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    .container {
+      padding: 2px 16px;
+    }
+    .card-body{
+    margin-left:6px;
+    }
+    .labelName{
+    color:#212325;
+    }
+    .checkText{
+    margin-top:20px;
+    }
+    .text-center {
+        text-align: center;
+        margin-top: 3px; /* Adjust as needed */
+    }
+</style>
+
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <fieldset>
+            <!-- <legend class="heading-div">Department Master</legend> -->
+            <div class="row margin-top10">
+                <div class="card" style="margin-left: 5px;margin-right: 5px">
+                    <form name="medicationErrorReporting" novalidate ng-submit="submitForm()">
+                        <div class="text-center">
+                            <h3>Hand hygiene staff survey</h3>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                        <i class="fa fa-flag" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="form-group"  show-errors>
+                                            <select class="text-input floating-label" name="ward" ng-model="wardId" ng-change="getSaveAsDraftHandHygiene(wardId)" required="required">
+                                                <option ng-repeat="info in wardList" value="{{info.wardId}}">{{info.wardName}}</option>
+                                            </select> <label for="code">Ward<span class="star">*</span></label>
+                                            <p class="help-block" ng-if="bedForm.ward.$error.required">Ward is required</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+<!--                        <div class="row">-->
+<!--                            <div class="col-lg-12 col-sm-12 col-md-12 padding-left-right-set4 padding-top10" >-->
+<!--                                <label class="labelName"><b>Hand hygiene staff survey</b></label><br>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+
+
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6 col-md-6 padding-top10">
+                                <label class="labelName"><b>1. Did you receive education in hand hygiene in the last year?</b> </label><br>
+                                <label class="labelName"> Yes</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value="" ng-model="checkBox1" ng-click="prescribing(1,0)">
+                                <label class="labelName"> No</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value="" ng-model="checkBox2" ng-click="prescribing(1,1)">
+
+                                <div class="checkText">
+                                    <label class="labelName"><b>3. What effort is required for you to perform good hand hygiene?</b></label><br>
+                                    <label class="labelName" style="margin-left: 55px;"> 0</label>
+                                    <label class="labelName" style="margin-left: 6px;"> 1</label>
+                                    <label class="labelName" style="margin-left: 6px;"> 2</label>
+                                    <label class="labelName" style="margin-left: 6px;"> 3</label>
+                                    <label class="labelName" style="margin-left: 6px;"> 4</label><br>
+                                    <label class="labelName"> No effort </label>
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox5" ng-click="prescribing(3,0)">
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox6" ng-click="prescribing(3,1)">
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox7" ng-click="prescribing(3,2)">
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox8" ng-click="prescribing(3,3)">
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox9"  ng-click="prescribing(3,4)">
+                                    <label class="labelName">A big effort</label>
+                                </div>
+
+                                <div class="checkText">
+                                    <label class="labelName"><b>5. Who do you want to remind you to perform hand hygiene? (Check all that apply)</b></label><br>
+                                    <label class="labelName"> Poster</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox14" ng-click="prescribing(5,0)">
+                                    <label class="labelName"> Sister/Nurse</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox15" ng-click="prescribing(5,1)">
+                                    <label class="labelName"> Demonstration</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox16" ng-click="prescribing(5,2)">
+                                </div>
+
+                               <div class="checkText">
+                                   <label class="labelName"><b>7. Do you want such demonstration to be repeated in future?</b></label><br>
+                                   <label class="labelName"> Yes</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox22" ng-click="prescribing(7,0)">
+                                   <label class="labelName"> No</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox23" ng-click="prescribing(7,1)">
+                               </div>
+
+                                <div class="checkText">
+                                   <label class="labelName"><b>9. Has this demonstration changed your hand hygiene practice?</b></label><br>
+                                   <label class="labelName"> Yes</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox28" ng-click="prescribing(9,0)">
+                                   <label class="labelName"> No</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox29" ng-click="prescribing(9,1)">
+                               </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-md-6">
+                                <label class="labelName"><b>2. Do you routinely use an alcohol-based hand rub for hand hygiene?</b></label><br>
+                                <label class="labelName"> Yes</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value="" ng-model="checkBox3" ng-click="prescribing(2,0)">
+                                <label class="labelName"> No</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value="" ng-model="checkBox4" ng-click="prescribing(2,1)">
+
+                                <div class="checkText">
+                                    <label class="labelName"><b>4. Do you need reminder to perform hand hygeine practice at various point of care?</b></label><br>
+                                    <label class="labelName"> Never</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value="" ng-model="checkBox10" ng-click="prescribing(4,0)">
+                                    <label class="labelName"> Sometime</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value="" ng-model="checkBox11" ng-click="prescribing(4,1)">
+                                    <label class="labelName"> often</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value="" ng-model="checkBox12" ng-click="prescribing(4,2)">
+                                    <label class="labelName"> Always</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value="" ng-model="checkBox13" ng-click="prescribing(4,3)">
+                                </div>
+
+                                <div class="checkText">
+                                    <label class="labelName"><b>6. How effective did you find the demonstration of hand hygiene performed on 5th May 2017?</b></label><br>
+                                    <label class="labelName" style="margin-left: 79px;"> 0</label>
+                                    <label class="labelName" style="margin-left: 5px;"> 1</label>
+                                    <label class="labelName" style="margin-left: 5px;"> 2</label>
+                                    <label class="labelName" style="margin-left: 5px;"> 3</label>
+                                    <label class="labelName" style="margin-left: 5px;"> 4</label><br>
+                                    <label class="labelName"> Not effective </label>
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox17" ng-click="prescribing(6,0)">
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox18" ng-click="prescribing(6,1)">
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox19" ng-click="prescribing(6,2)">
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox20" ng-click="prescribing(6,3)">
+                                    <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox21" ng-click="prescribing(6,4)">
+                                    <label class="labelName">Very effective</label>
+                                </div>
+
+                                <div class="checkText">
+                                    <label class="labelName"><b>8. If yes, then how frequent do you want such demonstration?</b></label><br>
+                                    <label class="labelName"> Monthly</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox24" ng-click="prescribing(8,0)">
+                                    <label class="labelName"> Bimonthly</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox25" ng-click="prescribing(8,1)">
+                                    <label class="labelName"> Half-yearly</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox26" ng-click="prescribing(8,2)">
+                                    <label class="labelName"> Annually</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox27" ng-click="prescribing(8,3)">
+                                </div>
+
+                                <div class="checkText">
+                                    <label class="labelName"><b>10. In future, do you want the result of your hand hygiene demo to be:</b></label><br>
+                                    <label class="labelName"> Revealed</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox30" ng-click="prescribing(10,0)">
+                                    <label class="labelName"> Concealed</label> <input type="checkbox" name="patient-list-radio2" ng-true-value="'Y'" ng-false-value="'N'"value=""  ng-model="checkBox31" ng-click="prescribing(10,1)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 10px">
+
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveRack()">
+                                    Disable</a>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <button type="submit" href=""  class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveHandHygieneSurvey('N')">
+                                    <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></button>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                                <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveHandHygieneSurvey('Y')">
+                                    Draft</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+<script>
+    var documentHeight = $(window).height();
+    var sideBarHeight = documentHeight - 55;
+    $("#page-content-wrapper").css("height", sideBarHeight + "px");
+    $(".selectedPageName").text("Department Master");
+    $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+    });
+    $('a[href$="specialityMaster"]').parents("li").addClass("active");
+</script>

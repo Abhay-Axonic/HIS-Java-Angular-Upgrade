@@ -1,0 +1,298 @@
+<!-- /********************************************************************************************************************************************
+Procurement - Work Order - Details Work Order creation page
+Created by - Pranita Patil
+Created Date - 23-July-2018 
+/********************************************************************************************************************************************/ -->
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+	<div class="container-fluid his-style">
+		<fieldset class="main-fieldset">
+			<div class="row margin-top10">
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10" title="{{vm.model.itemDetails}}">
+						<b class="padding-right10 ">WO No. :</b>{{vm.model.itemDetails.wrNo}}</span>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">WO Date:</b>
+						{{vm.model.itemDetails.addedDate | date:'dd/MM/yyyy': 'UTC'}}
+					</span>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Store :</b>{{vm.model.itemDetails.store}}</span>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Contract Type :</b>{{vm.model.itemDetails.contractType}}</span>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10 text-width-auto">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Vendor:</b> {{vm.model.itemDetails.vendorName}}
+					</span>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Against: </b>{{vm.model.itemDetails.requestType}}
+						</b> </span>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Status: </b>{{vm.model.itemDetails.status}}
+						</b> </span>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10">
+						<b class="padding-right10 ">Added By :</b> {{vm.model.itemDetails.addedBy}}
+						</b> </span>
+				</div>
+			</div>
+
+			<div class="row margin-top10">
+				<div class="col-lg-12 col-md-12 table-x-scroll padding-top10">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="width8">Asset Code</th>
+								<th class="width8">Asset Name</th>
+								<th class="width5">Serial No</th>
+								<th class="width5">Pending WR/QR Qty</th>
+								<th class="width5">WR/QR Amount</th>
+								<th class="width5">Workorder Qty</th>
+								<th class="width5">Bonus Qty</th>
+								<th class="width5">Amount</th>
+								<th class="width6">Discount %</th>
+								<th class="width5">Tax Code</th>
+								<th class="width5">Tax %</th>
+								<th class="width5">Total Amount</th>
+								<th class="width6">Discount Amt</th>
+								<th class="width5">Tax Amt</th>
+								<th class="width6">Net Amt</th>
+								<th class="width10">Inclusion Details</th>
+								<th class="width10">Exclusion Details</th>
+								<th class="width10">Payment Terms</th>
+								<th class="width6">Remarks</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr data-ng-repeat="item in vm.model.itemDetails.items | orderBy:sortType:sortReverse">
+								<td class="width2" title="{{item.itemCode}}">{{item.itemCode}}</td>
+								<td class="width6" title="{{item.itemName}}">{{item.itemName}}</td>
+								<td class="width8" title="{{item.batchNo}}">{{item.batchNo}}</td>
+								<td name="wrQuantity">{{item.quantity ?item.quantity :'-'}}</td>
+								<td name="wrAmount">{{item.amount ?item.amount :'-'}}</td>
+								<td>{{item.woQty|| 0}} </td>
+								<td>{{item.bonusQuantity|| 0}} </td>
+								<td>{{vm.model.Currency}} {{item.woAmount|| 0 | number:2}}</td>
+								<td>{{item.discountPercentage || 0 | number:2}}</td>
+								<td>{{item.taxName}} </td>
+								<td>{{vm.model.Currency}} {{item.taxPercent || 0 | number:2}}</td>
+								<td>{{vm.model.Currency}} {{item.totalAmount|| 0 | number:2}} </td>
+								<td>{{vm.model.Currency}} {{item.discountAmount|| 0 | number:2}}</td>
+								<td name="taxAmount"> {{(item.taxAmount || 0) | number:2}} </td>
+								<td name="netAmount">{{vm.model.Currency}} {{(item.netAmount ||0) | number:2}}</td>
+								<td class="width9 text-center media-middle">
+									<a><i class="fa fa-info-circle"
+											ng-click="vm.model.OpenPopup('Open', 'inclusionDetails');vm.model.ViewTerms('inclusionDetails', item)"
+											aria-hidden="true" title="Inclusion Details"></i></a>
+								</td>
+								<td class="text-center">
+									<a><i class="fa fa-info-circle"
+											ng-click="vm.model.OpenPopup('Open', 'exclusionDetails');vm.model.ViewTerms('exclusionDetails', item)"
+											aria-hidden="true" title="Exclusion Details"></i></a>
+								</td>
+								<td class="text-center">
+									<a><i class="fa fa-info-circle" ng-class="{bgRed: item.isValidPaymentTerms}"
+											ng-click="vm.model.OpenPopup('Open', 'paymentTerms'); vm.model.ViewTerms('paymentTerms', item)"
+											aria-hidden="true" title="Payment Terms"></i></a>
+								</td>
+								<td title="{{item.remark}}">{{item.remark}}</td>
+
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<footer class="col-lg-12 col-md-12 col-sm-12 ">
+				<div class="row padding-right20">
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4">
+						<table class="table table-bordered">
+							<tfoot class="">
+								<!-- table-th-bg -->
+								<tr>
+									<th class="width8">
+										<label>Total Amount</label>
+									</th>
+									<th class="width15">
+										<label> {{vm.model.Currency}}
+											{{(vm.model.itemDetails.totalAmount || 0) | number:2}}</label>
+									</th>
+									<th class="width8">
+										<label>Total Discount</label>
+									</th>
+									<th class="width15">
+										<label>{{vm.model.Currency}}
+											{{(vm.model.itemDetails.totalDiscount  || 0) | number:2}}</label>
+									</th>
+									<th class="width8">
+										<label>Total Tax</label>
+									</th>
+									<th class="width15">
+										<label> {{vm.model.Currency}}
+											{{(vm.model.itemDetails.totalTax || 0) | number:2}}</label>
+									</th>
+									<th class="width8">
+										<label>Net Amount</label>
+									</th>
+									<th class="width15">
+										<label>{{vm.model.Currency}}
+											{{(vm.model.itemDetails.netAmount  || 0) | number:2}}</label>
+									</th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+				<div class="row his-style margin-top10 padding-right20">
+					<div class="col-lg-1 col-md-1 col-sm-2 text-right">
+						<label>Remark:</label>
+					</div>
+					<div class="col-lg-10 col-md-10 col-sm-8 padding-left-right8">
+						<textarea rows="1" class="form-control" readonly>{{vm.model.itemDetails.remark}}</textarea>
+					</div>
+					<div class="col-lg-1 col-md-1 col-sm-2 "
+						style="padding-right:30px !important;  padding-left:0px !important;">
+						<a href="#/workOrderCreation">
+							<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</footer>
+		</fieldset>
+	</div>
+</div>
+<div id="inclusionDetails" class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Inclusion Details
+					<button type="button" class="close"
+						ng-click="vm.model.ClosePopup('Close', 'inclusionDetails')">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set padding-top4">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="form-group">
+							<span>Inclusion Details</span>
+							<textarea ng-model="vm.model.inclusionDetails" rows="6" readonly></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 	<div class="modal-footer">
+				<div class="modal-footer" style="border:none;">
+					<button type="button" ng-click="vm.model.SaveTerms('inclusionDetails')" class="btn btn-primary">Save</button>
+				</div>
+			</div> -->
+		</div>
+	</div>
+</div>
+<div id="exclusionDetails" class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Exclusion Details
+					<button type="button" class="close"
+						ng-click="vm.model.ClosePopup('Close', 'exclusionDetails')">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set padding-top4">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="form-group">
+							<span>Exclusion Details</span>
+							<textarea ng-model="vm.model.exclusionDetails" rows="6" readonly></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="modal-footer">
+				<div class="modal-footer" style="border:none;">
+					<button type="button" ng-click="vm.model.SaveTerms('exclusionDetails')" class="btn btn-primary">Save</button>
+				</div>
+			</div> -->
+		</div>
+	</div>
+</div>
+<div id="paymentTerms" class="modal fade ng-scope in common-small-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Payment Terms
+					<button type="button" class="close"
+						ng-click="vm.model.ClosePopup('Close', 'paymentTerms')">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set padding-top4">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="form-group">
+							<span>Payment Terms</span>
+							<textarea ng-model="vm.model.paymentTerms" rows="6" readonly></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 	<div class="modal-footer">
+				<div class="modal-footer" style="border:none;">
+					<button type="button" ng-click="vm.model.SaveTerms('paymentTerms')" class="btn btn-primary">Save</button>
+				</div>
+			</div> -->
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".selectedPageName").text("Work Order Creation");
+		$(".sidebar-nav li").each(function () {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="detailsWorkorderCreation"]').parents("li").addClass("active");
+
+		/*************************** rejection radio button function*********************************/
+		$(".add-new-item-row").hide();
+		$(".rejection-details-row1").hide();
+		$(".get-request-row").hide();
+		$(".addNewItemRadioBtnClass").change(function () {
+			if ($(this).is(":checked")) {
+				$(".add-new-item-row").show('slow');
+				$(".get-request-row").hide('slow');
+			}
+		});
+		$(".getRequestListBtnClass").change(function () {
+			if ($(this).is(":checked")) {
+				$(".add-new-item-row").hide('slow');
+				$(".get-request-row").show('slow');
+			}
+		});
+
+	});
+	/*************************** add button function start*********************************/
+	$(".radioRejected1").change(function () {
+		if ($(this).is(":checked")) {
+			$(this).closest(".row").siblings(".rejection-details-row1").show();
+		}
+	});
+	$(".radioAcceptedHold1").change(function () {
+		if ($(this).is(":checked")) {
+			$(this).closest(".row").siblings(".rejection-details-row1").hide();
+		}
+	});
+
+</script>
+<script src="resources/assets/js/common/page-height.js"></script>

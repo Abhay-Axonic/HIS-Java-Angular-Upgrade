@@ -1,0 +1,49 @@
+package com.param.adt.master.unit.dao;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import com.param.adt.common.Response;
+import com.param.adt.master.global.dto.VisitTypeMasterDto;
+import com.param.adt.master.unit.dto.BillingBedCategoryMasterDto;
+import com.param.adt.master.unit.dto.CorporateStatementChecklistMasterDto;
+import com.param.adt.master.unit.model.BillingBedVisitTypeMapper;
+import com.param.adt.master.unit.model.CorporateStatementChecklistVisitTypeMapper;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+@Transactional
+public interface ICorporateStatementChecklistMasterDao {
+
+	Response getCorporateStatementChecklistByName(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto) throws ApplicationException;
+
+	Response saveCorporateStatementChecklistMaster( CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+     Integer saveCorporateStatementChecklistMasterVisitTypeMapper( CorporateStatementChecklistVisitTypeMapper corporateStatementChecklistVisitTypeMapper)throws ApplicationException;
+
+    Response getCorporateStatementChecklistMasterList(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response getCorporateStatementChecklistMasterCount( CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response getActiveCorporateStatementChecklistMaster(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response getCorporateStatementChecklistMasterById(int corporateStatementChecklistId, int orgId, int unitId)throws ApplicationException;
+
+	Response getCorporateStatementChecklistByNameNotById(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response updateCorporateStatementChecklistMaster(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	Response updatePreviousVisitTypeList( CorporateStatementChecklistVisitTypeMapper corporateStatementChecklistVisitTypeMapper)throws ApplicationException;
+
+	Integer saveCorporateStatementListBedVisitTypeMapper(CorporateStatementChecklistVisitTypeMapper corporateStatementChecklistVisitTypeMapper)throws ApplicationException;
+
+	Response updateCorporateStatementChecklistMasterStatus(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	List<VisitTypeMasterDto> getCorporateStatementChecklistVistList(CorporateStatementChecklistMasterDto corporateStatementMasterDto)throws ApplicationException;
+
+
+	Response getCorporateStatementChecklistMasterListAll(CorporateStatementChecklistMasterDto corporateStatementChecklistMasterDto)throws ApplicationException;
+
+	
+}

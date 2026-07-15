@@ -1,0 +1,703 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+        <div class="row margin-top10 padding-left-right-set4">
+			<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4" style="padding-top: 8px;">
+        		<div class="row" ng-hide="dropdown == 'Y'">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+						 		<div class="row input-container padding-top2">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<select class="text-input floating-label" ng-model="visitTypeIdflag" ng-change="init()">
+											<option value="3">Day Care</option>
+													<option value="2">In patient</option>
+											</select>
+											<label for="code">Visit Type</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div>
+						</div>
+						
+       <div class="row margin-top10 padding-left-right-set4">
+			<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4" style="padding-top: 8px;">
+			
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 text-center">
+								<div class="color-indiction-green-div" style="border-radius: 50%; height: 15px; width: 15px;"></div>
+							</div>
+							<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set0 long-text-overflow">
+								<span class="color-indication-green-span">Service Rendered</span><!--  (s)  -->
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 text-center">
+								<div class="color-indiction-yellow-div" style="border-radius: 50%; height: 15px; width: 15px;"></div>
+							</div>
+							<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set0">
+								<span class="color-indication-orange-span">Service-Not requested</span><!--  (s)  -->
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 text-center">
+								<div class="color-indiction-Red-div" style="border-radius: 50%; height: 15px; width: 15px;"></div>
+							</div>
+							<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set0">
+								<span class="color-indication-red-span">Service-Pending</span><!--  (s)  -->
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+        
+        <div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll475">
+			  <table id="main-table" class="main-table width100">
+			    <thead>
+			      <tr class="">
+						<!-- <th class="UHID-width">
+							UHID
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th> -->
+						<th class="width30 text-center">
+							Patient Details
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width10 text-center" ng-hide="visitTypeId == 4">
+							Doctor
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width8 text-center" ng-hide="visitTypeId == 4">
+							Specialty
+						</th>
+						<!-- <th class="UHID-width">
+							Ward - Bed No.
+						</th> -->
+						<th class="width12 text-center">
+							Ward
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width6 text-center">
+							Ward Bed No.
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Lab Service
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Radiology Service
+						<!-- 	<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Clinical Service
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Other Service
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Sales Return
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Pharmacy
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Medication at Hospital Discharge
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Hospital Discharge Summary
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Visitor Pass
+						<!-- 	<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Action taken
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+					</tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-if="info.visitTypeId==3" ng-repeat="info in listOfAdmittedPatientList | filter : search">
+						<!-- <td>
+							<div>{{info.uhidnumber}}</div>
+						</td> -->
+						<!-- <td ng-init='age=getAge(info.dob)'>
+									<div ng-if="info.patientId > 0">{{info.pFirstName+' '+age+'/'+info.genderCode}}</div>
+									<div  ng-if="info.tPatientId > 0">{{info.pFirstName+' '+info.dob+'/'+info.genderCode}}</div>
+						</td> -->
+						<td class="text-center width15"><!-- Patient Details -->
+							<div class="row patient-details" id="45#1247#2_new" >
+								<div class="col-lg-4 col-sm-12 col-md-4">
+									<div class="" >
+										<img ng-src="{{(info.imagePath!=null&&info.imagePath!='')?info.imagePath:(info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="40" height="40" ng-click="patientDocumnetInformation(info)" >
+									</div>
+								</div>
+								<div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+									<div class="patient-name">{{info.prefixDesc+' '+info.pFirstName}}</div>
+									<div class="patient-details">
+										<span class="patient-details patient">{{info.age}}/ </span>
+										<span class="patient-details patient">{{info.genderCode}}</span>
+									<!-- 	<span class="patient-details patient" >||||||
+										<span class="patient-details patient" >info</span> -->
+									</div>
+									<div class="patient">{{info.uhidnumber}}</div>
+								</div>
+							</div>
+						</td>
+						<td ng-hide="visitTypeId == 4" class="text-left"><!-- Doctor Details -->
+							<div>Dr. {{info.dFirstName}}</div>
+						</td>
+						<td ng-hide="visitTypeId == 4" class="text-left">
+							{{info.specialityName}}
+						</td>
+						<td class="text-left"><!-- Ward - Bed No. -->
+							<div ng-if="info.bedNumber != null">{{info.floorName !='' ? info.floorName +'' : '' }}</div>
+							<div ng-if="info.bedNumber == null">{{info.erBedTypeAllocationDesc}}</div>
+						</td>
+						<td class="text-left">
+							{{info.bedNumber}}
+						</td>
+						<td class="vertical-middle"><!--  Location -->
+							<div class="text-center">
+								<div ng-if="info.labCountYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.labCountYellow > 0 && info.labCountRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.labCountYellow > 0 && info.labCountRed == 0 ">
+									<div class="service-indication bg-green"></div>
+								</div>
+								<!-- <div class="service-indication bg-green"></div> -->
+							</div>
+						</td>
+						<td class="vertical-middle"><!-- Lab Service -->
+							<div class="text-center">
+								<!-- <div class="service-indication bg-red"></div> -->
+								<div ng-if="info.radiologyCountYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.radiologyCountYellow > 0 && info.radiologyCountRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.radiologyCountYellow > 0 && info.radiologyCountRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+							</div>
+						</td>
+						
+						<td class="vertical-middle"><!-- Radiology Service -->
+							<div class="text-center">
+								<!-- <div class="service-indication bg-green"></div> -->
+								<div ng-if="info.procedureYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.procedureYellow > 0 && info.procedureRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.procedureYellow > 0 && info.procedureRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+								
+							</div>
+						</td>
+						<td class="vertical-middle"><!-- Procedure -->
+							<div class="text-center">
+								<!-- <div class="service-indication bg-red"></div> -->
+								<div ng-if="info.otherSerCountYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.otherSerCountYellow > 0 && info.otherSerCountRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.otherSerCountYellow > 0 && info.otherSerCountRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+								
+							</div>
+						</td>
+						<td class="vertical-middle"><!-- Other Service -->
+							<div class="text-center">
+								<!-- <div class="service-indication bg-yellow"></div> -->
+								<div ng-if="info.salesYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.salesYellow > 0 && info.salesRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.salesYellow > 0 && info.salesRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+							</div>
+						</td>
+						<td class="vertical-middle"><!-- Sales Return -->
+							<div class="text-center">
+								<!-- <div class="service-indication bg-yellow"></div> -->
+								<div ng-if="info.pharmecyYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.pharmecyYellow > 0 && info.pharmecyRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.pharmecyYellow > 0 && info.pharmecyRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+							</div>
+						</td>
+						<td class="vertical-middle"><!-- Pharmacy -->
+							<div class="text-center">
+								<div ng-if="info.dischargeMedicationYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.dischargeMedicationYellow > 0 && info.dischargeMedicationRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.dischargeMedicationYellow > 0 && info.dischargeMedicationRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+							</div>
+						</td>
+						
+						<td class="vertical-middle">
+							<div class="text-center">
+								<!-- <div class="service-indication bg-green"></div> -->
+								<div ng-if="info.dischargeSummaryGreen > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.dischargeSummaryGreen == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+								<!-- <div ng-if="info.dischargeSummaryYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div> -->
+							</div>
+						</td>
+						<td class="vertical-middle">
+							<div class="text-center">
+								<!-- <div class="service-indication bg-yellow"></div> -->
+								<div ng-if="info.visitorPassYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.visitorPassYellow > 0 && info.visitorPassRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.visitorPassYellow > 0 && info.visitorPassRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>  
+							</div>
+						</td>
+						<td class="vertical-middle">
+							<!-- <input type="button" value="Submit" ng-disabled="info.labCountRed >0 || info.radiologyCountRed > 0 || info.otherSerCountRed > 0 || info.salesRed > 0 || info.procedureRed > 0 || info.pharmecyRed > 0 || info.visitorPassRed > 0 || info.dischargeSummaryGreen > 0 || info.dischargeMedicationRed > 0 " ng-click="finalDischarge(info.dischargeId,info.admissionId,info.visitTypeId)" class="btn btn-primary btn-save-box-shadow"> -->
+							<input type="button" value="Submit" id="submit{{info.visitTypeId}}{{info.admissionId}}" style="    padding: 8px !important;"  ng-click="checkPendingStuff(info)" class="btn btn-primary btn-save-box-shadow">
+						</td>
+					</tr>
+					
+					<tr ng-if="info.visitTypeId==2 || info.visitTypeId==4" ng-repeat="info in listOfAdmittedPatientList | filter : search">
+						<!-- <td>
+							<div>{{info.uhidnumber}}</div>
+						</td> -->
+						<!-- <td ng-init='age=getAge(info.dob)'>
+									<div ng-if="info.patientId > 0">{{info.pFirstName+' '+age+'/'+info.genderCode}}</div>
+									<div  ng-if="info.tPatientId > 0">{{info.pFirstName+' '+info.dob+'/'+info.genderCode}}</div>
+								</td> -->
+								<td class="text-center width15">
+									<div class="row patient-details" id="45#1247#2_new" >
+										<div class="col-lg-4 col-sm-12 col-md-4">
+											<div class="" >
+												<img ng-src="{{(info.imagePath!=null && info.imagePath!='') ? info.imagePath : (info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="40" height="40" ng-click="patientDocumnetInformation(info)" >
+											</div>
+										</div>
+										<div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+											<div class="patient-name">{{info.prefixDesc+' '+info.pFirstName}}
+										</div>
+										<div class="patient-details">
+											<span class="patient-details patient">{{info.genderCode}}/</span>
+											<span class="patient-details patient">{{info.age}}
+										<!-- 	<span class="patient-details patient" >||||||
+											<span class="patient-details patient" >info</span> -->
+											</span></span>
+										</div>
+										<div class="patient">{{info.uhidnumber}}</div>
+									</div>
+								</div>
+							</td>
+							<td ng-hide="visitTypeId == 4" class="text-left">
+							<div>Dr. {{info.dFirstName}}</div>
+						</td>
+						<td ng-hide="visitTypeId == 4" class="text-left">
+							{{info.specialityName}}
+						</td>
+						<td class="text-left">
+							<div ng-if="info.bedNumber != null">{{info.floorName !='' ? info.floorName +'' : '' }}</div>
+							<div ng-if="info.bedNumber == null">{{info.erBedTypeAllocationDesc}}</div>
+						</td>
+						<td>
+							{{info.bedNumber}}
+						</td>
+						<td class="vertical-middle">
+							<div class="text-center">
+								<div ng-if="info.labCountYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.labCountYellow > 0 && info.labCountRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.labCountYellow > 0 && info.labCountRed == 0 ">
+									<div class="service-indication bg-green"></div>
+								</div>
+								<!-- <div class="service-indication bg-green"></div> -->
+							</div>
+						</td>
+						<td class="vertical-middle">
+							<div class="text-center">
+								<!-- <div class="service-indication bg-red"></div> -->
+								<div ng-if="info.radiologyCountYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.radiologyCountYellow > 0 && info.radiologyCountRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.radiologyCountYellow > 0 && info.radiologyCountRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+							</div>
+						</td>
+						
+						<td class="vertical-middle">
+							<div class="text-center">
+								<!-- <div class="service-indication bg-green"></div> -->
+								<div ng-if="info.procedureYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.procedureYellow > 0 && info.procedureRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.procedureYellow > 0 && info.procedureRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+								
+							</div>
+						</td>
+						<td class="vertical-middle">
+							<div class="text-center">
+								<!-- <div class="service-indication bg-red"></div> -->
+								<div ng-if="info.otherSerCountYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.otherSerCountYellow > 0 && info.otherSerCountRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.otherSerCountYellow > 0 && info.otherSerCountRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+								
+							</div>
+						</td>
+						<td class="vertical-middle">
+							<div class="text-center">
+								<!-- <div class="service-indication bg-yellow"></div> -->
+								<div ng-if="info.salesYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.salesYellow > 0 && info.salesRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.salesYellow > 0 && info.salesRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+							</div>
+						</td>
+						<td class="vertical-middle">
+							<div class="text-center">
+								<!-- <div class="service-indication bg-yellow"></div> -->
+								<div ng-if="info.pharmecyYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.pharmecyYellow > 0 && info.pharmecyRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.pharmecyYellow > 0 && info.pharmecyRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+							</div>
+						</td>
+						<td class="vertical-middle">
+							<div class="text-center">
+								<div ng-if="info.dischargeMedicationYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.dischargeMedicationYellow > 0 && info.dischargeMedicationRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.dischargeMedicationYellow > 0 && info.dischargeMedicationRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>
+							</div>
+						</td>
+						
+						<td class="vertical-middle">
+							<div class="text-center">
+								<!-- <div class="service-indication bg-green"></div> -->
+								<div ng-if="info.dischargeSummaryGreen == 0 ">
+									<div class="service-indication bg-green"></div>
+								</div>
+								<div ng-if="info.dischargeSummaryGreen > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<!-- <div ng-if="info.dischargeSummaryYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div> -->
+							</div>
+						</td>
+						<td class="vertical-middle">
+							<div class="text-center">
+								<div ng-if="info.visitorPassYellow == 0">
+									<div class="service-indication bg-yellow"></div>
+								</div>
+								<div ng-if="info.visitorPassYellow > 0 && info.visitorPassRed > 0">
+									<div class="service-indication bg-red"></div>
+								</div>
+								<div ng-if="info.visitorPassYellow > 0 && info.visitorPassRed == 0">
+									<div class="service-indication bg-green"></div>
+								</div>  
+							</div>
+						</td>
+						<td class="vertical-middle">
+							<!-- <input type="button" value="Submit" ng-disabled="info.labCountRed >0 || info.radiologyCountRed > 0 || info.otherSerCountRed > 0 || info.salesRed > 0 || info.procedureRed > 0 || info.pharmecyRed > 0 || info.visitorPassRed > 0 || info.dischargeSummaryGreen > 0"  ng-click="finalDischarge(info.dischargeId,info.admissionId,info.visitTypeId)" class="btn btn-primary btn-save-box-shadow"> -->
+							<input type="button" value="Submit"  id="submit{{info.visitTypeId}}{{info.admissionId}}"  style="    padding: 8px !important;"  ng-click="checkPendingStuff(info)" class="btn btn-primary btn-save-box-shadow">
+						</td>
+					</tr>
+			    </tbody>
+			  </table>
+			</div>
+		</div>
+        
+	</div>
+	<div class="col-lg-12 col-md-12 col-sm-12 padding-top5">
+		<!-- <div class="row">
+			<div class="col-lg-11 col-md-11 col-sm-10"></div>
+				<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+					<div class=" ">
+						<a href="#/bedManagement" class="btn btn-primary btn-save-box-shadow" title="Back">Back</a>
+					</div>
+				</div>
+			</div> -->
+		 <div class="row">
+			<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+				<a href="#/bedManagement"><button class="btn btn-primary btn-save-box-shadow  width100" title="Back">
+					<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
+				</button></a>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="confirmation" class="modal fade ng-scope in  kiosk-small-modal" role="dialog" >
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header padding-zero">
+					<div class="modal-title patient-details-row">
+						Alert !!
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10 padding-bottom30"><span>{{message}}</span></div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary width30" id="saveBtn" data-toggle="modal" ng-click="finalDischarge(dischargeIdForSubmit,admissionIdForSubmit,visitTypeIdForSubmit)" >Continue</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary width30" id="cancelBtn" data-toggle="modal" >Cancel</button>
+				</div>
+			</div>
+		</div>
+</div>
+
+<div class="modal fade ng-scope in common-small-popup" role="dialog" style="background:rgba(0, 0, 0, 0.33);" id="patientDocumentOption" role="dialog">
+	<div  class="modal-dialog" style="width: 700px !important; margin: 161px auto !important;">
+		<div class="modal-content" style="border-radius: 20px;">
+			<div class="modal-header padding-zero" style="padding:0px;margin-left: -34px;background-size: 210px 72px !important;">
+				<div class="modal-title patient-details-row">
+					<span class="heading-dialog"> APPOINTMENT DETAILS</span>
+					<button type="button" class="close" data-dismiss="modal" style=" color: red; margin-top: 26px;height: 23px;width: 23px !important;border: 2px solid;background-color: #FCE0E0;border-radius: 50% !important;float: right;">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="body-content" style="padding-top: 0px;">
+					<div class="row">
+                        
+						<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 padding-left-right-set margin-top10" style="text-align: -webkit-center;">
+							<div class="" style="vertical-align: middle !important;text-align: ;padding-right: 0px !important;">
+								<span class=" " id="patPhoto">
+									<img ng-src="{{(patientDocumentOption.imagePath!=null&&patientDocumentOption.imagePath!='')?patientDocumentOption.imagePath:(patientDocumentFlipBook.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" class="img-circle" width="60" height="60">
+								</span>
+							</div>
+						</div>
+                        
+						<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 uk-input-group">
+							<div class="row">
+								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+									<div class="row">
+										<span class="LISDynamicLabel"  id="mrnNumber">UHID:{{patientDocumentFlipBook.uhidNumber != null ? patientDocumentFlipBook.uhidNumber :patientDocumentFlipBook.uhidnumber}}</span>
+									</div>
+								</div>
+								<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+									<div class="row">
+										<span class="LISDynamicLabel"id="patName">Name:{{patientDocumentFlipBook.prefixDesc+' '+patientDocumentFlipBook.pFirstName}}</span>
+									</div>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+									<div class="row">
+										<span class="LISDynamicLabel" id="patAgeAndGender">Age:{{patientDocumentFlipBook.age != null ? patientDocumentFlipBook.age : patientDocumentFlipBook.ageStr}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                     
+					<div class="row padding-top20">
+					</div>
+					<div class="row padding-top20">
+						<div class="patientDetailsBox">
+							<div class="row text-center">
+								<span class="appDetailsHeader"></span>
+							</div>
+							<div class="row padding-top20">
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                             <!--     <div class="row">
+                                   <div class="row" style="padding-top: 15px;">
+                                     <span class="LISDynamicLabel">Template:</span>
+                                   </div>    
+                                     <div class="row">
+                                         <span class="LISDynamicLabel" id="templateView">View the templates</span>
+                                     </div>
+                                 </div> -->
+									<div class="row">
+										<div class="row" style="padding-top: 15px;">
+											<span class="LISDynamicLabel">Medical File:</span>
+										</div>    
+										<div class="row">
+											<a href="" ng-click="generateFlipbookData()">
+												<span class="LISDynamicLabel" id="viewFlipBookTemplate">View the documents </span>
+											</a>
+										</div>
+									</div>
+								</div>
+                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-left10">
+<!--                                   	<div class="row padding-left10" style="padding-top: px;">
+                                       <span class="LISDynamicLabel">Appointment Time:</span><br>
+                                       <span id="patAppTime"><div>{{getDateByFormat(patientDocumentFlipBook.encounterDateWithTimeString != null ? patientDocumentFlipBook.encounterDateWithTimeString : patientDocumentFlipBook.doa ,false)}}</div> </span>
+                                    </div>
+ -->
+									<div class="row padding-left10" style="padding-top: 5px;" > 
+										<span class="LISDynamicLabel">Visit Type:</span><br>
+										<span id="patVisit" ng-if="patientDocumentFlipBook.visitTypeId ==1">OPD</span>
+										<span id="patVisit" ng-if="patientDocumentFlipBook.visitTypeId ==2">IPD</span>
+										<span id="patVisit" ng-if="patientDocumentFlipBook.visitTypeId ==3">Day Care</span>
+										<span id="patVisit" ng-if="patientDocumentFlipBook.visitTypeId ==4">Emergency</span>
+									</div>
+<!--                                     <div class="row padding-left10" style="padding-top: 5px;">
+                                       <span class="LISDynamicLabel">Sponsor:</span><br>
+                                       <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementTypeId == 1">Self</span>
+                                       <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementTypeId == 2">Insurance</span>
+                                       <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementTypeId == 3">Corporate</span>
+                                       <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementId == 1">Self</span>
+                                       <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementId == 2">Insurance</span>
+                                       <span id="paymentEntitelment" ng-if ="patientDocumentFlipBook.paymentEntitlementId== 3">Corporate</span>
+                                    </div>
+ -->
+									<div class="row padding-left10" style="padding-top: 5px;"  ng-if=" patientDocumentFlipBook.visitTypeId ==1">
+										<span class="LISDynamicLabel">Status:</span><br>
+										<span id="appStatus"> {{patientDocumentFlipBook.appointmentStatusDesc}} </span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<script type="text/javascript">
+
+	$( document ).ready(function() {
+		
+		var documentHeight= $(window).height();
+	    var sideBarHeight = documentHeight - 55;
+	 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+	 	
+		
+		$(".selectedPageName").text("Ready For Billing");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="readyForBilling"]').parents("li").addClass("active");
+	});
+	</script>

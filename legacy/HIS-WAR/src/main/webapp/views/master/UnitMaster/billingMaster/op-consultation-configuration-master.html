@@ -1,0 +1,255 @@
+ <!-- Page Content -->
+    	<div id="page-content-wrapper" class="clockPopupOver ">
+	<div class="container-fluid his-style">
+		<div class="row padding-left-right-set4 margin-top10">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+						<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+					</div>
+					<input type="hidden" ng-model="data.opVisitRuleId">
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" ng-change="getDoctorList(data.specialityId)" ng-model="data.specialityId" ng-disabled="disableField">
+							<option value=" "></option>
+								<option ng-repeat="info in specialityMasterList"  ng-if="info.isClinicalSpeciality =='Y'" value="{{info.specialityId}}">{{info.specialityName}}</option>
+							</select> <label for="code">Specialty<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-2 col-md-1 polymer-icon">
+						<i class="fa fa-check-circle-o" aria-hidden="true"></i>
+					</div>
+					<input type="hidden" ng-model="data.opVisitRuleId">
+					<div class="col-lg-11 col-sm-10 col-md-11">
+						<div class="">
+							<select class="text-input floating-label dirty" ng-model="data.doctorId" ng-disabled="disableField || disableDoctor" convert-to-number>
+							<option value=" "></option>
+								<option ng-repeat="info in doctorList" value="{{info.doctorId}}">{{info.doctorName}}</option>
+							</select> <label for="code">Doctor<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="data.followupVisitDays"> 
+							<label for="code">Follow up Visit Days<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="data.followupVisitCount"> 
+							<label for="code">Follow up Visit Count<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="data.secondaryVisitDays"> 
+							<label for="code">Secondary Visit Days<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+						<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-11 col-sm-11 col-md-11">
+						<div class="">
+							<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label" ng-model="data.secondaryVisitCount"> 
+							<label for="code">Secondary Visit Count<span class="star">*</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row margin-top10">
+		
+		<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+				<div class="search">
+					<label class="show-entries">Show 
+					<select ng-init="pagination.pageSize='10'" 
+						ng-model="pagination.pageSize" 
+						ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+							<option value="10">10</option>
+							<option value="25">25</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+					</select> records 
+					</label>
+				</div>
+				</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+		        <div class=" ">
+		           <a href="" class="btn btn-primary btn-save-box-shadow" title="Save" data-toggle="modal" ng-click="saveOPCosultationConfigurationMaster()" ng-if="saveBtnFlag">
+			        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+			      
+			        <a href="" class="btn btn-primary btn-save-box-shadow" title="Update" data-toggle="modal" ng-click="updategetOPCosultationConfigurationMaster()" ng-if="updateBtnFlag">
+			        <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a>
+		        </div>
+		     </div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" ng-model="serachFilter" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+			<!-- table start-->
+				<div class="row padding-left-right-set4 common-popup-height-410 padding-top5">
+					<div class="col-md-12">
+						<table class="table table-bordered">
+							<tr class="">
+								<th class="width6">Specialty
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">Doctor
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">Follow up Visit Days
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">Follow up Visit Count
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">Secondary Visit Days
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">Secondary Visit Count
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6">Status(n)
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width2 text-center vertical-middle">Action taken</th>
+							</tr>
+							<tr ng-repeat="info in pagination.data | filter : serachFilter">
+								
+								<td>{{info.specialityName}}</td>
+								<td>{{info.doctorName}}</td>
+								<td>{{info.followupVisitDays}}</td>
+								<td>{{info.followupVisitCount}}</td>
+								<td>{{info.secondaryVisitDays}}</td>
+								<td>{{info.secondaryVisitCount}}</td>
+								<td class="text-center">
+									<label class="switch"> 
+									<input type="checkbox" ng-model="info.status"  ng-true-value="'A'"  ng-false-value="'I'"  ng-change="updategetOPCosultationConfigurationMasterStatus(info.opVisitRuleId,info.status)">
+									<div class="slider round"></div>
+									</label>
+								</td>
+								<td class="text-center vertical-middle">
+									<span>
+										<a title="Print ">
+											<i class="fa fa-pencil" aria-hidden="true" ng-click="getOPCosultationConfigurationListById(info.opVisitRuleId)"></i>
+										</a>
+									</span>
+									<!-- <span class="padding-left10"><a href="#/detailsMaterialPending">Details</a></span> -->
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="row margin-bottom45 center-block">
+						<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+							style="font-size: 14px; cursor: pointer;">
+							<li ng-class="{disabled:pagination.currentPage === 1}"><a
+								ng-click="pagination.setFirstPage(pagination)">First</a>
+							</li>
+							<li ng-class="{disabled:pagination.currentPage === 1}"><a
+								ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+							</li>
+							<li ng-repeat="page in pagination.getPagesList(pagination)"
+								ng-class="{active:pagination.currentPage === page}"><a
+								ng-click="pagination.setPage(page, pagination)">{{page}}</a>
+							</li>
+							<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+								<a ng-click="pagination.setNextPage(pagination)">Next</a>
+							</li>
+							<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+								<a ng-click="pagination.setLastPage(pagination)">Last</a>
+							</li>
+						</ul>
+					</div>
+				</div><modal visible="showModal"></modal>
+				<!-- table end-->
+	</div>
+</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$( document ).ready(function() {
+	$(".selectedPageName").text("OP Consultation Configuration Master");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="OPConsulationConfigurationMaster"]').parents("li").addClass("active");
+});
+</script>

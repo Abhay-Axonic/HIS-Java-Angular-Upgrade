@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(*)",
+      "Grep(*)",
+      "Glob(*)",
+      "Write(docs/**)",
+      "Edit(docs/**)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(tail *)",
+      "Bash(cat *)",
+      "Write(legacy/**)",
+      "Edit(legacy/**)"
+    ],
+    "ask": [
+      "Write(new/**)",
+      "Edit(new/**)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(rm *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ]
+  }
+}

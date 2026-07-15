@@ -1,0 +1,208 @@
+
+    <!-- *****************************************************************************************************************************
+                                                        Pending List For Assigning Picker/Dispenser 
+    ****************************************************************************************************************************** -->
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="clockPopupOver">
+        <div class="container-fluid his-style">
+            <div class="">
+                <div class="">
+                    <div class="">
+                        
+                        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                    </div>
+                </div>
+                <div class="" >
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                            <span class="profile_pic">
+                                <img alt="" src="resources/assets/images/tempImages/m.jpg" class="img-circle" style="width:35px" data-toggle="modal"
+                                    data-target="#patientDetailsModal">
+                            </span>
+                            <!-- <span class="margin-left10">{{patientDetails.patientName}} {{patientDetails.age}} </span> -->
+                            <span class="margin-left10"></span>
+                            <span class="padding-right5 font-weight600">UHID :</span> {{vm.model.worklistDetails.uhid ?
+                            vm.model.worklistDetails.uhid : '-'}}</span>
+                            <span class="margin-left10"></span>
+                            <span class="padding-right5 font-weight600">Patient Details : </span> {{vm.model.worklistDetails.patientDetail
+                            ? vm.model.worklistDetails.patientDetail : '-'}}</span>
+                            <!-- <span class=""><span class=" font-weight600">/</span> 36</span> -->
+                            <!-- <span class=""><span class=" font-weight600">/</span> M</span> -->
+        
+                            <span class="margin-left10">
+                                <span class="padding-right5 font-weight600">DOB :</span> {{vm.model.worklistDetails.patientDob | date:'dd/MM/yyyy' :
+                                'UTC'}}</span>
+                            <span class="margin-left10"></span>
+                            <span class="padding-right5 font-weight600">Doctor Details : </span> Dr.
+                            {{vm.model.worklistDetails.doctorDetail ? vm.model.worklistDetails.doctorDetail : '-'}}</span>
+                            <span class="margin-left10"></span>
+                            <!-- <span class="padding-right5 font-weight600">DOA :</span> {{vm.model.worklistDetails.doa | date:'dd/MM/yyyy' : 'UTC'}}</span> -->
+                            <span class="margin-left10"></span>
+                            <!-- <span class="padding-right5 font-weight600">PDD :</span> {{vm.model.worklistDetails.pdd | date:'dd/MM/yyyy' : 'UTC'}}</span> -->
+                            <span class="margin-left10"></span>
+                            <!-- <span class="padding-right5 font-weight600">Ward Name :</span> {{vm.model.worklistDetails.wardName}}</span> -->
+                            <span class="margin-left10"></span>
+                            <!-- <span class="padding-right5 font-weight600">Bed No. :</span>{{vm.model.worklistDetails.bedNo}}</span> -->
+                            <span class="margin-left8 bed-mang-box-icon">
+                                <img src="resources/assets/images/icon/bed/Allergies.png" title="Allergies" alt="Allergy" style="width:20px"
+                                    class="popper" data-toggle="popover" data-trigger="hover">
+                                <div class="popper-content hide">
+                                    <div>1.Egg Protein</div>
+                                    <div>2.Penicillin</div>
+                                </div>
+                            </span>
+                            <span class="margin-left8 bed-mang-box-icon">
+                                <img src="resources/assets/images/icon/bed/other investigation order.png" title="Comorbidity" alt="Allergy"
+                                    style="width:20px" class="popper" data-toggle="popover" data-trigger="hover">
+                                <div class="popper-content hide">
+                                    <div>1.Hyper Tension</div>
+                                </div>
+                            </span>
+                            <span class="margin-left8 bed-mang-box-icon">
+                                <img src="resources/assets/images/icon/bed/High Risk Patient.png" title="High Risk" alt="Allergy" style="width:20px"
+                                    class="popper" data-toggle="popover" data-trigger="hover">
+                                <div class="popper-content hide">
+                                    <div>1.Hepatitis b</div>
+                                </div>
+                            </span>
+                            <span class="padding-right5 font-weight600">Prescription No : </span>
+                            {{vm.model.worklistDetails.prescriptionNo ? vm.model.worklistDetails.prescriptionNo : '-'}}</span>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="row padding-top10 padding-left-right-set4">
+						<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll495">
+						  <table id="main-table" class="main-table width140">
+						    <thead>
+								<tr class="table-th-bg">
+									<th class="width5" title="Product Code">Product Code</th>
+									<th class="width8" title="Brand Name">Brand Name</th>
+									<th class="width8" title="Manufacturer">Manufacturer</th>
+									<th class="width4" title="Flag">Flag</th>
+									<th class="width5" title="UOM Unit">UOM Unit</th>
+									<th class="width3" title="Qty Ordered">Qty Ordered</th>
+									<th class="width6" title="Amount">Amt</th>
+									<th class="width6" title="Batch No.">Batch No.</th>
+									<th class="width4" title="Expiry Date">Expiry Date</th>
+									<th class="width4" title="Qty Issued">Qty Issued</th>
+									<th class="width5" title="Rate">Rate</th>
+									<th class="width7" title="Total Amount">Total Amt</th>
+									<th class="width6" title="Discount ">Disc</th>
+									<th class="width5" title="Frequency">Frequency</th>
+									<th class="width5" title="Dose">Dose</th>
+									<th class="width5" title="Start Date">Start Date</th>
+									<th class="width5" title="Stop Date">Stop Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- <tr ng-if="vm.model.pendingHandoverWorklistDetailsList.items == null || !vm.model.pendingHandoverWorklistDetailsList.items.length">
+                                            <td col-span="14"><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+                                        </tr> -->
+								<tr>
+									<td class="" title=""></td>
+									<td class="" title=""></td>
+									<td class="" title=""></td>
+									<td class="" title=""></td>
+									<td class="" title=""></td>
+									<td class="" title="" style="text-align: right"></td>
+									<td class="" title=""></td>
+									<td class="" title=""></td>
+									<td class="" title=""></td>
+									<td class="" title="" style="text-align: right"></td>
+									<td class="" title="" style="text-align: right"></td>
+									<td class="" title="" style="text-align: right"></td>
+									<td class="" title="" style="text-align: right"></td>
+									<td class="" title=""></td>
+									<td class="" title="" style="text-align: right"></td>
+									<td class="" title=""></td>
+									<td title=""></td>
+								</tr>
+							</tbody>
+						</table>
+						</div>
+					</div>
+                    
+                    
+                    <div class="row">
+                        <div class="row" style="margin-top:15px;">
+                            <div class="row padding-left-right-set4">
+                                <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4">
+									<div class="row input-container">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+												<input type="text" autocomplete="off" class="text-input floating-label" placeholder="Receiver" ng-model="vm.model.receiverName" ng-change="vm.model.isReceiverValid = false" data-ng-class="{tableError: vm.model.isReceiverValid[$index]}" ng-disabled="vm.model.receiverDisabled"> 
+												<label for="description" class="">Receiver name</label>
+												<p ng-if="vm.model.isReceiverValid" class="errorMsg">Receiver name is required</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+									<div class=" ">
+										<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Back" ng-click="vm.model.NavigateToPendingHandoverWorkList()">
+										<i class="fa fa-arrow-circle-o-left" style="font-size: 18px" aria-hidden="true"></i></a> 
+									</div>
+								</div>
+								<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+									<div class=" ">
+										<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Save" ng-click="vm.model.SavePopup()" ng-disabled="vm.model.receiverDisabled">
+										<i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i></a> 
+									</div>
+								</div>
+                            </div>	
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="confirmSave" class="modal fade ng-scope in" role="dialog">
+        <div class="modal-dialog" style="width: 560px !important; margin: 80px auto !important;">
+            <div class="modal-content" style="border-radius: 0px !important;">
+                <div class="modal-header" style="padding: 0px!important;">
+                    <div class="modal-title patient-details-row">
+                        Confirm
+                        <button type="button" id="popupClose" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="margin-left10">
+                        <span>Are you sure you want to Save?</span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                	<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Cancel" data-dismiss="modal">
+							<i class="fa fa-times" style="font-size: 18px" aria-hidden="true"></i></a> 
+						</div>
+					</div>
+                	<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+						<div class=" ">
+							<a href="" class="btn btn-primary btn-save-box-shadow width100" title="Ok" data-dismiss="modal">
+							<i class="fa fa-check-circle" style="font-size: 18px" aria-hidden="true"></i></a> 
+						</div>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--  confirmSave modal end -->
+    
+    
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $(".selectedPageName").text("Pending Handover worklist");/* Dispenser */
+            $(".sidebar-nav li").each(function() {
+                $(this).find("a").parents("li").removeClass("active");
+            });
+            $('a[href$="assigningPickerDispenser"]').parents("li").addClass("active");
+        });
+        </script>

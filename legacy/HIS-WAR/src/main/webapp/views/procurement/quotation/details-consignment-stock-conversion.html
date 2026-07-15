@@ -1,0 +1,442 @@
+
+<head>
+	<style type="text/css">
+	.tableError {
+		border: 2px solid red !important;
+	}
+
+	.tableError select.w-100.ng-pristine.ng-empty, .tableError input.w-100.ng-valid.ng-empty,
+		.borderRed {
+		border: 2px solid red;
+	}
+
+	.borderRed {
+		border: 2px solid #ff0000;
+	}
+
+	.bottomRed {
+		border-bottom: 2px solid #ff0000;
+	}
+
+	.text-input[disabled] {
+		cursor: not-allowed !important;
+	}
+	</style>
+</head>
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Store Indent Approval Details</legend> -->
+			<div class="row margin-top10">
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">GRN
+							No. :</b> {{vm.model.physicalInspectionData.grnNo}} </span>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">GRN
+							Date:</b> {{vm.model.physicalInspectionData.grnDate |
+						date:'dd/MM/yyyy'}} </span>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">GRN
+							Type:</b> {{vm.model.physicalInspectionData.assetType}} </span>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Invoice
+							No. : </b> {{vm.model.physicalInspectionData.invoiceNo}} </span>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Invoice
+							Date :</b>{{vm.model.physicalInspectionData.invoiceDate |
+						date:'dd/MM/yyyy' }} </span>
+				</div>
+			</div>
+			<div class="row margin-top5">
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Store
+							Name :</b> {{vm.model.physicalInspectionData.storeName}} </span>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">DC
+							No. :</b> {{vm.model.physicalInspectionData.dcNo}} </span>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">DC
+							Date:</b> {{vm.model.physicalInspectionData.dcDate |
+						date:'dd/MM/yyyy'}} </span>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Vendor
+							Name : </b> {{vm.model.physicalInspectionData.vendor}} </span>
+				</div>
+				<div
+					class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+					<span class="margin-left10"><b class="padding-right10 ">Added
+							By :</b> {{vm.model.physicalInspectionData.addedBy}} </span>
+				</div>
+			</div>
+		</fieldset>
+		<div class="row">
+			<div class="col-lg-12 col-md-12 padding-top8 padding-left-right-set4">
+				<div style="max-height: 420px; min-height: 420px; overflow-y: auto;">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="width1 text-center"><input type="checkbox"
+									ng-model="vm.model.selectAllRows"
+									ng-click="vm.model.SelectAllOrders()"></th>
+								<th class="width5" title="Item Code">Item Code
+									<div class="float_right"
+										ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8" title="Item Name">Item Name
+									<div class="float_right"
+										ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width5" title="Lot No.">Lot No.
+									<div class="float_right"
+										ng-click="sortType = 'lotNo'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6" title="Batch No.">Batch No.
+									<div class="float_right"
+										ng-click="sortType = 'batchNo'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width5" title="Expiry Date">Expiry Date
+									<div class="float_right"
+										ng-click="sortType = 'expiryDate'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width5" title="COP">COP
+									<div class="float_right"
+										ng-click="sortType = 'cop'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width5" title="MRP">MRP
+									<div class="float_right"
+										ng-click="sortType = 'mrp'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width6" title="Manufacturer">Manufacturer
+									<div class="float_right"
+										ng-click="sortType = 'manufacturerName'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width8" title="Total Consignment Stock">Total
+									Consignment Stock
+									<div class="float_right"
+										ng-click="sortType = 'totalConsignmentStock'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+
+								<th class="width8" title="Consumed Qty">Consumed Qty
+									<div class="float_right"
+										ng-click="sortType = 'consumedQty'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width7" title="Converted Consignment Stock">Converted
+									Consignment Stock
+									<div class="float_right"
+										ng-click="sortType = 'convertedConsignmentStock'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width10" title="Returned Consignment Stock">Returned
+									Consignment Stock
+									<div class="float_right"
+										ng-click="sortType = 'returedConsignmentStock'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								
+								<!-- <th class="width10" title="Store Stock Transfered">Store
+									Stock Transfered
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th> -->
+
+								<th class="width10" title="Store Stock transferred ">Store
+									Stock Transferred
+									<div class="float_right">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								
+								<th class="width10" title="Available Consignment Stock">Available
+									Stock for Conversion
+									<div class="float_right"
+										ng-click="sortType = 'availableStockforConversion'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<th class="width5" title="Conversion Quantity">Conversion
+									Quantity
+									<div class="float_right"
+										ng-click="sortType = 'conversionQuantity'; sortReverse = !sortReverse">
+										<div>
+											<i class="fa fa-caret-up" aria-hidden="true"></i>
+										</div>
+										<div class="margin-top-8">
+											<i class="fa fa-caret-down" aria-hidden="true"></i>
+										</div>
+									</div>
+								</th>
+								<!--  <th class="width7" title="Available Converted Stock">Available Converted Stock
+                                    <div class="float_right" ng-click="sortType = 'availableConvertedStock'; sortReverse = !sortReverse">
+                                        <div>
+                                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="margin-top-8">
+                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </th> -->
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								ng-repeat="item in vm.model.physicalInspectionData.items  | orderBy:sortType:sortReverse"
+								data-ng-class="{'disable': item.currentQty == 0, 'cursorDisabled':item.currentQty == 0}">
+								<!-- Minesh -->
+								<!-- <input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItem(item)" ng-disabled="item.statusId == 8" /> -->
+								<td class="width1 text-center"><input type="checkbox"
+									ng-model="item.isSelected" ng-click="vm.model.SelectItem(item)"
+									ng-disabled="item.currentQty == 0" /></td>
+								<td title="{{item.itemCode}}" class="width5">{{item.itemCode}}</td>
+								<td title="{{item.itemName}}" class="width8">{{item.itemName}}</td>
+								<td title="{{item.lotNo}}" class="width5">{{item.lotNo}}</td>
+								<td title="{{item.batchNo}}" class="width6">{{item.batchNo}}</td>
+								<td title="{{item.expiryDate | date:'MMM-yyyy'}}" class="width5">{{item.expiryDate
+									| date:'MMM-yyyy'}}</td>
+								<td title="{{item.cop}}" class="width5">{{item.cop}}</td>
+								<td title="{{item.mrp}}" class="width5">{{item.mrp}}</td>
+								<td title="{{item.manufacturerName}}" class="width6">{{item.manufacturerName}}</td>
+							    <td title="{{item.totalConsignmentStock}}" class="width8">{{item.totalConsignmentStock}}</td>
+								<!-- <td title="{{item.receivedQuantity}}" class="width8">{{item.receivedQuantity}}</td> HIS-HIS-18368-->
+
+								<td title="{{item.consumedQty}}" class="width8">{{item.consumedQty}}</td>
+								<td title="{{item.convertedConsignmentStock}}" class="width7">{{item.convertedConsignmentStock}}</td>
+								<td title="{{item.returnedQuantity}}" class="width10">{{item.returnedQuantity}}</td>
+								<!--  <td title="{{item.availableConsignmentStock}}" class="width10">{{item.availableConsignmentStock}}</td> -->
+								
+								<!-- <td title="{{item.currentQty}}" class="width10">{{item.currentQty}}</td> -->
+								<!-- <td title="" class="width10">{{item.totalConsignmentStock - item.consumedQty - returnedQuantity - storeStockTransfered}}</td> -->
+								
+								<!-- <td title="{{item.storeStockTransfered}}" class="width10">{{item.storeStockTransfered}}</td> -->
+								<td title="" class="width10 vertical-middle text-center">{{item.storeStockTransfered}}<a
+									ng-click="vm.model.ViewDetails(vm.model.physicalInspectionData.storeId, item.batchId , item.batchNo, item.lotNo)">
+										<i class="fa fa-info-circle" aria-hidden="true" title="Info"
+										data-toggle="modal" data-target="#Details"></i>
+								</a></td>
+<!-- <<<<<<< Updated upstream
+								<td title="" class="width10">{{(((item.receivedQuantity - item.consumedQty))- item.storeStockTransfered)-item.convertedConsignmentStock}}</td>
+								HIS-18368 <td title="" class="width10">{{(((item.receivedQuantity - item.consumedQty) - item.returnedQuantity )- item.storeStockTransfered)-item.convertedConsignmentStock}}</td>
+======= -->
+									<td title="" class="width10">{{(((item.totalConsignmentStock - item.consumedQty) - item.returnedQuantity )- item.storeStockTransfered)-item.convertedConsignmentStock}}</td>
+
+									<!-- <td title="" class="width10">{{item.approvedQuantity}}</td> -->
+
+							<!-- 	<td title="" class="width10">{{(((item.receivedQuantity - item.consumedQty) - item.returnedQuantity )- item.storeStockTransfered)-item.convertedConsignmentStock}}</td> -->
+								
+								<td title="" class="width5"><input type="text"
+									name="conversionQuantity" ng-model="item.conversionQuantity" ng-blur="availableQty(item)"
+									ng-disabled="item.isDisabled" allow-decimal-numbers></td>
+								<!--   <td title="{{item.availableConvertedStock}}" class="width7">{{item.availableConvertedStock}}</td> -->
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<footer
+			class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+			<div class="row his-style padding-right20">
+				<div class="col-md-1 text-right">
+					<b><label>Remark:</label></b>
+				</div>
+				<div class="col-md-9 padding-left-right8">
+					<textarea row="1" ng-model="vm.model.remark" class="form-control"></textarea>
+				</div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div>
+						<a href=""> <input type="button" data-toggle="modal" id="updateBtn"
+							data-target="#convertPopup" value="Convert"
+							class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+				<div class="col-md-1 padding-left0px-right6px">
+					<div>
+						<a href="" ng-click="vm.model.NavigateToBack()"> <input
+							type="button" value="Back"
+							class="btn btn-primary btn-save-box-shadow">
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<div id="convertPopup" class="modal fade ng-scope in" role="dialog">
+	<div class="modal-dialog"
+		style="width: 560px !important; margin: 80px auto !important;">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 0px !important;">
+				<div class="modal-title patient-details-row">
+					Confirm
+					<button type="button" class="close"
+						ng-click="vm.model.ModalDismiss('convertPopup')">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="margin-left10">
+					<span>Do you want to convert item to consignment stock to
+						normal stock?</span>
+				</div>
+			</div>
+			<div class="modal-footer" style="border: none;">
+				<button type="button" class="btn btn-primary" id="okBtn" ng-disabled="saveBtnDisabled"
+					ng-click="vm.model.SaveDetailsConsignmentStockConversion()">Ok</button>
+				<button type="button" id="cancelBtn"
+					ng-click="vm.model.ModalDismiss('convertPopup')"
+					class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="Details" class="modal fade ng-scope in common-small-popup"
+	role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div
+						class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="width6">Store Name</th>
+									<th class="width3">Quantity</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="d in vm.model.listData" ng-if="d.currentstock > 0">
+									<td>{{d.storename}}</td>
+									<td>{{d.currentstock}}</td>
+
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

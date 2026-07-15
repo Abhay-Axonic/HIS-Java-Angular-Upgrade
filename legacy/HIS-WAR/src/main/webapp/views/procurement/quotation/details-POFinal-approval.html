@@ -1,0 +1,1349 @@
+<head>
+  <style type="text/css">
+    .errorFlag{
+      color: red !important;
+    }  
+.table-scroll th, .table-scroll td {
+	white-space:inherit !important;
+}    
+  </style>
+</head>
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style">
+    <fieldset>
+      <!-- <legend class="heading-div">Store Indent Approval Details</legend> -->
+      <div class="row margin-top10">
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10">Purchase No. :</b> {{vm.model.purchaseOrders.poNumber}} </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10">Purchase Date:
+            </b> {{vm.model.purchaseOrders.addedDate | date : 'dd/MM/yyyy'}} </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10">Purchase Type :
+            </b> {{vm.model.purchaseOrders.assetType}} </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10">Vendor Name :
+            </b> {{vm.model.purchaseOrders.vendorName}} </span>
+        </div>
+      </div>
+      <div class="row margin-top10">
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10 ">Requesting Store: </b> {{vm.model.purchaseOrders.requestingStoreName}} </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10 ">Delivery Store: </b> {{vm.model.purchaseOrders.storeName}} </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10 ">Against: </b> {{vm.model.purchaseOrders.purchaseType}}
+          </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10 ">Added By: </b> {{vm.model.purchaseOrders.addedBy}}
+          </span>
+        </div>
+        <div
+        class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <!-- <span class="margin-left10"> <b class="padding-right10 ">Due
+              Date: </b> {{vm.model.purchaseOrders.dueDate | date :
+            'dd/MM/yyyy'}}
+          </span> -->
+        </div>
+      </div>
+    </fieldset>
+    <div id="consumbleRowId" class="table-scroll row margin-top10 padding-left-right-set4" ng-if="vm.model.assetTypeId == 1" style="margin-top: 10px !important">
+      <div class="table-wrap" >
+        <table class="table table-bordered main-table" style="max-width:300%;min-width:300%;">
+          <thead>
+            <tr>
+              <th colspan="2" scope="col" class="fixed" style="z-index: 1 !important;" ng-if="vm.model.poTypeId == 1 || vm.model.poTypeId == 3">Item Details</th>
+              <th colspan="2" scope="col" class="fixed" style="z-index: 1 !important;" ng-if="vm.model.poTypeId == 14">Item Details</th>
+              <th colspan="1" class="font-weight700" scope="col" ng-if="vm.model.poTypeId == 3">PR Qty Details</th>
+              <th colspan="7" class="font-weight700" scope="col">PO Qty Details</th>
+              <th colspan="4" class="font-weight700" scope="col">Bonus Qty Details</th>
+              <th colspan="5" class="font-weight700" scope="col">PO Amount Details</th>
+              <th colspan="8" class="font-weight700" scope="col">PO Amount Total Details</th>
+              <th colspan="10" class="font-weight700" scope="col" ng-if="vm.model.poTypeId == 3">Other Details</th>
+              <th colspan="9" class="font-weight700" scope="col" ng-if="vm.model.poTypeId == 1">Other Details</th>
+            </tr>
+            <tr>
+              <th class="fixed-side width1 text-center" scope="col">
+                <input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" ng-disabled="vm.model.purchaseOrders.reviewedBy >0">
+              </th>
+              <th class="width4 fixed fixed-side" scope="col" style="padding-top: 0;z-index: 1 !important;padding-bottom: 0 !important;margin-bottom: 0px;">
+                <div class="col-md-12 col-lg-12">
+                  <div class="col-md-4 col-lg-4" style="border-right: 1.5px solid white;z-index: 1 !important;height: 47px;padding: 0;padding-top: 4px;">
+                    Code
+                  </div>
+                  <div class="col-md-8 col-lg-8" style="padding-top: 4px;">
+                    Name
+                  </div>
+                </div>
+              </th>
+              <!-- <th class="fixed-side width1" scope="col">Code</th>
+              <th class="fixed-side width1" scope="col">Name</th> -->
+              <th class="width1" scope="col" ng-if="vm.model.poTypeId == 14">QR No.</th>
+              <th class="width1" scope="col" ng-if="vm.model.poTypeId == 14">QR Date</th>
+              <th class="width1" ng-if="vm.model.poTypeId == 3">PR Quantity</th>
+              <th class="width2">Pending Quantity</th>
+              <th class="width2">Quantity</th>
+              <th class="width2 vertical-middle">Reject Quantity</th>
+              <th class="width2 vertical-middle">Approved Quantity</th>
+              <th class="width1 vertical-middle">Reject</th>
+              <th class="width2 vertical-middle">UOM</th>
+              <th class="width1">UOM Unit</th>
+              <th class="width1">Qty</th>
+              <th class="width2 vertical-middle">Approved Bonus Quantity</th>
+              <th class="width2">UOM</th>
+              <th class="width1">UOM Unit</th>
+              <th class="width2">COP {{vm.model.Currency}}</th>
+              <th class="width2">MRP {{vm.model.Currency}}</th>
+              <th class="width1 vertical-middle text-center">Last PO Details</th>
+              <th class="width1">Tax Code</th>
+              <th class="width1">
+                Tax %
+              </th>
+              <th class="width1">
+                Disc %
+              </th>
+              <th class="width3">
+                Amount {{vm.model.Currency}}
+              </th>
+              <th class="width2">
+                Disc Amount {{vm.model.Currency}}
+              </th>
+              <th class="width2">
+                Tax Amount {{vm.model.Currency}}
+              </th>
+              <!-- <th class="width2">
+                Other Charges {{vm.model.Currency}}
+              </th> -->
+              <th class="width3">
+                Net Amount {{vm.model.Currency}}
+              </th>
+              <th class="width1 vertical-middle" ng-if="vm.model.poTypeId == 3">PR No.</th>
+              <th class="width3 vertical-middle ">Manufacture</th>
+              <th class="width4 vertical-middle">Specification</th>
+              <th class="width4 vertical-middle">Remark</th>
+              <th class="width1 vertical-middle text-center"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in vm.model.purchaseOrders.items">
+              <td class="fixed-side text-center">
+                <input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItem(item)" ng-disabled="vm.model.purchaseOrders.reviewedBy >0" />
+              </td>
+              <td class="width4 fixed fixed-side" scope="col" style="padding-top: 0;z-index: 1 !important;padding-bottom: 0 !important;margin-bottom: 0px;white-space: inherit !important;">
+                <div class="col-md-12 col-lg-12">
+                  <div class="col-md-4 col-lg-4" style="border-right: 1.5px solid #ddd;word-wrap: break-word;z-index: 0 !important;height: 47px;padding: 0;padding-top: 4px;">
+                    {{item.itemCode}}
+                  </div>
+                  <div class="col-md-8 col-lg-8" style="padding-top: 4px;">
+                    {{item.itemName}}
+                  </div>
+                </div>
+              </td>
+              <!-- <td class="fixed-side" title="{{item.itemCode}}">{{item.itemCode}}</td>
+              <td class="fixed-side" title="{{item.itemName}}">{{item.itemName}}</td> -->
+              <td ng-if="vm.model.poTypeId == 14">{{item.qrDateDto[0].qrno}}</td>
+              <td ng-if="vm.model.poTypeId == 14">{{item.qrDateDto[0].qrdate | date :  "dd-MM-yyyy"}}</td>
+              <td class="vertical-middle" title="{{item.prQuantity}}" ng-if="vm.model.poTypeId == 3">
+                {{item.prQuantity}}
+              </td>
+              <td class="width2" title="{{item.newMaxOrderQuantity}} / {{item.newMaxStoreQuantity}}">{{item.newMaxOrderQuantity}} / {{item.newMaxStoreQuantity}}</td>
+              <td class="vertical-middle" title="{{item.poQuantity}}" ng-class="{borderRed: vm.model.isValidPoQuantity[$index]}">
+                <div class="col-md-10 padding-left-right-set4">
+                  {{item.poQuantity}}
+                </div>
+                <div class="col-md-2 text-left vertical-middle">
+                  <a data-target="#AddQtyModal_ETOitemConfig" ng-click="vm.model.ViewStagedQuantity(item)" data-toggle="modal" title="View Qty">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </div>
+              </td>
+              <td class="vertical-middle" title="{{item.rejectQuantity}}">{{!!item.rejectQuantity ? item.rejectQuantity : 0}}</td>
+              <td title="{{item.approvedQuantity}}" class="vertical-middle">
+               <!--  <div class="row" ng-if="vm.model.poTypeId == 1">
+                  <input type="text" autocomplete="off" class="w-100" ng-model="item.approvedQuantity" ng-blur="vm.model.SaveApproval(item)" ng-if="!item.isDisabled" maxlength="3" numbers-only>
+                  <div ng-if="item.isDisabled">{{!!item.approvedQuantity ? item.approvedQuantity : 0 }}</div>
+                </div> -->
+                <!-- <div ng-if="vm.model.poTypeId == 3"> -->
+                  <div class="col-md-10 padding-left-right-set4">{{!!item.approvedQuantity ? item.approvedQuantity : 0 }}</div>
+                  <div class="col-md-2 text-left vertical-middle">
+                    <a data-target="#ApprovedStagedQuantity" ng-click="vm.model.ViewApprovedStagedQuantity(item)" data-toggle="modal" title="View Qty">
+                      <i class="fa fa-info-circle" ng-class="{errorFlag:!item.fillRejectQtyFlag}"></i>
+                    </a>
+                  </div>
+                <!-- </div> -->
+              </td>
+              <td class="vertical-middle text-center" title="Reject">
+                <div class="checkbox">
+                  <label class="switch switch-small">
+                    <input type="checkbox" class="switchInput" ng-disabled="item.isDisabled" ng-click="vm.model.RejectionPopup(item)" ng-model="item.isReject">
+                    <div class="slider round slider-small"></div>
+                  </label>
+                </div>
+              </td>
+              <td>
+                <!-- title="{{item.poUomType}}" -->
+                <!-- {{item.poUomType}} -->
+                <select ng-model="item.selectedUom" ng-options="uom.uomDetails for uom in item.uom" ng-disabled="vm.model.purchaseOrders.reviewedBy >0" ng-change="vm.model.CalculateStock(item, item.uom, item.selectedUom);"
+                  ng-class="{borderRed: item.valid_p_uom}" class="w-100"></select>
+              </td>
+              <td class="vertical-middle">
+                <!-- <span>{{item.poUomUnit}}</span> -->
+                <!-- <span>{{item.selectedUom.uomUnit}}</span> -->
+                <!-- <br/> -->
+                <span ng-if="item.receivedQtyCon!=''">({{item.receivedQtyCon}}) = </span> <br/>
+                <span> {{item.receivedQtyCalculation}} {{item.uomUnitData}}</span>
+                <span class="pull-right text-right">
+                  <a data-target="#selectUOM_modal" ng-click="vm.model.ViewPOUom(item)" data-toggle="modal">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </span>
+              </td>
+              <td title="{{item.bonusQuantity}}">
+                {{item.bonusQuantity}}
+              </td>
+              <td title="{{item.bonusApprovedQuantity}}">
+                <div class="row">
+                  <input type="text" autocomplete="off" class="w-100" ng-model="item.bonusApprovedQuantity" ng-if="!item.isDisabled" maxlength="3" numbers-only>
+                  <div ng-if="item.isDisabled">{{!!item.bonusApprovedQuantity ? item.bonusApprovedQuantity : 0 }}</div>
+                </div>
+              </td>
+              <td title="{{item.bonusUomType}}">
+                {{item.bonusUomType}}
+              </td>
+              <td class="vertical-middle">
+                <!-- <span>{{item.bonusUomUnit}}</span> -->
+                <!-- <br/> -->
+                <span ng-if="item.receivedQtyBonusCon!=''">({{item.receivedQtyBonusCon}}) = </span> <br/>
+                <span> {{item.receivedQtyBonusCalculation}} {{item.uomUnitDataBonus}}</span>
+                <span class="pull-right text-right">
+                  <a data-target="#bouns_selectUOM_modal" ng-click="vm.model.ViewBonusUom(item)" data-toggle="modal">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </span>
+              </td>
+              <td title="{{item.cop || 0 | number:2}}"> {{vm.model.Currency}} 
+                {{item.cop || 0 | number:2}}
+              </td>
+              <td title="{{item.mrp || 0 | number:2}}">{{vm.model.Currency}} 
+                {{item.mrp || 0 | number:2}}
+              </td>
+              <td class="vertical-middle text-center">
+                <a ng-click="vm.model.ViewHistory(item);">
+                  <i class="fa fa-info-circle" aria-hidden="true" title="Last Purchase Details" data-toggle="modal" data-target="#lastPurchaseDetails"></i>
+                </a>
+              </td>
+              <td title="{{item.taxCode}}">
+                {{item.taxCode}}
+              </td>
+              <td title="{{item.taxPercentage || 0 | number:2}}">{{vm.model.Currency}} 
+                {{item.taxPercentage || 0 | number:2}}
+              </td>
+              <td title="{{item.discount || 0 | number:2}}">
+                {{item.discount || 0 | number:2}}
+              </td>
+              <td title="{{item.poAmount || 0 | number:2}}">{{vm.model.Currency}} 
+                <!-- {{item.totalAmount | number:2}} -->
+                {{(item.poAmount = (item.approvedQuantity * item.cop) || 0) | number:2}}
+              </td>
+              <td title="{{item.totalDiscount || 0 | number:2}}">{{vm.model.Currency}} 
+                <!-- {{item.totalDiscount | number:2}} -->
+                {{(item.totalDiscount = (item.approvedQuantity * item.cop) * (item.discount/100) || 0) | number:2}}
+              </td>
+              <td name="taxAmount" title="{{item.taxAmount || 0 | number:2}}">{{vm.model.Currency}} 
+                {{(item.taxAmount = ((item.approvedQuantity * item.cop)-item.totalDiscount) * (item.taxPercentage/100) || 0) | number:2}}
+              </td>
+              <!-- <td title="{{item.totalOtherAmount || 0 | number:2}}">
+                <div class="col-md-10 text-left vertical-middle padding-top5">{{vm.model.Currency}} 
+                  {{item.totalOtherAmount || 0 | number:2}}
+                </div>
+                <div class="col-md-2 text-left vertical-middle padding-top5" ng-if="!!item.totalOtherAmount">
+                  <a ng-click="vm.model.ViewOtherCharges(item)" data-target="#otherCharges_Modal" data-toggle="modal" title="Other Charges">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </div>
+              </td> -->
+              <td title="item.netAmount || 0 | number:2">{{vm.model.Currency}} 
+                {{(item.netAmount = ((item.approvedQuantity * item.cop) - ((item.approvedQuantity * item.cop) * (item.discount/100)) + (((item.approvedQuantity * item.cop)-item.totalDiscount) * (item.taxPercentage/100)) + (item.totalOtherAmount )) || 0) | number:2}}
+              </td>
+              <td class="vertical-middle text-center" ng-if="vm.model.poTypeId == 3">
+                <a>
+                  <i class="fa fa-info-circle" aria-hidden="true" title="Purchase Request Details" data-toggle="modal" data-target="#purchaseRequestDetails" ng-click="vm.model.ViewPRList(item)"></i>
+                </a>
+              </td>
+              <td title="{{item.manufacturerName}}">
+                {{item.manufacturerName}}
+              </td>
+              <td title="{{item.specification}}">
+                {{item.specification}}
+              </td>
+              <td title="{{item.remark}}" ng-if ="!item.isDisabled">
+                <input type="text" autocomplete="off" ng-model="item.remark" class="select-box" maxlength="100">
+              </td>
+               <td title="{{item.remark}}" ng-if ="item.isDisabled">
+               {{item.remark}}
+              </td>
+              <td class="vertical-middle text-center">
+                
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- table two end -->
+    </div>
+    <div id="assetRowId" class="table-scroll row margin-top10 padding-left-right-set4" ng-if="vm.model.assetTypeId == 2" style="margin-top: 10px !important">
+      <div class="table-wrap" style="overflow: auto;">
+        <table class="table table-bordered main-table" style="max-width:300%;min-width:300%;">
+          <thead>
+            <tr>
+              <th colspan="2" style="z-index: 1 !important;" class="fixed-side fixed" scope="col">Item Details</th>
+              <th colspan="1" class="font-weight700" scope="col" ng-if="vm.model.poTypeId == 3">PR Qty Details</th>
+              <th colspan="5" class="font-weight700" scope="col">PO Qty Details</th>
+              <th colspan="2" class="font-weight700" scope="col">Bonus Qty Details</th>
+              <th colspan="5" class="font-weight700" scope="col">PO Amount Details</th>
+              <th colspan="5" class="font-weight700" scope="col">PO Amount Total Details</th>
+              <th colspan="17" class="font-weight700" scope="col" ng-if="vm.model.poTypeId == 3">Other Details</th>
+              <th colspan="16" class="font-weight700" scope="col" ng-if="vm.model.poTypeId == 1">Other Details</th>
+            </tr>
+            <tr>
+              <th class="fixed-side width1 text-center" scope="col">
+                <input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" ng-disabled="!vm.model.purchaseOrders || vm.model.purchaseOrders.statusId == 7 || vm.model.purchaseOrders.statusId == 8 || vm.model.purchaseOrders.statusId == 9 || vm.model.purchaseOrders.statusId == 5 || vm.model.purchaseOrders.approvalStatusId == 5 || vm.model.purchaseOrders.approvalStatusId == 7">
+              </th>
+              <th class="width4 fixed fixed-side" scope="col" style="padding-top: 0;z-index: 1 !important;padding-bottom: 0 !important;margin-bottom: 0px;">
+                <div class="col-md-12 col-lg-12">
+                  <div class="col-md-4 col-lg-4" style="border-right: 1.5px solid white;z-index: 1 !important;height: 47px;padding: 0;padding-top: 4px;">
+                    Code
+                  </div>
+                  <div class="col-md-8 col-lg-8" style="padding-top: 4px;">
+                    Name
+                  </div>
+                </div>
+              </th>
+              <th class="width1" ng-if="vm.model.poTypeId == 3">PR Quantity</th>
+              <th class="width2">Pending Quantity</th>
+              <th class="width2">Quantity</th>
+              <th class="width2 vertical-middle">Reject Quantity</th>
+              <th class="width2 vertical-middle">Approved Quantity</th>
+              <th class="width1 vertical-middle">Reject</th>
+              <th class="width1">Qty</th>
+              <th class="width2 vertical-middle">Approved Bonus Quantity</th>
+              <th class="width2">{{vm.model.Currency}} COP</th>
+              <th class="width2">{{vm.model.Currency}} MRP</th>
+              <th class="width1 vertical-middle text-center" title="Action">Last PO Details</th>
+              <th class="width1">Tax Code</th>
+              <th class="width1">Tax %</th>
+              <th class="width1">Disc %</th>
+              <th class="width3">{{vm.model.Currency}} Amount</th>
+              <th class="width2">{{vm.model.Currency}} 
+                Disc Amount
+              </th>
+              <th class="width2">{{vm.model.Currency}} 
+                Tax Amount
+              </th>
+              <!-- <th class="width2">{{vm.model.Currency}} 
+                Other Charges
+              </th> -->
+              <th class="width3">{{vm.model.Currency}} 
+                Net Amount
+              </th>
+              <th class="width1 vertical-middle" title="PR No" ng-if="vm.model.poTypeId == 3">PR No.</th>
+              <th class="width3 vertical-middle" title="Manufacture">Manufacture</th>
+              <th class="width4 vertical-middle" title="Service Provider">Service Provider</th>
+              <th class="width4 vertical-middle" title="Warranty">Warranty</th>
+              <th class="width4 vertical-middle" title="Accessories">Accessories</th>
+              <th class="width4 vertical-middle" title="Warranty Period">Warranty Period</th>
+              <th class="width4 vertical-middle" title="Expected Support Terms">Expected Support Terms</th>
+              <th class="width4 vertical-middle" title="Expected Payment Terms">Expected Payment Terms</th>
+              <th class="width4 vertical-middle" title="Expected Technical Specification">Expected Technical Specification</th>
+              <th class="width4 vertical-middle" title="Specification">Specification</th>
+              <th class="width4 vertical-middle" title="Remark">Remark</th>
+              <th class="width1 vertical-middle text-center">Upload</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in vm.model.purchaseOrders.items">
+              <td class="fixed-side text-center">
+                <input type="checkbox" ng-model="item.isSelected" ng-click="vm.model.SelectItem(item)" ng-disabled="item.status != 'Approved' || vm.model.purchaseOrders.reviewedBy >0" />
+              </td>
+              <td class="width4 fixed fixed-side" scope="col" style="padding-top: 0;z-index: 1 !important;padding-bottom: 0 !important;margin-bottom: 0px; white-space: inherit !important;">
+                <div class="col-md-12 col-lg-12">
+                  <div class="col-md-4 col-lg-4" style="border-right: 1.5px solid #ddd;word-wrap: break-word;z-index: 1 !important;height: 47px;padding: 0;padding-top: 4px;">
+                    {{item.itemCode}}
+                  </div>
+                  <div class="col-md-8 col-lg-8" style="padding-top: 4px;">
+                    {{item.itemName}}
+                  </div>
+                </div>
+              </td>
+              <td class="vertical-middle" title="{{item.prQuantity}}" ng-if="vm.model.poTypeId == 3">
+                {{item.prQuantity}}
+              </td>
+              <!--<td class="width2" title="{{item.newMaxOrderQuantity}} / {{item.newMaxStoreQuantity}}">{{item.newMaxOrderQuantity}} / {{item.newMaxStoreQuantity}}</td>-->
+              <td class="vertical-middle" title="{{item.poQuantity}}">{{item.poQuantity}}</td>
+              <td class="vertical-middle" ng-class="{borderRed: vm.model.isValidPoQuantity[$index]}" title="{{item.poQuantity}}">
+                <div class="col-md-10 padding-left-right-set4">
+                  {{item.poQuantity}}
+                </div>
+                <div class="col-md-2 text-left vertical-middle">
+                  <a data-target="#AddQtyModal_ETOitemConfig" ng-click="vm.model.ViewStagedQuantity(item)" data-toggle="modal" title="View Qty">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </div>
+              </td>
+              <td class="vertical-middle" title="{{item.rejectQuantity}}">{{!!item.rejectQuantity ? item.rejectQuantity : 0}}</td>
+              <td title="{{item.approvedQuantity}}" class="vertical-middle">
+                <div class="col-md-10 padding-left-right-set4">{{!!item.approvedQuantity ? item.approvedQuantity : 0 }}</div>
+                <div class="col-md-2 text-left vertical-middle">
+                  <a data-target="#ApprovedStagedQuantity" ng-click="vm.model.ViewApprovedStagedQuantity(item)" data-toggle="modal" title="View Qty">
+                    <i class="fa fa-info-circle" ng-class="{errorFlag:!item.fillRejectQtyFlag}"></i>
+                  </a>
+                </div>
+              </td>
+              <td class="vertical-middle text-center" title="Reject">
+                <div class="checkbox">
+                  <label class="switch switch-small">
+                    <input type="checkbox" class="switchInput" ng-disabled="item.isDisabled" ng-click="vm.model.RejectionPopup(item)" ng-model="item.isReject">
+                    <div class="slider round slider-small"></div>
+                  </label>
+                </div>
+              </td>
+              <td title="{{item.bonusQuantity}}">
+                {{item.bonusQuantity}}
+              </td>
+              <td title="{{item.bonusApprovedQuantity}}">
+                <div class="row">
+                  <input type="text" autocomplete="off" class="w-100" ng-model="item.bonusApprovedQuantity" ng-if="!item.isDisabled" maxlength="3" numbers-only>
+                  <div ng-if="item.isDisabled">{{!!item.bonusApprovedQuantity ? item.bonusApprovedQuantity : 0 }}</div>
+                </div>
+              </td>
+              <td title="{{item.cop || 0 | number:2}}">{{vm.model.Currency}} 
+                {{item.cop || 0 | number:2}}
+              </td>
+              <td title="{{item.mrp || 0 | number:2}}">{{vm.model.Currency}} 
+                {{item.mrp || 0 | number:2}}
+              </td>
+              <td class="vertical-middle text-center">
+                <a ng-click="vm.model.ViewHistory(item);">
+                  <i class="fa fa-info-circle" aria-hidden="true" title="Last Purchase Details" data-toggle="modal" data-target="#lastPurchaseDetails"></i>
+                </a>
+              </td>
+              <td title="{{item.taxCode}}">
+                {{item.taxCode}}
+              </td>
+              <td title="{{item.taxPercentage || 0 | number:2}}">{{vm.model.Currency}} 
+                {{item.taxPercentage || 0 | number:2}}
+              </td>
+              <td title="{{item.discount || 0 | number:2}}">
+                {{item.discount || 0 | number:2}}
+              </td>
+              <td title="{{item.poAmount || 0 | number:2}}">{{vm.model.Currency}} 
+                {{(item.poAmount = (item.approvedQuantity * item.cop) || 0) | number:2}}
+                <!-- {{item.approvedQuantity * item.cop || 0 | number:2}} -->
+              </td>
+              <td title="{{item.totalDiscount || 0 | number:2}}">{{vm.model.Currency}} 
+                {{(item.totalDiscount = (item.approvedQuantity * item.cop) * (item.discount/100) || 0) | number:2}}
+                <!-- {{(item.approvedQuantity * item.cop) * (item.discount/100) || 0 | number:2}} -->
+              </td>
+              <td title="{{item.taxAmount || 0 | number:2}}">{{vm.model.Currency}} 
+                <!-- {{ item.taxAmount | number:2}} -->
+                {{(item.taxAmount = ((item.approvedQuantity * item.cop)-item.totalDiscount )* (item.taxPercentage/100) || 0) | number:2}}
+              </td>
+              <!-- <td title="{{item.totalOtherAmount | number:2}}">
+                <div class="col-md-10 text-left vertical-middle padding-top5">{{vm.model.Currency}} 
+                  {{item.totalOtherAmount || 0 | number:2}}
+                </div>
+                <div class="col-md-2 text-left vertical-middle padding-top5" ng-if="!!item.totalOtherAmount">
+                  <a ng-click="vm.model.ViewOtherCharges(item)" data-target="#otherCharges_Modal" data-toggle="modal" title="Other Charges">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </div>
+              </td> -->
+              <td>{{vm.model.Currency}}
+                {{(item.netAmount = ((item.approvedQuantity * item.cop) - ((item.approvedQuantity * item.cop) * (item.discount/100)) + (((item.approvedQuantity * item.cop)-item.totalDiscount ) * (item.taxPercentage/100)) + (item.totalOtherAmount )) || 0) | number:2}}
+              </td>
+              <td class="vertical-middle text-center" ng-if="vm.model.poTypeId == 3">
+                <a>
+                  <i class="fa fa-info-circle" aria-hidden="true" title="Purchase Request Details" data-toggle="modal" data-target="#purchaseRequestDetails"
+                    ng-click="vm.model.ViewPRList(item)"></i>
+                </a>
+              </td>
+              <td title="{{item.manufacturerName}}">
+                {{item.manufacturerName}}
+              </td>
+              <td title="{{item.serviceProvider}}">
+                {{item.serviceProvider}}
+              </td>
+              <td title="{{item.warrantyDate | date:'MMM-yyyy'}}">
+                {{item.warrantyDate | date:'MMM-yyyy'}}
+              </td>
+              <td class="text-center">
+                <a ng-click="vm.model.OpenPopup('Open', 'viewAddedItems');vm.model.ViewItems(item)">
+                  <i class="fa fa-info-circle"></i>
+                </a>
+              </td>
+              <td class="text-center">
+                <a ng-click="vm.model.OpenPopup('Open', 'warrantyPeriodModal');vm.model.ViewTerms('warrantyPeriodModal', item)">
+                  <i class="fa fa-info-circle"></i>
+                </a>
+              </td>
+              <td class="text-center">
+                <a ng-click="vm.model.OpenPopup('Open', 'expectedSuportTermsModal');vm.model.ViewTerms('expectedSuportTermsModal', item)">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+              </td>
+              <td class="text-center">
+                <a ng-click="vm.model.OpenPopup('Open', 'expectedPaymentTermsModal');vm.model.ViewTerms('expectedPaymentTermsModal', item)">
+                  <i class="fa fa-info-circle"></i>
+                </a>
+              </td>
+              <td class="text-center">
+                <a ng-click="vm.model.OpenPopup('Open', 'expectedTechSpecificationModal');vm.model.ViewTerms('expectedTechSpecificationModal', item)">
+                  <i class="fa fa-info-circle"></i>
+                </a>
+              </td>
+              <td title="{{item.specification}}">
+                {{item.specification}}
+              </td>
+              <td ng-if ="!item.isDisabled">
+                <input type="text" autocomplete="off" ng-model="item.remark" maxlength="100">
+              </td>
+              <td title="{{item.remark}}" ng-if ="item.isDisabled">
+               {{item.remark}}
+              </td>
+              <td class="vertical-middle text-center">
+                <a>
+                  <i class="fa fa-upload" title="Upload"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <footer class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+    <fieldset>
+      <div class="row padding-left-right-set4">
+        <div class="col-lg-12 col-md-12 col-sm-12 padding-right20">
+          <table class=" table table-bordered">
+            <tbody>
+            <tr>
+              <th class="width5" rowspan="2">
+                <label>Payment Terms</label>
+              </th>
+              <td class="width13" rowspan="2" ng-if="!vm.model.DisableEditForOrder()" >
+                <textarea style="height:55px !important" rows="2" ng-model="vm.model.paymentTerm"></textarea>
+              </td>
+              <td class="width13" rowspan="2" style="max-width:195px !important;word-wrap:break-word;" ng-if="vm.model.DisableEditForOrder()">
+                <div style="width:100%; height:55px; overflow-y:scroll;">{{vm.model.paymentTerm}}
+                </div>
+              </td>
+              <th class="width7">
+                <label>Total Amount</label>
+              </th>
+              <td class="width8">{{vm.model.Currency}}
+                {{(vm.model.purchaseOrders.totalAmount = (vm.model.purchaseOrders.items | sumByColumn: 'poAmount') || 0) | number:2}}
+                <!-- {{vm.model.purchaseOrders.totalAmount || 0 | number: 2}} -->
+              </td>
+              <th class="width7">
+                <label>Total Discount</label>
+              </th>
+              <td class="width8">{{vm.model.Currency}}
+                <!-- {{vm.model.purchaseOrders.totalDiscount || 0 | number: 2}} -->
+                {{(vm.model.purchaseOrders.totalDiscount = (vm.model.purchaseOrders.items | sumByColumn: 'totalDiscount') || 0) | number:2}}
+              </td>
+              <th class="width8">
+                <label>Total Tax Amount</label>
+              </th>
+              <td class="width8">{{vm.model.Currency}}
+                <!-- {{vm.model.purchaseOrders.totalTaxAmount || 0 | number: 2}} -->
+                {{(vm.model.purchaseOrders.totalTaxAmount = (vm.model.purchaseOrders.items | sumByColumn: 'taxAmount') || 0) | number:2}}
+              </td>
+            </tr>
+            <tr>
+              <!-- <th class="width8" colspan="2"> -->
+              </th>
+              <th class="width10">
+                <label>Total Other Charges</label>
+              </th>
+              <td class="width8">
+                <div class="col-md-8">
+                  {{vm.model.Currency}}
+                  <!-- {{(vm.model.totalOtherCharges = (vm.model.purchaseOrders.items | sumByColumn: 'totalOtherAmount') || 0) | number:2}} -->
+                  {{vm.model.purchaseOrders.totalOtherAmount || 0 | number: 2}}
+                </div>
+                <div class="col-md-1 text-left vertical-middle padding-top5">
+                  <a ng-click="vm.model.OpenPopup('Open', 'otherCharges_Modal'); vm.model.fillOtherChargesList(vm.model.purchaseOrders)"
+                     title="Other Charges">
+                    <i class="fa fa-plus-circle" ng-class="{colorRed: item.validateOCFlag}"></i>
+                  </a>
+                </div>
+              </td>
+              <th class="width7">
+                <label>Round Off</label>
+              </th>
+              <td class="width8">{{vm.model.Currency}}
+                {{vm.model.purchaseOrders.roundOffAmount || 0 | number: 2}}
+              </td>
+              <th class="width8">
+                <label>Net Amount</label>
+              </th>
+              <td class="width8">{{vm.model.Currency}}
+                <!-- {{(vm.model.purchaseOrders.netAmount = (vm.model.purchaseOrders.items | sumByColumn: 'netAmount') || 0) | number:2}} -->
+                {{vm.model.purchaseOrders.netAmount || 0 | number: 2}}
+              </td>
+            </tr>
+            <tr>
+              <th colspan="3">
+                <div class="row">
+                  <div class="col-lg-3 col-md-3 col-sm-3 padding-top5" style="color:#716d6d;">
+                    <label>Discount</label>&nbsp;
+                    <label ng-if="vm.model.purchaseOrders.discountTypeId == 2">Amount :</label>
+                    <label ng-if="vm.model.purchaseOrders.discountTypeId == 1">Percentage :</label>
+                  </div>
+                  <!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-top5" ng-if="vm.model.purchaseOrders.discountTypeId == 1">
+                    <label style="color:#716d6d;">
+                      Percentage :
+                    </label>
+                  </div> -->
+                  <div class="col-lg-2 col-md-2 col-sm-2 padding-top5" ng-if="vm.model.purchaseOrders.discountTypeId == 1">
+                    <label style="color:#716d6d;">
+                      {{vm.model.purchaseOrders.discount | number: 2}} <span> % </span>
+                    </label>
+                  </div>
+                  <!-- <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10 text-width-auto" style="padding-top: 6px" ng-if="vm.model.purchaseOrders.discountTypeId == 2">
+                    <label>
+                      Amount :
+                    </label>
+                  </div> -->
+                  <label ng-if="vm.model.purchaseOrders.discountTypeId == 2" style="padding-top: 6px;color:#716d6d;">{{vm.model.Currency}}
+                    {{vm.model.purchaseOrders.totalDiscount | number: 2}}
+                  </label>
+                </div>
+              </th>
+              <th class="width8 padding-top10">
+                <label>Terms and Conditions:</label>
+              </th>
+              <td class="width8" colspan="5" ng-if ="!vm.model.DisableEditForOrder()">
+                <textarea style="height:55px !important" rows="2" ng-model="vm.model.remark"></textarea>
+              </td>
+              <td class="width8" colspan="5" style="max-width:195px !important;word-wrap:break-word;"  ng-if ="vm.model.DisableEditForOrder()" >
+                <div style="width:100%; height:55px; overflow-y:scroll;">{{vm.model.remark}}
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </fieldset>
+    <div class="row padding-right20 margin-top4">
+      <div class="col-lg-8 col-md-8 col-sm-8 text-right"></div>
+
+      <div class="col-lg-2 col-md-2 col-sm-2 padding-po-4th-level-approval">
+        <!-- <div ng-if="isPoApproval == true">
+          <a href="">
+            <input type="button" ng-click="vm.model.PurchaseOrderApproval(vm.model.purchaseOrders.id)" ng-disabled="vm.model.purchaseOrders.reviewedBy >0 || vm.model.purchaseOrders.approvalStatus !='Approved' " value="Final Approval" class="btn btn-primary btn-save-box-shadow">
+          </a>
+        </div> -->
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+        <!-- <div>
+          <a href="">
+            <input type="button" ng-click="vm.model.SavePOApproval()" ng-disabled="!vm.model.ValidateSaveButton()" value="Approve" class="btn btn-primary btn-save-box-shadow">
+          </a>
+        </div> -->
+        <a href="" ng-click="vm.model.NavigateToBack()">
+          <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+        </a>
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+        <div ng-if="isPoApproval == true">
+          <a href="">
+            <input type="button" ng-click="vm.model.PurchaseOrderApproval(vm.model.purchaseOrders.id)" ng-disabled="vm.model.purchaseOrders.reviewedBy >0" value="Final Approval" class="btn btn-primary btn-save-box-shadow">
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<div id="AddQtyModal_ETOitemConfig" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Staged Qty
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">
+                    Sr No.
+                  </th>
+                  <th class="width8">
+                    Date
+                  </th>
+                  <th class="width5">
+                    Qty
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="data in vm.model.stagedQuantity">
+                  <td>{{$index+1}}</td>
+                  <td>
+                    {{data.stagedDate | date:'dd/MM/yyyy'}}
+                  </td>
+                  <td>
+                    {{data.quantity}}
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th></th>
+                  <th>Total Qty</th>
+                  <th>
+                    {{vm.model.totalStagedQty = ((vm.model.stagedQuantity | sumByColumn: 'quantity'))}}
+                  </th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="ApprovedStagedQuantity" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Approved Staged Qty
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4" style="height:337px !important">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">
+                    Sr No.
+                  </th>
+                  <th class="width8">
+                    Date
+                  </th>
+                  <th class="width5">
+                    Quantity
+                  </th>
+                  <th class="width5">
+                    Approved Quantity
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="data in vm.model.approvedStageQuantity">
+                  <td>{{$index + 1}}</td>
+                  <td>
+                    {{data.stagedDate | date:'dd/MM/yyyy'}}
+                  </td>
+                  <td>
+                    {{data.quantity}} {{data.poUomUnit}}
+                  </td>
+                  <td>
+                    <input type="text" autocomplete="off" class="select-box" ng-model="data.approvedQuantity" ng-disabled="!vm.model.isSumVisible" 
+                      ng-blur="validateApprovedQty(data)" numbers-only>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th class="text-right">Total Qty</th> <!-- poApprovedQuantity -->
+                    <th>{{vm.model.approvedQuantity = (vm.model.approvedStageQuantity | sumByColumn: 'approvedQuantity') || 0}}</th>
+                  </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row his-style">
+          <div class="col-md-10"></div>
+          <div class="col-md-2 padding-left0px-right6px">
+            <div class="common-save-button">
+              <input type="button" value="Save" class="btn btn-primary btn-save-box-shadow"
+               ng-click="vm.model.sumApprovedQty()" ng-disabled="!vm.model.isSumVisible">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="selectUOM_modal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          UOM Details
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">
+                    UOM
+                  </th>
+                  <th class="width6">
+                    UOM Unit
+                  </th>
+                  <th class="width6">
+                    Conversion Factor
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="uom in vm.model.POUoms">
+                  <td>{{uom.uomType}}</td>
+                  <td>{{uom.uomUnit}}</td>
+                  <td>{{uom.conversion}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="bouns_selectUOM_modal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Bouns Qty UOM
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">
+                    UOM
+                  </th>
+                  <th class="width6">
+                    UOM Unit
+                  </th>
+                  <th class="width6">
+                    Conversion Factor
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="uom in vm.model.bonusUoms">
+                  <td>{{uom.uomType}}</td>
+                  <td>{{uom.uomUnit}}</td>
+                  <td>{{uom.conversion}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div id="otherCharges_Modal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Other Charges
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">
+                    Other Charges
+                  </th>
+                  <th class="width6">
+                    Amount
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="data in vm.model.otherCharges">
+                  <td>{{data.otherCharges}}</td>
+                  <td>{{vm.model.Currency}} {{data.amount | number:2}}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Total Qty</th>
+                  <th>{{vm.model.Currency}} 
+                    {{vm.model.totalOtherCharge = ((vm.model.otherCharges | sumByColumn: 'amount')) | number:2}}
+                  </th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div id="otherCharges_Modal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Other Charges
+          <button type="button" class="close" data-dismiss="modal" ng-click="cancelOtherCharges()">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">Other Charges</th>
+                  <th class="width6">Amount {{vm.model.Currency}}</th>
+                  <th class="width2">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="charges in vm.model.otherChargesList">
+                  <td>
+                    <select ng-model="charges.otherCharge" class="select-box floating-label"
+                      data-ng-options="otherCharge.otherCharges for otherCharge in vm.model.otherChargesDropdownList"
+                      ng-change="charges.isChargesValid=false" ng-class="{borderRed: charges.isChargesValid}"></select>
+                  </td>
+                  <td>
+                    <input type="text" autocomplete="off" ng-model="charges.amount" ng-class="{borderRed: charges.isAmountValid}"
+                      ng-change="charges.isAmountValid=false" ng-blur="vm.model.SetDecimalOtherCharge(charges)"
+                      class="select-box" allow-decimal-numbers disabled>
+                  </td>
+                  <td>
+                    <div>
+                      <input type="button" ng-click="vm.model.AddOtherCharge(charges.otherCharge.id, $index)" value="+"
+                        class="btn btn-primary btn-save-box-shadow width35"
+                        ng-disabled="!vm.model.purchaseOrders || vm.model.purchaseOrders.statusId == 7 || vm.model.purchaseOrders.statusId == 8 || vm.model.purchaseOrders.statusId == 9 || vm.model.purchaseOrders.statusId == 5 || vm.model.purchaseOrders.approvalStatusId == 5 || vm.model.purchaseOrders.approvalStatusId == 7">
+                      <input type="button" ng-click="vm.model.lessOtherCharge(charges, $index)" value="-"
+                        class="btn btn-primary btn-save-box-shadow width35" ng-show="showMinus">
+                        <!-- ng-if="$index !== 0" -->
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th class="text-right">Total Amount</th>
+                  <th>{{vm.model.Currency}} {{vm.model.otherChargesTotal = (vm.model.otherChargesList | sumByColumn:
+                    'amount') | number:2}}</th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row his-style">
+          <div class="col-md-10"></div>
+          <div class="col-md-2 padding-left0px-right6px">
+            <div class="common-save-button">
+              <input type="button" ng-click="vm.model.sumOtherCharges(vm.model.otherChargesList)" value="Save"
+                class="btn btn-primary btn-save-box-shadow"
+                ng-disabled="!vm.model.purchaseOrders || vm.model.purchaseOrders.statusId == 7 || vm.model.purchaseOrders.statusId == 8 || vm.model.purchaseOrders.statusId == 9 || vm.model.purchaseOrders.statusId == 5 || vm.model.purchaseOrders.approvalStatusId == 5 || vm.model.purchaseOrders.approvalStatusId == 7">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="qtyaccepatReject" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-backdrop="static" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Rejection
+          <button type="button" ng-click="vm.model.ModalDismiss('qtyaccepatReject')" class="close">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 padding-left-right-set">
+            <div class="row input-container margin-top10">
+              <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                  <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11">
+                  <input ng-model="vm.model.rejectQty" type="text" autocomplete="off" class="text-input floating-label dirty" maxlength="3" numbers-only>
+                  <label for="rejectQty">Qty</label>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                  <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11">
+                  <select ng-model="vm.model.rejectReason" class="text-input floating-label dirty" data-ng-options="rejectReason.reason for rejectReason in vm.model.reasons"></select>
+                  <label for="rejectReason">Select Reason</label>
+                </div>
+              </div>
+            </div>
+            <div class="row input-container margin-top10">
+              <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                <i class="fa fa-sticky-note" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-11 col-sm-11 col-md-11">
+                <textarea ng-model="vm.model.rejectNote" maxlength="100" rows="4" class="text-input floating-label dirty"></textarea>
+                <label for="rejectNote">Note</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border:none;">
+        <button type="button" class="btn btn-primary" ng-click="vm.model.SaveRejection()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="warrantyPeriodModal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Warranty Period
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row padding-left-right-set4 padding-top4">
+          <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set">
+            <div class="row input-container padding-bottom10">
+              <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+                <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+              </div>
+              <div class="col-lg-11 col-sm-11 col-md-11">
+                <input type="text" autocomplete="off" ng-model="vm.model.warrantyPeriod" class="text-input floating-label" readonly>
+                <!-- <label for="warrantyPeriod">Warranty Period</label> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="expectedSuportTermsModal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Expected Support Terms
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row padding-left-right-set padding-top4">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <textarea ng-model="vm.model.supportTerms" rows="6" readonly></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="expectedPaymentTermsModal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Expected Payment Terms
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row padding-left-right-set padding-top4">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <textarea ng-model="vm.model.paymentTerms" rows="6" readonly></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="expectedTechSpecificationModal" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Expected Technical Specification
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row padding-left-right-set padding-top4">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <textarea ng-model="vm.model.technicalSpecs" rows="6" readonly></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="viewAddedItems" class="modal fade ng-scope in common-large-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog"> 
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Item List
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body height-table-with-scroll ">
+        <fieldset>
+          <div class="row table-container">
+            <div class="table-container-header col-lg-12 col-md-12 padding-top10 padding-left-right-set4">
+              <table class="table table-striped table-hover table-condensed table-bordered">
+                <thead>
+                  <tr>
+                    <th class="width7">Item Code
+                      <div class="float_right" ng-click="sortType = 'itemCode'; sortReverse = !sortReverse">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="width7">Item Name
+                      <div class="float_right" ng-click="sortType = 'itemName'; sortReverse = !sortReverse">
+                        <div>
+                          <i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </div>
+                        <div class="margin-top-8">
+                          <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+            <div class="table-container-body padding-left-right-set4" style="height: 350px; overflow-y: scroll;">
+              <table class="table table-striped table-hover table-condensed table-bordered">
+                <tbody>
+                  <tr ng-repeat="item in vm.model.addedAccessoryItems | orderBy:sortType:sortReverse">
+                    <td class="width7">{{item.itemCode}}</td>
+                    <td class="width7" style="width: 6.96% !important">{{item.itemName}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="purchaseRequestDetails" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Purchase Request Details
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">
+                    PR No.
+                  </th>
+                  <th class="width6">
+                     PR Qty
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="pr in vm.model.prList">
+                  <td>{{pr.prNo}}</td>
+                  <td>{{pr.approvedQuantity}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  </div>
+  </div>
+</div>
+ <div id="AddQtyModal_ETOitemConfig" class="modal fade ng-scope in common-small-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Staged Qty
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 common-table-height-250 padding-top10 padding-left-right-set4" style="height:337px !important">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width3">
+                    Sr No.
+                  </th>
+                  <th class="width8">
+                    Date
+                  </th>
+                  <th class="width5">
+                    Qty
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="quantity in vm.model.stageQuantityList">
+                  <td>{{$index + 1}}</td>
+                  <td>
+                    {{data.stagedDate | date:'dd/MM/yyyy'}
+                  </td>
+                  <td>
+                    <input type="text" autocomplete="off" class="select-box" ng-model="quantity.quantity" maxlength="3" numbers-only>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                  <tr>
+                      <th></th>
+                      <th class="text-right">Total Qty</th>
+                      <th>{{vm.model.poQuantity = (vm.model.stageQuantityList | sumByColumn: 'quantity') || 0}}</th>
+                      <th></th>
+                  </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row his-style">
+          <div class="col-md-10"></div>
+          <div class="col-md-2 padding-left0px-right6px">
+            <div class="common-save-button">
+              <input type="button" value="Save" class="btn btn-primary btn-save-box-shadow"
+               ng-click="vm.model.sumPOQuantity()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+<div id="lastPurchaseDetails" class="modal fade ng-scope in common-large-popup" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title patient-details-row">
+          Last Purchase Order
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 col-sm-12 common-table-height-250 padding-top10 padding-left-right-set4">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Against</th>
+                  <th>QR/PR Number</th>
+                  <th>Date</th>
+                  <th>Quantity</th>
+                  <th>Quantity UOM</th>
+                  <th>Bonus Quantity</th>
+                  <th>Bonus Quantity UOM</th>
+                  <th>COP</th>
+                  <th>MRP</th>
+                  <th>Tax %</th>
+                  <th>Amount</th>
+                  <th>Discount</th>
+                  <th>Tax Amount</th>
+                  <th>Other Charges</th>
+                  <th>Net Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in vm.model.lastOrderDetails">
+                  <td>{{item.retype}}</td>
+                  <td>{{item.ponumber}}</td>
+                  <td>{{item.podate | date:'dd/MM/yyyy'}}</td>
+                  <td>{{item.quantity}}</td>
+                  <td>{{item.quantityuom}}</td>
+                  <td>{{item.bonusquantity}}</td>
+                  <td>{{item.bonusuomunit}}</td>
+                  <td>{{item.cop}}</td>
+                  <td>{{item.mrp}}</td>
+                  <td>{{item.taxpercentage}}</td>
+                  <td>{{item.totalamount}}</td>
+                  <td>{{item.totaldiscount}}</td>
+                  <td>{{item.taxamount}}</td>
+                  <td>{{item.otheramount}}</td>
+                  <td>{{item.netamount}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

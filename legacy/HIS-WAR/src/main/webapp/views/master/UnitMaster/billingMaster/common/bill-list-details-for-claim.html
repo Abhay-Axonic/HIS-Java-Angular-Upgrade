@@ -1,0 +1,165 @@
+<!-- BILL LIST VIEW POPUP -->
+<div id="billListDetailsClaim" class="common-large-popup modal fade ng-scope in his-style" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog"> 
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Bill Details
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body row" style="height: 440px; overflow-y: auto;">
+					 <div class="col-md-12">
+						<div class="row margin-top8">
+	<div class="col-md-12 col-lg-12 fix-height-scroll230 padding-left-right-set4" style="height: 100% !important;">
+		<table class="table table-bordered  margin-top8">
+			<thead>
+				<tr>
+					
+					<th class="width10">
+						 <span class="">Service Name</span>
+					</th>
+					<th class="width10">
+						Doctor
+					</th>
+					<th class="width3">
+						Qty
+					</th>
+					<th class="width5">
+						Unit Price
+					</th>
+					<th class="width5">
+						Total Amt
+					</th>
+					<th class="width5">
+						Concession
+					</th>
+					<th class="width5">
+						Disc %
+					</th>
+					<th class="width6">
+						Discount Amt
+					</th>
+					<th class="width6">
+						GST Type
+					</th>
+					<th class="width5">
+						GST %
+					</th>
+					<th class="width5">
+						GST Amt
+					</th>
+					<th class="width6">
+						Self Payable
+					</th>
+					<th class="width6">
+						Credit Payable
+					</th>
+					<th class="width6">
+						Package Payable
+					</th>
+					<th class="width6">
+						Net Payable
+					</th>
+					<th class="width5">
+						Order On
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="service in billServicesListClaim">
+					
+					<td>
+						{{service.serviceStandardName}}
+					</td>
+					<td>
+						{{service.doctorName}}
+					</td>
+					<td>
+						{{service.quantity}}
+					</td>
+					<td>
+						{{parseFloatNum(service.unitPrice)}}
+					</td>
+					<td>
+						{{parseFloatNum(service.grossAmount)}}
+					</td>
+					<td>
+						{{parseFloatNum(service.concession)}}
+					</td>
+					<td>
+						{{parseFloatNum(service.discountPercentage)}}%
+					</td>
+					<td>
+						{{parseFloatNum(service.discount)}}
+					</td>
+					<td>
+						{{service.taxName}}
+					</td>
+					<td>
+						{{parseFloatNum(service.taxPercentage)}}%
+					</td>
+					<td>
+						{{parseFloatNum(service.taxAmount)}}
+					</td>
+					<td>
+						{{parseFloatNum(service.selfPayable)}}
+					</td>
+					<td>
+						{{parseFloatNum(service.creditPayable)}}
+					</td>
+					<td>
+						{{parseFloatNum(service.packagePayableAmount)}}
+					</td>
+					<td>
+						{{parseFloatNum(service.netAmt)}}
+					</td>
+					<td><!-- {{getDateByFormat(service.orderDateString,false)}} -->
+						{{service.orderDateString}}
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<!-- <td colspan="3" class="text-right">
+						
+					</td> -->
+					<td colspan="4" class="text-right">
+						<span>Account Summary </span><!-- <input type="text" autocomplete="off" class="width62px" value="60"> -->
+					</td>
+					<td class="width5">
+						<!-- <input type="text" autocomplete="off" class="width100"> -->{{totalAmtQuaBase|setDec:2}}
+					</td>
+					<td class="width5">
+						{{totalAmtConcession|setDec:2}}
+					</td>
+					<td></td>
+					<td class="text-left">
+						<!-- <input type="text" autocomplete="off" class="width62px"> -->{{totalAmtDiscount|setDec:2}}
+					</td>
+					<td colspan="2"></td>
+					<td class="text-left">
+						<!-- <input type="text" autocomplete="off" class="width62px"> -->{{totalAmtGst|setDec:2}}
+					</td>
+					<td>{{totalSelfPayableAmtClaim|setDec:2}}</td>
+					<td>{{totalCreditPayableAmtClaim|setDec:2}}</td>
+					<td>{{totalPackageConsumptionAmt|setDec:2}}</td>
+					<td class="width5">
+						<!-- <input type="text" autocomplete="off" class="width62px" value="60"> -->{{totalNetPayableAmt|setDec:2}}
+					</td>
+					<td></td>
+					
+				</tr>
+				
+			</tfoot>
+		</table>
+ </div>
+</div>
+					</div> 
+				</div>
+				<div class="modal-footer" style="border:none;">
+				<button type="button" ng-click="sendToSmartCard()" class="btn btn-primary width10" id="sendBtn">Send to SmartCard</button>
+			</div>
+			</div>
+		</div>
+</div>

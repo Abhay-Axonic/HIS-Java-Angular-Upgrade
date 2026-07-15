@@ -1,0 +1,1361 @@
+<!-- /********************************************************************************************************************************************
+Procurement - quotation - GRN Settlement main page
+Created by - Nikita Chintawar
+Created Date - 10-Oct-2019 
+/********************************************************************************************************************************************/ -->
+<!-- Page Content -->
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <fieldset>
+            <div class="row margin-top10">
+                <div class="row">
+                    <div class="custom-sub-tab padding-left-right-set4">
+                        <ul class="tabs nav nav-tabs">
+                            <li ng-class="{ active : isSetFirstTabLevel(1) }" id="nor"
+                                class="width10"><a href=""
+                                                   ng-click="setFirstTabLevel(1); tab1List()">GRN Settlement</a></li>
+                            <li ng-class="{ active : isSetFirstTabLevel(2) }" class="width10">
+                                <a href="" ng-click="setFirstTabLevel(2) ; tab2List()"
+                                   class="employeeRegRadioParent">Settled List</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="row padding-left-right-set4">
+                        <div ng-show="isSetFirstTabLevel(1)" class="second-level-tab-display-div">
+                            <div class="row margin-top10">
+                                <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <input type="text" autocomplete="off" ng-model="vm.model.fromDate"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   placeholder="DD/MM/YYYY" model-view-value="true"
+                                                   is-open="vm.model.fromDateOpened"
+                                                   datepicker-options="vm.model.fromDateOptions" show-button-bar="false"
+                                                   ng-click="vm.model.OpenFromDate()"
+                                                   class="text-input floating-label dirty" readonly="">
+                                            <label for="fromDate">Date (From)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <input type="text" autocomplete="off" ng-model="vm.model.toDate"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   placeholder="DD/MM/YYYY" model-view-value="true"
+                                                   is-open="vm.model.toDateOpened"
+                                                   datepicker-options="vm.model.toDateOptions" show-button-bar="false"
+                                                   ng-click="vm.model.OpenToDate()"
+                                                   class="text-input floating-label dirty" readonly="">
+                                            <label for="toDate" class="LISDynamicLabel">Date-Till</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10"
+                                     >
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10 ">
+                                            <input type="text" autocomplete="off" ng-model="vm.model.vendorName"
+                                                   class="text-input floating-label"
+                                                   uib-typeahead="vendorNames.detail for vendorNames in vm.model.SearchVendorNames($viewValue)"
+                                                   typeahead-on-select="vm.model.AddVendorName($item); vm.model.search = ''">
+                                            <label for="vendorName">Vendor</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10"
+                                     >
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                            <i class="fa fa-building-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10" style="padding-top: 2px;">
+                                            <div>
+                                                <select name="fromstore" id="fromstore"
+                                                        class="text-input floating-label dirty"
+                                                        ng-model="vm.model.fromstore"
+                                                        data-ng-options="fromstore.store for fromstore in vm.model.fromstoreList">
+                                                </select>
+                                                <label for="fromstore" class="LISDynamicLabel">Store (Requester)</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10"
+                                     >
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                            <i class="fa fa-building-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10" style="padding-top: 2px;">
+                                            <select ng-model="vm.model.store"
+                                                    data-ng-options="store.store for store in vm.model.storeList"
+                                                    class="text-input floating-label"></select>
+                                            <label for="store" class="LISDynamicLabel">Store (Delivering)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10"
+                                     >
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10" style="padding-top: 2px;">
+                                            <select ng-model="vm.model.grnType"
+                                                    data-ng-options="type.type for type in vm.model.assetTypes"
+                                                    class="text-input floating-label">
+                                            </select>
+                                            <label for="grnType">GRN Type</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10"
+                                     >
+                                    <div class="row input-container">
+                                        <div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <input type="text" autocomplete="off" ng-model="vm.model.grnNumber"
+                                                   class="text-input floating-label">
+                                            <label for="grnNumber">GRN No</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row margin-top4">
+                                <div class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4 padding-top10"
+                                >
+                                    <div class="row input-container">
+                                        <div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+                                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-11 col-sm-11 col-md-11">
+                                            <select ng-model="vm.model.paymentTypes"
+                                                    class="text-input floating-label dirty"
+                                                    data-ng-options="paymentTypes.name for paymentTypes in paymentTypes">
+                                            </select>
+                                            <label for="status" class="LISDynamicLabel">Payment Type</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4 padding-left-right-set4 padding-top10"
+                                >
+                                    <div class="col-lg-1 col-sm-2 col-md-2 polymer-icon ">
+                                        <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-10 col-sm-8 col-md-8" style="width: 60%">
+                                        <select data-ng-options="paymentStatuses.name for paymentStatuses in paymentStatuses"
+                                                ng-model="vm.model.paymentStatuses"
+                                                ng-value="{{vm.model.paymentStatuses}}"
+                                                value="{{vm.model.paymentStatuses}}"
+                                                class="text-input floating-label dirty">
+                                        </select>
+                                        <label for="status" class="LISDynamicLabel">Payment Status</label>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set pull-left">
+                                        <div class="common-save-button" style="padding-top: 5px;">
+                                            <a class="btn btn-primary btn-save-box-shadow" id="searchBtn"
+                                               ng-click="vm.model.GetGRNSettlementList()" style="width: auto;">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-top4">
+                                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+                                    <div class="search ">
+                                        <label class="show-entries">Show
+                                            <select ng-init="vm.model.pagination.pageSize='10'"
+                                                    ng-model="vm.model.pagination.pageSize"
+                                                    ng-change="vm.model.pagination.setTotalPages(vm.model.pagination)"
+                                                    class="search-popUp-ddl">
+                                                <option value="10">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select> (records)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-1 float_right" style="margin-top: -5px;">
+                                    <div class="common-save-button">
+                                        <a class="btn btn-primary btn-save-box-shadow" ng-class="{disabled: settleBtn}"
+                                           data-toggle="modal" data-target="#paymentModePopup" id="saveBtn" style="width: auto;"
+                                           ng-click="CalculateAmount(vm.model.grnSettlementList)">Settle</a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+                                    <input type="text" autocomplete="off" class="text-search-box" ng-model="search"
+                                           placeholder="Search"
+                                           style="margin-top: 0px">
+                                    <!-- ng-change="vm.model.pagination.searchData(vm.model.grnSettlementList, vm.model.pagination)" -->
+                                    <i class="fa fa-search common-search-text-icon" style="left: 12px; top: 9px;"
+                                       aria-hidden="true"></i>
+                                </div>
+                            </div>
+                            <div class="row margin-top4">
+                                <div class="col-md-12 col-lg-12 col-sm-8 padding-left-right-set4">
+                                    <fieldset>
+                                        <div class="row table-container padding-left-right-set4 padding-top5">
+                                            <div class="table-container-header">
+                                                <table class="table table-striped table-hover table-condensed table-bordered first-checkBox-padding">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="width2 text-center">
+                                                            <!-- <input type="checkbox" ng-click="vm.model.SelectAllGRN()"
+                                                                ng-model="vm.model.selectAllRows"
+                                                                ng-disabled="!vm.model.grnSettlementList || vm.model.grnSettlementList == false" /> -->
+                                                        </th>
+                                                        <th class="width5" title="GRN Date">
+                                                            GRN Date
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'grnDate', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="GRN No">
+                                                            GRN No
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'grnNo', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5">
+                                                            Store (Requester)
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'requestingStoreName', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5">
+                                                            Store (Delivering)
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'storeName', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="Invoice No">
+                                                            Invoice No
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceNo', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="Invoice Date">
+                                                            Invoice Date
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'invoiceDate', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="DC No">
+                                                            DC No
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'dcNo', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="DC Date">
+                                                            DC Date
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'dcDate', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="Vendor Name">
+                                                            Vendor Name
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'vendorName', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="Status(n)">
+                                                            Status(n)
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'status', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="Payment Type">
+                                                            Payment Type
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'paymentType', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="Net Amount">
+                                                            Net Amount
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'netAmount', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="Paid Amount">
+                                                            Paid Amount
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'paidAmount', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="Total balance Amount">
+                                                            Total balance Amount
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'balanceAmount', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                          <th class="width5" title="Pay Due Date">
+                                                            Pay Due Date
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'payDueDate', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5" title="Payment Status">
+                                                            Payment Status
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'paymentStatus', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width6">Action taken</th>
+                                                    </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                            <div class="table-container-body"
+                                                 style="height: 400px; overflow-y: overlay;">
+                                                <table class="table table-striped table-hover table-condensed table-bordered">
+                                                    <tbody>
+                                                    <tr ng-repeat="grn in vm.model.pagination.data| filter : search">
+                                                        <td class="width2 text-center">
+                                                            <input type="checkbox" ng-model="grn.isSelected"
+                                                                   id="isSelected"
+                                                                   ng-click="vm.model.SelectGRN(grn)"
+                                                                   ng-disabled="grn.disFlag == true || grn.paymentStatus == 'Settled'"/>
+                                                            <!-- || grn.paymentStatus == Settled -->
+                                                        </td>
+                                                        <td class="width5" title="{{grn.grnDate | date:'dd/MM/yyyy'}}">
+                                                            {{grn.grnDate | date:dateFormat}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.grnNo}}">{{grn.grnNo}}</td>
+                                                        <td class="width5" title="{{grn.requestingStoreName}}">
+                                                            {{grn.requestingStoreName}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.storeName}}">{{grn.storeName}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.invoiceNo}}">{{grn.invoiceNo}}
+                                                        </td>
+                                                        <td ng-if="grn.stringDate!=true" class="width5" title="{{grn.invoiceDate | date:dateFormat}}">
+                                                            {{grn.invoiceDate | date:dateFormat}}
+                                                        </td>
+                                                        <td ng-if="grn.stringDate==true" class="width5" title="{{grn.invoiceDate}}">
+                                                            {{grn.invoiceDate}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.dcNo}}">{{grn.dcNo}}</td>
+                                                        <td ng-if="grn.stringDcDate==true" class="width5" title="{{grn.dcDate}}">{{grn.dcDate}}</td>
+                                                        <td ng-if="grn.stringDcDate!=true" class="width5" title="{{grn.dcDate | date:dateFormat}}">{{grn.dcDate | date:dateFormat }}</td>
+                                                        <td class="width5" title="{{grn.vendorName}}">
+                                                            {{grn.vendorName}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.status}}">{{grn.status}}</td>
+                                                        <td class="width5" title="{{grn.billType}}">{{grn.billType}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.netAmount | number:2}}">
+                                                            {{grn.netAmount | number:2}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.paidAmount}}">{{grn.paidAmount |
+                                                            number:2}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.balanceAmount}}">
+                                                            {{grn.balanceAmount | number:2}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.payDueDate | date:dateFormat}}">
+                                                            {{grn.payDueDate | date:dateFormat}}
+                                                        </td>
+                                                        <td class="width5" title="{{grn.paymentStatus}}">
+                                                            {{grn.paymentStatus}}
+                                                        </td>
+                                                        <td class="width6" style="width: 5.98% !important">
+                                                            <div class="col-lg-2 col-md-4 padding-left-right-set4 ">
+                                                                <a title="Print "
+                                                                   ng-click="vm.model.printGRNSettlementReport(grn)"> <i
+                                                                        class="fa fa-print"
+                                                                        aria-hidden="true"></i>
+                                                                </a>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 padding-left-right-set4 text-right">
+                                                                <a class="cursor-pointer"
+                                                                   ng-click="vm.model.NavigateToDetails(grn)">Details</a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-if="!vm.model.pagination.data || vm.model.pagination.data == false">
+                                                        <td class="text-center">
+                                                            <p>No Record Found</p>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-bottom45 center-block">
+                                            <ul ng-if="vm.model.pagination.totalPages > 1" class="pagination table-list"
+                                                style="font-size: 14px; cursor: pointer;">
+                                                <li ng-class="{disabled:vm.model.pagination.currentPage === 1}">
+                                                    <a ng-click="vm.model.pagination.setFirstPage(vm.model.pagination)">First</a>
+                                                </li>
+                                                <li ng-class="{disabled:vm.model.pagination.currentPage === 1}">
+                                                    <a ng-click="vm.model.pagination.setPreviousPage(vm.model.pagination)">Previous</a>
+                                                </li>
+                                                <li ng-repeat="page in vm.model.pagination.getPagesList(vm.model.pagination)"
+                                                    ng-class="{active:vm.model.pagination.currentPage === page}">
+                                                    <a ng-click="vm.model.pagination.setPage(page, vm.model.pagination)">{{page}}</a>
+                                                </li>
+                                                <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+                                                    <a ng-click="vm.model.pagination.setNextPage(vm.model.pagination)">Next</a>
+                                                </li>
+                                                <li ng-class="{disabled:vm.model.pagination.currentPage === vm.model.pagination.totalPages}">
+                                                    <a ng-click="vm.model.pagination.setLastPage(vm.model.pagination)">Last</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="isSetFirstTabLevel(2)"
+                             class="second-level-tab-display-div">
+                            <div class="row margin-top10">
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <input type="text" autocomplete="off" ng-model="vm.model.fromDateSettled"
+                                                   uib-datepicker-popup="dd/MM/yyyy"
+                                                   placeholder="DD/MM/YYYY" model-view-value="true"
+                                                   is-open="vm.model.fromDateOpenedSettled"
+                                                   datepicker-options="vm.model.fromDateOptionsSettled"
+                                                   show-button-bar="false" ng-click="vm.model.OpenFromDateSettled()"
+                                                   class="text-input floating-label dirty" readonly="">
+                                            <label for="fromDate">Date (From)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <input type="text" autocomplete="off" ng-model="vm.model.toDateSettled"
+                                                   uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+                                                   model-view-value="true" is-open="vm.model.toDateOpenedSettled"
+                                                   datepicker-options="vm.model.toDateOptionsSettled"
+                                                   show-button-bar="false" ng-click="vm.model.OpenToDateSettled()"
+                                                   class="text-input floating-label dirty" readonly="">
+                                            <label for="toDate" class="LISDynamicLabel">Date-Till</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+                                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10 ">
+                                            <input type="text" autocomplete="off" ng-model="vm.model.vendorName"
+                                                   class="text-input floating-label"
+                                                   uib-typeahead="vendorNames.detail for vendorNames in vm.model.SearchVendorNames($viewValue)"
+                                                   typeahead-on-select="vm.model.AddVendorName($item); vm.model.search = '';">
+                                            <label for="vendorName">Vendor</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="col-lg-1 col-sm-2 col-md-2 polymer-icon">
+                                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-lg-10 col-sm-10 col-md-10">
+                                            <input type="text" autocomplete="off" ng-model="vm.model.receiptNo"
+                                                   class="text-input floating-label"> <label
+                                                for="receiptNumber">Receipt No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
+                                    <div class="row input-container">
+                                        <div class="common-save-button" style="padding-top: 0px;">
+                                            <a class="btn btn-primary btn-save-box-shadow" id="searchBtn"
+                                               ng-click="vm.model.searchSettledList()"
+                                               style="width: auto;"> <i class="fa fa-search"
+                                                                        aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-top4">
+                                <div class="col-md-12 col-lg-12 col-sm-8 padding-left-right-set4">
+                                    <fieldset>
+                                        <div class="row table-container padding-left-right-set4 padding-top5">
+                                            <div class="table-container-header">
+                                                <table class="table table-striped table-hover table-condensed table-bordered first-checkBox-padding">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="width5">
+                                                            Receipt No.
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'receiptNumber', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5">
+                                                            Receipt Date
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'receiptDate', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+
+
+                                                        <th class="width5">
+                                                            GRN No.
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'grnnumber', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+
+
+                                                        <th class="width5">
+                                                            Vendor Name
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'vendorName', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5">
+                                                            Paid Amount
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'paidAmount', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5">
+                                                            Payment Mode
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'paidAmount', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width5">
+                                                            Payment Status
+                                                            <div class="float_right"
+                                                                 ng-click="vm.model.pagination.sortBy(vm.model.pagination, 'paymentStatus', sortReverse = !sortReverse)">
+                                                                <div>
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div class="margin-top-8">
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th class="width6">Action taken</th>
+                                                    </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                            <div class="table-container-body"
+                                                 style="height: 400px; overflow-y: overlay;">
+                                                <table class="table table-striped table-hover table-condensed table-bordered">
+                                                    <tbody>
+                                                    <tr ng-repeat="info in vm.model.grnSettledList | unique:'grnnumber'">
+                                                        <td class="width5" title="{{info.receiptnumber}}">
+                                                            {{info.receiptnumber}}
+                                                        </td>
+                                                        <td class="width5"
+                                                            title="{{info.receiptdate | date:'dd/MM/yyyy'}}">
+                                                            {{info.receiptdate | date:'dd/MM/yyyy'}}
+                                                        </td>
+                                                        <td class="width5" title="{{info.grnnumber}}">
+                                                            {{info.grnnumber}}
+                                                        </td>
+
+                                                        <td class="width5" title="{{info.vendorname}}">
+                                                            {{info.vendorname}}
+                                                        </td>
+                                                        <td class="width5" title="{{info.paidamount}}">
+                                                            {{info.paidamount}}
+                                                        </td>
+                                                        <td class="width5 text-center" title="">
+                                                            <i class="fa fa-info-circle" aria-hidden="true"
+                                                               ng-click="getDepositDetails(info.grnid);"></i>
+                                                        </td>
+                                                        <td class="width5" title="{{info.paymentStatus}}">
+                                                            {{info.paymentStatus}}
+                                                        </td>
+                                                        <td class="width6" style="width: 5.98% !important">
+                                                            <div class="col-lg-2 col-md-4 padding-left-right-set4">
+                                                                <a title="Print "
+                                                                   ng-click="vm.model.printGRNSettlementReport(info)">
+                                                                    <i class="fa fa-print"
+                                                                       aria-hidden="true"></i>
+                                                                </a>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 padding-left-right-set4">
+                                                                <a class="cursor-pointer"
+                                                                   ng-click="vm.model.NavigateToDetailsSettled(info)">Details</a>
+                                                            </div>
+                                                            <!-- <div class="col-lg-3 col-md-6 padding-left-right-set4">
+                                                                <a title=""> <i class="fa fa-info-circle"
+                                                                    aria-hidden="true"></i>
+                                                                </a>
+                                                            </div> -->
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-if="!vm.model.pagination.data || vm.model.pagination.data == false">
+                                                        <td class="text-center">
+                                                            <p>No Record Found</p>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<div id="paymentModePopup" class="common-medium-popup modal fade ng-scope" role="dialog" style="display: none;"
+     data-backdrop="static">
+    <div class="modal-dialog" style="width: 98% !important;margin: 26px auto !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Payment Mode
+                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.model.closePopup()">×</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                        <span>Total CN Amount: </span><span>{{totalCNAmount}}</span>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-3 margin-left5 padding-top10">
+                        <input type="checkbox" ng-click="vm.model.selectAllCN()" ng-model="isCheck">
+                        <span class="margin-left5">Use CN</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 headerHeight fix-height-scroll350 padding-left-right-set4">
+                        <table class="table table-bordered  margin-top8">
+                            <thead>
+                            <tr>
+                                <th class="width1">
+                                </th>
+                                <th class="width15">
+                                    Material Inward No.
+                                </th>
+                                <th class="width15">
+                                    RG No.
+                                </th>
+                                <th class="width15">
+                                    CN No.
+                                </th>
+                                <th class="width15">
+                                    CN Amount
+                                </th>
+                                <th class="width15">
+                                    Consume Amount
+                                </th>
+                                <th class="width15">
+                                    Balance
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="info in vm.model.creditNoteAmountList">
+                                <td class="width1">
+                                    <input type="checkbox" ng-click="vm.model.selectCNItem(info, $index)"
+                                           ng-model="info.isSelectItem"
+                                           ng-disabled="disableFlag == true">
+                                </td>
+                                <td class="width15">
+                                    {{info.inwordno}}
+                                </td>
+                                <td class="width15">
+                                    {{info.rgnumber}}
+                                </td>
+                                <td class="width15">
+                                    {{info.replacenumber}}
+                                </td>
+                                <td class="width15">
+                                    {{info.creditnetamount}}
+                                </td>
+                                <td class="width15">
+                                    {{info.consumenetamount}}
+                                </td>
+                                <td class="width15">
+                                    {{info.balance}}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row margin-top4">
+                    <div class="col-lg-10 col-md-10 col-sm-10 schedulerTabs">
+                        <ul class="tabs nav nav-tabs">
+                            <li ng-class="{ active : isSet(1) }" ng-hide="companySettlement">
+                                <a href ng-disabled="status=='Completed'? true:false"
+                                   ng-click="setSecondTabLevel(1);setPaymentModeId(1)">Cash</a>
+                            </li>
+                            <li ng-class="{ active : isSet(2) }">
+                                <a href ng-disabled="status=='Completed'? true:false"
+                                   ng-click="setSecondTabLevel(2);setPaymentModeId(2)">Cheque</a>
+                            </li>
+                            <!-- <li ng-class="{ active : isSet(3) }" >
+                                <a href ng-disabled="status=='Completed'? true:false" ng-click="setSecondTabLevel(3);setPaymentModeId(3)">M-Pesa</a>
+                            </li> -->
+                            <li ng-class="{ active : isSet(8) }">
+                                <a href ng-disabled="status=='Completed'? true:false"
+                                   ng-click="setSecondTabLevel(8);setPaymentModeId(8)">E-Transfer</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 float-right">
+                        <div class="width-div-for-patient-reg ">
+                            <a href="" style="width:40px" class="btn btn-primary btn-save-box-shadow"
+                               ng-click="addPaymentDetails()" ng-hide="addBtnId" title="Save">+</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <!-- CONTENT FOR FIRST TAB start-->
+                    <div ng-show="isSet(1)">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" name="description"
+                                                   class="text-input floating-label"
+                                                   ng-model="paymentDetails.cashAmount"
+                                                   ng-blur="vm.model.quantityValidation()"
+                                                   ng-disabled="status=='Completed'? true:false" is-number>
+                                            <label for="description" class="">Amount</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CONTENT FOR FIRST TAB end-->
+
+                    <!-- CONTENT FOR 2nd TAB start-->
+                    <div ng-show="isSet(2)">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <select ng-disabled="status=='Completed'? true:false"
+                                                    class="text-input floating-label" ng-model="paymentDetails.bankId">
+                                                <option value={{bank.bankId}} ng-value="bank.bankId"
+                                                        ng-repeat="bank in bankList">{{bank.bankName}}
+                                                </option>
+                                            </select> <label for="code">Bank Name</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input ng-disabled="status=='Completed'? true:false" type="text"
+                                                   autocomplete="off" name="description" ng-decimal="200"
+                                                   ng-model="paymentDetails.chequeNumber"
+                                                   class="text-input floating-label" numbers-only>
+                                            <!-- ng-model="paymentDetailsObj.checkNumber" -->
+                                            <label for="description" class="">Cheque Number</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" onkeydown="event.preventDefault()"
+                                                   class="text-input floating-label dirty" name="" id=""
+                                                   uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+                                                   placeholder="DD/MM/YYYY"
+                                                   ng-disabled="status=='Completed'? true:false"
+                                                   ng-model="paymentDetails.chequeDate" model-view-value="true"
+                                                   is-open="datepicker.opened" datepicker-options="chequeDateOptions"
+                                                   show-button-bar="false" ng-click="openDatePicker()" required>
+                                            <label for="description" class="">Cheque Date</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input type="text" autocomplete="off"
+                                                   ng-disabled="status=='Completed'? true:false" name="description"
+                                                   id="" ng-model="paymentDetails.chequeAmount"
+                                                   class="text-input floating-label" is-number>
+                                            <!-- ng-model="paymentDetailsObj.amount" -->
+                                            <label for="description" class="">Amount</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CONTENT FOR 2nd TAB end-->
+
+                    <!-- CONTENT FOR 5th TAB start-->
+                    <div ng-show="isSet(3)">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" name="description"
+                                                   class="text-input floating-label"
+                                                   ng-model="mpesaObject.transactionId"> <label
+                                                for="description" class="">Transaction ID</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" name="description"
+                                                   class="text-input floating-label" ng-decimal="200"
+                                                   ng-model="mpesaObject.mobileNo"> <label
+                                                for="description" class="">Mobile Number</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" name="description"
+                                                   class="text-input floating-label" ng-decimal="200"
+                                                   ng-model="mpesaObject.mpesaAmount" readonly> <label
+                                                for="description" class="">Amount</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1 col-sm-1 padding-left-right-set0 padding-top10">
+                                <div class="">
+                                    <button type="button" class="btn btn-primary" id=""
+                                            ng-click="validateMpesaDetails(mpesaObject)">Check
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                                <div class="">
+                                    <a href="">
+                                        <input type="button" value="Payment Req"
+                                               class="btn btn-primary btn-save-box-shadow" data-toggle="modal"
+                                               data-target="#paymentReqModalPhr">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+                                <div class="">
+                                    <a href="">
+                                        <input type="button" value="Validate"
+                                               class="btn btn-primary btn-save-box-shadow"
+                                               ng-click="validateSTKPushPayment()">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CONTENT FOR 5th TAB END-->
+
+                    <!-- CONTENT FOR 8th TAB start-->
+                    <div ng-show="isSet(8)">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11">
+                                        <div class="">
+                                            <select ng-model="eTransferObj.transactionobj"
+                                                    class="text-input floating-label"
+                                                    ng-options="x as x.name for x in transactionTypesList track by x.id"
+                                                    class="form-control"
+                                                    ng-required="true">
+                                            </select>
+                                            <!-- <select class="text-input floating-label dirty" ng-model="paymentDetails.transactionTypeId">
+                                                <option value="">-</option>
+                                                <option value="trans.id" ng-value="trans.id" ng-repeat="trans in transactionTypes">{{trans.name}}</option>
+                                            </select>  --><label for="code">Transaction Type</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11">
+                                        <div class="">
+                                            <select class="text-input floating-label dirty form-control"
+                                                    ng-model="eTransferObj.transBankId"
+                                                    ng-options="bank as bank.bankName for bank in bankList">
+                                                <!-- <option value="-">-</option>
+                                                <option value={{bank.bankId}} ng-value="bank.bankId"  ng-repeat="bank in bankList">{{bank.bankName}}</option> -->
+                                            </select> <label for="code">Bank Name</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" allow-pattern="(\d|[a-z])"
+                                                   name="description" id="" ng-model="eTransferObj.transactionNo"
+                                                   class="text-input floating-label dirty">
+                                            <label for="description" class="LISDynamicLabel">Transaction No.</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" onkeydown="event.preventDefault()"
+                                                   name="description" uib-datepicker-popup="dd/MM/yyyy"
+                                                   ui-mask="99/99/9999" placeholder="DD/MM/YYYY" model-view-value="true"
+                                                   ng-model="eTransferObj.transTransactionDate"
+                                                   class="text-input floating-label dirty"
+                                                   is-open="datepicker.opened" datepicker-options="dateOptionsTrancs"
+                                                   show-button-bar="false" ng-click="openDatePicker()">
+                                            <label for="description" class="LISDynamicLabel">Transaction Date</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-3 padding-left-right-set4 padding-top10">
+                                <div class="row input-container">
+                                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                        <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                        <div class="">
+                                            <input type="text" autocomplete="off" name="description" id=""
+                                                   ng-model="eTransferObj.transferAmount"
+                                                   class="text-input floating-label dirty" is-number>
+                                            <label for="description" class="LISDynamicLabel">Amount</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- CONTENT FOR 8th TAB END-->
+
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 headerHeight fix-height-scroll230">
+                            <table class="table table-bordered  margin-top8">
+                                <tr>
+                                    <th class="width15 vertical-top">
+                                        <span class="">Payment Mode</span>
+                                    </th>
+                                    <th class="width15 vertical-top">
+                                        <span class="">Bank Name</span>
+                                    </th>
+                                    <th class="width15 vertical-top">
+                                        Cheque No/Card No/Transaction No
+                                    </th>
+                                    <th class="width15 vertical-top">
+                                        Transaction Type
+                                    </th>
+                                    <th class="width15 vertical-top">
+                                        Total Amount
+                                    </th>
+                                    <th class="width5 vertical-top">
+                                        Action taken
+                                    </th>
+                                </tr>
+                                <tr ng-repeat="payment in listPaymentDetails">
+                                    <td>{{payment.paymentModeId == 1 ? 'Cash' : payment.paymentModeId == 2 ? 'Cheque' :
+                                        payment.paymentModeId == 3 ? 'M-Pesa' : payment.paymentModeId == 8 ?
+                                        'E-Transfer':'-'}}
+                                    </td>
+                                    <td>{{(payment.paymentModeId == 2 || payment.paymentModeId == 5 ||
+                                        payment.paymentModeId == 8 ) && payment.bankName != '' ? payment.bankName :
+                                        '-'}}
+                                    </td>
+                                    <td>{{(payment.paymentModeId == 2 && payment.chequeNumber != '') ?
+                                        payment.chequeNumber : (payment.paymentModeId == 3 && payment.cardNo != '' ||
+                                        payment.transactionNo != "") ? payment.cardNo + ' || '+ payment.transactionNo :
+                                        (payment.paymentModeId == 4 && payment.cardNo != '') ? payment.cardNo :
+                                        (payment.paymentModeId == 5 && payment.transactionNo != '') ?
+                                        payment.transactionNo :(payment.paymentModeId == 6 && payment.cardNumber != '')?
+                                        payment.cardNumber :(payment.paymentModeId == 8 && payment.transactionNo !=
+                                        '')?payment.transactionNo:'-' }}
+                                    </td>
+                                    <td>{{payment.transactionType}}</td>
+                                    <td>{{payment.amount}}</td>
+                                    <td>
+                                        <i class="fa fa-times" aria-hidden="true"
+                                           ng-click="removePaymentDetails(payment,$index)"></i>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-12">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <td class="text-right">
+                                    Total Amount
+                                </td>
+                                <td class="ng-binding">
+                                    {{parseFloatNum(totalamount)}}
+                                </td>
+                                <td class="text-right">
+                                    Paid Amount
+                                </td>
+                                <td class="ng-binding">
+                                    {{parseFloatNum(totalPaidAmountByPaymentMode)}}
+                                </td>
+                                <td class="text-right">
+                                    Total Due Amount
+                                </td>
+                                <td class="ng-binding">
+                                    {{parseFloatNum(dueAmount)}}
+                                </td>
+                                <!-- <td class="text-right">
+                                    Self Due Amount
+                                </td>
+                                <td class="ng-binding">
+                                    {{parseFloatNum(payeeDueAmtFinal)}}
+                                </td> -->
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-12 col-lg-12 padding-bottom10">
+                        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                    <div class="">
+                                        <input type="text" autocomplete="off" name="description" id=""
+                                               onkeypress="return /[A-Z-a-z]/i.test(event.key)"
+                                               ng-disabled="status=='Completed'? true:false"
+                                               class="text-input floating-label ng-pristine ng-valid dirty ng-empty ng-touched"
+                                               ng-model="listPaymentDetails.amountReceivedFrom">
+                                        <label for="description" class="">Amount Receive From</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                            <div class="row input-container">
+                                <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                                    <i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11 ">
+                                    <div class="">
+                                        <input type="text" autocomplete="off" name="description" id=""
+                                               ng-disabled="status=='Completed'? true:false"
+                                               class="text-input floating-label ng-pristine ng-untouched ng-valid dirty ng-empty"
+                                               ng-model="identificaitonNumber">
+                                        <label for="description" class="">Identification No..</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right padding-top10">
+                            <div class=" ">
+                                <button style="width:100%" class="btn btn-primary btn-save-box-shadow"
+                                        ng-hide="status=='Completed'? true:false" title="Save"
+                                        ng-disabled="flag == false"
+                                        ng-click="settleBill()">Settle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ***************** Payment Mode  Start *****************-->
+<div id="payment_mode_Modal_deposit" class="common-medium-popup modal fade ng-scope in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Payment Mode
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body row">
+                <div class="row height400-table-with-scroll">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 padding-left-right-set4">
+                            <table class="table table-bordered  margin-top8">
+                                <tr>
+                                    <th class="width15">
+                                        <span class="">Payment Mode</span>
+                                    </th>
+                                    <th class="width15">
+                                        <span class="">Bank Name</span>
+                                    </th>
+                                    <th class="width15">
+                                        Cheque No/Card No
+                                    </th>
+                                    <th class="width15">
+                                        Total Amount
+                                    </th>
+                                </tr>
+                                <tr ng-repeat="depositDetails in depositDetailsList track by $index">
+                                    <td>{{depositDetails.paymentMode}}</td>
+                                    <td>{{depositDetails.bankName==null?'-':depositDetails.bankName}}</td>
+                                    <td>
+                                        {{(depositDetails.chequeNumber==null)?(depositDetails.cardNo==null)?'-':depositDetails.cardNo:depositDetails.chequeNumber}}
+                                    </td>
+                                    <td class="text-right">{{depositDetails.totalAmount}}</td>
+                                </tr>
+                            </table>
+                            <table class="table table-bordered">
+                                <tr ng-if="(depositDetailsList|filter:searchKeyword)=='' || (depositDetailsList|filter:searchKeyword)==null">
+                                    <td>
+                                        <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">
+                                            No Records Found</p></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***************** Payment Mode End *****************-->
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".selectedPageName").text("Good Receipt Note Settelement");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$(".selectedServicesList").hide();
+		/*************************** rejection radio button function*********************************/
+		$(".add-new-item-row").hide();
+		$(".get-request-row").hide();
+		$(".addNewItemRadioBtnClass").change(function() {
+			if ($(this).is(":checked")) {
+				$(".add-new-item-row").show('slow');
+				$(".get-request-row").hide('slow');
+			}
+		});
+		$(".getRequestListBtnClass").change(function() {
+			if ($(this).is(":checked")) {
+				$(".add-new-item-row").hide('slow');
+				$(".get-request-row").show('slow');
+			}
+		});
+	});
+	/*************************** add button function start*********************************/
+	$(".table-th-bg").click(function() {
+		/* alert(); */
+		$(this).next().find(".selectedServicesList").toggle();
+	});
+
+</script>

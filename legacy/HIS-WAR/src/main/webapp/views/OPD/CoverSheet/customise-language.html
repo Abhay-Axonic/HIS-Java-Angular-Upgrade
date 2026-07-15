@@ -1,0 +1,192 @@
+<style>
+ .goog-te-banner-frame.skiptranslate {
+		    display: none !important;
+		    } 
+		body {
+		    top: 0px !important; 
+		    }
+		    .goog-te-gadget-icon{
+		    display: none !important;
+		    } 
+		    /*  .goog-te-gadget span{
+		    display: none !important;
+		    }   */
+		    .goog-te-menu-value span{
+  display:none;
+}
+.goog-te-menu-value {
+  
+    //color: #fff !important;
+    font-family: 'Material Icons';
+    content: "\E927";
+    vertical-align: -10px;
+    width:12px!important;
+}
+
+
+.goog-te-gadget-simple {
+     background-color: transparent;
+    border-left: none; 
+     border-top: none; 
+     border-bottom: none; 
+     border-right: none; 
+     font-size:0pt; 
+     display: block; 
+     padding-top: 0px; 
+     padding-bottom: 0px; 
+    cursor: pointer;
+     zoom: 0; 
+    width: 17px;
+    margin-top: -13px;
+		}
+
+
+</style>
+
+<div id="customiseLanguagePoup" class="modal fade ng-scope in common-large-popup" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+				 Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div 
+							class="second-level-tab-display-div" style="">
+							<div class="row padding-top5">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+<!--												   <select ng-model="LanguObj" ng-change="addLanguageDetails(LanguObj)"-->
+<!--													class="text-input floating-label"-->
+<!--													ng-options="x as x.desc for x in languageList track by x.languageId"-->
+<!--                                                    ng-value="{{x.languageId}}" value="{{x.languageId}}"-->
+<!--													class="form-control" ng-required="true">-->
+<!--&lt;!&ndash;													ng-change="convertLan(LanguObj)"&ndash;&gt;-->
+<!--												</select>-->
+                                                <select class="text-input floating-label" name="LanguObj" ng-model="LanguObj">
+                                                    <option ng-repeat="info in languageList" value="{{info}}">{{info.desc}}</option>
+                                                </select> <label for="code">Language</label>
+ 												<!-- <a> <i class="fa fa-language" id="google_translate_element" aria-hidden="true"></i></a> -->
+<!-- 												 <select ng-model="Obj.languageId" class="text-input floating-label" >-->
+<!--														<option value="1_English">English</option>-->
+<!--														<option value="2_Marathi">Marathi</option>-->
+<!--														<option value="3_Hindi">Hindi</option>-->
+<!--														<option value="4_Arabic">Arabic</option>-->
+<!--														<option value="5_Russian">Russian</option>-->
+<!--														<option value="6_Spanish">Spanish</option>-->
+<!--												</select>-->
+<!--												<label for="code">Language</label>-->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+									<div class="row input-container padding-top4">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11">
+											<div class="">
+											<input type="text" autocomplete="off" name="code" id="languageBlock" on-click="TranslateElementInit()"
+										     class="text-input floating-label translate"
+										     ng-model="Obj.convertedText" required="required">
+												 <label for="code">Converted Text</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-md-2 col-sm-2 padding-left-right-set4 text-width-auto">
+									<div class="">
+										<a href=""> <input type="button" value="Add" style="margin-top: 10px;"
+											class="btn btn-primary btn-save-box-shadow"
+											ng-click="addLanguageDetails(LanguObj);">
+										</a>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row padding-left-right-set4 table-container padding-top5">
+								<div class="table-container">
+									<div class="table-container-header">
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="width3">Language</th>
+													<th class="width10">Converted Text</th>
+													<th class="width2 text-center">Action</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="table-container-body fix-height-scroll500"
+										style="overflow: overlay;">
+										<!-- fix-height-scroll230, background: #fff; -->
+										<table
+											class="table table-striped table-hover table-condensed table-bordered">
+											<tbody>
+												<tr ng-repeat="info in addedLanguageList">
+													<td class="width3">{{info.desc}}</td>
+													<td class="width10">{{info.convertedText}}</td>
+													<td class="width2 text-center"><a class=""
+														title="Remove "><i class="fa fa-times"
+															ng-click="removeLanguage($index);"></i></a>&nbsp;&nbsp;
+													</td>
+												</tr>
+												
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+ <script type="text/javascript">
+//  function onclickAjax() {
+ $('input:text').each(function() {
+
+	    var elementId = $(this).attr("languageBlock"); 
+
+	    //Call the Google API
+	    $.ajax({
+	        type : "GET",
+// 	        url : "https://ajax.googleapis.com/ajax/services/language/translate",
+	        url : "https://www.apertium.org/apy/translate?q=hello%20world&langpair=en|es",
+	        dataType : 'jsonp',
+	        cache: false,
+	        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+	       /*  data : "v=1.0&q="+$("#languageBlock"+elementId).val()+"&langpair=en|es",
+	        success : function(iData){
+	            //update the value
+	            $("#languageBlock"+elementId).val(iData["responseData"]["translatedText"]);      
+	        }, */
+	        error:function (xhr, ajaxOptions, thrownError){ }
+	    });
+	});
+//  }
+ 
+ function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'ar,en,es,jv,ko,pa,pt,ru,hi,mr,bn,gu', 
+	  layout: google.translate.TranslateElement.InlineLayout.SIMPLE,autoDisplay: false}, 'google_translate_element');
+} 
+
+$('#lagSelected').click(function(){
+	document.getElementById("google_translate_element").style.display = "block";
+});
+</script> 
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>

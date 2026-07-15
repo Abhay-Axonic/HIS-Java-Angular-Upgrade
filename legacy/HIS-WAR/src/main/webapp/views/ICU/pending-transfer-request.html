@@ -1,0 +1,294 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+            	
+        	<div class="row padding-left-right-10 padding-top8">
+					<div class="col-lg-9 col-md-9 col-sm-9">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3"
+								style="padding-right: 0px;">
+								<div class="search">
+								<label class="show-entries">Show 
+								<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+									ng-init="noOfRecordsPerPage='10'" ng-model="noOfRecordsPerPage"
+									ng-change="setNoOfRecords();" class="search-popUp-ddl">
+										<option value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+								</select> entries 
+								</label>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0">
+					<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchpatient">
+					<i class="fa fa-search common-search-text-icon" aria-hidden="true" style="margin-top:7px"></i>
+				</div>
+		</div>
+            <modal visible="showModal"></modal>	
+            <div class="row padding-top10 padding-left-right-set4">
+				<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll500">
+				  <table id="main-table" class="main-table width120">
+				    <thead>
+						<tr class="">
+							<th class="UHID-width fixed">UHID
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="patient-doc-details-width">Patient Details
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th>Floor
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th>Ward No.
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th>Ward Bed No.
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th>From Ward Bed Category
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th>To Ward Bed Category
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="patient-doc-details-width">Doctor Details
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th>Reason for Ward Transfer/Move
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th>Note for Ward Transfer/Move<!-- Remark -->
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<!-- <th class="width3">
+							Note
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th> -->
+							<th class="table-action-width last-col-fixed">Action taken
+								<!-- <div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div> -->
+							</th>
+						</tr>
+					</thead>
+				    <tbody>
+						<tr ng-repeat="info in listOfTransferRequestList">
+							<td class="fixed">
+								<div>{{info.uhidnumber}}</div> <!-- <b>UHID:</b>  -->
+							</td>
+							<td ng-init='age=getAge(info.dob)'>
+								<div ng-if="info.patientId > 0">{{info.patientFullName+'
+									'+age+'/'+info.genderCode}}</div>
+								<div ng-if="info.tPatientId > 0">{{info.patientFullName+'
+									'+info.dob+'/'+info.genderCode}}</div>
+							</td>
+							<td>
+								<div>{{info.floorDesc}}</div>
+							</td>
+							<td>
+								<div>{{info.wardDesc}}</div>
+							</td>
+							<td>
+								<div>{{info.bedNumber}}</div>
+							</td>
+							<td>
+								<div>{{info.fromBedCategoryDesc}}</div>
+							</td>
+							<td>
+								<div>{{info.toBedCategoryDesc}}</div>
+							</td>
+							<td>
+								<div>{{info.doctorFullName}}</div>
+							</td>
+							<td>
+								<div>{{info.reasonDesc}}</div>
+							</td>
+							<td>
+								<div>{{info.remark}}</div>
+							</td>
+							<!-- <td class="text-center"><i class="fa fa-commenting font-size20" aria-hidden="true" data-toggle="modal" data-target="#notesForall" ng-click="showNotePopup(info.remark)"></i></td> -->
+							<td class="last-col-fixed">
+								<div class="row">
+									<input type="radio" name="radioBtnForTransferRqust{{$index}}"
+										class="radioAccepted" ng-click="toggleSelectionAccept(info)"
+										ng-model="content[$index]" value="acc" data-toggle="modal"
+										data-target="#commonNote"><span>Accept</span> <input
+										type="radio" name="radioBtnForTransferRqust{{$index}}"
+										class="radioRejected" ng-click="toggleSelectionReject(info)"
+										data-toggle="modal" data-target="#accepatReject"
+										ng-model="content[$index]" value="rej"><span>Reject</span>
+								</div> <!-- <div class="row medication-text-box margin-top10" >
+								<div class="col-md-12">
+									<input type="text" autocomplete="off" placeholder="Note" class="text-box-style" ng-hide="content[$index] != 'rej'" ng-model="note[info.transferRequestId]">
+								</div>
+							</div> --> <!-- <input type="text" autocomplete="off" placeholder="Note" id="drnote_{{info.transferRequestId}}" class="text-box-style"  ng-model="note[info.transferRequestId]">
+							<input type="text" autocomplete="off"  class="text-box-style" id="drrId_{{info.transferRequestId}}"  ng-model="doctorRejectReasonId[info.transferRequestId]"> -->
+							</td>
+						</tr>
+					</tbody>
+				  </table>
+				</div>
+				<div class="row margin-bottom45 sss">
+							<ul ng-if="pager.pages.length" class="pagination table-list"
+								style="font-size: 14px;">
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(1,'true')">First</a></li>
+								<li ng-class="{disabled:pager.currentPage === 1}"><a
+									ng-click="setPage(pager.currentPage - 1,'true')">Previous</a></li>
+								<li ng-repeat="page in pager.pages"
+									ng-class="{active:pager.currentPage === page}"><a
+									ng-click="setPage(page,'true')">{{page}}</a></li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.currentPage + 1,'true')">Next</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="setPage(pager.totalPages,'true')">Last</a>
+								</li>
+							</ul>
+						</div>
+			</div>
+	</div>
+	<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right15">
+					<div class="row padding-left-right15" style="padding-right: 25px !important;">
+						<div class="col-lg-11 col-md-11 col-sm-10"></div>
+							<div class="col-lg-1 col-md-2 col-sm-2  col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+								<button class="btn btn-primary btn-save-box-shadow  width100" title="Back">
+								<a href="#/bedManagement" class="color-white"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a></button>
+							</div>
+						</div>
+				</footer>
+</div>
+ <div ng-include="'./views/common/accept-reject.html'"></div>
+  <div ng-include="'./views/common/note-save.html'"></div>  
+<!-- NOTE POPUP FOR ALL -->
+<div id="notesForall" class="modal fade ng-scope in" role="dialog">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Note
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body common-sub-table">
+					<div class="row margin-top10" >
+						<div class="col-md-12 padding-left-right-set">
+							<!-- <input type="text" autocomplete="off" placeholder="Note" class="text-box-style"  ng-model="noteDoctor"> -->
+							<textarea placeholder="Note" ng-model="noteDoctor" rows="5"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+
+	$( document ).ready(function() {
+		
+		var documentHeight= $(window).height();
+	    var sideBarHeight = documentHeight - 55;
+	 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+	 	
+		$('.clockpicker').clockpicker();
+		$(".medication-text-box").hide();
+		$( ".radioRejected" ).change(function() {
+			if ($(this).is(":checked"))
+			{
+				$(this).closest(".row").siblings(".medication-text-box").show();
+			}
+		});
+		$( ".radioAccepted" ).change(function() {
+			if ($(this).is(":checked"))
+			{
+				$(this).closest(".row").siblings(".medication-text-box").hide();
+			}
+		});
+		$(".selectedPageName").text("Pending Transfer Request");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="pendingTransferRequest"]').parents("li").addClass("active");
+	});
+	</script>

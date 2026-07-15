@@ -1,0 +1,237 @@
+<div id="page-content-wrapper" class="ng-scope">
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- <legend class="heading-div">Store Indent Approval Details</legend> -->
+			<div class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Indent No. :</b>{{vm.model.indentApprovalDetail.indentNo}}</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Indent Date:
+						</b>{{vm.model.indentApprovalDetail.indentDate  | date:'dd/MM/yyyy'}}</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Requesting Store :</b>{{vm.model.indentApprovalDetail.fromStoreName}}</span>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Issuing Store:
+						</b>{{vm.model.indentApprovalDetail.toStoreName}}</span>
+				</div>
+			</div>
+			<div class="row margin-top10">
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Priority :
+						</b> Low </span>
+				</div>
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<span class="margin-left10 ng-binding">
+						<b class="padding-right10 ">Type:</b>Bed Linen
+					</span>
+				</div> -->
+
+			</div>
+			<div class="row" id="fixeAssetRowId">
+				<table class="table table-bordered">
+					<thead>
+
+						<tr>
+							<th class="width1">
+								<input type="checkbox" ng-model="vm.model.selectAllRows" ng-click="vm.model.SelectAllItems()" ng-change="vm.model.valueOnChange(item, true)"
+								 ng-disabled="!vm.model.indentApprovalDetail||vm.model.indentApprovalDetail.status != 'Pending' || vm.model.indentApprovalDetail.approvalStatus != 'Pending Approval'">
+							</th>
+							<th class="width7 vertical-middle">Linen Code
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width7 vertical-middle">Linen Name
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width9 vertical-middle">Indent Qty
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width7 vertical-middle">Stock Available
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width10 vertical-middle">Stock in Transit
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width5 text-center vertical-middle">Approved Qty
+								<div class="float_right">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width6">Rejected Qty
+								<div class="float_right" ng-click="sortType = 'rejectedQuantity'; sortReverse = !sortReverse">
+									<div>
+										<i class="fa fa-caret-up" aria-hidden="true"></i>
+									</div>
+									<div class="margin-top-8">
+										<i class="fa fa-caret-down" aria-hidden="true"></i>
+									</div>
+								</div>
+							</th>
+							<th class="width3">Action
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in vm.model.indentApprovalDetail.items" >
+							<td>
+								<input type="checkbox" ng-model="item.isSelected" ng-disabled="vm.model.indentApprovalDetail.statusId != 2 " ng-click="vm.model.SelectItem(item)"
+								 ng-change="vm.model.valueOnChange(item, true)" />
+							</td>
+							<td class="">{{item.itemCode}}</td>
+							<td class="">{{item.itemName}}</td>
+							<td class="">{{item.quantity}}</td>
+							<td class="">{{item.stockAvailable}}</td>
+							<td class="">{{item.stockInTransit}}</td>
+							<td class="vertical-middle">
+								<div class="row approved-qty-remark">
+									<input type="text" autocomplete="off" class="w-100" ng-model="item.approvedQuantity" ng-blur="vm.model.ApprovedQuantity(item)" ng-if="!item.isDisabled"
+									 numbers-only>
+									<div ng-if="item.isDisabled">{{!!item.approvedQuantity ? item.approvedQuantity : 0 }}</div>
+									<!-- ng-model="datum.approvedQuantity = (datum.isSelected ? datum.quantity : 0)" -->
+								</div>
+							</td>
+							<td>{{item.rejectedQuantity}}</td>
+							<td class=" vertical-middle">
+								<div class="checkbox">
+									<label class="switch switch-small">
+										<input type="checkbox" class="switchInput" ng-disabled="item.isDisabled" ng-click="vm.model.RejectionPopup(item)"
+										 ng-model="item.isReject">
+										<div class="slider round slider-small"></div>
+									</label>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+	</div>
+	<!-- fixed asset table end -->
+	</fieldset>
+	<footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+		<div class="row padding-top5 padding-right10">
+			<div class="col-lg-10 col-md-10 col-sm-10"></div>
+			<div class="col-lg-1 col-md-1 col-sm-1 padding-left0px-right6px">
+				<a>
+					<input type="button" ng-disabled="vm.model.indentApprovalDetail.approvalStatus != 'Pending Approval'" ng-click="vm.model.SaveApproval()" value="Save" class="btn btn-primary btn-save-box-shadow">
+				</a>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-1 padding-left10">
+				<a href="#/linenIndentApproval">
+					<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+				</a>
+			</div>
+		</div>
+	</footer>
+</div>
+</div>
+
+<div id="qtyaccepatReject" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);">
+	<div class="modal-dialog">
+		<!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Rejection
+					<button type="button" ng-click="vm.model.ModalDismiss('qtyaccepatReject')" class="close">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 padding-left-right-set">
+						<div class="row input-container margin-top10">
+							<div class="col-lg-6 col-md-6 col-sm-12">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11">
+									<div class="">
+										<input type="rejectQty" name="rejectQty" ng-model="vm.model.rejectQty" class="text-input floating-label" ng-class="{dirty: vm.model.rejectQty}"
+										 numbers-only>
+										<label for="rejectQty">Qty</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+									<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+								</div>
+								<div class="col-lg-11 col-sm-11 col-md-11 ">
+									<div class="">
+										<select name="rejectReason" id="rejectReason" class="text-input floating-label" ng-model="vm.model.rejectReason">
+											<option value="">Select Reason</option>
+											<option ng-repeat="datum in vm.model.reasons" value="{{datum.id}}">{{datum.reason}}</option>
+										</select>
+										<label for="rejectReason">Select Reason</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input-container margin-top10">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-sticky-note" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<textarea name="rejectNote" rows="4" id="rejectNote" class="text-input floating-label ng-pristine ng-untouched ng-valid ng-empty"
+									 ng-model="vm.model.rejectNote" ng-class="{dirty: vm.model.rejectNote}"></textarea>
+									<label for="rejectNote">Note</label>
+								</div>
+							</div>
+						</div>
+						<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" id="saveBtn" ng-disabled="!vm.model.rejectQty" class="btn btn-primary" ng-click="vm.model.SaveAcceptReject()">Save</button>
+			</div>
+		</div>
+	</div>
+</div>

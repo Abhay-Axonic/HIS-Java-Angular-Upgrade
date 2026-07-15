@@ -1,0 +1,48 @@
+package com.param.global.service;
+
+import javax.transaction.Transactional;
+
+import com.param.global.common.Response;
+import com.param.global.dto.DoctorConsChargesForMyLife;
+import com.param.global.dto.DoctorConsultationServiceMapperDto;
+import com.param.opd.encounter.dto.EncounterMasterDto;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+public interface IDoctorConsultationServiceMapperService {
+
+	@Transactional
+	Response saveDoctorConsultationServiceMapperService(DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto)throws ApplicationException;
+
+	@Transactional
+	Response getDoctorConsultationServiceMapperList(DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto)throws ApplicationException;
+
+	@Transactional
+	Response updateDoctorConsultationServiceMapper(DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto)throws ApplicationException;
+
+	@Transactional
+	Response getDoctorConsultationServiceMapperById(DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto);
+
+	
+	Response getDoctorConsultationServiceBySpecialityAndDoctorId(DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto);
+	
+	@Transactional
+	Response updateDoctorConsultationServiceMapperStatus(DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto)throws ApplicationException;
+
+	@Transactional
+	Response getDoctorConsultationServiceMapperListCount(DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto)throws ApplicationException;
+
+	@Transactional
+	Response getDoctorConsultationServiceBySpecialityAndDoctorIdTransactional(
+			DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto);
+	@Transactional
+	Response doctorConCheckAlreadyExistOrNot(DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto)throws ApplicationException;
+
+	@Transactional
+	Response getDoctorCharges(DoctorConsChargesForMyLife doctorConsultationServiceMapperDto)throws ApplicationException;
+	
+	@Transactional
+	DoctorConsultationServiceMapperDto getDoctorConsultationServiceBySpecialityAndDoctorIdForUpdatePackage(
+			EncounterMasterDto doctorConsultationServiceMapperDto) throws ApplicationException;
+
+}

@@ -1,0 +1,40 @@
+package com.param.opd.coversheet.service;
+
+import javax.transaction.Transactional;
+
+import com.param.global.common.Response;
+import com.param.opd.coversheet.dto.PatientTreatmentHistoryDetailsDto;
+import com.param.opd.coversheet.model.PatientTreatmentHistoryDetails;
+
+import in.param.exception.ApplicationException;
+@Transactional
+@SuppressWarnings({ "rawtypes"})
+public interface IPatientTreatmentHistoryDetailsService {
+
+	Response getOldListOfPatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException ;
+
+	Response getCurrentListOfPatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException ;
+
+	Response savePatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException ; 
+
+	Response updatePatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException ;
+
+	Response updateEnterErrorStatusPatientTreatmentHistoryDetails(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto) throws ApplicationException ;
+
+	Response updateSaveNurseReviewedFlag(PatientTreatmentHistoryDetails patientTreatmentHistoryDetails) throws ApplicationException ;
+
+	Response getCurrentPatientTreatmentHistoryDetailsForCoversheet(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException ;
+
+	Response getPatientTreatmentHistoryForBookView(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	Response getCompletedDiagnosticsProcedures(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	Response getCompletedMedicalProcedures(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	Response updateStatusRemoveTreatmentHistory(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	Response getPatientTreatmentHistoryForDischargeSummary(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+	Response getInvestigationHistory(PatientTreatmentHistoryDetailsDto patientTreatmentHistoryDetailsDto)throws ApplicationException;
+
+}

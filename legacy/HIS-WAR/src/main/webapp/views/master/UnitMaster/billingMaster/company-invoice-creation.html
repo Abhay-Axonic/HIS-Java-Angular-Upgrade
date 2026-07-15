@@ -1,0 +1,377 @@
+ <div id="page-content-wrapper" >
+	<div class="container-fluid his-style">
+		<fieldset class="">
+				<div class="row padding-top5">
+					<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+						<fieldset class="normalRegistration sub-fieldset">
+								<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group">
+											<select class="text-input floating-label" ng-model="paymentEntitlementId" ng-change="getCompanyMasterList(paymentEntitlementId)">
+												<option value="">-</option>
+												<option ng-repeat="paymentEntitlement in paymentEntitlementList" value="{{paymentEntitlement.id}}"
+													ng-if="paymentEntitlement.id != 1">{{paymentEntitlement.name}}</option>
+											</select> <label for="code">Payment Entitlement Type</label>
+										</div>
+									</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group">
+											<select class="text-input floating-label" ng-model="companyId" ng-change="getAssociateCompanyMasterList(companyId)">
+												<option value="">-</option>
+												<option ng-repeat="companyMaster in companyMasterList" value="{{companyMaster.id}}">{{companyMaster.name}}</option>
+											</select> <label for="code">Company</label>
+										</div>
+									</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="form-group">
+												<select class="text-input floating-label" ng-model="associateCompanyId" ng-disabled="isDisable">
+														<option value="">-</option>
+														<option ng-repeat="associateCompanyMaster in associateCompanyMasterList" value="{{associateCompanyMaster.id}}" >{{associateCompanyMaster.name}}</option>
+													</select>
+												<label for="code">Insurance Company</label>
+											</div>
+										</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+												<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="form-group">
+											<select class="text-input floating-label" ng-model="visitTypeId">
+												<option value="">-</option>
+												<option ng-repeat="visit in visitTypeList" value="{{visit.id}}">{{visit.label}}</option>
+											</select> <label for="code">Visits</label>
+										</div>
+									</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="fromDate" id="date1"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="fromDate"
+													model-view-value="true" is-open="popup.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open()">
+													<label for="code" class="LISDynamicLabel">Date (From)</label>
+												</span>
+												
+											</div>
+										</div>
+										</div>
+									</div>
+									
+									
+									<!-- <input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="date2" id="date2"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="toDate"
+													model-view-value="true" is-open="popup1.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open1()">  -->
+									
+									
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+										<div class="row input-container">
+											<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+												<i class="fa fa-calendar" aria-hidden="true"></i>
+											</div>
+											<div class="col-lg-10 col-sm-10 col-md-10">
+											<div class="">
+												<span class="input-group"> 
+													<input type="text" autocomplete="off" class="text-input floating-label dirty"
+													name="date2" id="date2"
+													uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+													placeholder="DD/MM/YYYY" ng-model="toDate"
+													model-view-value="true" is-open="popup1.opened"
+													datepicker-options="dateOptions"  show-button-bar="false"
+													ng-click="open1()">
+													<label for="code" class="LISDynamicLabel">Date-Till</label>
+												</span>
+												
+											</div>
+								</div>
+									</div>
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 pull-right text-width-auto">
+										<div class="common-save-button" style="padding-top:0px;"> 
+											 <a href="" class="btn btn-primary btn-save-box-shadow" id="searchBtn" style="width: auto;" ng-click="searchCompanyInvoice()">
+											 	<i class="fa fa-search" aria-hidden="true"></i> 
+											 </a> 
+										</div> 
+									</div>
+								</div>
+								
+						</fieldset>
+					</div>
+				</div>
+				<div class="row margin-top4">
+				<div class="col-lg-8 col-md-8 col-sm-8">
+					<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="pagination.pageSize='10'" 
+								ng-model="pagination.pageSize" 
+								ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				</div>
+					<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 float_right ">
+						<div class=" ">
+							<button  ng-disabled="companyInvoiceList==null || companyInvoiceList.length == 0" id="saveBtn"  ng-click="saveCompanyInvoiceCreation();" class="btn btn-primary btn-save-box-shadow">
+								Generate Bill
+							</button>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+						<input type="text" autocomplete="off" class="text-search-box"  ng-model="searchKeyword" placeholder="Search" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+					</div>
+				</div>
+				<div class="row margin-top4 padding-left-right-set4 table-container">
+					<div class="col-md-12 col-lg-12  fix-height-scroll500 table-responsive fixed-thead-tfoot-scroll"  id="fixed-thead-tfoot-scroll">
+					<table class="table table-bordered main-table" id="main-table">
+						<thead>
+							<tr>
+								<th class="width3 th-bg">
+                                   <label class="checkbox-inline">
+                                       <input type="checkbox" ng-model="selectedAll" ng-click="checkAll();">
+                                       <span></span>
+                                   </label>
+                                </th>
+								<th class="width7" title="Bill Date">
+									<span class="">Bill Date</span>
+								</th>
+								<th class="width7" title="Bill No">
+									Bill No.
+								</th>
+								<th class="width7" title="UHID">
+									UHID
+								</th>
+								<th class="width10" title="Patient Name">
+									Patient Name
+								</th>
+								<th class="width10" title="Visit Details">
+									Visit Details
+								</th>
+								 <th class="width10" title="Visit Type">
+									Visit Type
+								</th>
+								<th class="width6" title="Bill Amount">
+									Bill Amount
+								</th>
+								<th class="width6" title="Net Payable">
+									Net Payable
+								</th>
+								<th class="width6" title="Credit Payable">
+									Credit Payable
+								</th>
+								<th class="width6" title="Cr Net Amount">
+									Credit Net Amount
+								</th>
+								<th class="width6" title="Due Amount">
+									Due Amount
+								</th>
+								<th class="width3" title="Action">
+									Action taken
+								</th>
+								<th class="width3" title="Details">
+									Details
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="info in pagination.data|orderBy:column:reverse|filter:searchKeyword">
+								<td class="td-bg text-center">
+                                   <label class="checkbox-inline">
+                                       <input type="checkbox" ng-model="info.companyInvoiceSelected">
+                                       <span></span>
+                                   </label>
+                                </td>
+								<td class="td-bg" title="{{info.billDate}}">{{info.billDate}}</td>
+							    <td class="td-bg" title="{{info.billNumber}}">{{info.billNumber}}</td>
+							    <td class="td-bg" title="{{info.uhidNumber}}">{{info.uhidNumber}}</td>
+							    <td class="td-bg" title="{{info.patientName}}">{{info.patientName}}</td>
+								<td class="td-bg" title="{{info.visitNo}} | {{info.visitDate}}">{{info.visitNo}} | {{info.visitDate}}</td>
+							    <td class="td-bg">
+							       <div ng-if="info.visitTypeId == 1" title="OP">OP</div>
+							       <div ng-if="info.visitTypeId == 2" title="IP">IP</div>
+							       <div ng-if="info.visitTypeId == 3" title="DC">DC</div>
+							       <div ng-if="info.visitTypeId == 4" title="ER">ER</div>
+							    </td> 
+							    <td class="td-bg" title="{{parseFloatNum(info.totalBillAmount)}}">{{parseFloatNum(info.totalBillAmount)}}</td>
+							    <td class="td-bg" title="{{parseFloatNum(info.netAmount)}}">{{parseFloatNum(info.netAmount)}}</td>
+							    <td class="td-bg" title="{{parseFloatNum(info.creditBillAmount)}}">{{parseFloatNum(info.creditBillAmount)}}</td>
+							    <td class="td-bg" title="{{parseFloatNum(info.crNetAmount)}}">{{parseFloatNum(info.crNetAmount)}}</td>
+							    <td class="td-bg" title="{{parseFloatNum(info.billAmount)}}">{{parseFloatNum(info.billAmount)}}</td>
+								<td class="td-bg text-center" >
+									<span> 
+										<a href="" ng-click="printBill(info);">
+											<i class="fa fa-print" title="Print " aria-hidden="true"></i>
+										</a>
+									</span>
+								</td>
+								<td class="td-bg text-center" >
+									<a class="cursor-pointer" data-toggle="modal" data-target="#detailsInvoiceCreationModal" title="Details" ng-click="deatilsCompanyInvoiceList(info.billId,info.payeeId);">Details</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table table-bordered">
+					<tr ng-if="(companyInvoiceList|filter:searchKeyword)=='' || (companyInvoiceList|filter:searchKeyword)==null">
+						<td><p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p></td>
+					</tr>
+				</table>
+				</div>
+				
+				<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>		
+		</fieldset>
+</div>
+
+</div>
+
+<!-- detailsInvoiceCreationModal START -->
+<div id="detailsInvoiceCreationModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body height-table-with-scroll ">
+				<div class="row padding-top5 padding-left-right-set4">
+					<div id="table-scroll" class="table-scroll">
+						<div class="table-wrap">
+							<table class="main-table">
+								<thead>
+									<tr>
+										<!-- <th class="width1 th-bg"></th> -->
+										<th class="width8 th-bg"><span class="">Order No.</span></th>
+										<th class="width10 th-bg">Service Name</th>
+										<th class="width10 th-bg">Doctor</th>
+										<th class="width10 th-bg">Qty</th>
+										<th class="width10 th-bg">Unit Price</th>
+										<th class="width10 th-bg">Total Amount</th>
+										<th class="width10 th-bg">Concession</th>
+										<!-- <th class="width10 th-bg">Disc %</th> -->
+										<th class="width10 th-bg">Discount Amount</th>
+										<th class="width10 th-bg">GST Amount</th>
+										<th class="width10 th-bg">Net Payable</th>
+										<th class="width10 th-bg">Self Payable</th>
+										<th class="width10 th-bg">Credit Payable</th>
+										<th class="width10 th-bg">Cr Net Amount</th>
+										<th class="width10 th-bg">Due Amount</th>
+									</tr>
+								</thead><tbody class="scrollable">
+									<tr ng-repeat="info in detailsCompanyInvoiceCreationList|orderBy:column:reverse">
+										<!-- <td class="td-bg"><input type="checkbox"></td> -->
+										<td class="td-bg">{{info.orderNo}}</td>
+										<td class="td-bg">{{info.serviceStandardName}}</td>
+										<td class="td-bg">{{info.doctorName}}</td>
+										<td class="td-bg">{{info.quantity}}</td>
+										<td class="td-bg">{{info.unitRate}}</td>
+										<td class="td-bg">{{info.totalAmount}}</td>
+										<td class="td-bg">{{info.concession}}</td>
+									<!-- 	<td class="td-bg">{{info.concession}}</td> -->
+										<td class="td-bg">{{info.discount}}</td>
+										<td class="td-bg">{{info.taxAmount}}</td>
+										<td class="td-bg">{{info.netAmount}}</td>
+										<td class="td-bg">{{parseFloatNum(info.selfPayable)}}</td>
+										<td class="td-bg">{{parseFloatNum(info.credtPayable)}}</td>
+										<td class="td-bg">{{parseFloatNum(info.crNetAmount)}}</td>
+										<td class="td-bg"><b>{{parseFloatNum(info.credtPayable-info.crNetAmount)}}</b></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+		        <div class="row his-style">
+		          <div class="col-md-11"></div>
+		          <div class="col-md-1 padding-left0px-right6px">
+		            <div class="common-save-button">
+		              <input type="button" value="Ok" id="okBtn" class="btn btn-primary btn-save-box-shadow" data-dismiss="modal" ng-click="okClick()">
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+		</div>
+	</div>
+</div>
+<!-- detailsInvoiceCreationModal END -->
+
+
+<script src="resources/assets/js/common/page-height.js"></script>
+
+<script>
+
+$(document).ready(function() {
+	 
+	 $(".selectedPageName").text("Company Invoice Creation");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="TPACreditPartyInvoice"]').parents("li").addClass("active");
+});
+
+
+
+</script>

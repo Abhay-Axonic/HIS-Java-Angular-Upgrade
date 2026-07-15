@@ -1,0 +1,283 @@
+<style>
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	background: url(resources/assets/images/logo/Medicine_bg_page.jpg)
+		no-repeat center center fixed;
+	background-size: 100%;
+	background-position: top;
+	background-repeat: no-repeat;
+}
+.img-1,.img-2,.img-3,.img-4,.img-5,.img-6, img {
+    height: 175px !important;
+}
+.img-1 img {
+    background: #ff3f38 !important;
+    padding: 3px;
+}
+.img-2 img {
+    background: #006d09 !important;
+    padding: 3px;
+}
+.img-3 img {
+    background: #676767 !important;
+    padding: 3px;
+}
+.img-4 img {
+    background: #d78b00 !important;
+    padding: 3px;
+}
+.img-5 img {
+    background: white !important;
+    padding: 3px;
+}
+.img-6 img {
+   background: black !important;
+    padding: 3px;
+}
+.modal-content {
+    height: 690px !important;
+    overflow-y: scroll;
+}
+.login-html {
+    margin-left: -25px;
+    width: 100%;
+    height: 330px;
+    padding: 40px 10px 10px 10px;
+    background: rgb(57 115 114 / 63%);
+    text-align: center;
+    margin-top: 215px;
+    box-shadow: 2px 1px 21px 5px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+
+.login-html p {
+	font-size: 22px;
+	padding-bottom: 5px;
+	margin: 0 15px 10px 0;
+	display: inline-block;
+	border-bottom: 2px solid #00aad7;
+	text-align: center;
+	color: #fff;
+}
+
+.margin {
+	margin-top: 10px;
+	width: -webkit-fill-available;
+}
+
+.margin label {
+	text-align: left;
+	float: left;
+	margin-bottom: 10px !important;
+	font-size: 15px;
+	color: #e8e8e8;
+}
+
+.login-form {
+	margin-top: 30px;
+}
+.m-t {
+    margin: 55px 10px 10px 120px;
+}
+.btn-outline-primary {
+    width: 70%;
+    background: #249fc7;
+    border: none !important;
+    outline: none !important;
+    cursor: pointer !important;
+    color: #fff !important;
+    border-radius: 190px !important;
+    padding: 10px 15px 10px 15px !important;
+    font-size: 15px !important;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+.btn-outline-primary:hover {
+    background: #156f8c;
+    color: #fff;
+}
+.modal-header {
+    padding: 15px 5px 10px 10px !important;
+    margin-top: 0px !important;
+}
+h5 {
+    font-size: 15px;
+}
+.danger {
+    background: #eb0000;
+    border: none !important;
+    outline: none !important;
+    cursor: pointer !important;
+    color: #fff !important;
+    border-radius: 190px !important;
+    padding: 5px 15px 5px 15px !important;
+    font-size: 12px !important;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+.btn-primary-save {
+    background: #249fc7;
+    border: none !important;
+    outline: none !important;
+    cursor: pointer !important;
+    color: #fff !important;
+    border-radius: 190px !important;
+    padding: 5px 15px 5px 15px !important;
+    font-size: 12px !important;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+.btn-primary-save:hover {
+    background: #156f8c;
+    color: #fff;
+}
+.danger:hover {
+    background: #b90505;
+    color: #fff;
+}
+
+.heading-title h4 {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 5px 8px 15px;
+    border-bottom: 1px solid #ccc;
+    margin-left: 0px !important;
+}
+
+.heading-title p {
+    font-size: 14px;
+    text-align: justify;
+    padding: 5px 25px 10px 25px;
+}
+.heading-title1 h4 {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 5px 8px 15px;
+    border-bottom: 1px solid #ccc;
+    margin-left: 0px !important;
+}
+</style>
+
+<body>
+	<div class="container">
+		<div class="col-lg-6 col-lg-offset-2">
+			<div class="login-wrap">
+				<div class="login-html">
+					<p class="tab">Medicine Information</p>
+					<div class="login-form">
+						<div class="sign-in-htm">
+							<form>
+								<div class="row">
+								<div class="col-lg-6">
+									<div class="margin">
+										<div class="form-group">
+											<label for="inputdefault">Medicine Name</label> <!-- <input
+												type="text" class="form-control" id="medicine-name"
+												placeholder="Medicine Name"> -->
+												<input class="form-control" type="text" autocomplete="off"
+													class="text-input floating-label"
+													ng-model="medicine" placeholder="Search"
+													ng-click="getMedName(medicine)"
+													uib-typeahead="group.medicine for group in searchPharmanDrugList($viewValue)"
+													typeahead-editable="false"
+													typeahead-on-select="selectDrug($item, $model, $label,initVal);"
+													ng-change="getFormsByName()"
+													name="groupName" typeahead-min-length="3">
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="margin">
+										<div class="form-group">
+											<label for="inputdefault">Medicine Form</label> <!-- <select
+												class="form-control" id="Mediform">
+												<option>Eye Drop</option>
+												<option>Ear Drop</option>
+												<option>Nose Drop</option>
+											</select> -->
+											<select  class="form-control" name="Mediform" id="Mediform" ng-model="formulation"
+												ng-change="getMedForm(formulation, 0)" 
+												class="text-input floating-label dirty ng-pristine ng-untouched ng-valid ng-not-empty"
+												>
+												<option ng-repeat="info in medFormsList track by $index"
+													value="{{info.formulation}}" class="ng-binding ng-scope">
+													{{info.formulation}}</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								</div>
+								
+								<div class="row m-t">
+									<div class="col-lg-6 text-center">
+										<button type="button" class="btn btn-outline-primary" ng-model="type" ng-click="setType('Doctor')"
+											value="Doctor" data-mdb-ripple-color="dark" data-toggle="modal" data-target="#DP">Doctor</button>
+									</div>
+									<div class="col-lg-6 text-center">
+										<button type="button" class="btn btn-outline-primary" ng-model="type" ng-click="setType('Doctor')"
+											 value="Patient" data-mdb-ripple-color="dark" data-toggle="modal" data-target="#DP">Patient</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	<!-- Modal -->
+<div class="modal fade" id="DP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <div class="modal-header" style="justify-content: space-between;  border-bottom: 1px solid #e9ecef;  border-top-left-radius: 0.3rem; border-top-right-radius: 0.3rem;">
+        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;float: left;">{{medicine}}:{{formulation}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 4px 0px 0px 0px !important;">
+          <span aria-hidden="true" style="margin: 0px 0px 24px -18px !important; color: black;" ng-click="clear()">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div class="row">
+
+<div class="heading-title" ng-repeat="info in list">
+<h4>Medicine</h4>
+    <p>{{info.medicine}}</p>
+<!-- <h4>Medicinal forms</h4>
+    <p>{{info.medicinalforms}}</p> -->
+<h4>Allergy and crosssensitivity</h4>
+    <p>{{info.allergyandcrosssensitivity}}</p>
+<h4>Cautions:</h4>
+    <p>{{info.cautions}}</p>
+<h4>Hepatic impairment:</h4>
+    <p>{{info.hepaticimpairment}}</p>
+<h4>Renal impairment:</h4>
+    <p>{{info.renalimpairment}}</p>
+<h4>Indications and doses:</h4>
+    <p>{{info.indicationsanddoses}}</p>
+<h4>Monitoring requirements:</h4>
+    <p>{{info.monitoringrequirements}}</p>
+<h4>Patient and care advice:</h4>
+    <p>{{info.patientandcareradvice}}</p>
+<h4>Prescribing and dispensing informations</h4>
+    <p>{{info.prescribinganddispensinginformations}}</p>
+<h4>Pretreatment Screening Information:</h4>
+    <p>{{info.pretreatmentscreeninginformation}}</p>
+<h4>Side Effects:</h4>
+    <p>{{info.sideeffects}}</p>
+<h4>Interactions</h4>
+    <p>{{info.interactions}}</p>
+
+</div>
+
+
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn danger" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary-save">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>

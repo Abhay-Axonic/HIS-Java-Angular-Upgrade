@@ -1,0 +1,796 @@
+
+
+<div id="page-content-wrapper" >
+	<div class="container-fluid his-style">
+		<fieldset>
+			<!-- row 1 -->
+			<div class="row">
+				
+				<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									 <input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="fromDatepicker" id="fromDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="fromDate"
+											model-view-value="true" is-open="fromDatepicker.opened"
+											datepicker-options="dateOptions" show-button-bar="false"
+											ng-click="openFromDatePicker()">
+									<label for="code">Date (From)</label>
+						</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+						<div class="row input-container test-master-sample">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+								<i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11 ">
+								<div class="">
+									<input type="text" autocomplete="off" class="text-input floating-label dirty"
+											name="toDatepicker" id="toDatepicker"
+										    uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"
+											placeholder="DD/MM/YYYY" ng-model="toDate"
+											model-view-value="true" is-open="toDatepicker.opened"
+											datepicker-options="dateOptions1" show-button-bar="false"
+											ng-click="openToDatePicker()"  required >
+									<label for="description" class="LISDynamicLabel">Date-Till</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="storeId"  convert-to-number>
+										<option value="0">All</option>
+										<option ng-repeat="info in storeList" value="{{info.storeId}}">{{info.storeName}}</option>
+								</select> 
+								<label for="description" class="LISDynamicLabel">Department</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-building-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="requestCriticalityId"  convert-to-number>
+									<option value="0">All</option>
+									<option value="1">Normal</option>
+									<option value="2">Urgent</option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Request Critaclity</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					<div class="row input-container">
+						<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+							<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-11 ">
+							<div class="">
+								<select class="text-input floating-label dirty" ng-model="statusId"  convert-to-number>
+									<option value="0">All</option>
+									<option value="2">Completed</option>
+									<option value="1">Pending</option>
+									<option value="3">Rejected</option>
+								</select>
+								<label for="description" class="LISDynamicLabel">Status(n) </label>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10">
+					<div class=" ">
+						<a href="" class="btn btn-primary btn-save-box-shadow" title="Search" ng-click="getCorectiveMaintenanceReturnWorklist();">
+							<i class="fa fa-search" aria-hidden="true" ></i>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- //row 1 -->
+		</fieldset>
+		<div class="row">
+			<div class="col-lg-9 col-md-9 col-sm-9">
+					<div class="search">
+							<label class="show-entries">Show 
+							<select ng-init="pagination.pageSize='10'" 
+								ng-model="pagination.pageSize" 
+								ng-change="pagination.setTotalPages(pagination)" class="search-popUp-ddl">
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+							</select> (records) 
+							</label>
+						</div>
+				</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 float_right">
+				<input type="text" autocomplete="off" ng-model="searchKeyword" class="text-search-box" placeholder="Search" >
+				<i class="fa fa-search common-search-text-icon padding-top8" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="row padding-left-right-set4 margin-top8">
+			<div class="col-lg-12 col-md-12 ">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="">
+							<th class="width6">
+								 Request No
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width4" >
+								Request (Date)
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6">
+								Asset Code
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width8">
+								Asset Name
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width5">
+								  Serial No 
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width6">
+								   Return Serial No
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width4">
+								   Completion Date 
+								<div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div>
+							</th>
+							<th class="width5">
+								   Complaint Details 
+								<!-- <div class="float_right">
+									<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+									<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+								</div> -->
+							</th>
+							<th class="width5">
+								Status(n)
+							</th>
+							<th class="width5">
+								Action taken
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in pagination.data | filter:searchKeyword">
+							<td>{{info.callLogNumber}}</td>
+							<td>{{info.requestDateTime}}</td>
+							<td>{{info.itemCode}}</td>
+							<td>{{info.itemName}}</td>
+							<td>{{info.newSerialNo}}</td>
+							<td>{{info.requestedSerialNo}}</td>
+							<td>{{info.completionDate}}</td>
+							<td class="padding-edit-button-table" >
+								<div class=" text-center">
+									<a><i class="fa fa-info-circle" aria-hidden="true" title="Completion Details"  ng-click="getdetailsOfCM(info);"></i></a>
+								</div>
+							</td>
+							<td>
+								<div ng-if="info.replaceStatusId == 1">Pending</div>
+								<div ng-if="info.replaceStatusId == 2">Completed</div>
+								<div ng-if="info.replaceStatusId == 3">Rejected</div>
+							</td>
+							<td>
+								<div class="row padding-left-right-set4" data-ng-class="{'disabled': info.replaceStatusId == 2 || info.replaceStatusId == 3}">
+									<div id="mediaType" class="row uk-input-group customRadioBtn">	
+									
+										<ng-toggle tri-toggle ng-model="info.isAcceptOrReject"  ng-true-val="'A'" ng-false-val="'R'"  ng-no-val="'N'"
+											ng-checked="info.isAcceptOrReject=='A'" 
+											ng-click="showRejecPopup(info,$index);">
+										</ng-toggle>
+																					
+										<!-- <span>
+												<input id="acceptRadio" name="acceptRejectRdobtn" type="radio" class="otherRegistrationType trigger" ng-value=true ng-model="redioButton" ng-click="getAcceptDetils(info);" ng-disabled= "info.replaceStatusId != 1">
+												<label for="acceptRadio">Accept</label>
+										</span>
+										<span>
+												<input id="rejectRadio" name="acceptRejectRdobtn" type="radio"  ng-click="rejectDetils(info);" ng-value=false ng-model="redioButton" ng-disabled= "info.replaceStatusId != 1">
+												<label for="rejectRadio">Reject</label>
+										</span> -->
+									</div>
+								</div>
+							</td>
+						</tr>	
+						
+					</tbody>
+				</table> 
+			</div>
+			<div class="row margin-bottom45 center-block">
+					<ul ng-if="pagination.totalPages > 1" class="pagination table-list"
+						style="font-size: 14px; cursor: pointer;">
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setFirstPage(pagination)">First</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === 1}"><a
+							ng-click="pagination.setPreviousPage(pagination)">Previous</a>
+						</li>
+						<li ng-repeat="page in pagination.getPagesList(pagination)"
+							ng-class="{active:pagination.currentPage === page}"><a
+							ng-click="pagination.setPage(page,pagination)">{{page}}</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setNextPage(pagination)">Next</a>
+						</li>
+						<li ng-class="{disabled:pagination.currentPage === pagination.totalPages}">
+							<a ng-click="pagination.setLastPage(pagination)">Last</a>
+						</li>
+					</ul>
+				</div>
+		</div>
+	</div>
+</div>
+<!-- completion details modal start -->
+<div id="complaintInformationModal" class="modal fade ng-scope in common-large-popup" data-backdrop="static"  role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title patient-details-row">
+					Complaint Information Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<!-- modal-body row start -->
+				<div class="row">
+					<!-- ************ Asset Details row start ************  -->
+					<fieldset class="normalRegistration">
+						<legend class="heading-div">Asset Details</legend>
+						<div class="row padding-top5">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					          	<span class="">
+					          		<b class="padding-right10 "> Request Type :</b>
+					          	<label>
+		          					<div ng-if="detailsOfCMObj.requestTypeId == 1">Breakdown</div>
+		          					<div ng-if="detailsOfCMObj.requestTypeId == 2">Installation</div>
+		          					<div ng-if="detailsOfCMObj.requestTypeId == 3">As And When</div>
+		          				</label>
+					          	</span>
+					        </div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+								<span class="margin-left10">
+									<b class="padding-right10 "> Request Criticality :</b>
+									<label>
+									<div ng-if="detailsOfCMObj.requestCriticalityId == 1">Normal</div>
+		          				<div ng-if="detailsOfCMObj.requestCriticalityId == 2">Urgent</div>
+									</label>
+								</span>
+							</div>
+						</div>
+						<div class="row padding-top">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					          	<span class="">
+					          		<b class="padding-right10 "> Asset Category :</b><label>{{detailsOfCMObj.assetcategory}}</label>
+					          	</span>
+					        </div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<span class="margin-left10">
+									<b class="padding-right10 "> Asset Code :</b><label>{{detailsOfCMObj.assetCode}}</label>
+								</span>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<span class="margin-left10">
+									<b class="padding-right10 "> Asset Name :</b><label>{{detailsOfCMObj.assetName}}</label>
+								</span>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<span class="margin-left10">
+									<b class="padding-right10 "> Serial No. :</b><label>{{detailsOfCMObj.serialNumber}}</label>
+								</span>
+							</div>
+						</div>
+					</fieldset>
+					<!-- ************ Asset Details row end ************  -->
+					<!-- ************ Request Details row start ************  -->
+					<fieldset class="normalRegistration margin-top10">
+						<legend class="heading-div">Request Details</legend>
+							<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					          	<span class="">
+					          		<b class="padding-right10 "> Request DateTime :</b><label>{{detailsOfCMObj.requestDateTime}}</label>
+					          	</span>
+					        </div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+								<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+										<label class="switch"> 
+											<input type="checkbox" class="" ng-model="detailsOfCMObj.isDown" >
+											<div class="slider round"></div>
+										</label>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top12"><label class="cursor-pointer" for="1">Is NonOperative</label></div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<span class="margin-left10">
+									<b class="padding-right10 "> Down Time Date :</b><label>{{detailsOfCMObj.downDateTime}}</label>
+								</span>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<span class="margin-left10">
+									<b class="padding-right10 "> Down Time :</b><label>{{detailsOfCMObj.downTime}}</label>
+								</span>
+							</div>
+						</div>
+						<div class="row padding-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+								<div class="row">
+									<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+										<b class="padding-right10">Request Details:</b>
+									</div>
+									<div class="col-lg-10 col-md-9 col-sm-9 padding-left-right-set4">
+										<textarea name="editor" ck-editor-field type="text" autocomplete="off" id="" rows="8" cols="50"   ng-model="detailsOfCMObj.requestDetails" ng-disabled="true"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row padding-top5">
+							<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+								<b class="padding-right10">Remarks:</b>
+							</div>
+							<div class="col-lg-10 col-md-9 col-sm-9 padding-left-right-set4">
+								<textarea rows="2" class="dirty"  ng-disabled="true" ng-model="detailsOfCMObj.remark" ></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-6 padding-left-right-set4 padding-top10">
+								<span class="margin-left10">
+									<b class="padding-right10 ">Resolution Expected By:</b><label>{{detailsOfCMObj.resolutionExpectedDateTime}}</label>
+								</span>
+							</div>
+						</div>
+					</fieldset>
+					<!-- ************ Request Details row end ************  -->
+					<!-- ************ Allocation Details row start ************  -->
+					<fieldset class="normalRegistration margin-top10">
+					<legend class="heading-div">Allocation Details</legend>
+						<div class="row padding-top">
+						
+						<div class="row ">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<span class="margin-left10">
+									<b class="padding-right10 ">Assigned To :</b><label> {{detailsOfCMObj.userName}}</label>
+								</span>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+					          	<span class="">
+					          		<b class="padding-right10 ">Schedule Date:</b><label>{{detailsOfCMObj.scheduleDate}} </label>
+					          	</span>
+					        </div>
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+								<span class="margin-left10">
+									<b class="padding-right10 ">Schedule Time:</b><label> {{detailsOfCMObj.scheduleTime}}</label>
+								</span>
+							</div>
+						</div>
+						
+							
+							
+						</div>
+						<div class="row padding-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+								<div class="row">
+									<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+										<b class="padding-right10 padding-left5">Allocation Remarks :</b>
+									</div>
+									<div class="col-lg-10 col-md-9 col-sm-9 padding-left-right-set4">
+										<textarea rows="2" class="dirty" ng-model="detailsOfCMObj.allocationRemark" ng-disabled="true"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>	
+					<!-- ************ Allocation Details row end ************  -->
+					<!-- ************ Is Start and Resolution Details row start ************  -->
+					<fieldset class="normalRegistration margin-top10">
+						<legend class="heading-div">Is Start </legend>
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set1 padding-top8">
+								<div class="row input-container">
+									<div class="col-lg-4 col-sm-5 col-md-5 padding-left-right-set4 padding-top8">
+										<label>Is Start  :</label>
+									</div>
+									<div class="col-lg-4 col-sm-4 col-md-4 padding-top4">
+										<label class="switch">
+											<input type="checkbox" checked="" ng-model="detailsOfCMObj.isStart" ng-disabled="true">
+											<div class="slider round"></div>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>	
+					<fieldset class="normalRegistration margin-top10">
+						<legend class="heading-div">Resolution Details</legend>
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set0">
+							    <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top12 text-width-auto" style=" padding-top:  15px !important;">
+							        <label>Request Allocation Type</label></div>
+							    <div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4 ">
+									<div class="row input-container customRadioBtn padding-top8">
+										<input type="radio" name="AllocationRadioBtn" id="" class=""  ng-value="1" ng-model="detailsOfCMObj.requestAllocationTypeId" ng-disabled="true">
+											<label for="Inhouse" class="">In house</label>
+										<input type="radio" name="AllocationRadioBtn" id="" class=""  ng-value="0" ng-model="detailsOfCMObj.requestAllocationTypeId" ng-disabled="true">
+											<label for="Outhouse" class="">OEM</label>
+										<input type="radio" name="AllocationRadioBtn" id="" class="" ng-value="2" ng-model="detailsOfCMObj.requestAllocationTypeId" ng-disabled="true">
+											<label for="OutSource" class="">Out Source</label>
+									</div>
+							    </div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-if="detailsOfCMObj.requestAllocationTypeId == 0 || detailsOfCMObj.requestAllocationTypeId == 2">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="detailsOfCMObj.ticketNo" ng-disabled="true">
+											<label for="code">Ticket No.</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10" ng-if="detailsOfCMObj.requestAllocationTypeId == 0 || detailsOfCMObj.requestAllocationTypeId == 2">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off" name="code" id="" class="text-input floating-label dirty" ng-model="detailsOfCMObj.vendorName" ng-disabled="true">
+											<label for="code">Vendor</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
+						</div>
+						<div class="row padding-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+								<div class="row">
+									<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+										<b class="padding-right10">Resolution Details:</b>
+									</div>
+									<div class="col-lg-10 col-md-9 col-sm-9 padding-left-right-set4">
+										<textarea rows="2" class="dirty" ng-model="detailsOfCMObj.resolutionDetails" ng-disabled="true"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set1 padding-top8">
+								<div class="row input-container">
+									<div class="col-lg-6 col-sm-6 col-md-6 padding-left-right-set4 padding-top8">
+										<label>Is Completed  :</label>
+									</div>
+									<div class="col-lg-4 col-sm-4 col-md-4 padding-top4">
+										<label class="switch">
+											<input type="checkbox" checked="" ng-true-value="true" ng-false-value="false" ng-model="detailsOfCMObj.isCompleted" ng-disabled="true">
+											<div class="slider round"></div>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off"  class="text-input floating-label dirty" ng-model="detailsOfCMObj.assetUpDate" ng-disabled="true">
+											<label for="code">Asset Up Date</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="clockpicker">
+											<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" ng-model="detailsOfCMObj.assetUpTime" ng-disabled="true"> 
+											<label for="code">Asset Up Time</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+								<div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+										<label class="switch"> 
+											<input type="checkbox" class="" ng-true-value="true" ng-false-value="false" ng-model="detailsOfCMObj.underObservation" ng-disabled="true">
+											<div class="slider round"></div>
+										</label>
+									</div>
+									<div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4 padding-top12">
+									<label class="cursor-pointer" for="2">Under Observation</label></div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off"  class="text-input floating-label dirty" ng-model="detailsOfCMObj.fromDate" ng-disabled="true">
+											<label for="code">From Date </label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+								<div class="row input-container">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11">
+										<div class="">
+											<input type="text" autocomplete="off" class="text-input floating-label dirty" ng-model="detailsOfCMObj.toDate" ng-disabled="true"> 
+											<label for="code">To Date </label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row padding-top10">
+							<div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+								<div class="row">
+									<div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+										<b class="padding-right10">Remarks :</b>
+									</div>
+									<div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4">
+										<textarea rows="2" class="dirty" ng-model="detailsOfCMObj.remark" ng-disabled="true"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+					<!-- ************  Is Start and Resolution Details row end ************  -->
+					<!-- ************  Replacement Details row start ************  -->
+					<fieldset class="normalRegistration margin-top10">
+						<legend class="heading-div">Replacement Details</legend>
+						<div class="row padding-top5">
+							<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					          	<span class="">
+					          		<b class="padding-right10 ">Asset Category:</b>
+					          		<label>{{detailsOfCMObj.assetcategory}} </label>
+					          	</span>
+					        </div>
+					        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					          	<span class="">
+					          		<b class="padding-right10 ">Asset Code:</b>
+					          		<label> {{detailsOfCMObj.assetCode}}</label>
+					          	</span>
+					        </div>
+					        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					          	<span class="">
+					          		<b class="padding-right10 ">Asset Name:</b>
+					          		<label> {{detailsOfCMObj.assetName}}</label>
+					          	</span>
+					        </div>
+					         <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					          	<span class="">
+					          		<b class="padding-right10 ">Serial No: </b>
+					          		<label>{{detailsOfCMObj.requestedSerialNo}} </label>
+					          	</span>
+					        </div>
+					        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+					          	<span class="">
+					          		<b class="padding-right10 ">Return Serial No: </b>
+					          		<label>{{detailsOfCMObj.newSerialNo}} </label>
+					          	</span>
+					        </div>
+						</div>
+					</fieldset>
+					<!-- ************  Replacement Details row end ************  -->
+					<div class="row margin-top5">
+						<div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float-right">
+				           <div class="">
+				              <!-- <a href=""> -->
+				                   <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow"  data-dismiss="modal">
+				              <!--  </a> -->
+				           </div>
+		       			</div>
+					</div><div class="margin-top5"></div>
+				</div>
+				<!-- modal-body row end -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- completion details modal end -->
+
+
+<!-- accept radio button ReturnModal START -->
+<div id="acceptBtnReturnModal" class="modal fade in common-medium-popup" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+		<div class="modal-content">
+			<div class="modal-header padding-zero" style="padding:0px;">
+				<div class="modal-title patient-details-row">
+					Asset Accept Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-top10">
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="" id=""  ng-value="acceptReturnObj.assetName" class="text-input floating-label" disabled="disabled"> 
+									<label for="" class="">Asset Category </label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="" id="" class="text-input floating-label" ng-value="acceptReturnObj.itemCode" disabled="disabled"> 
+									<label for="" class="">Asset Code </label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top4">
+						<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="" id="" class="text-input floating-label"  ng-value="acceptReturnObj.itemName"  disabled="disabled"> 
+									<label for="" class="">Asset Name </label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set padding-top0">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="" id="" class="text-input floating-label"  ng-value="acceptReturnObj.newSerialNo"  disabled="disabled"> 
+									<label for="code"> Serial No.</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set padding-top0">
+				 		<div class="row input-container">
+							<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+								<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+							</div>
+							<div class="col-lg-11 col-sm-11 col-md-11">
+								<div class="">
+									<input type="text" autocomplete="off" name="" id="" class="text-input floating-label"  ng-value="acceptReturnObj.requestedSerialNo" disabled="disabled"> 
+									<label for="code">Return Serial No.</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="border:none;">
+				<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click = "saveAcceptance();">Save</button>
+				<button type="button" data-dismiss="modal" class="btn btn-primary" >Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- accept radio button replaceModal END -->
+
+<div id="accepatReject" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);">
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Rejection
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" title="Reason Type -'Rejection'" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											<select class="text-input floating-label dirty"  id="rejectReasonIdDrpDN" name="code" ng-model="rejectReasonId">
+											<option value="">Select Reason</option>
+											<option ng-repeat="info in reasonList" value="{{info.reasonMasterId}}"  >{{info.reasonDesc}}</option>
+											</select>		
+											<label for="code">Select Reasons</label>
+										</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-sticky-note" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<textarea name="code" rows="4" id="noteRejectDrpDN"
+													class="text-input floating-label" ng-model="noteReject"></textarea>
+												<label for="code">Note</label>
+											</div>
+										</div>
+									</div>
+									<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="saveAcceptReject()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<script src="resources/assets/js/common/page-height.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var documentHeight= $(window).height();
+    var sideBarHeight = documentHeight - 55;
+  $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+  
+  $(".selectedPageName").text("Corrective Maintenance Return Worklist");
+	$(".sidebar-nav li").each(function() {
+		$(this).find("a").parents("li").removeClass("active");
+	});
+	$('a[href$="correctiveMaintenanceReturnWorklist"]').parents("li").addClass("active");
+});
+</script>

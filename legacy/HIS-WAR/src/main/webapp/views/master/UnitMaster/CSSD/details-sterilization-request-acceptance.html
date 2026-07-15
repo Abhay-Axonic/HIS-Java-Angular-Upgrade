@@ -1,0 +1,235 @@
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Requesting Store :</b>
+					<label class="ng-binding">{{viewSterRequestAcceptanceObj.requestingStore}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Issuing Store:
+					</b>
+					<label class="ng-binding">{{viewSterRequestAcceptanceObj.issueingStore}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Request Date:</b>
+					<label class="ng-binding">{{viewSterRequestAcceptanceObj.createdDate}}</label>
+				</span>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+				<span class="margin-left10">
+					<b class="padding-right10 ">Request No.:</b>
+					<label class="ng-binding">{{viewSterRequestAcceptanceObj.requestNo}}</label>
+				</span>
+			</div>
+		</div>
+		<div class="row" id="">
+				<div class="col-lg-12 col-md-12 height420-table-with-scroll padding-top10 padding-left-right-set4">
+					<!-- table-x-scroll -->
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<!-- <th class="width1 vertical-middle text-center">
+									<input type="checkbox">
+								</th> -->
+								<th class="width4 vertical-middle">Kit Code</th>
+								<th class="width5 vertical-middle">Kit Name</th>
+								<th class="width5 vertical-middle">Batch No.</th>
+								<th class="width3 vertical-middle text-center">Action</th>
+								<th class="width2 vertical-middle text-center"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="kitInfo in viewSterRequestAcceptanceObj.kitList">
+								<!-- <td class="vertical-middle text-center" >
+									<input type="checkbox">
+								</td> -->
+								<td>{{kitInfo.kitCode}}</td>
+								<td>{{kitInfo.kitName}}</td>
+								<td>{{kitInfo.batchNumber}}</td>
+								<td class="text-center">
+									<div class="checkbox no-margin">
+										<label><input type="checkbox" value="" style="" ng-disabled="viewSterRequestAcceptanceObj.status != 'New'" ng-model="kitInfo.reject" data-toggle="modal" data-target="#qtyacceptReject" ng-click="toReject(kitInfo)">Reject</label>
+									</div>
+								</td>
+								<td class="text-center"><a data-toggle="modal" data-target="#instrumentInfoDetails" ng-click="getInstrumentInfo(kitInfo)"><i class="fa fa-info-circle"></i></a></td>
+							</tr>
+							
+							
+						</tbody>
+					</table>
+					</div>
+				</div>
+				
+				<footer class="col-lg-12 col-md-12 padding-left-right-set4 padding-right20">
+					<div class="row padding-top5 margin-top10 padding-right20">
+						<div class="col-lg-10 col-md-8 padding-left-right8"></div>
+						<div class="col-lg-1 col-md-2 padding-left-right-set4">
+							<a href="">
+								<input type="button" ng-disabled="viewSterRequestAcceptanceObj.status != 'New'" value="Save" class="btn btn-primary btn-save-box-shadow"  data-toggle="modal" data-target="#confirmPopupOnAcceptSterilizationRequest">
+							</a>
+						</div>
+						<div class="col-lg-1 col-md-2 padding-left-right-set4">
+							<a href="#/sterilizationRequestAcceptance">
+								<input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+							</a>
+						</div>
+					</div>
+				</footer>
+				
+	</div>
+</div>
+
+
+<!-- Confirmation PopUp Accept Sterilization Request -->
+	<div id="confirmPopupOnAcceptSterilizationRequest" class="modal fade ng-scope in"
+		role="dialog" style="padding-left: 17px;" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 0px;">
+					<div class="modal-title patient-details-row">
+						Confirm
+						<button type="button" class="close" data-dismiss="modal"
+							ng-click="cancel();">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="margin-left10">
+						<span>Are you sure you want to save?</span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary"
+							id="okBtn" ng-click="acceptSterilizationRequest();">Ok</button>
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="cancelBtn">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<!--  instrumentDetails START -->
+<div id="instrumentInfoDetails" class="modal fade ng-scope in common-medium-popup" role="dialog" style="z-index: 9999; background: rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+			<div class="modal-header padding-zero"> 
+				<div class="modal-title patient-details-row">
+					  Details
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row padding-left-right-set4 padding-top4">
+						<div class="col-md-12 common-table-height-250">
+							<table class="table table-bordered">
+								<thead>
+									<tr class="">
+										<th class="width15">
+											Instrument Code
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width15">
+											Instrument Name
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width5">
+											Qty
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+										<th class="width5">
+											Physical Qty
+											<div class="float_right">
+												<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+											</div>
+										</th>
+									</tr>
+									</thead>
+									<tbody>
+										
+										<tr ng-repeat="instrumentInfo in kitInstrumentInfo.kitInstrumentList">
+										<td>{{instrumentInfo.instrumentCode}}</td>
+										<td>{{instrumentInfo.instrumentName}}</td>
+										<td>{{instrumentInfo.quantity}}</td>
+										<td><input type="text" autocomplete="off" class="w-100" ng-blur="checkPhyQty(instrumentInfo)" ng-model="instrumentInfo.physicalQuantity"></td>
+									</tr>
+									</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+				</div>
+		</div>
+	</div>
+</div>
+<!-- instrumentDetails END -->
+
+<!-- Qty Accept Reject Modal -->
+  <div id="qtyacceptReject" class="modal fade ng-scope in common-small-popup" role="dialog" style="z-index:1300 !important;background: rgba(0, 0, 0, 0.33);" data-keyboard="false" data-backdrop="static"> 
+		<div class="modal-dialog"> <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title patient-details-row">
+						Rejection
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 padding-left-right-set">
+							<div class="row input-container margin-top10">
+									
+									<div class="col-lg-6 col-md-6 col-sm-6">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"> 
+										<i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+									</div>
+									<div class="col-lg-11 col-sm-11 col-md-11 ">
+										<div class="">
+											
+											<select class="text-input floating-label"
+											name="rejectionReason" ng-model="rejectReasonId"
+											ng-options="data.id as data.reason for data in rejectReasonsList"
+											required>
+											</select> <label for="rejectionReason">Select Reason</label>
+										</div>
+									</div>
+									</div>
+								</div>
+							<div class="row input-container margin-top10">
+										<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+											<i class="fa fa-sticky-note" aria-hidden="true"></i>
+										</div>
+										<div class="col-lg-11 col-sm-11 col-md-11 ">
+											<div class="">
+												<textarea name="code" rows="4" id="noteReject"
+													class="text-input floating-label" ng-model="rejectReasonNote"></textarea>
+												<label for="code">Note</label>
+											</div>
+										</div>
+									</div>
+									<!-- <input type="text" autocomplete="off" id="commonId" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="border:none;">
+					<button type="button" data-dismiss="modal" class="btn btn-primary" id="" ng-click="setRejectIdandNote()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End -->

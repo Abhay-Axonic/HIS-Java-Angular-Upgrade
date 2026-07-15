@@ -1,0 +1,360 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+	<div class="container-fluid his-style">
+	
+	<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-calendar-plus-o " aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"  placeholder="DD/MM/YYYY"
+							model-view-value="true" is-open="fromDateOpened" datepicker-options="fromDateOptions" show-button-bar="false"	ng-click="OpenFromDate()"
+							ng-model="search.fromDate"> 
+							<label for="description" class="LISDynamicLabel">From Date</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-calendar-minus-o " aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off" name="description" id="" class="text-input floating-label" uib-datepicker-popup="dd/MM/yyyy" ui-mask="99/99/9999"  placeholder="DD/MM/YYYY"
+							model-view-value="true" is-open="toDateOpened" datepicker-options="oDateOptions" show-button-bar="false"	ng-click="OpenToDate()"
+							ng-model="search.toDate"> 
+							<label for="description" class="LISDynamicLabel">To Date</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4  padding-top10"> 
+				<div class="row input-container margin-top4">
+					<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-files-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<select class="dirty text-input floating-label" ng-model="visitTypeId" convert-to-number name="visitType">
+							<option value="2">IP</option>
+							<option value="3">DC</option>
+							<option value="4">ER</option>
+							<option value="5">ALL</option>
+							
+							</select>
+							<label for="code">Visit Type</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4  padding-top10">
+					<div class="row input-container margin-top4">
+						<div class="col-lg-1 col-sm-1 col-md-2 polymer-icon">
+							<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+						</div>
+						<div class="col-lg-11 col-sm-11 col-md-10">
+							<div class="">
+								<select class="dirty text-input floating-label" ng-model="search.doctorId" >
+								<option ng-repeat="info in doctorsList" value="{{info.doctorId}}">{{info.doctorName}}</option>
+								</select>
+								<label for="code">Doctor</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container">
+					<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon ">
+						<i class="fa fa-user" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<input type="text" autocomplete="off"  class="text-input floating-label" tabindex="3" ng-model="patientName" placeholder="Search"
+                       			 uib-typeahead="group.patientName+'|'+group.uhidNumber for group in searchGroupList($viewValue)"
+                       			 typeahead-editable="false" typeahead-on-select="selectPatientId($item, $model, $label);" name="groupName" >
+								<label for="description" class="">Patient Name / UHID</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+
+		</div>
+		<div class="row margin-top10 padding-left-right-1 his-style">
+		
+		
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container margin-top4">
+					<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-building " aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<select name="floor" id="floor" class="text-input floating-label dirty" ng-model="search.floorId" ng-change="getWardList(search.floorId)">
+							<option ng-repeat="info in floorList" value="{{info.floorId}}">{{info.floorName}}</option>
+							</select>
+							<label for="code">Floor</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+				<div class="row input-container margin-top4">
+					<div class="col-lg-2 col-sm-2 col-md-2 polymer-icon">
+						<i class="fa fa-hospital-o" aria-hidden="true"></i>
+					</div>
+					<div class="col-lg-10 col-sm-10 col-md-10">
+						<div class="">
+							<select name="ward" id="floor" class="text-input floating-label dirty" ng-model="search.wardId" >
+							<option ng-repeat="info in wardList" value="{{info.wardId}}">{{info.wardName}}</option>
+							</select>
+							<label for="code">Ward</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+			
+			<div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 text-width-auto padding-top10">
+					<div class="">
+						<!-- width-div-for-patient-reg pull-left -->
+						<a href="" class="btn btn-primary btn-save-box-shadow text-width-auto" ng-click="searchDischargedPatientList()"
+						 title="Search">
+							<i class="fa fa-search" style="" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			
+		</div>
+						
+       <div class="row margin-top10 padding-left-right-set4">
+			<div class="col-lg-7 col-md-7 col-sm-7 padding-left-right-set4" style="padding-top: 8px;">
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right">
+				<input type="text" autocomplete="off" class="text-search-box" placeholder="Search" ng-model="searchFilter" style="margin-top: 0px"> <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+			</div>
+		</div>
+        
+        <div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll475">
+			  <table id="main-table" class="main-table width100">
+			    <thead>
+			      <tr class="">
+						<!-- <th class="UHID-width">
+							UHID
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th> -->
+						<th class="width30 text-center">
+							Patient Details
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width10 text-center" >
+							Doctor
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width8 text-center">
+							Specialty
+						</th>
+						<!-- <th class="UHID-width">
+							Ward - Bed No.
+						</th> -->
+						<th class="width12 text-center">
+							Ward
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width6 text-center">
+							Bed No.
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							 Bill
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Receipt
+						<!-- 	<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Bed Transfer Report
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Advance Paid 
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Discharge Summary
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							 Report Prints For Services
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Case Sheet Print
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							 Prescription 
+							<!-- <div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<th class="width7 text-center">
+							Visitor Pass
+						<!-- 	<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div> -->
+						</th>
+						<!-- <th class="width7 text-center">
+							Action
+							<div class="float_right">
+								<div><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+								<div class="margin-top-8"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+							</div>
+						</th> -->
+					</tr>
+			    </thead>
+			    <tbody>
+					<tr ng-repeat="info in admittedPatientList | filter : searchFilter">
+						<!-- <td>
+							<div>{{info.uhidnumber}}</div>
+						</td> -->
+						<!-- <td ng-init='age=getAge(info.dob)'>
+									<div ng-if="info.patientId > 0">{{info.pFirstName+' '+age+'/'+info.genderCode}}</div>
+									<div  ng-if="info.tPatientId > 0">{{info.pFirstName+' '+info.dob+'/'+info.genderCode}}</div>
+								</td> -->
+								<td class="text-center width15">
+									<div class="row patient-details" id="45#1247#2_new" >
+										<div class="col-lg-4 col-sm-12 col-md-4">
+											<div class="" >
+												<img ng-src="{{(info.imagePath!=null && info.imagePath!='') ? info.imagePath : (info.genderCode=='F')?'resources/assets/images/tempImages/patient.png':'resources/assets/images/tempImages/m.jpg'}}" style="cursor: pointer;" class="img-circle" width="60" height="60">
+											</div>
+										</div>
+										<div class="col-lg-8 col-sm-12 col-md-8" ng-if="info.patientId > 0">
+											<div class="patient-name">{{info.pFirstName}}
+										</div>
+										<div class="patient-details">
+											<span class="patient-details patient">{{info.genderCode}}/</span>
+											<span class="patient-details patient">{{info.age}}
+											</span></span>
+										</div>
+										<div class="patient">{{info.uhidnumber}}</div>
+									</div>
+								</div>
+							</td>
+							<td class="text-left">
+							<div>Dr. {{info.dFirstName}}</div>
+						</td>
+						<td  class="text-left">
+							{{info.specialityName}}
+						</td>
+						<td class="text-left">
+							<div ng-if="info.bedNumber != null">{{info.floorName !='' ? info.floorName +'' : '' }}</div>
+							<div ng-if="info.bedNumber == null">{{info.erBedTypeAllocationDesc}}</div>
+						</td>
+						<td>
+							{{info.bedNumber}}
+						</td>
+						<td class="vertical-middle">
+						
+						</td>
+						<td class="vertical-middle">
+							
+						</td>
+						
+						<td class="vertical-middle">
+							
+						</td>
+						<td class="vertical-middle">
+							
+						</td>
+						<td class="vertical-middle">
+						
+						</td>
+						<td class="vertical-middle">
+							
+						</td>
+						<td class="vertical-middle">
+							
+						</td>
+						
+						<td class="vertical-middle">
+							
+						</td>
+						<td class="vertical-middle">
+							
+						</td>
+						<!-- <td class="vertical-middle">
+							<input type="button" value="Submit" ng-disabled="info.labCountRed >0 || info.radiologyCountRed > 0 || info.otherSerCountRed > 0 || info.salesRed > 0 || info.procedureRed > 0 || info.pharmecyRed > 0 || info.visitorPassRed > 0 "  ng-click="finalDischarge(info.dischargeId,info.admissionId,info.visitTypeId)" class="btn btn-primary btn-save-box-shadow">
+						</td> -->
+					</tr>
+			    </tbody>
+			  </table>
+			</div>
+		</div>
+        
+	</div>
+</div>
+	<script type="text/javascript">
+
+	$( document ).ready(function() {
+		
+		var documentHeight= $(window).height();
+	    var sideBarHeight = documentHeight - 55;
+	 	$("#page-content-wrapper").css("height", sideBarHeight + "px" );
+	 	
+		
+		$(".selectedPageName").text("Ready For Billing");
+		$(".sidebar-nav li").each(function() {
+			$(this).find("a").parents("li").removeClass("active");
+		});
+		$('a[href$="readyForBilling"]').parents("li").addClass("active");
+	});
+	</script>

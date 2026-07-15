@@ -1,0 +1,23 @@
+package com.param.global.otims.service;
+
+import com.param.global.common.Response;
+import com.param.global.otims.dto.ResourceChargeConfigurationDto;
+
+import in.param.exception.ApplicationException;
+@SuppressWarnings("rawtypes")
+public interface IResourceChargeConfigurationService {
+
+	Response saveResourceChargeConfiguration(ResourceChargeConfigurationDto resourceChargeConfigurationDto) throws ApplicationException;
+
+	Response updateResourceChargeConfiguration(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+
+	Response getResourceChargeConfigurationById(Integer resourceChargeConfigurationId)throws ApplicationException;
+
+	Response getResourceChargeConfigurationList(Integer orgId, Integer unitId)throws ApplicationException;
+
+	Response updateResourceChargeConfigurationStatus(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+
+	Response getResourceChareges(ResourceChargeConfigurationDto resourceChargeConfigurationDto)throws ApplicationException;
+
+
+}

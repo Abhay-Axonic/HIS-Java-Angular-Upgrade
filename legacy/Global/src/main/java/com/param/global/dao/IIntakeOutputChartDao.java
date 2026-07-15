@@ -1,0 +1,48 @@
+package com.param.global.dao;
+
+import com.param.global.common.Response;
+import com.param.global.dto.IntakeOutputChartDetailsDto;
+import com.param.global.dto.IntakeOutputChartMasterDto;
+import com.param.global.dto.OutputChartDetailsDto;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+public interface IIntakeOutputChartDao {
+
+	public Response saveIntakeOutputChart(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response saveIntakeOutputChartDetails(IntakeOutputChartDetailsDto intakeOutputChartDetailsDto) throws ApplicationException;
+
+	public Response saveOutputChartDetails(OutputChartDetailsDto outputChartDetailsDto) throws ApplicationException;
+	
+	public Response getIntakeOutputChartListByPatientId(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response getIntakeOutputChartHistoryListByDate(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response getIntakeHistoryList(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response getOutputHistoryList(IntakeOutputChartMasterDto intakeOutputChartMasterDto) throws ApplicationException;
+
+	public Response getInputOutputChartHistoryDetailsList(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response getInputOutputChartHistoryByDate(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response updateInputOutputStartStatus(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response updateStatusForStartIOChart(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response getIntakeAndOutputDateByPatientId(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response updateIntakeOutputChart(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response updateIntakeOutputChartDetails(IntakeOutputChartDetailsDto intakeOutputChartDetailsDto)throws ApplicationException;
+
+	public Response updateOutputChartDetails(OutputChartDetailsDto outputChartDetailsDto)throws ApplicationException;
+
+	public Response deleteStatusForStartIOChart(IntakeOutputChartMasterDto intakeOutputChartMasterDto)throws ApplicationException;
+
+	public Response deleteStatusForOutputChart(OutputChartDetailsDto outputChartDetailsDto)throws ApplicationException;
+
+
+}

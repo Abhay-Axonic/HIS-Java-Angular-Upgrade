@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net http://dozer.sourceforge.net/schema/beanmapping.xsd">
+	<!-- <configuration> <date-format>dd-MM-yyyy HH:mm:ss</date-format> </configuration> -->
+
+	<mapping map-id="opd_AppointmentMasterDto_to_AppointmentMaster" date-format="dd-MM-yyyy HH:mm:ss">
+		<class-a>com.param.opd.appointment.model.AppointmentMaster</class-a>
+		<class-b>com.param.opd.appointment.dto.AppointmentMasterDto</class-b>
+		<field-exclude> 
+		  <a>timeSlot</a> 
+		  <b>timeSlot</b> 
+</field-exclude>  
+	</mapping>
+	
+	<mapping map-id="PatientRegistrationDto_to_PatientRegistration"
+		date-format="dd-M-yyyy HH:mm:ss">
+		<class-a>com.param.global.model.PatientRegistration
+		</class-a>
+		<class-b> com.param.global.dto.PatientRegistrationDto
+		</class-b>
+	</mapping>
+	
+	<mapping map-id="PatientRegistrationDto_to_PatientDetails"
+		date-format="dd-M-yyyy HH:mm:ss">
+		<class-a>com.param.global.model.PatientDetails
+		</class-a>
+		<class-b> com.param.global.dto.PatientRegistrationDto
+		</class-b>
+	</mapping>
+	
+	<mapping map-id="PatientRegistrationDto_to_PatientRegistrationLog"
+		date-format="dd-M-yyyy HH:mm:ss">
+		<class-a>com.param.global.model.PatientRegistrationLog
+		</class-a>
+		<class-b> com.param.global.dto.PatientRegistrationDto
+		</class-b>
+	</mapping>
+	
+	<mapping map-id="opd_EncounterMasterDto_to_EncounterMaster" date-format="dd-MM-yyyy HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.EncounterMaster</class-a>
+		<class-b>com.param.opd.encounter.dto.EncounterMasterDto</class-b>
+		<field-exclude> 
+		  <a>encounterTime</a> 
+		  <b>encounterTime</b> 
+		</field-exclude>  
+	</mapping>
+	
+	<mapping map-id="BillingDetailsDto_to_BillingDetails" date-format="dd-MM-yyyy HH:mm:ss">
+		<class-a>com.param.global.billing.dto.BillingDetailsDto</class-a>
+		<class-b>com.param.billing.global.transaction.model.BillingMaster</class-b>
+	</mapping>
+	
+	<mapping map-id="SlotMasterDto_to_AppointmentMaster" date-format="dd-MM-yyyy HH:mm:ss">
+		<class-a>com.param.global.dto.SlotMasterDto</class-a>
+		<class-b>com.param.opd.appointment.model.AppointmentMaster</class-b>
+	</mapping>
+	
+	<mapping map-id="DiagnosisPatientAppointmentMapperDto_to_DiagnosisPatientAppointmentMapper" date-format="dd-MM-yyyy HH:mm:ss">
+		<class-a>com.param.opd.coversheet.dto.DiagnosisPatientAppointmentMapperDto</class-a>
+		<class-b>com.param.opd.coversheet.model.DiagnosisPatientAppointmentMapper</class-b>
+	</mapping>
+	
+		<!-- <mapping map-id="EncounterAssignmenMapperDto_to_EncounterAssignmenMapper" date-format="dd-MM-yyyy HH:mm:ss">
+		<class-a>com.param.opd.coversheet.dto.EncounterAssignmenMapperDto</class-a>
+		<class-b>com.param.opd.coversheet.model.EncounterAssignmenMapper</class-b>
+	</mapping> -->
+	
+	
+	
+	<mapping map-id="MedicationModelDto_to_MedicationModel" date-format="yyyy-M-dd HH:mm:ss">
+		<class-a>com.param.opd.model.MedicationModel</class-a>
+		<class-b>com.param.opd.coversheet.dto.MedicationDTO</class-b>
+	</mapping>
+	
+	
+	<mapping map-id="DoctorFavoritesDto_to_DoctorFavorites" date-format="dd-MM-yyyy HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.DoctorFavorites</class-a>
+		<class-b>com.param.opd.coversheet.dto.DoctorFavoritesDto</class-b>
+	</mapping>
+	
+	<mapping map-id="CoversheetInstructionDto_to_CoversheetInstruction" date-format="dd-MM-yyyy HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.CoversheetInstruction</class-a>
+		<class-b>com.param.opd.coversheet.dto.CoversheetInstructionDto</class-b>
+	</mapping>
+	
+	
+	<mapping map-id="ConsultDoctorDto_to_ConsultDoctor" date-format="dd-MM-yyyy HH:mm:ss">
+		<class-a>com.param.opd.model.ConsultDoctor</class-a>
+		<class-b>com.param.opd.coversheet.dto.ConsultDoctorDto</class-b>
+	</mapping>
+	
+	<mapping map-id="PrescriptionMasterDto_to_PrescriptionMaster" date-format="yyyy-MM-dd HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.PrescriptionMaster</class-a>
+		<class-b>com.param.opd.coversheet.dto.PrescriptionDto</class-b>
+	</mapping>
+	
+	<mapping map-id="PrescriptionDetailsMasterDto_to_PrescriptionDetailsMaster" date-format="yyyy-MM-dd HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.PrescriptionDetailsMaster</class-a>
+		<class-b>com.param.opd.coversheet.dto.PrescriptionDetailsDto</class-b>
+	</mapping>
+	
+	<mapping map-id="PrescriptionDetailsMasterDto_to_PrescriptionFrequencyMaster" date-format="yyyy-MM-dd HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.PrescriptionFrequencyMaster</class-a>
+		<class-b>com.param.opd.coversheet.dto.PrescriptionDetailsDto</class-b>
+	</mapping>
+	
+	<mapping map-id="InfusionSolutionDto_to_InfusionSolutionMaster" date-format="yyyy-MM-dd HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.InfusionSolutionMaster</class-a>
+		<class-b>com.param.opd.coversheet.dto.InfusionSolutionDto</class-b>
+	</mapping>
+	
+	<mapping map-id="InfusionAdditiveDto_to_InfusionAdditiveMaster" date-format="yyyy-MM-dd HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.InfusionAdditiveMaster</class-a>
+		<class-b>com.param.opd.coversheet.dto.InfusionAdditiveDto</class-b>
+	</mapping>
+	
+	<mapping map-id="IncidentReportRoleMapperDto_to_IncidentReportRoleMapper" date-format="yyyy-MM-dd HH:mm:ss">
+		<class-a>com.param.global.model.IncidentReportRoleMapper</class-a>
+		<class-b>com.param.global.unit.dto.IncidentReportRoleMapperDto</class-b>
+	</mapping>
+	
+	<mapping map-id="IncidentReportTemplateMapperDto_to_IncidentReportTemplateMapper" date-format="yyyy-MM-dd HH:mm:ss">
+		<class-a>com.param.global.model.IncidentReportTemplateMapper</class-a>
+		<class-b>com.param.global.unit.dto.IncidentReportTemplateMapperDto</class-b>
+	</mapping>
+	<mapping map-id="TranslatedInstructionMasterDto_to_TranslatedInstructionMaster" date-format="yyyy-MM-dd HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.TranslatedInstructionMaster</class-a>
+		<class-b>com.param.global.dto.global.TranslatedInstructionMasterDto</class-b>
+	</mapping>
+	
+	<mapping map-id="TranslatedFrequencyMasterDto_to_TranslatedFrequencyMaster" date-format="yyyy-MM-dd HH:mm:ss">
+		<class-a>com.param.opd.coversheet.model.TranslatedFrequencyMaster</class-a>
+		<class-b>com.param.global.dto.global.TranslatedFrequencyMasterDto</class-b>
+	</mapping>
+</mappings>

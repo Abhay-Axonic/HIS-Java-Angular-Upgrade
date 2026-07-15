@@ -1,0 +1,25 @@
+package com.param.global.service;
+
+import javax.transaction.Transactional;
+
+import com.param.global.common.Response;
+import com.param.global.dto.FormulationTypeToDosageMapperDto;
+
+import in.param.exception.ApplicationException;
+
+@SuppressWarnings("rawtypes")
+@Transactional
+public interface IFormulationTypeToDosageMapperService {
+
+	Response saveFormulationTypeToDosageMapper(FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response getFormulationTypeToDosageMapperList(FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response updateFormulationTypeToDosageMapper(FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response updateFormulationTypeToDosageMapperStatus(
+			FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+	Response getFormTypeToDosMappListByFormTypeId(FormulationTypeToDosageMapperDto formulationTypeToDosageMapperDto)throws ApplicationException;
+
+}

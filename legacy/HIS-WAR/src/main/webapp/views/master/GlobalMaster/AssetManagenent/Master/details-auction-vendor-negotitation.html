@@ -1,0 +1,280 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+    <div class="container-fluid his-style">
+        <fieldset>
+            <!-- <legend class="heading-div">Vendor Negotitation Details</legend> -->
+            <div class="row margin-top4">
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span><b class="padding-right10 ">Scrap
+                        No. :</b> <lable></lable></span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span class="margin-left10"><b class="padding-right10 ">Scrap
+                        Date:</b><lable></lable> </span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span class="margin-left10"><b class="padding-right10 ">VSR 
+                        No. :</b><lable></lable> </span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span class="margin-left10"><b class="padding-right10 ">VSR
+                        Date:</b><lable><lable> </lable></lable></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span><b class="padding-right10 ">Store
+                        :</b> <lable></lable></span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span class="margin-left10"><b class="padding-right10 ">Vendor
+                        :</b><lable></lable> </span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span class="margin-left10"><b class="padding-right10 ">Reference  
+                        No. :</b><lable></lable> </span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+                    <span class="margin-left10"><b class="padding-right10 ">Reference 
+                        Date:</b><lable><lable> </lable></lable></span>
+                </div>
+            </div>
+            <div class="row margin-top4">
+                <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-bottom10" style="height:610px !important;overflow:auto;">
+                    <table ng-repeat="item in vm.model.itemInfo" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="vertical-middle width15">Item Details</th>
+                                <th class="vertical-middle width12">Terms</th>
+                                <th class="vertical-middle width12">Comparison Details</th>
+                                <th class="" colspan="{{item.negotiationDetails.length}}">Negotiated Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="7" class="vertical-middle">
+                                    <div>Item : </div>
+                                    <div>Qty : </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <div>Date: </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>COP</td>
+                                <td class="text-center">
+                                    <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'cop')" aria-hidden="true"></i>
+                                </td>
+                                <td>
+                                    <input type="text" autocomplete="off" ng-readonly="!!negotitateData.id" class="w-100" allow-decimal-numbers >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Warranty Period</td>
+                                <td class="text-center">
+                                    <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'warrantyPeriod')" aria-hidden="true"></i>
+                                </td>
+                                <td>
+                                    <input type="text" autocomplete="off" ng-readonly="!!negotitateData.id" class="w-100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Support Terms</td>
+                                <td class="text-center">
+                                    <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'supportTerms')" aria-hidden="true"></i>
+                                </td>
+                                <td>
+                                    <input type="text" autocomplete="off" ng-readonly="!!negotitateData.id" class="w-100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Technical Specification</td>
+                                <td class="text-center">
+                                    <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'techSpecs')" aria-hidden="true"></i>
+                                </td>
+                                <td>
+                                    <input type="text" autocomplete="off" ng-readonly="!!negotitateData.id" class="w-100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Payment Terms</td>
+                                <td class="text-center">
+                                    <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'paymentTerms')" aria-hidden="true"></i>
+                                </td>
+                                <td>
+                                    <input type="text" autocomplete="off" ng-readonly="!!negotitateData.id" class="w-100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Remarks</td>
+                                <td class="text-center">
+                                    <i class="fa fa-info-circle" ng-click="vm.model.OpenPopup('Open', 'commonComparisonDetailsModal'); vm.model.ViewTermsModal(item, 'remark')" aria-hidden="true"></i>
+                                </td>
+                                <td>
+                                    <input type="text" autocomplete="off" ng-readonly="!!negotitateData.id" class="w-100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td>
+                                    <div class="row">
+                                        <label class="radio-inline">
+                                            <input type="radio" ng-disabled="!!negotitateData.id" ng-value="1" name="{{item.id + 'data' + $index}}" ng-change="vm.model.ButtonVisible(1)">Accept
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" ng-disabled="!!negotitateData.id" ng-value="2" name="{{item.id + 'data' + $index}}" ng-change="vm.model.ButtonVisible(2)">Reject
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" ng-disabled="!!negotitateData.id" ng-value="3" name="{{item.id + 'data' + $index}}" ng-change="vm.model.ButtonVisible(3)">On Hold
+                                        </label>
+                                    </div>
+                                    <div class="row margin-top4">
+                                        <input type="text" autocomplete="off" ng-readonly="!!negotitateData.id" ng-if="negotitateData.negotitateStatus == 2" class="w-100">
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+        <footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20" style="margin-bottom: 15px !important">
+            <div class="row his-style margin-top10" style="padding-right: 40px !important">
+                <div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+                    <a href="" ng-click="vm.model.NavigateToBack()">
+                        <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow">
+                    </a>
+                </div>
+                <div class="col-lg-1 col-md-1 padding-left-right-set4 pull-right">
+                    <a href="" ng-class="{disabled: vm.model.btnTypeId == 1}">
+                        <input type="button" value="Save" class="btn btn-primary btn-save-box-shadow">
+                    </a>
+                </div>
+                <div class="col-md-2 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+                    <a href="" ng-class="{disabled: vm.model.btnTypeId == 2 || vm.model.btnTypeId == 3}">
+                        <input type="button" id="updateBtn"  value="Send For Vendor Selection" class="btn btn-primary btn-save-box-shadow">
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<div id="commonComparisonDetailsModal" class="modal fade ng-scope in common-large-popup" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row">
+                    Comparison Details
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row padding-left-right-set4">
+                    <div class="row">
+                        <fieldset class="div-fieldset">
+                            <legend class="heading-div">
+                                <span></span>
+                            </legend>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <textarea class="resize-set" rows="4" cols="50" readonly></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="row">
+                        <fieldset class="div-fieldset">
+                            <legend class="heading-div">
+                                <span></span>
+                            </legend>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <textarea class="resize-set" rows="4" cols="50" readonly></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>    
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var documentHeight= $(window).height();
+        var sideBarHeight = documentHeight - 55;
+        $("#page-content-wrapper").css("height", sideBarHeight + "px" );
+    }); 
+        $(".selectedPageName").text("Auction Vendor Negotiation Details");
+        $(".sidebar-nav li").each(function() {
+        $(this).find("a").parents("li").removeClass("active");
+        });
+        $('a[href$="detailsVendorNegotitation"]').parents("li").addClass("active");
+    
+    
+    $(".rejection-details-row1").hide();
+    $(".rejection-details-row2").hide();
+    $(".rejection-details-row3").hide();
+    $(".rejection-details-row4").hide();
+    
+    /* ************** radioRejected1 ********** */
+    
+    $( ".radioRejected1" ).change(function() {
+        if ($(this).is(":checked"))
+        {
+        $(this).closest(".row").siblings(".rejection-details-row1").show();
+        }
+    });
+    $( ".radioAcceptedHold1" ).change(function() {
+        if ($(this).is(":checked"))
+        {
+        $(this).closest(".row").siblings(".rejection-details-row1").hide();
+        }
+    });
+    
+    /* ************** radioRejected2 ********** */
+    
+    $( ".radioRejected2" ).change(function() {
+        if ($(this).is(":checked"))
+        {
+        $(this).closest(".row").siblings(".rejection-details-row2").show();
+        }
+    });
+    $( ".radioAcceptedHold2" ).change(function() {
+        if ($(this).is(":checked"))
+        {
+        $(this).closest(".row").siblings(".rejection-details-row2").hide();
+        }
+    });
+    
+    /* ************** radioRejected3 ********** */
+    
+    $( ".radioRejected3" ).change(function() {
+        if ($(this).is(":checked"))
+        {
+        $(this).closest(".row").siblings(".rejection-details-row3").show();
+        }
+    });
+    $( ".radioAcceptedHold3" ).change(function() {
+        if ($(this).is(":checked"))
+        {
+        $(this).closest(".row").siblings(".rejection-details-row3").hide();
+        }
+    });
+    /* ************** radioRejected4 ********** */
+    
+    $( ".radioRejected4" ).change(function() {
+        if ($(this).is(":checked"))
+        {
+        $(this).closest(".row").siblings(".rejection-details-row4").show();
+        }
+    });
+    $( ".radioAcceptedHold4" ).change(function() {
+        if ($(this).is(":checked"))
+        {
+        $(this).closest(".row").siblings(".rejection-details-row4").hide();
+        }
+    });
+</script>

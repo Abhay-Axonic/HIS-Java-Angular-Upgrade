@@ -1,0 +1,297 @@
+<!-- *****************************************************************************************************************************
+													Crash Cart Request Approval
+****************************************************************************************************************************** -->
+<!-- Page Content -->
+<div id="page-content-wrapper" class="">
+    <div class="container-fluid his-style">
+        <legend class="main-heading-div commonPatientSearch cursor-pointer">
+			<div class="row" id="storeSelection">
+				<div class="col-lg-10 col-md-9 col-sm-6"></div>
+				<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set1 pull-right">
+					<span class="heading-name-font">{{nursingStationCookieShow}} </span>
+					<span class="heading-name-font pull-right" title="Change Nursing Station" data-toggle="modal" 
+						ng-click="isWardChanged()">
+						<i class="fa fa-stack-exchange" aria-hidden="true"></i>
+					</span>
+				</div>
+			</div>
+		</legend>
+        <div class="row margin-top10 padding-left-right-set4">
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" class="text-input floating-label dirty" name="fromDate" id="fromDate" uib-datepicker-popup="dd/MM/yyyy"
+                                placeholder="DD/MM/YYYY" ng-model="vm.model.fromDate" model-view-value="true" is-open="vm.model.fromDateOpened"
+                                datepicker-options="vm.model.fromDateOptions" show-button-bar="false" ng-click="vm.model.OpenFromDate()">
+                            <label for="fromDate" class="">Date (From)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon ">
+                        <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" class="text-input floating-label dirty" name="toDate" id="toDate" uib-datepicker-popup="dd/MM/yyyy" placeholder="DD/MM/YYYY"
+                                ng-model="vm.model.toDate" model-view-value="true" is-open="vm.model.toDateOpened" datepicker-options="vm.model.toDateOptions"
+                                show-button-bar="false" ng-click="vm.model.OpenToDate()">
+                            <label for="toDate" class="">Date-Till</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container margin-top4">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-files-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <select class="dirty text-input floating-label" ng-model="vm.model.visitType" name="visitType" ng-class="{dirty: vm.model.visitType}"
+                                data-ng-options="visitTypeData.type for visitTypeData in vm.model.visitTypeList">
+                            </select>
+                            <label for="visitType">Visit Type</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" name="patientName" id="patientName" class="text-input floating-label" ng-model="vm.model.patientName"
+                                ng-change="vm.model.isPatientNameValid = false" uib-typeahead="patientNames.patientName as patientNames.details for patientNames in vm.model.SearchpatientNames($viewValue)"
+                                typeahead-on-select="vm.model.AddPatientDetails($item); vm.model.search = '';">
+
+                            <label for="patientName">Patient Name</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" name="uhid" ng-model="vm.model.uhid" ng-class="{dirty:vm.model.uhid}" id="" class="text-input floating-label"
+                                uib-typeahead="patientNames.uhid as patientNames.details for patientNames in vm.model.SearchUhid($viewValue)"
+                                typeahead-on-select="vm.model.AddPatientDetails($item); vm.model.search = '';">
+                            <label for="code">UHID</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <select class="dirty text-input floating-label" ng-model="vm.model.visitNumber" name="visitNo" ng-class="{dirty: vm.model.visitNo}"
+                                ng-change="vm.model.isVisitNoValid = false" ng-options="visitNumber.visitNo for visitNumber in vm.model.visitDetails"
+                                ng-if="vm.model.visitType.id == 1">
+                            </select>
+
+                            <input type="text" autocomplete="off" name="visitNumberText" ng-model="vm.model.visitNumberText" ng-class="{dirty:vm.model.visitNumberText}"
+                                class="text-input floating-label" ng-if="vm.model.visitType.id != 1">
+
+                            <label for="status">Visit No</label>
+                            <p ng-if="vm.model.isVisitNoValid" class="errorMsg">Select Visit No</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row margin-top4">
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container margin-top4">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-hospital-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <select class="dirty text-input floating-label" ng-model="vm.model.ward" name="ward" ng-class="{dirty: vm.model.ward}" ng-options="ward.wardName for ward in vm.model.wardList">
+                            </select>
+                            <label for="status">Ward</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container margin-top4">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-building" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <select class="dirty text-input floating-label" ng-model="vm.model.store" name="store" ng-class="{dirty: vm.model.store}"
+                                ng-options="store.store for store in vm.model.storeList">
+                            </select>
+                            <label for="status">Store</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+                <div class="row input-container">
+                    <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+                        <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-11 col-sm-11 col-md-11">
+                        <div class="">
+                            <input type="text" autocomplete="off" class="text-input floating-label dirty" ng-model="vm.model.crashCartNo">
+                            <label for="code">Crash Cart No.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set1 pull-right text-width-auto margin-top4">
+                <div class="common-save-button">
+                    <a href="" class="btn btn-primary btn-save-box-shadow" ng-click="vm.model.GetCrashCartRequestApproval()" style="width: auto;">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set0 float_right margin-top10">
+                <input type="text" autocomplete="off" class="text-search-box dirty" ng-model="vm.model.search" placeholder="Search" style="margin-top: 0px">
+                <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+            </div>
+        </div>
+        
+        <div class="row padding-top10 padding-left-right-set4">
+			<div id="fixed-thead-tfoot-scroll" class="fixed-thead-tfoot-scroll fix-height-scroll400">
+			  <table id="main-table" class="main-table width200">
+			    <thead class="mainServiceTableCommon">
+			      <tr>
+                    <th class="width8 vertical-top" title="Crash Cart No.">
+                        Crash Cart No.
+                    </th>
+                    <th class="width8 vertical-top" title="Crash Cart Date">
+                        Crash Cart Date
+                    </th>
+                    <th class="width10 vertical-top" title="Code Blue Date Time">
+                        Code Blue Date Time
+                    </th>
+                    <th class="width8 vertical-top" title="Store">
+                        Store
+                    </th>
+                    <th class="width8 vertical-top" title="Visit Type">
+                        Visit Type
+                    </th>
+                    <th class="width8 vertical-top" title=" Visit No">
+                        Visit No
+                    </th>
+                    <th class="width6 vertical-top" title="UHID">
+                        UHID
+                    </th>
+                    <th class="width8 vertical-top" title="Patient Details">
+                        Patient Details
+                    </th>
+                    <th class="width8 vertical-top" title="Doctor Details">
+                        Doctor Details
+                    </th>
+                    <th class="width5 vertical-top" title="Ward">Ward
+                    </th>
+                    <th class="width5 vertical-top" title="Bed No">Ward Bed No
+                    </th>
+                    <th class="width8 vertical-top" title="Request By">Requestor
+                    </th>
+                    <th class="width5 vertical-top" title="Status">Status(n)
+                    </th>
+                    <th class="width8 text-center last-col-fixed" title="Action">
+                        Action taken
+                    </th>
+                </tr>
+			    </thead>
+			    <tbody>
+			      <tr ng-if="vm.model.crashCartRequestApprovalList == null || !vm.model.crashCartRequestApprovalList.length">
+                       <td colspan="14">
+                           <p style="text-align: center;margin-top: 0px !important;margin-bottom: 1px !important;">No Records Found</p>
+                       </td>
+                   </tr>
+                   <tr ng-repeat="requestItem in vm.model.crashCartRequestApprovalList | filter : vm.model.search |   orderBy:sortType:sortReverse">
+                       <td class="width8" title="{{requestItem.crashCartNo}}">{{requestItem.crashCartNo}}</td>
+                       <td class="width8" title="{{requestItem.crashCartDate | date:'dd/MM/yyyy':'UTC'}}">{{requestItem.crashCartDate | date:'dd/MM/yyyy':'UTC'}}</td>
+                       <td class="width10" title="{{requestItem.codeBlueDateTime | date:'dd/MM/yyyy hh:mm a'}}">{{requestItem.codeBlueDateTime | date:'dd/MM/yyyy hh:mm a'}}</td>
+                       <td class="width8" title="{{requestItem.store}}">{{requestItem.store}}</td>
+                       <td class="width8" title="{{requestItem.visitType}}">{{requestItem.visitType}}</td>
+                       <td class="width8" title="{{requestItem.visitNo}}">{{requestItem.visitNo}}</td>
+                       <td class="width6" title="{{requestItem.uhid}}">{{requestItem.uhid}}</td>
+                       <td class="width8" title="{{requestItem.patientDetail}}">{{requestItem.patientDetail}}</td>
+                       <td class="width8" title="{{requestItem.doctorDetail}}">{{requestItem.doctorDetail}}</td>
+                       <td class="width5" title="{{requestItem.wardName}}">{{requestItem.wardName}}</td>
+                       <td class="width5" title="{{requestItem.bedNo}}">{{requestItem.bedNo}}</td>
+                       <td class="width8" title="{{requestItem.requestedBy}}">{{requestItem.requestedBy}}</td>
+                       <td class="width5" title="{{requestItem.status}}">{{requestItem.status}}</td>
+
+                       <td class="text-center cursor-pointer last-col-fixed">
+                           <span>
+                               <a title="Print" ng-click="vm.model.printCrashCartApprovalReport(requestItem)">
+                                   <i class="fa fa-print" aria-hidden="true"></i>
+                               </a>
+                           </span>
+                           <span>
+                               <a href ng-click="vm.model.NavigateToDetail(requestItem)">Details</a>
+                           </span>
+                       </td>
+                   </tr>
+			    </tbody>
+			  </table>
+			</div>
+		</div>
+        
+    </div>
+</div>
+
+<div id="nursingStationModal"  class="modal fade ng-scope common-small-popup in" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- width: 25% !important;margin: 200px 0 0 510px !important; -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title patient-details-row" style="margin-left: 16px;">
+                    Select Nursing Station
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row padding-top10 padding-bottom10">
+                    <div class="col-md-5 col-lg-5 col-sm-5 padding-left-right-5">
+                        <span>Select Nursing Station</span> 
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-set1">
+                        <select class="dirty" style="width:100%;border-radius: 10px;height: 40px;"  ng-model="departmentNursing" >
+                        <option  value="">Select Nursing Station</option>
+                            <option value="{{departmentNursing}}" ng-repeat="departmentNursing in departmentNursingStationMapperDtoslist">{{departmentNursing.nursingStationDesc}}</option>
+                        </select>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="modal-footer" style="border: none;">
+                <button type="button"  class="btn btn-primary width13" id="otpOk" ng-click="selectsetNursingStation();">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".selectedPageName").text("Crash Cart Request Approval");
+        $(".sidebar-nav li").each(function () {
+            $(this).find("a").parents("li").removeClass("active");
+        });
+    });
+</script>
