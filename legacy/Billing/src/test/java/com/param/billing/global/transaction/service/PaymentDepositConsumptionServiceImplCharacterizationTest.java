@@ -219,26 +219,26 @@ class PaymentDepositConsumptionServiceImplCharacterizationTest {
         }
 
         @Test
-        @DisplayName("still touches every remaining row with a real (no-op) update even after the requested amount is fully exhausted -- the >0 guard is checked once BEFORE the loop, not per-iteration")
-        void stillTouchesLaterRows_withZeroConsumedAmount_onceExhausted() throws Exception {
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 4a, owner-approved): stops touching rows once the requested amount is fully exhausted, instead of still writing a no-op update to every remaining row")
+        void stopsAtExhaustion_insteadOfTouchingLaterRows() throws Exception {
             stubAddDepositConsumption(999);
             PaymentDepositDto deposit = depositDto(10, 1, 100.0);
             stubDepositDetails(10, Arrays.asList(detailRow(100.0), detailRow(500.0)));
 
             service.consumeDeposit(request(100.0, Arrays.asList(deposit)));
 
-            // The `if(consumedAmount>0)` guard wraps the whole `while(listIterator.hasNext())` loop,
-            // not each iteration -- once entered (because consumedAmount started > 0), the loop runs
-            // to the end of the list regardless of whether consumedAmount has since reached 0. Row 1
-            // exactly satisfies the request; row 2 still gets a real updateDepositDetails call, with
-            // consumedAmount forced to 0 (0 >= detailsAmount is false, so the else-branch sets
-            // consumedAmount(0)) and its balance left numerically unchanged -- a real database write
-            // that changes nothing, on every row after the amount is exhausted.
+            // Previously, the `if(consumedAmount>0)` guard wrapped the whole
+            // `while(listIterator.hasNext())` loop, not each iteration -- once entered, the loop ran
+            // to the end of the list regardless of whether consumedAmount had since reached 0, so row
+            // 2 still got a real (no-op) updateDepositDetails call after row 1 exactly satisfied the
+            // request. Now the loop condition itself is `listIterator.hasNext() && consumedAmount>0`,
+            // re-checked every iteration -- once row 1 exhausts the requested amount, the loop stops
+            // before ever touching row 2.
             ArgumentCaptor<PaymentDepositDetailsDto> captor = ArgumentCaptor.forClass(PaymentDepositDetailsDto.class);
-            verify(iDepositMasterService, times(2)).updateDepositDetails(captor.capture());
-            PaymentDepositDetailsDto secondRowUpdate = captor.getAllValues().get(1);
-            assertThat(secondRowUpdate.getConsumedAmount()).isEqualTo(0.0);
-            assertThat(secondRowUpdate.getBalanceAmount()).isEqualTo(500.0); // unchanged
+            verify(iDepositMasterService, times(1)).updateDepositDetails(captor.capture());
+            PaymentDepositDetailsDto onlyUpdate = captor.getValue();
+            assertThat(onlyUpdate.getConsumedAmount()).isEqualTo(100.0); // row 1, fully consumed by the request
+            assertThat(onlyUpdate.getBalanceAmount()).isEqualTo(0.0);
         }
     }
 
