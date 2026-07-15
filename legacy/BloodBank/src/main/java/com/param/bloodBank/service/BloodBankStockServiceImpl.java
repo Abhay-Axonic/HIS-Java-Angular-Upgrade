@@ -50,12 +50,12 @@ public class BloodBankStockServiceImpl implements IBloodBankStockService,ICommon
 			String loanNumber = generateBloodBagLoanNo(incrementedId);
 			BloodBagLoanInDto bloodBagLoandto = new BloodBagLoanInDto();
 			bloodBagLoandto.setLoanInNumber(loanNumber);
-			bloodBagLoandto.setCreatedBy(list.get(0).getCreatedBy());
-			bloodBagLoandto.setUpdatedBy(list.get(0).getUpdatedBy());
-			bloodBagLoandto.setUpdatedDate(list.get(0).getUpdatedDate());
-			bloodBagLoandto.setCreatedDate(list.get(0).getCreatedDate());
-			bloodBagLoandto.setUnitId(list.get(0).getUnitId());
-			bloodBagLoandto.setOrganizationId(list.get(0).getOrganizationId());
+			bloodBagLoandto.setCreatedBy(list.getFirst().getCreatedBy());
+			bloodBagLoandto.setUpdatedBy(list.getFirst().getUpdatedBy());
+			bloodBagLoandto.setUpdatedDate(list.getFirst().getUpdatedDate());
+			bloodBagLoandto.setCreatedDate(list.getFirst().getCreatedDate());
+			bloodBagLoandto.setUnitId(list.getFirst().getUnitId());
+			bloodBagLoandto.setOrganizationId(list.getFirst().getOrganizationId());
 			Response loanInres = iBloodBagLoanInDao.savaloanIn(bloodBagLoandto);
 			
 			Response res = null;

@@ -423,8 +423,8 @@ public class PreSterilizationProcessServiceImpl implements IPreSterilizationProc
 			List<CssdKitDto> list = new ArrayList<>();
 			if(res.getListObject().size()>0) {
 				list.addAll(res.getListObject());
-				dto.setKitName(list.get(0).getKitName());
-				dto.setKitCode(list.get(0).getKitCode());
+				dto.setKitName(list.getFirst().getKitName());
+				dto.setKitCode(list.getFirst().getKitCode());
 				dto.setBatchList(list);
 			}
 			 return new Response(SUCCESS, SUCCESS_CODE, null, null,dto);	

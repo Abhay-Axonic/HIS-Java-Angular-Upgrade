@@ -57,7 +57,6 @@ public class PreSterilizationProcessInstrumentDaoImpl extends GenericDao<PreSter
 			logger.error("getPreSterilizationProcessEquipmentList failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
@@ -297,7 +296,6 @@ public class PreSterilizationProcessInstrumentDaoImpl extends GenericDao<PreSter
 			logger.error("getEquipmentListPendingForInspection failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -319,7 +317,6 @@ public class PreSterilizationProcessInstrumentDaoImpl extends GenericDao<PreSter
 			logger.error("getEquipmentListPendingForDisInfection failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -342,7 +339,6 @@ public class PreSterilizationProcessInstrumentDaoImpl extends GenericDao<PreSter
 			logger.error("getEquipmentListPendingForKitFormation failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 

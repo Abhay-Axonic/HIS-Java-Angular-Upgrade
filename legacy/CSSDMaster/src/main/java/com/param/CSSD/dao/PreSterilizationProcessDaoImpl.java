@@ -115,7 +115,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("saveCleanedWorklist failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -142,7 +141,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getKitInstrumentId failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -227,7 +225,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getCleanedWorklistByMultipleFields failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -304,7 +301,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getPendingForCleaningWorklistByMultipleFields failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -414,7 +410,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getInspectedWorklistByMultipleFields failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -525,7 +520,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getDisinfectedWorklistByMultipleFields failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -587,7 +581,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getPreSterilizationProcessByTransitionNumber failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -757,7 +750,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getKitFormationWorklistByMultipleFields failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -837,7 +829,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getKitFormationWorklistByTransitionNumber failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -868,7 +859,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("replaceInstrument failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -940,7 +930,7 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 									+ "WHERE preSterilizationProcessInstrument.transitionNumber=:transitionNumber")
 							.setParameter("transitionNumber", preSterilizationProcessDto.getTransitionNumber())
 							.setResultTransformer(Transformers.aliasToBean(PreSterilizationProcessInstrumentDto.class))
-							.list();;
+							.list();
 					
 					preSterilizationProcessDto.setKitInstrumentList(kitInstrumentList);
 				}
@@ -957,7 +947,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getSterilizedKitsByKitId failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -1034,7 +1023,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getPreSterilizationProcessList failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -1056,7 +1044,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("searchPreSterilizationProcessList failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -1077,7 +1064,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getKitListPendingForInspection failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -1098,7 +1084,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getKitListPendingForDisInfection failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -1119,7 +1104,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getKitListPendingForKitFormation failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
@@ -1140,7 +1124,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getFormedKitList failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -1184,7 +1167,7 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 					.setParameter("kitId", kitId)
 					.setResultTransformer(Transformers.aliasToBean(PreSterilizationProcessDto.class)).list();
 			statelessSession.close();
-			return new Response(SUCCESS, null, null, null, preSterilizationProcessDtoList.get(0));
+			return new Response(SUCCESS, null, null, null, preSterilizationProcessDtoList.getFirst());
 		} catch (HibernateException he) {
 			logger.error("getPreSterilizationProcessKitById failed", he);
 			throw new ServiceException(he.getMessage());
@@ -1192,7 +1175,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 			logger.error("getPreSterilizationProcessKitById failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
@@ -1217,7 +1199,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 		logger.error("getCssdStoreList failed", e);
 		throw new ServiceException(e.getMessage());
 	} finally {
-		;
 	}
 	}
 
@@ -1293,7 +1274,6 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 		logger.error("checkStoreStockByItemId failed", e);
 		throw new ServiceException(e.getMessage());
 	} finally {
-		;
 	}
 	}
 
@@ -1384,7 +1364,7 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
              preSterilizationProcessDto.setKitInstrumentList(itemList);
              Response resp = iPreSterilizationProcessService.saveInstrumentAsKit(preSterilizationProcessDto);
 			 PreSterilizationProcessDto dto = (PreSterilizationProcessDto)(resp.getObject());
-			 Response resp1 = iPreSterilizationProcessService.getKitInstrumentId(dto.getKitId(),preSterilizationProcessDto.getKitInstrumentList().get(0).getInstrumentId());
+			 Response resp1 = iPreSterilizationProcessService.getKitInstrumentId(dto.getKitId(),preSterilizationProcessDto.getKitInstrumentList().getFirst().getInstrumentId());
 			 Integer kitInstrumentId = (Integer) resp1.getObject();
 				      				
 			PreSterilizationProcess preSterilizationProcess=new PreSterilizationProcess();
@@ -1440,15 +1420,15 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 	try {
 		   for (Map.Entry<Integer, List<CssdOpeningBalanceDetailStock>> currentObj : map.entrySet()) {
 			   PreSterilizationProcess preSterilizationProcess=new PreSterilizationProcess();
-				preSterilizationProcess.setCreated_by(currentObj.getValue().get(0).getAddedBy());
-				preSterilizationProcess.setUpdated_by(currentObj.getValue().get(0).getUpdatedBy());
-				preSterilizationProcess.setCreated_date(TimeZoneComponent.getDateByzone(currentObj.getValue().get(0).getUnitId()));
-				preSterilizationProcess.setUpdated_date(TimeZoneComponent.getDateByzone(currentObj.getValue().get(0).getUnitId()));
+				preSterilizationProcess.setCreated_by(currentObj.getValue().getFirst().getAddedBy());
+				preSterilizationProcess.setUpdated_by(currentObj.getValue().getFirst().getUpdatedBy());
+				preSterilizationProcess.setCreated_date(TimeZoneComponent.getDateByzone(currentObj.getValue().getFirst().getUnitId()));
+				preSterilizationProcess.setUpdated_date(TimeZoneComponent.getDateByzone(currentObj.getValue().getFirst().getUnitId()));
 				preSterilizationProcess.setStatus("Completed");
 				preSterilizationProcess.setTransition("KitFormed");
 				preSterilizationProcess.setKitId(currentObj.getKey());
-				preSterilizationProcess.setOrganizationId(currentObj.getValue().get(0).getOrganizationId());
-				preSterilizationProcess.setUnitId(currentObj.getValue().get(0).getUnitId());
+				preSterilizationProcess.setOrganizationId(currentObj.getValue().getFirst().getOrganizationId());
+				preSterilizationProcess.setUnitId(currentObj.getValue().getFirst().getUnitId());
 				preSterilizationProcess.setStoreId(storeId);
 				preSterilizationProcess.setIsIssued(false);
 				preSterilizationProcess.setIsSterilized(true);
@@ -1457,8 +1437,8 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 				preSterilizationProcess.setIsReturned(false);
 				preSterilizationProcess.setSterilizationRequested(false);
 				preSterilizationProcess.setIsSterilizeFromOpeningStock('Y');
-				preSterilizationProcess.setFormation_date(TimeZoneComponent.getDateByzone(currentObj.getValue().get(0).getUnitId()));
-				preSterilizationProcess.setExpiryDate(currentObj.getValue().get(0).getSterilizationExpiryDate());
+				preSterilizationProcess.setFormation_date(TimeZoneComponent.getDateByzone(currentObj.getValue().getFirst().getUnitId()));
+				preSterilizationProcess.setExpiryDate(currentObj.getValue().getFirst().getSterilizationExpiryDate());
 				Integer transitionNumber =(Integer)sessionFactory.getCurrentSession().save(preSterilizationProcess);
 				
 				for(CssdOpeningBalanceDetailStock dto:currentObj.getValue()) {
@@ -1479,8 +1459,8 @@ public class PreSterilizationProcessDaoImpl extends GenericDao<PreSterilizationP
 						preSterilizationProcessEquipment.setStatus("KitFormed");
 						preSterilizationProcessEquipment.setCreated_by(dto.getAddedBy());
 						preSterilizationProcessEquipment.setUpdated_by(dto.getUpdatedBy());
-						preSterilizationProcessEquipment.setCreated_date(TimeZoneComponent.getDateByzone(currentObj.getValue().get(0).getUnitId()));
-						preSterilizationProcessEquipment.setUpdated_date(TimeZoneComponent.getDateByzone(currentObj.getValue().get(0).getUnitId()));
+						preSterilizationProcessEquipment.setCreated_date(TimeZoneComponent.getDateByzone(currentObj.getValue().getFirst().getUnitId()));
+						preSterilizationProcessEquipment.setUpdated_date(TimeZoneComponent.getDateByzone(currentObj.getValue().getFirst().getUnitId()));
 						sessionFactory.getCurrentSession().save(preSterilizationProcessEquipment);
 				}
 			   

@@ -213,11 +213,11 @@ private SessionService sessionService;
 		{
 			if(batch.getStoreStockList() != null)
 			{
-				batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+				batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 		
 				// Add stock transaction
 				StockTransaction stockTransaction=	new StockTransaction(balanceQuantity, screen, screen.getCode(), quantity,
-						batch.getStoreStockList().get(0).getStore(),0);
+						batch.getStoreStockList().getFirst().getStore(),0);
 //				sessionService.setEntityDefaults(stockTransaction);	
 				stockTransaction.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),
 						request.getUserId());

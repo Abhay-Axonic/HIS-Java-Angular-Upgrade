@@ -60,7 +60,6 @@ public class AutoclaveMasterDaoImpl extends GenericDao<AutoclaveMaster, Integer>
 			logger.error("getAllAutoclaveList failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 	
@@ -82,7 +81,6 @@ public class AutoclaveMasterDaoImpl extends GenericDao<AutoclaveMaster, Integer>
 			logger.error("getActiveAutoclaveList failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 
@@ -162,7 +160,6 @@ public class AutoclaveMasterDaoImpl extends GenericDao<AutoclaveMaster, Integer>
 			logger.error("createAutoclave failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			;
 		}
 	}
 

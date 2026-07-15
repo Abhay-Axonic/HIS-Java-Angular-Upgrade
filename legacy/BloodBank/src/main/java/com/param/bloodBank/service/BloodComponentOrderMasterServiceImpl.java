@@ -47,7 +47,7 @@ public class BloodComponentOrderMasterServiceImpl implements IBloodComponentOrde
 //					
 //					return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
 //				}else{
-				String requisitionNumber = iGlobalUnitMasterDao.getGeneratedNo(0, bloodComponentOrderMasterDto.getBloodComponentOrderMasterDtoList().get(0).getUnitId(), REQUISITION_NUMBER);
+				String requisitionNumber = iGlobalUnitMasterDao.getGeneratedNo(0, bloodComponentOrderMasterDto.getBloodComponentOrderMasterDtoList().getFirst().getUnitId(), REQUISITION_NUMBER);
 				bloodComponentOrderMasterDto.setRequisitionNumber(requisitionNumber);
 				
 				List<BloodComponentOrderMasterDto> list = new ArrayList();
