@@ -95,7 +95,7 @@ public class CorrectiveMaintenanceScheduleServiceImpl  implements ICorrectiveMai
 						if(resrepl.getObject() != null) {
 							try {
 								
-								Long batchId= new Long(correctiveMaintenanceScheduleDto.getCorrectiveMaintenanceReplacementDto().getNewSerialNoId());
+								Long batchId= Long.valueOf(correctiveMaintenanceScheduleDto.getCorrectiveMaintenanceReplacementDto().getNewSerialNoId());
 								
 								allocateItemQuantity(batchId,1, screenId,correctiveMaintenanceScheduleDto.getUnitId(),correctiveMaintenanceScheduleDto.getStoreId(), correctiveMaintenanceScheduleDto);
 
@@ -132,12 +132,12 @@ public class CorrectiveMaintenanceScheduleServiceImpl  implements ICorrectiveMai
 				Integer balanceQuantity = batch.getCurrentQuantity() - approvedDisposedQuantity;
 
 				batch.setCurrentQuantity(balanceQuantity);
-				batch.getStoreStockList().get(0).setAvailableQty(avaialableStoreStock - approvedDisposedQuantity);
+				batch.getStoreStockList().getFirst().setAvailableQty(avaialableStoreStock - approvedDisposedQuantity);
 
 				com.param.entity.model.master.Screen screen = GlobalDao.getScreen(screenId);
 
 				StockTransaction stockTransaction = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-						approvedDisposedQuantity, batch.getRate(), batch.getStoreStockList().get(0).getStore(), batch,0);
+						approvedDisposedQuantity, batch.getRate(), batch.getStoreStockList().getFirst().getStore(), batch,0);
 //				sessionService.setEntityDefaults(stockTransaction);
 				stockTransaction.setCreateDefaults(correctiveMaintenanceScheduleDto.getOrganizationId(),correctiveMaintenanceScheduleDto.getUnitId(),
 						correctiveMaintenanceScheduleDto.getUpdatedBy());

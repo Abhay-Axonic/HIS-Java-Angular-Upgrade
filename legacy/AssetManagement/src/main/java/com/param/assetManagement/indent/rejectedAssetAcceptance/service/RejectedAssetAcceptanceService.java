@@ -282,12 +282,12 @@ public class RejectedAssetAcceptanceService implements IRejectedAssetAcceptanceS
 			Integer balanceQuantity = avaialableStoreStock + leaseQuantity;
 
 			// Deduct issued quantity from the batch store stock
-			batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+			batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 			// Add stock transaction
 
 			StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-					batch.getStoreStockList().get(0).getStore(),0);
+					batch.getStoreStockList().getFirst().getStore(),0);
 //			sessionService.setEntityDefaults(stockTransaction);
 			stockTransaction.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),
 					request.getUserId());

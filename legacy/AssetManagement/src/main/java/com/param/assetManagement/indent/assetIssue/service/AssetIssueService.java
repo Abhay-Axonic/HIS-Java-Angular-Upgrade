@@ -195,13 +195,13 @@ public class AssetIssueService implements IAssetIssueService {
 		Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 		// Deduct issued quantity from the batch store stock
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 		Integer inTransitQuantity = GlobalDao.getTransitQuantityByBatch(storeId, batch.getId());
 		Integer tQty = inTransitQuantity + leaseQuantity;
-		batch.getStoreStockList().get(0).settQty(tQty);
+		batch.getStoreStockList().getFirst().settQty(tQty);
 		// Add stock transaction
 		StockTransaction st = new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-				batch.getStoreStockList().get(0).getStore(),detail.getId());
+				batch.getStoreStockList().getFirst().getStore(),detail.getId());
 		st.setIsTransit(true);
 		st.setItem(item);
 		st.setTransitNo(transitNo);
@@ -270,7 +270,7 @@ public class AssetIssueService implements IAssetIssueService {
 			asseccoriesResponsesList.add(PopulateAccessories(accessories));
 		}
 		batchResponse = new BatchResponse(batch.getId(), batch.getBatchNo(), batch.getExpiryDate(),
-				batch.getStoreStockList().get(0).getAvailableQty(), asseccoriesResponsesList, batch.getSellingPrice());
+				batch.getStoreStockList().getFirst().getAvailableQty(), asseccoriesResponsesList, batch.getSellingPrice());
 		return batchResponse;
 	}
 	public static BatchResponse PopulateBatchWithStock1(Batch batch , Integer issueQty) {
@@ -280,7 +280,7 @@ public class AssetIssueService implements IAssetIssueService {
 			asseccoriesResponsesList.add(PopulateAccessories(accessories));
 		}
 		batchResponse = new BatchResponse(batch.getId(), batch.getBatchNo(), batch.getExpiryDate(),
-				batch.getStoreStockList().get(0).getAvailableQty(), asseccoriesResponsesList, batch.getSellingPrice());
+				batch.getStoreStockList().getFirst().getAvailableQty(), asseccoriesResponsesList, batch.getSellingPrice());
 		batchResponse.setIssueQuantity(issueQty);
 		return batchResponse;
 	}
@@ -290,7 +290,7 @@ public class AssetIssueService implements IAssetIssueService {
 				accessories.getBatchAccessory().getBatchNo(), accessories.getBatchAccessory().getItem().getId(),
 				accessories.getBatchAccessory().getItem().getCode(),
 				accessories.getBatchAccessory().getItem().getName(),
-				accessories.getBatchAccessory().getStoreStockList().get(0).getAvailableQty());
+				accessories.getBatchAccessory().getStoreStockList().getFirst().getAvailableQty());
 	}
 
 	private List<PickerResponse> PopulateCarriers(Integer orgId, Integer unitId) {

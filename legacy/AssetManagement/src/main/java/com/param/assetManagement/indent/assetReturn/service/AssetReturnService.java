@@ -267,7 +267,7 @@ private SessionService sessionService;
 		return new AsseccoriesResponse(issueAccessory.getBatch().getId(), issueAccessory.getBatch().getBatchNo(),
 				issueAccessory.getBatch().getItem().getId(), issueAccessory.getBatch().getItem().getCode(),
 				issueAccessory.getBatch().getItem().getName(),
-				issueAccessory.getBatch().getStoreStockList().get(0).getAvailableQty());
+				issueAccessory.getBatch().getStoreStockList().getFirst().getAvailableQty());
 	}
 
 	@Override
@@ -358,16 +358,16 @@ private SessionService sessionService;
 			Integer leaseQuantity = quantity;
 
 			Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
-			batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity <0 ? 0 : balanceQuantity);
+			batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity <0 ? 0 : balanceQuantity);
 
 			// Deduct issued quantity from the batch store stock
 			Integer inTransitQuantity = GlobalDao.getTransitQuantityByBatch(storeId, batch.getId());
 			Integer tQty = inTransitQuantity + leaseQuantity;
-			batch.getStoreStockList().get(0).settQty(tQty);
+			batch.getStoreStockList().getFirst().settQty(tQty);
 
 			// Add stock transaction
 			StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), quantity,
-					batch.getStoreStockList().get(0).getStore(),0);
+					batch.getStoreStockList().getFirst().getStore(),0);
 			stockTransaction.setCreateDefaults(request.getOrganizationId(), request.getUnitId(), request.getUserId());
 			batch.addStockTransaction(stockTransaction);
 			
@@ -486,7 +486,7 @@ private SessionService sessionService;
 		return new AsseccoriesResponse(issueAccessory.getBatch().getId(), issueAccessory.getBatch().getBatchNo(),
 				issueAccessory.getBatch().getItem().getId(), issueAccessory.getBatch().getItem().getCode(),
 				issueAccessory.getBatch().getItem().getName(),
-				issueAccessory.getBatch().getStoreStockList().get(0).getAvailableQty());
+				issueAccessory.getBatch().getStoreStockList().getFirst().getAvailableQty());
 	}
 
 }

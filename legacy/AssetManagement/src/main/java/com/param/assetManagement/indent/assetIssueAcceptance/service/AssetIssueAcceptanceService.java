@@ -288,7 +288,7 @@ public class AssetIssueAcceptanceService implements IAssetIssueAcceptanceService
 		return new AsseccoriesResponse(issueAccessory.getBatch().getId(), issueAccessory.getBatch().getBatchNo(),
 				issueAccessory.getBatch().getItem().getId(), issueAccessory.getBatch().getItem().getCode(),
 				issueAccessory.getBatch().getItem().getName(),
-				issueAccessory.getBatch().getStoreStockList().get(0).getAvailableQty(), issueAccessory.getIssueQuantity() );
+				issueAccessory.getBatch().getStoreStockList().getFirst().getAvailableQty(), issueAccessory.getIssueQuantity() );
 	}
 	
 	
@@ -308,15 +308,15 @@ public class AssetIssueAcceptanceService implements IAssetIssueAcceptanceService
 		
 		List<StoreStock> fromStoreStock = batch.getStoreStockList().stream().filter(i -> i.getStore().getStoreId() == issue.getToStore().getStoreId()).collect(Collectors.toList());
 		if(fromStoreStock!=null &&  fromStoreStock.size()>0) {
-			fromStoreStock.get(0).settQty(tQty);
+			fromStoreStock.getFirst().settQty(tQty);
 		}
 		
 		List<StoreStock> toStoreStock = batch.getStoreStockList().stream().filter(i -> i.getStore().getStoreId() == issue.getFromStore().getStoreId()).collect(Collectors.toList());
 		if(toStoreStock!=null &&  toStoreStock.size()>0)
 		{
-			toStoreStock.get(0).setAvailableQty(balanceQuantity);
+			toStoreStock.getFirst().setAvailableQty(balanceQuantity);
 			StockTransaction stockTransaction=	new StockTransaction(avaialableStoreStock, screen, screen.getCode(),
-	    			acceptedQuantity, batch.getStoreStockList().get(0).getStore(), bm.getId());
+	    			acceptedQuantity, batch.getStoreStockList().getFirst().getStore(), bm.getId());
 //			sessionService.setEntityDefaults(stockTransaction);
 			stockTransaction.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),
 					request.getUserId());
@@ -329,7 +329,7 @@ public class AssetIssueAcceptanceService implements IAssetIssueAcceptanceService
 					request.getUserId());
 			AssetIssueDao.saveStoreStock(storeStockNew);
 			StockTransaction stockTransaction1=	new StockTransaction(avaialableStoreStock, screen, screen.getCode(),
-					acceptedQuantity, batch.getStoreStockList().get(0).getStore(), bm.getId());
+					acceptedQuantity, batch.getStoreStockList().getFirst().getStore(), bm.getId());
 //			sessionService.setEntityDefaults(stockTransaction1);
 			stockTransaction1.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),
 					request.getUserId());

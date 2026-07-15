@@ -263,7 +263,7 @@ public class AssetReturnAcceptanceService implements IAssetReturnAcceptanceServi
 		return new AsseccoriesResponse(issueAccessory.getBatch().getId(), issueAccessory.getBatch().getBatchNo(),
 				issueAccessory.getBatch().getItem().getId(), issueAccessory.getBatch().getItem().getCode(),
 				issueAccessory.getBatch().getItem().getName(),
-				issueAccessory.getBatch().getStoreStockList().get(0).getAvailableQty());
+				issueAccessory.getBatch().getStoreStockList().getFirst().getAvailableQty());
 	}
 
 	private Batch updateStoreStock(Integer storeId , Integer acceptingStore,	Batch batch, Integer quantity,
@@ -290,10 +290,10 @@ public class AssetReturnAcceptanceService implements IAssetReturnAcceptanceServi
 			Integer tQty = inTransitQuantity - quantity;
 			if(!fromStoreStock.isEmpty()) {
 				//fromStoreStock.get(0).setAvailableQty(balanceQuantity);	
-				fromStoreStock.get(0).settQty(tQty);
+				fromStoreStock.getFirst().settQty(tQty);
 			}
 			StockTransaction stockTransaction = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-					quantity, batch.getStoreStockList().get(0).getStore(), d.getId());
+					quantity, batch.getStoreStockList().getFirst().getStore(), d.getId());
 			stockTransaction.setCreateDefaults(request.getOrganizationId(), request.getUnitId(), request.getUserId());
 			batch.addStockTransaction(stockTransaction);
 
@@ -306,10 +306,10 @@ public class AssetReturnAcceptanceService implements IAssetReturnAcceptanceServi
 			List<StoreStock> toStoreStock = batch.getStoreStockList().stream()
 					.filter(i -> i.getStore().getStoreId().equals(acceptingStore)).collect(Collectors.toList());
 			if (toStoreStock != null && toStoreStock.size() > 0) {
-				toStoreStock.get(0).setAvailableQty(balanceQuantity1);
+				toStoreStock.getFirst().setAvailableQty(balanceQuantity1);
 				//toStoreStock.get(0).setTotalQty(toStoreStock.get(0).getTotalQty()+quantity);
 				StockTransaction stockTransaction1 = new StockTransaction(avaialableStoreStock1, screen,
-						screen.getCode(), quantity, batch.getStoreStockList().get(0).getStore(), d.getId());
+						screen.getCode(), quantity, batch.getStoreStockList().getFirst().getStore(), d.getId());
 //				sessionService.setEntityDefaults(stockTransaction);
 				stockTransaction1.setCreateDefaults(request.getOrganizationId(), request.getUnitId(),
 						request.getUserId());
@@ -321,7 +321,7 @@ public class AssetReturnAcceptanceService implements IAssetReturnAcceptanceServi
 				storeStockNew.setCreateDefaults(request.getOrganizationId(), request.getUnitId(), request.getUserId());
 				AssetIssueDao.saveStoreStock(storeStockNew);
 				StockTransaction stockTransaction1 = new StockTransaction(avaialableStoreStock, screen,
-						screen.getCode(), quantity, batch.getStoreStockList().get(0).getStore(), d.getId());
+						screen.getCode(), quantity, batch.getStoreStockList().getFirst().getStore(), d.getId());
 //				sessionService.setEntityDefaults(stockTransaction1);
 				stockTransaction1.setCreateDefaults(request.getOrganizationId(), request.getUnitId(),
 						request.getUserId());
