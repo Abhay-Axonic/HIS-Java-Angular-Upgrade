@@ -17,4 +17,6 @@ public interface IRazorPayDao {
 
 	Response updatePaymentLinkLog(String razorpayPaymentLinkStatus, String razorpayPaymentLinkId)throws ApplicationException;
 
+	Response getOrderLogDetailsByOrderId(String orderId)throws ApplicationException;
+
 }
