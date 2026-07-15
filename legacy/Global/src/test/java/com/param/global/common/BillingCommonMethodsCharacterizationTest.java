@@ -2,6 +2,7 @@ package com.param.global.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.never;
@@ -22,11 +23,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.param.global.billing.dao.IContractConsumptionDao;
 import com.param.global.billing.dto.PharmacyBillCommonDto;
+import com.param.global.dto.BillingMasterDto;
 import com.param.global.dto.ContractConsumptionDto;
+import com.param.global.dto.OrderDetailsMasterDto;
 import com.param.global.dto.OrderDetailsPackageMapperDto;
 import com.param.global.dto.PackageConsumptionMasterResDto;
 import com.param.global.dto.PackageConsumptionServiceDetailDto;
 import com.param.global.dto.TPackageConsumptionCapDetailsDto;
+import com.param.global.pharmacy.dto.SaleDetailPackageMapperDto;
 
 /**
  * WAVE-1 CHARACTERIZATION TEST -- DRAFT, NOT YET REVIEWED OR APPROVED.
@@ -873,6 +877,281 @@ class BillingCommonMethodsCharacterizationTest {
             // subtraction at all). The two branches derive netAmount inconsistently.
             assertThat(consumptionDto.getNetAmount()).isEqualTo(40.0);
             assertThat(consumptionDto.getSelfPayable()).isEqualTo(40.0); // set equal to netAmount here
+        }
+    }
+
+    // =========================================================================================
+    // SHADOW-TEST HARNESS EXPANSION (Step 2), batch 3 -- the last 5 real-calculation methods in
+    // BillingCommonMethods.java: both createOrderDetailsPackageMapper overloads (706, 725),
+    // consumeServiceFromPackageOrContract, createOrderPackageMapperForPharmacyObj,
+    // createSaleDetailPackageMapperDto. Same rigor and process as prior batches.
+    // =========================================================================================
+
+    @Nested
+    @DisplayName("BillingCommonMethods.createOrderDetailsPackageMapper(resDto, srv, packageAmt, serviceAmt, isCapService, isCapServiceUpdate) -- characterization (current behavior, not verified-correct behavior)")
+    class PackageMapperWithServiceCapUpdate {
+
+        @Test
+        @DisplayName("isCapServiceUpdate=true: writes the negated packageAmt to the service-cap DAO and stamps both service-detail/master ids")
+        void updatesServiceCap_whenFlagTrue() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            resDto.setPackageId(10);
+            resDto.setPackageName("X");
+            resDto.setPackageCode("Y");
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            srv.setPackageConsumptionMasterId(50);
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderDetailsPackageMapper(
+                    resDto, srv, java.math.BigDecimal.valueOf(200.0), java.math.BigDecimal.valueOf(300.0),
+                    /* isCapService */ 'N', /* isCapServiceUpdate */ true);
+
+            assertThat(result.getPackageId()).isEqualTo(10);
+            assertThat(result.getIsCapService()).isEqualTo('N');
+            assertThat(result.getPacakgeConsumptionServiceDetailId()).isEqualTo(40);
+            assertThat(result.getPackageConsumptionMasterId()).isEqualTo(50);
+            verify(tPackageConsumptionCapDetailsDao).updatePackageServiceCap(40, -200.0);
+        }
+
+        @Test
+        @DisplayName("isCapServiceUpdate=false: the DAO write and both id fields are skipped, but the mapper dto's core fields are still set")
+        void skipsServiceCapUpdate_whenFlagFalse() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderDetailsPackageMapper(
+                    resDto, srv, java.math.BigDecimal.valueOf(200.0), java.math.BigDecimal.valueOf(300.0), 'N', false);
+
+            verify(tPackageConsumptionCapDetailsDao, never()).updatePackageServiceCap(any(), any());
+            assertThat(result.getPacakgeConsumptionServiceDetailId()).isNull();
+            assertThat(result.getPackageAmount()).isEqualByComparingTo(java.math.BigDecimal.valueOf(200.0));
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.createOrderDetailsPackageMapper(resDto, capDtls, packageAmt, serviceAmt) -- characterization (current behavior, not verified-correct behavior)")
+    class PackageMapperWithCapUpdate {
+
+        @Test
+        @DisplayName("unconditionally writes the negated packageAmt to the cap DAO -- no guard flag, unlike the sibling overload above")
+        void alwaysUpdatesCap() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            resDto.setPackageId(10);
+            TPackageConsumptionCapDetailsDto capDtls = new TPackageConsumptionCapDetailsDto();
+            capDtls.setPackageConsumptionMasterId(20);
+            capDtls.setPackageConsumptionCapDetailsId(30);
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderDetailsPackageMapper(
+                    resDto, capDtls, java.math.BigDecimal.valueOf(150.0), java.math.BigDecimal.valueOf(250.0));
+
+            assertThat(result.getIsCapService()).isEqualTo('Y');
+            assertThat(result.getPackageConsumptionMasterId()).isEqualTo(20);
+            assertThat(result.getPackageConsumptionCapDetailsId()).isEqualTo(30);
+            verify(tPackageConsumptionCapDetailsDao).updatePackageCap(30, -150.0);
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.consumeServiceFromPackageOrContract -- characterization (current behavior, not verified-correct behavior)")
+    class ConsumeServiceFromPackageOrContract {
+
+        private BillingMasterDto billingMasterDto() {
+            BillingMasterDto dto = new BillingMasterDto();
+            dto.setOrganisationId(1);
+            dto.setUnitId(2);
+            dto.setVisitTypeId(3);
+            dto.setPatientTypeId(4);
+            dto.setBillingBedCategoryId(5);
+            dto.setContractId(6);
+            dto.setEncounterId(7);
+            dto.setAdmissionId(8);
+            dto.setTariffId(9);
+            dto.setPatientId(11);
+            dto.setSelfPayeeId(12);
+            dto.setPatientClassId(13);
+            return dto;
+        }
+
+        @Test
+        @DisplayName("serviceAmt > 0: ordDiscountPer and patientClassPercentage pass through from the order detail unchanged")
+        void positiveServiceAmt_discountAndClassPercentagePassThrough() throws Exception {
+            OrderDetailsMasterDto detail = new OrderDetailsMasterDto();
+            detail.setServiceId(100);
+            detail.setServiceAmt(java.math.BigDecimal.valueOf(500.0));
+            detail.setOrdDiscountPer(java.math.BigDecimal.valueOf(15.0));
+            detail.setPatientClassPercentage(java.math.BigDecimal.valueOf(25.0));
+            detail.setOrderQty(2);
+            detail.setOrderDate(1750000000000L);
+
+            ContractConsumptionDto result = billingCommonMethods.consumeServiceFromPackageOrContract(billingMasterDto(), detail);
+
+            assertThat(result.getOrdDiscountPer()).isEqualTo(15.0);
+            assertThat(result.getPatientClassPercentage()).isEqualTo(25.0);
+            assertThat(result.getServiceRate()).isEqualTo(500.0);
+        }
+
+        @Test
+        @DisplayName("FINDING (logged, not fixed): serviceAmt <= 0 forces BOTH ordDiscountPer and patientClassPercentage to zero, regardless of what the order detail actually has configured")
+        void zeroServiceAmt_forcesDiscountAndClassPercentageToZero() throws Exception {
+            OrderDetailsMasterDto detail = new OrderDetailsMasterDto();
+            detail.setServiceId(100);
+            detail.setServiceAmt(java.math.BigDecimal.ZERO);
+            detail.setOrdDiscountPer(java.math.BigDecimal.valueOf(15.0)); // configured, but will be ignored
+            detail.setPatientClassPercentage(java.math.BigDecimal.valueOf(25.0)); // configured, but will be ignored
+            detail.setOrderQty(2);
+            detail.setOrderDate(1750000000000L);
+
+            ContractConsumptionDto result = billingCommonMethods.consumeServiceFromPackageOrContract(billingMasterDto(), detail);
+
+            // Not necessarily wrong (a free/zero-priced line arguably has nothing to discount), but a
+            // real characterization point: any configured discount%/patient-class% on a zero-priced
+            // line item is silently discarded rather than preserved, since the whole zero-vs-positive
+            // check gates both fields identically off the SAME condition.
+            assertThat(result.getOrdDiscountPer()).isEqualTo(0.0);
+            assertThat(result.getPatientClassPercentage()).isEqualTo(0.0);
+        }
+
+        @Test
+        @DisplayName("currentDate is derived from ordRenderDatetime when present, falling back to orderDate only when it's null")
+        void currentDate_prefersOrdRenderDatetimeOverOrderDate() throws Exception {
+            OrderDetailsMasterDto detail = new OrderDetailsMasterDto();
+            detail.setServiceId(100);
+            detail.setServiceAmt(java.math.BigDecimal.valueOf(100.0));
+            detail.setOrdDiscountPer(java.math.BigDecimal.ZERO);
+            detail.setPatientClassPercentage(java.math.BigDecimal.ZERO);
+            detail.setOrderQty(1);
+            detail.setOrderDate(1600000000000L); // would produce a different date than ordRenderDatetime below
+            detail.setOrdRenderDatetime(1750000000000L);
+
+            ContractConsumptionDto result = billingCommonMethods.consumeServiceFromPackageOrContract(billingMasterDto(), detail);
+
+            assertThat(result.getCurrentDate()).isEqualTo(
+                    com.param.global.common.GlobalCommonDateUtils.getStringDate(new java.util.Date(1750000000000L), "yyyy-MM-dd HH:mm:ss"));
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.createOrderPackageMapperForPharmacyObj -- characterization (current behavior, not verified-correct behavior)")
+    class PharmacyPackageMapperObj {
+
+        @Test
+        @DisplayName("billingMasterDto != null: org/unit come from billingMasterDto, serviceAmount is the rate ALONE, not multiplied by quantity")
+        void billingMasterDtoPresent_serviceAmountIsRateOnly() {
+            SaleDetailPackageMapperDto mppr = new SaleDetailPackageMapperDto();
+            mppr.setPackageId(1);
+            mppr.setRate(50.0);
+            mppr.setPackageAmount(200.0);
+            BillingMasterDto billingMasterDto = new BillingMasterDto();
+            billingMasterDto.setOrganisationId(10);
+            billingMasterDto.setUnitId(20);
+            OrderDetailsMasterDto detail = new OrderDetailsMasterDto();
+            detail.setOrderQty(5); // deliberately large -- should NOT affect the result in this branch
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderPackageMapperForPharmacyObj(
+                    mppr, billingMasterDto, /* orgId */ 999, /* unitId */ 998, detail);
+
+            assertThat(result.getOrganizationId()).isEqualTo(10);
+            assertThat(result.getUnitId()).isEqualTo(20);
+            // serviceAmount = rate alone (50.0), NOT rate * orderQty (which would be 250.0).
+            assertThat(result.getServiceAmount()).isEqualByComparingTo(java.math.BigDecimal.valueOf(50.0));
+        }
+
+        @Test
+        @DisplayName("FINDING (logged, not fixed): billingMasterDto == null: org/unit fall back to the raw params, but serviceAmount switches formula to rate * orderQty -- whether quantity is factored into the dollar amount depends on an unrelated null-check, not on any explicit quantity flag")
+        void billingMasterDtoNull_serviceAmountMultipliedByQty() {
+            SaleDetailPackageMapperDto mppr = new SaleDetailPackageMapperDto();
+            mppr.setPackageId(1);
+            mppr.setRate(50.0);
+            mppr.setPackageAmount(200.0);
+            OrderDetailsMasterDto detail = new OrderDetailsMasterDto();
+            detail.setOrderQty(5);
+
+            OrderDetailsPackageMapperDto result = billingCommonMethods.createOrderPackageMapperForPharmacyObj(
+                    mppr, /* billingMasterDto */ null, /* orgId */ 999, /* unitId */ 998, detail);
+
+            assertThat(result.getOrganizationId()).isEqualTo(999);
+            assertThat(result.getUnitId()).isEqualTo(998);
+            // serviceAmount = rate * orderQty = 50.0 * 5 = 250.0 -- a DIFFERENT formula from the
+            // billingMasterDto != null case above, keyed off a null-check that has no obvious logical
+            // connection to "should quantity be factored into this dollar amount."
+            assertThat(result.getServiceAmount()).isEqualByComparingTo(java.math.BigDecimal.valueOf(250.0));
+        }
+    }
+
+    @Nested
+    @DisplayName("BillingCommonMethods.createSaleDetailPackageMapperDto -- characterization (current behavior, not verified-correct behavior)")
+    class SaleDetailPackageMapperDtoCreation {
+
+        @Test
+        @DisplayName("PackageConsumptionServiceDetailDto branch, consume=true, capOrQty<=1: writes to updatePackageCapItem (not the quantity variant)")
+        void serviceDetailBranch_consumeTrue_singleCap() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            resDto.setPackageId(1);
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+            srv.setPackageConsumptionMasterId(50);
+
+            SaleDetailPackageMapperDto result = billingCommonMethods.createSaleDetailPackageMapperDto(
+                    resDto, srv, 'Y', /* packageAmount */ 100.0, /* unitNetAmountDto */ 90.0,
+                    /* consume */ true, /* capOrQty */ 1, /* pharRecal */ null);
+
+            assertThat(result.getPacakgeConsumptionServiceDetailId()).isEqualTo(40);
+            verify(tPackageConsumptionCapDetailsDao).updatePackageCapItem(40, -100.0, false);
+            verify(tPackageConsumptionCapDetailsDao, never()).updatePackageQuantityCapItem(any(), any(), any(), anyBoolean());
+        }
+
+        @Test
+        @DisplayName("PackageConsumptionServiceDetailDto branch, consume=true, capOrQty>1: writes to updatePackageQuantityCapItem instead")
+        void serviceDetailBranch_consumeTrue_multiQty() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+
+            billingCommonMethods.createSaleDetailPackageMapperDto(
+                    resDto, srv, 'Y', 100.0, 90.0, true, /* capOrQty */ 3, null);
+
+            verify(tPackageConsumptionCapDetailsDao).updatePackageQuantityCapItem(40, -1, -100.0, false);
+            verify(tPackageConsumptionCapDetailsDao, never()).updatePackageCapItem(any(), any(), anyBoolean());
+        }
+
+        @Test
+        @DisplayName("PackageConsumptionServiceDetailDto branch, consume=false: no DAO write at all")
+        void serviceDetailBranch_consumeFalse_noWrite() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            PackageConsumptionServiceDetailDto srv = new PackageConsumptionServiceDetailDto();
+            srv.setPackageConsumptionServiceDetailId(40);
+
+            billingCommonMethods.createSaleDetailPackageMapperDto(
+                    resDto, srv, 'Y', 100.0, 90.0, /* consume */ false, 1, null);
+
+            verifyNoInteractions(tPackageConsumptionCapDetailsDao);
+        }
+
+        @Test
+        @DisplayName("TPackageConsumptionCapDetailsDto branch, consume=true, capOrQty<=1: writes to updatePackageCapProductCategory")
+        void capDetailsBranch_consumeTrue_singleCap() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            TPackageConsumptionCapDetailsDto capDtls = new TPackageConsumptionCapDetailsDto();
+            capDtls.setPackageConsumptionCapDetailsId(30);
+
+            billingCommonMethods.createSaleDetailPackageMapperDto(
+                    resDto, capDtls, 'Y', 100.0, 90.0, true, 1, /* pharRecal */ null);
+
+            verify(tPackageConsumptionCapDetailsDao).updatePackageCapProductCategory(30, -100.0, false, false);
+        }
+
+        @Test
+        @DisplayName("TPackageConsumptionCapDetailsDto branch, consume=true, capOrQty>1, pharRecal=1: writes to updatePackageQuantityCapProductCategory with pharmacyReturnFlag=true")
+        void capDetailsBranch_consumeTrue_multiQty_pharmacyReturn() {
+            PackageConsumptionMasterResDto resDto = new PackageConsumptionMasterResDto();
+            TPackageConsumptionCapDetailsDto capDtls = new TPackageConsumptionCapDetailsDto();
+            capDtls.setPackageConsumptionCapDetailsId(30);
+
+            billingCommonMethods.createSaleDetailPackageMapperDto(
+                    resDto, capDtls, 'Y', 100.0, 90.0, true, /* capOrQty */ 2, /* pharRecal */ 1);
+
+            // pharRecal==1 sets pharmacyReturnFlag=true, passed as the DAO call's last argument.
+            verify(tPackageConsumptionCapDetailsDao).updatePackageQuantityCapProductCategory(30, -1, -100.0, false, true);
         }
     }
 }
