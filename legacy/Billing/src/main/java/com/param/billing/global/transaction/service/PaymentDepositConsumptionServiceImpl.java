@@ -57,7 +57,6 @@ public class PaymentDepositConsumptionServiceImpl implements IPaymentDepositCons
 				
 				Double consumedAmount = reqDto.getTotalDepositConsumption();
 				Double detailsConsumedAmount = depositDto.getConsumedAmount();
-				depositDto.setConsumedAmount(detailsConsumedAmount);
 				//update call to deposit master
 				iDepositMasterService.updateDepositMaster(depositDto);
 				

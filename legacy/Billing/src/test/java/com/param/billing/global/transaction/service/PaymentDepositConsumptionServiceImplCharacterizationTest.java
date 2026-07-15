@@ -43,23 +43,26 @@ import com.param.global.dao.IGlobalUnitMasterDao;
  * since whether the eventual database write is absolute or relative is that layer's own concern,
  * not this method's.
  *
- * TWO GENUINE FINDINGS from reading the method closely while building fixtures for it (flagged, not
- * fixed -- needs an owner decision, not a unilateral AI fix):
+ * TWO GENUINE FINDINGS from reading the method closely while building fixtures for it:
  *
- * 1. BACKWARDS-LOOKING NULL CHECK: `if (depositDto.getBillId() != null) depositDto.setBillId(reqDto
- *    .getBillingMasterId());` (and the identical pattern for `billPayeeDetailsId`) only overwrites
- *    the field when it is ALREADY non-null -- the opposite of the usual "fill in if missing" idiom.
- *    A `PaymentDepositDto` arriving with `billId == null` keeps it null; the request's own
- *    `billingMasterId` is silently never attached to it. Whether this is intentional (only stamp a
- *    bill reference onto records that already indicate they need one) or an inverted condition is a
- *    real question this session does not answer. See BillIdBackwardsCheck below.
+ * 1. BACKWARDS-LOOKING NULL CHECK (still open, blocked pending a business-intent answer -- see
+ *    docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 4b): `if (depositDto.getBillId() !=
+ *    null) depositDto.setBillId(reqDto.getBillingMasterId());` (and the identical pattern for
+ *    `billPayeeDetailsId`) only overwrites the field when it is ALREADY non-null -- the opposite of
+ *    the usual "fill in if missing" idiom. A `PaymentDepositDto` arriving with `billId == null` keeps
+ *    it null; the request's own `billingMasterId` is silently never attached to it. Whether this is
+ *    intentional (only stamp a bill reference onto records that already indicate they need one) or an
+ *    inverted condition is a real question this session does not answer. See BillIdBackwardsCheck
+ *    below.
  *
- * 2. READ-THEN-WRITE-BACK NO-OP: `Double detailsConsumedAmount = depositDto.getConsumedAmount();
- *    depositDto.setConsumedAmount(detailsConsumedAmount);` reads the DTO's own field and immediately
- *    writes the identical value back -- confirmed via a test that this has no observable effect
- *    (whatever the caller/request set `consumedAmount` to is exactly what reaches
- *    `updateDepositMaster`). Not fixed; noted because it reads like either dead code left over from
- *    a refactor, or a mistaken assignment that was meant to compute something else.
+ * 2. READ-THEN-WRITE-BACK NO-OP -- FIXED 2026-07-15 (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md,
+ *    finding 4c, owner-approved). Previously: `Double detailsConsumedAmount = depositDto
+ *    .getConsumedAmount(); depositDto.setConsumedAmount(detailsConsumedAmount);` read the DTO's own
+ *    field and immediately wrote the identical value back -- confirmed via a test that this had no
+ *    observable effect. Now: the pointless write-back line is deleted; `detailsConsumedAmount` is
+ *    still read and used exactly as before everywhere else in the method (the deposit-consumption-
+ *    details save, and as the local running-total base). See ReadWriteBackNoOp below, which still
+ *    passes unchanged -- the whole point of deleting a true no-op is that nothing observable moves.
  *
  * Per Decision 4 (owner-approved): assertions use exact equality, not RULES.md's $0.01 tolerance.
  */
@@ -276,11 +279,11 @@ class PaymentDepositConsumptionServiceImplCharacterizationTest {
     }
 
     @Nested
-    @DisplayName("ReadWriteBackNoOp -- flagged during test authoring, not fixed, needs an owner decision")
+    @DisplayName("ReadWriteBackNoOp -- FIXED 2026-07-15: the no-op write-back line is deleted, behavior unchanged")
     class ReadWriteBackNoOp {
 
         @Test
-        @DisplayName("the deposit master update receives exactly the consumedAmount the caller already set -- the read-then-write-back has no observable effect")
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 4c, owner-approved): the deposit master update still receives exactly the consumedAmount the caller already set, now via the deleted no-op line's absence rather than its presence -- byte-identical output, confirming the deletion was truly a no-op")
         void updateDepositMasterReceivesTheOriginalConsumedAmountUnchanged() throws Exception {
             stubAddDepositConsumption(999);
             PaymentDepositDto deposit = depositDto(10, 1, 777.0); // an arbitrary value the "no-op" line reads and writes back
