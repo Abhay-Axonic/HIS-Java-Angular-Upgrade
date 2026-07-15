@@ -62,9 +62,13 @@ import com.param.procurement.purchase.dto.goodReceiptNote.GRNStatusDto;
  *    NullTaxReference#fallsBackToZero_whenTaxIsNull_insteadOfCrashing below, which now pins the fixed
  *    (graceful-skip) behavior instead of the crash.
  *
- * 3. NO SOFT-DELETE GUARD (still open): Inventory skips details where `getIsDeleted()` is true. This
- *    method's loop has no equivalent check at all -- every detail in the list is processed
- *    unconditionally. See NoDeletedGuard#processesEveryDetailRegardlessOfDeletedFlag below.
+ * 3. NO SOFT-DELETE GUARD -- FIXED 2026-07-15 (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md,
+ *    finding 2b, owner-approved). Previously: Inventory skips details where `getIsDeleted()` is true,
+ *    but this method's loop had no equivalent check -- every detail was processed unconditionally.
+ *    Now: the entire loop body is wrapped in `if (!detail.getIsDeleted())`, the exact pattern already
+ *    live in Inventory's parallel flow -- `GoodReceiptNoteDetail` inherits `getIsDeleted()` from
+ *    `CommonEntity` via `BaseEntity`, the same chain `ReturnableGatepassDetail` uses. See
+ *    NoDeletedGuard#skipsDeletedDetails_insteadOfProcessingAll below.
  *
  * Per Decision 4 (owner-approved): assertions use exact equality, not RULES.md's $0.01 tolerance.
  */
@@ -250,16 +254,18 @@ class GoodReceiptNoteServiceCharacterizationTest {
     }
 
     @Nested
-    @DisplayName("NoDeletedGuard -- confirms this method has no equivalent of Inventory's isDeleted skip")
+    @DisplayName("NoDeletedGuard -- confirms this method now mirrors Inventory's isDeleted skip")
     class NoDeletedGuard {
 
         @Test
-        @DisplayName("processes every detail in the list -- there is no isDeleted-style guard to skip any of them")
-        void processesEveryDetailRegardlessOfDeletedFlag() throws Exception {
+        @DisplayName("FIXED 2026-07-15 (docs/DECISION_NEEDED_TriagePendingFindingsFixes.md, finding 2b, owner-approved): skips a detail marked isDeleted, still processes the rest of the batch normally")
+        void skipsDeletedDetails_insteadOfProcessingAll() throws Exception {
             Tax tax = new Tax(5);
             tax.setTaxPercentage(18.0);
             GoodReceiptNoteDetail detail1 = detail(55, 1000.0, 0.0, 180.0, tax, 7);
+            detail1.setIsDeleted(true);
             GoodReceiptNoteDetail detail2 = detail(56, 500.0, 0.0, 90.0, tax, 8);
+            detail2.setIsDeleted(false);
             GoodReceiptNote grn = goodReceiptNote(0, 1, Arrays.asList(detail1, detail2));
 
             when(grnDao.getGoodReceiptNote(1)).thenReturn(grn);
@@ -267,8 +273,10 @@ class GoodReceiptNoteServiceCharacterizationTest {
 
             service.approveGoodReceiptNote(request(1, 42));
 
-            // 2 details x 1 tax component each = 2 saves, both details processed unconditionally.
-            verify(taxComponentDetailsDao, times(2)).saveTaxComponentDetails(any());
+            // Only detail2 (not deleted) is processed: 1 tax component x 1 detail = 1 save, not 2.
+            verify(taxComponentDetailsDao, times(1)).saveTaxComponentDetails(any());
+            // The rest of the batch (the good-receipt-note status update itself) still completes.
+            verify(grnDao).updateGoodReceiptNote(grn);
         }
     }
 

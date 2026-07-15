@@ -1744,27 +1744,28 @@ public class GoodReceiptNoteService implements IGoodReceiptNoteService {
 			goodReceiptNote.setApprovalStatus(new Status(grnStatusDto.getApprovalStatusId()));
 
 			for (GoodReceiptNoteDetail detail : goodReceiptNote.getGoodReceiptNoteDetailsList()) {
+				if (!detail.getIsDeleted()) {
 				detail.setStatus(new Status(grnStatusDto.getApprovalStatusId()));
 
 				detail.setUpdatedDate(TimeZoneComponent.getDateByzone(goodReceiptNote.getUnitId()));
 				detail.setUpdatedByUser(grnStatusDto.getUserId());
-				
+
 				List<TaxComponentDetailsDto> taxDetailsList = grnDao.getTaxDetails(detail.getTax()!=null ? detail.getTax().getId():0);
-				
+
 				Double commTaxAmount = detail.getTotalAmount() - (detail.getTotalDiscount()!=null ? detail.getTotalDiscount() :0);
-				
+
 				//Double natAmount = detail.getTotalAmount() - (detail.getDiscount()!=null ? detail.getDiscount() :0);HIS-22584 Orthocare Hospital :- Tally integration for Orthocare Hospital.
-				
+
 				if(taxDetailsList != null && taxDetailsList.size()>0) {
-					
+
 					for (TaxComponentDetailsDto taxDetail : taxDetailsList) {
-						
+
 						try {
-							
-							Double taxComponentAmount = (commTaxAmount) * (taxDetail.getTaxComponentPercentage()/100);		
-							
+
+							Double taxComponentAmount = (commTaxAmount) * (taxDetail.getTaxComponentPercentage()/100);
+
 						//	Double taxComponentAmount = (natAmount) * (taxDetail.getTaxComponentPercentage()/100);HIS-22584 Orthocare Hospital :- Tally integration for Orthocare Hospital.
-							
+
 							TaxComponentDetailsDto dto  = new TaxComponentDetailsDto();
 							dto.setCreatedBy(grnStatusDto.getUserId());
 							dto.setGrnDetailsId(detail.getId());
@@ -1782,14 +1783,15 @@ public class GoodReceiptNoteService implements IGoodReceiptNoteService {
 							dto.setUnitId(goodReceiptNote.getUnitId());
 							dto.setUpdatedBy(grnStatusDto.getUserId());
 							iTaxComponentDetailsDao.saveTaxComponentDetails(dto);
-							
+
 						} catch (Exception e) {
 							logger.error("approveGoodReceiptNote failed", e);
 							throw new ServiceException(e.getMessage());
 						}
-						
+
 					}
-					
+
+				}
 				}
 			}
 	
