@@ -138,6 +138,24 @@ Also worth noting: `confirmAppointment1` (lines 308-312) is a small, separate, u
 
 **Reading this code, all of the Razorpay order-creation and confirmation endpoints appear reachable by an anonymous caller with no login at all** — which would mean an attacker doesn't need a compromised patient session or insider access to exercise any of the gaps in §1–3; a direct, unauthenticated HTTP request would do. **I have not verified this against a running instance** (no server was started this session, consistent with holding off on the deployment-verification work per your last instruction) — this is a code-reading conclusion, not a proven exploit. Given the filter's complexity (600+ lines, duplicated conditions, inconsistent path-matching styles), an independent runtime check (e.g., a single unauthenticated `curl` POST to `/getOrderIdForRazorPayPayment` against a dev instance) would be the fastest way to remove all doubt here.
 
+## 4a. Update (2026-07-15, later): the auth-bypass reading is now higher-confidence — the one thing that could have contradicted it turns out to be disconnected
+
+Per owner instruction, read `legacy/HIS-WAR/src/main/java/com/param/config/SecurityConfig.java` to check for a layer that might also gate these endpoints beyond `JwtTokenFilter` alone. That class defines a real, sensible-looking Spring Security policy:
+
+```java
+http.csrf().disable()
+    .authorizeRequests()
+    .antMatchers("/resources/assets/js/**","/adt/organizationMasterList/**","/adt/getUnitByCredentials","/ldapUserCredentialCheck").permitAll()
+    .antMatchers(HttpMethod.POST, "/adt/userLogin").permitAll()
+    .anyRequest().authenticated()
+    .and()
+    .addFilterBefore(new JwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+```
+
+On paper, `.anyRequest().authenticated()` — with only 5 narrow exceptions, none matching any Razorpay endpoint — would have been exactly the backstop that could catch a request `JwtTokenFilter` lets through. **It does not, because it never runs.** `legacy/HIS-WAR/src/main/webapp/WEB-INF/web.xml` registers exactly three filters (`rateLimitFilter`, `requestWrap` = `JwtTokenFilter` directly, `cors`, all mapped to `/*`) and contains **no `DelegatingFilterProxy`/`springSecurityFilterChain` entry** — the specific bridge Spring Security requires to insert itself into the servlet pipeline. No servlet-spec `<security-constraint>` exists either, and no `WebApplicationInitializer` class provides an alternate wiring path. `SecurityConfig.java` is Spring beans sitting in the application context that are **never invoked for a single incoming HTTP request.**
+
+Net effect: **`JwtTokenFilter` is not one layer among several — it is the entire authentication layer for this application, in production, today.** This doesn't just fail to contradict §4's finding; it removes the one thing that might have. Logged as its own standalone item, since this affects every URL in the application, not just these two endpoints — see `docs/DECISION_NEEDED_SpringSecurityFilterChainNotWired.md`.
+
 ## 5. Severity assessment
 
 If §4's reading is correct, this is a **higher-severity, different-category finding** than the (already-fixed) 10x-undercharge bug: not an arithmetic error that undercharges by a fixed, discoverable ratio, but a missing trust boundary that — combined with no signature verification — means an unauthenticated caller could plausibly:
@@ -156,5 +174,7 @@ This needs a decision on scope and priority before any fix is designed, same as 
 3. **Should the `amount` vs. `razorPayBillAmount` disconnect (§2a) be closed** — either by using a single field consistently, or by explicitly validating both against the same server-computed source once (1) exists?
 4. **Do you want me to runtime-verify §4's authentication-bypass reading** against a local dev instance (a read-only, no-payment-attempted `curl` test — would not create any real order or touch billing data) before you decide how urgently to treat it? I have not done this yet.
 5. **Priority relative to other open work:** you've asked this be treated with the same priority as the original undercharge document. Given what surfaced above, I'd flag this as *at least* equally urgent, and possibly more so given the authentication question in §4 — but the actual priority call is yours.
+
+**Status update (2026-07-15, later):** Owner confirmed this system is live production processing real Razorpay payments — this raises the stakes on everything above, including the still-unresolved historical-reconciliation question in the sibling document. Owner is separately obtaining the production hostname to run the read-only curl test for §4/item 4 above (a request with no `Content-Type: application/json` header, guaranteed to never reach `Orders.create()` regardless of the auth-filter outcome — see conversation for the exact command). §4a above (SecurityConfig.java investigation) was completed per owner instruction and raises confidence in the bypass finding, pending that runtime confirmation. A fix has been drafted for review — see `docs/REVIEW_DRAFT_razorpay-auth-fix-NOT-APPLIED.md` — but **not applied to any source file**, per explicit owner instruction to review and approve before anything is touched.
 
 No code, schema, or billing math has been touched to produce this document. Awaiting your direction.
