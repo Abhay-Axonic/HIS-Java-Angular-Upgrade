@@ -481,3 +481,19 @@ Classification: Neither (known-issue log only, no code change this session — s
 Classification: Neither (known-issue log only, no code change this session — same precedent as the three prior BR-PENDING entries from this harness effort). Owner Decision: Explicitly deferred, per the standing Decision 5 instruction.
 
 **Notes:** `mvn -pl Billing test -Dtest=PaymentDepositConsumptionServiceImplCharacterizationTest`: BUILD SUCCESS, 8/8 tests pass (verified from a clean `target/` wipe of the whole module, alongside entry point #3's 13 tests -- 21/21 total). No local `try/catch` touched, no database column changed, no business term introduced.
+
+## BR-PENDING-savebill-misleading-conflict-message — Known issue, NOT fixed: saveBill reports "already in process by another user" even when the real cause is no server-side order data at all (2026-07-15)
+
+**Found while writing wave-1 shadow-test characterization tests for entry point #5 (`saveBill`), not while looking for bugs.** Logged per the standing owner instruction (Decision 5). This is a facet of `docs/AUDIT_BillingRisk.md` ONE-OFF-2 (the ±1.00 whole-unit tolerance) that the original audit text doesn't explicitly call out.
+
+**What the code does today:** `Billing/.../transaction/controller/BillingMasterController.java`'s `saveBill` initializes `checkSameAmount = true` and only ever sets it `false` inside a block gated on `orderDetailsRes.getObject() != null` (the server-side order-sum lookup). If that lookup returns no object at all -- for any reason, not necessarily a genuine concurrent-edit conflict (could be a data gap, a since-deleted order, a query miss) -- `checkSameAmount` never gets the chance to become `false`, and the method unconditionally returns `"This bill is already in process by other user!"`. The message asserts a specific cause (concurrent editing) that the code has not actually verified; it's really "no comparable server-side data was found," a different and potentially more concerning failure mode reported with a misleading, narrower message. Confirmed via a passing test (`NoServerSideData#rejectsOutright_whenServerHasNoMatchingOrderData`).
+
+**Severity:** low-to-moderate -- doesn't cause incorrect billing math, but could send an operator down the wrong troubleshooting path (assuming a colleague has the bill open, when the actual issue might be a data-integrity gap worth investigating directly).
+
+**Owner instruction:** log clearly, do not fix. No code change made to `BillingMasterController.java`.
+
+**Also confirmed, not a new finding but a direct re-verification of ONE-OFF-2 against current source:** the whole-unit `Math.round(...)` rounding and the ±1.00 tolerance fallback (both the split-bill netAmount-only path and the non-split-bill self+credit-payable path, which requires BOTH legs independently within tolerance) behave exactly as the original audit described -- pinned by 6 passing tests, not just re-read from the audit.
+
+Classification: Neither (known-issue log only, no code change this session). Owner Decision: Explicitly deferred, per the standing Decision 5 instruction.
+
+**Notes:** `mvn -pl Billing test -Dtest=BillingMasterControllerSaveBillCharacterizationTest`: BUILD SUCCESS, 8/8 tests pass (verified from a clean `target/` wipe of the whole module, alongside entry points #3/#4's 21 tests -- 29/29 total). No local `try/catch` touched, no database column changed, no business term introduced.
