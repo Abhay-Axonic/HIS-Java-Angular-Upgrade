@@ -93,7 +93,7 @@ public class OTIMSDashboardServiceImpl implements IOTIMSDashboardService, ICommo
 							 Date d = df.parse(myTime); 
 							 Calendar cal = Calendar.getInstance();
 							 cal.setTime(d);
-							 cal.add(Calendar.MINUTE, switchovertimelist.get(0).getSwitchOverTime());
+							 cal.add(Calendar.MINUTE, switchovertimelist.getFirst().getSwitchOverTime());
 							 String newTime = df.format(cal.getTime());
 							 //System.out.println(newTime);
 							// procedureOTScheduleDto.setToTime(newTime);
@@ -126,7 +126,7 @@ public class OTIMSDashboardServiceImpl implements IOTIMSDashboardService, ICommo
 							 Date d = df.parse(myTime); 
 							 Calendar cal = Calendar.getInstance();
 							 cal.setTime(d);
-							 cal.add(Calendar.MINUTE, switchoverStaffList.get(0).getSwitchOverTime());
+							 cal.add(Calendar.MINUTE, switchoverStaffList.getFirst().getSwitchOverTime());
 							 String newTime = df.format(cal.getTime());
 							 //System.out.println(newTime);
 							// procedureStaffScheduleDto.setToTime(newTime);
@@ -409,13 +409,13 @@ public class OTIMSDashboardServiceImpl implements IOTIMSDashboardService, ICommo
 				if(reason != "")
 				Obj.setRequestReason(reason);
 				
-				Response checkListResp  =   iProcedureOTScheduleDao.getPreOparetiveCheckListDeta(orderMasterList.get(0).getProReqId());
+				Response checkListResp  =   iProcedureOTScheduleDao.getPreOparetiveCheckListDeta(orderMasterList.getFirst().getProReqId());
 				List<ChecklistMasterDto> checkList =  new ArrayList<>();
 				if(checkListResp.getListObject() != null && checkListResp.getListObject().size() >0) {
 					checkList.addAll(checkListResp.getListObject());
 				}
 				
-				Response wheelInTimeSheetRes  =   iProcedureOTScheduleDao.getWheelInDataByProReqId(orderMasterList.get(0).getProReqId());
+				Response wheelInTimeSheetRes  =   iProcedureOTScheduleDao.getWheelInDataByProReqId(orderMasterList.getFirst().getProReqId());
 				if(wheelInTimeSheetRes.getStatus().equals(SUCCESS) && wheelInTimeSheetRes.getObject()!=null) {
 					ProcedureOrderMasterDto wheelInTimeSheetObj = (ProcedureOrderMasterDto)wheelInTimeSheetRes.getObject();
 					Obj.setOtCompletionTimeSheetId(wheelInTimeSheetObj.getOtCompletionTimeSheetId());

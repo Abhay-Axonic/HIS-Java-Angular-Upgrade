@@ -102,7 +102,7 @@ public class OTReservationServiceImpl  implements IOTReservationService, ICommon
 		try {
 			
 			String email = "";
-			Date date = TimeZoneComponent.getDateByzone(oTReservationdto.getProcedureOrderMasterDto()!=null ? oTReservationdto.getProcedureOrderMasterDto().get(0)!=null ? oTReservationdto.getProcedureOrderMasterDto().get(0).getUnitId(): null : null);
+			Date date = TimeZoneComponent.getDateByzone(oTReservationdto.getProcedureOrderMasterDto()!=null ? oTReservationdto.getProcedureOrderMasterDto().getFirst()!=null ? oTReservationdto.getProcedureOrderMasterDto().getFirst().getUnitId(): null : null);
 			String dateTime = GlobalCommonDateUtils.getStringDate(date, "dd-M-yyyy HH:mm:ss");
 			Integer proRequestId = 0;
 			Integer otreservation = 0;
