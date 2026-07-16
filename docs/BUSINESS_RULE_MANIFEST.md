@@ -685,3 +685,35 @@ Its sibling branch nine lines earlier (the amount-tracked-cap branch, lines 1015
 Classification: **Financial Correctness** (Finding 1, pending decision). Owner Decision: Pending — proposal awaiting review, same fast-track process as the pharmacy leak and the balance-cap swap.
 
 **Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 90/90 (5 new tests this batch), Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. Further targeted characterization of `consumeServiceFromContract` is paused pending owner review of this finding, per standing instruction.
+
+## BR-FIXED-shadow-wave2-consumeservicefromcontractpackage-batch1 — FIXED: same second-round quantity-cap credit-loss bug repeats in consumeServiceFromContractPackage, fast-tracked and applied same-day (2026-07-16)
+
+**Found via a targeted pattern sweep** (owner-requested, given this is the 3rd instance of an overwrite-vs-accumulate bug shape found this session) across `BillingCommonMethods.java` and `ContractConsumptionServiceImpl.java` for every `totalCreditPayable`/`totalSelfPayable`/`creaditPayableSecondRound` assignment. Result: exactly one repeat found, in `consumeServiceFromContractPackage`'s own second-round quantity-cap branch — the direct sibling of the branch just fixed in `consumeServiceFromContract`. `consumePackageFromContract`'s equivalent second-round block was also checked and has no repeat (only the correct ternary-based patterns). `BillingCommonMethods.java` has no local running totals of its own (only receives/returns them as parameters, already correct).
+
+**FIXED, fast-tracked and applied same-day: `Global/.../billing/service/ContractConsumptionServiceImpl.java:2475-2478`, the second-round loop's quantity-tracked-cap branch (this method's own version), REASSIGNED `totalCreditPayable`/`totalSelfPayable` instead of accumulating onto them.**
+
+Before:
+```java
+creaditPayableSecondRound = rate;
+totalCreditPayable = rate;
+totalSelfPayable = 0.0;
+```
+
+After (applied):
+```java
+creaditPayableSecondRound = rate;
+totalCreditPayable = totalCreditPayable+creaditPayableSecondRound;
+totalSelfPayable = totalSelfPayable-creaditPayableSecondRound;
+```
+
+Now matches the amount-tracked-cap sibling branch immediately above it (lines 2430-2438), which already accumulated correctly. Confirmed via `ConsumeServiceFromContractPackageCharacterizationTest.SecondRoundTypeTwoQuantityCap#quantityCapBranch_accumulatesOntoRunningTotal`: round 1 (60% co-share on $300) correctly contributes $120 credit; secondRound's own $300 now accumulates onto it for $420 total (was $300 before the fix, discarding round 1's $120 entirely).
+
+**Severity (at time of finding):** identical class to its sibling — a real dollar amount vanished from the system's own running total.
+
+**Secondary, non-urgent gap in the same branch — still open, NOT fixed, same as its sibling:** no quantity-sufficiency check at all, hardcodes `1.00` as the deducted quantity. The now-passing test's own comment notes `totalSelfPayable` can go negative (180-300=-120) because of this still-open gap.
+
+**Owner instruction:** approved and applied immediately, same fast-track as the sibling fix and the pharmacy leak/balance-cap swap. No `docs/DECISION_NEEDED_*.md` was written separately for this one — the owner pre-approved applying it "same process" as the just-reviewed sibling finding, given the pattern-sweep context made the repeat's shape and fix immediately obvious.
+
+Classification: **Financial Correctness** (fixed). Owner Decision: Approved and applied.
+
+**Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 132/132 across all modules (Global 86/86 on this branch -- does not yet include the sibling fix's or batch1's tests, each held on its own separate branch per standing instruction; Billing 29/29; plus 17 pre-existing elsewhere). No local `try/catch` touched, no database column changed, no business term introduced.
