@@ -656,3 +656,21 @@ Only the else-branch (second operand) of each ternary was swapped; the already-c
 Classification: **Financial Correctness**. Owner Decision: Approved and applied, per `docs/DECISION_NEEDED_ConsumeServiceFromContractBalanceCapSwap.md`.
 
 **Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 85/85, Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. The broader targeted characterization of `consumeServiceFromContract`'s remaining risky branches (and of `consumeServiceFromContractPackage`/`consumePackageFromContract`) remains paused pending owner direction, unrelated to this fix's completion.
+
+## BR-PENDING-shadow-wave2-consumeservicefromcontract-batch2 — `consumeServiceFromContract` targeted characterization: 6 of the ~11 risky call sites covered, no further findings; remaining sites explicitly logged as skipped edge cases (2026-07-16)
+
+**Continuation of the targeted characterization work resumed this session.** Covers, with no further findings beyond what's already fixed/logged: `resDto.getType()==1` consultation routing into `calculateSelfCreditAndFinalAmount`; `resDto.getType()==2` quantity-cap-exceeded split; second-round `secondRound.getType()==1`; second-round `secondRound.getType()==2` amount-cap; second-round `secondRound.getType()==2` quantity-cap (the now-fixed credit-loss branch); and the pure self-pay / no-contract path's `taxCalculation` call (line ~1819).
+
+**Explicitly NOT covered, logged as a deliberate gap per standing instruction (targeted, not exhaustive):**
+- The `secondRound.getType()==2`, quantity-tracked-cap, GST-applicable-bed-category combination (`taxCalculation` call at line ~1081) — requires a second-round quantity cap AND a bed-charges/GST-applicable service simultaneously; judged an edge case (narrow combination of conditions) in the original branch-mapping pass.
+- The finalization path's `taxCalculation` call when `resDto.getBillingBedExist()!=null` is false and a stale `finalPrice` triggers reconciliation (line ~1332) — requires the contract's stored final price to be lower than a freshly computed rate; a "price increased since contract snapshot" edge case.
+- The fallback-tariff path (`taxCalculation` at line ~1567) — fires when a contract exists but no service-detail row from it ever resolves a nonzero credit; a data-quality edge case, not the common path.
+- The finalization path's main `taxCalculation` call at line ~1316 (`resDto.getBillingBedExist()==null` branch) — judged lower priority than the no-contract path (line 1819) since both exercise the same underlying `taxCalculation` method already characterized extensively in `BillingCommonMethods.java`'s own test suite; not re-verified at this call site specifically.
+
+None of the skipped branches were judged likely to hide a NEW defect class beyond what's already been found and fixed in this method (the swap bug and the quantity-cap credit-loss bug) — they're skipped for time/coverage-tradeoff reasons, not because they were checked and found risk-free.
+
+**Owner instruction:** characterize, log gaps clearly, do not chase every branch. Confirmed via passing test assertions (6 new tests this batch).
+
+Classification: Neither (characterization only, no code change this batch).
+
+**Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 138/138 across all modules (Global 91/91 on this branch's own lineage; does not yet include the sibling fix branches' tests, each held separately per standing instruction). No local `try/catch` touched, no database column changed, no business term introduced.

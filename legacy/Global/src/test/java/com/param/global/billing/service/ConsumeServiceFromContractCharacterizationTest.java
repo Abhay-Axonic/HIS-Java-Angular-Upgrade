@@ -2,6 +2,7 @@ package com.param.global.billing.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
@@ -406,6 +407,61 @@ class ConsumeServiceFromContractCharacterizationTest {
             // above it) would have produced.
             verify(billingCommonMethods).updatePreAuthAndServiceCapAmountForSecondContract(
                     eq(secondRound), eq(400.0), eq(0.0), eq(400.0), any(), any(), eq(consumptionDto), eq(false), eq(1.00), eq(true));
+        }
+    }
+
+    @Nested
+    @DisplayName("no contract at all (contractId==null) -- pure self-pay path, routes into taxCalculation (batch-1 finding 1/2's method)")
+    class NoContractSelfPayRouting {
+
+        @Test
+        @DisplayName("contractId==null, GST-applicable bed category -> calls taxCalculation with the unit-tariff rate")
+        void noContract_gstApplicable_callsTaxCalculation() {
+            ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
+            consumptionDto.setContractId(null);
+            consumptionDto.setVisitTypeId(1); // OP
+            consumptionDto.setServiceId(500);
+            consumptionDto.setServiceRate(500.0);
+            consumptionDto.setOrdDiscountPer(0.0);
+            consumptionDto.setChangedPrice(null);
+            consumptionDto.setServiceChargeStatus(null);
+            consumptionDto.setPatientClassPercentage(null);
+            consumptionDto.setProcedureId(null);
+            consumptionDto.setIsBOM(null);
+            consumptionDto.setIsPeriodicityService(null);
+            consumptionDto.setIsConsultationService(null);
+            consumptionDto.setConsultationAmount(null);
+            consumptionDto.setQuantity(null);
+            consumptionDto.setCurrentDate("2026-07-16 10:00:00");
+            consumptionDto.setUnitId(1);
+            consumptionDto.setBillingBedCategoryId(1);
+            consumptionDto.setTariffId(null);
+            consumptionDto.setDefaultSelfTariffId(9);
+
+            when(encounterMasterDao.getIsBedChargesService(any())).thenReturn('Y');
+            when(contractConsumptionDao.getGstApplicableForBillingBedCategory(anyInt())).thenReturn(true);
+
+            UnitServiceTariffMasterDto tariff = new UnitServiceTariffMasterDto();
+            tariff.setUnitServiceTriffId(77);
+            tariff.setRate(400.0);
+            tariff.setIsDiscount(null);
+            tariff.setIsSchemeDiscount(null);
+            when(encounterMasterService.getBasePriceByServiceTariffMaster(any(UnitServiceTariffMasterDto.class)))
+                    .thenReturn(tariff);
+
+            ContractConsumptionDto taxResult = new ContractConsumptionDto();
+            taxResult.setTaxAmt(0.0);
+            taxResult.setTaxPercentage(0.0);
+            when(billingCommonMethods.taxCalculation(eq(400.0), any(), anyDouble(), anyInt(), any(), any()))
+                    .thenReturn(taxResult);
+
+            service.consumeServiceFromContract(consumptionDto);
+
+            // Confirms routing: contractId==null skips the entire contract block and goes straight
+            // to the pure self-pay fallback, which -- since gstApplicableForBillingBedCategory=true
+            // and isBedService='Y' -- calls taxCalculation with the unit-tariff rate (400.0, since
+            // no consultationAmount/changedPrice/procedureId/periodicity override applies).
+            verify(billingCommonMethods).taxCalculation(eq(400.0), any(), anyDouble(), eq(1), any(), any());
         }
     }
 }
