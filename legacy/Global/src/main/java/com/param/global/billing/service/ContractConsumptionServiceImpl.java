@@ -2473,9 +2473,9 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 													orderDetailsPayeeMapperDtosList=new LinkedList<>();
 													
 													creaditPayableSecondRound = rate;
-													
-													totalCreditPayable = rate;
-													totalSelfPayable = 0.0;
+
+													totalCreditPayable = totalCreditPayable+creaditPayableSecondRound;
+													totalSelfPayable = totalSelfPayable-creaditPayableSecondRound;
 													
 													ContractConsumptionDto creditAndSelfAmountDto = 
 															billingCommonMethods.updatePreAuthAndServiceCapAmountForSecondContract(secondRound,creaditPayableSecondRound,totalSelfPayable,totalCreditPayable,secondRounfCoShare,preAuthAmount,consumptionDto,true,1.00,false);
