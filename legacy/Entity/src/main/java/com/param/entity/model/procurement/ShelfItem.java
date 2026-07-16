@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -22,6 +23,7 @@ import com.param.utility.TimeZoneComponent;
 @Entity(name = "ShelfItem")
 @Table(name = "t_shelf_item", schema = "procurement")
 public class ShelfItem extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

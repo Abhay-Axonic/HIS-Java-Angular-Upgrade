@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import com.param.entity.model.master.Status;
 @Entity(name = "LoanInOutDetail")
 @Table(name = "t_loan_in_out_detail", schema = "procurement")
 public class LoanInOutDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

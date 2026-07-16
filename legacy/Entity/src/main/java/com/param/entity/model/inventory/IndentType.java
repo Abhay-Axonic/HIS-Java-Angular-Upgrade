@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import com.param.entity.model.base.BaseEntity;
 @Entity(name = "IndentType")
 @Table(name = "m_indent_type", schema = "inventory")
 public class IndentType extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	@Id

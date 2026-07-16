@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,6 +25,7 @@ import com.param.utility.TimeZoneComponent;
 @Entity(name="PrescriptionFrequencyDetail")
 @Table(name="t_prescription_frequency_detail",schema="pharmacy")
 public class PrescriptionFrequencyDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

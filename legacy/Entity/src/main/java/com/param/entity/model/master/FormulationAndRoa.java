@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import com.param.entity.model.base.BaseEntity;
 @Table(name = "m_formulation_and_roa", schema = "public")
 
 public class FormulationAndRoa extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

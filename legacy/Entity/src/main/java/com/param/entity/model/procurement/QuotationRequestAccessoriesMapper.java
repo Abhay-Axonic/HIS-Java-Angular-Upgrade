@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import com.param.entity.model.base.BaseEntity;
 @Table(name="t_qr_accessories_mapper",schema="procurement")
 public class QuotationRequestAccessoriesMapper extends BaseEntity implements Serializable{
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

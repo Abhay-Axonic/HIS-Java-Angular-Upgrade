@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -13,6 +14,7 @@ import com.param.entity.model.master.TaxComponent;
 @Entity(name = "ConsignmentOutwardTaxComponent")
 @Table(name="t_consignment_outward_tax_component", schema = "procurement")
 public class ConsignmentOutwardTaxComponent extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

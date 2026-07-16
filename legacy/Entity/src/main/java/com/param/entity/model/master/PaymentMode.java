@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.param.entity.model.pharmacy.SalePaymentMode;
 @Entity(name = "PaymentMode")
 @Table(name = "m_payment_mode_master", schema = "public")
 public class PaymentMode implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

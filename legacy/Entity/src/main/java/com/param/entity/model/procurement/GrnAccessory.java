@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -17,6 +18,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="t_grn_accessories", schema = "procurement")
 public class GrnAccessory extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

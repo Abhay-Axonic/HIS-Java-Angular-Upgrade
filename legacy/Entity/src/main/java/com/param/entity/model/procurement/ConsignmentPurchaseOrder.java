@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,11 +29,11 @@ import com.param.entity.model.master.User;
 import com.param.entity.model.master.Vendor;
 
 
-	
 @Entity(name = "ConsignmentPurchaseOrder")
 @Table(name = "t_consignment_purchase_order", schema = "procurement")
 public class ConsignmentPurchaseOrder extends BaseEntity implements Serializable {
-		private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)

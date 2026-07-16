@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -70,6 +71,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "m_sms_utility_cofiguration_seq", sequenceName = "public.m_sms_utility_cofiguration_seq", allocationSize = 1)
 public class SmsUtilityConfiguration implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

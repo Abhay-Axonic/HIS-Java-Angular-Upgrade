@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 @Entity(name = "Hour")
 @Table(name = "m_hour_master", schema = "public")
 public class Hour implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

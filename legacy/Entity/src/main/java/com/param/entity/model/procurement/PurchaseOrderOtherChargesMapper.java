@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -19,7 +20,8 @@ import com.param.entity.model.master.OtherCharge;
 @Entity(name = "PurchaseOrderOtherChargesMapper")
 @Table(name = "t_other_charges_po_mapper", schema = "procurement")
 public class PurchaseOrderOtherChargesMapper extends BaseEntity implements Serializable{
-	
+
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	@Id

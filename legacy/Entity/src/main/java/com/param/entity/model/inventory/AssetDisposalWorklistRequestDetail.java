@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import com.param.entity.model.base.BaseEntity;
 @Entity
 @Table(name="t_asset_disposal_worklist_request_detail", schema = "inventory")
 public class AssetDisposalWorklistRequestDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.param.service.global.model.SaleDetailPackageMapper;
 @Entity(name = "SaleDetail")
 @Table(name = "t_sale_detail", schema = "pharmacy")
 public class SaleDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -446,7 +448,6 @@ public class SaleDetail extends BaseEntity implements Serializable {
 
 	public void setUnitDiscountAmount(Double unitDiscountAmount) {
 		this.unitDiscountAmount = unitDiscountAmount == null ? 0.00 : unitDiscountAmount;
-		;
 	}
 
 	public UomUnit getUomUnit() {

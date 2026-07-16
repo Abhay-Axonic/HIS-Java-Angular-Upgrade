@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -27,6 +28,7 @@ import com.param.global.common.InstantConverter;
 @Entity(name="DrugAdministrationDetail")
 @Table(name="t_drug_administration_detail",schema="pharmacy")
 public class DrugAdministrationDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

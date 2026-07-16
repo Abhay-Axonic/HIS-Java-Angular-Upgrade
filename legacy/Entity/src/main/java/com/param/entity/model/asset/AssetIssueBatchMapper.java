@@ -1,5 +1,6 @@
 package com.param.entity.model.asset;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ import com.param.entity.model.master.User;
 @Table(name = "t_asset_issue_batch_mapper", schema = "assets")
 public class AssetIssueBatchMapper extends BaseEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -194,8 +196,6 @@ public class AssetIssueBatchMapper extends BaseEntity implements Serializable {
 
 		this.assetIssueAccessories.add(assetIssueAccessory);
 		assetIssueAccessory.setAssetIssueBatchMapper(this);
-		;
-
 		return assetIssueAccessory;
 	}
 

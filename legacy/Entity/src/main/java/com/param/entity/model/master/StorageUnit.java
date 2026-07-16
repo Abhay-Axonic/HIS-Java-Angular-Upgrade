@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import com.param.entity.model.base.BaseEntity;
 @Entity(name = "StorageUnit")
 @Table(name = "m_storage_unit", schema = "public")
 public class StorageUnit extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

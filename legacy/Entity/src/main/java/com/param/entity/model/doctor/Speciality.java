@@ -1,5 +1,6 @@
 package com.param.entity.model.doctor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity(name="Speciality")
 @Table(name="m_speciality_master", schema="doctor")
 public class Speciality implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

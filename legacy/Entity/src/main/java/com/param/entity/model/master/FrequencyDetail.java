@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -30,6 +31,7 @@ import com.param.global.common.InstantConverter;
 @Table(name = "m_frequency_detail")
 @NamedQuery(name = "FrequencyDetail.findAll", query = "SELECT f FROM FrequencyDetail f")
 public class FrequencyDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

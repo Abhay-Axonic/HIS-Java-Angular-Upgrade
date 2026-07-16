@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import com.param.entity.model.master.User;
 @Entity(name="Reject")
 @Table(name="t_reject",schema="pharmacy")
 public class Reject extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

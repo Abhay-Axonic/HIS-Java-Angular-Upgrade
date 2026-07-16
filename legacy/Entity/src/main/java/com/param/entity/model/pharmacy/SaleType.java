@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import com.param.entity.model.base.BaseEntity;
 @Entity(name = "SaleType")
 @Table(name = "m_sale_type", schema = "pharmacy")
 public class SaleType extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

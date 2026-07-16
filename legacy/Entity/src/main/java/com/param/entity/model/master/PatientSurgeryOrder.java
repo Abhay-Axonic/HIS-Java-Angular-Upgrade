@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 @Entity(name = "PatientSurgeryOrders")
 @Table(name = "t_patient_surgery_order", schema = "public")
 public class PatientSurgeryOrder implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

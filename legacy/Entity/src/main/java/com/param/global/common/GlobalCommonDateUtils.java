@@ -71,11 +71,11 @@ public class GlobalCommonDateUtils {
     private static final SecureRandom RANDOM = new SecureRandom();
     
     public static double getAmount(Double amount) {
-    	return new Double(df2.format(Math.abs(amount==null?0:amount))).doubleValue();
+    	return Double.valueOf(df2.format(Math.abs(amount == null ? 0 : amount))).doubleValue();
     }
     
     public static double getAmountCap(Double amount) {
-    	return new Double(df2.format(amount==null?0:amount)).doubleValue();
+    	return Double.valueOf(df2.format(amount == null ? 0 : amount)).doubleValue();
     }
     
     

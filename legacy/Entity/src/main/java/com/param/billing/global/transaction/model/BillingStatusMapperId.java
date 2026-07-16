@@ -1,5 +1,6 @@
 package com.param.billing.global.transaction.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -7,6 +8,7 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class BillingStatusMapperId implements Serializable{
+	@Serial
 	private static final long serialVersionUID = 3575646305183668472L;
 	
 	@Column(name = "bill_id")

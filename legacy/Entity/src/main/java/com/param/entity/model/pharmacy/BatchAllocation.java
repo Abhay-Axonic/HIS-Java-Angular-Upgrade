@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
@@ -19,6 +20,7 @@ import com.param.entity.model.master.Store;
 @Entity(name="BatchAllocation")
 @Table(name="t_batch_allocation", schema="pharmacy")
 public class BatchAllocation extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

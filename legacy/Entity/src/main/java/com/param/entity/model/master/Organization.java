@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity(name = "Organization")
 @Table(name = "m_organization_master", schema = "public")
 public class Organization implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

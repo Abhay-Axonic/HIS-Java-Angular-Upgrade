@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,6 +22,7 @@ import com.param.entity.model.master.User;
 @Entity(name = "com.param.entity.model.inventory.WasteAssetDisposalWorklistDetail")
 @Table(name = "t_waste_asset_disposal_worklist_detail", schema = "inventory")
 public class WasteAssetDisposalWorklistDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

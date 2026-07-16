@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity(name="Frequency")
 @Table(name="m_frequency",schema="public")
 public class Frequency extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

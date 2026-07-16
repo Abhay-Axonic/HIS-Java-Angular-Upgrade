@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import com.param.entity.model.base.BaseEntity;
 @Entity(name = "GenralInsurance")
 @Table(name = "m_general_insurance_company", schema = "public")
 public class GeneralInsurance extends BaseEntity implements Serializable{
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 

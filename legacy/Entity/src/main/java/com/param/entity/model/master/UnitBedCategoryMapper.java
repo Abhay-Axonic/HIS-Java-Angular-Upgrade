@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -18,6 +19,7 @@ import com.param.global.model.BedCategoryMaster;
 @Entity(name = "UnitBedCategoryMappers")
 @Table(name = "t_unit_bed_category_mapper", schema = "public")
 public class UnitBedCategoryMapper implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

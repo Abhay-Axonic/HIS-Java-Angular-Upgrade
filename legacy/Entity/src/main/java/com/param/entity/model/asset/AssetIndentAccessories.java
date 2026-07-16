@@ -1,5 +1,6 @@
 package com.param.entity.model.asset;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import com.param.entity.model.master.RejectReason;
 @Table(name = "t_asset_indent_accessories", schema = "assets")
 public class AssetIndentAccessories extends BaseEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

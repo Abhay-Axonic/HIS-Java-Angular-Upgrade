@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import com.param.entity.model.procurement.ConsignmentOutwardDetail;
 @Entity(name = "BatchUomMapper")
 @Table(name = "t_batch_uom_mapper", schema = "inventory")
 public class BatchUomMapper extends UomEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY)

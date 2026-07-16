@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -27,6 +28,7 @@ import com.param.entity.model.base.BaseEntity;
 @Entity(name = "UserStoreMapper")
 @Table(name = "m_user_store_mapper", schema = "public")
 public class UserStoreMapper extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

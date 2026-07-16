@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 @Entity(name = "ContactType")
 @Table(name = "m_contact_type_master", schema = "public")
 public class ContactType implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

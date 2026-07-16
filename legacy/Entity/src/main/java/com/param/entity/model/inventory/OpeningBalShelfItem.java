@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -21,6 +22,7 @@ import com.param.utility.TimeZoneComponent;
 @Entity(name = "OpeningBalShelfItem")
 @Table(name = "t_opening_bal_shelf_item", schema = "inventory")
 public class OpeningBalShelfItem extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import com.param.entity.model.master.UomUnit;
 @Table(name = "t_material_picker_batch_mapper", schema = "inventory")
 public class MaterialPickerBatchMapper extends BaseEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

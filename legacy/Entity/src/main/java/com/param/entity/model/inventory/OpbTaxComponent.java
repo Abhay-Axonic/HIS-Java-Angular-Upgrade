@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import com.param.entity.model.master.TaxComponent;
 @Entity(name = "OpbTaxComponent")
 @Table(name = "t_opb_tax_component", schema = "inventory")
 public class OpbTaxComponent extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

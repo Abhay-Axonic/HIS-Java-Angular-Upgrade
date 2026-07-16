@@ -1,5 +1,6 @@
 package com.param.entity.model.asset;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +31,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Table(name = "t_asset_issue", schema = "assets")
 public class AssetIssue extends BaseEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

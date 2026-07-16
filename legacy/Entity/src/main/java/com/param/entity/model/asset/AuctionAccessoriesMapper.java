@@ -1,5 +1,6 @@
 package com.param.entity.model.asset;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import com.param.entity.model.master.Status;
 @Entity(name = "AuctionAccessoriesMapper")
 @Table(name = "t_auction_accessories_mapper", schema = "assets")
 public class AuctionAccessoriesMapper extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

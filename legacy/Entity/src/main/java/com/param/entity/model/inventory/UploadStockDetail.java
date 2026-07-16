@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,6 +23,7 @@ import com.param.entity.model.master.User;
 @Entity(name = "UploadStockDetail")
 @Table(name = "t_upload_stock_detail", schema = "inventory")
 public class UploadStockDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

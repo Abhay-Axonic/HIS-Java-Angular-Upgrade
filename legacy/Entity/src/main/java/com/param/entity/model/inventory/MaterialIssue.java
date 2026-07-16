@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.param.entity.model.master.User;
 @Entity(name = "MaterialIssue")
 @Table(name = "t_material_issue", schema = "inventory")
 public class MaterialIssue extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

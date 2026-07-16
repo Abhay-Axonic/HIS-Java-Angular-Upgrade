@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import com.param.entity.model.patient.PatientRegistration;
 @Entity(name="ReturnBillableConsumption")
 @Table(name="t_return_billable_consumption",schema="pharmacy")
 public class ReturnBillableConsumption extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

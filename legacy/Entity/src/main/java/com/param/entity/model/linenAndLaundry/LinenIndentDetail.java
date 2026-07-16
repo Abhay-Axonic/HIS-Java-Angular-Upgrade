@@ -1,5 +1,6 @@
 package com.param.entity.model.linenAndLaundry;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import com.param.entity.model.master.Status;
 @Entity(name = "LinenIndentDetail")
 @Table(name = "t_linen_indent_detail", schema = "linen_and_laundry")
 public class LinenIndentDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	@Id

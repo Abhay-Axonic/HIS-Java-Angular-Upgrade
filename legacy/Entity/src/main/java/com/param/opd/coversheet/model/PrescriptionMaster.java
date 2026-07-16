@@ -1,5 +1,6 @@
 package com.param.opd.coversheet.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
+
 @NamedNativeQuery(name="GET_COUNT_OF_MEDICATIONS_BY_PRESCIPTION_ID",
 query="select count(prescription_id) as \"prescriptionCount\" from pharmacy.t_prescription_detail "
 		+ " where prescription_id=:prescriptionId "
@@ -19,6 +21,7 @@ query="select count(prescription_id) as \"prescriptionCount\" from pharmacy.t_pr
 @Table(name="t_prescription",schema="pharmacy")
 public class PrescriptionMaster implements Serializable{
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	@Id

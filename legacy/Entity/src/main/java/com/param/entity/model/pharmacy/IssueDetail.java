@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.param.entity.model.procurement.ImplantIndentDetail;
 @Entity(name = "IssueDetail")
 @Table(name = "t_issue_detail", schema = "pharmacy")
 public class IssueDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

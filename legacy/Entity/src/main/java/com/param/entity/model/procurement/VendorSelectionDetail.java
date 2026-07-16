@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name="t_vendor_selection_detail", schema = "procurement")
 public class VendorSelectionDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

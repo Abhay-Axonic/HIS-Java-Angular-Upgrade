@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import com.param.entity.model.master.UomUnit;
 @Entity(name = "CrashCartBatchMapper")
 @Table(name = "t_crash_cart_batch_mapper", schema = "pharmacy" )
 public class CrashCartBatchMapper extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

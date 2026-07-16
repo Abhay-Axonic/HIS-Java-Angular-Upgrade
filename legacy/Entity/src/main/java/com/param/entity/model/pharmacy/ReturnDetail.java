@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.param.entity.model.base.BaseEntity;
 @Entity(name = "ReturnDetail")
 @Table(name = "t_return_detail", schema = "pharmacy")
 public class ReturnDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -148,8 +150,6 @@ public class ReturnDetail extends BaseEntity implements Serializable {
 
 		this.saleReturnDetailTaxComponenets.add(saleReturnDetailTaxComponenet);
 		saleReturnDetailTaxComponenet.setReturnDetail(this);
-		;
-
 		return saleReturnDetailTaxComponenet;
 	}
 	

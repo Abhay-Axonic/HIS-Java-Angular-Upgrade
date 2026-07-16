@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +34,7 @@ import com.param.utility.TimeZoneComponent;
 @Entity(name = "Batch")
 @Table(name = "t_batch", schema = "inventory")
 public class Batch extends BaseEntity implements Serializable,ICommonConstants,Cloneable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	public Object clone() throws CloneNotSupportedException {

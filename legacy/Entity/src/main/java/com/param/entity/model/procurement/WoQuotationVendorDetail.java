@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import com.param.entity.model.master.Status;
 @Entity
 @Table(name = "t_wo_quotation_send_to_vendor_detail", schema = "procurement")
 public class WoQuotationVendorDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

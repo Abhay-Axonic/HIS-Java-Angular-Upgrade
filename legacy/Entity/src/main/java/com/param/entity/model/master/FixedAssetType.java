@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import com.param.entity.model.base.BaseEntity;
 @Table(name = "m_fixed_asset_type")
 //@NamedQuery(name = "FixedAssetType.findAll", query = "SELECT m FROM FixedAssetType m")
 public class FixedAssetType extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

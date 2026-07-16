@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import com.param.entity.model.master.Status;
 @Entity(name = "PhysicalInspectionDetail")
 @Table(name = "t_physical_inspection_detail", schema = "procurement")
 public class PhysicalInspectionDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

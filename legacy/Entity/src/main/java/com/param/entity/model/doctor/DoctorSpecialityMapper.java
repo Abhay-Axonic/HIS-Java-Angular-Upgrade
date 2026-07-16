@@ -1,5 +1,6 @@
 package com.param.entity.model.doctor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -7,6 +8,7 @@ import java.sql.Timestamp;
 @Entity(name="DoctorSpeciality")
 @Table(name="t_doctor_speciality_mapper", schema="doctor")
 public class DoctorSpecialityMapper implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

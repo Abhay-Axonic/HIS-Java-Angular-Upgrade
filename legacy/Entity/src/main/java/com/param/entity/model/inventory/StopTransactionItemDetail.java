@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ import com.param.entity.model.master.UomUnit;
 @Entity
 @Table(name = "t_stop_transaction_item_detail", schema = "inventory")
 public class StopTransactionItemDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

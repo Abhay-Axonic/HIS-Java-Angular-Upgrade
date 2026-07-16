@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -32,6 +33,7 @@ public class BillableConsumptionDetail extends BaseEntity implements Serializabl
 		this.saleDetail = saleDetail;
 	}
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id
