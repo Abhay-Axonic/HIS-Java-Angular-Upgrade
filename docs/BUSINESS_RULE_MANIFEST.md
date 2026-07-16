@@ -800,3 +800,19 @@ creaditPayable=resDto.getCoShare()!=null && resDto.getCoShare()>0 ? creaditPayab
 Classification: **Financial Correctness** (fixed). Owner Decision: Approved and applied.
 
 **Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 132/132 across all modules (Global 86/86 on this branch -- does not yet include the sibling fixes' or batch tests, each held on its own separate branch per standing instruction; Billing 29/29; plus 17 pre-existing elsewhere). No local `try/catch` touched, no database column changed, no business term introduced.
+
+## BR-PENDING-shadow-wave2-consumepackagefromcontract-batch1 — `consumePackageFromContract` swept and characterized: no findings, structurally simpler than its two sibling giant methods (2026-07-16)
+
+**Third and final giant method in `ContractConsumptionServiceImpl.java`.** An agent-assisted sweep of this entire ~445-line method (`public Response consumePackageFromContract(ServiceSearchResDto searchResDto)`) for both bug shapes found this session — reassign-vs-accumulate running totals, and duplicate/stale-variable formula pairs — found **no instances of either**.
+
+Structurally, this method is simpler than its two siblings: it has **only `type==1` (flat contract-rate) logic** in both round 1 and round 2 — no `type==2`/days-or-quantity-cap branches at all, and (notably) **no coShare adjustment step** on its cap-defined credit/self split, unlike the near-identical branch in `consumeServiceFromContractPackage` that was found leaking money this session (`BR-FIXED-shadow-wave2-consumeservicefromcontractpackage-coshare-leak`). Only 2 risky-method call sites exist in the whole method: `updatePreAuthAndServiceCapAmountForFirstPriorityContract` (line ~2904) and `updatePreAuthAndServiceCapAmountForSecondContract` (line ~3009), both in cap-defined branches whose credit/self split ternaries were traced and confirmed correct, matching the already-proven-correct pattern used elsewhere in this class (`selfPayable` gets the overage, `creaditPayable` gets the cap amount — the correct direction).
+
+Direct test coverage added for the round-1 cap-defined branch (`Round1CapDefinedSplit#capExceeded_creditGetsCapAmount_selfGetsOverage`), confirming `creaditPayable=$800`/`selfPayable=$200` for a `$1000`/`$800`-cap example. The round-2 equivalent branch was swept and confirmed correct but not given its own dedicated test, given zero risk identified and the sweep's confirmation this method has no coShare step to leak money through.
+
+**This closes out the giant-method targeted characterization pass across all three methods in `ContractConsumptionServiceImpl.java`** (`consumeServiceFromContract`, `consumeServiceFromContractPackage`, `consumePackageFromContract`) for this session, per the owner's "when you judge diminishing returns, stop" instruction — this method showed the lowest risk of the three (no defects found, simplest structure) and further exhaustive branch-by-branch testing here was judged lower value than the work already completed.
+
+**Owner instruction:** characterize, log findings (none here) clearly. Confirmed via a passing test assertion.
+
+Classification: Neither (characterization only, no code change, no findings).
+
+**Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 132/132 across all modules (Global 86/86 on this branch's own lineage; does not yet include the sibling fix/characterization branches' tests, each held separately per standing instruction). No local `try/catch` touched, no database column changed, no business term introduced.
