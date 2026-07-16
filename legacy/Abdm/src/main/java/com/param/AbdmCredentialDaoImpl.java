@@ -9232,13 +9232,13 @@ public class AbdmCredentialDaoImpl extends GenericDao<AbdmCredential, Integer>
 				listForTableType25.sort(Comparator.comparing(DischargeSummaryTabularTemplateData::getRowId));
 
 				int count = (listForTableType5 != null && listForTableType5.size() > 0)
-						? (listForTableType5.size() / listForTableType5.get(0).getNumberOfCoulmn()) : 0;
+						? (listForTableType5.size() / listForTableType5.getFirst().getNumberOfCoulmn()) : 0;
 				int count6 = (listForTableType6 != null && listForTableType6.size() > 0)
-						? (listForTableType6.size() / listForTableType6.get(0).getNumberOfCoulmn()) : 0;
+						? (listForTableType6.size() / listForTableType6.getFirst().getNumberOfCoulmn()) : 0;
 				int count10 = (listForTableType10 != null && listForTableType10.size() > 0)
-						? (listForTableType10.size() / listForTableType10.get(0).getNumberOfCoulmn()) : 0;
+						? (listForTableType10.size() / listForTableType10.getFirst().getNumberOfCoulmn()) : 0;
 				int count25 = (listForTableType25 != null && listForTableType25.size() > 0)
-						? (listForTableType25.size() / listForTableType25.get(0).getNumberOfCoulmn()) : 0;
+						? (listForTableType25.size() / listForTableType25.getFirst().getNumberOfCoulmn()) : 0;
 
 				List<InvestigationOrderMasterNewDto> listlabOrder = new ArrayList<>();
 				for (int i = 0; i < count10; i++) {
@@ -16992,16 +16992,21 @@ public class AbdmCredentialDaoImpl extends GenericDao<AbdmCredential, Integer>
 
 			JSONObject text1 = new JSONObject();
 			text1.put("status", "generated");
-			text1.put("div", "<div xmlns=\"http://www.w3.org/1999/xhtml\"><h4>Narrative with Details</h4>\n"
-					+ "      <p><b>id:</b> 1</p>\n" + "      <p><b>status:</b> final</p>\n"
-					+ "      <p><b>category:</b> Computerized tomography service (Details : {http://snomed.info/sct} code '310128004' = 'Computerized tomography service')</p>\n"
-					+ "      <p><b>subject:</b> ABC. Generated Summary: id: 1; Medical Record Number = 1234 (System : {https://healthid.ndhm.gov.in/}); active; ABC ; ph: +919818512600(HOME); gender: male; birthDate: 1981-01-12</p>\n"
-					+ "      <p><b>issued:</b> 2020-07-09</p>\n" + "      <p><b>performer:</b> XYZ Lab Pvt.Ltd.</p>\n"
-					+ "      <p><b>resultInterpreter:</b> Dr. DEF. Generated Summary: id: 1; Medical License number = 7601003178999 (System : {doctor.ndhm.gov.in})</p>\n"
-					+ "      <h3>Diagnostic Report for ABC issued 9-July 2020 14:26</h3>\n" + "      <pre>\n"
-					+ "code: CT of head-neck\n" + "Imaging Study: HEAD and NECK CT DICOM imaging study\n"
-					+ "Conclusion: CT brains: large tumor sphenoid/clivus. </pre>\n"
-					+ "      <p>XYZ Lab Pvt.Ltd., Inc signed: Dr. DEF Radiologist</p></div>");
+			text1.put("div", """
+					<div xmlns="http://www.w3.org/1999/xhtml"><h4>Narrative with Details</h4>
+					      <p><b>id:</b> 1</p>
+					      <p><b>status:</b> final</p>
+					      <p><b>category:</b> Computerized tomography service (Details : {http://snomed.info/sct} code '310128004' = 'Computerized tomography service')</p>
+					      <p><b>subject:</b> ABC. Generated Summary: id: 1; Medical Record Number = 1234 (System : {https://healthid.ndhm.gov.in/}); active; ABC ; ph: +919818512600(HOME); gender: male; birthDate: 1981-01-12</p>
+					      <p><b>issued:</b> 2020-07-09</p>
+					      <p><b>performer:</b> XYZ Lab Pvt.Ltd.</p>
+					      <p><b>resultInterpreter:</b> Dr. DEF. Generated Summary: id: 1; Medical License number = 7601003178999 (System : {doctor.ndhm.gov.in})</p>
+					      <h3>Diagnostic Report for ABC issued 9-July 2020 14:26</h3>
+					      <pre>
+					code: CT of head-neck
+					Imaging Study: HEAD and NECK CT DICOM imaging study
+					Conclusion: CT brains: large tumor sphenoid/clivus. </pre>
+					      <p>XYZ Lab Pvt.Ltd., Inc signed: Dr. DEF Radiologist</p></div>""");
 			resource1.put("text", text1);
 
 			JSONObject compositionIdentifier = new JSONObject();
@@ -17271,10 +17276,15 @@ public class AbdmCredentialDaoImpl extends GenericDao<AbdmCredential, Integer>
 				JSONObject text5 = new JSONObject();
 				text5.put("status", "generated");
 				text5.put("div",
-						"<div xml:lang=\"en-IN\" xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en-IN\">\n"
-								+ "<h3>Diagnostic Report for ABC issued 9-July 2020 14:26</h3>\n"
-								+ "<pre>\ncode: CT of head-neck\nImaging Study: HEAD and NECK CT DICOM imaging study\nConclusion: CT brains: large tumor sphenoid/clivus. </pre>\n"
-								+ "<p>XYZ Lab Pvt.Ltd., Inc signed: Dr. DEF Radiologist</p>\n</div>");
+						"""
+						<div xml:lang="en-IN" xmlns="http://www.w3.org/1999/xhtml" lang="en-IN">
+						<h3>Diagnostic Report for ABC issued 9-July 2020 14:26</h3>
+						<pre>
+						code: CT of head-neck
+						Imaging Study: HEAD and NECK CT DICOM imaging study
+						Conclusion: CT brains: large tumor sphenoid/clivus. </pre>
+						<p>XYZ Lab Pvt.Ltd., Inc signed: Dr. DEF Radiologist</p>
+						</div>""");
 				resource5.put("text", text5);
 
 				JSONArray identifierArray5 = new JSONArray();
