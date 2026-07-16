@@ -72,9 +72,9 @@ public class TemplateDiagnosisMapperDaoImpl extends GenericDao<TemplateDiagnosis
 		Integer result = sessionFactory.getCurrentSession()
 				.getNamedQuery("UPDATE_TEMPLATE_DIGNOSIS_MAPPER")
 				.setParameter("isDeleted", 'Y')
-				.setParameter("organisationId", listTemplateDiagnosisMapperDto.get(0).getOrganisationId())
-				.setParameter("unitId", listTemplateDiagnosisMapperDto.get(0).getUnitId())
-				.setParameter("templateId", listTemplateDiagnosisMapperDto.get(0).getPrevTemplateId())
+				.setParameter("organisationId", listTemplateDiagnosisMapperDto.getFirst().getOrganisationId())
+				.setParameter("unitId", listTemplateDiagnosisMapperDto.getFirst().getUnitId())
+				.setParameter("templateId", listTemplateDiagnosisMapperDto.getFirst().getPrevTemplateId())
 				.executeUpdate();
 		if (result > 0) {
 			for (Iterator iterator = listTemplateDiagnosisMapperDto.iterator(); iterator.hasNext();) {

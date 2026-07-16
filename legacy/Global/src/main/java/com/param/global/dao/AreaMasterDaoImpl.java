@@ -61,7 +61,6 @@ public class AreaMasterDaoImpl extends GenericDao<AreaMaster, Integer> implement
 		} catch (Exception e) {
 		logger.error("getAreaByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -97,7 +96,6 @@ public class AreaMasterDaoImpl extends GenericDao<AreaMaster, Integer> implement
 		} catch (Exception e) {
 		logger.error("getAreaMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -121,7 +119,6 @@ public class AreaMasterDaoImpl extends GenericDao<AreaMaster, Integer> implement
 		} catch (Exception e) {
 		logger.error("getAreaByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -139,7 +136,6 @@ public class AreaMasterDaoImpl extends GenericDao<AreaMaster, Integer> implement
 		} catch (Exception e) {
 		logger.error("getAreaById failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -157,7 +153,6 @@ public class AreaMasterDaoImpl extends GenericDao<AreaMaster, Integer> implement
 		} catch (Exception e) {
 		logger.error("getActiveAreaList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -176,7 +171,6 @@ public class AreaMasterDaoImpl extends GenericDao<AreaMaster, Integer> implement
 		} catch (Exception e) {
 		logger.error("getActiveCityListByDistrictId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -199,7 +193,6 @@ public class AreaMasterDaoImpl extends GenericDao<AreaMaster, Integer> implement
 		logger.error("updateAreaStatus failed", e);
 			return new Response<AreaMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -229,7 +222,6 @@ public class AreaMasterDaoImpl extends GenericDao<AreaMaster, Integer> implement
 		logger.error("updateAreaMaster failed", e);
 			return new Response<AreaMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -273,12 +265,12 @@ public class AreaMasterDaoImpl extends GenericDao<AreaMaster, Integer> implement
 			
 			if(areaMastersList!=null && areaMastersList.size()>0)
 			{
-					dto.setCountryId(areaMastersList.get(0).getCountryId());
-					dto.setStateId(areaMastersList.get(0).getStateId());
-					dto.setDistrictId(areaMastersList.get(0).getDistrictId());
-					dto.setCityId(areaMastersList.get(0).getCityId());
-					dto.setAreaId(areaMastersList.get(0).getAreaId());
-					dto.setPostCode(areaMastersList.get(0).getPostCode());
+					dto.setCountryId(areaMastersList.getFirst().getCountryId());
+					dto.setStateId(areaMastersList.getFirst().getStateId());
+					dto.setDistrictId(areaMastersList.getFirst().getDistrictId());
+					dto.setCityId(areaMastersList.getFirst().getCityId());
+					dto.setAreaId(areaMastersList.getFirst().getAreaId());
+					dto.setPostCode(areaMastersList.getFirst().getPostCode());
 				return new Response(SUCCESS, null, null, null, dto);
 			}else{
 				return new Response(ERROR, null, null, null, null);

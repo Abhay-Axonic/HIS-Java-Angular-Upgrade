@@ -318,7 +318,7 @@ return null;
                                 "  to_char(user_mst.otp_expiry_date,'YYYY-MM-dd HH:MI:SS')  AS \"otpExpiratyDate\"" +
                                 "  ,otp_time_stamp as \"otpTimeStamp\",otp_count as \"otpCount\", blocked as \"blocked\" from public.m_user_master user_mst where user_id = :userId")
 //					.setInteger("userId", userMasterDto.getUserId())
-                        .setParameter("userId", userIds.get(0))
+                        .setParameter("userId", userIds.getFirst())
                         .setResultTransformer(Transformers.aliasToBean(UserMasterDto.class)).uniqueResult();
 
                 boolean isUserBlocked= checkOtpValidity(userDto,false);
@@ -390,7 +390,7 @@ return new Response(ERROR, null, null, null, null);
                                 "  to_char(user_mst.otp_expiry_date,'YYYY-MM-dd HH:MI:SS')  AS \"otpExpiratyDate\"" +
                                 "  ,otp_time_stamp as \"otpTimeStamp\",otp_count as \"otpCount\",blocked as \"blocked\" from public.m_user_master user_mst where user_id = :userId")
 //					.setInteger("userId", userMasterDto.getUserId())
-                        .setParameter("userId", userIds.get(0))
+                        .setParameter("userId", userIds.getFirst())
 
                         .setResultTransformer(Transformers.aliasToBean(UserMasterDto.class)).uniqueResult();
 
@@ -408,7 +408,7 @@ return new Response(ERROR, null, null, null, null);
                             .setParameterList("userIDS", userIds)
                             .setTimestamp("otpCurrentTimeStamp", userMasterDto.getOtpTimeStamp())
                             .executeUpdate();
-                    return new Response(SUCCESS, userIds.get(0) + "", OTP_VERIFIED, null, true);
+                    return new Response(SUCCESS, userIds.getFirst() + "", OTP_VERIFIED, null, true);
                     //}
                     //return new Response(OTP_EXPIRED, null, null, null,false);
                 }else{
@@ -1874,12 +1874,12 @@ return new Response(ERROR, ERROR_CODE, null, null, null);
             if (value == null) {
                 return 0.0;
             }
-            if (value instanceof Integer) {
-                return ((Integer) value).doubleValue();
-            } else if (value instanceof Float) {
-                return ((Float) value).doubleValue();
-            } else if (value instanceof Double) {
-                return (Double) value;
+            if (value instanceof Integer integer) {
+                return integer.doubleValue();
+            } else if (value instanceof Float float1) {
+                return float1.doubleValue();
+            } else if (value instanceof Double double1) {
+                return double1;
             } else {
                 return 0.0;
             }

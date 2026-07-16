@@ -74,7 +74,7 @@ public class PrivilegeDaoImpl implements IPrivilegeDao {
 	@Override
 	public Privilege getPrivilegeById(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
-		Privilege privilege = (Privilege) session.get(Privilege.class, new Integer(id));
+		Privilege privilege = (Privilege) session.get(Privilege.class, Integer.valueOf(id));
 		return privilege;
 	}
 	
@@ -95,7 +95,7 @@ public class PrivilegeDaoImpl implements IPrivilegeDao {
 	@Override
 	public void removePrivilege(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
-		Privilege p = (Privilege) session.load(Privilege.class, new Integer(id));
+		Privilege p = (Privilege) session.load(Privilege.class, Integer.valueOf(id));
 		if (null != p) {
 			session.delete(p);
 		}

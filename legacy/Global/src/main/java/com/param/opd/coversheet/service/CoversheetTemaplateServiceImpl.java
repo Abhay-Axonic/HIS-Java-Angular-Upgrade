@@ -1807,7 +1807,7 @@ public class CoversheetTemaplateServiceImpl implements ICoversheetTemaplateServi
 										orderMasterDto.setListOrderDetailsMasterDto(orderDetailsList);
 										   
 										 orderRes = iOrderMasterService.saveOrderMaster(orderMasterDto);
-										 labOrderId = (Integer) orderRes.getListObject().get(0);
+										 labOrderId = (Integer) orderRes.getListObject().getFirst();
 								
 					
 						
@@ -1887,7 +1887,7 @@ public class CoversheetTemaplateServiceImpl implements ICoversheetTemaplateServi
 					&& resDto.getListPrescriptionData().size() > 0) {
 
 				PrescriptionDto prescriptionDtoSave = new PrescriptionDto();
-				MedicationDTO medicationDTO = resDto.getListPrescriptionData().get(0);
+				MedicationDTO medicationDTO = resDto.getListPrescriptionData().getFirst();
 //				for (MedicationDTO medicationDTO : list) {
 
 					prescriptionDtoSave.setIsIntervention(FALSE);
@@ -2574,7 +2574,7 @@ public class CoversheetTemaplateServiceImpl implements ICoversheetTemaplateServi
 										orderMasterDto.setListOrderDetailsMasterDto(orderDetailsList);
 										   
 										 orderRes = iOrderMasterService.saveOrderMaster(orderMasterDto);
-										 labOrderId = (Integer) orderRes.getListObject().get(0);
+										 labOrderId = (Integer) orderRes.getListObject().getFirst();
 								
 					
 						
@@ -2673,7 +2673,7 @@ public class CoversheetTemaplateServiceImpl implements ICoversheetTemaplateServi
 				else {
 						list = coversheetTemplateMasterDto.getListPrescriptionData();
 					}
-                MedicationDTO medicationDTO = list.get(0);
+                MedicationDTO medicationDTO = list.getFirst();
 //				for (MedicationDTO medicationDTO : list) {
 
 						prescriptionDtoSave.setIsIntervention(FALSE);
@@ -2846,9 +2846,9 @@ public class CoversheetTemaplateServiceImpl implements ICoversheetTemaplateServi
 						CoversheetTemplateMasterDto resDto = (CoversheetTemplateMasterDto) res.getObject();
 						if (resDto.getListPrescriptionData() != null
 								&& resDto.getListPrescriptionData().size() > 0) {
-							 medicationDTO = resDto.getListPrescriptionData().get(0);
+							 medicationDTO = resDto.getListPrescriptionData().getFirst();
 	                }else {
-						 medicationDTO = coversheetTemplateMasterDto.getListPrescriptionData().get(0);
+						 medicationDTO = coversheetTemplateMasterDto.getListPrescriptionData().getFirst();
 	                }
 //				for (MedicationDTO medicationDTO : list) {
 

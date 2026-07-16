@@ -234,7 +234,7 @@ public class AmbulanceChargesServiceImpl implements IAmbulanceChargesService, IC
 						if(order.getListObject() != null && order.getListObject().size()>0) {
 							 orderDetailsIdsList.addAll(order.getListObject());
 						}
-						ambulanceChargesDto.setOrderDetailsId(orderDetailsIdsList.get(0));
+						ambulanceChargesDto.setOrderDetailsId(orderDetailsIdsList.getFirst());
 						return iAmbulanceChargesDao.saveAmbulanceCharges(ambulanceChargesDto);
 
 		} catch (Exception e) {

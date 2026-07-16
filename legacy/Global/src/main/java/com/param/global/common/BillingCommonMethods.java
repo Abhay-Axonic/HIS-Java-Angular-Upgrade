@@ -98,28 +98,28 @@ public class BillingCommonMethods<T> {
 
         resDto.setTaxAmt(taxAmt);
         resDto.setFinalPrice(((serviceAmount1 * qty) - (Math.abs(concession + discountAmt))) + taxAmt);
-        resDto.setFinalPrice(new Double(OrderMasterServiceImpl.df2.format(resDto.getFinalPrice())));
+        resDto.setFinalPrice(Double.valueOf(OrderMasterServiceImpl.df2.format(resDto.getFinalPrice())));
         resDto.setServiceRate(serviceAmount1);
         serviceAmount1 = (serviceAmount1 * qty) + taxAmt;
         if (checkConsultaionService) {
 
             if (resDto.getIsTariffRateApplicable() == 'Y') {
                 resDto.setSelfPayable(resDto.getFinalPrice() * ((resDto.getCoShare() != null ? resDto.getCoShare() : 0.00) * 0.01));
-                resDto.setSelfPayable(new Double(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
+                resDto.setSelfPayable(Double.valueOf(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
                 resDto.setCreaditPayable(resDto.getFinalPrice() - resDto.getSelfPayable());
 
             } else {
 
                 rate = resDto.getFinalPrice();
                 resDto.setSelfPayable(rate >= contractRate ? (resDto.getSelfPayable() + (rate - contractRate)) : (resDto.getCreaditPayable() >= rate ? 0.00 : (contractRate - rate)));
-                resDto.setSelfPayable(new Double(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
+                resDto.setSelfPayable(Double.valueOf(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
                 resDto.setCreaditPayable(rate >= contractRate ? resDto.getCreaditPayable() : (resDto.getCreaditPayable() >= rate ? rate : resDto.getCreaditPayable()));
             }
 
         } else {
 
             resDto.setSelfPayable(resDto.getFinalPrice() * ((resDto.getCoShare() != null ? resDto.getCoShare() : 0.00) * 0.01));
-            resDto.setSelfPayable(new Double(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
+            resDto.setSelfPayable(Double.valueOf(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
             resDto.setCreaditPayable(resDto.getFinalPrice() - resDto.getSelfPayable());
         }
 
@@ -824,8 +824,7 @@ public class BillingCommonMethods<T> {
         oDPmpprDto.setRate(unitNetAmountDto);
         oDPmpprDto.setPackageConsumptionMasterId(-1);
 
-        if (srvCapDto instanceof PackageConsumptionServiceDetailDto) {
-            PackageConsumptionServiceDetailDto srv = (PackageConsumptionServiceDetailDto) srvCapDto;
+        if (srvCapDto instanceof PackageConsumptionServiceDetailDto srv) {
             oDPmpprDto.setPackageConsumptionMasterId(srv.getPackageConsumptionMasterId());
             oDPmpprDto.setPacakgeConsumptionServiceDetailId(srv.getPackageConsumptionServiceDetailId());
             if (consume) {
@@ -834,8 +833,7 @@ public class BillingCommonMethods<T> {
                 else
                     iTPackageConsumptionCapDetailsDao.updatePackageCapItem(srv.getPackageConsumptionServiceDetailId(), (packageAmount * -1), false);
             }
-        } else if (srvCapDto instanceof TPackageConsumptionCapDetailsDto) {
-            TPackageConsumptionCapDetailsDto capDtls = (TPackageConsumptionCapDetailsDto) srvCapDto;
+        } else if (srvCapDto instanceof TPackageConsumptionCapDetailsDto capDtls) {
             oDPmpprDto.setPackageConsumptionMasterId(capDtls.getPackageConsumptionMasterId());
             oDPmpprDto.setPackageConsumptionCapDetailsId(capDtls.getPackageConsumptionCapDetailsId());
             if(consume) {

@@ -81,7 +81,6 @@ public class TPackageConsumptionServiceDetailDto {
 
 	public void setIsPackageService(char isPackageService) {
 		this.isPackageService = (isPackageService != '\u0000' ? isPackageService : 'N');
-		;
 	}
 
 	public char getIsCapService() {

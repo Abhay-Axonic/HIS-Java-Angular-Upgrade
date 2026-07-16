@@ -743,7 +743,7 @@ public class ContractConsumptionDto {
 	}
 
 	public void setCoShare(Double coShare) {
-		this.coShare = coShare==null?0.00:coShare;;
+		this.coShare = coShare==null?0.00:coShare;
 	}
 
 	public Double getBalanceCapAmount() {
@@ -1136,7 +1136,7 @@ public class ContractConsumptionDto {
 	}
 
 	public void setStatus(Character status) {
-		this.status = status==null?'I':status;;
+		this.status = status==null?'I':status;
 	}
 	public Integer getForceAddRemoved() {
 		return forceAddRemoved!=null?forceAddRemoved:0;

@@ -80,10 +80,10 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 			Integer prefixId=(Integer)sessionFactory.getCurrentSession()
 					.createSQLQuery("select pm.prefix_id from m_prefix_master pm "
 							+ " where pm.gender_id=:genderId")
-					.setParameter("genderId", genderMasterDtoList.get(0).getId())
+					.setParameter("genderId", genderMasterDtoList.getFirst().getId())
 					.setMaxResults(1)
 					.uniqueResult();
-			genderMasterDtoList.get(0).setPreFixId(prefixId);
+			genderMasterDtoList.getFirst().setPreFixId(prefixId);
 			return new Response(SUCCESS, null, null, genderMasterDtoList,null);
  			
 		}catch(HibernateException he){
@@ -146,7 +146,6 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getGenderByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -170,7 +169,6 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 		logger.error("updateGenderMaster failed", e);
 			return new Response<GenderMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 
 	}
@@ -195,7 +193,6 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 		logger.error("updateGenderStatus failed", e);
 			return new Response<GenderMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 
 	}
@@ -215,7 +212,6 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getActiveGenderList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

@@ -32,7 +32,7 @@ public class NurseShiftAllocationServiceImpl implements INurseShiftAllocationSer
 		try {
 			if (res.getListObject() != null && res.getListObject().size() > 0) {
 				List<NurseShiftAllocationDto> list = res.getListObject();
-				nurseShiftAllocationDto.setNurseShiftAllocationId(list.get(0).getNurseShiftAllocationId());
+				nurseShiftAllocationDto.setNurseShiftAllocationId(list.getFirst().getNurseShiftAllocationId());
 				return new Response<>(ERROR, ERROR_CODE, "Already Exist", null, null);
 			}
 

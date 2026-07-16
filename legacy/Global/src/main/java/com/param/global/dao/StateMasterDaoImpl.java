@@ -57,7 +57,6 @@ public class StateMasterDaoImpl extends GenericDao<StateMaster, Integer> impleme
 		} catch (Exception e) {
 			logger.error("getStateByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -93,7 +92,6 @@ public class StateMasterDaoImpl extends GenericDao<StateMaster, Integer> impleme
 		} catch (Exception e) {
 			logger.error("getStateMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -115,7 +113,6 @@ public class StateMasterDaoImpl extends GenericDao<StateMaster, Integer> impleme
 		} catch (Exception e) {
 			logger.error("getStateByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -135,7 +132,6 @@ public class StateMasterDaoImpl extends GenericDao<StateMaster, Integer> impleme
 		} catch (Exception e) {
 			logger.error("getStateById failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -158,7 +154,6 @@ public class StateMasterDaoImpl extends GenericDao<StateMaster, Integer> impleme
 			logger.error("updateStateStatus failed", e);
 			return new Response<StateMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -176,7 +171,6 @@ public class StateMasterDaoImpl extends GenericDao<StateMaster, Integer> impleme
 		} catch (Exception e) {
 			logger.error("getActiveStateList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -200,7 +194,6 @@ public class StateMasterDaoImpl extends GenericDao<StateMaster, Integer> impleme
 			logger.error("updateStateMaster failed", e);
 			return new Response<StateMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -237,7 +230,6 @@ public class StateMasterDaoImpl extends GenericDao<StateMaster, Integer> impleme
 		} catch (Exception e) {
 			logger.error("getStateByCountryId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

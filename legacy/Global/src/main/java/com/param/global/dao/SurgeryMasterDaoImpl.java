@@ -144,7 +144,6 @@ public class SurgeryMasterDaoImpl extends GenericDao<SurgeryMaster, Integer>
 			logger.error("updateSurgeryMaster failed", e);
 			return new Response<SurgeryMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -167,7 +166,6 @@ public class SurgeryMasterDaoImpl extends GenericDao<SurgeryMaster, Integer>
 			logger.error("updateStatusForSurgeryMaster failed", e);
 			return new Response<SurgeryMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

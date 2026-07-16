@@ -108,15 +108,15 @@ class OAuthScheme extends RFC2617Scheme {
 			}
 			request = original;
 		}
-		if (request instanceof HttpUriRequest) {
-			return (HttpUriRequest) request;
+		if (request instanceof HttpUriRequest uriRequest) {
+			return uriRequest;
 		}
 		return null;
 	}
 
 	private OAuthAccessor getAccessor(Credentials credentials) {
-		if (credentials instanceof OAuthCredentials) {
-			return ((OAuthCredentials) credentials).getAccessor();
+		if (credentials instanceof OAuthCredentials authCredentials) {
+			return authCredentials.getAccessor();
 		}
 		return new OAuthAccessor(new OAuthConsumer(null // callback URL
 				, credentials.getUserPrincipal().getName() // consumer key

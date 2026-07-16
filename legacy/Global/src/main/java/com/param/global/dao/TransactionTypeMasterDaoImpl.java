@@ -67,7 +67,6 @@ public class TransactionTypeMasterDaoImpl extends GenericDao<TransactionTypeMast
 		} catch (Exception e) {
 		logger.error("getTransactionTypeMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -88,7 +87,6 @@ public class TransactionTypeMasterDaoImpl extends GenericDao<TransactionTypeMast
 		} catch (Exception e) {
 		logger.error("getTransactionTypeByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -127,7 +125,6 @@ public class TransactionTypeMasterDaoImpl extends GenericDao<TransactionTypeMast
 		} catch (Exception e) {
 		logger.error("getTransactionTypeByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -151,7 +148,6 @@ public class TransactionTypeMasterDaoImpl extends GenericDao<TransactionTypeMast
 		logger.error("updateTransactionTypeMaster failed", e);
 			return new Response<TransactionTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -175,7 +171,6 @@ public class TransactionTypeMasterDaoImpl extends GenericDao<TransactionTypeMast
 		logger.error("updateStatusForTransactionType failed", e);
 			return new Response<TransactionTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

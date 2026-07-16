@@ -100,7 +100,6 @@ public class HolidayCalenderMasterDaoImpl extends GenericDao<HolidayCalenderMast
 		} catch (Exception e) {
 			logger.error("getHolidayCalenderMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -122,7 +121,6 @@ public class HolidayCalenderMasterDaoImpl extends GenericDao<HolidayCalenderMast
 		} catch (Exception e) {
 			logger.error("getHolidayByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -146,7 +144,6 @@ public class HolidayCalenderMasterDaoImpl extends GenericDao<HolidayCalenderMast
 			logger.error("updateHolidayMaster failed", e);
 			return new Response<HolidayCalenderMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -164,7 +161,6 @@ public class HolidayCalenderMasterDaoImpl extends GenericDao<HolidayCalenderMast
 		} catch (Exception e) {
 			logger.error("getHolidayByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -186,7 +182,6 @@ public class HolidayCalenderMasterDaoImpl extends GenericDao<HolidayCalenderMast
 			logger.error("updateHolidayStatus failed", e);
 			return new Response<HolidayCalenderMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -203,7 +198,6 @@ public class HolidayCalenderMasterDaoImpl extends GenericDao<HolidayCalenderMast
 		} catch (Exception e) {
 			logger.error("getActiveHolidayMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

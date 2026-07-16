@@ -44,8 +44,10 @@ public class AiAppointmentQueueDaoImpl  extends GenericDao<AIAppointmentQueue, I
             }
 
 
-            String appoSql = " select sm.doctor_id as \"doctorId\",am.created_by  as \"createdBy\"  from opd.m_appointment_master am inner join opd.m_slot_master sm on \n" +
-                    " am.slot_id =sm.slot_id  where am.appointment_id = :appointmentId limit 1 ";
+            String appoSql = """
+                     select sm.doctor_id as "doctorId",am.created_by  as "createdBy"  from opd.m_appointment_master am inner join opd.m_slot_master sm on\s
+                     am.slot_id =sm.slot_id  where am.appointment_id = :appointmentId limit 1\s\
+                    """;
 
             AIAppointmentQueueDto dto = (AIAppointmentQueueDto) sessionFactory.getCurrentSession().createSQLQuery(appoSql)
                     .setParameter("appointmentId",aiAppointmentQueueDto.getAppointmentId())

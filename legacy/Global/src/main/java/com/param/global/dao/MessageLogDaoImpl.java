@@ -57,7 +57,7 @@ public class MessageLogDaoImpl extends GenericDao<MessageLog, Integer>implements
 					.setResultTransformer(Transformers.aliasToBean(MessageLogDto.class)).list();
 			Integer id = null;
 			if(messageQueueIdList != null  && messageQueueIdList.size() >0 ) {
-				id = messageQueueIdList.get(0).getId();
+				id = messageQueueIdList.getFirst().getId();
 				return new Response<>(SUCCESS, SUCCESS_CODE, null, null, id);
 			}else {
 				return new Response<>(SUCCESS, SUCCESS_CODE, null, null, null);

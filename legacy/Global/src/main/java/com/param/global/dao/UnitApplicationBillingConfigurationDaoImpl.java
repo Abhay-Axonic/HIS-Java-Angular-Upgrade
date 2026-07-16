@@ -457,7 +457,7 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 					.setParameter("unitId", unitId)
 				    .setResultTransformer(Transformers.aliasToBean(UnitApplicationConfigurationDto.class)).list();
 			
-		return list.get(0).getPdfGenerationUrl();
+		return list.getFirst().getPdfGenerationUrl();
 
 		} catch (HibernateException he) {
 			logger.error("getURLForPdfGeneration failed", he);
@@ -478,7 +478,7 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 					.setParameter("unitId", unitId)
 				    .setResultTransformer(Transformers.aliasToBean(UnitApplicationConfigurationDto.class)).list();
 			
-		return list.get(0).getPdfGenerationUrlMis();
+		return list.getFirst().getPdfGenerationUrlMis();
 
 		} catch (HibernateException he) {
 			logger.error("getURLForPdfGenerationMis failed", he);
@@ -731,7 +731,7 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 //					.setParameter("unitId", unitId)
 				    .setResultTransformer(Transformers.aliasToBean(UnitApplicationConfigurationDto.class)).list();
 			
-		return list.get(0).getPdfGenerationUrl();
+		return list.getFirst().getPdfGenerationUrl();
 
 		} catch (HibernateException he) {
 			logger.error("getURLForPdfGenerationForBI failed", he);
@@ -784,7 +784,7 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 					.setResultTransformer(Transformers.aliasToBean(ApplicationConfigurationDto.class)).list();
 			
 			if(list != null && list.size() == 1) {
-				return list.get(0).getPublicUrl();
+				return list.getFirst().getPublicUrl();
 			}else {
 				return null;
 			}

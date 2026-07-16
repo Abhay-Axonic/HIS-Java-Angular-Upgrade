@@ -58,7 +58,6 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getCountryByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -97,7 +96,6 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getRelationMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -116,7 +114,6 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getRelationById failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -135,7 +132,6 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getActiveRelationList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -156,7 +152,6 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getRelationByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -181,7 +176,6 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 			logger.error("updateRelationMaster failed", e);
 			return new Response<RelationMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -204,7 +198,6 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 			logger.error("updateRelationStatus failed", e);
 			return new Response<RelationMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -239,7 +232,6 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getActiveRelationListForWebPage failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

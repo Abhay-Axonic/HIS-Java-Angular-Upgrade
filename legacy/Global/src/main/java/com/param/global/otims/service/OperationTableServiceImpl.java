@@ -60,7 +60,7 @@ public class OperationTableServiceImpl implements IOperationTableService, ICommo
 					if(tableTypeRes.getListObject()!=null && tableTypeRes.getListObject().size()>0)
 					{
 						tableTypeList.addAll(tableTypeRes.getListObject());
-						operationTableTypeDto.setTableTypeName(tableTypeList.get(0).getTableDesc());
+						operationTableTypeDto.setTableTypeName(tableTypeList.getFirst().getTableDesc());
 					}
 					
 					//get  Operation theatre name  by id
@@ -68,7 +68,7 @@ public class OperationTableServiceImpl implements IOperationTableService, ICommo
 					if(operationTheatreRes.getListObject()!=null && operationTheatreRes.getListObject().size()>0)
 					{
 						operationTheatreList.addAll(operationTheatreRes.getListObject());
-						operationTableTypeDto.setTheatreName(operationTheatreList.get(0).getTheatreName());
+						operationTableTypeDto.setTheatreName(operationTheatreList.getFirst().getTheatreName());
 					}
 					
 					operationTableTypeDto.setOperationTableId(dto.getOperationTableId());
@@ -110,7 +110,7 @@ public class OperationTableServiceImpl implements IOperationTableService, ICommo
 				if(tableTypeRes.getListObject()!=null && tableTypeRes.getListObject().size()>0)
 				{
 					tableTypeList.addAll(tableTypeRes.getListObject());
-					operationTableTypeDto.setTableTypeName(tableTypeList.get(0).getTableDesc());
+					operationTableTypeDto.setTableTypeName(tableTypeList.getFirst().getTableDesc());
 				}
 				
 				//get  Operation theatre name  by id
@@ -118,7 +118,7 @@ public class OperationTableServiceImpl implements IOperationTableService, ICommo
 				if(operationTheatreRes.getListObject()!=null && operationTheatreRes.getListObject().size()>0)
 				{
 					operationTheatreList.addAll(operationTheatreRes.getListObject());
-					operationTableTypeDto.setTheatreName(operationTheatreList.get(0).getTheatreName());
+					operationTableTypeDto.setTheatreName(operationTheatreList.getFirst().getTheatreName());
 				}
 				
 				operationTableTypeDto.setOperationTableTypeId(operationTableTypeDto.getTableTypeId());

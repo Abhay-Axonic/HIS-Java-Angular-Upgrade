@@ -638,7 +638,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							}
 							else
 								shareAmt = 0.00;
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 					}else{
 						for(GetDoctorShareDto dto : docShareType1)
@@ -677,7 +677,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 						
 					}
@@ -706,7 +706,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 					}else{
 						for(GetDoctorShareDto dto : docShareType2)
@@ -738,7 +738,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 						
 					}
@@ -765,7 +765,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 					}else{
 						for(GetDoctorShareDto dto : docShareType3)
@@ -798,7 +798,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else 
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 						
 					}
@@ -826,7 +826,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else 
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 					}else{
 						for(GetDoctorShareDto dto : docShareType4)
@@ -859,7 +859,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else 
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 						
 					}
@@ -878,7 +878,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							}else
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 					}
 				}else{
@@ -956,7 +956,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							}
 							else
 								shareAmt = 0.00;
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 					}else{
 						for(GetDoctorShareDto dto : docShareType1)
@@ -981,7 +981,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 						
 					}
@@ -1002,7 +1002,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 					}else{
 						for(GetDoctorShareDto dto : docShareType2)
@@ -1027,7 +1027,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 						
 					}
@@ -1047,7 +1047,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 							else
 								shareAmt = 0.00;
 							
-							return new Double (df2.format(shareAmt));
+							return Double.valueOf(df2.format(shareAmt));
 						}
 					}
 				}else{
@@ -1525,18 +1525,18 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 				Integer visitTypeId =null;
 				
 				UnitApplicationConfigurationDto uAppConfDto = new UnitApplicationConfigurationDto();
-				uAppConfDto.setOrganizationId(list.get(0).getOrgId());
-				uAppConfDto.setUnitId(list.get(0).getOrgUnitId());
+				uAppConfDto.setOrganizationId(list.getFirst().getOrgId());
+				uAppConfDto.setUnitId(list.getFirst().getOrgUnitId());
 				
 				Response appConfigRes = iUnitApplicationBillingConfigurationDao.getUnitApplicationBillingConfigByOrgUnit(uAppConfDto);
 				if (appConfigRes.getCode().equalsIgnoreCase(SUCCESS_CODE) && appConfigRes.getObject() != null) 
 				{
 					uAppConfDto = (UnitApplicationConfigurationDto) appConfigRes.getObject();
 				}
-				if(list.get(0).getAdmissionId()!=null && list.get(0).getAdmissionId() > 0 ) 
+				if(list.getFirst().getAdmissionId()!=null && list.getFirst().getAdmissionId() > 0 ) 
 				{
 					
-					Response admissionDto = ipdChargesDao.getAdmissionsById(list.get(0).getAdmissionId());
+					Response admissionDto = ipdChargesDao.getAdmissionsById(list.getFirst().getAdmissionId());
 					AdmissionListIpdChargesResDto adminDto = (AdmissionListIpdChargesResDto) admissionDto.getObject();
 						patientTypeId = adminDto.getPatientCategoryId();
 						billingBedCategoryId = adminDto.getBedBillingCategoryId();
@@ -1550,10 +1550,10 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 						bedId =  adminDto.getBedId();
 				}
 				
-				if(list.get(0).getEncounterId()!=null && list.get(0).getEncounterId() >0) 
+				if(list.getFirst().getEncounterId()!=null && list.getFirst().getEncounterId() >0) 
 				{
 					
-					Response encounterRes = iEncounterMasterService.getEncounterDetailsById(list.get(0).getEncounterId());
+					Response encounterRes = iEncounterMasterService.getEncounterDetailsById(list.getFirst().getEncounterId());
 					EncounterMasterDto encounterMasterDto = (EncounterMasterDto) encounterRes.getObject();
 						patientTypeId = encounterMasterDto.getPatientCategoryId();
 						paymentEntitlementId = encounterMasterDto.getPaymentEntitlementId();
@@ -1565,7 +1565,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService, ICommonConst
 				}
 				
 				
-				UnitApplicationConfigurationDto appConfigDto = this.getPharmacyServiceId(list.get(0).getOrgId() ,list.get(0).getOrgUnitId() );
+				UnitApplicationConfigurationDto appConfigDto = this.getPharmacyServiceId(list.getFirst().getOrgId() ,list.getFirst().getOrgUnitId() );
 				
 			for (OrderDetailsMasterDto orderDetailsMasterDto : list) {
 				

@@ -198,7 +198,7 @@ public class RISWorkbenchController implements ICommonConstants{
 			Boolean SendMail = true;
 
 				RadiologyOrdersListDto orderDto = new RadiologyOrdersListDto();
-				orderDto =list.get(0);
+				orderDto =list.getFirst();
 				if(orderDto.getIsFinalRelease() != null && orderDto.getIsFinalRelease().equals('Y')){
 					if(orderDto.getEncounterId() != null ) {
 						Response checkDueAmount = iRISWorkbenchService.checkDueAmount(orderDto);
@@ -216,7 +216,7 @@ public class RISWorkbenchController implements ICommonConstants{
 			if(SendMail ) {
 
 
-				String resPublicUrl = unitApplicationBillingConfigurationService.getPublicUrl(list.get(0).getUnitId());
+				String resPublicUrl = unitApplicationBillingConfigurationService.getPublicUrl(list.getFirst().getUnitId());
 				for (RadiologyOrdersListDto radiologyOrdersListDto : list) {
 
 					int lowerLimit = 97;

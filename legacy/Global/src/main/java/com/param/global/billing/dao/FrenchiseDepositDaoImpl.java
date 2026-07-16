@@ -27,11 +27,11 @@ public class FrenchiseDepositDaoImpl extends GenericDao<FranchiseDepositMaster, 
     public Response addFrenchiseDeposit(FranchiseDepositMasterDto dto) throws BillingException {
         try{
             FranchiseDepositMaster master = new FranchiseDepositMaster();
-            master.setAvailableDeposit(new Double(OrderMasterServiceImpl.df2.format(dto.getAvailableDeposit())));
+            master.setAvailableDeposit(Double.valueOf(OrderMasterServiceImpl.df2.format(dto.getAvailableDeposit())));
             master.setConsumedDeposit(dto.getConsumedDeposit());
             master.setCreatedBy(dto.getCreatedBy());
             master.setCreatedDate(TimeZoneComponent.getDateByzone(dto.getUnitId()));
-            master.setAmount(new Double(OrderMasterServiceImpl.df2.format(dto.getAmount())));
+            master.setAmount(Double.valueOf(OrderMasterServiceImpl.df2.format(dto.getAmount())));
             master.setFrDepositNo(dto.getFrDepositNo());
             master.setOrgId(dto.getOrgId());
             master.setFranchiseUnitId(dto.getFranchiseUnitId());

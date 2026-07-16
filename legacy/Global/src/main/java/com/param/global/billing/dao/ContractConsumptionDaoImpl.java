@@ -2633,7 +2633,7 @@ public class ContractConsumptionDaoImpl implements IContractConsumptionDao,IComm
 			
 			Date currentDate  =  TimeZoneComponent.getDateByzone(procedureForContract.getUnitId());
 			String pharmacyContractQuery = null;
-			ContractConsumptionDto consumptionDto = new ContractConsumptionDto();;
+			ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
 			   if(procedureForContract.getAdmissionId()!=null && procedureForContract.getAdmissionId()>0)
 					{
 				      

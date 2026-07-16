@@ -51,7 +51,7 @@ public class NewBornAssessmentServiceImpl implements INewBornAssessmentService, 
 						apagr.setTotalScore(dto.getTotalScore());
 						apagr.setApgarRemark(dto.getApgarRemark());
 						apagr.setStatus('A');
-						apagr.setCreatedBy(assessmentDto.getCreatedBy());;
+						apagr.setCreatedBy(assessmentDto.getCreatedBy());
 						apagr.setCreatedDate(assessmentDto.getCreatedDate().toString());
 						apagr.setUpdatedBy(assessmentDto.getUpdatedBy());
 						apagr.setUpdatedDate(assessmentDto.getUpdatedDate().toString());

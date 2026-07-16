@@ -211,10 +211,10 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 				prodCatIds.add(response.getProductCategoryId());
 				response.setColorCode(GlobalDao.getColorCode(response.getGenericId(),orgId,unitId));
 				Integer assetCatId = 0;
-				if (batchList.get(0).getItem().getProductCategory() != null) {
-					assetCatId = batchList.get(0).getItem().getProductCategory().getAssetCategory().getId();
+				if (batchList.getFirst().getItem().getProductCategory() != null) {
+					assetCatId = batchList.getFirst().getItem().getProductCategory().getAssetCategory().getId();
 				} else {
-					assetCatId = batchList.get(0).getItem().getGeneric().getProductCategory().getAssetCategory()
+					assetCatId = batchList.getFirst().getItem().getGeneric().getProductCategory().getAssetCategory()
 							.getId();
 				}
 
@@ -226,7 +226,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 						// Don't throw - get first object and set data.
 					}
 
-					PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+					PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 					response.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 					response.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 				}
@@ -294,7 +294,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 						// Don't throw - get first object and set data.
 					}
 
-					PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+					PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 					response.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 					response.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 				}
@@ -304,13 +304,13 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 				 */
 				Integer assetCatId = 0;
 				Integer prodCatId = 0;
-				if (batchList.get(0).getItem().getProductCategory() != null) {
-					assetCatId = batchList.get(0).getItem().getProductCategory().getAssetCategory().getId();
-					prodCatId = batchList.get(0).getItem().getProductCategory().getId();
+				if (batchList.getFirst().getItem().getProductCategory() != null) {
+					assetCatId = batchList.getFirst().getItem().getProductCategory().getAssetCategory().getId();
+					prodCatId = batchList.getFirst().getItem().getProductCategory().getId();
 				} else {
-					assetCatId = batchList.get(0).getItem().getGeneric().getProductCategory().getAssetCategory()
+					assetCatId = batchList.getFirst().getItem().getGeneric().getProductCategory().getAssetCategory()
 							.getId();
-					prodCatId = batchList.get(0).getItem().getGeneric().getProductCategory().getId();
+					prodCatId = batchList.getFirst().getItem().getGeneric().getProductCategory().getId();
 				}
 
 				response.setAssetCategoryId(assetCatId);
@@ -379,7 +379,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 						// Don't throw - get first object and set data.
 					}
 
-					PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+					PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 					response.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 					response.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 				}
@@ -387,13 +387,13 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 				if (admissionId != null) {
 					Integer assetCatId = 0;
 					Integer prodCatId = 0;
-					if (batchList.get(0).getItem().getProductCategory() != null) {
-						assetCatId = batchList.get(0).getItem().getProductCategory().getAssetCategory().getId();
-						prodCatId = batchList.get(0).getItem().getProductCategory().getId();
+					if (batchList.getFirst().getItem().getProductCategory() != null) {
+						assetCatId = batchList.getFirst().getItem().getProductCategory().getAssetCategory().getId();
+						prodCatId = batchList.getFirst().getItem().getProductCategory().getId();
 					} else {
-						assetCatId = batchList.get(0).getItem().getGeneric().getProductCategory().getAssetCategory()
+						assetCatId = batchList.getFirst().getItem().getGeneric().getProductCategory().getAssetCategory()
 								.getId();
-						prodCatId = batchList.get(0).getItem().getGeneric().getProductCategory().getId();
+						prodCatId = batchList.getFirst().getItem().getGeneric().getProductCategory().getId();
 					}
 					response.setAssetCategoryId(assetCatId);
 					PatientConsession patientConsession = IGlobalDao.getPatientConsessionAdmission(id, admissionId,
@@ -930,7 +930,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 								// Don't throw - get first object and set data.
 							}
 
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							batch.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							batch.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;
@@ -1291,7 +1291,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 								// Don't throw - get first object and set data.
 							}
 
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							batch.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							batch.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;
@@ -1380,7 +1380,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 								// Don't throw - get first object and set data.
 							}
 
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							batch.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							batch.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;
@@ -1535,7 +1535,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 								// Don't throw - get first object and set data.
 							}
 
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							batch.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							batch.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;
@@ -1621,7 +1621,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 		List<Integer> productIds = response.stream().map(x -> x.getProdCatId()).collect(Collectors.toList());
 		List<PharmacyTariff> pharmacyTariffs = new ArrayList<>();
 		if(patientSponsorDetails != null && patientSponsorDetails.size()>0){
-			pharmacyTariffs = GlobalDao.getTariff(productIds,patientSponsorDetails.get(0).getPaymentEntitlementId());
+			pharmacyTariffs = GlobalDao.getTariff(productIds,patientSponsorDetails.getFirst().getPaymentEntitlementId());
 		}
 		
 		
@@ -1792,7 +1792,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 									// Don't throw - get first object and set data.
 								}
 
-								PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+								PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 								batch.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 								batch.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 								break;
@@ -1881,7 +1881,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 								// Don't throw - get first object and set data.
 							}
 
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							batch.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							batch.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;
@@ -2067,7 +2067,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 								// Don't throw - get first object and set data.
 							}
 
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							batch.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							batch.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;
@@ -2267,7 +2267,7 @@ public class ItemsServiceImpl implements IItemsService, ICommonConstants {
 								// Don't throw - get first object and set data.
 							}
 
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							batch.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							batch.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;
@@ -2707,7 +2707,7 @@ public List<ItemsDetailsResponse> getKitItemsOnWalkInSales(ItemsRequest itemsReq
 						if (batchDto.getBatchNo() == null) {
 							batchDto.setBatchNo(ICommonConstants.NOT_APPLICABLE);
 							if (batchDto.getStoreStockList() != null && batchDto.getStoreStockList().size() > 0) {
-								batchDto.setCurrentQuantity(batchDto.getStoreStockList().get(0).getAvailableQty() != null ? batchDto.getStoreStockList().get(0).getAvailableQty() : 0);
+								batchDto.setCurrentQuantity(batchDto.getStoreStockList().getFirst().getAvailableQty() != null ? batchDto.getStoreStockList().getFirst().getAvailableQty() : 0);
 							}
 						}
 						batchList.add(batchDto);
@@ -2723,15 +2723,15 @@ public List<ItemsDetailsResponse> getKitItemsOnWalkInSales(ItemsRequest itemsReq
 
 					Integer assetCatId = 0;
 					Integer prodCatId = 0;
-					if (batchList.get(0).getItem().getProductCategory() != null) {
-						assetCatId = batchList.get(0).getItem().getProductCategory().getAssetCategory().getId();
-						prodCatId = batchList.get(0).getItem().getProductCategory().getId();
+					if (batchList.getFirst().getItem().getProductCategory() != null) {
+						assetCatId = batchList.getFirst().getItem().getProductCategory().getAssetCategory().getId();
+						prodCatId = batchList.getFirst().getItem().getProductCategory().getId();
 					} else {
-						assetCatId = batchList.get(0).getItem().getGeneric().getProductCategory().getAssetCategory()
+						assetCatId = batchList.getFirst().getItem().getGeneric().getProductCategory().getAssetCategory()
 								.getId();
-						prodCatId = batchList.get(0).getItem().getGeneric().getProductCategory().getId();
+						prodCatId = batchList.getFirst().getItem().getGeneric().getProductCategory().getId();
 					}
-					response.setIsLasa(batchList.get(0).getItem().getIsLasa() != null ? batchList.get(0).getItem().getIsLasa() : false);
+					response.setIsLasa(batchList.getFirst().getItem().getIsLasa() != null ? batchList.getFirst().getItem().getIsLasa() : false);
 
 					response.setAssetCategoryId(assetCatId);
 					
@@ -2741,7 +2741,7 @@ public List<ItemsDetailsResponse> getKitItemsOnWalkInSales(ItemsRequest itemsReq
 							
 							for (PharmacyTariff pharmacyTariff : pharmacyTariffs) {
 								
-								if(pharmacyTariff.getProductCategoryId().equals(prodCatIds.get(0))){
+								if(pharmacyTariff.getProductCategoryId().equals(prodCatIds.getFirst())){
 									response.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 									response.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 								}
@@ -2862,10 +2862,10 @@ public ItemsDetailsResponse itemsDetailWalkInPrescription(Integer id, Integer en
 			prodCatIds.add(response.getProductCategoryId());
 			response.setColorCode(GlobalDao.getColorCode(response.getGenericId(),orgId,unitId));
 			Integer assetCatId = 0;
-			if (!batchList.isEmpty() && batchList.get(0).getItem().getProductCategory() != null) {
-				assetCatId = batchList.get(0).getItem().getProductCategory().getAssetCategory().getId();
-			} else if ( !batchList.isEmpty() && batchList.get(0).getItem().getGeneric().getProductCategory().getAssetCategory() != null){
-				assetCatId = batchList.get(0).getItem().getGeneric().getProductCategory().getAssetCategory()
+			if (!batchList.isEmpty() && batchList.getFirst().getItem().getProductCategory() != null) {
+				assetCatId = batchList.getFirst().getItem().getProductCategory().getAssetCategory().getId();
+			} else if ( !batchList.isEmpty() && batchList.getFirst().getItem().getGeneric().getProductCategory().getAssetCategory() != null){
+				assetCatId = batchList.getFirst().getItem().getGeneric().getProductCategory().getAssetCategory()
 						.getId();
 			}
 
@@ -2877,7 +2877,7 @@ public ItemsDetailsResponse itemsDetailWalkInPrescription(Integer id, Integer en
 					// Don't throw - get first object and set data.
 				}
 
-				PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+				PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 				response.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 				response.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 			}

@@ -52,7 +52,6 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 		} catch (Exception e) {
 		logger.error("getAmbulanceTarrifByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -114,7 +113,6 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 		} catch (Exception e) {
 		logger.error("getAmbulanceTarrifList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -133,7 +131,6 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 		} catch (Exception e) {
 		logger.error("getAmbulanceTarrifActiveList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -153,7 +150,6 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 		} catch (Exception e) {
 		logger.error("getAmbulanceTarrifByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -175,7 +171,6 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 		} catch (Exception e) {
 		logger.error("getSingleAmbulanceTarrif failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -204,7 +199,6 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 		logger.error("updateAmbulanceTarrif failed", e);
 			return new Response<AmbulanceTarrifDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -226,7 +220,6 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 		logger.error("changeAmbulanceTarrifStatus failed", e);
 			return new Response<AmbulanceTarrifDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

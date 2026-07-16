@@ -61,7 +61,6 @@ public class DistrictMasterDaoImpl extends GenericDao<DistrictMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getDistrictByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -98,7 +97,6 @@ public class DistrictMasterDaoImpl extends GenericDao<DistrictMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getDistrictMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -122,7 +120,6 @@ public class DistrictMasterDaoImpl extends GenericDao<DistrictMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getDistrictByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -148,7 +145,6 @@ public class DistrictMasterDaoImpl extends GenericDao<DistrictMaster, Integer>
 			logger.error("updateDistrictMaster failed", e);
 			return new Response<StateMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -167,7 +163,6 @@ public class DistrictMasterDaoImpl extends GenericDao<DistrictMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getDistrictById failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -191,7 +186,6 @@ public class DistrictMasterDaoImpl extends GenericDao<DistrictMaster, Integer>
 			logger.error("updateDistrictStatus failed", e);
 			return new Response<StateMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -209,7 +203,6 @@ public class DistrictMasterDaoImpl extends GenericDao<DistrictMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getActiveDistrictList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -228,7 +221,6 @@ public class DistrictMasterDaoImpl extends GenericDao<DistrictMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getActiveStateListByCountryId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -273,7 +265,6 @@ public class DistrictMasterDaoImpl extends GenericDao<DistrictMaster, Integer>
 		} catch (Exception e) {
 			logger.error("getDistrictMasterListByCountryId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

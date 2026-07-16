@@ -59,7 +59,7 @@ public class OperationTheatreServiceImpl implements IOperationTheatreService, IC
 					Response type = iOperationTheatreTypeDao.getOperationTheatreTypeById(operationTheatreDto.getTheatreTypeId(), operationTheatreDto.getOrgId(), operationTheatreDto.getUnitId());
 					List<OperationTheatreTypeDto> typeDto = new ArrayList<>();
 					typeDto.addAll(type.getListObject());
-					operationTheatreDto.setTheatreTypeName(typeDto.get(0).getTheatreTypeName());
+					operationTheatreDto.setTheatreTypeName(typeDto.getFirst().getTheatreTypeName());
 					
 					Request request = new Request();
 					Payload payload = new Payload();
@@ -94,7 +94,7 @@ public class OperationTheatreServiceImpl implements IOperationTheatreService, IC
 				Response type = iOperationTheatreTypeDao.getOperationTheatreTypeById(operationTheatreDto.getTheatreTypeId(), operationTheatreDto.getOrgId(), operationTheatreDto.getUnitId());
 				List<OperationTheatreTypeDto> typeDto = new ArrayList<>();
 				typeDto.addAll(type.getListObject());
-				operationTheatreDto.setTheatreTypeName(typeDto.get(0).getTheatreTypeName());
+				operationTheatreDto.setTheatreTypeName(typeDto.getFirst().getTheatreTypeName());
 				
 				Request request = new Request();
 				Payload payload = new Payload();

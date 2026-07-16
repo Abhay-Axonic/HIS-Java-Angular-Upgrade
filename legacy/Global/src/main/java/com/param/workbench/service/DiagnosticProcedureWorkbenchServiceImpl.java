@@ -169,7 +169,7 @@ public class DiagnosticProcedureWorkbenchServiceImpl implements IDiagnosticProce
 					if (radiologyOrdersListDto.getModalityId() != null) {
 						Response modalityRes = iRoomModalityMasterDao.getModalityDetailsByModalityId(roomModalityDto);
 						if (modalityRes.getListObject() != null && modalityRes.getListObject().size() > 0) {
-							roomModalityDto = (RoomModalityMasterDto) modalityRes.getListObject().get(0);
+							roomModalityDto = (RoomModalityMasterDto) modalityRes.getListObject().getFirst();
 						}
 					}
 

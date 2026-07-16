@@ -273,8 +273,8 @@ public class AppointmentMasterDaoImpl extends GenericDao<AppointmentMaster, Inte
 			if(list.size()>0) {
 			ServiceappoServiceMpprSyncDto dto1 = (ServiceappoServiceMpprSyncDto)sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_URL_FOR_PDF_GENERATION")
-					.setParameter("orgId", list.get(0).getHospitalId())
-					.setParameter("unitId", list.get(0).getUnitId())
+					.setParameter("orgId", list.getFirst().getHospitalId())
+					.setParameter("unitId", list.getFirst().getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(ServiceappoServiceMpprSyncDto.class))
 					.uniqueResult();
 			pdfUrl=dto1.getPdfGenerationUrl();

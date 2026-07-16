@@ -71,9 +71,9 @@ public class DepartmentNursingStationMapperDaoImpl extends GenericDao<Department
 			Integer result = sessionFactory.getCurrentSession()
 					.getNamedQuery("UPDATE_DEPARTMENT_NURSING_STATION_MAPPER")
 					.setParameter("isDeleted", 'Y')
-					.setParameter("organisationId", listDepartmentNursingStationMapperDto.get(0).getOrganisationId())
-					.setParameter("unitId", listDepartmentNursingStationMapperDto.get(0).getUnitId())
-					.setParameter("specialityId", listDepartmentNursingStationMapperDto.get(0).getSpecialityId())
+					.setParameter("organisationId", listDepartmentNursingStationMapperDto.getFirst().getOrganisationId())
+					.setParameter("unitId", listDepartmentNursingStationMapperDto.getFirst().getUnitId())
+					.setParameter("specialityId", listDepartmentNursingStationMapperDto.getFirst().getSpecialityId())
 					.executeUpdate();
 			if (result > 0) {
 				for (Iterator iterator = listDepartmentNursingStationMapperDto.iterator(); iterator.hasNext();) {

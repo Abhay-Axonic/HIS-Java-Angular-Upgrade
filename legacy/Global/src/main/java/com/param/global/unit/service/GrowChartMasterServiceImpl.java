@@ -172,7 +172,7 @@ public class GrowChartMasterServiceImpl  implements IGrowChartMasterService, ICo
 	@Transactional
 	public Response saveGrowthChartTransaction(List<TGrowthChartDto> listTGrowthChartDto) throws ApplicationException {
 		try {
-			Date date = TimeZoneComponent.getDateByzone(listTGrowthChartDto.get(0).getUnitId());
+			Date date = TimeZoneComponent.getDateByzone(listTGrowthChartDto.getFirst().getUnitId());
 			String dateTime = GlobalCommonDateUtils.getStringDate(date, "dd-M-yyyy HH:mm:ss");
 			for (Iterator iterator = listTGrowthChartDto.iterator(); iterator.hasNext();) {
 				TGrowthChartDto tGrowthChartDto = (TGrowthChartDto) iterator.next();

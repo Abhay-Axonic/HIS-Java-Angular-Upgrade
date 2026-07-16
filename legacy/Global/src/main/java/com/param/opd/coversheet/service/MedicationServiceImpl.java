@@ -135,8 +135,8 @@ public class MedicationServiceImpl implements IMedicationService, ICommonConstan
 								}
 								addNewQty = addedOrdQty + presDtlDto.getOrderQty();
 								presDtlDto.setOrderQty(addNewQty);
-								presDtlDto.setPrescriptionDetailsid(newDto.get(0).getPrescriptionDetailsid());
-								presDtlDto.setPrescriptionFrequencyId(newDto.get(0).getPrescriptionFrequencyId());
+								presDtlDto.setPrescriptionDetailsid(newDto.getFirst().getPrescriptionDetailsid());
+								presDtlDto.setPrescriptionFrequencyId(newDto.getFirst().getPrescriptionFrequencyId());
 							}
 						}
 

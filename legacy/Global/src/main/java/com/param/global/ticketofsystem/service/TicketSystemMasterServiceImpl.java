@@ -144,7 +144,7 @@ public class TicketSystemMasterServiceImpl implements ITicketSystemMasterService
 					ticketSystemMasterDto =(TicketSystemMasterDto) response.getObject();
 					
 					Response dataForPdsSave =  iTicketSystemMasterDao.getDataForPdsSave(unitId);
-					TicketSystemMasterDto jsonPdsData = (TicketSystemMasterDto) dataForPdsSave.getListObject().get(0);
+					TicketSystemMasterDto jsonPdsData = (TicketSystemMasterDto) dataForPdsSave.getListObject().getFirst();
 					
 					ticketSystemMasterDto.setTicketSystemJson(jsonPdsData.getTicketSystemJson());
 					Response uploadFileRes = iProductionSupportAppService.uploadFile(files);
@@ -170,7 +170,7 @@ public class TicketSystemMasterServiceImpl implements ITicketSystemMasterService
 				Response response = iTicketSystemMasterDao.getTicketSystemMasterById(ticketMasterId);
 				TicketSystemMasterDto ticketSystemMasterDto =(TicketSystemMasterDto) response.getObject();
 				Response dataForPdsSave =  iTicketSystemMasterDao.getDataForPdsSave(unitId);
-				TicketSystemMasterDto jsonPdsData = (TicketSystemMasterDto) dataForPdsSave.getListObject().get(0);
+				TicketSystemMasterDto jsonPdsData = (TicketSystemMasterDto) dataForPdsSave.getListObject().getFirst();
 				ticketSystemMasterDto.setTicketSystemJson(jsonPdsData.getTicketSystemJson());
 				Response addTicketToProductionSupport = iProductionSupportAppService.addTicketToProductionSupport(ticketSystemMasterDto);
 				ticketSystemMasterDto.setTicketNumber(addTicketToProductionSupport.getMessage());

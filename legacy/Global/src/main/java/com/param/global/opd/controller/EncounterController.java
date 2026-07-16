@@ -164,7 +164,7 @@ public class EncounterController implements ICommonConstants{
 				if(res.getCode().equals("Y") && (encounterMasterDto.getEncounterTypeId()==1 || encounterMasterDto.getEncounterTypeId()==2)) //HIS-15029 change by Kaustubh
 					iEncounterMasterService.updateAutorenderServicesAfterEncounter((EncounterMasterDto)res.getObject(),2);
 				if(res.getListObject()!=null)
-					iEncounterMasterService.saveOrderDetailsAfterEncounter((EncounterMasterDto)res.getObject(), (Integer)res.getListObject().get(0),2);
+					iEncounterMasterService.saveOrderDetailsAfterEncounter((EncounterMasterDto)res.getObject(), (Integer)res.getListObject().getFirst(),2);
 
                 if(encounterMasterDto.getAdminServiceMasterId() != null){
                     EncounterMasterDto adminServiceDto = encounterMasterDto;
@@ -188,7 +188,7 @@ public class EncounterController implements ICommonConstants{
 					
 				     if(responseRate.getListObject()!=null && responseRate.getListObject().size()>0) {
 				    	 
-				    	 ServiceSearchResDto dto= (ServiceSearchResDto)responseRate.getListObject().get(0);
+				    	 ServiceSearchResDto dto= (ServiceSearchResDto)responseRate.getListObject().getFirst();
 				    	 encounterMasterDto.setServiceId(dto.getServiceMasterId());
 				    	 encounterMasterDto.setPackageBasePrice(BigDecimal.valueOf(dto.getPackagePrice()));
 				    	 encounterMasterDto.setEhcPackageId(dto.getPackageMasterId());

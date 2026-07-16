@@ -302,7 +302,7 @@ public class UnitServiceTariffMasterDto
 	}
 
 	public void setMarkupStatus(Boolean markupStatus) {
-		this.markupStatus = (markupStatus==null)?false:markupStatus;;
+		this.markupStatus = (markupStatus==null)?false:markupStatus;
 	}
 
 	public Double getPatientClassPercentage() {

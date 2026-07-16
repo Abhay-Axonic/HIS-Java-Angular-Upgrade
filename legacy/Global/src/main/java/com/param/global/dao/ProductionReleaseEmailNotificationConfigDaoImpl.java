@@ -143,10 +143,12 @@ public class ProductionReleaseEmailNotificationConfigDaoImpl extends GenericDao<
 
     private Response getProductionReleaseEmailNotificationConfig(ProductionReleaseEmailNotificationConfigDto dto) {
 
-       String query=" select is_email_send as  \"isEmailSend\" " +
-               " from public.production_release_email_notification_config_mapper mapper\n" +
-               " where mapper.instance_name =:instanceName " +
-               " and mapper.version_number =:versionNumber ";
+       String query="""
+                select is_email_send as  "isEmailSend" \
+                from public.production_release_email_notification_config_mapper mapper
+                where mapper.instance_name =:instanceName \
+                and mapper.version_number =:versionNumber\s\
+               """;
 
 
         List<ProductionReleaseEmailNotificationConfigDto> mapperList = (List<ProductionReleaseEmailNotificationConfigDto>) sessionFactory.getCurrentSession()

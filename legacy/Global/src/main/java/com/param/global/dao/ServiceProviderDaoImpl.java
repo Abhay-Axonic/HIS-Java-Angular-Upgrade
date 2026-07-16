@@ -48,7 +48,6 @@ public class ServiceProviderDaoImpl extends GenericDao<ServiceProvider, Integer>
 		} catch (Exception e) {
 		logger.error("getServiceProviderByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -111,7 +110,6 @@ public class ServiceProviderDaoImpl extends GenericDao<ServiceProvider, Integer>
 		} catch (Exception e) {
 		logger.error("getServiceProviderList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -130,7 +128,6 @@ public class ServiceProviderDaoImpl extends GenericDao<ServiceProvider, Integer>
 		} catch (Exception e) {
 		logger.error("getServiceProviderActiveList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -150,7 +147,6 @@ public class ServiceProviderDaoImpl extends GenericDao<ServiceProvider, Integer>
 		} catch (Exception e) {
 		logger.error("getServiceProviderByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -172,7 +168,6 @@ public class ServiceProviderDaoImpl extends GenericDao<ServiceProvider, Integer>
 		} catch (Exception e) {
 		logger.error("getSingleServiceProvider failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -213,7 +208,6 @@ public class ServiceProviderDaoImpl extends GenericDao<ServiceProvider, Integer>
 		logger.error("updateServiceProvider failed", e);
 			return new Response<ServiceProviderDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -235,7 +229,6 @@ public class ServiceProviderDaoImpl extends GenericDao<ServiceProvider, Integer>
 		logger.error("changeServiceProviderStatus failed", e);
 			return new Response<ServiceProviderDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

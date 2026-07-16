@@ -171,7 +171,7 @@ public class AppointmentServiceImpl implements IAppointmentService, ICommonConst
 						List<CountryMasterDto> nationalityMasterDtoList =countryMasterResponse.getListObject();
 						if(countryMaster == null)
 						{
-							reqDto.setCountryId(nationalityMasterDtoList.get(0).getCountryId());
+							reqDto.setCountryId(nationalityMasterDtoList.getFirst().getCountryId());
 						}
 						if(countryMaster != null && countryMaster.getCountryId() > 0){
 							reqDto.setCountryId(countryMaster.getCountryId());

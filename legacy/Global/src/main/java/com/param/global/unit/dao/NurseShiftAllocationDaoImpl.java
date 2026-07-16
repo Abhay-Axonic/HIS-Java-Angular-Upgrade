@@ -405,7 +405,7 @@ public class NurseShiftAllocationDaoImpl extends GenericDao<NurseShiftAllocation
 			NurseShiftAllocationDto NurseAllocationDto = (NurseShiftAllocationDto) sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_NURSE_ALLOACTION_BY_DETAILS_ID")
 					.setParameter("nurseShiftAllocationDetailsId",
-							nurseShiftAllocationDto.getShiftList().get(0).getNurseShiftAllocationDetailsId())
+							nurseShiftAllocationDto.getShiftList().getFirst().getNurseShiftAllocationDetailsId())
 					.setParameter("orgId", nurseShiftAllocationDto.getOrgId())
 					.setParameter("unitId", nurseShiftAllocationDto.getUnitId())
 

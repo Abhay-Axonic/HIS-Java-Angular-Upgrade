@@ -231,7 +231,6 @@ public class OPConsultationConfigurationMasterDaoImpl extends GenericDao<OPConsu
 		logger.error("updateOPConsultationConfigurationStatus failed", e);
 			return new Response<CountryMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 	

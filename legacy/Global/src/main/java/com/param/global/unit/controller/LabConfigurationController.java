@@ -93,8 +93,7 @@ public class LabConfigurationController implements ICommonConstants {
 			int orgId = Integer.parseInt(params.get("orgId").trim());
 			int unitId = Integer.parseInt(params.get("unitId").trim());
 			
-	;
-			return iLabConfigurationService.getLabConfigurationList(orgId,unitId);
+	return iLabConfigurationService.getLabConfigurationList(orgId,unitId);
 		}catch (Exception e) {
 			
 			throw e;

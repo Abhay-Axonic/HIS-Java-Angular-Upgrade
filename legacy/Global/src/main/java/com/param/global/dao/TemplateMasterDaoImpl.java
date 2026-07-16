@@ -972,7 +972,7 @@ public class TemplateMasterDaoImpl extends GenericDao<TemplateMaster, Integer> i
 						.setResultTransformer(Transformers.aliasToBean(FormsEngineTransactionDto.class)).list();
 			
 			if(template!=null && template.size()>0)
-				return new Response<>(SUCCESS, SUCCESS_CODE, null, template, template.get(0));
+				return new Response<>(SUCCESS, SUCCESS_CODE, null, template, template.getFirst());
 			
 			return new Response<>(SUCCESS, SUCCESS_CODE, "No data found.", null, null);
 		}catch(Exception e){

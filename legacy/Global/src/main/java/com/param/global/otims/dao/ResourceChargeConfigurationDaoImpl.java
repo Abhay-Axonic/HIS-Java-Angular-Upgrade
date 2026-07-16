@@ -197,7 +197,7 @@ public class ResourceChargeConfigurationDaoImpl extends GenericDao<ResourceCharg
 			.setResultTransformer(Transformers.aliasToBean(ResourceChargeConfigurationDto.class)).list();
 			if(list.size()>0 && list!=null)
 			{
-				return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, list.get(0));
+				return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, list.getFirst());
 			}
 			else {
 				

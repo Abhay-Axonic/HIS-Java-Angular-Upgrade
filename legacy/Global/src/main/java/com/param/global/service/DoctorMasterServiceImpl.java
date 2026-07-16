@@ -1116,7 +1116,7 @@ public class DoctorMasterServiceImpl implements IDoctorMasterService,ICommonCons
 			Response responseDocDetails = iDoctorMasterDao.getDoctorDetails(doctorDto);
 
 			if (responseDocDetails.getListObject() != null && !responseDocDetails.getListObject().isEmpty()) {
-				bookAppointmentDto.setDoctorDto((DoctorMasterDto) responseDocDetails.getListObject().get(0));
+				bookAppointmentDto.setDoctorDto((DoctorMasterDto) responseDocDetails.getListObject().getFirst());
 			}
 			// get unit list mapped with doctor
 			UserUnitMapperDto unitDto = new UserUnitMapperDto();
@@ -1141,7 +1141,7 @@ public class DoctorMasterServiceImpl implements IDoctorMasterService,ICommonCons
 			if (qualificationListRes.getListObject() != null && !qualificationListRes.getListObject().isEmpty()) {
 
 				if (qualificationListRes.getListObject().size() == 1) {
-					DoctorDocumentMapperDto dto = (DoctorDocumentMapperDto) qualificationListRes.getListObject().get(0);
+					DoctorDocumentMapperDto dto = (DoctorDocumentMapperDto) qualificationListRes.getListObject().getFirst();
 					bookAppointmentDto.setDoctorDegrees(dto.getDegreeDesc());
 				} else {
 					int listLength = qualificationListRes.getListObject().size();

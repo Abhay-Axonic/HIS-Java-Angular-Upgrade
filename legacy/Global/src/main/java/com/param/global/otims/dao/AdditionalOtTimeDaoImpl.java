@@ -158,7 +158,7 @@ public class AdditionalOtTimeDaoImpl extends GenericDao<AdditionalOtTime, Intege
 			double rate = 0;
 			if(additionalOtTimeDtosList!=null && additionalOtTimeDtosList.size()>0)
 			{
-				 rate = additionalOtTimeDtosList.get(0).getRate().doubleValue();
+				 rate = additionalOtTimeDtosList.getFirst().getRate().doubleValue();
 			}
 			return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, rate);
 		}catch(HibernateException e){

@@ -73,7 +73,7 @@ public class DoctorScheduleDaoImpl extends GenericDao<DoctorSchedule, Integer> i
 			
 			Boolean isSyncScheduling=(Boolean)sessionFactory.getCurrentSession()
 					.createSQLQuery("  select om.is_sync_scheduling as \"isSyncScheduling\" from public.m_organization_master om where  om.organization_id=:organizationId and om.status='A' ")
-					.setParameter("organizationId", scheduleMasterDtosList.get(0).getOrganisationId())
+					.setParameter("organizationId", scheduleMasterDtosList.getFirst().getOrganisationId())
 					.uniqueResult();
 			
 			if(isSyncScheduling == true) {

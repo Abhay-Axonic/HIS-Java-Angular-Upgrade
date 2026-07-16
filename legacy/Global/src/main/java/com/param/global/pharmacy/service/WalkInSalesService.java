@@ -293,7 +293,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 			Integer balanceQuantity = batch.getCurrentQuantity() + quantity;
 
 			batch.setCurrentQuantity(balanceQuantity);
-			batch.getStoreStockList().get(0).setAvailableQty(avaialableStoreStock + quantity);
+			batch.getStoreStockList().getFirst().setAvailableQty(avaialableStoreStock + quantity);
 
 			batchAllocation.setQuantity(0);
 			batchAllocation.setBatch(batch);
@@ -301,7 +301,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 			Screen screen = GlobalDao.getScreen(screenId);
 
 			StockTransaction stockTransaction = new StockTransaction(avaialableStoreStock, screen, screen.getCode(),
-					quantity, batch.getRate(), batch.getStoreStockList().get(0).getStore(), batch, 0);
+					quantity, batch.getRate(), batch.getStoreStockList().getFirst().getStore(), batch, 0);
 
 			stockTransaction.setCreateDefaults(
 					batchAllocation.getOrganizationId() != null ? batchAllocation.getOrganizationId()
@@ -423,10 +423,10 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 				if (batchExists) {
 					BatchResponse batchResponse = response.getBatch().stream()
 							.filter(batch -> batch.getBatchId().equals(request.getItem().getBatchId()))
-							.collect(Collectors.toList()).get(0);
+							.collect(Collectors.toList()).getFirst();
 
 					Batch batch = batchList.stream().filter(b -> b.getId().equals(request.getItem().getBatchId()))
-							.collect(Collectors.toList()).get(0);
+							.collect(Collectors.toList()).getFirst();
 
 					response.setAllocationId(allocateBatchQuantity(request, batch, batchResponse));
 				}
@@ -466,9 +466,9 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 			} else {
 				boolean batchExists = false;
 
-				response = GlobalDao.itemsDetailTariff(batchList.get(0).getItem().getId());
+				response = GlobalDao.itemsDetailTariff(batchList.getFirst().getItem().getId());
 
-				Double patientclasspercentage = GlobalDao.patientclasspercentage(batchList.get(0).getItem().getId(),request.getOrganizationId(),request.getUnitId(),request.getEntitlementId()); 
+				Double patientclasspercentage = GlobalDao.patientclasspercentage(batchList.getFirst().getItem().getId(),request.getOrganizationId(),request.getUnitId(),request.getEntitlementId()); 
 				response.setPatientClassPercentage(patientclasspercentage);
 
 				List<Integer> prodCatIds = new ArrayList<Integer>();
@@ -481,7 +481,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 						// Don't throw - get first object and set data.
 					}
 
-					PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+					PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 					response.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 					response.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 				}
@@ -506,10 +506,10 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 				if (batchExists) {
 					BatchResponse batchResponse = response.getBatch().stream()
 							.filter(batch -> batch.getBatchId().equals(request.getItem().getBatchId()))
-							.collect(Collectors.toList()).get(0);
+							.collect(Collectors.toList()).getFirst();
 
 					Batch batch = batchList.stream().filter(b -> b.getId().equals(request.getItem().getBatchId()))
-							.collect(Collectors.toList()).get(0);
+							.collect(Collectors.toList()).getFirst();
 
 					//response.setAllocationId(allocateBatchQuantity(request, batch, batchResponse));
 				}
@@ -529,7 +529,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 	private CommonResponse allocateItemQuantity(WalkInSalesRequest request) throws CustomException {
 
 		try {
-			Long batchId = new Long(request.getItem().getBatchId());
+			Long batchId = Long.valueOf(request.getItem().getBatchId());
 
 			// added code by minesh for consimentLogic
 			Batch batchC = (batchId != null && batchId > 0) ? GlobalDao.getBatch(batchId) : null;
@@ -596,10 +596,10 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 							usedQuantity = quantity;
 						}
 						batch.setCurrentQuantity(balanceQuantity);
-						batch.getStoreStockList().get(0).setAvailableQty(avaialableStoreStockByBatch - quantity);
+						batch.getStoreStockList().getFirst().setAvailableQty(avaialableStoreStockByBatch - quantity);
 						balanceQty = avaialableStoreStockByBatch - quantity;
 						BatchAllocation batchAllocation = new BatchAllocation(request.getTempBillId(),
-								batch.getStoreStockList().get(0).getStore(), batch, quantity);
+								batch.getStoreStockList().getFirst().getStore(), batch, quantity);
 						batchAllocation.setIsFromOt(request.getIsFromOt() != null ? request.getIsFromOt() : false);
 						// sessionService.setEntityDefaults(batchAllocation);
 						batchAllocation.setCreateDefaults(request.getOrganizationId(), request.getUnitId(),
@@ -608,7 +608,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 
 						StockTransaction stockTransaction = new StockTransaction(avaialableStoreStockByBatch, screen,
 								screen.getCode(), usedQuantity, batch.getRate(),
-								batch.getStoreStockList().get(0).getStore(), batch, 0);
+								batch.getStoreStockList().getFirst().getStore(), batch, 0);
 						stockTransaction.setCreateDefaults(request.getOrganizationId(), request.getUnitId(),
 								request.getUserId());
 						// sessionService.setEntityDefaults(stockTransaction);
@@ -619,7 +619,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 				//System.out.println(batchAllocationList);//NitinSysoutComment
 				List<Long> allocationIdss = WalkInSalesDao.allocateQuantity(batchAllocationList);
 				if (!allocationIdss.isEmpty()) {
-					response.setId(allocationIdss.get(0));
+					response.setId(allocationIdss.getFirst());
 				}
 
 				response.setIds(allocationIdss);
@@ -674,7 +674,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 			 */
 
 			BatchAllocation batchAllocation = new BatchAllocation(request.getTempBillId(),
-					batch.getStoreStockList().get(0).getStore(), batch, issueQtyFromRequest);
+					batch.getStoreStockList().getFirst().getStore(), batch, issueQtyFromRequest);
 			// sessionService.setEntityDefaults(batchAllocation);
 			batchAllocation.setCreateDefaults(request.getOrganizationId(), request.getUnitId(), request.getUserId());
 			WalkInSalesDao.saveBatchAllocation(batchAllocation);
@@ -693,7 +693,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 			storeStockForbatch.setAvailableQty(storeAvaliableQuantity - issueQtyFromRequest);
 
 			BatchAllocation batchAllocation = new BatchAllocation(request.getTempBillId(),
-					batch.getStoreStockList().get(0).getStore(), batch, issueQtyFromRequest);
+					batch.getStoreStockList().getFirst().getStore(), batch, issueQtyFromRequest);
 			batchAllocation.setCreateDefaults(request.getOrganizationId(), request.getUnitId(), request.getUserId());
 			// sessionService.setEntityDefaults(batchAllocation);
 			WalkInSalesDao.saveBatchAllocation(batchAllocation);
@@ -1158,10 +1158,10 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 								balanceQuantity = 0;
 							}
 							batch.setCurrentQuantity(balanceQuantity);
-							batch.getStoreStockList().get(0).setAvailableQty(avaialableStoreStock + actualQty);
+							batch.getStoreStockList().getFirst().setAvailableQty(avaialableStoreStock + actualQty);
 							StockTransaction stockTransaction = new StockTransaction((avaialableStoreStock + actualQty), screen,
 									screen.getCode(), actualQty, batch.getRate(),
-									batch.getStoreStockList().get(0).getStore(), batch, 0);
+									batch.getStoreStockList().getFirst().getStore(), batch, 0);
 							stockTransaction.setTransactionDetialsId(saleDetail.getId().intValue());
 							stockTransaction.setTransactionId(sale.getId().intValue());
 							stockTransaction.setIsTransit(false);
@@ -1262,7 +1262,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 		Integer balanceQuantity = batch.getCurrentQuantity() + quantity;
 
 		batch.setCurrentQuantity(balanceQuantity);
-		batch.getStoreStockList().get(0).setAvailableQty(avaialableStoreStock + quantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(avaialableStoreStock + quantity);
 
 		batchAllocation.setQuantity(0);
 		batchAllocation.setBatch(batch);
@@ -1295,13 +1295,13 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 					Integer quantity = batchAllocationObj.getQuantity();
 					Integer balanceQuantity = batch.getCurrentQuantity() + quantity;
 					batch.setCurrentQuantity(balanceQuantity);
-					batch.getStoreStockList().get(0).setAvailableQty(avaialableStoreStock + quantity);
+					batch.getStoreStockList().getFirst().setAvailableQty(avaialableStoreStock + quantity);
 					batchAllocationObj.setQuantity(0);
 					batchAllocationObj.setBatch(batch);
 
 					Screen screen = GlobalDao.getScreen(request.getScreenId());
 					StockTransaction stockTransaction = new StockTransaction(avaialableStoreStock, screen,
-							screen.getCode(), quantity, batch.getRate(), batch.getStoreStockList().get(0).getStore(),
+							screen.getCode(), quantity, batch.getRate(), batch.getStoreStockList().getFirst().getStore(),
 							batch, 0);
 					stockTransaction.setCreateDefaults(batch.getOrganizationId(), batch.getUnitId(),
 							batch.getAddedByUser());
@@ -1331,13 +1331,13 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 					Integer quantity = batchAllocationObj.getQuantity();
 					Integer balanceQuantity = batch.getCurrentQuantity() + quantity;
 					batch.setCurrentQuantity(balanceQuantity);
-					batch.getStoreStockList().get(0).setAvailableQty(avaialableStoreStock + quantity);
+					batch.getStoreStockList().getFirst().setAvailableQty(avaialableStoreStock + quantity);
 					batchAllocationObj.setQuantity(0);
 					batchAllocationObj.setBatch(batch);
 
 					Screen screen = GlobalDao.getScreen(screenId);
 					StockTransaction stockTransaction = new StockTransaction(avaialableStoreStock, screen,
-							screen.getCode(), quantity, batch.getRate(), batch.getStoreStockList().get(0).getStore(),
+							screen.getCode(), quantity, batch.getRate(), batch.getStoreStockList().getFirst().getStore(),
 							batch, 0);
 
 					stockTransaction.setCreateDefaults(batch.getOrganizationId(), batch.getUnitId(),
@@ -1379,7 +1379,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 			Batch batch = GlobalDao.getBatch(request.getStoreId(), batchId, request.getUnitId());
 			Integer balanceQuantity = batch.getCurrentQuantity() - allocationQuantity;
 			batch.setCurrentQuantity(balanceQuantity);
-			batch.getStoreStockList().get(0).setAvailableQty(avaialableStoreStock - allocationQuantity);
+			batch.getStoreStockList().getFirst().setAvailableQty(avaialableStoreStock - allocationQuantity);
 			balanceQty = avaialableStoreStock - allocationQuantity;
 			batchAllocation.setQuantity(request.getItem().getQuantity());
 			batchAllocation.setBatch(batch);
@@ -1387,7 +1387,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 			Screen screen = GlobalDao.getScreen(request.getScreenId());
 
 			StockTransaction stockTransaction = new StockTransaction(avaialableStoreStock, screen, screen.getCode(),
-					Math.abs(allocationQuantity), batch.getRate(), batch.getStoreStockList().get(0).getStore(), batch,
+					Math.abs(allocationQuantity), batch.getRate(), batch.getStoreStockList().getFirst().getStore(), batch,
 					0);
 			stockTransaction.setCreateDefaults(request.getOrganizationId(), request.getUnitId(), request.getUserId());
 			WalkInSalesDao.saveStockTransaction(stockTransaction);
@@ -1604,7 +1604,6 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 										duplicateQty += Util.GetLeaseQuantity(item1.getQuantity(), batch.getBatchUomList(), uomTypeNew);
 									}
 								}
-								;
 							}
 							Integer leaseQuantity = Util.GetLeaseQuantity(quantity, batch.getBatchUomList(), uomType);
 
@@ -1857,7 +1856,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 
 				saleDetail = new SaleDetail(batch, item.getDiscountAmount(), item.getLeaseQuantity(), item.getNetAmount(),
 						null,
-						(prescriptionDetailId != null) ? new PrescriptionDetail(new Long(prescriptionDetailId), parentFlag)
+						(prescriptionDetailId != null) ? new PrescriptionDetail(Long.valueOf(prescriptionDetailId), parentFlag)
 								: null,
 						item.getQuantity(), item.getRate(), item.getTaxAmount(), new Tax(item.getTaxId()),
 						item.getTaxPercentage(), item.getTotalAmount(), item.getUnitDiscountAmount(),
@@ -2354,17 +2353,17 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 		Integer balanceQuantity = batch.getCurrentQuantity() - quantity;
 
 		batch.setCurrentQuantity(balanceQuantity);
-		batch.getStoreStockList().get(0).setAvailableQty(storeStock - quantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(storeStock - quantity);
 
 		BatchAllocation batchAllocation = new BatchAllocation(request.getTempBillId(),
-				batch.getStoreStockList().get(0).getStore(), batch, quantity);
+				batch.getStoreStockList().getFirst().getStore(), batch, quantity);
 		// sessionService.setEntityDefaults(batchAllocation);
 		batchAllocation.setCreateDefaults(request.getOrganizationId(), request.getUnitId(),
 				request.getUserId() != null ? request.getUserId() : sessionService.getUserId());
 		Screen screen = GlobalDao.getScreen(request.getScreenId());
 
 		StockTransaction stockTransaction = new StockTransaction(storeStock, screen, screen.getCode(), quantity,
-				batch.getRate(), batch.getStoreStockList().get(0).getStore(), batch, 0);
+				batch.getRate(), batch.getStoreStockList().getFirst().getStore(), batch, 0);
 		// sessionService.setEntityDefaults(stockTransaction);
 		stockTransaction.setCreateDefaults(request.getOrganizationId(), request.getUnitId(),
 				request.getUserId() != null ? request.getUserId() : sessionService.getUserId());
@@ -2379,7 +2378,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 		Integer allocationQuantity = batchAllocation.getQuantity() + quantity;
 		Integer balanceQuantity = batch.getCurrentQuantity() - quantity;
 		batch.setCurrentQuantity(balanceQuantity);
-		batch.getStoreStockList().get(0).setAvailableQty(storeStock - quantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(storeStock - quantity);
 
 		batchAllocation.setQuantity(allocationQuantity);
 		batchAllocation.setBatch(batch);
@@ -2387,7 +2386,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 		Screen screen = GlobalDao.getScreen(request.getScreenId());
 
 		StockTransaction stockTransaction = new StockTransaction(storeStock, screen, screen.getCode(),
-				Math.abs(quantity), batch.getRate(), batch.getStoreStockList().get(0).getStore(), batch, 0);
+				Math.abs(quantity), batch.getRate(), batch.getStoreStockList().getFirst().getStore(), batch, 0);
 		// sessionService.setEntityDefaults(stockTransaction);
 		stockTransaction.setCreateDefaults(request.getOrganizationId(), request.getUnitId(),
 				request.getUserId() != null ? request.getUserId() : sessionService.getUserId());
@@ -3097,7 +3096,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 				{
 					Integer saleId = entry.getKey();
 					dto = (List<OrderDetailsMasterDto>) entry.getValue();
-					sale = GlobalDao.getSale(new Long(saleId),billingMasterDto.getPaymentEntitlementId(), billingMasterDto.getPatientClassId(),true);
+					sale = GlobalDao.getSale(Long.valueOf(saleId),billingMasterDto.getPaymentEntitlementId(), billingMasterDto.getPatientClassId(),true);
 						sale.setAdmissionId(billingMasterDto.getAdmissionId());
 						sale.setOrganizationId(billingMasterDto.getOrganisationId());
 						sale.setUnitId(billingMasterDto.getUnitId());
@@ -3106,9 +3105,9 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 						sale.setBillingBedCategoryId(billingMasterDto.getBillingBedCategoryId());
 						sale.setPatientId(billingMasterDto.getPatientId());
 						sale.setVisitTypeId(billingMasterDto.getVisitTypeId());
-						sale.setIsRefReq(dto.get(0).getIsRefDoctorShare());
-						sale.setDepartmentId(dto.get(0).getDepartmentId());
-						sale.setForceAddPackageId(dto.get(0).getForceAddRemoved().intValue() == 1 ? dto.get(0).getOrderDetailsPackageMapperDtosList().get(0).getPackageId()	: null);
+						sale.setIsRefReq(dto.getFirst().getIsRefDoctorShare());
+						sale.setDepartmentId(dto.getFirst().getDepartmentId());
+						sale.setForceAddPackageId(dto.getFirst().getForceAddRemoved().intValue() == 1 ? dto.getFirst().getOrderDetailsPackageMapperDtosList().getFirst().getPackageId()	: null);
 					
 						Double saleTotalAmount = 0.00;
 						Double saleNetAmount = 0.00;
@@ -3139,8 +3138,8 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 						if (!sale.isTaxInclusive() && item.getTaxPercentage() != null && item.getTaxPercentage() > 0) 
 						{
 							Double dis = 0d;
-							if(dto.get(0).getOrdDiscountPer() != null && dto.get(0).getOrdDiscountPer().doubleValue() > 0) {
-								 dis = (item.getTotalAmount() / 100) * dto.get(0).getOrdDiscountPer().doubleValue();
+							if(dto.getFirst().getOrdDiscountPer() != null && dto.getFirst().getOrdDiscountPer().doubleValue() > 0) {
+								 dis = (item.getTotalAmount() / 100) * dto.getFirst().getOrdDiscountPer().doubleValue();
 							}
 							
 							double taxAmt = ((item.getTotalAmount()-(item.getConsessionAmount() + dis))* item.getTaxPercentage() * 0.01);
@@ -3149,8 +3148,8 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 							item.setTaxAmount(GlobalCommonDateUtils.getAmount(taxAmt));
 						} else {
 							Double dis = 0d;
-							if(dto.get(0).getOrdDiscountPer() != null && dto.get(0).getOrdDiscountPer().doubleValue() > 0) {
-								 dis = (item.getTotalAmount() / 100) * dto.get(0).getOrdDiscountPer().doubleValue();
+							if(dto.getFirst().getOrdDiscountPer() != null && dto.getFirst().getOrdDiscountPer().doubleValue() > 0) {
+								 dis = (item.getTotalAmount() / 100) * dto.getFirst().getOrdDiscountPer().doubleValue();
 							}
 							
 							
@@ -3177,11 +3176,11 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 									item.getAssetCategoryId(), item.getProductCategoryId(), null, null);
 						}	
 							
-						if(dto.get(0).getConcessionPer()!=null)
+						if(dto.getFirst().getConcessionPer()!=null)
 						{
-							item.setConsessionAmount(GlobalCommonDateUtils.getAmount(item.getTotalAmount()* (dto.get(0).getConcessionPer() * 0.01)));
-							item.setConsessionPercentage(dto.get(0).getConcessionPer());
-							item.setUnitConsessionAmount(GlobalCommonDateUtils.getAmount(item.getRate() * (dto.get(0).getConcessionPer() * 0.01)));
+							item.setConsessionAmount(GlobalCommonDateUtils.getAmount(item.getTotalAmount()* (dto.getFirst().getConcessionPer() * 0.01)));
+							item.setConsessionPercentage(dto.getFirst().getConcessionPer());
+							item.setUnitConsessionAmount(GlobalCommonDateUtils.getAmount(item.getRate() * (dto.getFirst().getConcessionPer() * 0.01)));
 						}else if(patientConsession != null && patientConsession.isMarkupStatus() == false) 
 						{
 							item.setConsessionAmount(GlobalCommonDateUtils.getAmount(item.getTotalAmount()* (patientConsession.getPatientClassPercentage() * 0.01)));
@@ -3193,16 +3192,16 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 							item.setUnitConsessionAmount(0);
 						}
 						
-						if(dto.get(0).getOrdDiscountPer().compareTo(BigDecimal.ZERO)==-1 )
+						if(dto.getFirst().getOrdDiscountPer().compareTo(BigDecimal.ZERO)==-1 )
 						{
 							item.setDiscountPercentage(item.getOldDiscountPercentage());
 						}
 						
-						if(dto.get(0).getOrdDiscountPer()!=null && !(dto.get(0).getOrdDiscountPer().compareTo(BigDecimal.ZERO)==-1))
+						if(dto.getFirst().getOrdDiscountPer()!=null && !(dto.getFirst().getOrdDiscountPer().compareTo(BigDecimal.ZERO)==-1))
 						{
-							item.setDiscountPercentage(dto.get(0).getOrdDiscountPer().doubleValue());
-							item.setDiscountAmount(GlobalCommonDateUtils.getAmount((item.getTotalAmount() - item.getConsessionAmount())	* (dto.get(0).getOrdDiscountPer().doubleValue() * 0.01)));
-							item.setUnitDiscountAmount(GlobalCommonDateUtils.getAmount((item.getRate() - item.getUnitConsessionAmount()) * (dto.get(0).getOrdDiscountPer().doubleValue() * 0.01)));
+							item.setDiscountPercentage(dto.getFirst().getOrdDiscountPer().doubleValue());
+							item.setDiscountAmount(GlobalCommonDateUtils.getAmount((item.getTotalAmount() - item.getConsessionAmount())	* (dto.getFirst().getOrdDiscountPer().doubleValue() * 0.01)));
+							item.setUnitDiscountAmount(GlobalCommonDateUtils.getAmount((item.getRate() - item.getUnitConsessionAmount()) * (dto.getFirst().getOrdDiscountPer().doubleValue() * 0.01)));
 						}
 						else if (item.getDiscountPercentage() != null && item.getDiscountPercentage() > 0) 
 						{
@@ -3235,7 +3234,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 				Set<Integer> saleDetailsId = new HashSet();
 
 				List<OrderDetailsMaster> detailsList = null;
-				Response res = iOrderMasterDao.getMedicationsByOrderId(dto.get(0).getOrderId());
+				Response res = iOrderMasterDao.getMedicationsByOrderId(dto.getFirst().getOrderId());
 				if (res.getListObject() != null && res.getListObject().size() > 0) {
 					detailsList = res.getListObject();
 				}
@@ -3400,7 +3399,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 					orderDetailsMaster.setPriorityId(2);
 					orderDetailsMaster.setForceAddRemoved(odForAdd.getForceAddRemoved());
 					payeeIds.add(saleDetail.getPayeeId());
-					orderDetailsMaster.setDiscountCategoryId(pharamcyList.get(0).getDiscountCategoryId()!= null ? pharamcyList.get(0).getDiscountCategoryId() : null );
+					orderDetailsMaster.setDiscountCategoryId(pharamcyList.getFirst().getDiscountCategoryId()!= null ? pharamcyList.getFirst().getDiscountCategoryId() : null );
 					// For Package
 					for (SaleDetailPackageMapperDto mppr : saleDetail.getSaleDetailPackageMapperDtoList()) 
 					{
@@ -3914,7 +3913,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 	public Response updatePayeeRetunService(List<OrderDetailsMasterDto> pharamcyList, BillingMasterDto billingMasterDto)
 			throws Exception {
 		try {
-			List<OrderDetailsMasterDto> orderDetailsList = iOrderDetailsMasterService.getItemDetailsFromOrderDetailsForUpdateReturnCalculation(pharamcyList.get(0).getOrderId());
+			List<OrderDetailsMasterDto> orderDetailsList = iOrderDetailsMasterService.getItemDetailsFromOrderDetailsForUpdateReturnCalculation(pharamcyList.getFirst().getOrderId());
 				billingMasterDto.setOrderDetailsMasterDtosList(pharamcyList);
 			Response res = this.pharamcyPackageContractReturn(billingMasterDto, orderDetailsList);
 
@@ -3933,7 +3932,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 			Integer patientTypeId) throws BillingException, Exception {
 		try {
 			OrderDetailsDiscountDto OrderDetailsDiscountDtos = new OrderDetailsDiscountDto();
-			SaleDtoChangeOfPayee sale = GlobalDao.getSale(new Long(saleId), paymentEntitlementId, patientClassId,true);
+			SaleDtoChangeOfPayee sale = GlobalDao.getSale(Long.valueOf(saleId), paymentEntitlementId, patientClassId,true);
 			Double patientClassPercentage = 0.00;
 			for (SaleDetailsChangeOfPayee item : sale.getSaledDetails()) {
 				PatientConsession patientConsession = null;
@@ -4116,7 +4115,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 													&& tContractDto.getContractId().equals(itm.getContractId())))
 										.findAny();
 
-								if (!result.isPresent()) 
+								if (result.isEmpty()) 
 								{
 									ContractConsumptionDto dtoToBeadded = tContractDto ;
 										/*new ContractConsumptionDto();
@@ -4473,7 +4472,6 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 								&& item.getSaleDetailPayeeMapperDtoList().size() > 0) {
 							Double itemNet = item.getNetAmount();
 							Double amt = 0.00;
-							;
 							Double diff = 0.00;
 							int i = 1;
 							for (SaleDetailPayeeMapperDto mpprDto : item.getSaleDetailPayeeMapperDtoList()) {
@@ -4633,7 +4631,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 							sum = sum + dto.getRate().doubleValue();
 						}
 					}
-					 selfPayeSum = selfPayeSum + sum;;
+					 selfPayeSum = selfPayeSum + sum;
 					contractSum.put(configDto.getSelfPayeeId(), BigDecimal.valueOf(selfPayeSum));
 				}else {
 					Double netSum = 0.00;
@@ -4694,7 +4692,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 						//Double calTaxAmt = (amt * taxPercentage) / 100;
                         Double calTaxAmt = (amt * taxPercentage)/(100 + item.getTaxPercentage());
 						SaleDetailTaxComponenet saleDetailTaxComponenet = new SaleDetailTaxComponenet(calTaxAmt,
-								new SaleDetail(sale.getSaleDetailsList().get(0).getId()), taxPercentage,
+								new SaleDetail(sale.getSaleDetailsList().getFirst().getId()), taxPercentage,
 								new TaxComponent(taxCompId));
 						// sessionService.setEntityDefaults(saleDetailTaxComponenet);
 						saleDetailTaxComponenet.setAmount(calTaxAmt);
@@ -5315,7 +5313,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 				prodCatId.add(item.getProductCategoryId());
 				List<PharmacyTariff> pharmacyTariffs = GlobalDao.getTariff(prodCatId, dto.getPaymentEntitlementId());
 				if (pharmacyTariffs != null && !pharmacyTariffs.isEmpty()) {
-					PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+					PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 					item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 					item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 				}
@@ -5370,9 +5368,9 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 				}
 				billDto.setPharmacyReturnServiceRecal(null);
 				
-                Date orderDate = dtlsList.get(0).getOrderDateString()!=null ? GlobalCommonDateUtils.getDate(dtlsList.get(0).getOrderDateString(),"yyyy-MM-dd HH:mm:ss"):date;
-                boolean isDummyService = dtlsList.get(0).getIsDummyService() ? true : false;
-				Integer createdBy= dtlsList.get(0).getCreatedBy()!=null ? dtlsList.get(0).getCreatedBy():billDto.getCreatedBy();
+                Date orderDate = dtlsList.getFirst().getOrderDateString()!=null ? GlobalCommonDateUtils.getDate(dtlsList.getFirst().getOrderDateString(),"yyyy-MM-dd HH:mm:ss"):date;
+                boolean isDummyService = dtlsList.getFirst().getIsDummyService() ? true : false;
+				Integer createdBy= dtlsList.getFirst().getCreatedBy()!=null ? dtlsList.getFirst().getCreatedBy():billDto.getCreatedBy();
                 Double netAmount = 0.00;
 				Double taxAmount = 0.00;
 				Double ordTotalAmt = 0.00;
@@ -5426,9 +5424,9 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 					orderMasterDto.setCreatedBy(createdBy);
 					orderMasterDto.setUpdatedBy(billDto.getCreatedBy());
 					orderMasterDto.setReturnDate(billDto.getReturnDate()!= null ? billDto.getReturnDate(): null);
-					orderMasterDto.setSaleId(dtlsList.get(0).getSaleId());
-					if(billDto.getOrderDetailsMasterDtosList()!=null && billDto.getOrderDetailsMasterDtosList().get(0).getOrderId()>0)
-						orderMasterDto.setOrderId(billDto.getOrderDetailsMasterDtosList().get(0).getOrderId());
+					orderMasterDto.setSaleId(dtlsList.getFirst().getSaleId());
+					if(billDto.getOrderDetailsMasterDtosList()!=null && billDto.getOrderDetailsMasterDtosList().getFirst().getOrderId()>0)
+						orderMasterDto.setOrderId(billDto.getOrderDetailsMasterDtosList().getFirst().getOrderId());
 					
 					if (admission != null) 
 					{
@@ -5870,9 +5868,9 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 				}
 
 				OrderDetailsMasterDto dtoToAdd = new OrderDetailsMasterDto();
-					if(billDto.getOrderDetailsMasterDtosList()!=null && billDto.getOrderDetailsMasterDtosList().get(0).getOrderId()>0)
+					if(billDto.getOrderDetailsMasterDtosList()!=null && billDto.getOrderDetailsMasterDtosList().getFirst().getOrderId()>0)
 					{
-						dtoToAdd.setOrderDetailsId(billDto.getOrderDetailsMasterDtosList().get(0).getOrderDetailsId());
+						dtoToAdd.setOrderDetailsId(billDto.getOrderDetailsMasterDtosList().getFirst().getOrderDetailsId());
 						dtoToAdd.setUpdatedBy(billDto.getUpdatedBy());
 						dtoToAdd.setUpdatedDate(date.getTime());
 						dtoToAdd.setCreatedDate(orderDate.getTime());
@@ -6155,7 +6153,7 @@ public class WalkInSalesService implements IWalkInSalesService, ICommonConstants
 	@Transactional
 	public Response applyDiscountOnPharamcyReturn(List<OrderDetailsMasterDto> dtlsList,	BillingMasterDto billDto) throws Exception 
 	{
-		OrderDetailsMasterDto mainOrderDetail = dtlsList.get(0);
+		OrderDetailsMasterDto mainOrderDetail = dtlsList.getFirst();
 		
 		List<OrderDetailsMaster> detailsList = null;
 		Response res = iOrderMasterDao.getMedicationsByOrderId(mainOrderDetail.getOrderId());

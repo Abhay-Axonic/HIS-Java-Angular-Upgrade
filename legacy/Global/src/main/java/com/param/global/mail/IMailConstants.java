@@ -17,12 +17,19 @@ public interface IMailConstants {
 			public String MYLIFE_ANDROID_APP_LINK = "https://www.dropbox.com/s/xbhe7xxpprvmzq3/Athaayu%20V1.1.apk?dl=0";
 			
 			String MAIL_SUBJECT = "Password Reset";
-			String MESSAGE = "You recently requested to reset your password for your Clinivantage account. "
-							+ "\nBased on request we have successfully changed your password,  "
-							+ "\nand your new password is :  ";
-			String NOTE = "\n\nNote : Please don't forget to change your password once you logged in to your Clinivantage system from my profile section. "
-						+ "\n\nRegards, "
-						+ "\nClinivantage Team ";
+			String MESSAGE = """
+							You recently requested to reset your password for your Clinivantage account.\s
+							Based on request we have successfully changed your password, \s
+							and your new password is : \s\
+							""";
+			String NOTE = """
+						
+						
+						Note : Please don't forget to change your password once you logged in to your Clinivantage system from my profile section.\s
+						
+						Regards,\s
+						Clinivantage Team\s\
+						""";
 			
 			String PATIENT_NOTE = "\n\nNote : Please download MyLife App from below link \n"+MYLIFE_ANDROID_APP_LINK+" \nPlease don't forget to change your password once you logged in to your MyLife App from my profile section. "
 					+ "\n\nRegards, "
@@ -58,9 +65,12 @@ public interface IMailConstants {
 			public String DOCTOR_REG_CONTENT = "\nYour Registration as a Doctor is successful with Clinivantage.\nFollowing are the login credentials for Application.";
 			public String EMPLOYEE_REG_CONTENT = "\nYour Registration is successful with Clinivantage.\nFurther are the login credentials for Application ";
 			
-			public String CHANGE_PASSWORD_NOTE = "Note:  Please don't forget to change your password once you logged in to your Clinivantage system from my profile section."
-												+ "\n\nRegards, "
-												+ "\nClinivantage Team ";
+			public String CHANGE_PASSWORD_NOTE = """
+												Note:  Please don't forget to change your password once you logged in to your Clinivantage system from my profile section.
+												
+												Regards,\s
+												Clinivantage Team\s\
+												""";
 			public String USERNAME = "\nUsername: ";
 			public String PASSWORD = "\nPassword: ";
 			
@@ -68,19 +78,23 @@ public interface IMailConstants {
 			
 			String PASSWORD_PROTECTED_DOCUMENT_SUBJECT = "Patient Documents";
 			public String PASSWORD_PROTECTED_DOCUMENT_MESSAGE = "\n follwing are the list of documents: \n";
-			public String OTP_MAIL_CONTENT = "Dear Patron,  "
-					+ "\n<br>   "
-					+ "\n<br>Greetings from Team Clinivantage.  "
-					+ "\n<br>   "
-					+ "\n<br>OTP for reset password is: ";
+			public String OTP_MAIL_CONTENT = """
+					Dear Patron, \s
+					<br>  \s
+					<br>Greetings from Team Clinivantage. \s
+					<br>  \s
+					<br>OTP for reset password is:\s\
+					""";
 							
 			public String OTP_SUBJECT="OTP Verification";
 			public String RESEND_USERNAME_SUBJECT="UserName";
-			public String USERNAME_MAIL_CONTENT= "Dear Patron,  "
-					+ "\n<br>   "
-					+ "\n<br>Greetings from Team Clinivantage.  "
-					+ "\n<br>   "
-					+ "\n<br>Username is: ";
+			public String USERNAME_MAIL_CONTENT= """
+					Dear Patron, \s
+					<br>  \s
+					<br>Greetings from Team Clinivantage. \s
+					<br>  \s
+					<br>Username is:\s\
+					""";
 			public String RESEND_USERNAME_AND_PWD_SUBJECT = " Username and Password";
 			public String PWD_CONTENT="Your Password is:";
 			

@@ -46,8 +46,7 @@ public class URLConnectionClient implements HttpClient {
 		final URL url = request.url;
 		final URLConnection connection = url.openConnection();
 		connection.setDoInput(true);
-		if (connection instanceof HttpURLConnection) {
-			HttpURLConnection http = (HttpURLConnection) connection;
+		if (connection instanceof HttpURLConnection http) {
 			http.setRequestMethod(httpMethod);
 			for (Map.Entry<String, Object> p : parameters.entrySet()) {
 				String name = p.getKey();
@@ -99,16 +98,13 @@ public class URLConnectionClient implements HttpClient {
 									.parseInt(contentLength));
 				}
 				connection.setDoOutput(true);
-				OutputStream output = connection.getOutputStream();
-				try {
+				try (OutputStream output = connection.getOutputStream()) {
 					ex = new ExcerptInputStream(body);
 					byte[] b = new byte[1024];
 					for (int n; 0 < (n = ex.read(b));) {
 						output.write(b, 0, n);
 					}
 					excerpt = ex.getExcerpt();
-				} finally {
-					output.close();
 				}
 			} finally {
 				body.close();

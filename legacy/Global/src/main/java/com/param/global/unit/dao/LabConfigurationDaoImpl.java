@@ -101,7 +101,7 @@ public class LabConfigurationDaoImpl  extends GenericDao<LabConfigurationMaster,
 			master.setMicrobiologyId(dto.getMicrobiologyId());
 			master.setHistopathologyId(dto.getHistopathologyId());
 			master.setCystopathologyId(dto.getCystopathologyId());
-			master.setIsPinApplicable(dto.getIsPinApplicable());;
+			master.setIsPinApplicable(dto.getIsPinApplicable());
 			master.setSerologyId(dto.getSerologyId());
 			master.setClinicalPathologyId(dto.getClinicalPathologyId());
 			master.setIsPrebarcodeGenerantion(dto.getIsPrebarcodeGenerantion() !=null ? dto.getIsPrebarcodeGenerantion() :'N');
@@ -263,7 +263,7 @@ public class LabConfigurationDaoImpl  extends GenericDao<LabConfigurationMaster,
 			int cnt=0;
 			if(list!=null && list.size()==1)
 			{
-			 cnt= list.get(0).getUserId() ;	
+			 cnt= list.getFirst().getUserId() ;	
 			 return new Response(SUCCESS, SUCCESS_CODE, null, list, cnt);
 			}
 			else if(list!=null && list.size()>1){

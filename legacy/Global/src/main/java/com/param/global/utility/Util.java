@@ -103,7 +103,7 @@ public class  Util {
 	public static BatchResponse PopulateBatchWithStock(Batch batch) {
 
 		BatchResponse batchResponse= new BatchResponse(batch.getId(), batch.getBatchNo(), batch.getExpiryDate(), batch.getSellingPrice(),
-				batch.getStoreStockList().get(0).getAvailableQty(), batch.getMarkup(), batch.getRate(),
+				batch.getStoreStockList().getFirst().getAvailableQty(), batch.getMarkup(), batch.getRate(),
 				PopulateUom(batch));
 		batchResponse.setTaxId(batch.getTax()!=null ? batch.getTax().getId():null);
 		batchResponse.setTaxPercentage(batch.getTaxPercentage());
@@ -131,14 +131,14 @@ public class  Util {
 	public static BatchResponse PopulateBatchWithStockWithConsignmentFlag(Batch batch) {
 
 		return new BatchResponse(batch.getId(), batch.getBatchNo(), batch.getExpiryDate(), batch.getSellingPrice(),
-				batch.getStoreStockList().get(0).getAvailableQty(), batch.getMarkup(), batch.getRate(),batch.getIsConsignment(),
+				batch.getStoreStockList().getFirst().getAvailableQty(), batch.getMarkup(), batch.getRate(),batch.getIsConsignment(),
 				PopulateUom(batch));
 	}
 	//end code  by minesh for Populate Batch With Stock And Consignment Flag
 
 	public static BatchResponse PopulateBatchWithStockWithFlag(Batch batch, Boolean isSelected) {
 		BatchResponse bres=new BatchResponse(batch.getId(), batch.getBatchNo(), batch.getExpiryDate(), batch.getSellingPrice(),
-				batch.getStoreStockList().get(0).getAvailableQty(), batch.getMarkup(), batch.getRate(),
+				batch.getStoreStockList().getFirst().getAvailableQty(), batch.getMarkup(), batch.getRate(),
 				PopulateUom(batch), isSelected);
 		bres.setTaxPercentage(batch.getTaxPercentage()!=null ? batch.getTaxPercentage() : 0);
 		bres.setTaxId(batch.getTax()!=null ? batch.getTax().getId():0);

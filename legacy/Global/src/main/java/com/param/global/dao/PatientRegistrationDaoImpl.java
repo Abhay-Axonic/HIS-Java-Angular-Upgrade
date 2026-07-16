@@ -285,7 +285,7 @@ public class PatientRegistrationDaoImpl extends GenericDao<PatientRegistration, 
 			}
 			
 			if(patientRegistrationDto.getHealthId() != null && patientRegistrationDto.getHealthNumber() != null && getPatientDetaisList.size() >0) {
-				PatientDetailsDto alreadyExists = getPatientDetaisList.get(0);
+				PatientDetailsDto alreadyExists = getPatientDetaisList.getFirst();
 		         Session sessiona=sessionFactory.openSession();
 					String querya="UPDATE PatientRegistration "
 								+ " SET healthId ='"+patientRegistrationDto.getHealthId()+"', "

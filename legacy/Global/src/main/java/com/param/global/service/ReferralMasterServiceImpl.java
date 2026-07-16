@@ -200,7 +200,7 @@ public class ReferralMasterServiceImpl implements IReferralMasterService, ICommo
 			Response deptResponse = iReferralMasterDao.getReferralByName(referralMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
-				return new Response(ERROR, "1", "Referral you are trying to add is "+ALREADY_EXIST, null, deptResponse.getListObject().get(0));
+				return new Response(ERROR, "1", "Referral you are trying to add is "+ALREADY_EXIST, null, deptResponse.getListObject().getFirst());
 			} else {
 				Response res = iReferralMasterDao.addReferralTypeTypeMaster(referralMasterDto);
 				

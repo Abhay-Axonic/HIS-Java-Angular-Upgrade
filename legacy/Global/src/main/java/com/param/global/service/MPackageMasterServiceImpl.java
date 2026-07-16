@@ -974,7 +974,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 													SERVICE_AVAILABLE_IN_ACTIVE_PACKAGE, null,
 													(tempRes.getListObject() != null
 															&& tempRes.getListObject().size() > 0)
-																	? tempRes.getListObject().get(0)
+																	? tempRes.getListObject().getFirst()
 																	: null);
 										}
 									}
@@ -988,7 +988,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 									return new Response<>(SUCCESS, SUCCESS_CODE, SERVICE_AVAILABLE_IN_ACTIVE_PACKAGE,
 											null,
 											(tempRes.getListObject() != null && tempRes.getListObject().size() > 0)
-													? tempRes.getListObject().get(0)
+													? tempRes.getListObject().getFirst()
 													: null);
 								}
 							}
@@ -1039,7 +1039,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 								Response servRes = iUnitServiceMapperDao
 										.getServiceByIdForPackageValid(packageServiceCheckReqDto.getServiceId(),unitId);
 								if (servRes.getListObject() != null && servRes.getListObject().size() > 0) {
-									ServiceSearchResDto servDtls = (ServiceSearchResDto) servRes.getListObject().get(0);
+									ServiceSearchResDto servDtls = (ServiceSearchResDto) servRes.getListObject().getFirst();
 
 									// get service price
 									UnitServiceTariffMasterDto tariffDto = new UnitServiceTariffMasterDto();
@@ -1123,7 +1123,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 									return new Response<>(SUCCESS, SUCCESS_CODE, SERVICE_AVAILABLE_IN_ACTIVE_PACKAGE,
 											null,
 											(tempRes.getListObject() != null && tempRes.getListObject().size() > 0)
-													? tempRes.getListObject().get(0)
+													? tempRes.getListObject().getFirst()
 													: null);
 								}
 							}
@@ -1173,7 +1173,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 									return new Response<>(SUCCESS, SUCCESS_CODE, SERVICE_AVAILABLE_IN_ACTIVE_PACKAGE,
 											null,
 											(tempRes.getListObject() != null && tempRes.getListObject().size() > 0)
-													? tempRes.getListObject().get(0)
+													? tempRes.getListObject().getFirst()
 													: null);
 								}
 							}
@@ -1205,7 +1205,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 										return new Response<>(SUCCESS, SUCCESS_CODE,
 												SERVICE_AVAILABLE_IN_ACTIVE_PACKAGE, null,
 												(tempRes.getListObject() != null && tempRes.getListObject().size() > 0)
-														? tempRes.getListObject().get(0)
+														? tempRes.getListObject().getFirst()
 														: null);
 									}
 								}
@@ -1848,7 +1848,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 							switch (parentPackageDto.getPackageTypeId()) {
 								case 1: // EHC package
 									     if(serviceIds.isEmpty()) {
-											 serviceIds = parentPackageDto.getPackageMasterDtoList().get(0)
+											 serviceIds = parentPackageDto.getPackageMasterDtoList().getFirst()
 													 .getListTPackageServicesDetailsDto()
 													 .stream()
 													 .filter(pkg -> pkg.getServiceId() != null)
@@ -1862,9 +1862,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 									break;
 								case 2: // Either or Package
 									// get service details
-									if(serviceIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().get(0)
+									if(serviceIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().getFirst()
 											.getListTPackageServicesDetailsDto()!=null) {
-										serviceIds = 	 parentPackageDto.getPackageMasterDtoList().get(0)
+										serviceIds = 	 parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageServicesDetailsDto()
 												.stream()
 												.filter(pkg -> pkg.getServiceId() != null)
@@ -1872,7 +1872,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 												.distinct().collect(Collectors.toSet());
 										reqDto.setServiceIds(serviceIds);
 									}
-									eorlist = parentPackageDto.getPackageMasterDtoList().get(0).getListTPackageEitherorGroupDetailsDto();
+									eorlist = parentPackageDto.getPackageMasterDtoList().getFirst().getListTPackageEitherorGroupDetailsDto();
 
 									packageRes =   this.searchServiceForPackageByMultipleCategory(dto, reqDto);
 									packageDto=  (MPackageMasterDto)packageRes.getObject();
@@ -1889,9 +1889,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 								case 3: // package with cap
 									packageRes =   this.searchServiceForPackageByMultipleCategory(dto, reqDto);
 									packageDto=  (MPackageMasterDto)packageRes.getObject();
-									if(serviceIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().get(0)
+									if(serviceIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().getFirst()
 											.getListTPackageServicesDetailsDto()!=null) {
-										serviceIds = parentPackageDto.getPackageMasterDtoList().get(0)
+										serviceIds = parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageServicesDetailsDto()
 												.stream()
 												.filter(pkg -> pkg.getServiceId() != null)
@@ -1908,9 +1908,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 											packageDto.setListTPackageServicesDetailsDto(packageDtoService.getListTPackageServicesDetailsDto());
 										}
 									}
-									if(itemIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().get(0)
+									if(itemIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().getFirst()
 											.getListTPackageItemDetailsDto()!=null) {
-										itemIds = parentPackageDto.getPackageMasterDtoList().get(0)
+										itemIds = parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageItemDetailsDto()
 												.stream()
 												.filter(pkg -> pkg.getItemId() != null)
@@ -1929,9 +1929,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 											packageDto.setListTPackageItemDetailsDto(packageDtoItem.getListTPackageItemDetailsDto());
 										}
 									 }
-									if(serviceIdsExclusion.isEmpty() && parentPackageDto.getPackageMasterDtoList().get(0)
+									if(serviceIdsExclusion.isEmpty() && parentPackageDto.getPackageMasterDtoList().getFirst()
 											.getListGroupWiseIncExc()!=null) {
-										serviceIdsExclusion = parentPackageDto.getPackageMasterDtoList().get(0)
+										serviceIdsExclusion = parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListGroupWiseIncExc()
 												.stream()
 												.filter(pkg -> pkg.getServiceId() != null)
@@ -1949,9 +1949,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 											packageDto.setListGroupWiseIncExc(packageDtoExclusion.getListGroupWiseIncExc());
 										}
 									}
-									if(itemIdsExclusion.isEmpty() && parentPackageDto.getPackageMasterDtoList().get(0)
+									if(itemIdsExclusion.isEmpty() && parentPackageDto.getPackageMasterDtoList().getFirst()
 											.getListConsumableWiseIncExc()!=null) {
-										itemIdsExclusion = parentPackageDto.getPackageMasterDtoList().get(0)
+										itemIdsExclusion = parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListConsumableWiseIncExc()
 												.stream()
 												.filter(pkg -> pkg.getItemId() != null)
@@ -1969,16 +1969,16 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 											packageDto.setListConsumableWiseIncExc(packageDtoItemExclusion.getListConsumableWiseIncExc());
 										}
 									}
-									if(parentPackageDto.getPackageMasterDtoList().get(0).getListTPackageBedCategoryDetailDto()!=null									 ){
-										 bedCategoryListCap = parentPackageDto.getPackageMasterDtoList().get(0)
+									if(parentPackageDto.getPackageMasterDtoList().getFirst().getListTPackageBedCategoryDetailDto()!=null									 ){
+										 bedCategoryListCap = parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageBedCategoryDetailDto();
 									}
-									if(parentPackageDto.getPackageMasterDtoList().get(0).getListTPackageGroupWiseCapDetailsDto()!=null									 ){
-										groupWiseCap = parentPackageDto.getPackageMasterDtoList().get(0)
+									if(parentPackageDto.getPackageMasterDtoList().getFirst().getListTPackageGroupWiseCapDetailsDto()!=null									 ){
+										groupWiseCap = parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageGroupWiseCapDetailsDto();
 									}
-									if(parentPackageDto.getPackageMasterDtoList().get(0).getListTPackageConsumableWiseCapDetailsDto()!=null									 ){
-										consumableWiseCap = parentPackageDto.getPackageMasterDtoList().get(0)
+									if(parentPackageDto.getPackageMasterDtoList().getFirst().getListTPackageConsumableWiseCapDetailsDto()!=null									 ){
+										consumableWiseCap = parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageConsumableWiseCapDetailsDto();
 									}
 
@@ -1995,9 +1995,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 									break;
 								case 4: // All exclusive package
 									//List<TPackageIncExcDetailsDto> tPackageServiceIncExcDetailsDto = new ArrayList<TPackageIncExcDetailsDto>();
-									if(serviceIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().get(0)
+									if(serviceIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().getFirst()
 											.getListTPackageIncExcServiceDetailsDto()!=null) {
-										serviceIds = 	 parentPackageDto.getPackageMasterDtoList().get(0)
+										serviceIds = 	 parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageIncExcServiceDetailsDto()
 												.stream()
 												.filter(pkg -> pkg.getServiceId() != null)
@@ -2005,9 +2005,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 												.distinct().collect(Collectors.toSet());
 										reqDto.setServiceIds(serviceIds);
 									}
-									if(itemIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().get(0)
+									if(itemIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().getFirst()
 											.getListTPackageIncExcItemDetailsDto()!=null) {
-										itemIds = 	 parentPackageDto.getPackageMasterDtoList().get(0)
+										itemIds = 	 parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageIncExcItemDetailsDto()
 												.stream()
 												.filter(pkg -> pkg.getItemId() != null)
@@ -2015,9 +2015,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 												.distinct().collect(Collectors.toSet());
 										reqDto.setItemIds(itemIds);
 									}
-									 if(parentPackageDto.getPackageMasterDtoList().get(0)
+									 if(parentPackageDto.getPackageMasterDtoList().getFirst()
 											 .getListTPackageIncExcServiceDetailsDto()!=null){
-										 exclulist  = parentPackageDto.getPackageMasterDtoList().get(0)
+										 exclulist  = parentPackageDto.getPackageMasterDtoList().getFirst()
 												 .getListTPackageIncExcServiceDetailsDto()
 												 .stream()
 												 .filter(pkg -> pkg.getIsGroupwiseExlusion() != null && pkg.getIsGroupwiseExlusion().equals(2))
@@ -2035,9 +2035,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 									}
 									break;
 								case 5: // multi encounter package
-									if(serviceIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().get(0)
+									if(serviceIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().getFirst()
 											.getListTPackageServicesDetailsDto()!=null) {
-										serviceIds = 	 parentPackageDto.getPackageMasterDtoList().get(0)
+										serviceIds = 	 parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageServicesDetailsDto()
 												.stream()
 												.filter(pkg -> pkg.getServiceId() != null)
@@ -2045,9 +2045,9 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 												.distinct().collect(Collectors.toSet());
 										reqDto.setServiceIds(serviceIds);
 									}
-									if(itemIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().get(0)
+									if(itemIds.isEmpty() && parentPackageDto.getPackageMasterDtoList().getFirst()
 											.getListTPackageItemDetailsDto()!=null) {
-										itemIds = 	 parentPackageDto.getPackageMasterDtoList().get(0)
+										itemIds = 	 parentPackageDto.getPackageMasterDtoList().getFirst()
 												.getListTPackageItemDetailsDto()
 												.stream()
 												.filter(pkg -> pkg.getItemId() != null)
@@ -2287,7 +2287,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 							ordDtls.setUpdatedBy(encounterMasterDto.getCreatedBy());
 							ordDtls.setIsDrug('N');
 							ordDtls.setIsPackageService('Y');
-							ordDtls.setIsPackage(false);;
+							ordDtls.setIsPackage(false);
 							ordDtls.setIsInvestigationOrder('N');
 							ordDtls.setIsProcedure('N');
 							ordDtls.setDebitNoteService(false);
@@ -3510,7 +3510,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 									if (result.isPresent())
 										break;
 
-									if (!result.isPresent()) {
+									if (result.isEmpty()) {
 									/**	if (consumptionDto.getOrderDetailsPackageMapperDtosList() != null
 												&& !consumptionDto.getOrderDetailsPackageMapperDtosList().isEmpty()) {
 											/**OrderDetailsPackageMapperDto oDPmpprDto = new OrderDetailsPackageMapperDto();
@@ -4558,7 +4558,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 								   if(result.isPresent())
 									   continue;
 
-								  if (ordDtlsDto.getSelfPayable().doubleValue()>0 && !result.isPresent())
+								  if (ordDtlsDto.getSelfPayable().doubleValue()>0 && result.isEmpty())
 									{
 										if(ordDtlsDto.getOrderDetailsPackageMapperDtosList()!=null && !ordDtlsDto.getOrderDetailsPackageMapperDtosList().isEmpty())
 										{
@@ -4755,7 +4755,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 			        .filter(od -> od.getOrderDetailsId()==null)
 			        .findFirst();
 
-			if(!result.isPresent())
+			if(result.isEmpty())
 			{
 				List<OrderDetailsMasterDto> distinctOrderDetailsList = mergedList.stream()
 	                    .collect(Collectors.collectingAndThen(
@@ -5674,7 +5674,7 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 													continue;
 
 												//for (int qty =1 ; qty <=quantity ; qty++) {
-												if (itemDto.getSelfPayable().doubleValue() > 0 && !result.isPresent() && unitNetAmount > 0) {
+												if (itemDto.getSelfPayable().doubleValue() > 0 && result.isEmpty() && unitNetAmount > 0) {
 													if (itemDto.getSaleDetailPackageMapperDtoList() != null && !itemDto.getSaleDetailPackageMapperDtoList().isEmpty()) {
 													/**	SaleDetailPackageMapperDto oDPmpprDto = new SaleDetailPackageMapperDto();
 														oDPmpprDto.setPackageId(resDto.getPackageId());

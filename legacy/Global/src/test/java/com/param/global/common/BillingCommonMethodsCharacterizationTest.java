@@ -1211,7 +1211,7 @@ class BillingCommonMethodsCharacterizationTest {
                     resDto, srv, consumptionDto, 50.0, 'N', true);
 
             assertThat(result.getOrderDetailsPackageMapperDtosList()).hasSize(2);
-            assertThat(result.getOrderDetailsPackageMapperDtosList().get(0)).isSameAs(existing.get(0));
+            assertThat(result.getOrderDetailsPackageMapperDtosList().getFirst()).isSameAs(existing.getFirst());
         }
     }
 

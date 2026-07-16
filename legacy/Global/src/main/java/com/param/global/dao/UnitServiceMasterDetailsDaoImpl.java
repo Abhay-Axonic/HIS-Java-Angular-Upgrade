@@ -125,7 +125,7 @@ public class UnitServiceMasterDetailsDaoImpl extends GenericDao<UnitServiceMaste
 			 unitServiceMasterDetailsDto = (UnitServiceMasterDetailsDto) sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_SERVICE_MASTER_DETAILS_BY_ID")
 					.setParameter("unitServiceMasterDetailsId", unitServiceMasterDetailsDto.getUnitServiceMasterDetailsId())
-					.setResultTransformer(Transformers.aliasToBean(UnitServiceMasterDetailsDto.class)).uniqueResult();;
+					.setResultTransformer(Transformers.aliasToBean(UnitServiceMasterDetailsDto.class)).uniqueResult();
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, null,unitServiceMasterDetailsDto);
 		}catch (HibernateException he) {
 			logger.error("getUnitServiceMasterDetailsById failed", he);
@@ -323,7 +323,7 @@ public class UnitServiceMasterDetailsDaoImpl extends GenericDao<UnitServiceMaste
 					.getNamedQuery("GET_PROCEDURE_SERVICES_FOR_SEARCH").getQueryString());
 			
 			if(unitServiceMasterDetailsDto.getProcedureTypeIdList()!=null)
-				query.append("AND srvmppr.procedure_type_id IN( "+unitServiceMasterDetailsDto.getProcedureTypeIdList().get(0)+","+unitServiceMasterDetailsDto.getProcedureTypeIdList().get(1)+")");
+				query.append("AND srvmppr.procedure_type_id IN( "+unitServiceMasterDetailsDto.getProcedureTypeIdList().getFirst()+","+unitServiceMasterDetailsDto.getProcedureTypeIdList().get(1)+")");
 			else
 				query.append("AND srvmppr.procedure_type_id="+unitServiceMasterDetailsDto.getProcedureTypeId());
 			
@@ -474,7 +474,7 @@ public class UnitServiceMasterDetailsDaoImpl extends GenericDao<UnitServiceMaste
 					.createSQLQuery(query)
 					.setParameter("serviceId", unitServiceMasterDetailsDto.getServiceMasterId())
 					.setParameter("unitId", unitServiceMasterDetailsDto.getUnitId())
-					.setResultTransformer(Transformers.aliasToBean(UnitServiceMasterDetailsDto.class)).uniqueResult();;
+					.setResultTransformer(Transformers.aliasToBean(UnitServiceMasterDetailsDto.class)).uniqueResult();
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, null,unitServiceMasterDetailsDto);
 		}catch (HibernateException he) {
 			logger.error("getUnitServiceMasterDetailsByServiceId failed", he);

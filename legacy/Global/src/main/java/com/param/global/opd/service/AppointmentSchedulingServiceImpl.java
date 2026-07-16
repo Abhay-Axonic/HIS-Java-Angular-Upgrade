@@ -918,7 +918,7 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 	@Transactional
 	public Response generateCyclicServiceAppointment(List<SlotMasterDto> slotMasterDto) {
 		try {
-			Date currentDate = TimeZoneComponent.getDateByzone(slotMasterDto.get(0).getUnitId());
+			Date currentDate = TimeZoneComponent.getDateByzone(slotMasterDto.getFirst().getUnitId());
 			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			String strCurrentDate = formatter.format(currentDate);
 			BigDecimal serviceAmt = BigDecimal.ZERO;
@@ -932,8 +932,8 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 		
 			EncounterMasterDto encounterMasterDto =new EncounterMasterDto();
 			
-			if (slotMasterDto.get(0).getParentPackageId() != null || slotMasterDto.get(0).getIsFromCoversheet().equals('Y')) {
-				Response res = iEncounterMasterService.getEncounterDetailsById(slotMasterDto.get(0).getEncounterId());
+			if (slotMasterDto.getFirst().getParentPackageId() != null || slotMasterDto.getFirst().getIsFromCoversheet().equals('Y')) {
+				Response res = iEncounterMasterService.getEncounterDetailsById(slotMasterDto.getFirst().getEncounterId());
 				encounterMasterDto = (EncounterMasterDto) res.getObject();
 			}
 			// create order detail list
@@ -1012,9 +1012,9 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 			}
 
 			// place order master
-			if (slotMasterDto.get(0).getParentPackageId() != null
-					|| slotMasterDto.get(0).getIsFromCoversheet().equals('Y')) {
-				SlotMasterDto slotMasterDto1 = slotMasterDto.get(0);
+			if (slotMasterDto.getFirst().getParentPackageId() != null
+					|| slotMasterDto.getFirst().getIsFromCoversheet().equals('Y')) {
+				SlotMasterDto slotMasterDto1 = slotMasterDto.getFirst();
 				OrderMasterDto orderMasterDto = new OrderMasterDto();
 				orderMasterDto.setPatientId(slotMasterDto1.getPatientId());
 				orderMasterDto.setCreatedBy(slotMasterDto1.getCreatedBy());
@@ -1080,22 +1080,22 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 			}
 
 			// place entry in bill detail incase of package
-			if (slotMasterDto.get(0).getParentPackageId() != null
-					|| slotMasterDto.get(0).getIsFromCoversheet().equals('Y')) {
-				OrderDetailsMasterDto orderDetailsMasterDto = orderDetailsMasterList.get(0);
+			if (slotMasterDto.getFirst().getParentPackageId() != null
+					|| slotMasterDto.getFirst().getIsFromCoversheet().equals('Y')) {
+				OrderDetailsMasterDto orderDetailsMasterDto = orderDetailsMasterList.getFirst();
 
-				if (slotMasterDto.get(0).getParentPackageId() != null && slotMasterDto.get(0).getBillId() != null) {
+				if (slotMasterDto.getFirst().getParentPackageId() != null && slotMasterDto.getFirst().getBillId() != null) {
 					for (i = 0; i < slotMasterDto.size(); i++) {
 						BillingDetailsDto billingDetailsDto = new BillingDetailsDto();
-						billingDetailsDto.setBillingMasterId(slotMasterDto.get(0).getBillId());
+						billingDetailsDto.setBillingMasterId(slotMasterDto.getFirst().getBillId());
 						billingDetailsDto.setServiceId(orderDetailsMasterDto.getServiceId());
 						billingDetailsDto.setRate(orderDetailsMasterDto.getServiceAmt().doubleValue());
 						billingDetailsDto.setQuantity(1.00);
 						billingDetailsDto.setConcession(0.00);
 						billingDetailsDto.setGrossAmount(orderDetailsMasterDto.getServiceAmt().doubleValue());
 						billingDetailsDto.setCoPayPercentage( Double.valueOf(0.00));
-						billingDetailsDto.setUnitId(slotMasterDto.get(0).getUnitId());
-						billingDetailsDto.setOrganizationId(slotMasterDto.get(0).getOrganizationId());
+						billingDetailsDto.setUnitId(slotMasterDto.getFirst().getUnitId());
+						billingDetailsDto.setOrganizationId(slotMasterDto.getFirst().getOrganizationId());
 						billingDetailsDto.setStatus('A');
 						billingDetailsDto.setCreatedBy(orderDetailsMasterDto.getCreatedBy());
 						billingDetailsDto.setUpdatedBy(orderDetailsMasterDto.getUpdatedBy());
@@ -1105,13 +1105,13 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 								.setUpdatedDate(GlobalCommonDateUtils.getLongDateFromStrigDate(strCurrentDate));
 						billingDetailsDto.setDiscount(0.00);
 
-						if (slotMasterDto.get(0).getTaxId() != null) {
-							billingDetailsDto.setTaxId(slotMasterDto.get(0).getTaxId());
+						if (slotMasterDto.getFirst().getTaxId() != null) {
+							billingDetailsDto.setTaxId(slotMasterDto.getFirst().getTaxId());
 							billingDetailsDto
-									.setTaxPer( Double.valueOf(slotMasterDto.get(0).getTaxPercentage().doubleValue()));
+									.setTaxPer( Double.valueOf(slotMasterDto.getFirst().getTaxPercentage().doubleValue()));
 							serviceAmt = orderDetailsMasterDto.getServiceAmt();
 							taxAmt = serviceAmt
-									.multiply((slotMasterDto.get(0).getTaxPercentage().multiply(new BigDecimal(0.01))));
+									.multiply((slotMasterDto.getFirst().getTaxPercentage().multiply(new BigDecimal(0.01))));
 							netAmt = serviceAmt.add(taxAmt);
 
 						} else {
@@ -1133,8 +1133,8 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 						List<OrderDetailsPayeeMapperDto> orderPayeeBillList = new ArrayList<OrderDetailsPayeeMapperDto>();
 						OrderDetailsPayeeMapperDto orderDetailBillPayeeMapperDto = new OrderDetailsPayeeMapperDto();
 						orderDetailBillPayeeMapperDto.setPayeeAmount(new BigDecimal(billingDetailsDto.getNetAmt()));
-						orderDetailBillPayeeMapperDto.setPayeeId(slotMasterDto.get(0).getOrderDetailsPackageMapperDto().getPayeeId());
-						orderDetailBillPayeeMapperDto.setServiceId(slotMasterDto.get(0).getServiceMasterId());
+						orderDetailBillPayeeMapperDto.setPayeeId(slotMasterDto.getFirst().getOrderDetailsPackageMapperDto().getPayeeId());
+						orderDetailBillPayeeMapperDto.setServiceId(slotMasterDto.getFirst().getServiceMasterId());
 						// orderDetailPayeeMapperDto.setContractId(null);
 						orderPayeeBillList.add(orderDetailBillPayeeMapperDto);
 
@@ -1358,10 +1358,10 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 					patientRegistrationDto.setCountryId(encounterMasterDto.getPatientRegistrationDto().getCountryId()!=null ? encounterMasterDto.getPatientRegistrationDto().getCountryId():null);
 					patientRegistrationDto.setDistrictId(encounterMasterDto.getPatientRegistrationDto().getDistrictId()!=null ? encounterMasterDto.getPatientRegistrationDto().getDistrictId():null);
 					if(encounterMasterDto.getPatientRegistrationDto().getKinList()!=null && encounterMasterDto.getPatientRegistrationDto().getKinList().size()>0) {
-						encounterMasterDto.getPatientRegistrationDto().getKinList().get(0).setOrganizationId(slotMasterDto.getOrganizationId());
-						encounterMasterDto.getPatientRegistrationDto().getKinList().get(0).setUnitId(slotMasterDto.getUnitId());
-						encounterMasterDto.getPatientRegistrationDto().getKinList().get(0).setCreatedBy(slotMasterDto.getCreatedBy());
-						encounterMasterDto.getPatientRegistrationDto().getKinList().get(0).setUpdatedBy(slotMasterDto.getUpdatedBy());
+						encounterMasterDto.getPatientRegistrationDto().getKinList().getFirst().setOrganizationId(slotMasterDto.getOrganizationId());
+						encounterMasterDto.getPatientRegistrationDto().getKinList().getFirst().setUnitId(slotMasterDto.getUnitId());
+						encounterMasterDto.getPatientRegistrationDto().getKinList().getFirst().setCreatedBy(slotMasterDto.getCreatedBy());
+						encounterMasterDto.getPatientRegistrationDto().getKinList().getFirst().setUpdatedBy(slotMasterDto.getUpdatedBy());
 					}
 					patientRegistrationDto.setKinList(encounterMasterDto.getPatientRegistrationDto().getKinList()!=null ? encounterMasterDto.getPatientRegistrationDto().getKinList():null);
 				Response patientRegistraion = patientRegistrationServiceImpl.savePatientRegistration(patientRegistrationDto);
@@ -1505,10 +1505,10 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 			
 			//set kin details
 			if(encounterMasterDto.getPatientRegistrationDto().getKinList()!=null && encounterMasterDto.getPatientRegistrationDto().getKinList().size()>0) {
-				encounterMasterDto.getPatientRegistrationDto().getKinList().get(0).setOrganizationId(slotMasterDto.getOrganizationId());
-				encounterMasterDto.getPatientRegistrationDto().getKinList().get(0).setUnitId(slotMasterDto.getUnitId());
-				encounterMasterDto.getPatientRegistrationDto().getKinList().get(0).setCreatedBy(slotMasterDto.getCreatedBy());
-				encounterMasterDto.getPatientRegistrationDto().getKinList().get(0).setUpdatedBy(slotMasterDto.getUpdatedBy());
+				encounterMasterDto.getPatientRegistrationDto().getKinList().getFirst().setOrganizationId(slotMasterDto.getOrganizationId());
+				encounterMasterDto.getPatientRegistrationDto().getKinList().getFirst().setUnitId(slotMasterDto.getUnitId());
+				encounterMasterDto.getPatientRegistrationDto().getKinList().getFirst().setCreatedBy(slotMasterDto.getCreatedBy());
+				encounterMasterDto.getPatientRegistrationDto().getKinList().getFirst().setUpdatedBy(slotMasterDto.getUpdatedBy());
 			}
 			if(encounterMasterDto.getPatientRegistrationDto().getPatientId()==null || encounterMasterDto.getPatientRegistrationDto().getPatientId()==0)
 			{
@@ -1546,7 +1546,7 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 					
 					
 					if(patRes.getListObject()!=null) {
-						orderId = (Integer)patRes.getListObject().get(0);
+						orderId = (Integer)patRes.getListObject().getFirst();
 					}else {
 						isExistingPatient =true;
 					}
@@ -1816,10 +1816,10 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 				
 				//set kin details
 				if(patientRegistrationDto.getKinList()!=null && patientRegistrationDto.getKinList().size()>0) {
-					patientRegistrationDto.getKinList().get(0).setOrganizationId(encounterMasterDto.getOrganizationId());
-					patientRegistrationDto.getKinList().get(0).setUnitId(encounterMasterDto.getUnitId());
-					patientRegistrationDto.getKinList().get(0).setCreatedBy(encounterMasterDto.getCreatedBy());
-					patientRegistrationDto.getKinList().get(0).setUpdatedBy(encounterMasterDto.getUpdatedBy());
+					patientRegistrationDto.getKinList().getFirst().setOrganizationId(encounterMasterDto.getOrganizationId());
+					patientRegistrationDto.getKinList().getFirst().setUnitId(encounterMasterDto.getUnitId());
+					patientRegistrationDto.getKinList().getFirst().setCreatedBy(encounterMasterDto.getCreatedBy());
+					patientRegistrationDto.getKinList().getFirst().setUpdatedBy(encounterMasterDto.getUpdatedBy());
 				}
 				if(patientRegistrationDto.getPatientId()==null || patientRegistrationDto.getPatientId()==0)
 				{
@@ -1856,7 +1856,7 @@ public class AppointmentSchedulingServiceImpl implements IAppointmentSchedulingS
 						
 						
 						if(patRes.getListObject()!=null) {
-							orderId = (Integer)patRes.getListObject().get(0);
+							orderId = (Integer)patRes.getListObject().getFirst();
 						}
 						if(encounterMasterDto.getAppointmentObject()!=null)
 							encounterMasterDto.getAppointmentObject().setPatientId((Integer)patRes.getObject());

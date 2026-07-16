@@ -210,7 +210,7 @@ public class SaleDetailPackageMapperDto {
 	}
 
 	public void setIsPackageItem(Character isPackageItem) {
-		this.isPackageItem = (isPackageItem==null)?'N':isPackageItem;;
+		this.isPackageItem = (isPackageItem==null)?'N':isPackageItem;
 	}
 
 	public int getCapOrQty() {

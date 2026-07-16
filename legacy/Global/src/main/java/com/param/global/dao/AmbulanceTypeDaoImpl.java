@@ -57,7 +57,6 @@ public class AmbulanceTypeDaoImpl extends GenericDao<AmbulanceType, Integer>
 		} catch (Exception e) {
 			logger.error("getAmbulanceByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -112,7 +111,6 @@ public class AmbulanceTypeDaoImpl extends GenericDao<AmbulanceType, Integer>
 		} catch (Exception e) {
 			logger.error("getAmbulanceTypeList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -131,7 +129,6 @@ public class AmbulanceTypeDaoImpl extends GenericDao<AmbulanceType, Integer>
 		} catch (Exception e) {
 			logger.error("getAmbulanceTypeActiveList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -153,7 +150,6 @@ public class AmbulanceTypeDaoImpl extends GenericDao<AmbulanceType, Integer>
 		} catch (Exception e) {
 			logger.error("getSingleAmbulanceType failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -176,7 +172,6 @@ public class AmbulanceTypeDaoImpl extends GenericDao<AmbulanceType, Integer>
 			logger.error("updateAmbulanceType failed", e);
 			return new Response<AmbulanceTypeDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -195,7 +190,6 @@ public class AmbulanceTypeDaoImpl extends GenericDao<AmbulanceType, Integer>
 		} catch (Exception e) {
 			logger.error("getAmbulanceByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -217,7 +211,6 @@ public class AmbulanceTypeDaoImpl extends GenericDao<AmbulanceType, Integer>
 			logger.error("changeAmbulanceStatus failed", e);
 			return new Response<AmbulanceTypeDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -236,7 +229,6 @@ public class AmbulanceTypeDaoImpl extends GenericDao<AmbulanceType, Integer>
 		} catch (Exception e) {
 			logger.error("getAmbulanceTarrifByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -287,7 +279,6 @@ public class AmbulanceTypeDaoImpl extends GenericDao<AmbulanceType, Integer>
 		} catch (Exception e) {
 			logger.error("getAmbulanceTarrifList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

@@ -118,7 +118,7 @@ public class ContractConsumptionController implements ICommonConstants {
 					serviceDetailslist.add(dto);
 				}
 			}
-			return new Response(SUCCESS,SUCCESS_CODE,null,serviceDetailslist,serviceDetailslist.get(0));
+			return new Response(SUCCESS,SUCCESS_CODE,null,serviceDetailslist,serviceDetailslist.getFirst());
 		}catch(Exception e){
 			logger.error("consumeServiceFromContractFostCostEstimationBillingbed failed", e);
 			throw new ServiceException(e.getMessage());

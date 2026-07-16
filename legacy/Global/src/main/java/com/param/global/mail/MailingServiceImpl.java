@@ -147,7 +147,7 @@ public class MailingServiceImpl<E> implements IMailingService,ICommonConstants,I
 			
 			MailDto mailDto = loadProperties();
 			
-			userMasterDto = iUserMasterDao.userLogin(userMasterDto).getListObject().size() > 0 ? (UserMasterDto)iUserMasterDao.userLogin(userMasterDto).getListObject().get(0) : null;
+			userMasterDto = iUserMasterDao.userLogin(userMasterDto).getListObject().size() > 0 ? (UserMasterDto)iUserMasterDao.userLogin(userMasterDto).getListObject().getFirst() : null;
 			if(userMasterDto != null){
 				/*if(userMasterDto.getRoleId() == PATIENT)
 					// get patient by UserId
@@ -1456,7 +1456,7 @@ public class MailingServiceImpl<E> implements IMailingService,ICommonConstants,I
 						String pattern = "yyyy-MM-dd";
 			        	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-			        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.get(0)));
+			        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.getFirst()));
 						
 					String Messg = "Batch job is not executed for " +unitIds.toString()+  " units on "+date+" date ";
 					AmazonMailDto amazonDto = new AmazonMailDto();

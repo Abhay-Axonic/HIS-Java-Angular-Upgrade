@@ -58,7 +58,7 @@ public class AreaMasterServiceImpl implements ICommonConstants, IAreaMasterServi
 			Response deptResponse = iAreaDao.getAreaByName(areaMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
-				return new Response(ERROR, null, ALREADY_EXIST, null, deptResponse.getListObject().get(0));
+				return new Response(ERROR, null, ALREADY_EXIST, null, deptResponse.getListObject().getFirst());
 
 			} else {
 				/*areaMasterDto

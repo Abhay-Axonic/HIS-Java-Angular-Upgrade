@@ -81,7 +81,7 @@ public class CorporateEmployeeMasterServiceImpl implements ICorporateEmployeeMas
 		try {
 			Response corporateEmpRes= iCorporateEmployeeMasterDao.getCorporateEmployeeMasterDetailsById(dto);
 			if(corporateEmpRes.getStatus()==SUCCESS && corporateEmpRes.getListObject().size()>0 && corporateEmpRes.getListObject()!=null){
-				CorporateEmployeeMasterDto corporateEmpDto=(CorporateEmployeeMasterDto)corporateEmpRes.getListObject().get(0);
+				CorporateEmployeeMasterDto corporateEmpDto=(CorporateEmployeeMasterDto)corporateEmpRes.getListObject().getFirst();
 				List<CorporateEmpDependentDetailsDto>  dependentList=null;
 				Response empDependentsRes=iCorporateEmployeeMasterDao.getCorporateEmployeeDependantsDetails(dto);
 				if(empDependentsRes.getStatus()==SUCCESS && empDependentsRes.getListObject().size()>0 && empDependentsRes.getListObject()!=null){
@@ -150,7 +150,7 @@ public class CorporateEmployeeMasterServiceImpl implements ICorporateEmployeeMas
 			Response res= iCorporateEmployeeMasterDao.verifyCorporateEmployee(dto);
 			if(res.getListObject()!=null && res.getListObject().size()>0){
 				if(dto.getTypeOfEmp()==1){
-					CorporateEmployeeMasterDto resDto=(CorporateEmployeeMasterDto)res.getListObject().get(0);
+					CorporateEmployeeMasterDto resDto=(CorporateEmployeeMasterDto)res.getListObject().getFirst();
 					if(dto.getFirstName()!=null && resDto.getFirstName()!=null && resDto.getFirstName().toLowerCase().equals(dto.getFirstName().toLowerCase())) 
 					{
 						return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, res.getListObject(), 1);

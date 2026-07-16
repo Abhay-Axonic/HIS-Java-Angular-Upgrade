@@ -383,7 +383,7 @@ public class whatsAppServiceImpl  implements IwhatsAppServiceImpl, ICommonConsta
 			   		
 			   		// template
 			   		JSONObject template = new JSONObject();
-			   		String c = dto.getTemplateId();;
+			   		String c = dto.getTemplateId();
 			   		template.put("templateId", c);
 			   		template.put("language", language);
 			   		   // whatsApp
@@ -399,7 +399,7 @@ public class whatsAppServiceImpl  implements IwhatsAppServiceImpl, ICommonConsta
 			   			channels.put("whatsapp");
 			   			
 			   				String f="IN";
-			   				String g=wDhatsappRequestDto.getTo();;
+			   				String g=wDhatsappRequestDto.getTo();
 			   				jsonObject1.put("to", g);
 			   				jsonObject1.put("countryCode", f);
 			   				jsonObject1.put("whatsapp", whatsApp);
