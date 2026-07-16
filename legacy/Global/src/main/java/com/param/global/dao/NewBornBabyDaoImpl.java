@@ -56,7 +56,7 @@ public class NewBornBabyDaoImpl extends GenericDao<NewBornBaby, Integer>
 			int noOfBabies = newBornBabyDto.getNumberOfBabies();
 			Response res1 = regDao.patientSearchNormalByPatientId(newBornBabyDto.getPatientId(),
 					newBornBabyDto.getOrganizationId(),newBornBabyDto.getUnitId());
-			PatientRegistrationDto patientRegistrationDto = (PatientRegistrationDto)res1.getListObject().get(0);
+			PatientRegistrationDto patientRegistrationDto = (PatientRegistrationDto)res1.getListObject().getFirst();
 			
 			for(int i=0;i<noOfBabies;i++){
 				NewBornBaby newBornBaby=new NewBornBaby();
@@ -163,7 +163,6 @@ public class NewBornBabyDaoImpl extends GenericDao<NewBornBaby, Integer>
 		} catch (Exception e) {
 		logger.error("getBabyDetailsByParentId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

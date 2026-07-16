@@ -96,8 +96,7 @@ public class HttpMethodResponse extends HttpResponseMessage {
 				request.append(header.getName()).append(": ")
 						.append(header.getValue()).append(EOL);
 			}
-			if (httpRequest instanceof HttpEntityEnclosingRequest) {
-				HttpEntityEnclosingRequest r = (HttpEntityEnclosingRequest) httpRequest;
+			if (httpRequest instanceof HttpEntityEnclosingRequest r) {
 				long contentLength = r.getEntity().getContentLength();
 				if (contentLength >= 0) {
 					request.append("Content-Length: ").append(contentLength)

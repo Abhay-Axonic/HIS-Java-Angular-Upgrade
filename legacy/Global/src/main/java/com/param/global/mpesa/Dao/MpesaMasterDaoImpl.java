@@ -169,7 +169,7 @@ public class MpesaMasterDaoImpl implements IMpesaMasterDao,ICommonConstants  {
 				 DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern("yyyyMMdd");
 				 LocalDateTime currentDate = LocalDateTime.now();
 				 //System.out.println(dtfDate.format(currentDate));
-				 pinPadDetailsDto.setIpAddress(ipMac.get(0));
+				 pinPadDetailsDto.setIpAddress(ipMac.getFirst());
 				// pinPadDetailsDto.setIpAddress(pinPadDetailsDto.getIp());
 				// pinPadDetailsDto.setIpAddress(BASEURL); 
 			     pinPadDetailsDto.setUniqueNumber(dtfDate.format(currentDate)+intId.toString());

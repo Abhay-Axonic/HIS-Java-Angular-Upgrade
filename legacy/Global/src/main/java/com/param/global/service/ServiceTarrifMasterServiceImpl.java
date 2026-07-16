@@ -116,7 +116,7 @@ public class ServiceTarrifMasterServiceImpl implements IServiceTarrifMasterServi
 		Response responseDto = iServiceTarrifMasterDao.getServiceTarrifMaster(variablePricingDto);
 		
 		if(responseDto.getCode() == SUCCESS_CODE && !(responseDto.getListObject().isEmpty())){
-			VariablePricingDto responseVariablePricingDto = (VariablePricingDto) responseDto.getListObject().get(0);
+			VariablePricingDto responseVariablePricingDto = (VariablePricingDto) responseDto.getListObject().getFirst();
 			
 			//GET BedType multiplication factor
 			Response responseBedTypeDto = iTarrifBedCategoryDao.getBedCategoryFactorByTarrifId(responseVariablePricingDto.getServiceTarrifMasterId());
@@ -189,7 +189,7 @@ public class ServiceTarrifMasterServiceImpl implements IServiceTarrifMasterServi
 					}
 					
 					if(VPSeqDto.getCode() == SUCCESS_CODE && !VPSeqDto.getListObject().isEmpty() && listVariableFactorDto !=null){
-						VariablePricingSequenceDto seqDto = (VariablePricingSequenceDto) VPSeqDto.getListObject().get(0);
+						VariablePricingSequenceDto seqDto = (VariablePricingSequenceDto) VPSeqDto.getListObject().getFirst();
 						
 						List<MySequenceDto> listMyDto = new ArrayList();
 						listMyDto.add(new MySequenceDto(seqDto.getPatientTypeSeqNo(), "PT"));

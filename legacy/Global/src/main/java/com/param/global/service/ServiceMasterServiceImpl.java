@@ -354,7 +354,7 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 		    		
 		    		serviceMasterDto.setSpecialityName(strServices[0].trim()); 
 		    		if(splDto.size()>0) {
-		    			serviceMasterDto.setSpecialityId(splDto.get(0).getSpecialityId()); 
+		    			serviceMasterDto.setSpecialityId(splDto.getFirst().getSpecialityId()); 
 		    		}else{
 		    			if(remark.length()==0) {
 		    				remark.append(" Department does not exist");
@@ -370,7 +370,7 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 		    		 
 		    		 if(subSplDto.size()>0) 
 		    		 {
-		    			 serviceMasterDto.setSubSpecialityId(subSplDto.get(0).getSubSpecialityMasterId()); 
+		    			 serviceMasterDto.setSubSpecialityId(subSplDto.getFirst().getSubSpecialityMasterId()); 
 		    		 }else {
 		    			 if(remark.length()==0) 
 		    			 {
@@ -386,7 +386,7 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 		    		serviceMasterDto.setGeneralLedgerName(strServices[4].trim()); 
 		    		if(GLDto.size()>0) 
 		    		{
-		    			serviceMasterDto.setGeneralLedgerId(GLDto.get(0).getGeneralLedgerId());	
+		    			serviceMasterDto.setGeneralLedgerId(GLDto.getFirst().getGeneralLedgerId());	
 		    		}else {
 		    			if(remark.length()==0) {
 			    			remark.append(" General Ledger Code not exist");
@@ -574,7 +574,7 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 					.setInteger("orgId", dto.getOrganizationId())
 					.setInteger("unitId", dto.getUnitId())
 			.setResultTransformer(Transformers.aliasToBean(ServiceSearchResDto.class)).list();
-			list.get(0).setDiscountDetailsList(OrderDetailsDiscountDtoList);
+			list.getFirst().setDiscountDetailsList(OrderDetailsDiscountDtoList);
 			return new Response(SUCCESS,SUCCESS_CODE, SUCCESS_MESSAGE, list, null);
 		}catch (Exception e) {
 		logger.error("getSurchargeServiceDetails failed", e);
@@ -681,7 +681,7 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 						List<BatchDto> batchList = res1.getListObject();
 						
 						if(batchList.size() == 1) {
-							if(batchList.get(0).getBatchNo() == null) {
+							if(batchList.getFirst().getBatchNo() == null) {
 								dto.setBatchReq(false);
 							}
 						}
@@ -716,7 +716,7 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 					if(res1.getStatus().equals(SUCCESS)) {
 						List<BatchDto> batchList = res1.getListObject();
 						if(batchList.size() == 1) {
-							if(batchList.get(0).getBatchNo() == null) {
+							if(batchList.getFirst().getBatchNo() == null) {
 								dto.setBatchReq(false);
 							}
 						}

@@ -96,19 +96,19 @@ public class PaymentDepositDetailsDto {
 		return amount;
 	}
 	public void setAmount(Double amount) {
-		this.amount = new Double(OrderMasterServiceImpl.df2.format(amount));
+		this.amount = Double.valueOf(OrderMasterServiceImpl.df2.format(amount));
 	}
 	public Double getConsumedAmount() {
 		return consumedAmount;
 	}
 	public void setConsumedAmount(Double consumedAmount) {
-		this.consumedAmount = new Double(OrderMasterServiceImpl.df2.format(consumedAmount));
+		this.consumedAmount = Double.valueOf(OrderMasterServiceImpl.df2.format(consumedAmount));
 	}
 	public Double getBalanceAmount() {
 		return balanceAmount;
 	}
 	public void setBalanceAmount(Double balanceAmount) {
-		this.balanceAmount = new Double(OrderMasterServiceImpl.df2.format(balanceAmount));
+		this.balanceAmount = Double.valueOf(OrderMasterServiceImpl.df2.format(balanceAmount));
 	}
 	public String getBankName() {
 		return bankName;

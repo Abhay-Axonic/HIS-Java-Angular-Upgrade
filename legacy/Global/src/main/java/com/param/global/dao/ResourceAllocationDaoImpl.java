@@ -54,7 +54,6 @@ public class ResourceAllocationDaoImpl extends GenericDao<ResourceAllocation, In
 		} catch (Exception e) {
 			logger.error("getResourceAllocationByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -103,7 +102,6 @@ public class ResourceAllocationDaoImpl extends GenericDao<ResourceAllocation, In
 		} catch (Exception e) {
 		logger.error("getResourceAllocationList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -145,7 +143,6 @@ public class ResourceAllocationDaoImpl extends GenericDao<ResourceAllocation, In
 		} catch (Exception e) {
 		logger.error("getResourceAllocationActiveList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -167,7 +164,6 @@ public class ResourceAllocationDaoImpl extends GenericDao<ResourceAllocation, In
 		} catch (Exception e) {
 		logger.error("getResourceAllocationByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -189,7 +185,6 @@ public class ResourceAllocationDaoImpl extends GenericDao<ResourceAllocation, In
 		} catch (Exception e) {
 		logger.error("getSingleResourceAllocation failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -216,7 +211,6 @@ public class ResourceAllocationDaoImpl extends GenericDao<ResourceAllocation, In
 		logger.error("updateResourceAllocation failed", e);
 			return new Response<ResourceAllocationDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -238,7 +232,6 @@ public class ResourceAllocationDaoImpl extends GenericDao<ResourceAllocation, In
 		logger.error("changeResourceAllocationStatus failed", e);
 			return new Response<ResourceAllocationDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

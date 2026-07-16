@@ -125,11 +125,11 @@ public class BillingServiceImpl implements IBillingService,ICommonConstants,IBil
 				BillingDetailsDto billingDetailsDto = new BillingDetailsDto();
 					billingDetailsDto.setBillingMasterId(vistDetailsObj.getBillId());
 					billingDetailsDto.setServiceId(orderDetailsMasterDto.getServiceId());
-					billingDetailsDto.setRate(orderDetailsMasterDto.getServiceAmt()!=null ? new Double(orderDetailsMasterDto.getServiceAmt().doubleValue()): 0.00);
+					billingDetailsDto.setRate(orderDetailsMasterDto.getServiceAmt()!=null ? Double.valueOf(orderDetailsMasterDto.getServiceAmt().doubleValue()): 0.00);
 					billingDetailsDto.setQuantity(orderDetailsMasterDto.getOrderQty().doubleValue());
 					billingDetailsDto.setConcession(0.00);
-					billingDetailsDto.setGrossAmount(orderDetailsMasterDto.getOrdTotalAmt()!=null ? new Double(orderDetailsMasterDto.getOrdTotalAmt().doubleValue()):0.00);
-					billingDetailsDto.setCoPayPercentage(orderDetailsMasterDto.getCoPayPer() !=null ? new Double(orderDetailsMasterDto.getCoPayPer().doubleValue()) : new Double(0.00));
+					billingDetailsDto.setGrossAmount(orderDetailsMasterDto.getOrdTotalAmt()!=null ? Double.valueOf(orderDetailsMasterDto.getOrdTotalAmt().doubleValue()):0.00);
+					billingDetailsDto.setCoPayPercentage(orderDetailsMasterDto.getCoPayPer() !=null ? Double.valueOf(orderDetailsMasterDto.getCoPayPer().doubleValue()) : Double.valueOf(0.00));
 					billingDetailsDto.setUnitId(orderDetailsMasterDto.getOrgUnitId());
 					billingDetailsDto.setOrganizationId(orderDetailsMasterDto.getOrgId());
 					billingDetailsDto.setStatus('A');
@@ -137,20 +137,20 @@ public class BillingServiceImpl implements IBillingService,ICommonConstants,IBil
 					billingDetailsDto.setUpdatedBy(orderDetailsMasterDto.getUpdatedBy());
 					billingDetailsDto.setCreatedDate(billingMasterObj.getBillDateTime());
 					billingDetailsDto.setUpdatedDate(billingMasterObj.getBillDateTime());
-					billingDetailsDto.setDiscount(orderDetailsMasterDto.getOrdDiscount()!=null ? new Double(orderDetailsMasterDto.getOrdDiscount().doubleValue()):0.00);
+					billingDetailsDto.setDiscount(orderDetailsMasterDto.getOrdDiscount()!=null ? Double.valueOf(orderDetailsMasterDto.getOrdDiscount().doubleValue()):0.00);
 					billingDetailsDto.setTaxId(orderDetailsMasterDto.getTaxId());
-					billingDetailsDto.setTaxPer(orderDetailsMasterDto.getTaxPer()!=null ? new Double(orderDetailsMasterDto.getTaxPer().doubleValue()):0.00);
-					billingDetailsDto.setTaxAmount(orderDetailsMasterDto.getTaxAmount()!=null ? new Double(orderDetailsMasterDto.getTaxAmount().doubleValue()):0.00);
-					billingDetailsDto.setNetAmt(orderDetailsMasterDto.getNetAmount()!=null ? new Double(orderDetailsMasterDto.getNetAmount().doubleValue()):0.00);
+					billingDetailsDto.setTaxPer(orderDetailsMasterDto.getTaxPer()!=null ? Double.valueOf(orderDetailsMasterDto.getTaxPer().doubleValue()):0.00);
+					billingDetailsDto.setTaxAmount(orderDetailsMasterDto.getTaxAmount()!=null ? Double.valueOf(orderDetailsMasterDto.getTaxAmount().doubleValue()):0.00);
+					billingDetailsDto.setNetAmt(orderDetailsMasterDto.getNetAmount()!=null ? Double.valueOf(orderDetailsMasterDto.getNetAmount().doubleValue()):0.00);
 					billingDetailsDto.setOrdDocId(orderDetailsMasterDto.getOrdDocId());
 					billingDetailsDto.setOrdDocSplId(orderDetailsMasterDto.getOrdDocSplId());
-					billingDetailsDto.setSelfPayable(orderDetailsMasterDto.getSelfPayable()!=null ? new Double(orderDetailsMasterDto.getSelfPayable().doubleValue()):0.00);
-					billingDetailsDto.setCreditPayable(orderDetailsMasterDto.getCreditPayable()!=null ? new Double(orderDetailsMasterDto.getCreditPayable().doubleValue()):0.00);
+					billingDetailsDto.setSelfPayable(orderDetailsMasterDto.getSelfPayable()!=null ? Double.valueOf(orderDetailsMasterDto.getSelfPayable().doubleValue()):0.00);
+					billingDetailsDto.setCreditPayable(orderDetailsMasterDto.getCreditPayable()!=null ? Double.valueOf(orderDetailsMasterDto.getCreditPayable().doubleValue()):0.00);
 					billingDetailsDto.setPayeeId(orderDetailsMasterDto.getPayeeId());
 					billingDetailsDto.setOrderDetailsId(orderDetailsMasterDto.getOrderDetailsId());
 					billingDetailsDto.setPackageId(orderDetailsMasterDto.getPackageId());
-					billingDetailsDto.setPackageConsumptionAmt(orderDetailsMasterDto.getPackageConsumptionAmt()!=null ? new Double(orderDetailsMasterDto.getPackageConsumptionAmt().doubleValue()): new Double(0.00));
-					billingDetailsDto.setCoSharePer(orderDetailsMasterDto.getCoPayPer()!=null ? new Double(orderDetailsMasterDto.getCoPayPer().doubleValue()): new Double(0.00));
+					billingDetailsDto.setPackageConsumptionAmt(orderDetailsMasterDto.getPackageConsumptionAmt()!=null ? Double.valueOf(orderDetailsMasterDto.getPackageConsumptionAmt().doubleValue()): Double.valueOf(0.00));
+					billingDetailsDto.setCoSharePer(orderDetailsMasterDto.getCoPayPer()!=null ? Double.valueOf(orderDetailsMasterDto.getCoPayPer().doubleValue()): Double.valueOf(0.00));
 					billingDetailsDto.setIsDoctorSharePosted('N');
 					billingDetailsDto.setOrderDetailsPayeeMapperDtosList(orderDetailsPayeeMapperDtosList);
 					iBillingDao.saveBillingDetails(billingDetailsDto);
@@ -249,11 +249,11 @@ public class BillingServiceImpl implements IBillingService,ICommonConstants,IBil
 					BillingDetailsDto billingDetailsDto = new BillingDetailsDto();
 						billingDetailsDto.setBillingMasterId(vistDetailsObj.getBillId());
 						billingDetailsDto.setServiceId(orderDetailsMasterDto.getServiceId());
-						billingDetailsDto.setRate(orderDetailsMasterDto.getServiceAmt()!=null ? new Double(orderDetailsMasterDto.getServiceAmt().doubleValue()): 0.00);
+						billingDetailsDto.setRate(orderDetailsMasterDto.getServiceAmt()!=null ? Double.valueOf(orderDetailsMasterDto.getServiceAmt().doubleValue()): 0.00);
 						billingDetailsDto.setQuantity(orderDetailsMasterDto.getOrderQty().doubleValue());
 						billingDetailsDto.setConcession(0.00);
-						billingDetailsDto.setGrossAmount(orderDetailsMasterDto.getOrdTotalAmt()!=null ? new Double(orderDetailsMasterDto.getOrdTotalAmt().doubleValue()):0.00);
-						billingDetailsDto.setCoPayPercentage(orderDetailsMasterDto.getCoPayPer() !=null ? new Double(orderDetailsMasterDto.getCoPayPer().doubleValue()) : new Double(0.00));
+						billingDetailsDto.setGrossAmount(orderDetailsMasterDto.getOrdTotalAmt()!=null ? Double.valueOf(orderDetailsMasterDto.getOrdTotalAmt().doubleValue()):0.00);
+						billingDetailsDto.setCoPayPercentage(orderDetailsMasterDto.getCoPayPer() !=null ? Double.valueOf(orderDetailsMasterDto.getCoPayPer().doubleValue()) : Double.valueOf(0.00));
 						billingDetailsDto.setUnitId(orderDetailsMasterDto.getOrgUnitId());
 						billingDetailsDto.setOrganizationId(orderDetailsMasterDto.getOrgId());
 						billingDetailsDto.setStatus('A');
@@ -261,20 +261,20 @@ public class BillingServiceImpl implements IBillingService,ICommonConstants,IBil
 						billingDetailsDto.setUpdatedBy(orderDetailsMasterDto.getUpdatedBy());
 						billingDetailsDto.setCreatedDate(orderDetailsMasterDto.getCreatedDate());
 						billingDetailsDto.setUpdatedDate(orderDetailsMasterDto.getUpdatedDate());
-						billingDetailsDto.setDiscount(orderDetailsMasterDto.getOrdDiscount()!=null ? new Double(orderDetailsMasterDto.getOrdDiscount().doubleValue()):0.00);
+						billingDetailsDto.setDiscount(orderDetailsMasterDto.getOrdDiscount()!=null ? Double.valueOf(orderDetailsMasterDto.getOrdDiscount().doubleValue()):0.00);
 						billingDetailsDto.setTaxId(orderDetailsMasterDto.getTaxId());
-						billingDetailsDto.setTaxPer(orderDetailsMasterDto.getTaxPer()!=null ? new Double(orderDetailsMasterDto.getTaxPer().doubleValue()):0.00);
-						billingDetailsDto.setTaxAmount(orderDetailsMasterDto.getTaxAmount()!=null ? new Double(orderDetailsMasterDto.getTaxAmount().doubleValue()):0.00);
-						billingDetailsDto.setNetAmt(orderDetailsMasterDto.getNetAmount()!=null ? new Double(orderDetailsMasterDto.getNetAmount().doubleValue()):0.00);
+						billingDetailsDto.setTaxPer(orderDetailsMasterDto.getTaxPer()!=null ? Double.valueOf(orderDetailsMasterDto.getTaxPer().doubleValue()):0.00);
+						billingDetailsDto.setTaxAmount(orderDetailsMasterDto.getTaxAmount()!=null ? Double.valueOf(orderDetailsMasterDto.getTaxAmount().doubleValue()):0.00);
+						billingDetailsDto.setNetAmt(orderDetailsMasterDto.getNetAmount()!=null ? Double.valueOf(orderDetailsMasterDto.getNetAmount().doubleValue()):0.00);
 						billingDetailsDto.setOrdDocId(orderDetailsMasterDto.getOrdDocId());
 						billingDetailsDto.setOrdDocSplId(orderDetailsMasterDto.getOrdDocSplId());
-						billingDetailsDto.setSelfPayable(orderDetailsMasterDto.getSelfPayable()!=null ? new Double(orderDetailsMasterDto.getSelfPayable().doubleValue()):0.00);
-						billingDetailsDto.setCreditPayable(orderDetailsMasterDto.getCreditPayable()!=null ? new Double(orderDetailsMasterDto.getCreditPayable().doubleValue()):0.00);
+						billingDetailsDto.setSelfPayable(orderDetailsMasterDto.getSelfPayable()!=null ? Double.valueOf(orderDetailsMasterDto.getSelfPayable().doubleValue()):0.00);
+						billingDetailsDto.setCreditPayable(orderDetailsMasterDto.getCreditPayable()!=null ? Double.valueOf(orderDetailsMasterDto.getCreditPayable().doubleValue()):0.00);
 						billingDetailsDto.setPayeeId(orderDetailsMasterDto.getPayeeId());
 						billingDetailsDto.setOrderDetailsId(orderDetailsMasterDto.getOrderDetailsId());
 						billingDetailsDto.setPackageId(orderDetailsMasterDto.getPackageId());
-						billingDetailsDto.setPackageConsumptionAmt(orderDetailsMasterDto.getPackageConsumptionAmt()!=null ? new Double(orderDetailsMasterDto.getPackageConsumptionAmt().doubleValue()): new Double(0.00));
-						billingDetailsDto.setCoSharePer(orderDetailsMasterDto.getCoPayPer()!=null ? new Double(orderDetailsMasterDto.getCoPayPer().doubleValue()): new Double(0.00));
+						billingDetailsDto.setPackageConsumptionAmt(orderDetailsMasterDto.getPackageConsumptionAmt()!=null ? Double.valueOf(orderDetailsMasterDto.getPackageConsumptionAmt().doubleValue()): Double.valueOf(0.00));
+						billingDetailsDto.setCoSharePer(orderDetailsMasterDto.getCoPayPer()!=null ? Double.valueOf(orderDetailsMasterDto.getCoPayPer().doubleValue()): Double.valueOf(0.00));
 						billingDetailsDto.setIsDoctorSharePosted('N');
 						billingDetailsDto.setOrderDetailsPayeeMapperDtosList(orderDetailsPayeeMapperDtosList);
 						billingDetailsDto.setOrderDetailsPackageMapperDtosList(orderDetailsPackageMapperDtoList);
@@ -294,8 +294,8 @@ public class BillingServiceImpl implements IBillingService,ICommonConstants,IBil
 									billDtilsEch.setRate(dto.getBasePrice().doubleValue());
 									billDtilsEch.setQuantity(dto.getQuantity().doubleValue());
 									billDtilsEch.setConcession(0.00);
-									billDtilsEch.setGrossAmount(dto.getTotalAmt()!=null ? new Double(dto.getTotalAmt().doubleValue()):0.00);
-									billDtilsEch.setCoPayPercentage(dto.getCoPayPer() !=null ? new Double(dto.getCoPayPer().doubleValue()) : new Double(0.00));
+									billDtilsEch.setGrossAmount(dto.getTotalAmt()!=null ? Double.valueOf(dto.getTotalAmt().doubleValue()):0.00);
+									billDtilsEch.setCoPayPercentage(dto.getCoPayPer() !=null ? Double.valueOf(dto.getCoPayPer().doubleValue()) : Double.valueOf(0.00));
 									billDtilsEch.setUnitId(orderDetailsMasterDto.getOrgUnitId());
 									billDtilsEch.setOrganizationId(orderDetailsMasterDto.getOrgId());
 									billDtilsEch.setStatus('A');
@@ -303,20 +303,20 @@ public class BillingServiceImpl implements IBillingService,ICommonConstants,IBil
 									billDtilsEch.setUpdatedBy(orderDetailsMasterDto.getUpdatedBy());
 									billDtilsEch.setCreatedDate(orderDetailsMasterDto.getCreatedDate());
 									billDtilsEch.setUpdatedDate(orderDetailsMasterDto.getUpdatedDate());
-									billDtilsEch.setDiscount(dto.getDiscount()!=null ? new Double(dto.getDiscount().doubleValue()):0.00);
+									billDtilsEch.setDiscount(dto.getDiscount()!=null ? Double.valueOf(dto.getDiscount().doubleValue()):0.00);
 									billDtilsEch.setTaxId(dto.getTaxId());
-									billDtilsEch.setTaxPer(dto.getTaxPercentage()!=null ? new Double(dto.getTaxPercentage().doubleValue()):0.00);
-									billDtilsEch.setTaxAmount(dto.getTaxAmt()!=null ? new Double(dto.getTaxAmt().doubleValue()):0.00);
-									billDtilsEch.setNetAmt(dto.getNetPay()!=null ? new Double(dto.getNetPay().doubleValue()):0.00);
+									billDtilsEch.setTaxPer(dto.getTaxPercentage()!=null ? Double.valueOf(dto.getTaxPercentage().doubleValue()):0.00);
+									billDtilsEch.setTaxAmount(dto.getTaxAmt()!=null ? Double.valueOf(dto.getTaxAmt().doubleValue()):0.00);
+									billDtilsEch.setNetAmt(dto.getNetPay()!=null ? Double.valueOf(dto.getNetPay().doubleValue()):0.00);
 									billDtilsEch.setOrdDocId(dto.getDoctorSpecialityId());
 									billDtilsEch.setOrdDocSplId(dto.getServiceSpecialityId());
-									billDtilsEch.setSelfPayable(dto.getSelfPayable()!=null ? new Double(dto.getSelfPayable().doubleValue()):0.00);
-									billDtilsEch.setCreditPayable(dto.getCreditPayable()!=null ? new Double(dto.getCreditPayable().doubleValue()):0.00);
+									billDtilsEch.setSelfPayable(dto.getSelfPayable()!=null ? Double.valueOf(dto.getSelfPayable().doubleValue()):0.00);
+									billDtilsEch.setCreditPayable(dto.getCreditPayable()!=null ? Double.valueOf(dto.getCreditPayable().doubleValue()):0.00);
 									billDtilsEch.setPayeeId(dto.getPayeeId());
 									billDtilsEch.setOrderDetailsId(dto.getOrderDetailsId());
 									billDtilsEch.setPackageId(dto.getPackageId());
-									billDtilsEch.setPackageConsumptionAmt(dto.getPackageConsumptionAmt()!=null ? new Double(dto.getPackageConsumptionAmt().doubleValue()): new Double(0.00));
-									billDtilsEch.setCoSharePer(dto.getCoPayPer()!=null ? new Double(dto.getCoPayPer().doubleValue()): new Double(0.00));
+									billDtilsEch.setPackageConsumptionAmt(dto.getPackageConsumptionAmt()!=null ? Double.valueOf(dto.getPackageConsumptionAmt().doubleValue()): Double.valueOf(0.00));
+									billDtilsEch.setCoSharePer(dto.getCoPayPer()!=null ? Double.valueOf(dto.getCoPayPer().doubleValue()): Double.valueOf(0.00));
 									billDtilsEch.setIsDoctorSharePosted('N');
 									
 									Response ehcPayeeRes = iOrderDetailsMasterDao.getOrderPayeeDetailsByOrderDetailsId(dto.getOrderDetailsId(),null);
@@ -351,15 +351,15 @@ public class BillingServiceImpl implements IBillingService,ICommonConstants,IBil
 						    
 						    if(detailsPackageMapperDto!=null)
 						    {
-						    	totalAmount = totalAmount + new Double(detailsPackageMapperDto.getServiceAmount().doubleValue()*orderDetailsMasterDto.getOrderQty().doubleValue());
+						    	totalAmount = totalAmount + Double.valueOf(detailsPackageMapperDto.getServiceAmount().doubleValue() * orderDetailsMasterDto.getOrderQty().doubleValue());
 						    }
 					    }else{
-					    	totalAmount = totalAmount + new Double(orderDetailsMasterDto.getOrdTotalAmt().doubleValue());
+					    	totalAmount = totalAmount + Double.valueOf(orderDetailsMasterDto.getOrdTotalAmt().doubleValue());
 					    }
-						taxAmount = taxAmount + new Double(orderDetailsMasterDto.getTaxAmount().doubleValue());
-						netAmount = netAmount + new Double(orderDetailsMasterDto.getNetAmount().doubleValue());
-						selfPayable = selfPayable + new Double(orderDetailsMasterDto.getSelfPayable().doubleValue());
-						creditPayable = creditPayable + new Double(orderDetailsMasterDto.getCreditPayable().doubleValue());
+						taxAmount = taxAmount + Double.valueOf(orderDetailsMasterDto.getTaxAmount().doubleValue());
+						netAmount = netAmount + Double.valueOf(orderDetailsMasterDto.getNetAmount().doubleValue());
+						selfPayable = selfPayable + Double.valueOf(orderDetailsMasterDto.getSelfPayable().doubleValue());
+						creditPayable = creditPayable + Double.valueOf(orderDetailsMasterDto.getCreditPayable().doubleValue());
 						
 				if(orderDetailsIdList != null && orderDetailsIdList.size() > 0)
 					iOrderDetailsMasterService.updateIsBilledStatus(orderDetailsIdList,vistDetailsObj.getBillId(),null);

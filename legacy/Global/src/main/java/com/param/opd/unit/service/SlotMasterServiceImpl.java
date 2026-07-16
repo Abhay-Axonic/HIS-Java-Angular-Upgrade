@@ -212,7 +212,7 @@ public class SlotMasterServiceImpl implements ISlotMasterService, ICommonConstan
 					// checking slots are in between break time or not
 
 
-					if(slotMasterDtosObj.getBreakSlotsList().get(0).getBreakFromTime()!="" && slotMasterDtosObj.getBreakSlotsList().get(0).getBreakToTime()!="")
+					if(slotMasterDtosObj.getBreakSlotsList().getFirst().getBreakFromTime()!="" && slotMasterDtosObj.getBreakSlotsList().getFirst().getBreakToTime()!="")
 					{
 						if (slotsCreationService.isSlotIsBetweenBreakTime(slotMasterDtosObj.getBreakSlotsList(),timeSlotsDto) == true)
 						timeSlotsDtos.add(timeSlotsDto);
@@ -376,7 +376,7 @@ public class SlotMasterServiceImpl implements ISlotMasterService, ICommonConstan
 				Instant fromTime = tempSlotMasterDto.getFromTime();
 				Instant toTime = tempSlotMasterDto.getToTime();
 				
-				if(tempSlotMasterDto.getBreakSlotsList().get(0).getBreakFromTime()!="" && tempSlotMasterDto.getBreakSlotsList().get(0).getBreakToTime()!="")	
+				if(tempSlotMasterDto.getBreakSlotsList().getFirst().getBreakFromTime()!="" && tempSlotMasterDto.getBreakSlotsList().getFirst().getBreakToTime()!="")	
 				{					
 					Iterator breakTimeSlotIte = tempSlotMasterDto.getBreakSlotsList().iterator();	
 					//MultiValueMap mValueMap = new LinkedMultiValueMap<>();	
@@ -744,7 +744,7 @@ public class SlotMasterServiceImpl implements ISlotMasterService, ICommonConstan
 								// checking slots are in between break time or not
 									
 									
-								if(slotMasterDtosObj.getBreakSlotsList().get(0).getBreakFromTime()!="" && slotMasterDtosObj.getBreakSlotsList().get(0).getBreakToTime()!="")	
+								if(slotMasterDtosObj.getBreakSlotsList().getFirst().getBreakFromTime()!="" && slotMasterDtosObj.getBreakSlotsList().getFirst().getBreakToTime()!="")	
 								{
 									if (slotsCreationService.isSlotIsBetweenBreakTime(slotMasterDtosObj.getBreakSlotsList(),timeSlotsDto) == true)
 									timeSlotsDtos.add(timeSlotsDto);
@@ -918,7 +918,7 @@ public class SlotMasterServiceImpl implements ISlotMasterService, ICommonConstan
 					Instant fromTime = tempSlotMasterDto.getFromTime();
 					Instant toTime = tempSlotMasterDto.getToTime();
 					
-					if(tempSlotMasterDto.getBreakSlotsList().get(0).getBreakFromTime()!="" && tempSlotMasterDto.getBreakSlotsList().get(0).getBreakToTime()!="")	
+					if(tempSlotMasterDto.getBreakSlotsList().getFirst().getBreakFromTime()!="" && tempSlotMasterDto.getBreakSlotsList().getFirst().getBreakToTime()!="")	
 					{					
 						Iterator breakTimeSlotIte = tempSlotMasterDto.getBreakSlotsList().iterator();	
 						//MultiValueMap mValueMap = new LinkedMultiValueMap<>();	
@@ -1478,7 +1478,7 @@ public class SlotMasterServiceImpl implements ISlotMasterService, ICommonConstan
 			
 			if(masterDtosList.size()>0)
 			{
-				 dto = masterDtosList.get(0);
+				 dto = masterDtosList.getFirst();
 				 return new Response(SUCCESS, null, null, null, dto.getSlotId());
 			}else{
 				return new Response(ERROR, null, "No slots available for EHC...!!", null, null);

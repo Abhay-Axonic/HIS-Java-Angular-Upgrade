@@ -975,7 +975,7 @@ public class UserMasterServiceImpl implements IUserMasterService, ICommonConstan
 			post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 			HttpResponse response = httpclient.execute(post);
 			if (response != null) {
-				if (response.getStatusLine().getStatusCode() == new Integer(SUCCESS_CODE)) {
+				if (response.getStatusLine().getStatusCode() == Integer.valueOf(SUCCESS_CODE)) {
 					String json = EntityUtils.toString(response.getEntity());
 					org.json.JSONObject jsonObj = new org.json.JSONObject(json);
 					String authToken = jsonObj.getString("value");
@@ -983,7 +983,7 @@ public class UserMasterServiceImpl implements IUserMasterService, ICommonConstan
 						return authToken;
 					else
 						throw new IOException("Failed to generate auth token");
-				} else if (response.getStatusLine().getStatusCode() == new Integer(UNAUTHORISED_CODE)) {
+				} else if (response.getStatusLine().getStatusCode() == Integer.valueOf(UNAUTHORISED_CODE)) {
 					throw new IOException("Unauthorised User");
 				}
 			} else {
@@ -1087,7 +1087,7 @@ public class UserMasterServiceImpl implements IUserMasterService, ICommonConstan
 						masterDto.setUnitList(unitRes.getListObject());
 					
 						UnitApplicationConfigurationDto unitApplicationConfigurationDto = new UnitApplicationConfigurationDto();
-						unitApplicationConfigurationDto.setUnitId(masterDto.getUnitList().get(0).getUnitId());
+						unitApplicationConfigurationDto.setUnitId(masterDto.getUnitList().getFirst().getUnitId());
 						unitApplicationConfigurationDto.setOrganizationId(userMasterDto.getOrganizationId());
 						Response unitApplicationConfigurationRes = iUnitApplicationBillingConfigurationService
 								.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);

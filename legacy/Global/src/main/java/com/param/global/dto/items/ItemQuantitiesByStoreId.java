@@ -1,5 +1,6 @@
 package com.param.global.dto.items;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,6 +12,7 @@ public class ItemQuantitiesByStoreId implements Serializable{
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private Long transitQty;

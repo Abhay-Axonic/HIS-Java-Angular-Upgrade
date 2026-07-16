@@ -439,11 +439,11 @@ public class CommonBillingItemsDto {
 	}
 
 	public Long getBatchId() {
-		return (tempBatchId != null && tempBatchId > 0) ? new Long(tempBatchId) : batchId;
+		return (tempBatchId != null && tempBatchId > 0) ? Long.valueOf(tempBatchId) : batchId;
 	}
 
 	public void setBatchId(Long batchId) {
-		this.batchId = (tempBatchId != null && tempBatchId > 0) ? new Long(tempBatchId) : batchId;
+		this.batchId = (tempBatchId != null && tempBatchId > 0) ? Long.valueOf(tempBatchId) : batchId;
 	}
 
 	public Boolean getIsConsumed() {

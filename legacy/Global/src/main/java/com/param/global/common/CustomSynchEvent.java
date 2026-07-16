@@ -1,9 +1,13 @@
 package com.param.global.common;
 
+import java.io.Serial;
+
+
 import org.springframework.context.ApplicationEvent;
 
 public class CustomSynchEvent extends ApplicationEvent {
 
+	@Serial
 	private static final long serialVersionUID = -3448633405178813251L;
 	
 	private String message;

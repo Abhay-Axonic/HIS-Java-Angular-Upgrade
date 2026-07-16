@@ -917,7 +917,7 @@ public class EncounterMasterDaoImpl extends GenericDao<EncounterMaster, Integer>
 					.executeUpdate();
 
 			Integer mapperId= (Integer) sessionFactory.getCurrentSession().createSQLQuery("select mapper_id from public.t_radiology_mapper " +
-					"tod  where order_details_id ="+radiologyOrdersListDto.getOrderDetailsId()+" ").uniqueResult();;
+					"tod  where order_details_id ="+radiologyOrdersListDto.getOrderDetailsId()+" ").uniqueResult();
 
 			String hql = "DELETE FROM public.t_radiology_mapper WHERE mapper_id = :mapperId";
 			Integer deletedEntities = sessionFactory.getCurrentSession().createSQLQuery(hql)
@@ -2101,7 +2101,7 @@ public class EncounterMasterDaoImpl extends GenericDao<EncounterMaster, Integer>
 				sessionFactory.getCurrentSession().createSQLQuery("update opd.t_broadcast_msg set "
 						+ "status='I'"
 						+ "WHERE id=:id ")
-					.setParameter("id", list.get(0).getId())
+					.setParameter("id", list.getFirst().getId())
 				.executeUpdate();
 			}
 				return new Response(SUCCESS, SUCCESS_CODE, null, list, null);
@@ -3641,7 +3641,7 @@ public class EncounterMasterDaoImpl extends GenericDao<EncounterMaster, Integer>
 					.setResultTransformer(Transformers.aliasToBean(OrderDetailsByEncounterIdDto.class)).list();
 			if(list!=null && list.size()>0)
 			{
-				return new Response<>(SUCCESS, SUCCESS_CODE, null, null, list.get(0));
+				return new Response<>(SUCCESS, SUCCESS_CODE, null, null, list.getFirst());
 			}
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, null, null);
 	 }catch (Exception e) {
@@ -9718,7 +9718,7 @@ try {
 					.setParameter("toDate", encounterMasterDto.getToDate().substring(0, 10) )
 					.setResultTransformer(Transformers.aliasToBean(EncounterMasterDto.class)).list();
 			if(encounterMasterDtoList != null && !encounterMasterDtoList.isEmpty()){
-				return new Response<>(SUCCESS, SUCCESS_CODE,null , encounterMasterDtoList, encounterMasterDtoList.get(0));
+				return new Response<>(SUCCESS, SUCCESS_CODE,null , encounterMasterDtoList, encounterMasterDtoList.getFirst());
 			}
 			return new Response<>(SUCCESS, SUCCESS_CODE, "No Data Found", null, null);
 		} catch (Exception e) {

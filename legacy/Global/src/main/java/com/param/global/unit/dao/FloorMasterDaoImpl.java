@@ -111,7 +111,6 @@ public class FloorMasterDaoImpl extends GenericDao<FloorMaster, Integer> impleme
 		} catch (Exception e) {
 			logger.error("getFloorByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -156,7 +155,6 @@ public class FloorMasterDaoImpl extends GenericDao<FloorMaster, Integer> impleme
 			logger.error("updateFloorMaster failed", e);
 			return new Response<FloorMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -175,7 +173,6 @@ public class FloorMasterDaoImpl extends GenericDao<FloorMaster, Integer> impleme
 		} catch (Exception e) {
 			logger.error("getFloorByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

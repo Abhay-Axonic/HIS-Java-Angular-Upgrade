@@ -132,7 +132,7 @@ public class DiscountTypeMasterDaoImpl extends GenericDao<com.param.entity.model
 	@Override
 	public Response getDiscountCategoryCount(DiscountCategoryTypeMasterDto dto) throws ApplicationException {
 		try {
-			Criteria c=sessionFactory.getCurrentSession().createCriteria(DiscountCategory.class).createAlias("unit","unit");;
+			Criteria c=sessionFactory.getCurrentSession().createCriteria(DiscountCategory.class).createAlias("unit","unit");
 			c.add(Restrictions.eq("isActive", true));
 			c.add(Restrictions.eq("isDeleted", false));
 			c.add(Restrictions.eq("unit.unitId", dto.getUnitId()));

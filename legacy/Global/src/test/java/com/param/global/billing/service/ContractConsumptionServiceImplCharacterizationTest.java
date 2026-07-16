@@ -525,7 +525,7 @@ class ContractConsumptionServiceImplCharacterizationTest {
             ContractConsumptionDto finalResult = (ContractConsumptionDto) result.getObject();
             assertThat(finalResult.getOrderDetailsPayeeMapperDtosList()).containsExactly(payeeMapper);
             assertThat(finalResult.getOrderDetailsPackageMapperDtosList()).hasSize(1);
-            OrderDetailsPackageMapperDto pkgMapper = finalResult.getOrderDetailsPackageMapperDtosList().get(0);
+            OrderDetailsPackageMapperDto pkgMapper = finalResult.getOrderDetailsPackageMapperDtosList().getFirst();
             assertThat(pkgMapper.getIsPackageService()).isEqualTo('N');
             assertThat(pkgMapper.getIsCapService()).isEqualTo('N');
             assertThat(pkgMapper.getServiceAmount()).isEqualByComparingTo(java.math.BigDecimal.valueOf(250.0));

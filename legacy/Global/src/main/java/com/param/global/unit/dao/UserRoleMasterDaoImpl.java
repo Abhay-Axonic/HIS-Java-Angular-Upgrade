@@ -637,38 +637,40 @@ public class UserRoleMasterDaoImpl extends GenericDao<UserRoleMaster, Integer>
 					.setParameter("orgId", buttonMasterDto.getHospitalId())
 					.uniqueResult();
 
-			String sqlQuery = "WITH DoctorConfig AS (\n" +
-					"    SELECT json_configuration\n" +
-					"    FROM public.button_master_config\n" +
-					"    WHERE doctor_id =:doctorId \n" +
-					"    AND button_id =:buttonId \n" +
-					"    AND organization_id =:OrgId" +
-					"    AND status = 'A'" +
-					"),\n" +
-					"SpecialtyConfig AS (\n" +
-					"    SELECT json_configuration\n" +
-					"    FROM public.button_master_config\n" +
-					"    WHERE speciality_id =:specialityId\n" +
-					"    AND button_id =:buttonId \n" +
-					"    AND organization_id =:OrgId " +
-					"    AND status = 'A'" +
-					"),\n" +
-					"MasterConfig AS (\n" +
-					"    SELECT combined_ai_json,\n"+
-					"           system_prompt,\n" +
-					"           user_prompt\n    "+
-					"    FROM public.button_master\n" +
-					"    WHERE tab_id =:tabId\n" +
-					"    AND organization_id =:OrgId " +
-					"    AND status = 'A'" +
-					")\n" +
-					"SELECT COALESCE(dc.json_configuration, sc.json_configuration, mc.combined_ai_json) AS \"jsonConfiguration\", "+
-					" mc.system_prompt AS \"systemPrompt\", " +
-					" mc.user_prompt AS \"userPrompt\" " +
-					"FROM MasterConfig mc\n" +
-					"LEFT JOIN DoctorConfig dc ON 1 = 1\n" +
-					"LEFT JOIN SpecialtyConfig sc ON 1 = 1 "+
-					"LIMIT 1";
+			String sqlQuery = """
+					WITH DoctorConfig AS (
+					    SELECT json_configuration
+					    FROM public.button_master_config
+					    WHERE doctor_id =:doctorId\s
+					    AND button_id =:buttonId\s
+					    AND organization_id =:OrgId\
+					    AND status = 'A'\
+					),
+					SpecialtyConfig AS (
+					    SELECT json_configuration
+					    FROM public.button_master_config
+					    WHERE speciality_id =:specialityId
+					    AND button_id =:buttonId\s
+					    AND organization_id =:OrgId \
+					    AND status = 'A'\
+					),
+					MasterConfig AS (
+					    SELECT combined_ai_json,
+					           system_prompt,
+					           user_prompt
+					    \
+					    FROM public.button_master
+					    WHERE tab_id =:tabId
+					    AND organization_id =:OrgId \
+					    AND status = 'A'\
+					)
+					SELECT COALESCE(dc.json_configuration, sc.json_configuration, mc.combined_ai_json) AS "jsonConfiguration", \
+					 mc.system_prompt AS "systemPrompt", \
+					 mc.user_prompt AS "userPrompt" \
+					FROM MasterConfig mc
+					LEFT JOIN DoctorConfig dc ON 1 = 1
+					LEFT JOIN SpecialtyConfig sc ON 1 = 1 \
+					LIMIT 1""";
 
 			ButtonMasterDto result = (ButtonMasterDto) sessionFactory.getCurrentSession().createSQLQuery(sqlQuery)
 					.setParameter("OrgId", buttonMasterDto.getHospitalId())

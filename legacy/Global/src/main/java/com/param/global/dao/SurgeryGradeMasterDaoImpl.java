@@ -52,7 +52,6 @@ public class SurgeryGradeMasterDaoImpl extends GenericDao<SurgeryGradeMaster, In
 		} catch (Exception e) {
 		logger.error("getSurgeryGradeByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -89,7 +88,6 @@ public class SurgeryGradeMasterDaoImpl extends GenericDao<SurgeryGradeMaster, In
 		} catch (Exception e) {
 		logger.error("getSurgeryGradeMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -111,7 +109,6 @@ public class SurgeryGradeMasterDaoImpl extends GenericDao<SurgeryGradeMaster, In
 		} catch (Exception e) {
 		logger.error("getSurgeryGradeByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -135,7 +132,6 @@ public class SurgeryGradeMasterDaoImpl extends GenericDao<SurgeryGradeMaster, In
 		logger.error("updateSurgeryGradeMaster failed", e);
 			return new Response<SurgeryGradeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -155,7 +151,6 @@ public class SurgeryGradeMasterDaoImpl extends GenericDao<SurgeryGradeMaster, In
 		} catch (Exception e) {
 		logger.error("getSurgeryGradeByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -179,7 +174,6 @@ public class SurgeryGradeMasterDaoImpl extends GenericDao<SurgeryGradeMaster, In
 		logger.error("updateSurgeryGradeStatus failed", e);
 			return new Response<SurgeryGradeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 
 	}
@@ -199,7 +193,6 @@ public class SurgeryGradeMasterDaoImpl extends GenericDao<SurgeryGradeMaster, In
 		} catch (Exception e) {
 		logger.error("getActiveSurgeryGradeMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

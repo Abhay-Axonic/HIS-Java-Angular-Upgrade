@@ -389,11 +389,11 @@ public class RISWorkbenchServiceImpl implements IRISWorkbenchService ,ICommonCon
 			//iMailingService.sentRegistrationMailToPatient(patientRegistrationDto);
 			String pattern = "yyyy-MM-dd HH:mm:ss";
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(list!=null && list.size()>0 ? list.get(0).getUnitId():null));
+			String date1 = simpleDateFormat.format(TimeZoneComponent.getDateByzone(list!=null && list.size()>0 ? list.getFirst().getUnitId():null));
 			com.param.global.common.Response res1 = null;
 			
 			Response orgRes = iGlobalOrganisationMasterDao
-					.getOrganiazationFolderPath(list.get(0).getOrganizationId());
+					.getOrganiazationFolderPath(list.getFirst().getOrganizationId());
 			OrganizationMasterDto organizationMasterDto = (OrganizationMasterDto) orgRes.getObject();
 
 			for (RadiologyOrdersListDto dto : list) {

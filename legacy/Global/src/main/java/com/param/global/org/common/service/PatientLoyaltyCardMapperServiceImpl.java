@@ -161,7 +161,7 @@ public class PatientLoyaltyCardMapperServiceImpl implements IPatientLoyaltyCardM
 		PatientLoyaltyCardMapperDto patientLoyaltyCardMapperDto = new PatientLoyaltyCardMapperDto();
 		 Response res1=iPatientLoyaltyCardMapperDao.getLoyaltiDetailsByMapprId(dto);
 				if(res1.getListObject().size()>0 && res1.getListObject()!=null){
-					 patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)res1.getListObject().get(0);
+					 patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)res1.getListObject().getFirst();
 					
 					if(patientLoyaltyCardMapperDto.getCardBlockDate() !=null ? patientLoyaltyCardMapperDto.getCardBlockDate().before(currentDate) :true){
 						
@@ -183,7 +183,7 @@ public class PatientLoyaltyCardMapperServiceImpl implements IPatientLoyaltyCardM
 					    	 break;
 					     }
 					    	
-			    };
+			    }
 			    
 			    String authKey=null;
 			    while(true)
@@ -195,7 +195,7 @@ public class PatientLoyaltyCardMapperServiceImpl implements IPatientLoyaltyCardM
 					    	 break;
 					     }
 					    	
-			    };
+			    }
 			    
 			    SlotMasterDto.setOpt(otp);
 			    SlotMasterDto.setMobileNumber(dto.getMobileNumber());
@@ -209,7 +209,7 @@ public class PatientLoyaltyCardMapperServiceImpl implements IPatientLoyaltyCardM
 				 if(res3.getListObject().size()>0) {
 					 
 					 List<PatientLoyaltyCardMapperDto> list =res3.getListObject();
-					 dto.setEmail(list.get(0).getEmail());
+					 dto.setEmail(list.getFirst().getEmail());
 				 }
 				
 				  Response rese= iPatientLoyaltyCardMapperDao.getUnitName(dto);
@@ -353,7 +353,7 @@ public class PatientLoyaltyCardMapperServiceImpl implements IPatientLoyaltyCardM
 			    Response res=iPatientLoyaltyCardMapperDao.getLoyaltiDetailsByMapprId(dto);
 				if(res.getListObject().size()>0 && res.getListObject()!=null){
 					
-					 patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)res.getListObject().get(0);
+					 patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)res.getListObject().getFirst();
 					 
 					}
 				if(patientLoyaltyCardMapperDto.getCardBlockDate() !=null ? patientLoyaltyCardMapperDto.getCardBlockDate().before(currentDate) :true){
@@ -361,7 +361,7 @@ public class PatientLoyaltyCardMapperServiceImpl implements IPatientLoyaltyCardM
 				    LoyaltyCardLogDto loyaltyCardLogDto = new LoyaltyCardLogDto();
 				    Response logData=iLoyaltyCardLogDao.getLogDataByCardNo(dto);
 					if(logData.getListObject().size()>0 && logData.getListObject()!=null){
-						 loyaltyCardLogDto=(LoyaltyCardLogDto)logData.getListObject().get(0);
+						 loyaltyCardLogDto=(LoyaltyCardLogDto)logData.getListObject().getFirst();
 						
 						if(loyaltyCardLogDto.getLoyaltyCardNo().toLowerCase().trim().equals(dto.getCardNo().toLowerCase().trim())){
 							

@@ -1,5 +1,6 @@
 package com.param.privilege.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table(name = "privilege", schema = "privilege")
 public class Privilege implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 6807808198317246730L;
 
 	@Id

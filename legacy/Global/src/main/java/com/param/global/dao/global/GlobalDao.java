@@ -704,11 +704,13 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 	@Override
 	public List<Store> getUserStoreList(Integer unitId, Integer orgId, Integer userId) {
 
-		String hql = "SELECT store.storeId as storeId,store.storeName as storeName,store.storeType as storeType\n"
-				+ "FROM UserStoreMapperNew as storeMapper \n" + "INNER JOIN storeMapper.storeMaster as store\n"
-				+ "WHERE storeMapper.userId=:userId AND storeMapper.isDeleted = false AND storeMapper.unitId = :unitId "
-				+ " AND storeMapper.organizationId=:organizationId "
-				+ " ORDER BY store.storeName ASC";
+		String hql = """
+				SELECT store.storeId as storeId,store.storeName as storeName,store.storeType as storeType
+				FROM UserStoreMapperNew as storeMapper\s
+				INNER JOIN storeMapper.storeMaster as store
+				WHERE storeMapper.userId=:userId AND storeMapper.isDeleted = false AND storeMapper.unitId = :unitId \
+				 AND storeMapper.organizationId=:organizationId \
+				 ORDER BY store.storeName ASC""";
 		Query query = getSession().createQuery(hql);
 		query.setParameter("userId", userId != null ? userId : sessionService.getUserId());
 		query.setParameter("unitId", unitId != null ? unitId : sessionService.getUnitId());
@@ -720,10 +722,13 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 
 	@Override
 	public List<Store> getUserActiveStoreList(Integer storeId, Integer unitId, Integer orgId) {
-		String hql = "SELECT store.storeId as storeId,store.storeName as storeName,store.storeType as storeType\n"
-				+ "FROM UserStoreMapperNew as storeMapper \n" + "INNER JOIN storeMapper.storeMaster as store\n"
-				+ "WHERE storeMapper.isDeleted = false AND storeMapper.isActive = true AND storeMapper.unitId = :unitId AND store.storeId = :storeId"
-				+ " AND storeMapper.organizationId=:organizationId ";
+		String hql = """
+				SELECT store.storeId as storeId,store.storeName as storeName,store.storeType as storeType
+				FROM UserStoreMapperNew as storeMapper\s
+				INNER JOIN storeMapper.storeMaster as store
+				WHERE storeMapper.isDeleted = false AND storeMapper.isActive = true AND storeMapper.unitId = :unitId AND store.storeId = :storeId\
+				 AND storeMapper.organizationId=:organizationId\s\
+				""";
 		Query query = getSession().createQuery(hql);
 		query.setParameter("unitId", unitId != null ? unitId : sessionService.getUnitId());
 		query.setParameter("organizationId", orgId != null ? orgId : sessionService.getOrganizationId());
@@ -1276,7 +1281,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		query.setParameter("unitId", unitId != null ? unitId : sessionService.getUnitId());
 		List<StoreStock> data = query.list();
 		if (data.size() > 0) {
-			return (StoreStock) data.get(0);
+			return (StoreStock) data.getFirst();
 		}
 		return null;
 
@@ -1299,7 +1304,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		query.setParameter("unitId", unitId != null ? unitId : sessionService.getUnitId());
 		List<StoreStock> data = query.list();
 		if (data.size() > 0) {
-			return (StoreStock) data.get(0);
+			return (StoreStock) data.getFirst();
 		}
 		return null;
 
@@ -1876,16 +1881,18 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 	@Override
 	public List<PatientSearchDetails> salesReturnPatientSearchByUhid(String uhid, Integer orgId) {
 
-		String sql = " select distinct pat.uhid_number as uhidNumber ,\n"
-				+ "pre.prefix_code as prefixCode,  pat.first_name as firstName ,pat.middle_name as middleName, \n"
-				+ "pat.last_name as lastName, pat.dob as dob,\n"
-				+ "gen.gender_code as genderCode, pat.mobile_number as mobileNumber, pat.patient_id as patientId\n"
-				+ "from opd.t_encounter_master enc\n"
-				+ "inner join patient.t_patient_registration pat on pat.patient_id = enc.patient_id\n"
-				+ "inner join public.m_prefix_master pre on pre.prefix_id = pat.prefix_id \n"
-				+ "inner join public.m_gender_master gen on pat.gender_id = gen.gender_id\n"
-				+ " where enc.status_id = 5 and pat.status ='A' and pat.organization_id =:orgId "
-				+ "\t AND ((:uhid = '' OR lower(pat.uhid_number) LIKE :uhid )) ";
+		String sql = """
+				 select distinct pat.uhid_number as uhidNumber ,
+				pre.prefix_code as prefixCode,  pat.first_name as firstName ,pat.middle_name as middleName,\s
+				pat.last_name as lastName, pat.dob as dob,
+				gen.gender_code as genderCode, pat.mobile_number as mobileNumber, pat.patient_id as patientId
+				from opd.t_encounter_master enc
+				inner join patient.t_patient_registration pat on pat.patient_id = enc.patient_id
+				inner join public.m_prefix_master pre on pre.prefix_id = pat.prefix_id\s
+				inner join public.m_gender_master gen on pat.gender_id = gen.gender_id
+				 where enc.status_id = 5 and pat.status ='A' and pat.organization_id =:orgId \
+				\t AND ((:uhid = '' OR lower(pat.uhid_number) LIKE :uhid ))\s\
+				""";
 
 		Query query = getSession().createSQLQuery(sql).addScalar("uhidNumber").addScalar("prefixCode")
 				.addScalar("firstName").addScalar("middleName").addScalar("lastName").addScalar("dob")
@@ -5562,7 +5569,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		List<SaleDtoChangeOfPayee> sale = query1
 				.setResultTransformer(Transformers.aliasToBean(SaleDtoChangeOfPayee.class)).list();
 
-		SaleDtoChangeOfPayee saleDto = sale.get(0);
+		SaleDtoChangeOfPayee saleDto = sale.getFirst();
 		
 		if(flag == true){
 			String saleDetailQuery = " with sale as ( " 
@@ -6158,8 +6165,8 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		query.setParameter("admissionId", admissionId);
 		Integer returnQty = 0;
 		if (query.list().size() > 0) {
-			if (query.list().get(0) != null) {
-				returnQty = (Integer) query.list().get(0);
+			if (query.list().getFirst() != null) {
+				returnQty = (Integer) query.list().getFirst();
 			}
 
 		}
@@ -6224,21 +6231,29 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 	@Override
 	public List<PatientSearchDetails> getIPDCERPatientsPatientIndent(String name, Integer visitType, Integer unitId) {
 
-		String sql = " select distinct pat.uhid_number as uhidNumber ,\n"
-				+ "pre.prefix_code as prefixCode,  pat.first_name as firstName ,pat.middle_name as middleName, \n"
-				+ "pat.last_name as lastName, pat.dob as dob,\n"
-				+ "gen.gender_code as genderCode, pat.mobile_number as mobileNumber, pat.patient_id as patientId\n"
-				+ "from adt.t_admission adm\n"
-				+ "inner join patient.t_patient_registration pat on pat.patient_id = adm.patient_id\n"
-				+ "left join adt.t_discharge dis on adm.admission_id=dis.admission_id\n"
-				+ "inner join public.m_prefix_master pre on pre.prefix_id = pat.prefix_id \n"
-				+ "inner join public.m_gender_master gen on pat.gender_id = gen.gender_id\n"
-				+ "where (dis.discharge_status_id not in(" + "		1," + "		2," + "		3," + "		5"
-				+ "	) or dis.discharge_id is null) and pat.status = 'A'\n"
-				+ " and adm.visit_type_id =:visitType and adm.unit_id =:unitId " + "\tand (:name= ''\n"
-				+ "\tor lower(pat.first_name) like :name\n" + "\tor :name= ''\n"
-				+ "\tor lower(pat.middle_name) like :name\n" + "\tor :name= ''\n"
-				+ "\tor lower(pat.last_name) like :name)";
+		String sql = """
+				 select distinct pat.uhid_number as uhidNumber ,
+				pre.prefix_code as prefixCode,  pat.first_name as firstName ,pat.middle_name as middleName,\s
+				pat.last_name as lastName, pat.dob as dob,
+				gen.gender_code as genderCode, pat.mobile_number as mobileNumber, pat.patient_id as patientId
+				from adt.t_admission adm
+				inner join patient.t_patient_registration pat on pat.patient_id = adm.patient_id
+				left join adt.t_discharge dis on adm.admission_id=dis.admission_id
+				inner join public.m_prefix_master pre on pre.prefix_id = pat.prefix_id\s
+				inner join public.m_gender_master gen on pat.gender_id = gen.gender_id
+				where (dis.discharge_status_id not in(\
+				\t\t1,\
+				\t\t2,\
+				\t\t3,\
+				\t\t5\
+				\t) or dis.discharge_id is null) and pat.status = 'A'
+				 and adm.visit_type_id =:visitType and adm.unit_id =:unitId \
+				\tand (:name= ''
+				\tor lower(pat.first_name) like :name
+				\tor :name= ''
+				\tor lower(pat.middle_name) like :name
+				\tor :name= ''
+				\tor lower(pat.last_name) like :name)""";
 
 		Query query = getSession().createSQLQuery(sql).addScalar("uhidNumber").addScalar("prefixCode")
 				.addScalar("firstName").addScalar("middleName").addScalar("lastName").addScalar("dob")
@@ -6423,7 +6438,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		query.setParameter("unitId", unitId);
 		query.setParameter("storeId", storeId != null ? storeId : 0);
 		list = query.list();
-		return list != null ? (PrefixRunningNumber) list.get(0) : null;
+		return list != null ? (PrefixRunningNumber) list.getFirst() : null;
 	}
 
 	@Override
@@ -7872,7 +7887,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		if (query.list().isEmpty()) {
 			return null;
 		} else {
-			return (DoctorSpecialityResp) query.list().get(0);
+			return (DoctorSpecialityResp) query.list().getFirst();
 		}
 
 	}
@@ -7896,7 +7911,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		query.setResultTransformer(Transformers.aliasToBean(BatchResponse1.class));
 
 		if (query.list().size() > 0) {
-			return (BatchResponse1) query.list().get(0);
+			return (BatchResponse1) query.list().getFirst();
 		} else {
 			return null;
 		}
@@ -8291,7 +8306,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		Query q = sessionFactory.getCurrentSession().createSQLQuery(sql);
 		q.setParameter("admissionId", admissionId); // Bind the admissionId parameter
 		List resultList = q.list();
-		return !resultList.isEmpty() ? (String) resultList.get(0) : "";
+		return !resultList.isEmpty() ? (String) resultList.getFirst() : "";
 	}
 
 	@Override
@@ -8415,7 +8430,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		query.setParameter("unitId", unitId != null ? unitId : sessionService.getUnitId());
 		List<StoreStock> data = query.list();
 		if (data.size() > 0) {
-			return (StoreStock) data.get(0);
+			return (StoreStock) data.getFirst();
 		}
 		return null;
 
@@ -8445,7 +8460,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 		Query query = getSession().createQuery(hql);
 		query.setParameter("id", id);
 		List<Batch> batchList = query.list();
-		return batchList.get(0);
+		return batchList.getFirst();
 
 	}
 
@@ -8951,7 +8966,7 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 				+ "	and priority_id = 1 and tpsd.status = 'A' ";
 		Query q = sessionFactory.getCurrentSession().createSQLQuery(sql);
 		q.setParameter("admissionId",admissionId);
-		return !q.list().isEmpty() ? (String) q.list().get(0) : "";
+		return !q.list().isEmpty() ? (String) q.list().getFirst() : "";
 	}
 
 	@Override
@@ -9870,8 +9885,8 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 
             Query query = getSession().createSQLQuery(caseBuilder.toString())
                     .setParameterList("ids", batchIds)
-                    .setParameter("unitId", batchList.get(0).getUnitId())
-                    .setParameter("orgId", batchList.get(0).getOrganizationId());
+                    .setParameter("unitId", batchList.getFirst().getUnitId())
+                    .setParameter("orgId", batchList.getFirst().getOrganizationId());
 
             query.executeUpdate();
             return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, null);

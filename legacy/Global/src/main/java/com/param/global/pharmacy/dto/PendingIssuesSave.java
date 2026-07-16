@@ -1,5 +1,6 @@
 package com.param.global.pharmacy.dto;
 
+import java.io.Serial;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,6 +10,7 @@ import com.param.global.billing.dto.PharmacyBillCommonDto;
 @JsonInclude(Include.NON_NULL)
 public class PendingIssuesSave extends PharmacyBillCommonDto {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private Integer statusId;

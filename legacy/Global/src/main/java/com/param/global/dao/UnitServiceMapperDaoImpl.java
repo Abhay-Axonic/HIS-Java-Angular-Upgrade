@@ -295,7 +295,7 @@ public class UnitServiceMapperDaoImpl extends GenericDao<UnitServiceMapper, Inte
 						.setParameter("subSpecialityId", serviceSearchReqDto.getSubGroupId())
 						.setDate("currentDate", TimeZoneComponent.getDateByzone(serviceSearchReqDto.getUnitId())) //added
 						.setResultTransformer(Transformers.aliasToBean(ServiceSearchResDto.class))
-						.list();;
+						.list();
 			}else if(serviceSearchReqDto.getGroupId() != null){
 				query.append(" AND  service.speciality_id =:specialityId ");
 				listServiceMasterDto = sessionFactory.getCurrentSession().createSQLQuery(query.toString())
@@ -317,7 +317,7 @@ public class UnitServiceMapperDaoImpl extends GenericDao<UnitServiceMapper, Inte
 						.setParameter("subSpecialityId", serviceSearchReqDto.getSubGroupId())
 						.setDate("currentDate", TimeZoneComponent.getDateByzone(serviceSearchReqDto.getUnitId())) //added
 						.setResultTransformer(Transformers.aliasToBean(ServiceSearchResDto.class))
-						.list();;
+						.list();
 			}else{
 				listServiceMasterDto = sessionFactory.getCurrentSession().createSQLQuery(query.toString())
 						.setParameter("searchKeyword", "%"+serviceSearchReqDto.getServiceName().toLowerCase()+"%")

@@ -66,9 +66,9 @@ public class UserStoreMapperDaoImpl extends GenericDao<UserStoreMapperNew, Integ
 			Integer result = sessionFactory.getCurrentSession()
 					.getNamedQuery("UPDATE_USER_STORE_MAPPER")
 					.setParameter("isDeleted", TRUE)
-					.setParameter("organizationId", listuserStoreMapperDto.get(0).getOrganizationId())
-					.setParameter("unitId", listuserStoreMapperDto.get(0).getUnitId())
-					.setParameter("userId", listuserStoreMapperDto.get(0).getUserId())
+					.setParameter("organizationId", listuserStoreMapperDto.getFirst().getOrganizationId())
+					.setParameter("unitId", listuserStoreMapperDto.getFirst().getUnitId())
+					.setParameter("userId", listuserStoreMapperDto.getFirst().getUserId())
 					.executeUpdate();
 			if (result > 0) {
 				for (Iterator iterator = listuserStoreMapperDto.iterator(); iterator.hasNext();) {

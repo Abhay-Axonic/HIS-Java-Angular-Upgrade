@@ -60,7 +60,6 @@ public class PrefixMasteDaoImpl extends GenericDao<PrefixMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getPrefixByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -97,7 +96,6 @@ public class PrefixMasteDaoImpl extends GenericDao<PrefixMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getPrefixByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -122,7 +120,6 @@ public class PrefixMasteDaoImpl extends GenericDao<PrefixMaster, Integer>
 		logger.error("updatePrefixMaster failed", e);
 		return new Response<PrefixMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -139,7 +136,6 @@ public class PrefixMasteDaoImpl extends GenericDao<PrefixMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getPrefixByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -162,7 +158,6 @@ public class PrefixMasteDaoImpl extends GenericDao<PrefixMaster, Integer>
 		logger.error("updatePrefixStatus failed", e);
 		return new Response<PrefixMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -180,7 +175,6 @@ public class PrefixMasteDaoImpl extends GenericDao<PrefixMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getActivePrefixList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -201,7 +195,6 @@ public class PrefixMasteDaoImpl extends GenericDao<PrefixMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getPrefixMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -237,7 +230,6 @@ public class PrefixMasteDaoImpl extends GenericDao<PrefixMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getActivePrefixListForWebPage failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

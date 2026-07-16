@@ -80,7 +80,7 @@ public class BillOfMaterialServiceImpl implements IBillOfMaterialService, ICommo
 				 res = iBillOfMaterialDao.saveBillOfMaterial(dto);
 			}
 			List<CommonDto> patientCatList = new ArrayList<>();
-			Response resPatientCat  = iPatientCategoryMasterDao.getPatientCategoryByOrg(billOfMaterialDto.getBillOfMaterialList().get(0).getOrganizationId());
+			Response resPatientCat  = iPatientCategoryMasterDao.getPatientCategoryByOrg(billOfMaterialDto.getBillOfMaterialList().getFirst().getOrganizationId());
 			if(resPatientCat.getListObject() != null && resPatientCat.getListObject().size()>0) {
 				patientCatList.addAll(resPatientCat.getListObject());
 				List<UnitServiceTariffMasterDto> unitServiceTariffMasterDtoList = new ArrayList<>();
@@ -218,8 +218,8 @@ public class BillOfMaterialServiceImpl implements IBillOfMaterialService, ICommo
 					Integer  payeeId = null;
 
 					UnitApplicationConfigurationDto uAppConfDto = new UnitApplicationConfigurationDto();
-					uAppConfDto.setOrganizationId(serviceList.get(0).getOrganizationId());
-					uAppConfDto.setUnitId(serviceList.get(0).getUnitId());
+					uAppConfDto.setOrganizationId(serviceList.getFirst().getOrganizationId());
+					uAppConfDto.setUnitId(serviceList.getFirst().getUnitId());
 					Response appConfigRes = iUnitApplicationBillingConfigurationDao.getUnitApplicationBillingConfigByOrgUnit(uAppConfDto);
 					if (appConfigRes.getCode().equalsIgnoreCase(SUCCESS_CODE) && appConfigRes.getObject() != null) 
 					{
@@ -269,16 +269,16 @@ public class BillOfMaterialServiceImpl implements IBillOfMaterialService, ICommo
 						orderMst.setOrderStatus(ACTIVE);
 						orderMst.setOrderStatusId(1);
 						orderMst.setOrdRemarks("Procedure Order");
-						orderMst.setOrgId(serviceList.get(0).getOrganizationId());
-						orderMst.setOrgUnitId(serviceList.get(0).getUnitId());
+						orderMst.setOrgId(serviceList.getFirst().getOrganizationId());
+						orderMst.setOrgUnitId(serviceList.getFirst().getUnitId());
 						orderMst.setPatientId(oTReservationDto.getPatientId());
 						orderMst.setPaymentEntitlementTypeId(paymentEntitlementId);
 						orderMst.setPriorityId(1);
-						orderMst.setUpdatedBy(serviceList.get(0).getCreatedBy());
+						orderMst.setUpdatedBy(serviceList.getFirst().getCreatedBy());
 						orderMst.setUpdatedDate(today.getTime());
 						orderMst.setVisitTypeId(oTReservationDto.getVisitTypeId());
 
-						List<OrderDetailsMasterDto> listOrderDetails = new ArrayList();;
+						List<OrderDetailsMasterDto> listOrderDetails = new ArrayList();
 					for (OTReservationDto otReservationDto2 : serviceList) {
 					
 
@@ -319,8 +319,8 @@ public class BillOfMaterialServiceImpl implements IBillOfMaterialService, ICommo
 										orderDetails.setProcedureOrderMstId(oTReservationDto.getProReqId());
 			
 										ContractConsumptionDto consumptionDto = new ContractConsumptionDto();
-											consumptionDto.setOrganizationId(serviceList.get(0).getOrganizationId() != null ? serviceList.get(0).getOrganizationId() :sessionService.getOrganizationId());
-											consumptionDto.setUnitId(serviceList.get(0).getUnitId() != null ? serviceList.get(0).getUnitId() :sessionService.getUnitId());
+											consumptionDto.setOrganizationId(serviceList.getFirst().getOrganizationId() != null ? serviceList.getFirst().getOrganizationId() :sessionService.getOrganizationId());
+											consumptionDto.setUnitId(serviceList.getFirst().getUnitId() != null ? serviceList.getFirst().getUnitId() :sessionService.getUnitId());
 											consumptionDto.setVisitTypeId(visitTypeId);
 											consumptionDto.setPatientTypeId(patientTypeId);
 											consumptionDto.setBillingBedCategoryId(billingBedCategoryId);
@@ -342,8 +342,8 @@ public class BillOfMaterialServiceImpl implements IBillOfMaterialService, ICommo
 										
 										ContractConsumptionDto consumptionDtoForRate = new ContractConsumptionDto();
 										
-										consumptionDtoForRate.setOrganizationId(serviceList.get(0).getOrganizationId() != null ? serviceList.get(0).getOrganizationId() :sessionService.getOrganizationId());
-										consumptionDtoForRate.setUnitId(serviceList.get(0).getUnitId() != null ? serviceList.get(0).getUnitId() :sessionService.getUnitId());
+										consumptionDtoForRate.setOrganizationId(serviceList.getFirst().getOrganizationId() != null ? serviceList.getFirst().getOrganizationId() :sessionService.getOrganizationId());
+										consumptionDtoForRate.setUnitId(serviceList.getFirst().getUnitId() != null ? serviceList.getFirst().getUnitId() :sessionService.getUnitId());
 										consumptionDtoForRate.setVisitTypeId(visitTypeId);
 										consumptionDtoForRate.setBillingBedCategoryId(billingBedCategoryId);
 										consumptionDtoForRate.setServiceId(otReservationDto2.getServiceId());

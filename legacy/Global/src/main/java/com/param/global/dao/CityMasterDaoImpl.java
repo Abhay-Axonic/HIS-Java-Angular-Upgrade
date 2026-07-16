@@ -62,7 +62,6 @@ public class CityMasterDaoImpl extends GenericDao<CityMaster, Integer> implement
 		} catch (Exception e) {
 			logger.error("getCityByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -86,7 +85,6 @@ public class CityMasterDaoImpl extends GenericDao<CityMaster, Integer> implement
 		} catch (Exception e) {
 			logger.error("getCityByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -105,7 +103,6 @@ public class CityMasterDaoImpl extends GenericDao<CityMaster, Integer> implement
 		} catch (Exception e) {
 			logger.error("getCityByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -126,7 +123,6 @@ public class CityMasterDaoImpl extends GenericDao<CityMaster, Integer> implement
 		} catch (Exception e) {
 			logger.error("getCityMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -144,7 +140,6 @@ public class CityMasterDaoImpl extends GenericDao<CityMaster, Integer> implement
 		} catch (Exception e) {
 			logger.error("getActiveCityList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -163,7 +158,6 @@ public class CityMasterDaoImpl extends GenericDao<CityMaster, Integer> implement
 		} catch (Exception e) {
 			logger.error("getActiveDistrictListByStateId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -186,7 +180,6 @@ public class CityMasterDaoImpl extends GenericDao<CityMaster, Integer> implement
 			logger.error("updateCityStatus failed", e);
 			return new Response<CityMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -226,7 +219,6 @@ public class CityMasterDaoImpl extends GenericDao<CityMaster, Integer> implement
 			logger.error("updateCityMaster failed", e);
 			return new Response<CityMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -264,7 +256,6 @@ public class CityMasterDaoImpl extends GenericDao<CityMaster, Integer> implement
 		} catch (Exception e) {
 			logger.error("getCityByStateId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

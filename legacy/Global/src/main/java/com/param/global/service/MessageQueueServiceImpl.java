@@ -415,8 +415,7 @@ public static void main(String[] args) {
 											Response patResponse =iPatientRegistrationDao.getPatientDetailsById(messageQueueDto.getUserId());
 											PatientDetailsDto dto=(PatientDetailsDto) patResponse.getObject();
 											dob=dto.getDob();
-											byte[] pdfData = byteOutPutStream.toByteArray();/* Your PDF data */;
-								            // Password to protect the PDF
+											byte[] pdfData = byteOutPutStream.toByteArray();/* Your PDF data */// Password to protect the PDF
 											System.out.println("dob iss"+dob);
 									        byteOutPutStream = passwordProtectPDF(pdfData, dob);
 										}
@@ -854,13 +853,13 @@ public static void main(String[] args) {
 			Response appRes = iUnitApplicationBillingConfigurationDao.getUnitApplicationBillingConfigList(appDto);
 			List<UnitApplicationConfigurationDto>  appList = new ArrayList<>();
 			appList.addAll(appRes.getListObject());
-			dto.setSmtpUserId(appList.get(0).getEmailId());
+			dto.setSmtpUserId(appList.getFirst().getEmailId());
 			 //for getting report URL
 			String OTP= new DecimalFormat("000000").format(new Random().nextInt(999999));
 			
-			if(appList.get(0).getMailProviderId() ==2 ) {
+			if(appList.getFirst().getMailProviderId() ==2 ) {
 				
-				Response mailres = iMailingService.sendOTPMail(dto,appList.get(0).getMailCredential(),OTP);
+				Response mailres = iMailingService.sendOTPMail(dto,appList.getFirst().getMailCredential(),OTP);
 				
 			}else {
 				
@@ -1332,7 +1331,7 @@ public static void main(String[] args) {
 			Response appRes = iUnitApplicationBillingConfigurationDao.getUnitApplicationBillingConfigList(appDto);
 			List<UnitApplicationConfigurationDto>  appList = new ArrayList<>();
 			appList.addAll(appRes.getListObject());
-			dto.setSmtpUserId(appList.get(0).getSenderId());
+			dto.setSmtpUserId(appList.getFirst().getSenderId());
 			 //for getting report URL
 			String OTP= new DecimalFormat("000000").format(new Random().nextInt(999999));
 			String message = "OTP for verification  "	;

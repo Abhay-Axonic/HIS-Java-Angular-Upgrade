@@ -45,7 +45,7 @@ public class GetStoreListUsingsessionService implements IGetStoreListUsingsessio
             this.sessionService.setStoreId(storeId);
             List<Cookie> cookies = Arrays.stream(request.getCookies())
                     .filter(cookie -> cookie.getName().equals("cookieObject")).collect(Collectors.toList());
-            Cookie cookie = cookies.get(0);
+            Cookie cookie = cookies.getFirst();
             cookie.setValue(java.net.URLEncoder.encode(new Gson().toJson(sessionService.getCookieObjectDto()), StandardCharsets.UTF_8.name()));
             cookie.setMaxAge(60 * 60 * 24 * 30);
             cookie.setPath(request.getContextPath());

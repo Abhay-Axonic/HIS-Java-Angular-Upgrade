@@ -146,7 +146,7 @@ public class FrenchiseDepositServiceImpl implements  IFrenchiseDepositService, I
                     dto.setUnitId(unitId);
                     Response loyalityCardResponse=iPatientLoyaltyCardMapperDao.getPatientDetailsByLoyaltiCardNo(dto);
                     if(loyalityCardResponse.getListObject().size() >0 && loyalityCardResponse.getListObject()!=null){
-                        PatientLoyaltyCardMapperDto patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)loyalityCardResponse.getListObject().get(0);
+                        PatientLoyaltyCardMapperDto patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)loyalityCardResponse.getListObject().getFirst();
                         //checking that front end amount should be less than or equal to card amount
                         if(patientLoyaltyCardMapperDto.getCardAmount()>=detailsMPesaDto.getAmount())
                         {

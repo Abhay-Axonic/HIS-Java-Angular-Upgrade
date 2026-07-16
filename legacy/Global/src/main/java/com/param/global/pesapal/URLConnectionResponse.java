@@ -55,8 +55,8 @@ public class URLConnectionResponse extends HttpResponseMessage {
 
 	@Override
 	public int getStatusCode() throws IOException {
-		if (connection instanceof HttpURLConnection) {
-			return ((HttpURLConnection) connection).getResponseCode();
+		if (connection instanceof HttpURLConnection lConnection) {
+			return lConnection.getResponseCode();
 		}
 		return STATUS_OK;
 	}
@@ -126,7 +126,7 @@ public class URLConnectionResponse extends HttpResponseMessage {
 			into.put(REQUEST, request.toString());
 		}
 		{
-			HttpURLConnection http = (connection instanceof HttpURLConnection) ? (HttpURLConnection) connection
+			HttpURLConnection http = (connection instanceof HttpURLConnection hurlc) ? hurlc
 					: null;
 			StringBuilder response = new StringBuilder();
 			String value;

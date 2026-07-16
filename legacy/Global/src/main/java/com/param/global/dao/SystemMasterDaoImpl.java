@@ -113,7 +113,7 @@ public class SystemMasterDaoImpl extends GenericDao<SystemMaster, Integer>
 			systemMaster.setUpdatedBy(masterOfSytemDto.getUpdatedBy());
 			systemMaster.setCreatedDate(TimeZoneComponent.getDateByzone(masterOfSytemDto.getUnitId()));
 			systemMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(masterOfSytemDto.getUnitId()));
-			systemMaster.setTypeId(masterOfSytemDto.getTypeId());;
+			systemMaster.setTypeId(masterOfSytemDto.getTypeId());
 			 sessionFactory.getCurrentSession().save(systemMaster);
 			
 			  for(MasterOfSytemDto genderListObj:masterOfSytemDto.getGenderIdList()){
@@ -222,7 +222,7 @@ public class SystemMasterDaoImpl extends GenericDao<SystemMaster, Integer>
 			systemMaster.setUpdatedBy(masterOfSytemDto.getUpdatedBy());
 			systemMaster.setCreatedDate(TimeZoneComponent.getDateByzone(masterOfSytemDto.getUnitId()));
 			systemMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(masterOfSytemDto.getUnitId()));
-			systemMaster.setTypeId(masterOfSytemDto.getTypeId());;
+			systemMaster.setTypeId(masterOfSytemDto.getTypeId());
 			 sessionFactory.getCurrentSession().update(systemMaster);
 			
 			Integer count=sessionFactory.getCurrentSession().createQuery(" update SystemMasterGenderMapper smgm set status='I' where smgm.systemId=:systemId "	)

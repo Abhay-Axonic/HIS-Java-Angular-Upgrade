@@ -53,11 +53,11 @@ public class DepositMasterDaoImpl extends GenericDao<DepositMaster, Integer> imp
 		try{
 			DepositMaster master = new DepositMaster();
 				master.setAdmNoteId(dto.getAdmNoteId());
-				master.setAvailableDeposit(new Double(OrderMasterServiceImpl.df2.format(dto.getAvailableDeposit())));
+				master.setAvailableDeposit(Double.valueOf(OrderMasterServiceImpl.df2.format(dto.getAvailableDeposit())));
 				master.setConsumedDeposit(dto.getConsumedDeposit());
 				master.setCreatedBy(dto.getCreatedBy());
 				master.setCreatedDate(TimeZoneComponent.getDateByzone(dto.getUnitId()));
-				master.setDepositAmount(new Double(OrderMasterServiceImpl.df2.format(dto.getDepositAmount())));
+				master.setDepositAmount(Double.valueOf(OrderMasterServiceImpl.df2.format(dto.getDepositAmount())));
 				master.setDepositDate(TimeZoneComponent.getDateByzone(dto.getUnitId()));
 				master.setDepositNo(dto.getDepositNo());
 				master.setDepositTypeId(dto.getDepositTypeId());

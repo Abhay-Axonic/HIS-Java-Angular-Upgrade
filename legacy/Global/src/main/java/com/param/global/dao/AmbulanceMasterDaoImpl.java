@@ -99,7 +99,6 @@ public class AmbulanceMasterDaoImpl extends GenericDao<AmbulanceMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getAmbulanceMasterDataActiveList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -121,7 +120,6 @@ public class AmbulanceMasterDaoImpl extends GenericDao<AmbulanceMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getSingleAmbulanceMasterData failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -147,7 +145,6 @@ public class AmbulanceMasterDaoImpl extends GenericDao<AmbulanceMaster, Integer>
 		logger.error("updateAmbulanceMasterData failed", e);
 			return new Response<AmbulanceMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -169,7 +166,6 @@ public class AmbulanceMasterDaoImpl extends GenericDao<AmbulanceMaster, Integer>
 		logger.error("changeAmbulanceMasterDataStatus failed", e);
 			return new Response<AmbulanceMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -188,7 +184,6 @@ public class AmbulanceMasterDaoImpl extends GenericDao<AmbulanceMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getAmbulanceMasterByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

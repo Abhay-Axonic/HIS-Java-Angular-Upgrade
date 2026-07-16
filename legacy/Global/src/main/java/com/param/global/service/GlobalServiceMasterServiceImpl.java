@@ -182,7 +182,7 @@ public class GlobalServiceMasterServiceImpl implements IGlobalServiceMasterServi
 		    		
 		    		serviceMasterDto.setSpecialityName(strServices[0].trim()); 
 		    		if(splDto.size()>0) {
-		    			serviceMasterDto.setSpecialityId(splDto.get(0).getSpecialityId()); 
+		    			serviceMasterDto.setSpecialityId(splDto.getFirst().getSpecialityId()); 
 		    		}else{
 		    			if(remark.length()==0) {
 		    				remark.append(" Department does not exist");
@@ -198,7 +198,7 @@ public class GlobalServiceMasterServiceImpl implements IGlobalServiceMasterServi
 		    		 
 		    		 if(subSplDto.size()>0) 
 		    		 {
-		    			 serviceMasterDto.setSubSpecialityId(subSplDto.get(0).getSubSpecialityMasterId()); 
+		    			 serviceMasterDto.setSubSpecialityId(subSplDto.getFirst().getSubSpecialityMasterId()); 
 		    		 }else {
 		    			 if(remark.length()==0) 
 		    			 {

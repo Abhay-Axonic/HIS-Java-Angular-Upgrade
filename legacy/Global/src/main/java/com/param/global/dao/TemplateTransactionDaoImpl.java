@@ -490,7 +490,7 @@ public class TemplateTransactionDaoImpl extends GenericDao<TemplateTransaction, 
 			if (labSampleDetailsMaster!=null) {
 				return new Response(SUCCESS, SUCCESS_200, SUCCESS_200_MESSAGE, null, labSampleDetailsMaster);
 			} else {
-				return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, new Integer(0));
+				return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, Integer.valueOf(0));
 			}
 		} catch (HibernateException exception) {
 		logger.error("updateLabSampleDetailsMaster failed", exception);

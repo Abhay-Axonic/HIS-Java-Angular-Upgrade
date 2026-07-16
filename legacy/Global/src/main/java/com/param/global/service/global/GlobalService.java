@@ -517,10 +517,10 @@ public class GlobalService implements IGlobalService {
 				visitDetail.setAddedDate(admission.getUpdatedDate());
 				visitDetails.add(visitDetail);
 				if (admission.getAdmissionDetail() != null) {
-					patientDetails.setWardId(admission.getAdmissionDetail().get(0).getWardMaster().getWardId());
-					patientDetails.setWardName(admission.getAdmissionDetail().get(0).getWardMaster().getWardName());
-					patientDetails.setBedId(admission.getAdmissionDetail().get(0).getBedMaster().getBedId());
-					patientDetails.setBedNo(admission.getAdmissionDetail().get(0).getBedMaster().getBedNumber());
+					patientDetails.setWardId(admission.getAdmissionDetail().getFirst().getWardMaster().getWardId());
+					patientDetails.setWardName(admission.getAdmissionDetail().getFirst().getWardMaster().getWardName());
+					patientDetails.setBedId(admission.getAdmissionDetail().getFirst().getBedMaster().getBedId());
+					patientDetails.setBedNo(admission.getAdmissionDetail().getFirst().getBedMaster().getBedNumber());
 				}
 			}
 		}
@@ -1508,35 +1508,35 @@ public class GlobalService implements IGlobalService {
 							.collect(Collectors.toList()).isEmpty()) {
 
 				storeStock = storeStocks.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (stockInTransits.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 					.collect(Collectors.toList()) != null
 					&& !stockInTransits.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				stockInTransit = stockInTransits.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (lastMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 					.collect(Collectors.toList()) != null
 					&& !lastMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				lastMonthSale = lastMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (currentMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 					.collect(Collectors.toList()) != null
 					&& !currentMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				currentMonthSale = currentMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (maxStoreQuantitys.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 					.collect(Collectors.toList()) != null
 					&& !maxStoreQuantitys.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				maxStoreQuantity = maxStoreQuantitys.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getIntQuantity();
+						.collect(Collectors.toList()).getFirst().getIntQuantity();
 			}
 
 			Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit);
@@ -1700,7 +1700,7 @@ public class GlobalService implements IGlobalService {
 			purchaseOrderResponseList.setOtherChargesList(GlobalDao.getOtherChargesBP(unitId));
 			AgainstPOSearchResponse purchaseOrderSearchDto = againstPOSearchResponses.stream()
 					.filter(x -> x.getPoId().equals(againstPurchaseOrder.getPoId())).collect(Collectors.toList())
-					.get(0);
+					.getFirst();
 
 			List<PurchaseOrderDetailResponse> poDeatailList = new ArrayList<PurchaseOrderDetailResponse>();
 
@@ -1719,7 +1719,7 @@ public class GlobalService implements IGlobalService {
 					List<GRNQuantity> specificGRNQuantitiy = grnQuantities.stream()
 							.filter(x -> x.getPoDetailId().equals(poDetail.getId())).collect(Collectors.toList());
 					if (specificGRNQuantitiy != null && !specificGRNQuantitiy.isEmpty())
-						poGRNQuantity = specificGRNQuantitiy.get(0).getReceivedAndApprovedQtySum();
+						poGRNQuantity = specificGRNQuantitiy.getFirst().getReceivedAndApprovedQtySum();
 					poDetail.setPoGrnQuantity(poGRNQuantity);
 					poDetail.setPendingQuantity(poDetail.getPendingQuantity());// HIS-14302 // /HIS-14302
 					poDetail.setPoPendingQuantity(poDetail.getPoQuantity() - poDetail.getPoGrnQuantity());
@@ -1757,13 +1757,13 @@ public class GlobalService implements IGlobalService {
 							.collect(Collectors.toList());
 
 					if (storeStock1 != null && !storeStock1.isEmpty())
-						storeStock = storeStock1.get(0).getQuantity();
+						storeStock = storeStock1.getFirst().getQuantity();
 					if (stockInTransit1 != null && !stockInTransit1.isEmpty())
-						stockInTransit = stockInTransit1.get(0).getQuantity();
+						stockInTransit = stockInTransit1.getFirst().getQuantity();
 					if (maxStoreQuantity1 != null && !maxStoreQuantity1.isEmpty())
-						maxStoreQuantity = maxStoreQuantity1.get(0).getIntQuantity();
+						maxStoreQuantity = maxStoreQuantity1.getFirst().getIntQuantity();
 					if (prLeaseQuantity != null && !prLeaseQuantity.isEmpty())
-						prLeaseQty = prLeaseQuantity.get(0).getQuantity();
+						prLeaseQty = prLeaseQuantity.getFirst().getQuantity();
 					long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit + prLeaseQty);
 
 					if (maxOrderQuantity < 0) {
@@ -2250,9 +2250,9 @@ public class GlobalService implements IGlobalService {
 			Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 			// Deduct issued quantity from the batch store stock
-			batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
-			batch.getStoreStockList().get(0).setUpdatedByUser(store.getUserId());
-			batch.getStoreStockList().get(0).setUpdatedDate(TimeZoneComponent.getDateByzone(store.getUnitId()));
+			batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
+			batch.getStoreStockList().getFirst().setUpdatedByUser(store.getUserId());
+			batch.getStoreStockList().getFirst().setUpdatedDate(TimeZoneComponent.getDateByzone(store.getUnitId()));
 			// Calculate current batch quantity
 
 			// Set current batch quantity
@@ -2262,7 +2262,7 @@ public class GlobalService implements IGlobalService {
 			screen.setUpdatedByUser(store.getUserId());
 
 			StockTransaction stockTransaction = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-					leaseQuantity, batch.getStoreStockList().get(0).getStore(), 0);
+					leaseQuantity, batch.getStoreStockList().getFirst().getStore(), 0);
 
 			stockTransaction.setUpdatedByUser(store.getUserId());
 			stockTransaction.setAddedDate(TimeZoneComponent.getDateByzone(store.getUnitId()));
@@ -2358,42 +2358,42 @@ public class GlobalService implements IGlobalService {
 							.collect(Collectors.toList()).isEmpty()) {
 
 				storeStock = storeStocks.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (stockInTransits.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 					.collect(Collectors.toList()) != null
 					&& !stockInTransits.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				stockInTransit = stockInTransits.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (lastMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 					.collect(Collectors.toList()) != null
 					&& !lastMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				lastMonthSale = lastMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (currentMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 					.collect(Collectors.toList()) != null
 					&& !currentMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				currentMonthSale = currentMonthSales.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (maxStoreQuantitys.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 					.collect(Collectors.toList()) != null
 					&& !maxStoreQuantitys.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				maxStoreQuantity = maxStoreQuantitys.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getIntQuantity();
+						.collect(Collectors.toList()).getFirst().getIntQuantity();
 			}
 			if (approvedPRAndPOQuantities.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 					.collect(Collectors.toList()) != null
 					&& !approvedPRAndPOQuantities.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				approvedPRAndPOQuantity = approvedPRAndPOQuantities.stream()
-						.filter(x -> x.getItemId().equals(item.getItemId())).collect(Collectors.toList()).get(0)
+						.filter(x -> x.getItemId().equals(item.getItemId())).collect(Collectors.toList()).getFirst()
 						.getQuantity();
 			}
 			if (approvedPOQuantities.stream().filter(x -> x.getItemId().equals(item.getItemId()))
@@ -2401,7 +2401,7 @@ public class GlobalService implements IGlobalService {
 					&& !approvedPOQuantities.stream().filter(x -> x.getItemId().equals(item.getItemId()))
 							.collect(Collectors.toList()).isEmpty()) {
 				approvedPOQuantity = approvedPOQuantities.stream().filter(x -> x.getItemId().equals(item.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 
 			// Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit +
@@ -2595,7 +2595,7 @@ public class GlobalService implements IGlobalService {
 					}
 
 					TariffResponse resp = new TariffResponse();
-					PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+					PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 					resp.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 					resp.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 					resp.setItemId(tariff.getItemId());
@@ -2832,8 +2832,8 @@ public class GlobalService implements IGlobalService {
 					}
 					// for get batchwise stock
 					if (batch.getStoreStockList() != null && batch.getStoreStockList().size() > 0) {
-						batch.setCurrentQuantity(batch.getStoreStockList().get(0).getAvailableQty() != null
-								? batch.getStoreStockList().get(0).getAvailableQty()
+						batch.setCurrentQuantity(batch.getStoreStockList().getFirst().getAvailableQty() != null
+								? batch.getStoreStockList().getFirst().getAvailableQty()
 								: 0);
 					}
 				}
@@ -3076,10 +3076,10 @@ public class GlobalService implements IGlobalService {
 				visitDetail.setAddedDate(admission.getUpdatedDate());
 				visitDetails.add(visitDetail);
 				if (admission.getAdmissionDetail() != null) {
-					patientDetails.setWardId(admission.getAdmissionDetail().get(0).getWardMaster().getWardId());
-					patientDetails.setWardName(admission.getAdmissionDetail().get(0).getWardMaster().getWardName());
-					patientDetails.setBedId(admission.getAdmissionDetail().get(0).getBedMaster().getBedId());
-					patientDetails.setBedNo(admission.getAdmissionDetail().get(0).getBedMaster().getBedNumber());
+					patientDetails.setWardId(admission.getAdmissionDetail().getFirst().getWardMaster().getWardId());
+					patientDetails.setWardName(admission.getAdmissionDetail().getFirst().getWardMaster().getWardName());
+					patientDetails.setBedId(admission.getAdmissionDetail().getFirst().getBedMaster().getBedId());
+					patientDetails.setBedNo(admission.getAdmissionDetail().getFirst().getBedMaster().getBedNumber());
 				}
 				
 				Integer isFinalBill=GlobalDao.getIsFinalBill(null,admission.getAdmissionId());
@@ -3195,7 +3195,7 @@ public class GlobalService implements IGlobalService {
 		                        	{
 		                        	if(detail.getBonusUomTypeId().equals(1))
 									{
-		                        		bonusBatches.setBonusQuantity(bonusBatches.getBonusQuantity()*(detail.getUomList().get(0).getConversion()*detail.getUomList().get(1).getConversion()));
+		                        		bonusBatches.setBonusQuantity(bonusBatches.getBonusQuantity()*(detail.getUomList().getFirst().getConversion()*detail.getUomList().get(1).getConversion()));
 									}
 									if(detail.getBonusUomTypeId().equals(2))
 									{
@@ -3212,7 +3212,7 @@ public class GlobalService implements IGlobalService {
 		                    {
 		                    	if( detail.getBonusUomTypeId() != null && detail.getBonusUomTypeId().equals(1))
 								{
-	                        		detail.setBonusApprovedQuantity(detail.getBonusApprovedQuantity()*(detail.getUomList().get(0).getConversion()*detail.getUomList().get(1).getConversion()));
+	                        		detail.setBonusApprovedQuantity(detail.getBonusApprovedQuantity()*(detail.getUomList().getFirst().getConversion()*detail.getUomList().get(1).getConversion()));
 								}
 								if( detail.getBonusUomTypeId() != null && detail.getBonusUomTypeId().equals(2))
 								{
@@ -3295,8 +3295,8 @@ public class GlobalService implements IGlobalService {
 					}
 					// for get batchwise stock
 					if (batch.getStoreStockList() != null && batch.getStoreStockList().size() > 0) {
-						batch.setCurrentQuantity(batch.getStoreStockList().get(0).getAvailableQty() != null
-								? batch.getStoreStockList().get(0).getAvailableQty()
+						batch.setCurrentQuantity(batch.getStoreStockList().getFirst().getAvailableQty() != null
+								? batch.getStoreStockList().getFirst().getAvailableQty()
 								: 0);
 					}
 				}

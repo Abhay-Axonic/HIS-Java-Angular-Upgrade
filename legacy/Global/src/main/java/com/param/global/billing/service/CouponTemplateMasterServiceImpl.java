@@ -78,7 +78,7 @@ public class CouponTemplateMasterServiceImpl implements ICouponTemplateMasterSer
 					Response rescheck = iCouponTemplateMasterDao.getCheckServiceBilledOrNot(dto,masterDto.getServiceId());
 					
 					if(rescheck.getListObject()!= null && rescheck.getListObject().size()>0) {
-						PatientCouponTemplateMapperDto mapper = (PatientCouponTemplateMapperDto) rescheck.getListObject().get(0);
+						PatientCouponTemplateMapperDto mapper = (PatientCouponTemplateMapperDto) rescheck.getListObject().getFirst();
 						masterDto.setOrderDetailsId(mapper.getOrderDetailsId());
 						return new Response<>(SUCCESS, SUCCESS_CODE, null, null, masterDto);
 					}else {

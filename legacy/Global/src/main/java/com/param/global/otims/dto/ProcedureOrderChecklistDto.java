@@ -54,7 +54,7 @@ public class ProcedureOrderChecklistDto {
 	
 	private Integer roleId;
 	
-	private boolean userMappedChecklist;;
+	private boolean userMappedChecklist;
 	
 	public boolean isCheckStatus() {
 		return checkStatus;

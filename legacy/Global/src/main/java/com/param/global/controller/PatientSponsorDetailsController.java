@@ -33,7 +33,7 @@ public class PatientSponsorDetailsController implements ICommonConstants{
 	public @ResponseBody Response addPatientSponsorDetails(@RequestBody  List<PatientSponsorDetailsDto> patientSponsorDetailsDtosList) {
 		try {
 			
-			int encounterId=patientSponsorDetailsDtosList.get(0).getEncounterId();
+			int encounterId=patientSponsorDetailsDtosList.getFirst().getEncounterId();
 			return iPatientSponsorDetailsService.savePatientSponsorDetailsAndUpdatePatientSponsorUpdate(patientSponsorDetailsDtosList, encounterId);
 		} catch (Exception e) {
 		logger.error("method failed", e);

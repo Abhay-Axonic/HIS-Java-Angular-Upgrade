@@ -1786,7 +1786,7 @@ public class InvestigationOrderMasterNewDto {
 	}
 
 	public void setOrdConcession(BigDecimal ordConcession) {
-		this.ordConcession = ordConcession!=null?ordConcession:BigDecimal.ZERO;;
+		this.ordConcession = ordConcession!=null?ordConcession:BigDecimal.ZERO;
 	}
 
 	public BigDecimal getOrdDiscount() {

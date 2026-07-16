@@ -1,9 +1,13 @@
 package com.param.global.dto;
 
+import java.io.Serial;
+
+
 import org.springframework.context.ApplicationEvent;
 
 public class ScheduleLogsDto extends ApplicationEvent{
 
+	@Serial
 	private static final long serialVersionUID = -4215334842370518697L;
 	public ScheduleLogsDto(Object source) {
 		super(source);

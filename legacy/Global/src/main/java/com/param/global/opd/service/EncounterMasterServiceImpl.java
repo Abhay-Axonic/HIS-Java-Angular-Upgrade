@@ -522,23 +522,23 @@ public class EncounterMasterServiceImpl
 					doctorConsultationServiceMapperDto.setPaymentEntitlementId(encounterMasterDto.getPaymentEntitlementTypeId());
 					
 
-					if (!priorityOne.isEmpty() && priorityOne.get(0).getPaymentEntitlementId() != SELF) {
+					if (!priorityOne.isEmpty() && priorityOne.getFirst().getPaymentEntitlementId() != SELF) {
 
-					    doctorConsultationServiceMapperDto.setCompanyId(priorityOne.get(0).getPayeeId());
+					    doctorConsultationServiceMapperDto.setCompanyId(priorityOne.getFirst().getPayeeId());
 					} 
 
 					
 					if (!priorityOne.isEmpty()) {
 
-					    if (priorityOne.get(0).getPaymentEntitlementId() == INSURANCE) {
+					    if (priorityOne.getFirst().getPaymentEntitlementId() == INSURANCE) {
 
-					        doctorConsultationServiceMapperDto.setAssoCompanyId(priorityOne.get(0).getInsuranceId());
+					        doctorConsultationServiceMapperDto.setAssoCompanyId(priorityOne.getFirst().getInsuranceId());
 					    }
 					}
 					
 				Response response = iDoctorConsultationServiceMapperService.getDoctorConsultationServiceBySpecialityAndDoctorId(doctorConsultationServiceMapperDto);
 				if (response.getStatus().equals(SUCCESS) && response.getListObject().size() > 0) {
-					DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto2 = (DoctorConsultationServiceMapperDto) response.getListObject().get(0);
+					DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto2 = (DoctorConsultationServiceMapperDto) response.getListObject().getFirst();
 					if (encounterMasterDto.getUserDefinedVisitTypeId() == 1) 
 					{
 						serviceId = doctorConsultationServiceMapperDto2.getNewVisitServiceId();
@@ -1419,8 +1419,8 @@ public class EncounterMasterServiceImpl
 							orderDetailsMasterDto.setOrdDiscount(new BigDecimal(encounterMasterDto.getDiscountAmount()));
 							
 							if(consumptionDto.getOrderDetailsPayeeMapperDtosList() != null){
-								consumptionDto.getOrderDetailsPayeeMapperDtosList().get(0).setPayeeAmount(new BigDecimal(consumptionDto.getFinalPrice() - encounterMasterDto.getDiscountAmount()));
-								consumptionDto.getOrderDetailsPayeeMapperDtosList().get(0).setSpiltBillAmt(new BigDecimal(consumptionDto.getFinalPrice() - encounterMasterDto.getDiscountAmount()));
+								consumptionDto.getOrderDetailsPayeeMapperDtosList().getFirst().setPayeeAmount(new BigDecimal(consumptionDto.getFinalPrice() - encounterMasterDto.getDiscountAmount()));
+								consumptionDto.getOrderDetailsPayeeMapperDtosList().getFirst().setSpiltBillAmt(new BigDecimal(consumptionDto.getFinalPrice() - encounterMasterDto.getDiscountAmount()));
 							}
 							
 						}else{
@@ -2184,7 +2184,7 @@ public class EncounterMasterServiceImpl
 					if (radiologyOrdersListDto.getModalityId() != null) {
 						Response modalityRes = iRoomModalityMasterDao.getModalityDetailsByModalityId(roomModalityDto);
 						if (modalityRes.getListObject() != null && modalityRes.getListObject().size() > 0) {
-							roomModalityDto = (RoomModalityMasterDto) modalityRes.getListObject().get(0);
+							roomModalityDto = (RoomModalityMasterDto) modalityRes.getListObject().getFirst();
 						}
 					}
 
@@ -2471,7 +2471,7 @@ public class EncounterMasterServiceImpl
 			if (response.getStatus().equals(SUCCESS) && response.getListObject().size() > 0) 
 			{
 				DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto2 = (DoctorConsultationServiceMapperDto) response
-						.getListObject().get(0);
+						.getListObject().getFirst();
 				if (visitType == 1) {
 					serviceId = doctorConsultationServiceMapperDto2.getNewVisitServiceId();
 					serviceAmount = doctorConsultationServiceMapperDto2.getNewVisitRate();
@@ -2672,7 +2672,7 @@ public class EncounterMasterServiceImpl
 							.getDoctorConsultationServiceBySpecialityAndDoctorId(doctorConsultationServiceMapperDto);
 					if (response.getStatus().equals(SUCCESS) && response.getListObject().size() > 0) 
 					{
-						DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto2 = (DoctorConsultationServiceMapperDto) response.getListObject().get(0);
+						DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto2 = (DoctorConsultationServiceMapperDto) response.getListObject().getFirst();
 						if (encounterMasterDto.getUserDefinedVisitTypeId() == 1) 
 						{
 							serviceId = doctorConsultationServiceMapperDto2.getNewVisitServiceId();
@@ -2870,7 +2870,7 @@ public class EncounterMasterServiceImpl
 					Response response = iDoctorConsultationServiceMapperService.getDoctorConsultationServiceBySpecialityAndDoctorId(doctorConsultationServiceMapperDto);
 					if (response.getStatus().equals(SUCCESS) && response.getListObject().size() > 0) {
 						DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto2 = (DoctorConsultationServiceMapperDto) response
-								.getListObject().get(0);
+								.getListObject().getFirst();
 						if (encounterMasterDto.getUserDefinedVisitTypeId() == 1) {
 							serviceId = doctorConsultationServiceMapperDto2.getNewVisitServiceId();
 							serviceName = doctorConsultationServiceMapperDto2.getNewVisitServiceName();
@@ -3748,7 +3748,7 @@ public class EncounterMasterServiceImpl
 						.getDoctorConsultationServiceBySpecialityAndDoctorId(doctorConsultationServiceMapperDto);
 				if (response.getStatus().equals(SUCCESS) && response.getListObject().size() > 0) {
 					DoctorConsultationServiceMapperDto doctorConsultationServiceMapperDto2 = (DoctorConsultationServiceMapperDto) response
-							.getListObject().get(0);
+							.getListObject().getFirst();
 					if (encounterMasterDto.getUserDefinedVisitTypeId() == 1) {
 						serviceId = doctorConsultationServiceMapperDto2.getNewVisitServiceId();
 						serviceName = doctorConsultationServiceMapperDto2.getNewVisitServiceName();
@@ -4164,14 +4164,14 @@ public class EncounterMasterServiceImpl
 										for(int i=0; i<appointmentStatusMasterDtoList.size(); i++){
 											 if(i<appointmentStatusMasterDtoList.size()-1){
 												 if(i==0){
-													 grnBatchNo = appointmentStatusMasterDtoList.get(0).getGrnBatchNo();
+													 grnBatchNo = appointmentStatusMasterDtoList.getFirst().getGrnBatchNo();
 												 }
 												 if(!grnBatchNo.equalsIgnoreCase(appointmentStatusMasterDtoList.get(i).getBatchNo().toString()))
 												 batchNos += appointmentStatusMasterDtoList.get(i).getBatchNo()+"|";
 											 }
 											 else{
 												 if(i==0){
-													 grnBatchNo = appointmentStatusMasterDtoList.get(0).getGrnBatchNo();
+													 grnBatchNo = appointmentStatusMasterDtoList.getFirst().getGrnBatchNo();
 												 }
 												if(!dto.getBarcodeScreen()){
 												 if(!grnBatchNo.equalsIgnoreCase(appointmentStatusMasterDtoList.get(i).getBatchNo().toString()))
@@ -4194,16 +4194,16 @@ public class EncounterMasterServiceImpl
 									 if((dto.getBonusBatchFlag()!=null && dto.getBonusBatchFlag() && q.equalsIgnoreCase("@inventoryBatchExpiry")) || (dto.getBarcodeScreen()!=null && dto.getBarcodeScreen() && q.toString().equalsIgnoreCase("@inventoryBatchExpiry"))){
 										 for(int i=0; i<appointmentStatusMasterDtoList.size(); i++){
 											 if(dto.getBarcodeScreen() && appointmentStatusMasterDtoList.size()>0){
-												 batchExpiry = appointmentStatusMasterDtoList.get(0).getBonusBatchExpiry();
+												 batchExpiry = appointmentStatusMasterDtoList.getFirst().getBonusBatchExpiry();
 											 }
 										 else
 										   {
 											 if(i<appointmentStatusMasterDtoList.size()-1){
-												 if(!appointmentStatusMasterDtoList.get(0).getGrnBatchNo().equalsIgnoreCase(appointmentStatusMasterDtoList.get(i).getBatchNo().toString()))
+												 if(!appointmentStatusMasterDtoList.getFirst().getGrnBatchNo().equalsIgnoreCase(appointmentStatusMasterDtoList.get(i).getBatchNo().toString()))
 													 batchExpiry += appointmentStatusMasterDtoList.get(i).getBonusBatchExpiry()+"|";
 											 }
 											 else{
-												 if(!appointmentStatusMasterDtoList.get(0).getGrnBatchNo().equalsIgnoreCase(appointmentStatusMasterDtoList.get(i).getBatchNo().toString()))
+												 if(!appointmentStatusMasterDtoList.getFirst().getGrnBatchNo().equalsIgnoreCase(appointmentStatusMasterDtoList.get(i).getBatchNo().toString()))
 												 batchExpiry += appointmentStatusMasterDtoList.get(i).getBonusBatchExpiry();
 											 }
 										  }

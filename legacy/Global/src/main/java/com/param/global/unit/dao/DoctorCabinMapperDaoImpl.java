@@ -70,9 +70,9 @@ public class DoctorCabinMapperDaoImpl extends GenericDao<DoctorCabinMapper, Inte
 			Integer result = sessionFactory.getCurrentSession()
 					.getNamedQuery("UPDATE_DOCTOR_CABIN_MAPPER")
 					.setParameter("isDeleted", 'Y')
-					.setParameter("organisationId", listDoctorCabinMapperDto.get(0).getOrganisationId())
-					.setParameter("unitId", listDoctorCabinMapperDto.get(0).getUnitId())
-					.setParameter("doctorId", listDoctorCabinMapperDto.get(0).getDoctorId())
+					.setParameter("organisationId", listDoctorCabinMapperDto.getFirst().getOrganisationId())
+					.setParameter("unitId", listDoctorCabinMapperDto.getFirst().getUnitId())
+					.setParameter("doctorId", listDoctorCabinMapperDto.getFirst().getDoctorId())
 					.executeUpdate();
 			if (result > 0) {
 				for (Iterator iterator = listDoctorCabinMapperDto.iterator(); iterator.hasNext();) {

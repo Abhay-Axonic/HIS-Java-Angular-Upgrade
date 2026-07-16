@@ -495,7 +495,7 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 						
 						resDto.setFinalPrice((resDto.getServiceRate()*qty)-Math.abs(concession+discountAmt) + taxAmt);
 						resDto.setSelfPayable(resDto.getFinalPrice()*((resDto.getCoShare()!=null ? resDto.getCoShare() : 0.00 )*0.01));
-						resDto.setSelfPayable(new Double(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
+						resDto.setSelfPayable(Double.valueOf(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
 						resDto.setCreaditPayable(resDto.getFinalPrice()-resDto.getSelfPayable());
 					}
 					
@@ -2739,7 +2739,7 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 			{
                 if(contractRes.getListObject()!=null && contractRes.getListObject().size()>0)
                 {
-                	contractDto = (ContractConsumptionDto) contractRes.getListObject().get(0);
+                	contractDto = (ContractConsumptionDto) contractRes.getListObject().getFirst();
                 	if(contractDto.getPatientId()!=null)
                 	{
                 		 packageRes = iMPackageMasterService.getExistingActivePackageByPatientEncounter(contractDto.getPatientId(), (contractDto.getVisitTypeId().intValue()==OP?contractDto.getEncounterId():contractDto.getAdmissionId()), contractDto.getVisitTypeId(), contractDto.getOrganizationId(),contractDto.getUnitId(),0);
@@ -2846,9 +2846,9 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 									concession = resDto.getServiceRate()*(patientClassPer*0.01);
 									discount = ((resDto.getServiceRate()-concession)*consumptionDto.getOrdDiscountPer()*0.01);
 									resDto.setFinalPrice(resDto.getServiceRate()-(concession+discount) + (resDto.getServiceRate()-(concession+discount))*(resDto.getTaxPercentage()*0.01));
-									resDto.setFinalPrice(new Double(OrderMasterServiceImpl.df2.format(resDto.getFinalPrice())));
+									resDto.setFinalPrice(Double.valueOf(OrderMasterServiceImpl.df2.format(resDto.getFinalPrice())));
 									resDto.setSelfPayable(resDto.getFinalPrice()*(resDto.getCoShare()*0.01));
-									resDto.setSelfPayable(new Double(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
+									resDto.setSelfPayable(Double.valueOf(OrderMasterServiceImpl.df2.format(resDto.getSelfPayable())));
 									resDto.setCreaditPayable(resDto.getFinalPrice()-resDto.getSelfPayable());
 									
 								/*	if(patientClassPer >0)

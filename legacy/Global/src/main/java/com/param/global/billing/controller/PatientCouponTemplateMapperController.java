@@ -1,6 +1,7 @@
 package com.param.global.billing.controller;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -49,7 +50,7 @@ public class PatientCouponTemplateMapperController implements ICommonConstants{
 			        StringBuilder sb = new StringBuilder(randomSize);
 			        String s =  "";
 			        for (int i = 0; i < randomSize; i++) {
-			        	int index  = (int)(AlphaNumericString.length() * Math.random());
+			        	int index  = (int)(AlphaNumericString.length() * ThreadLocalRandom.current().nextDouble());
 			            sb.append(AlphaNumericString.charAt(index));
 			        }
 			  

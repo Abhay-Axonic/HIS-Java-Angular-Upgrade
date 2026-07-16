@@ -125,7 +125,6 @@ public class AmbulanceChargesDaoImpl extends GenericDao<AmbulanceCharges, Intege
 			logger.error("getAmbulanceChargesActiveList failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			 ;
 		}
 	}
 
@@ -148,7 +147,6 @@ public class AmbulanceChargesDaoImpl extends GenericDao<AmbulanceCharges, Intege
 			logger.error("getSingleAmbulanceCharges failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			 ;
 		}
 	}
 
@@ -186,7 +184,6 @@ public class AmbulanceChargesDaoImpl extends GenericDao<AmbulanceCharges, Intege
 			logger.error("updateAmbulanceCharges failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			 ;
 		}
 	}
 
@@ -208,7 +205,6 @@ public class AmbulanceChargesDaoImpl extends GenericDao<AmbulanceCharges, Intege
 			logger.error("changeAmbulanceChargesStatus failed", e);
 			throw new ServiceException(e.getMessage());
 		} finally {
-			 ;
 		}
 	}
 

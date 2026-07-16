@@ -85,7 +85,7 @@ public class PatientHabitDetailsMapperDaoImpl extends GenericDao<PatientHabitDet
 							patientHabitDetails.setTypeOfExercise(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getTypeOfExercise());
 							patientHabitDetails.setYearsSmoked(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getYearsSmoked());
 							patientHabitDetails.setYearsUsed(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getYearsUsed());
-							patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getHabitTypeId());;
+							patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getHabitTypeId());
 							patientHabitDetails.setCreatedDate(CommonDateUtils.getDate(patientHabitDetailsDto.getCreatedDate(), "dd-MM-yyyy"));
 							patientHabitDetails.setCreatedBy(patientHabitDetailsDto.getCreatedBy());
 							patientHabitDetails.setUpdatedBy(patientHabitDetailsDto.getUpdatedBy());
@@ -138,7 +138,7 @@ public class PatientHabitDetailsMapperDaoImpl extends GenericDao<PatientHabitDet
 							patientHabitDetails.setTypeOfExercise(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getTypeOfExercise());
 							patientHabitDetails.setYearsSmoked(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getYearsSmoked());
 							patientHabitDetails.setYearsUsed(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getYearsUsed());
-							patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getHabitTypeId());;
+							patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getHabitTypeId());
 							patientHabitDetails.setCreatedDate(CommonDateUtils.getDate(patientHabitDetailsDto.getCreatedDate(), "dd-MM-yyyy"));
 							patientHabitDetails.setCreatedBy(patientHabitDetailsDto.getCreatedBy());
 							patientHabitDetails.setUpdatedBy(patientHabitDetailsDto.getUpdatedBy());
@@ -423,7 +423,7 @@ public class PatientHabitDetailsMapperDaoImpl extends GenericDao<PatientHabitDet
 				patientHabitDetails.setTypeOfExercise(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getTypeOfExercise());
 				patientHabitDetails.setYearsSmoked(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getYearsSmoked());
 				patientHabitDetails.setYearsUsed(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getYearsUsed());
-				patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getHabitTypeId());;
+				patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getHabitTypeId());
 				patientHabitDetails.setCreatedDate(CommonDateUtils.getDate(patientHabitDetailsDto.getCreatedDate(), "dd-MM-yyyy"));
 				patientHabitDetails.setCreatedBy(patientHabitDetailsDto.getCreatedBy());
 				patientHabitDetails.setUpdatedBy(patientHabitDetailsDto.getUpdatedBy());
@@ -510,7 +510,7 @@ public class PatientHabitDetailsMapperDaoImpl extends GenericDao<PatientHabitDet
 					patientHabitDetails.setTypeOfExercise(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getTypeOfExercise());
 					patientHabitDetails.setYearsSmoked(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getYearsSmoked());
 					patientHabitDetails.setYearsUsed(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getYearsUsed());
-					patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getHabitTypeId());;
+					patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getListOfPatientHabitDetailsDto().get(i).getHabitTypeId());
 					patientHabitDetails.setCreatedDate(CommonDateUtils.getDate(patientHabitDetailsDto.getCreatedDate(), "dd-MM-yyyy"));
 					patientHabitDetails.setCreatedBy(patientHabitDetailsDto.getCreatedBy());
 					patientHabitDetails.setUpdatedBy(patientHabitDetailsDto.getUpdatedBy());
@@ -595,7 +595,7 @@ public class PatientHabitDetailsMapperDaoImpl extends GenericDao<PatientHabitDet
 								patientHabitDetails.setTypeOfExercise(dto.getTypeOfExercise());
 								patientHabitDetails.setYearsSmoked(dto.getYearsSmoked());
 								patientHabitDetails.setYearsUsed(dto.getYearsUsed());
-								patientHabitDetails.setHabitTypeId(dto.getHabitTypeId());;
+								patientHabitDetails.setHabitTypeId(dto.getHabitTypeId());
 								patientHabitDetails.setCreatedDate(TimeZoneComponent.getDateByzone(resDto.getUnitId()));
 								patientHabitDetails.setCreatedBy(resDto.getCreatedBy());
 								patientHabitDetails.setUpdatedBy(resDto.getUpdatedBy());
@@ -686,7 +686,7 @@ try{
 					patientHabitDetails.setTypeOfExercise(dto.getTypeOfExercise());
 					patientHabitDetails.setYearsSmoked(dto.getYearsSmoked());
 					patientHabitDetails.setYearsUsed(dto.getYearsUsed());
-					patientHabitDetails.setHabitTypeId(dto.getHabitTypeId());;
+					patientHabitDetails.setHabitTypeId(dto.getHabitTypeId());
 					patientHabitDetails.setCreatedDate(TimeZoneComponent.getDateByzone(coversheetTemplateMasterDto.getUnitId()));
 					patientHabitDetails.setCreatedBy(coversheetTemplateMasterDto.getCreatedBy());
 					patientHabitDetails.setUpdatedBy(coversheetTemplateMasterDto.getUpdatedBy());
@@ -847,7 +847,7 @@ try{
 				patientHabitDetails.setTypeOfExercise(patientHabitDetailsDto.getTypeOfExercise());
 				patientHabitDetails.setYearsSmoked(patientHabitDetailsDto.getYearsSmoked());
 				patientHabitDetails.setYearsUsed(patientHabitDetailsDto.getYearsUsed());
-				patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getHabitTypeId());;
+				patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getHabitTypeId());
 				patientHabitDetails.setCreatedDate(CommonDateUtils.getDate(patientHabitDetailsDto.getCreatedDate(), "dd-MM-yyyy"));
 				patientHabitDetails.setCreatedBy(patientHabitDetailsDto.getCreatedBy());
 				patientHabitDetails.setUpdatedBy(patientHabitDetailsDto.getUpdatedBy());
@@ -890,7 +890,7 @@ try{
 				patientHabitDetails.setTypeOfExercise(patientHabitDetailsDto.getTypeOfExercise());
 				patientHabitDetails.setYearsSmoked(patientHabitDetailsDto.getYearsSmoked());
 				patientHabitDetails.setYearsUsed(patientHabitDetailsDto.getYearsUsed());
-				patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getHabitTypeId());;
+				patientHabitDetails.setHabitTypeId(patientHabitDetailsDto.getHabitTypeId());
 				patientHabitDetails.setCreatedDate(CommonDateUtils.getDate(patientHabitDetailsDto.getCreatedDate(), "dd-MM-yyyy"));
 				patientHabitDetails.setCreatedBy(patientHabitDetailsDto.getCreatedBy());
 				patientHabitDetails.setUpdatedBy(patientHabitDetailsDto.getUpdatedBy());

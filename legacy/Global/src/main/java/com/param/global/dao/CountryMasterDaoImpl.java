@@ -57,7 +57,6 @@ public class CountryMasterDaoImpl extends GenericDao<CountryMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getCountryByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -94,7 +93,6 @@ public class CountryMasterDaoImpl extends GenericDao<CountryMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getCountryMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -114,7 +112,6 @@ public class CountryMasterDaoImpl extends GenericDao<CountryMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getCountryByID failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -138,7 +135,6 @@ public class CountryMasterDaoImpl extends GenericDao<CountryMaster, Integer>
 		logger.error("updateCountryStatus failed", e);
 			return new Response<CountryMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -164,7 +160,6 @@ public class CountryMasterDaoImpl extends GenericDao<CountryMaster, Integer>
 		logger.error("updateCountryMaster failed", e);
 			return new Response<CountryMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -184,7 +179,6 @@ public class CountryMasterDaoImpl extends GenericDao<CountryMaster, Integer>
 		} catch (Exception e) {
 		logger.error("getCountryByNameNotId failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

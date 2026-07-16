@@ -3065,7 +3065,7 @@ public class DocUploadUtility implements HISFileUploadsPath,ICommonConstants{
    			            Map<String, String> headers = new HashMap<>();
    			            headers.put("X-Amz-Meta-Description", "This is a test file.");
 
-   			            String objectName = organizationId+"_"+string+"_PDF.pdf";;
+   			            String objectName = organizationId+"_"+string+"_PDF.pdf";
    			            String contentType ="application/pdf";
 
    			            // Get InputStream from MultipartFile

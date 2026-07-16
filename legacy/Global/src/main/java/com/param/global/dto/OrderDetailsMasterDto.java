@@ -710,7 +710,7 @@ public class OrderDetailsMasterDto {
 	}
 
 	public void setOrdConcession(BigDecimal ordConcession) {
-		this.ordConcession = ordConcession!=null?ordConcession:BigDecimal.ZERO;;
+		this.ordConcession = ordConcession!=null?ordConcession:BigDecimal.ZERO;
 	}
 
 	public BigDecimal getOrdDiscount() {
@@ -1372,7 +1372,7 @@ public class OrderDetailsMasterDto {
 	}
 
 	public void setIsConsumed(Boolean isConsumed) {
-		this.isConsumed = isConsumed!=null?isConsumed:false;;
+		this.isConsumed = isConsumed!=null?isConsumed:false;
 	}
 
 	public String getpImage() {

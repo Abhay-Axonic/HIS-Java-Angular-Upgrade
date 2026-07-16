@@ -1231,7 +1231,7 @@ public  String getGeneratedGlobalNo(int storeId, int orgId,int unitId, int scree
 				entity.setOrganizationId(subscriptionDetails.getOrganizationId());
 				entity.setUnitId(subscriptionDetails.getUnitId());
 				entity.setRemark(subscriptionDetails.getRemark());
-				Integer id= (Integer) sessionFactory.getCurrentSession().save(entity);;
+				Integer id= (Integer) sessionFactory.getCurrentSession().save(entity);
 				return new Response<>(SUCCESS, SUCCESS_CODE, "Subscription added successfully.", null, entity);
 			}
 

@@ -58,7 +58,6 @@ public class SpecialityMasterDaoImpl extends GenericDao<SpecialityMaster, Intege
 		} catch (Exception e) {
 			logger.error("getSpecialityMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -127,7 +126,6 @@ public class SpecialityMasterDaoImpl extends GenericDao<SpecialityMaster, Intege
 			logger.error("editSpecialityMaster failed", e);
 			return new Response<SpecialityMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -164,7 +162,6 @@ public class SpecialityMasterDaoImpl extends GenericDao<SpecialityMaster, Intege
 			logger.error("updateSpecialityMaster failed", e);
 			return new Response<SpecialityMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -221,7 +218,6 @@ public class SpecialityMasterDaoImpl extends GenericDao<SpecialityMaster, Intege
 		} catch (Exception e) {
 			logger.error("getActiveSpecialityList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -241,7 +237,6 @@ public class SpecialityMasterDaoImpl extends GenericDao<SpecialityMaster, Intege
 		} catch (Exception e) {
 			logger.error("getSpecialityByName failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -264,7 +259,6 @@ public class SpecialityMasterDaoImpl extends GenericDao<SpecialityMaster, Intege
 			logger.error("updateSpecialityStatus failed", e);
 			return new Response<SpecialityMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 
 	}
@@ -282,7 +276,6 @@ public class SpecialityMasterDaoImpl extends GenericDao<SpecialityMaster, Intege
 		} catch (Exception e) {
 			logger.error("getActiveSpecialityMasterList failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -301,7 +294,6 @@ public class SpecialityMasterDaoImpl extends GenericDao<SpecialityMaster, Intege
 		} catch (Exception e) {
 			logger.error("getSpecialityListForSubSpeciality failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -397,7 +389,6 @@ public class SpecialityMasterDaoImpl extends GenericDao<SpecialityMaster, Intege
 		} catch (Exception e) {
 		logger.error("getSpecialityListOfActiveInactive failed", e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

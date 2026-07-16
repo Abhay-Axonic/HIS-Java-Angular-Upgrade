@@ -50,7 +50,6 @@ public class AmbulanceFacilitiesDaoImpl extends GenericDao<AmbulanceFacilities, 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -108,7 +107,6 @@ public class AmbulanceFacilitiesDaoImpl extends GenericDao<AmbulanceFacilities, 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -127,7 +125,6 @@ public class AmbulanceFacilitiesDaoImpl extends GenericDao<AmbulanceFacilities, 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -147,7 +144,6 @@ public class AmbulanceFacilitiesDaoImpl extends GenericDao<AmbulanceFacilities, 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -169,7 +165,6 @@ public class AmbulanceFacilitiesDaoImpl extends GenericDao<AmbulanceFacilities, 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -192,7 +187,6 @@ public class AmbulanceFacilitiesDaoImpl extends GenericDao<AmbulanceFacilities, 
 			logger.error(e.getMessage(), e);
 			return new Response<AmbulanceFacilitiesDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -214,7 +208,6 @@ public class AmbulanceFacilitiesDaoImpl extends GenericDao<AmbulanceFacilities, 
 			logger.error(e.getMessage(), e);
 			return new Response<AmbulanceFacilitiesDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

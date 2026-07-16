@@ -47,7 +47,7 @@ public class OtherDBDataDisplayServiceImpl  implements IOtherDBDataDisplayServic
 			dto.setProcedure(iOtherDBDataDisplayDao.getProceduresList(reqDto).getListObject());
 			dto.setReviewNotes(iOtherDBDataDisplayDao.getreviewNotesList(reqDto).getListObject());
 			dto.setRadiologyorders(iOtherDBDataDisplayDao.getRadiologyOrdersList(reqDto).getListObject());
-			dto.setProvisionalDiagnosys(iOtherDBDataDisplayDao.getProvisionalDiagonsys(reqDto).getListObject());;
+			dto.setProvisionalDiagnosys(iOtherDBDataDisplayDao.getProvisionalDiagonsys(reqDto).getListObject());
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, null, dto);
 		}catch(BillingException be){
 			throw be;

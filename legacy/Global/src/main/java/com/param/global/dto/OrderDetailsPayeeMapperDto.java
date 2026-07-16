@@ -1,6 +1,7 @@
 package com.param.global.dto;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class OrderDetailsPayeeMapperDto {
 
@@ -175,7 +176,7 @@ public class OrderDetailsPayeeMapperDto {
 	}
 
 	public void setPayeeAmount(BigDecimal payeeAmount) {
-		this.payeeAmount = payeeAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+		this.payeeAmount = payeeAmount.setScale(2, RoundingMode.HALF_UP);
 	}
 
 	public Integer getUnitId() {

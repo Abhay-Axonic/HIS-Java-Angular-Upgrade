@@ -132,7 +132,7 @@ public class ICPCMapperController implements ICommonConstants{
         		 List<Cookie> cookies = Arrays.stream(request.getCookies())
                          .filter(cookie -> cookie.getName().equals("cookieObject")).collect(Collectors.toList());
         		 if (cookies != null && cookies.size() > 0) {
-                     sessionService.setCookieObjectDto(new Gson().fromJson(java.net.URLDecoder.decode(cookies.get(0).getValue(), StandardCharsets.UTF_8.name()), CookieObjectDto.class));
+                     sessionService.setCookieObjectDto(new Gson().fromJson(java.net.URLDecoder.decode(cookies.getFirst().getValue(), StandardCharsets.UTF_8.name()), CookieObjectDto.class));
                  }
         	}
 			return iICPCMapperService.getActiveGenderListForICPCMapper(request);

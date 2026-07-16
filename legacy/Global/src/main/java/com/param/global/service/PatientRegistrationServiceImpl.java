@@ -328,7 +328,7 @@ public class PatientRegistrationServiceImpl implements IPatientRegistrationServi
 			if (res.getListObject().size() > 0 && patientRegistrationDto.getIsAlreadyExist() == 'N')
 			{
 				List<PatientDetailsDto> getPatientDetaisList = res.getListObject();
-				PatientDetailsDto alreadyExist = getPatientDetaisList.get(0);
+				PatientDetailsDto alreadyExist = getPatientDetaisList.getFirst();
 				return new Response(ERROR, ALREADY_EXIST_CODE, "Patient already exists.."+alreadyExist.getUHIDNumber(), null, alreadyExist.getPatientId());
 			} else {
 				//<---save patient
@@ -423,7 +423,7 @@ public class PatientRegistrationServiceImpl implements IPatientRegistrationServi
 					Response genRes = iGenderMasterDao.getGenderByName(gender);
 					if (genRes.getStatus().equals(SUCCESS) && genRes.getListObject() != null && !genRes.getListObject().isEmpty()){
 						List<GenderMasterDto> genderList = genRes.getListObject();
-						gender = genderList.get(0);
+						gender = genderList.getFirst();
 						patientRegistrationDto.setGenderId(gender.getId());
 						patientRegistrationDto.setPrefixId(gender.getPreFixId());
 					}
@@ -1326,7 +1326,7 @@ public Response getPatientDetaisForHealthCard(PatientRegistrationDto patientRegi
 			
 			if(res2.getListObject().size()>0){
 				List<KinDetailsDto> list = res2.getListObject();
-				KinDetailsDto kin = list.get(0);
+				KinDetailsDto kin = list.getFirst();
 				patientRegistrationDto.setKinDetailsDto(kin);
 			}
 			
@@ -1406,7 +1406,7 @@ public Response savePatientFingerPrint(PatientRegistrationDto dto) throws Applic
 			//post.setEntity(input);
 			HttpResponse response = httpClient.execute(post);
 			if (response != null) {
-				if (response.getStatusLine().getStatusCode() == new Integer(SUCCESS_CODE)) {
+				if (response.getStatusLine().getStatusCode() == Integer.valueOf(SUCCESS_CODE)) {
 					String json = EntityUtils.toString(response.getEntity(),"UTF-8");
 					JSONObject jsonObj = new JSONObject(json);
 					Integer errorCode = Integer.parseInt(jsonObj.getString("ErrorCode"));
@@ -1464,7 +1464,7 @@ try {
 			post.setEntity(input);
 			HttpResponse response = httpClient.execute(post);
 			if (response != null) {
-				if (response.getStatusLine().getStatusCode() == new Integer(SUCCESS_CODE)) 
+				if (response.getStatusLine().getStatusCode() == Integer.valueOf(SUCCESS_CODE)) 
 				{
 					String json = EntityUtils.toString(response.getEntity(),"UTF-8");
 					JSONObject jsonObj = new JSONObject(json);
@@ -1486,7 +1486,7 @@ try {
 							{  
 								List<Integer> patientIds = patientRes.getListObject();
 								PatientSearchDto patientSearchDto = new  PatientSearchDto();
-								patientSearchDto.setPatientId(patientIds.get(0));
+								patientSearchDto.setPatientId(patientIds.getFirst());
 								patientSearchDto.setOrganizationId(dto.getOrganizationId());
 								patientSearchDto.setUnitId(dto.getUnitId());
 								patientSearchDto.setPatientType(1);

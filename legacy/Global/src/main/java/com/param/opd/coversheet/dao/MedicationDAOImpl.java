@@ -592,7 +592,7 @@ public class MedicationDAOImpl extends GenericDao<PrescriptionMaster, Integer>
 			prescriptionMaster.setPrescriptionDate(TimeZoneComponent.getDateByzone(prescriptionMaster.getUnitId()));
 
 			if(prescriptionDto.getPrescriptionDetailsDtosList()!=null) {
-			 if(prescriptionDto.getPrescriptionDetailsDtosList().get(0).getIsDischarge()!=null && prescriptionDto.getPrescriptionDetailsDtosList().get(0).getIsDischarge().equals(true)){
+			 if(prescriptionDto.getPrescriptionDetailsDtosList().getFirst().getIsDischarge()!=null && prescriptionDto.getPrescriptionDetailsDtosList().getFirst().getIsDischarge().equals(true)){
 				 prescriptionMaster.setReconciliationStatusId(2);//pending
 				 prescriptionMaster.setReconciliationDone(false);
 			 }else {
@@ -1365,7 +1365,7 @@ try {
 			prescriptionMaster.setAddedDate(TimeZoneComponent.getDateByzone(prescriptionMaster.getUnitId()));
 			prescriptionMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(prescriptionMaster.getUnitId()));
 			prescriptionMaster.setPrescriptionDate(TimeZoneComponent.getDateByzone(prescriptionMaster.getUnitId()));
-			 if(prescriptionDto.getPrescriptionDetailsDtosList().get(0).getIsDischarge()!=null && prescriptionDto.getPrescriptionDetailsDtosList().get(0).getIsDischarge().equals('Y')){
+			 if(prescriptionDto.getPrescriptionDetailsDtosList().getFirst().getIsDischarge()!=null && prescriptionDto.getPrescriptionDetailsDtosList().getFirst().getIsDischarge().equals('Y')){
 				 prescriptionMaster.setReconciliationDone(false);
 				 prescriptionMaster.setReconciliationStatusId(2);
 			 }else {
@@ -2675,7 +2675,7 @@ try {
 			String  ss = null;
 			
 			if(list != null && list.size() == 1) {
-				cimmsData= list.get(0).getCimmsData();
+				cimmsData= list.getFirst().getCimmsData();
 			}
 			
 	        if(cimmsData == null) {

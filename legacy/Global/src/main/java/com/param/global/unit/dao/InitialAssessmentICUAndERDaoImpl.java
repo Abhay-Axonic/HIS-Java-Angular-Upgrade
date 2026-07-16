@@ -77,7 +77,7 @@ public class InitialAssessmentICUAndERDaoImpl extends GenericDao<InitialAssessme
                     .setParameter("admissionId",admissionId)
                     .setResultTransformer(Transformers.aliasToBean(InitialAssessmentICUAndERReturnDTO.class)).list();
 
-            return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, getInitialAssessmentICUAndERList, getInitialAssessmentICUAndERList !=null && getInitialAssessmentICUAndERList.size()>0 ?getInitialAssessmentICUAndERList.get(0).getStartDateTime():null );
+            return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, getInitialAssessmentICUAndERList, getInitialAssessmentICUAndERList !=null && getInitialAssessmentICUAndERList.size()>0 ?getInitialAssessmentICUAndERList.getFirst().getStartDateTime():null );
 
         }catch (Exception e){
             throw e;

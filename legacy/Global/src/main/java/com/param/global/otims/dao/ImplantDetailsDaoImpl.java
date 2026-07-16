@@ -468,7 +468,7 @@ public class ImplantDetailsDaoImpl extends GenericDao<ImplantDetails, Integer>im
 
 			Integer count = sessionFactory.getCurrentSession()
 					.createSQLQuery(query)
-					.setParameter("procedureOrderId", oTReservationdto.getProcedureOrderMasterDto().get(0).getProcedureOrderId())
+					.setParameter("procedureOrderId", oTReservationdto.getProcedureOrderMasterDto().getFirst().getProcedureOrderId())
 					.executeUpdate();
 
 			if(count>0) {

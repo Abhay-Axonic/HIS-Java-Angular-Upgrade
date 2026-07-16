@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import in.param.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 import com.param.global.common.ServiceException;
+
 @Service
 @SuppressWarnings({"rawtypes","unchecked"})
 public class SmsUtilityConfigServiceImpl implements ISmsUtilityConfigService, ICommonConstants,ISmsUtilityConstants {
@@ -402,7 +404,7 @@ public class SmsUtilityConfigServiceImpl implements ISmsUtilityConfigService, IC
 				dto.setProceduceName(smsInfo.getProceduceName() != null ? smsInfo.getProceduceName():null);
 			}
 			if(smsInfo.getOutstandingAmount()!=null && smsInfo.getBillAmount()!=null)
-				dto.setPaidAmount(smsInfo.getBillAmount().subtract(smsInfo.getOutstandingAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+				dto.setPaidAmount(smsInfo.getBillAmount().subtract(smsInfo.getOutstandingAmount()).setScale(2, RoundingMode.HALF_EVEN));
 
 			dto.setCriticalUrl(smsInfo.getCriticalUrl() != null ? smsInfo.getCriticalUrl() : null);
 
@@ -563,7 +565,7 @@ public class SmsUtilityConfigServiceImpl implements ISmsUtilityConfigService, IC
 						smsDto.setTotalDepositAmount(smsInfo.getTotalDepositAmount());
 						smsDto.setTotalPendingDuaAmount(smsInfo.getTotalPendingDuaAmount());
 						if(smsInfo.getOutstandingAmount()!=null && smsInfo.getBillAmount()!=null)
-							smsDto.setPaidAmount(smsInfo.getBillAmount().subtract(smsInfo.getOutstandingAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+							smsDto.setPaidAmount(smsInfo.getBillAmount().subtract(smsInfo.getOutstandingAmount()).setScale(2, RoundingMode.HALF_EVEN));
 
 						smsDto.setCriticalUrl(smsInfo.getCriticalUrl() != null ? smsInfo.getCriticalUrl() : null);
 						smsDto.setWhatsAppTemplateMasterId(queryData.getWhatsAppTemplateMasterId() != null ? queryData.getWhatsAppTemplateMasterId() : null);
@@ -637,7 +639,7 @@ public class SmsUtilityConfigServiceImpl implements ISmsUtilityConfigService, IC
 									  /**
 									    Calling getListOfMobileNoForScheduleSmsUtility() for getting the Mobile no for sending sms 
 									    */
-									  SmsUtilityConfigInfoDto smsUtilityInfoDto=(SmsUtilityConfigInfoDto)collectionSMSRes.getListObject().get(0);
+									  SmsUtilityConfigInfoDto smsUtilityInfoDto=(SmsUtilityConfigInfoDto)collectionSMSRes.getListObject().getFirst();
 									  dto.setCompanyAdmissionPatientCount(smsUtilityInfoDto.getCompanyAdmissionPatientCount());
 									  dto.setCompanyDischargePatientCount(smsUtilityInfoDto.getCompanyDischargePatientCount());
 									  dto.setSelfAdmissionPatientCount(smsUtilityInfoDto.getSelfAdmissionPatientCount());
@@ -1098,7 +1100,7 @@ public class SmsUtilityConfigServiceImpl implements ISmsUtilityConfigService, IC
 					}
 					
 					if(smsInfo.getOutstandingAmount()!=null && smsInfo.getBillAmount()!=null)
-						dto.setPaidAmount(smsInfo.getBillAmount().subtract(smsInfo.getOutstandingAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						dto.setPaidAmount(smsInfo.getBillAmount().subtract(smsInfo.getOutstandingAmount()).setScale(2, RoundingMode.HALF_EVEN));
 
 					dto.setCriticalUrl(smsInfo.getCriticalUrl() != null ? smsInfo.getCriticalUrl() : null);
 
@@ -1329,7 +1331,7 @@ public class SmsUtilityConfigServiceImpl implements ISmsUtilityConfigService, IC
 								smsDto.setSiteName(smsInfo.getSiteName()!=null ? smsInfo.getSiteName() : null);
 								smsDto.setAppointmentUniqueId(smsInfo.getAppointmentUniqueId()!= null ? smsInfo.getAppointmentUniqueId() : null);
 								if(smsInfo.getOutstandingAmount()!=null && smsInfo.getBillAmount()!=null)
-									smsDto.setPaidAmount(smsInfo.getBillAmount().subtract(smsInfo.getOutstandingAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+									smsDto.setPaidAmount(smsInfo.getBillAmount().subtract(smsInfo.getOutstandingAmount()).setScale(2, RoundingMode.HALF_EVEN));
 
 
 								smsDto.setCriticalUrl(smsInfo.getCriticalUrl() != null ? smsInfo.getCriticalUrl() : null);

@@ -20,7 +20,7 @@ public interface ILabConfigurationService {
 	Response getLabConfigurationByOrgUnit(int orgId,int unitId)throws ApplicationException;
 	Response checkPinExistOrNot(int orgId, int unitId, String pin, int userId)throws ApplicationException;
 	Response getUserByPin(int orgId, int unitId, String pin)throws ApplicationException;
-	Response saveMedallRequestResponse(MedallRequestResponseDto dto)throws ApplicationException;;
-	Response getMedallRequestResponse(MedallRequestResponseDto med)throws ApplicationException;;
+	Response saveMedallRequestResponse(MedallRequestResponseDto dto)throws ApplicationException;
+	Response getMedallRequestResponse(MedallRequestResponseDto med)throws ApplicationException;
 	
 }

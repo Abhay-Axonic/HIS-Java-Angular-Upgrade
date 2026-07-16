@@ -2594,7 +2594,7 @@ public class AppointmentSchedulingDaoImpl implements IAppointmentSchedulingDao,I
 			
 			if(masterDtosList.size()>0)
 			{
-				 dto = masterDtosList.get(0);
+				 dto = masterDtosList.getFirst();
 				 return dto.getSlotId();
 			}else{
 				return 0;
