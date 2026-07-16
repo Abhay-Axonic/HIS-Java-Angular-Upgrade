@@ -685,3 +685,31 @@ Its sibling branch nine lines earlier (the amount-tracked-cap branch, lines 1015
 Classification: **Financial Correctness** (Finding 1, pending decision). Owner Decision: Pending — proposal awaiting review, same fast-track process as the pharmacy leak and the balance-cap swap.
 
 **Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 90/90 (5 new tests this batch), Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. Further targeted characterization of `consumeServiceFromContract` is paused pending owner review of this finding, per standing instruction.
+
+## BR-FIXED-shadow-wave2-consumeservicefromcontractpackage-coshare-leak — FIXED: consumeServiceFromContractPackage's cap-defined coShare split no longer leaks money, same defect shape as the session's first fix (2026-07-16)
+
+**Found via an agent-assisted sweep for repeats of the coShare money-conservation bug pattern fixed as the very first fix of this whole session** (`updatePreAuthForPharmacyContract`'s coShare adjustment — see `docs/DECISION_NEEDED_PharmacyContractCoShareMoneyLeak.md`). Same defect shape, different method: a self-payable delta computed off an already-reassigned credit-payable instead of the original pre-adjustment value.
+
+**FIXED, fast-tracked and applied same-day: `Global/.../billing/service/ContractConsumptionServiceImpl.java:2106-2107`, round-1, `resDto.getType()==1`, `resDto.getBalanceCapAmount()!=null` branch's coShare adjustment.**
+
+Before:
+```java
+creaditPayable=resDto.getCoShare()!=null && resDto.getCoShare()>0 ? creaditPayable - (creaditPayable * (resDto.getCoShare()*0.01)) :creaditPayable ;
+selfPayable= resDto.getCoShare()!=null && resDto.getCoShare()>0 ? selfPayable + (creaditPayable * (resDto.getCoShare()*0.01)) :selfPayable ;
+```
+
+After (applied — pure line-order swap, same fix shape as the pharmacy leak):
+```java
+selfPayable= resDto.getCoShare()!=null && resDto.getCoShare()>0 ? selfPayable + (creaditPayable * (resDto.getCoShare()*0.01)) :selfPayable ;
+creaditPayable=resDto.getCoShare()!=null && resDto.getCoShare()>0 ? creaditPayable - (creaditPayable * (resDto.getCoShare()*0.01)) :creaditPayable ;
+```
+
+`selfPayable` is now computed first, from the still-original `creaditPayable`, before `creaditPayable` is reassigned — exactly the pattern already correct at lines 2056-2058 of this same method and in the already-fixed `updatePreAuthForPharmacyContract`. Confirmed via `ConsumeServiceFromContractPackageCoShareFixTest#capDefinedCoShareSplit_conservesTotal`: `creaditPayable=$1000`, cap=`$800`, coShare=`20%` → `creaditPayable=$640`, `selfPayable=$360` (was $328 before the fix), total correctly conserved at $1000 (was $968 — $32 vanished).
+
+**Severity (at time of finding):** same class as the pharmacy co-share leak — a real dollar amount vanished from the combined total, not merely misallocated.
+
+**Owner instruction:** approved and applied immediately, same fast-track as the pharmacy leak, balance-cap swap, and the other consumeServiceFromContract(Package) fixes this batch. No separate `docs/DECISION_NEEDED_*.md` was written — the owner pre-approved applying it "same process" after the quick before/after summary, matching the pattern established for the earlier same-day repeats.
+
+Classification: **Financial Correctness** (fixed). Owner Decision: Approved and applied.
+
+**Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 132/132 across all modules (Global 86/86 on this branch -- does not yet include the sibling fixes' or batch tests, each held on its own separate branch per standing instruction; Billing 29/29; plus 17 pre-existing elsewhere). No local `try/catch` touched, no database column changed, no business term introduced.

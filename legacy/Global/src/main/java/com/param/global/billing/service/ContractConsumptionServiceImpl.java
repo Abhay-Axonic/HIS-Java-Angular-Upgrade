@@ -2103,8 +2103,8 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 									selfPayable =resDto.getCreaditPayable() < resDto.getBalanceCapAmount() ? resDto.getSelfPayable() :resDto.getSelfPayable()+(resDto.getCreaditPayable()-resDto.getBalanceCapAmount());
 									creaditPayable =  resDto.getCreaditPayable() < resDto.getBalanceCapAmount() ?  resDto.getCreaditPayable() : resDto.getBalanceCapAmount();
 									
+									selfPayable= resDto.getCoShare()!=null && resDto.getCoShare()>0 ? selfPayable + (creaditPayable * (resDto.getCoShare()*0.01)) :selfPayable ;
 									creaditPayable=resDto.getCoShare()!=null && resDto.getCoShare()>0 ? creaditPayable - (creaditPayable * (resDto.getCoShare()*0.01)) :creaditPayable ;
-							    	selfPayable= resDto.getCoShare()!=null && resDto.getCoShare()>0 ? selfPayable + (creaditPayable * (resDto.getCoShare()*0.01)) :selfPayable ;
 								/*	//<---1.2.3.1 If cap amount is greater than credit payable amount then assign the self and credit values as it is
 									if(resDto.getCreaditPayable() < resDto.getBalanceCapAmount())
 									{
