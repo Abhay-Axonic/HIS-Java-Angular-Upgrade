@@ -116,7 +116,7 @@ public class PatientTypeGroupWiseDetailsDaoImpl extends GenericDao<PatientTypeGr
 				//For Checking End
 				
 				if(patientTypeGroupList != null && patientTypeGroupList.size() > 0) {
-					ids.add(patientTypeGroupList.get(0).getPatientTypeGroupId());
+					ids.add(patientTypeGroupList.getFirst().getPatientTypeGroupId());
 				}
 
 					PatientTypeGroupWiseDetailsMaster patientGroupMaster = new PatientTypeGroupWiseDetailsMaster();

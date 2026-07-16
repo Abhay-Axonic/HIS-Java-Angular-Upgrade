@@ -266,7 +266,7 @@ public class UnitServiceTariffMasterController implements ICommonConstants{
 				
 			}
 			
-			Response res = iUnitServiceTariffMasterService.checkUnitServiceMasterMapping(serviceIds,unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().get(0).getUnitId());
+			Response res = iUnitServiceTariffMasterService.checkUnitServiceMasterMapping(serviceIds,unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().getFirst().getUnitId());
 		
 			List<UnitServiceTariffMasterDto> unitservicMapperForSaveInToUnitSerMapper = new ArrayList<UnitServiceTariffMasterDto>();
 			
@@ -328,11 +328,11 @@ public class UnitServiceTariffMasterController implements ICommonConstants{
 				
 				Date date = new Date();
 				UnitServiceMapperDto unitServiceMapperDto = new UnitServiceMapperDto();
-				unitServiceMapperDto.setUnitId(unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().get(0).getUnitId());
+				unitServiceMapperDto.setUnitId(unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().getFirst().getUnitId());
 				unitServiceMapperDto.setStatus('A');
-				unitServiceMapperDto.setOrgnisationId(unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().get(0).getOrganizationId());
-				unitServiceMapperDto.setCreatedBy(unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().get(0).getCreatedBy());
-				unitServiceMapperDto.setUpdatedBy(unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().get(0).getCreatedBy());
+				unitServiceMapperDto.setOrgnisationId(unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().getFirst().getOrganizationId());
+				unitServiceMapperDto.setCreatedBy(unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().getFirst().getCreatedBy());
+				unitServiceMapperDto.setUpdatedBy(unitServiceTariffMasterDto.getUnitServiceTariffMasterDtosList().getFirst().getCreatedBy());
 				unitServiceMapperDto.setCreatedDate(date.getTime());
 				unitServiceMapperDto.setUpdatedDate(date.getTime());
 				

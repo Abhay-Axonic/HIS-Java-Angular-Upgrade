@@ -284,13 +284,13 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 			Response procedureOrderRes = iProcedureOrderDao.getProcedureOrderById(proReqId);
 			resDto.setProcedureOrders(procedureOrderRes.getListObject());
 			Integer totalDuration = 160;
-			Integer orgId = resDto.getProcedureOrders().get(0).getOrgId();
-			Integer unitId = resDto.getProcedureOrders().get(0).getUnitId();
-			String UhidNumber = resDto.getProcedureOrders().get(0).getUhidNumber();
-			Integer admissionId  = resDto.getProcedureOrders().get(0).getAdmissionId();
-			Integer encounterId = resDto.getProcedureOrders().get(0).getEncounterId();
-			Integer procedureStatusId = resDto.getProcedureOrders().get(0).getProcedureStatusId();
-			Integer visitTypeId =  resDto.getProcedureOrders().get(0).getVisitTypeId();
+			Integer orgId = resDto.getProcedureOrders().getFirst().getOrgId();
+			Integer unitId = resDto.getProcedureOrders().getFirst().getUnitId();
+			String UhidNumber = resDto.getProcedureOrders().getFirst().getUhidNumber();
+			Integer admissionId  = resDto.getProcedureOrders().getFirst().getAdmissionId();
+			Integer encounterId = resDto.getProcedureOrders().getFirst().getEncounterId();
+			Integer procedureStatusId = resDto.getProcedureOrders().getFirst().getProcedureStatusId();
+			Integer visitTypeId =  resDto.getProcedureOrders().getFirst().getVisitTypeId();
 			
 			Integer  patientTypeId = null;
 			Integer  billingBedCategoryId = null;
@@ -342,7 +342,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 
 				}else{
 					
-					  patientTypeId = encounterMasterDto.getPatientSponsorDetailsDtosList().get(0).getPatientTypeId();
+					  patientTypeId = encounterMasterDto.getPatientSponsorDetailsDtosList().getFirst().getPatientTypeId();
 					  paymentEntitlementId = encounterMasterDto.getPaymentEntitlementTypeId()!=null?encounterMasterDto.getPaymentEntitlementTypeId():1;
 					  visitTypeId = 1;
 					  contractId = encounterMasterDto.getContractId();
@@ -361,7 +361,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 			
 			if(procedureStatusId.equals(3)) {
 				
-				Response resRquip = iProcedureOrderDao.getScheduleEquipment(resDto.getProcedureOrders().get(0).getProReqId());
+				Response resRquip = iProcedureOrderDao.getScheduleEquipment(resDto.getProcedureOrders().getFirst().getProReqId());
 				Equipmentlist.addAll(resRquip.getListObject());
 			
 				
@@ -499,7 +499,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 								
 								if(OtEquipmentDto.getProcedureOrderId()==null) 
 								{
-									OtEquipmentDto.setProcedureOrderId(resDto.getProcedureOrders().get(0).getServiceId());
+									OtEquipmentDto.setProcedureOrderId(resDto.getProcedureOrders().getFirst().getServiceId());
 								}
 								
 								ContractConsumptionDto consumptionDto = null;
@@ -813,7 +813,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 					prodCatId.add(dto.getProductCategoryId());
 					List<PharmacyTariff> pharmacyTariffs = GlobalDao.getTariff(prodCatId, paymentEntitlementId);
 					if (pharmacyTariffs != null && !pharmacyTariffs.isEmpty()) {
-						PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+						PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 						dto.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 						dto.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 					}
@@ -928,7 +928,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 					prodCatId.add(dto.getProductCategoryId());
 					List<PharmacyTariff> pharmacyTariffs = GlobalDao.getTariff(prodCatId, paymentEntitlementId);
 					if (pharmacyTariffs != null && !pharmacyTariffs.isEmpty()) {
-						PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+						PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 						dto.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 						dto.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 					}
@@ -1344,11 +1344,11 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 	public Response saveProcedureList(List<ProcedureOrderMasterDto> procedureOrderMasterDtoList)
 			throws ServiceException {
 		try {
-			Date date = TimeZoneComponent.getDateByzone(procedureOrderMasterDtoList.get(0).getUnitId());
+			Date date = TimeZoneComponent.getDateByzone(procedureOrderMasterDtoList.getFirst().getUnitId());
 			String dateTime = GlobalCommonDateUtils.getStringDate(date, "dd-M-yyyy HH:mm:ss");
 			ProcedureOrderMaster mst = new ProcedureOrderMaster();
 			ProcedureReqMaster procedureReqMaster = new ProcedureReqMaster();
-			String email  = procedureOrderMasterDtoList.get(0).getEmail();
+			String email  = procedureOrderMasterDtoList.getFirst().getEmail();
 			Response procedureReqRes = null;
 			Integer proRequestId = 0;
 			Integer cancelProcCount = 0;
@@ -1534,28 +1534,28 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 			Integer admissionId = null;
 			Integer encounterId =null;
 			Integer procedureTotalDuration = 0;
-			Integer orgId = reqDto.getProcedureOrders().get(0).getOrgId();
-			Integer unitId = reqDto.getProcedureOrders().get(0).getUnitId();
+			Integer orgId = reqDto.getProcedureOrders().getFirst().getOrgId();
+			Integer unitId = reqDto.getProcedureOrders().getFirst().getUnitId();
 			Integer createdBy = sessionService.getUserId();
-			Integer doctorId = reqDto.getProcedureOrders().get(0).getDoctorId();
-			Integer visitTypeId = reqDto.getProcedureOrders().get(0).getVisitTypeId();
+			Integer doctorId = reqDto.getProcedureOrders().getFirst().getDoctorId();
+			Integer visitTypeId = reqDto.getProcedureOrders().getFirst().getVisitTypeId();
 			if(visitTypeId !=null && visitTypeId.intValue() == 1) {
-				 encounterId = (reqDto.getProcedureOrders().get(0).getEncounterId()!=null&&reqDto.getProcedureOrders().get(0).getEncounterId()>0)? reqDto.getProcedureOrders().get(0).getEncounterId():reqDto.getProcedureReqMasterDto().getEncounterId();
+				 encounterId = (reqDto.getProcedureOrders().getFirst().getEncounterId()!=null&&reqDto.getProcedureOrders().getFirst().getEncounterId()>0)? reqDto.getProcedureOrders().getFirst().getEncounterId():reqDto.getProcedureReqMasterDto().getEncounterId();
 			}if(visitTypeId !=null && visitTypeId.intValue() != 1) {
-				 admissionId = (reqDto.getProcedureOrders().get(0).getAdmissionId()!=null && reqDto.getProcedureOrders().get(0).getAdmissionId()>0) ? reqDto.getProcedureOrders().get(0).getAdmissionId() : reqDto.getProcedureReqMasterDto().getAdmissionId();
+				 admissionId = (reqDto.getProcedureOrders().getFirst().getAdmissionId()!=null && reqDto.getProcedureOrders().getFirst().getAdmissionId()>0) ? reqDto.getProcedureOrders().getFirst().getAdmissionId() : reqDto.getProcedureReqMasterDto().getAdmissionId();
 			}
 			
-			Integer procedureRequestId = reqDto.getProcedureOrders().get(0).getProReqId() != null?reqDto.getProcedureOrders().get(0).getProReqId():null;
-			Integer specialityId = reqDto.getProcedureOrders().get(0).getSpecialityId();
-			Integer patientId = reqDto.getProcedureOrders().get(0).getPatientId();
-			Integer procedureOrderId = reqDto.getProcedureOrders().get(0).getProcedureOrderId();
+			Integer procedureRequestId = reqDto.getProcedureOrders().getFirst().getProReqId() != null?reqDto.getProcedureOrders().getFirst().getProReqId():null;
+			Integer specialityId = reqDto.getProcedureOrders().getFirst().getSpecialityId();
+			Integer patientId = reqDto.getProcedureOrders().getFirst().getPatientId();
+			Integer procedureOrderId = reqDto.getProcedureOrders().getFirst().getProcedureOrderId();
 			Date currentDate = TimeZoneComponent.getDateByzone(unitId);
 			Integer storeId = sessionService.getStoreId();
 			List<Integer> procedureTypeIds = new ArrayList<Integer>();
 			// Map<ServiceId,ProcedureOrderId>
 			Map<Integer, Integer> procOrders = new HashMap<>();
 			
-			if(reqDto.getProcedureOrders().get(0).getProReqId() == null ) 
+			if(reqDto.getProcedureOrders().getFirst().getProReqId() == null ) 
 			{
 				Response saveReqRes = iProcedureReqDao.saveProcedureReq(reqDto.getProcedureReqMasterDto());
 				 ProcedureReqMaster procedureReqMaster  = (ProcedureReqMaster) saveReqRes.getObject();
@@ -1815,7 +1815,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 					Response admissionDto = ipdChargesDao.getAdmissionsById(admissionId);
 					AdmissionListIpdChargesResDto adminDto = (AdmissionListIpdChargesResDto) admissionDto.getObject();
 						patientTypeId = adminDto.getPatientCategoryId();
-						billingBedCategoryId = (reqDto.getProcedureOrders().get(0).getBillingBedCategoryId()!=null && reqDto.getProcedureOrders().get(0).getBillingBedCategoryId()>0)?reqDto.getProcedureOrders().get(0).getBillingBedCategoryId():adminDto.getBedBillingCategoryId();
+						billingBedCategoryId = (reqDto.getProcedureOrders().getFirst().getBillingBedCategoryId()!=null && reqDto.getProcedureOrders().getFirst().getBillingBedCategoryId()>0)?reqDto.getProcedureOrders().getFirst().getBillingBedCategoryId():adminDto.getBedBillingCategoryId();
 						paymentEntitlementId = adminDto.getPaymentEntitlementId();
 						contractId = adminDto.getContractId();
 						payeeId = adminDto.getPayeeId();
@@ -1851,7 +1851,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 				
 				if (reqDto.getProcedureOrders() != null && reqDto.getProcedureOrders().size() > 0) 
 				{
-					ProcedureOrderMasterDto proOrder = reqDto.getProcedureOrders().get(0);
+					ProcedureOrderMasterDto proOrder = reqDto.getProcedureOrders().getFirst();
 					Date today = TimeZoneComponent.getDateByzone(unitId);
 					listOrderDetails = new LinkedList<>();
 
@@ -2156,7 +2156,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 								netAmount = netAmount + dto.getNetAmount();
 								taxAmount = taxAmount + dto.getTaxAmount();
 								totalamount = totalamount + dto.getTotalAmount();
-								reqDetails.setBatchId(new Long(dto.getBatchId()));
+								reqDetails.setBatchId(Long.valueOf(dto.getBatchId()));
 								reqDetails.setItemId(dto.getItemId());
 								reqDetails.setMrp(dto.getMrp());
 								reqDetails.setRate(dto.getMrp());
@@ -2272,7 +2272,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 								netAmount = netAmount + dto.getNetAmount();
 								totalamount = totalamount + dto.getTotalAmount();
 
-								reqDetails.setBatchId(new Long(dto.getBatchId()));
+								reqDetails.setBatchId(Long.valueOf(dto.getBatchId()));
 								reqDetails.setItemId(dto.getItemId());
 								reqDetails.setMrp(dto.getMrp());
 								reqDetails.setRate(dto.getMrp());
@@ -2411,7 +2411,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 									consumptionDto.setUnitId(unitId);
 									consumptionDto.setVisitTypeId(visitTypeId);
 									consumptionDto.setCreaditPayable(0.00);
-									consumptionDto.setSelfPayable(dto.getAmount());;
+									consumptionDto.setSelfPayable(dto.getAmount());
 									consumptionDto.setPatientTypeId(proOrder.getPatientTypeId());
 									consumptionDto.setBillingBedCategoryId(billingBedCategoryId);
 									consumptionDto.setPaymentEntitlementId(proOrder.getPaymentEntitlementId());
@@ -3098,8 +3098,8 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 							if (dto.getItemId().intValue() == otimsItemId.intValue()) {
 								if (map.containsKey(otimsItemId)) {
 
-									if (!map.get(otimsItemId).get(0).getBatchId().equals(dto.getBatchId())
-											&& !map.get(otimsItemId).get(0).getUomTypeId().equals(dto.getUomTypeId())) {
+									if (!map.get(otimsItemId).getFirst().getBatchId().equals(dto.getBatchId())
+											&& !map.get(otimsItemId).getFirst().getUomTypeId().equals(dto.getUomTypeId())) {
 										OtcCompletionInvMedicationDto newDto = new OtcCompletionInvMedicationDto();
 										newDto.setUsedQty(Integer.parseInt(inventoryItemsObj.getString("usedQty")));
 										newDto.setItemId(
@@ -3149,7 +3149,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 										int listSize = dtoList.size();
 										//System.out.print("=========" + listSize);
 										int size = (listSize == 1 || listSize == 2) ? 1 : 2;
-										dumyDto = dtoList.get(dtoList.size() - 1);
+										dumyDto = dtoList.getLast();
 										Integer bQ = dumyDto.getBookedQty();
 										Integer uQ = 0;
 										if (dumyDto.getUsedQty() == 0) {
@@ -3768,14 +3768,14 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 							Integer bookedQty = 0;
 							if (dto.getItemId().intValue() == otimsItemId.intValue()) {
 								if (map.containsKey(otimsItemId)) {
-									if(map.get(otimsItemId).get(0).getBatchId()==0) {
+									if(map.get(otimsItemId).getFirst().getBatchId()==0) {
 										List<OtcCompletionInvImplantsDto> dtoList = (List<OtcCompletionInvImplantsDto>) map
 												.get(otimsItemId);
 										OtcCompletionInvImplantsDto dumyDto = new OtcCompletionInvImplantsDto();
 										int listSize = dtoList.size();
 										//System.out.print("=========" + listSize);
 										int size = (listSize == 1 || listSize == 2) ? 1 : 2;
-										dumyDto = dtoList.get(dtoList.size() - 1);
+										dumyDto = dtoList.getLast();
 										Integer bQ = dumyDto.getBookedQty();
 										Integer uQ = 0;
 										if (dumyDto.getUsedQty() == 0) {
@@ -3832,7 +3832,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 											map.get(otimsItemId).add(newDto);
 										}
 									}else {
-									if (!map.get(otimsItemId).get(0).getBatchId().equals(dto.getBatchId())) {//&& !map.get(otimsItemId).get(0).getUomTypeId().equals(dto.getUomTypeId())
+									if (!map.get(otimsItemId).getFirst().getBatchId().equals(dto.getBatchId())) {//&& !map.get(otimsItemId).get(0).getUomTypeId().equals(dto.getUomTypeId())
 										OtcCompletionInvImplantsDto newDto = new OtcCompletionInvImplantsDto();
 										newDto.setUsedQty(Integer.parseInt(inventoryItemsObj.getString("usedQty")));
 										newDto.setItemId(
@@ -3879,7 +3879,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 										int listSize = dtoList.size();
 										//System.out.print("=========" + listSize);
 										int size = (listSize == 1 || listSize == 2) ? 1 : 2;
-										dumyDto = dtoList.get(dtoList.size() - 1);
+										dumyDto = dtoList.getLast();
 										Integer bQ = dumyDto.getBookedQty();
 										Integer uQ = 0;
 										if (dumyDto.getUsedQty() == 0) {
@@ -4476,7 +4476,7 @@ public class ProcedureOrderServiceImpl implements IProcedureOrderService, ICommo
 			throws ApplicationException {
 		try 
 		{
-			Date date = TimeZoneComponent.getDateByzone(procedureOrderMasterDtoList.get(0).getUnitId());
+			Date date = TimeZoneComponent.getDateByzone(procedureOrderMasterDtoList.getFirst().getUnitId());
 			String dateTime = GlobalCommonDateUtils.getStringDate(date, "dd-M-yyyy HH:mm:ss");
 			List<Integer> orderIdList = new ArrayList() ;
 			 ProcedureOrderMaster mst = null;

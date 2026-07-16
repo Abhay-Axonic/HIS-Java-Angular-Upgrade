@@ -803,7 +803,7 @@ public class TDoctorShareServiceImpl implements ITDoctorShareService, ICommonCon
 					if(list!=null && list.size()>0)
 					{
 						OrderDetailsMaster orderDetailsMaster = iOrderDetailsMasterDao.getOrderDetailsByIdForPayeeUpdate(creditNoteDetailsDto.getOrderDetailsId());
-						IOrderDetailsMasterService.updateOrderDetailsObj(orderDetailsMaster,list.get(0).getCrNetAmount());
+						IOrderDetailsMasterService.updateOrderDetailsObj(orderDetailsMaster,list.getFirst().getCrNetAmount());
 						
 						for(TDoctorShareRespDto doctorShareRespDto : list)
 						{
@@ -838,7 +838,7 @@ public class TDoctorShareServiceImpl implements ITDoctorShareService, ICommonCon
 					if(list!=null && list.size()>0)
 					{
 						OrderDetailsMaster orderDetailsMaster = iOrderDetailsMasterDao.getOrderDetailsByIdForPayeeUpdate(creditNoteDetailsDto.getOrderDetailsId());
-						IOrderDetailsMasterService.updateOrderDetailsObj(orderDetailsMaster,list.get(0).getCrNetAmount());
+						IOrderDetailsMasterService.updateOrderDetailsObj(orderDetailsMaster,list.getFirst().getCrNetAmount());
 						
 						for(TDoctorShareRespDto doctorShareRespDto : list)
 						{

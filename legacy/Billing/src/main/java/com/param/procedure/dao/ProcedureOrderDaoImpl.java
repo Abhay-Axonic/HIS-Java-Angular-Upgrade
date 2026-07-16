@@ -266,7 +266,7 @@ public class ProcedureOrderDaoImpl extends GenericDao<ProcedureOrderMaster, Inte
 			master.setUpdatedDate(procedureOrderMasterDto.getUpdatedDate() != null && !procedureOrderMasterDto.getUpdatedDate().isEmpty() ? GlobalCommonDateUtils.getDate(procedureOrderMasterDto.getUpdatedDate(), "dd-MM-yyyy HH:mm:ss") : TimeZoneComponent.getDateByzone(procedureOrderMasterDto.getUnitId()));
 			master.setProReqId(procedureOrderMasterDto.getProReqId());
 			master.setExportedToOtims(false);
-			master.setProcedureSequence(procedureOrderMasterDto.getProcedureSequence()!=null ? procedureOrderMasterDto.getProcedureSequence(): 1);;
+			master.setProcedureSequence(procedureOrderMasterDto.getProcedureSequence()!=null ? procedureOrderMasterDto.getProcedureSequence(): 1);
 			master.setEmergency(procedureOrderMasterDto.getEmergancy()!=null?procedureOrderMasterDto.getEmergancy():false);
 			if(procedureOrderMasterDto.getPreferedTime()!=null) {
 

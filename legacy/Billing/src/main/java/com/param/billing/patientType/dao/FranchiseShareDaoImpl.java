@@ -94,7 +94,7 @@ public class FranchiseShareDaoImpl implements IFranchiseShareDao, ICommonConstan
             //For Checking End
 
             if(shareGrpList != null && shareGrpList.size() > 0) {
-                ids.add(shareGrpList.get(0).getShareId());
+                ids.add(shareGrpList.getFirst().getShareId());
             }
             FranchiseShareMaster shareMaster = new FranchiseShareMaster();
             shareMaster.setFranchiseUnitId(shareDto.getFranchiseUnitId());

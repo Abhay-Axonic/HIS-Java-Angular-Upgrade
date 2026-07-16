@@ -435,7 +435,7 @@ public class InvestigationServiceImpl implements IinvestigationService,ICommonCo
 							  if(orderMasterDto2.getListOrderDetailsMasterDto()!=null && orderMasterDto2.getListOrderDetailsMasterDto().size()>0)
 							   {
 									 orderRes = iOrderMasterService.saveOrderMaster(orderMasterDto2);
-									 labOrderId = (Integer) orderRes.getListObject().get(0);
+									 labOrderId = (Integer) orderRes.getListObject().getFirst();
 							   }
 							
 						}

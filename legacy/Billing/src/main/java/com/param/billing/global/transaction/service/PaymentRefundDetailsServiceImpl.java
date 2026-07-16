@@ -121,7 +121,7 @@ public class PaymentRefundDetailsServiceImpl implements IPaymentRefundMasterServ
 			Double loyaltyDepositamount = 0.0;
 			Double activeDepositamount = 0.0;
 			PaymentRefundMaster paymentRefundMaster = null;
-			Date date = TimeZoneComponent.getDateByzone(refundCollectionReqDto.getListPaymentRefundDetails().get(0).getUnitId());
+			Date date = TimeZoneComponent.getDateByzone(refundCollectionReqDto.getListPaymentRefundDetails().getFirst().getUnitId());
 			String dateTime = GlobalCommonDateUtils.getStringDate(date, "dd-M-yyyy HH:mm:ss");
 			List<PatientLoyaltyCardMapperDto>  mailList =  new 	ArrayList<PatientLoyaltyCardMapperDto>();  
 			PaymentRefundMasterDto dto = refundCollectionReqDto.getPaymentRefundMasterDto();
@@ -277,7 +277,7 @@ public class PaymentRefundDetailsServiceImpl implements IPaymentRefundMasterServ
 						LoyaltyCarddto.setUnitId(dto.getUnitId());
 						Response loyalityCardResponse=iPatientLoyaltyCardMapperDao.getPatientDetailsByLoyaltiCardNo(LoyaltyCarddto);
 						if(loyalityCardResponse.getListObject().size() >0 && loyalityCardResponse.getListObject()!=null){
-							PatientLoyaltyCardMapperDto patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)loyalityCardResponse.getListObject().get(0);
+							PatientLoyaltyCardMapperDto patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)loyalityCardResponse.getListObject().getFirst();
 								Double totalLoylty  = reuDto.getAmount()+patientLoyaltyCardMapperDto.getCardAmount();
 								LoyaltyCarddto.setCardAmount(totalLoylty);
 								iPatientLoyaltyCardMapperDao.addUpdatedLoyaltyCardAmount(LoyaltyCarddto);
@@ -351,7 +351,7 @@ public class PaymentRefundDetailsServiceImpl implements IPaymentRefundMasterServ
 			Double loyaltyDepositamount = 0.0;
 			Double activeDepositamount = 0.0;
 			PaymentRefundMaster paymentRefundMaster = null;
-			Date date = TimeZoneComponent.getDateByzone(refundCollectionReqDto.getListPaymentRefundDetails().get(0).getUnitId());
+			Date date = TimeZoneComponent.getDateByzone(refundCollectionReqDto.getListPaymentRefundDetails().getFirst().getUnitId());
 			String dateTime = GlobalCommonDateUtils.getStringDate(date, "dd-M-yyyy HH:mm:ss");
 			
 			
@@ -529,7 +529,7 @@ public class PaymentRefundDetailsServiceImpl implements IPaymentRefundMasterServ
 	public Response saveRefundAgainstPharamacy(RefundCollectionReqDto refundCollectionReqDto) throws BillingException 
 	{
 		try{
-		Date date = TimeZoneComponent.getDateByzone(refundCollectionReqDto.getListPaymentRefundDetails().get(0).getUnitId());
+		Date date = TimeZoneComponent.getDateByzone(refundCollectionReqDto.getListPaymentRefundDetails().getFirst().getUnitId());
 		String dateTime = GlobalCommonDateUtils.getStringDate(date, "dd-M-yyyy HH:mm:ss");
 		Double loyaltyDepositamount = 0.0;
 		Double activeDepositamount = 0.0;

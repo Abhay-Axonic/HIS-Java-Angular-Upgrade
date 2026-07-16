@@ -65,7 +65,6 @@ public class CardTypeMasterDaoImpl extends GenericDao<CardTypeMaster, Integer> i
 			
 			throw e;
 		} finally {
-			 ;
 		}
 		//return new Response(ERROR, null, null, null, null);
 	}
@@ -101,7 +100,6 @@ public class CardTypeMasterDaoImpl extends GenericDao<CardTypeMaster, Integer> i
 			
 			throw e;
 		} finally {
-			 ;
 		}
 		//return new Response(ERROR, null, null, null, null);
 	}
@@ -126,7 +124,6 @@ public class CardTypeMasterDaoImpl extends GenericDao<CardTypeMaster, Integer> i
 			throw e;
 			//return new Response<CardTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -147,7 +144,6 @@ public class CardTypeMasterDaoImpl extends GenericDao<CardTypeMaster, Integer> i
 			
 			throw e;
 		} finally {
-			 ;
 		}
 		//return new Response(ERROR, null, null, null, null);
 	}
@@ -171,7 +167,6 @@ public class CardTypeMasterDaoImpl extends GenericDao<CardTypeMaster, Integer> i
 			throw e;
 		//	return new Response<CardTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

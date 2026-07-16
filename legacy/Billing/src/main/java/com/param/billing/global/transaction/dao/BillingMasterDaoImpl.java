@@ -520,10 +520,10 @@ public class BillingMasterDaoImpl extends GenericDao<BillingMaster, Integer> imp
 					for (BillListResDto bill : listBills) {
 						bill.setPaymentEntitlementId(listPayees.stream()
 								.filter(x -> x.getBillingMasterId().equals(bill.getBillingMasterId())).collect(Collectors.toList())
-								.get(0).getPaymentEntitlementId());
+								.getFirst().getPaymentEntitlementId());
 						bill.setAssociateCompanyDesc(listPayees.stream()
 								.filter(x -> x.getBillingMasterId().equals(bill.getBillingMasterId())).collect(Collectors.toList())
-								.get(0).getAssociateCompanyDesc());
+								.getFirst().getAssociateCompanyDesc());
 					}
 				}
 			}
@@ -2374,7 +2374,7 @@ public class BillingMasterDaoImpl extends GenericDao<BillingMaster, Integer> imp
 							? receiptDetailsDto.getOtherDeduction().doubleValue()
 							: 0);
 
-			deductionAmount = new Double(OrderMasterServiceImpl.df2.format(deductionAmount));
+			deductionAmount = Double.valueOf(OrderMasterServiceImpl.df2.format(deductionAmount));
 
 			int i = sessionFactory.getCurrentSession()
 					.createSQLQuery("update billing.m_billing_master set "
@@ -2412,7 +2412,7 @@ public class BillingMasterDaoImpl extends GenericDao<BillingMaster, Integer> imp
 								? serviceDetailsDto.getOtherDeduction().doubleValue()
 								: 0);
 
-				deductionAmount = new Double(OrderMasterServiceImpl.df2.format(deductionAmount));
+				deductionAmount = Double.valueOf(OrderMasterServiceImpl.df2.format(deductionAmount));
 
 				i = +sessionFactory.getCurrentSession()
 						.createSQLQuery("update billing.t_billing_details set "
@@ -4203,7 +4203,7 @@ public class BillingMasterDaoImpl extends GenericDao<BillingMaster, Integer> imp
 		if( paymentCollectionDto!=null && paymentCollectionDto.size()!=0 && object!=null) {
         sessionFactory.getCurrentSession()
                 .createSQLQuery(" update billing.t_payment_reciept_master set received_from =:receivedFrom  where billing_master_id =:billingMasterId ")
-				.setParameter("receivedFrom", paymentCollectionDto.get(0).getReceivedFrom())
+				.setParameter("receivedFrom", paymentCollectionDto.getFirst().getReceivedFrom())
 				.setParameter("billingMasterId", object)
 				.executeUpdate();
 		}

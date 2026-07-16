@@ -3,6 +3,7 @@ package com.param.billing.global.transaction.controller;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -376,10 +377,10 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 						emailinfo.setInsuranceId(null);
 					}
 					if (dto1 != null) {
-						emailinfo.setBillAmount(new BigDecimal(dto1.getNetAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-						emailinfo.setSelfAmount(new BigDecimal(dto1.getTotalSelfPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-						emailinfo.setCreditAmount(new BigDecimal(dto1.getTotalCreditPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-						emailinfo.setOutstandingAmount(new BigDecimal(dto1.getOutstanding()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						emailinfo.setBillAmount(new BigDecimal(dto1.getNetAmount()).setScale(2, RoundingMode.HALF_EVEN));
+						emailinfo.setSelfAmount(new BigDecimal(dto1.getTotalSelfPayable()).setScale(2, RoundingMode.HALF_EVEN));
+						emailinfo.setCreditAmount(new BigDecimal(dto1.getTotalCreditPayable()).setScale(2, RoundingMode.HALF_EVEN));
+						emailinfo.setOutstandingAmount(new BigDecimal(dto1.getOutstanding()).setScale(2, RoundingMode.HALF_EVEN));
 					} else {
 						emailinfo.setBillAmount(new BigDecimal(0.00));
 						emailinfo.setSelfAmount(new BigDecimal(0.00));
@@ -402,10 +403,10 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 						smsInfo.setBillId((Integer) billRes.getObject());
 						smsInfo.setPatientId(reqDto.getPatientId());
 						smsInfo.setTreatingDoctorId(reqDto.getDoctorId());
-						smsInfo.setBillAmount(new BigDecimal(dto.getNetAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-						smsInfo.setSelfAmount(new BigDecimal(dto.getTotalSelfPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-						smsInfo.setCreditAmount(new BigDecimal(dto.getTotalCreditPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-						smsInfo.setOutstandingAmount(new BigDecimal(dto.getOutstanding()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						smsInfo.setBillAmount(new BigDecimal(dto.getNetAmount()).setScale(2, RoundingMode.HALF_EVEN));
+						smsInfo.setSelfAmount(new BigDecimal(dto.getTotalSelfPayable()).setScale(2, RoundingMode.HALF_EVEN));
+						smsInfo.setCreditAmount(new BigDecimal(dto.getTotalCreditPayable()).setScale(2, RoundingMode.HALF_EVEN));
+						smsInfo.setOutstandingAmount(new BigDecimal(dto.getOutstanding()).setScale(2, RoundingMode.HALF_EVEN));
 						smsInfo.setDateTime(reqDto.getDateOfReciept());
 						smsInfo.setReferringDoctorId(reqDto.getReferalDocId());
 						smsInfo.setOrganizationId(billingMasterDto.getOrganisationId());
@@ -415,9 +416,9 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 				if (billRes.getStatus().equals(SUCCESS) && reqDto.getIsInterimOrFinalBill() == 1
 						&& reqDto.getVisitTypeId() != OP) {
 
-					BigDecimal roundOffNetAmount = new BigDecimal(reqDto.getAmount()).setScale(2,BigDecimal.ROUND_HALF_EVEN);
-					BigDecimal roundOffSelfAmount = new BigDecimal(reqDto.getTotalSelfPayable()).setScale(2,BigDecimal.ROUND_HALF_EVEN);
-					BigDecimal roundOffCreditAmount = new BigDecimal(reqDto.getTotalCreditPayable()).setScale(2,BigDecimal.ROUND_HALF_EVEN);
+					BigDecimal roundOffNetAmount = new BigDecimal(reqDto.getAmount()).setScale(2, RoundingMode.HALF_EVEN);
+					BigDecimal roundOffSelfAmount = new BigDecimal(reqDto.getTotalSelfPayable()).setScale(2, RoundingMode.HALF_EVEN);
+					BigDecimal roundOffCreditAmount = new BigDecimal(reqDto.getTotalCreditPayable()).setScale(2, RoundingMode.HALF_EVEN);
 
 					SmsUtilityConfigInfoDto smsInfo = new SmsUtilityConfigInfoDto();
 						smsInfo.setUnitId(reqDto.getUnitId());
@@ -454,13 +455,13 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 				smsInfo.setBillId((Integer) billRes.getObject());
 				smsInfo.setPatientId(billingMasterDto.getPatientId());
 				smsInfo.setTreatingDoctorId(billingMasterDto.getOrdDoctorId());
-				smsInfo.setBillAmount(new BigDecimal(billingMasterDto.getNetAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+				smsInfo.setBillAmount(new BigDecimal(billingMasterDto.getNetAmount()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setSelfAmount(
-						new BigDecimal(billingMasterDto.getSelfPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getSelfPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setCreditAmount(
-						new BigDecimal(billingMasterDto.getCreditPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getCreditPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setOutstandingAmount(
-						new BigDecimal(billingMasterDto.getOutstanding()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getOutstanding()).setScale(2, RoundingMode.HALF_EVEN));
 				//smsInfo.setDateTime(reqDto.getDateOfReciept());
 				smsInfo.setReferringDoctorId(billingMasterDto.getReferralId() != null ? billingMasterDto.getReferralId() : 0);
 				smsInfo.setOrganizationId(billingMasterDto.getOrganisationId());
@@ -503,13 +504,13 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 				smsInfo.setBillId((Integer) billRes.getObject());
 				smsInfo.setPatientId(billingMasterDto.getPatientId());
 				smsInfo.setTreatingDoctorId(billingMasterDto.getOrdDoctorId());
-				smsInfo.setBillAmount(new BigDecimal(billingMasterDto.getNetAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+				smsInfo.setBillAmount(new BigDecimal(billingMasterDto.getNetAmount()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setSelfAmount(
-						new BigDecimal(billingMasterDto.getSelfPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getSelfPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setCreditAmount(
-						new BigDecimal(billingMasterDto.getCreditPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getCreditPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setOutstandingAmount(
-						new BigDecimal(billingMasterDto.getOutstanding()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getOutstanding()).setScale(2, RoundingMode.HALF_EVEN));
 				//smsInfo.setDateTime(reqDto.getDateOfReciept());
 				smsInfo.setReferringDoctorId(billingMasterDto.getReferralId() != null ? billingMasterDto.getReferralId() : 0);
 				smsInfo.setOrganizationId(billingMasterDto.getOrganisationId());
@@ -1155,8 +1156,8 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
                     smsInfo.setEncounterTypeId(encounterPaymentDto.getEncounterMasterDto()!=null && encounterPaymentDto.getEncounterMasterDto().getEncounterTypeId()!=null ? encounterPaymentDto.getEncounterMasterDto().getEncounterTypeId() :null);
 					smsInfo.setOrganizationId(paymentCollectionDto.getOrgnizationId());
 					smsInfo.setEncounterId(paymentCollectionDto.getEncounterId());
-					smsInfo.setBillAmount(new BigDecimal(paymentCollectionDto.getAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-					smsInfo.setSelfAmount(new BigDecimal(paymentCollectionDto.getAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+					smsInfo.setBillAmount(new BigDecimal(paymentCollectionDto.getAmount()).setScale(2, RoundingMode.HALF_EVEN));
+					smsInfo.setSelfAmount(new BigDecimal(paymentCollectionDto.getAmount()).setScale(2, RoundingMode.HALF_EVEN));
 				smsUtilityService.getEmailUtilityByTriggerId(ISmsUtilityConstants.ENCOUNTER,smsInfo);
 				
 				//if(res.getStatus().equalsIgnoreCase(SUCCESS))
@@ -3014,13 +3015,13 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 				smsInfo.setBillId(billingMasterDto.getBillingMasterId());
 				smsInfo.setPatientId(billingMasterDto.getPatientId());
 				smsInfo.setTreatingDoctorId(billingMasterDto.getOrdDoctorId());
-				smsInfo.setBillAmount(new BigDecimal(billingMasterDto.getNetAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+				smsInfo.setBillAmount(new BigDecimal(billingMasterDto.getNetAmount()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setSelfAmount(
-						new BigDecimal(billingMasterDto.getSelfPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getSelfPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setCreditAmount(
-						new BigDecimal(billingMasterDto.getCreditPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getCreditPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setOutstandingAmount(
-						new BigDecimal(billingMasterDto.getOutstanding()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getOutstanding()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setDateTime(billingMasterDto.getOrderDate());
 				smsInfo.setReferringDoctorId(billingMasterDto.getReferralId() != null ? billingMasterDto.getReferralId() : 0);
 				smsInfo.setOrganizationId(billingMasterDto.getOrganisationId());
@@ -3034,13 +3035,13 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 				smsInfo.setBillId(billingMasterDto.getBillingMasterId());
 				smsInfo.setPatientId(billingMasterDto.getPatientId());
 				smsInfo.setTreatingDoctorId(billingMasterDto.getOrdDoctorId());
-				smsInfo.setBillAmount(new BigDecimal(billingMasterDto.getNetAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+				smsInfo.setBillAmount(new BigDecimal(billingMasterDto.getNetAmount()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setSelfAmount(
-						new BigDecimal(billingMasterDto.getSelfPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getSelfPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setCreditAmount(
-						new BigDecimal(billingMasterDto.getCreditPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getCreditPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setOutstandingAmount(
-						new BigDecimal(billingMasterDto.getOutstanding()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(billingMasterDto.getOutstanding()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setDateTime(billingMasterDto.getOrderDate());
 				smsInfo.setReferringDoctorId(billingMasterDto.getReferralId() != null ? billingMasterDto.getReferralId() : 0);
 				smsInfo.setOrganizationId(billingMasterDto.getOrganisationId());
@@ -3807,13 +3808,13 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
                            emailinfo.setInsuranceId(null);
 						 }
 						 if(dto1!=null) {
-							 emailinfo.setBillAmount(new BigDecimal(dto1.getNetAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+							 emailinfo.setBillAmount(new BigDecimal(dto1.getNetAmount()).setScale(2, RoundingMode.HALF_EVEN));
 							 emailinfo.setSelfAmount(
-										new BigDecimal(dto1.getTotalSelfPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+										new BigDecimal(dto1.getTotalSelfPayable()).setScale(2, RoundingMode.HALF_EVEN));
 							 emailinfo.setCreditAmount(
-										new BigDecimal(dto1.getTotalCreditPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+										new BigDecimal(dto1.getTotalCreditPayable()).setScale(2, RoundingMode.HALF_EVEN));
 							 emailinfo.setOutstandingAmount(
-										new BigDecimal(dto1.getOutstanding()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+										new BigDecimal(dto1.getOutstanding()).setScale(2, RoundingMode.HALF_EVEN));
 						 }else {
 							 emailinfo.setBillAmount(new BigDecimal(0.00));
 							 emailinfo.setSelfAmount(new BigDecimal(0.00));
@@ -4276,11 +4277,11 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 			}
 			encounterMasterDto.getPatientSponsorDetailsDtosList().add(patSpon);
 
-			encounterMasterDto.getPaymentReceiptDetailsDtosList().get(0).setCreatedBy(unitApplicationConfigurationDto.getWebAppUserId());
-			encounterMasterDto.getPaymentReceiptDetailsDtosList().get(0).setPaymentModeId(8);
-			encounterMasterDto.getPaymentReceiptDetailsDtosList().get(0).setStatus('A');
-			encounterMasterDto.getPaymentReceiptDetailsDtosList().get(0).setTransTransactionDate(formattedDate);
-			encounterMasterDto.getPaymentReceiptDetailsDtosList().get(0).setTransactionTypeId(6);
+			encounterMasterDto.getPaymentReceiptDetailsDtosList().getFirst().setCreatedBy(unitApplicationConfigurationDto.getWebAppUserId());
+			encounterMasterDto.getPaymentReceiptDetailsDtosList().getFirst().setPaymentModeId(8);
+			encounterMasterDto.getPaymentReceiptDetailsDtosList().getFirst().setStatus('A');
+			encounterMasterDto.getPaymentReceiptDetailsDtosList().getFirst().setTransTransactionDate(formattedDate);
+			encounterMasterDto.getPaymentReceiptDetailsDtosList().getFirst().setTransactionTypeId(6);
 
 
 			encounterMasterDto.getAppointmentObject().setCreatedBy(unitApplicationConfigurationDto.getWebAppUserId());
@@ -4503,8 +4504,8 @@ public class BillingMasterController implements ICommonConstants, IBillingStatus
 					if(packageDetails.getListObject()!= null && packageDetails.getListObject().size()>0){
 						List<PackageListForOpBillResDto> listPackService = packageDetails.getListObject();
 						encounterMasterDto.setRegistrationTypeId(filteredDtoObj.getPackageTypeId()); //use as package type
-						List<TPackageServicesDetailsDto> listPackServiceD = listPackService.get(0).getListTPackageServicesDetailsDto();
-						MPackageMasterDto mPackageDto = listPackService.get(0).getmPackageMasterDto();
+						List<TPackageServicesDetailsDto> listPackServiceD = listPackService.getFirst().getListTPackageServicesDetailsDto();
+						MPackageMasterDto mPackageDto = listPackService.getFirst().getmPackageMasterDto();
 						mPackageDto.setSpecialityId(filteredDtoObj.getSpecialityId());
 						mPackageDto.setSubSpecialityId(filteredDtoObj.getSubSpecialityId());
 						BillingMasterDto master12 = mapToBillingMaster(null, encounterMasterDto, unitApplicationConfigurationDto,listPackServiceD,mPackageDto);

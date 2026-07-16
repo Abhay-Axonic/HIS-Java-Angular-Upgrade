@@ -79,7 +79,7 @@ public class MPeriodicityServiceConfigController {
 	@RequestMapping(value = "/config/avail/{serviceId}/{orgId}/{unitId}/{visitTypeId}" , method = RequestMethod.GET)
 	public Response validatePServiceConfigAvail(@PathVariable Map<String, String> params){
 		try{
-			int visitTypeId = Integer.parseInt(params.get("visitTypeId"));;
+			int visitTypeId = Integer.parseInt(params.get("visitTypeId"));
 			int serviceId = Integer.parseInt(params.get("serviceId"));
 			int orgId = Integer.parseInt(params.get("orgId"));
 			int unitId = Integer.parseInt(params.get("unitId"));
@@ -93,7 +93,7 @@ public class MPeriodicityServiceConfigController {
 	@RequestMapping(value = "/config/getRate/{serviceId}/{orgId}/{unitId}/{visitTypeId}/{periodicityServiceConfigId}" , method = RequestMethod.GET)
 	public Response getRatePServiceConfig(@PathVariable Map<String, String> params){
 		try{
-			int visitTypeId = Integer.parseInt(params.get("visitTypeId"));;
+			int visitTypeId = Integer.parseInt(params.get("visitTypeId"));
 			int serviceId = Integer.parseInt(params.get("serviceId"));
 			int orgId = Integer.parseInt(params.get("orgId"));
 			int unitId = Integer.parseInt(params.get("unitId"));
