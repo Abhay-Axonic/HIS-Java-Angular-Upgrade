@@ -692,6 +692,23 @@ Now matches its sibling branch nine lines earlier (the amount-tracked-cap branch
 
 Classification: **Financial Correctness** (Finding 1, fixed). Owner Decision: Approved and applied, per `docs/DECISION_NEEDED_SecondRoundQuantityCapCreditLoss.md`.
 
+    creaditPayableSecondRound = netAmt;
+    totalCreditPayable = totalCreditPayable+creaditPayableSecondRound;
+    totalSelfPayable = totalSelfPayable-creaditPayableSecondRound;
+```
+
+Now matches its sibling branch nine lines earlier (the amount-tracked-cap branch, lines 1015/1023-1024), which already accumulated correctly. Confirmed via `ConsumeServiceFromContractCharacterizationTest.SecondRoundTypeTwoQuantityCap#quantityCapBranch_accumulatesOntoRunningTotal`: a first-priority contract's $300 contribution, plus this round's own $400, now correctly totals $700 (was $400 before the fix — the $300 vanished).
+
+**Severity (at time of finding):** same class as the pharmacy co-share leak — a real dollar amount vanished from the system's own running total, not merely landing on the wrong party.
+
+**Secondary, non-urgent finding in the same branch — still open, NOT fixed:** unlike the resDto-level quantity-cap branch (lines 798-826), which properly compares `resDto.getBalanceQuantity()` against `consumptionDto.getQuantity()` and splits proportionally when insufficient, this second-round branch still has no such comparison at all — any positive `secondRound.getBalanceQuantity()` is treated as fully covering the entire `netAmt`, and `1.00` is hardcoded as the quantity-to-deduct regardless of how much was actually needed. Same shape as the previously-logged batch-2 hardcoded-quantity findings (`createOrderDetailsPackageMapperForMultiEncounter`). Deliberately NOT folded into the urgent fix — a separate, more involved judgment call about how a genuinely-insufficient quantity cap should split. The now-passing test's own comment notes that with the fix applied, `totalSelfPayable` can go negative (200-400=-200) precisely because of this still-open gap.
+
+**Owner instruction:** Finding 1 approved and applied exactly as proposed in `docs/DECISION_NEEDED_SecondRoundQuantityCapCreditLoss.md`, same fast-track as the pharmacy leak and the balance-cap swap. The secondary finding remains logged, not fixed, per standing Decision 5.
+
+**Also characterized this batch, no further findings:** `resDto.getType()==1` consultation routing into `calculateSelfCreditAndFinalAmount`; `resDto.getType()==2` quantity-cap-exceeded split (correctly splits available-vs-excess units, not a repeat of the balance-cap swap); second-round loop `secondRound.getType()==1`; second-round loop `secondRound.getType()==2` amount-cap (correctly caps at the smaller of leftover self-pay or the second contract's own remaining balance).
+
+Classification: **Financial Correctness** (Finding 1, fixed). Owner Decision: Approved and applied, per `docs/DECISION_NEEDED_SecondRoundQuantityCapCreditLoss.md`.
+
 **Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 136/136 across all modules (Global 90/90, Billing 29/29, plus 17 pre-existing elsewhere). No local `try/catch` touched, no database column changed, no business term introduced.
 
 ## BR-FIXED-shadow-wave2-consumeservicefromcontractpackage-batch1 — FIXED: same second-round quantity-cap credit-loss bug repeats in consumeServiceFromContractPackage, fast-tracked and applied same-day (2026-07-16)
@@ -725,3 +742,33 @@ Now matches the amount-tracked-cap sibling branch immediately above it (lines 24
 Classification: **Financial Correctness** (fixed). Owner Decision: Approved and applied.
 
 **Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 132/132 across all modules (Global 86/86 on this branch -- does not yet include the sibling fix's or batch1's tests, each held on its own separate branch per standing instruction; Billing 29/29; plus 17 pre-existing elsewhere). No local `try/catch` touched, no database column changed, no business term introduced.
+
+## BR-FIXED-shadow-wave2-consumeservicefromcontractpackage-amountcap-duplicate — FIXED: consumeServiceFromContractPackage's amount-cap branch no longer duplicates the cap formula into selfPayable, overcharging the patient (2026-07-16)
+
+**Found while building the fix-confirming test for the second-round quantity-cap credit-loss repeat, in the same method's round-1 branch.** A different defect shape from the accumulate-vs-reassign pattern — not a repeat, a distinct new finding.
+
+**FIXED, fast-tracked and applied same-day: `Global/.../billing/service/ContractConsumptionServiceImpl.java:2204-2207`, round-1, `resDto.getType()==2`, amount-tracked-balance-cap branch, duplicated the cap-amount formula into BOTH `creaditPayable` and `selfPayable` instead of giving the patient the overage.**
+
+Before:
+```java
+creaditPayable = rate < resDto.getBalanceAmount() ? rate : resDto.getBalanceAmount();
+selfPayable = rate < resDto.getBalanceAmount() ? 0.0 : resDto.getBalanceAmount();
+```
+
+After (applied):
+```java
+creaditPayable = rate < resDto.getBalanceAmount() ? rate : resDto.getBalanceAmount();
+selfPayable = rate < resDto.getBalanceAmount() ? 0.0 : rate-resDto.getBalanceAmount();
+```
+
+The dead, commented-out code three lines below the live ternaries showed exactly what was originally intended (`selfPayable=rate-resDto.getBalanceAmount()`) — someone converted an if/else into a ternary and copy-pasted the wrong right-hand side into the second line. Confirmed via `ConsumeServiceFromContractPackageAmountCapFixTest#balanceCapExceeded_creditGetsCapAmount_selfGetsOverage`: rate=$500, remaining cap=$300 -> `creaditPayable=$300` (correct, unchanged by this fix), `selfPayable=$200` (was $300 before the fix).
+
+**Severity (at time of finding):** distinct from the accumulate-vs-reassign bugs — this one doesn't discard money, it **creates** it: the combined total booked ($600) exceeded the actual service cost ($500) by $100, with the extra $100 landing on the patient.
+
+**Secondary, non-urgent finding in the same area — still open, NOT fixed:** `Global/.../billing/service/ContractConsumptionServiceImpl.java:2189`, three lines above the fixed branch, `patientClassDto.getMarkupStatus()` is called with no null-check on `patientClassDto` itself (`patientClassDto = iContractConsumptionDao.getPatientClassAndPercentageByVisit(consumptionDto); if(patientClassDto.getMarkupStatus()!=null...)`), unlike the sibling `resDto.getType()==1` branch a few lines up, which does check `patientClassDto != null` first. A real NPE-crash risk if that DAO call ever legitimately returns null, worked around via a mock in the test, not fixed — same category as previously-logged crash-only findings (e.g. the pharmacy `preauthId` NPE, `saveOrderMaster`'s timezone crash).
+
+**Owner instruction:** approved and applied immediately, same fast-track as the pharmacy leak, balance-cap swap, and the two second-round quantity-cap fixes. No separate `docs/DECISION_NEEDED_*.md` was written — the owner pre-approved applying it "same process" after the quick before/after summary.
+
+Classification: **Financial Correctness** (fixed). Owner Decision: Approved and applied.
+
+**Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 132/132 across all modules (Global 86/86 on this branch -- does not yet include the sibling fixes' or batch1's tests, each held on its own separate branch per standing instruction; Billing 29/29; plus 17 pre-existing elsewhere). No local `try/catch` touched, no database column changed, no business term introduced.

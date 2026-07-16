@@ -2204,7 +2204,7 @@ public class ContractConsumptionServiceImpl implements IContractConsumptionServi
 									if(resDto.getBalanceAmount()!=null && resDto.getBalanceAmount()>0)
 									{
 										creaditPayable = rate < resDto.getBalanceAmount() ? rate : resDto.getBalanceAmount();
-										selfPayable = rate < resDto.getBalanceAmount() ? 0.0 : resDto.getBalanceAmount();
+										selfPayable = rate < resDto.getBalanceAmount() ? 0.0 : rate-resDto.getBalanceAmount();
 										/*if(rate < resDto.getBalanceAmount())
 										{
 											creaditPayable = rate;
