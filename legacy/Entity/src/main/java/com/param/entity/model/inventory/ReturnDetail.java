@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,6 +26,7 @@ import com.param.entity.model.master.User;
 @Entity(name = "com.param.entity.model.inventory.returnDetail")
 @Table(name = "t_return_detail", schema = "inventory")
 public class ReturnDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

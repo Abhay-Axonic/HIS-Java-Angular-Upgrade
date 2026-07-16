@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ import java.sql.Timestamp;
 @Entity(name="AssignPickerDetailAddedItems")
 @Table(name="t_assign_picker_detail_added_items",schema="pharmacy")
 public class AssignPickerDetailAddedItems extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

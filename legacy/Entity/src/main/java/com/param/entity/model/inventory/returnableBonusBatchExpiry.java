@@ -1,4 +1,6 @@
 package com.param.entity.model.inventory;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -13,10 +15,12 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.param.entity.model.base.BaseEntity;
+
 @Entity(name = "returnableBonusBatchExpiry")
 @Table(name = "t_returnable_bonus_batch_expiry", schema = "inventory")
 public class returnableBonusBatchExpiry extends BaseEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

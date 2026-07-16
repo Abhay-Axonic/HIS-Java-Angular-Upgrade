@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -21,6 +22,7 @@ import com.param.entity.model.master.UomUnit;
 @Table(name = "t_operations_completion_inventory_detail", schema = "theatre_management")
 public class OperationsCompletionInventoryDetail extends BaseEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

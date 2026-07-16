@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -39,6 +40,7 @@ public class PrescriptionDetail extends BaseEntity implements Serializable {
 	}
 
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

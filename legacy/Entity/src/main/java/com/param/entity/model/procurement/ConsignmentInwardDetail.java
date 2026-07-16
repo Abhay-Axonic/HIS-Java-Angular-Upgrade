@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ import com.param.entity.model.master.UomUnit;
 @Entity(name = "ConsignmentInwardDetail")
 @Table(name = "t_consignment_inward_detail", schema = "procurement")
 public class ConsignmentInwardDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

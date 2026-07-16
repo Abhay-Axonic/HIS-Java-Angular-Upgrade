@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,7 @@ import com.param.entity.model.master.Status;
 @Entity(name = "ComputeStockDetail")
 @Table(name = "t_compute_stock_detail", schema = "inventory")
 public class ComputeStockDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

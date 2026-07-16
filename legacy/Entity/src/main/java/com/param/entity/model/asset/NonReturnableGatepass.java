@@ -1,5 +1,6 @@
 package com.param.entity.model.asset;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,7 @@ import com.param.entity.model.master.Vendor;
 @Table(name = "t_non_returnable_gatepass", schema = "assets")
 public class NonReturnableGatepass extends BaseEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

@@ -177,7 +177,7 @@ public class CompanyReceiptDetail {
 	
 	@PrePersist
 	private void prePersist() {
-		setCreatedDate(TimeZoneComponent.getDateByzone(0));;
+		setCreatedDate(TimeZoneComponent.getDateByzone(0));
 	}
 	
 	@PreUpdate

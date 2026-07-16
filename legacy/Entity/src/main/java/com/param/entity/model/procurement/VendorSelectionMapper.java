@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -19,7 +20,8 @@ import com.param.entity.model.master.Vendor;
 @Entity
 @Table(name="t_vendor_selection_mapper", schema = "procurement")
 public class VendorSelectionMapper extends BaseEntity implements Serializable{
-	
+
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

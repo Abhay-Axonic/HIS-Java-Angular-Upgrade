@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -19,6 +20,7 @@ import com.param.entity.model.master.Status;
 @Entity(name = "ConfirmStockDetail")
 @Table(name = "t_confirm_stock_detail", schema = "inventory")
 public class ConfirmStockDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

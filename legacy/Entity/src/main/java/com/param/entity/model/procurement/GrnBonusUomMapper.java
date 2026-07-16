@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -18,6 +19,7 @@ import java.sql.Timestamp;
 @Table(name="t_grn_bonus_uom_mapper",schema="procurement")
 public class GrnBonusUomMapper extends UomEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	//bi-directional many-to-one association to TGoodReceiptNoteDetail

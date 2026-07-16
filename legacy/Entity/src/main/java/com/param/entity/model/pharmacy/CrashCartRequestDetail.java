@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import com.param.entity.model.master.UomUnit;
 @Entity(name = "CrashCartRequestDetail")
 @Table(name = "t_crash_cart_request_detail", schema = "pharmacy")
 public class CrashCartRequestDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

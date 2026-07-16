@@ -1,5 +1,6 @@
 package com.param.adt.master.global.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.persistence.*;
 @Embeddable
 public class UserRoleMapperId implements Serializable{
 
+	@Serial
 	private static final long serialVersionUID = 1L;	
 	@Column(name="user_id")
 	private Integer userId;

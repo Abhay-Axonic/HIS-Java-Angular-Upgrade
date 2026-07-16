@@ -1,5 +1,6 @@
 package com.param.entity.model.linenAndLaundry;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -20,6 +21,7 @@ import com.param.entity.model.master.User;
 @Entity
 @Table(name="t_rejected_acceptance_detail", schema="linen_and_laundry")
 public class RejectedAcceptanceDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

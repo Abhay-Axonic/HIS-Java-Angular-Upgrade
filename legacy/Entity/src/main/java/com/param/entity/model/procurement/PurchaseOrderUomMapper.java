@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -21,7 +22,8 @@ import com.param.entity.model.master.UomUnit;
 @Entity(name = "PurchaseOrderUomMapper")
 @Table(name = "t_purchase_order_uom_mapper", schema = "procurement")
 public class PurchaseOrderUomMapper extends UomEntity implements Serializable{
-	
+
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

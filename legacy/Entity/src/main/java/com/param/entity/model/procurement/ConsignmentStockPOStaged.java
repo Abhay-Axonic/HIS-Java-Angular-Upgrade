@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Entity(name="ConsignmentStockPOStaged")
 @Table(name="t_consignment_stock_po_staged", schema = "procurement")
 	public class ConsignmentStockPOStaged extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

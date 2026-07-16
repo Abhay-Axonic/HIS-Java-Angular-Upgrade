@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,6 +22,7 @@ import com.param.entity.model.base.BaseEntity;
 @Table(name = "t_grn_staged_qunatity", schema = "procurement")
 public class GRNStagedQuantity extends BaseEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

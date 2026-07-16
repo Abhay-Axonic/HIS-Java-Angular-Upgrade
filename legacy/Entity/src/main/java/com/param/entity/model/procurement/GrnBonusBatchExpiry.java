@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,9 +16,11 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.param.entity.model.base.BaseEntity;
+
 @Entity(name = "GrnBonusBatchExpiry")
 @Table(name = "t_grn_bonus_batch_expiry", schema = "procurement")
 public class GrnBonusBatchExpiry extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

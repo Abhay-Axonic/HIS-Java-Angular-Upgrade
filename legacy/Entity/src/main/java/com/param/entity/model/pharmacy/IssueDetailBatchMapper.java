@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.param.entity.model.master.User;
 @Entity(name = "IssueDetailBatchMapper")
 @Table(name = "t_issue_detail_batch_mapper", schema = "pharmacy")
 public class IssueDetailBatchMapper extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

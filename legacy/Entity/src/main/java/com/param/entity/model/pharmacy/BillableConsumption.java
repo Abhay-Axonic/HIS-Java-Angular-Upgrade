@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class BillableConsumption extends BaseEntity implements Serializable {
 		this.sale = sale;
 	}
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

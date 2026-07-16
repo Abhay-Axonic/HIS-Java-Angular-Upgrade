@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -16,6 +17,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="t_consignment_stock_po_accessories_mapper", schema = "procurement")
 public class ConsignmentStockPOAccessoriesMapper extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

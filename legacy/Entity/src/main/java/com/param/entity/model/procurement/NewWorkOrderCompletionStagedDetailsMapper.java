@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -10,10 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.param.entity.model.base.BaseEntity;
+
 @Entity(name = "NewWorkOrderCompletionStagedDetailsMapper")
 @Table(name = "t_new_work_order_completion_staged_details", schema = "procurement")
 public class NewWorkOrderCompletionStagedDetailsMapper extends BaseEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

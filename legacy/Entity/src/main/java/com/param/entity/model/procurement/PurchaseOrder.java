@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity(name = "PurchaseOrder")
 @Table(name="t_purchase_order",schema="procurement")
 public class PurchaseOrder extends BaseEntity implements Serializable{
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

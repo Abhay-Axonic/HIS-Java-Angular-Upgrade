@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,11 +32,9 @@ import com.param.utility.TimeZoneComponent;
 @Entity(name = "ReturnableGatepassDetail")
 @Table(name = "t_returnable_gatepass_detail", schema = "inventory")
 public class ReturnableGatepassDetail extends BaseEntity implements Serializable {
-	
-	
-	
-	
 
+
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

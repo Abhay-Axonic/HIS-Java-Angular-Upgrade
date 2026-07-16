@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import com.param.entity.model.base.BaseEntity;
 @Entity(name = "PrefixRunningNumber")
 @Table(name = "t_prefix_running_number", schema = "public")
 public class PrefixRunningNumber extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

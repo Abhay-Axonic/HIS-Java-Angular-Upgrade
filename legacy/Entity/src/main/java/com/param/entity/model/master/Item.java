@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.param.opd.coversheet.model.InfusionSolutionMaster;
 @Entity(name = "Item")
 @Table(name = "m_item", schema = "public")
 public class Item extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

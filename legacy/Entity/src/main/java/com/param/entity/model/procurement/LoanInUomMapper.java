@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import com.param.entity.model.master.UomUnit;
 @Entity(name = "LoanInUomMapper")
 @Table(name = "t_loan_in_uom_mapper", schema = "procurement")
 public class LoanInUomMapper extends UomEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY)

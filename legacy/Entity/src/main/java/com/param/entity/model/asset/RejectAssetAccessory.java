@@ -1,5 +1,6 @@
 package com.param.entity.model.asset;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,6 +21,7 @@ import com.param.entity.model.master.User;
 @Entity(name = "RejectAssetAccessory")
 @Table(name = "t_asset_reject_accessories", schema = "assets")
 public class RejectAssetAccessory extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

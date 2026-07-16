@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,9 +32,11 @@ import com.param.entity.model.master.UomType;
 import com.param.entity.model.master.UomUnit;
 import com.param.entity.model.master.User;
 import com.param.entity.model.master.Vendor;
+
 @Entity(name = "GoodReceiptNoteDetailLog")
 @Table(name = "t_good_receipt_note_detail_log", schema = "procurement")
 public class GoodReceiptNoteDetailLog extends BaseEntity implements Serializable  {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

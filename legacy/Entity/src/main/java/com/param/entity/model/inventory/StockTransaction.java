@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity(name = "StockTransaction")
 @Table(name = "t_stock_transaction", schema = "inventory")
 public class StockTransaction extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

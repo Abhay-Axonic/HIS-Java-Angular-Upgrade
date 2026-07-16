@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import com.param.opd.coversheet.model.InfusionSolutionMaster;
 @Table(name = "m_strength_unit", schema = "public")
 @NamedQuery(name = "StrengthUnit.findAll", query = "SELECT s FROM StrengthUnit s")
 public class StrengthUnit extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

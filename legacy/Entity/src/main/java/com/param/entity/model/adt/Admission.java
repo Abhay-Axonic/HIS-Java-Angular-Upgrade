@@ -18,7 +18,7 @@ import com.param.entity.model.doctor.Doctor;
 import com.param.entity.model.master.Organization;
 import com.param.entity.model.master.Unit;
 import com.param.entity.model.master.VisitType;
-import com.param.entity.model.patient.PatientRegistration;;
+import com.param.entity.model.patient.PatientRegistration;
 
 @Entity(name = "Admissions")
 @Table(name = "t_admission", schema = "adt")

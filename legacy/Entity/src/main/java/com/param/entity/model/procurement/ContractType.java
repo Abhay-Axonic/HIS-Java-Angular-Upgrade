@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -19,6 +20,7 @@ import com.param.entity.model.base.CommonEntity;
 @Entity
 @Table(name="m_contract_type", schema = "procurement")
 public class ContractType extends CommonEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

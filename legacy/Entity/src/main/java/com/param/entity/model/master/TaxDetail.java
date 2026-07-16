@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
@@ -20,6 +21,7 @@ import com.param.entity.model.base.BaseEntity;
 @Table(name = "m_tax_detail")
 @NamedQuery(name = "TaxDetail.findAll", query = "SELECT t FROM TaxDetail t")
 public class TaxDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

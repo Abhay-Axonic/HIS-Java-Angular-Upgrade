@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,9 +24,11 @@ import com.param.entity.model.master.RejectReason;
 import com.param.entity.model.master.Status;
 import com.param.entity.model.master.Store;
 import com.param.entity.model.master.User;
+
 @Entity(name = "ConfirmStock")
 @Table(name = "t_confirm_stock", schema = "inventory")
 public class ConfirmStock extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

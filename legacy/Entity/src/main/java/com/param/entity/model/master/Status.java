@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import com.param.entity.model.base.CommonEntity;
 @Entity(name = "Status")
 @Table(name = "m_status", schema = "public")
 public class Status extends CommonEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

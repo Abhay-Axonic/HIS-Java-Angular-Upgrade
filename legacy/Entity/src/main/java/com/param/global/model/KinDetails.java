@@ -287,7 +287,7 @@ public class KinDetails
 	}
 
 	public void setIsGuarantor(char isGuarantor) {
-		this.isGuarantor =  (isGuarantor == '\u0000') ? 'N' : isGuarantor;;
+		this.isGuarantor =  (isGuarantor == '\u0000') ? 'N' : isGuarantor;
 	}
 
 	public int getKinDetailsId() {

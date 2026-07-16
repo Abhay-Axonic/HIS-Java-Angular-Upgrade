@@ -1,5 +1,6 @@
 package com.param.entity.model.linenAndLaundry;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ import com.param.entity.model.master.User;
 @Entity(name = "LinenIssue")
 @Table(name = "t_linen_issue", schema = "linen_and_laundry")
 public class LinenIssue extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	@Id

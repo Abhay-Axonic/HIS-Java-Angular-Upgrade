@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import com.param.entity.model.master.UomUnit;
 @Table(name = "t_consignment_inward_uom_mapper", schema = "procurement")
 public class ConsignmentInwardUomMapper extends UomEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	// bi-directional many-to-one association to ConsignmentInwardDetail

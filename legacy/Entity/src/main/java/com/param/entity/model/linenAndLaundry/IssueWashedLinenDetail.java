@@ -1,5 +1,6 @@
 package com.param.entity.model.linenAndLaundry;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="t_issue_washed_linen_detail", schema="linen_and_laundry")
 public class IssueWashedLinenDetail implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

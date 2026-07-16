@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,7 @@ import com.param.utility.TimeZoneComponent;
 @Entity(name = "NonBillableConsumption")
 @Table(name = "t_non_billable_consumption", schema="inventory")
 public class NonBillableConsumption extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

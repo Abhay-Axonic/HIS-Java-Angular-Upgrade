@@ -1,5 +1,6 @@
 package com.param.entity.model.adt;
 
+import java.io.Serial;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity(name="WardMasters")
 @Table(name="m_ward_master", schema="adt")
 public class WardMasters implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

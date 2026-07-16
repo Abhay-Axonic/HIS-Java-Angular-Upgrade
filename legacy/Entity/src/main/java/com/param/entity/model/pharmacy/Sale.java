@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ import com.param.global.model.SpecialityMaster;
 @Entity(name = "Sale")
 @Table(name = "t_sale", schema = "pharmacy")
 public class Sale extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

@@ -1,5 +1,6 @@
 package com.param.opd.coversheet.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="t_prescription_frequency_detail",schema="pharmacy")
 public class PrescriptionFrequencyMaster implements Serializable{
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

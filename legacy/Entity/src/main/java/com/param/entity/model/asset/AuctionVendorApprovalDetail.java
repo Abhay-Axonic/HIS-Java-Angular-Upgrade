@@ -1,5 +1,6 @@
 package com.param.entity.model.asset;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import com.param.entity.model.base.BaseEntity;
 @Table(name = "t_auction_vendor_approval_detail", schema = "assets")
 public class AuctionVendorApprovalDetail extends BaseEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

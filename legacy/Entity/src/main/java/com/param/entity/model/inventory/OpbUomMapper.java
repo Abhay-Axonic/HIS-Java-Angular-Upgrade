@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,6 +18,7 @@ import com.param.entity.model.master.User;
 @Entity(name = "OpbUomMapper")
 @Table(name = "t_opb_uom_mapper", schema = "inventory")
 public class OpbUomMapper extends UomEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY)

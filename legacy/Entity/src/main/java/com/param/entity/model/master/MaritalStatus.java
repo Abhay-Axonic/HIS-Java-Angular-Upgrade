@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 @Table(name = "m_marital_status_master", schema = "public")
 
 public class MaritalStatus implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

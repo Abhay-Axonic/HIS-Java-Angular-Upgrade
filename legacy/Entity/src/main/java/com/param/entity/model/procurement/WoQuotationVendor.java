@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import com.param.entity.model.master.Vendor;
 @Entity
 @Table(name = "t_wo_quotation_send_to_vendor", schema = "procurement")
 public class WoQuotationVendor extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

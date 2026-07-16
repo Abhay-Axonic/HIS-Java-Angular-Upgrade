@@ -1,5 +1,6 @@
 package com.param.entity.model.pharmacy;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
@@ -21,6 +22,7 @@ import com.param.entity.model.master.Status;
 @Entity(name="PatientIssueReturnDetail")
 @Table(name="t_patient_issue_return_detail",schema="pharmacy")
 public class PatientIssueReturnDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

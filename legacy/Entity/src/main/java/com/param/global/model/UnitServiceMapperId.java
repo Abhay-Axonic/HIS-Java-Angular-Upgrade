@@ -1,5 +1,6 @@
 package com.param.global.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ public class UnitServiceMapperId implements Serializable{
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "service_id")

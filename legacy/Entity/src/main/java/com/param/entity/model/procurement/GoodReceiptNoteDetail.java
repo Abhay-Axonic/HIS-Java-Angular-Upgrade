@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +36,7 @@ import com.param.entity.model.master.Vendor;
 @Entity(name = "GoodReceiptNoteDetail")
 @Table(name = "t_good_receipt_note_detail", schema = "procurement")
 public class GoodReceiptNoteDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

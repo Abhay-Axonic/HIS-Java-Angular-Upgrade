@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 
@@ -20,7 +21,6 @@ import javax.persistence.Table;
 import com.param.entity.model.base.BaseEntity;
 
 
-
 @NamedNativeQueries({
 	
 	@NamedNativeQuery(name="GET_PREFIX_NUMBER",query  ="select * from public.t_generate_prefix_number(:storeId,:unitId,:prefixId)")
@@ -29,8 +29,9 @@ import com.param.entity.model.base.BaseEntity;
 @Entity(name = "PrefixConfiguration")
 @Table(name = "m_prefix_configuration", schema = "public")
 public class PrefixConfiguration extends BaseEntity implements Serializable{
-	
-private static final long serialVersionUID = 1L;
+
+	@Serial
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

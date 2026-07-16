@@ -1,5 +1,6 @@
 package com.param.entity.model.inventory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,6 +25,7 @@ import com.param.utility.TimeZoneComponent;
 @Entity(name = "BatchExpDetail")
 @Table(name = "t_batch_exp_detail", schema = "inventory")
 public class BatchExpDetail extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

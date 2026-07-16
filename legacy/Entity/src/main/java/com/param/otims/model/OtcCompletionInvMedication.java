@@ -358,7 +358,7 @@ public class OtcCompletionInvMedication {
 	}
 
 	public void setConsessionAmount(Double consessionAmount) {
-		this.consessionAmount = consessionAmount==null?0:consessionAmount;;
+		this.consessionAmount = consessionAmount==null?0:consessionAmount;
 	}
 
 	public Double getUnitConsessionAmount() {

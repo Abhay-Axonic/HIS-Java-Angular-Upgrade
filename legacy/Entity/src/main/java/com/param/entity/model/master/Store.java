@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import com.param.global.model.DepartmentStoreMapper;
 @Entity(name = "Store")
 @Table(name = "m_store", schema = "public")
 public class Store extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

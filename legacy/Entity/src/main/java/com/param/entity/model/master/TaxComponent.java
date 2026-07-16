@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import com.param.entity.model.base.BaseEntity;
 @Entity(name = "TaxComponent")
 @Table(name = "m_tax_component", schema = "public")
 public class TaxComponent extends BaseEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

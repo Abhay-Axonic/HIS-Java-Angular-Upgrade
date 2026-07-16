@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 @Entity(name = "GeneralLedger")
 @Table(name = "m_general_ledger_master", schema = "public")
 public class GeneralLedger implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

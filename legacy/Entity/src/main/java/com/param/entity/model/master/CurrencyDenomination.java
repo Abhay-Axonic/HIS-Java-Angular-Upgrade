@@ -1,5 +1,6 @@
 package com.param.entity.model.master;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 @Entity(name = "CurrencyDenomination")
 @Table(name = "t_currency_denomination_master", schema = "public")
 public class CurrencyDenomination implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

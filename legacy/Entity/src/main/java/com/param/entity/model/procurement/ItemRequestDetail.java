@@ -1,5 +1,6 @@
 package com.param.entity.model.procurement;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -26,6 +27,7 @@ import com.param.entity.model.master.Vendor;
 @Table(name = "t_item_request_detail", schema = "procurement")
 public class ItemRequestDetail extends BaseEntity implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id
