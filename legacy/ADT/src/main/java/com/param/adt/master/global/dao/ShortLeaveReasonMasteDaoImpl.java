@@ -119,7 +119,6 @@ public class ShortLeaveReasonMasteDaoImpl extends GenericDao<ShortLeaveReasonMas
 			
 			return new Response<ShortLeaveReasonMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -160,7 +159,6 @@ public class ShortLeaveReasonMasteDaoImpl extends GenericDao<ShortLeaveReasonMas
 			
 			return new Response<ShortLeaveReasonMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

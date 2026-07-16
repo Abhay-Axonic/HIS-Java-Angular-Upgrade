@@ -53,7 +53,6 @@ public class EncounterTypeMasterDaoImpl extends GenericDao<EncounterTypeMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -91,7 +90,6 @@ public class EncounterTypeMasterDaoImpl extends GenericDao<EncounterTypeMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -117,7 +115,6 @@ public class EncounterTypeMasterDaoImpl extends GenericDao<EncounterTypeMaster, 
 			
 			return new Response<EncounterTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -135,7 +132,6 @@ public class EncounterTypeMasterDaoImpl extends GenericDao<EncounterTypeMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -158,7 +154,6 @@ public class EncounterTypeMasterDaoImpl extends GenericDao<EncounterTypeMaster, 
 			
 			return new Response<EncounterTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -175,7 +170,6 @@ public class EncounterTypeMasterDaoImpl extends GenericDao<EncounterTypeMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -196,7 +190,6 @@ public class EncounterTypeMasterDaoImpl extends GenericDao<EncounterTypeMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

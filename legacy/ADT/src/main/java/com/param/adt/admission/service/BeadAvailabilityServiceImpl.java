@@ -42,7 +42,7 @@ public class BeadAvailabilityServiceImpl implements IBedAvailibilityService,ICom
 				String d=ADTCommonDateUtils.getAvalDate(cal.getTime(), "yyyy-MM-dd");
 				dates.add(d);
 			}
-			bedAvailibailityDto.setStartDate(dates.get(0));
+			bedAvailibailityDto.setStartDate(dates.getFirst());
 			bedAvailibailityDto.setEndDate(dates.get(6));
 			
 			Response res = iBedAvailabilityDao.bedAvailiblityList(bedAvailibailityDto);

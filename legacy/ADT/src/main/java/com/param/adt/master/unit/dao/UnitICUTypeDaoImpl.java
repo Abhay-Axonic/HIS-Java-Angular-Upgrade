@@ -111,7 +111,6 @@ public class UnitICUTypeDaoImpl extends GenericDao<UnitICUTypeMapper, Integer>
 			
 			return new Response(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

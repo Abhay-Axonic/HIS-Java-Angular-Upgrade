@@ -777,7 +777,7 @@ public class DischargeSummaryDaoImpl extends GenericDao<DischargeSummary, Intege
 						docHeading.setFont(font);
 						docHeading.setAlignment(Element.ALIGN_CENTER);
 						//docHeading.add("DISCHARGE SUMMARY");
-						docHeading.add(dischargeSummaryFieldList.get(0).getDischargeTemplateName());
+						docHeading.add(dischargeSummaryFieldList.getFirst().getDischargeTemplateName());
 						docHeading.setSpacingAfter(1);
 						documentPDF.add(docHeading);
 						
@@ -1193,7 +1193,7 @@ public class DischargeSummaryDaoImpl extends GenericDao<DischargeSummary, Intege
 		        		logoWithHeader=patientData.getDischargeSummaryHeaderLogo();
 		        	}
 		        	String header="<br>"+ patientData.getDischargeSummaryHeader();
-		        	header=header.replace("@dischargeTemplateName", dischargeSummaryFieldList.get(0).getDischargeTemplateName());
+		        	header=header.replace("@dischargeTemplateName", dischargeSummaryFieldList.getFirst().getDischargeTemplateName());
 
 		        	header=header.replace("@uhidNo", patientData.getUhidNumber());
 		        	//header=header.replace("@admissionNo", patientData.getAdmissionId().toString());
@@ -1707,7 +1707,7 @@ public class DischargeSummaryDaoImpl extends GenericDao<DischargeSummary, Intege
                     		headerCell.setPaddingTop(-4);
                     		headerCell.setBorder(Rectangle.NO_BORDER);
         					Paragraph headerPara = new Paragraph();
-        					headerPara.add(mapEntry.getValue().get(0).getHeaderName());
+        					headerPara.add(mapEntry.getValue().getFirst().getHeaderName());
         					headerPara.setFont(boldFont);
         					headerCell.setColspan(4);
         					headerCell.addElement(headerPara);

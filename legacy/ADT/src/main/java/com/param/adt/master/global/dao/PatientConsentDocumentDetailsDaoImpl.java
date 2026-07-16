@@ -97,7 +97,6 @@ public class PatientConsentDocumentDetailsDaoImpl extends GenericDao<PatientCons
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

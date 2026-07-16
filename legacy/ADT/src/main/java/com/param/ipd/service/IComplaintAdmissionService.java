@@ -38,5 +38,5 @@ public interface IComplaintAdmissionService {
 
     Response saveMyLatestMedicalSummaryCallBack(SmartDocumentSummary dto) throws ApplicationException;
 
-    Response getAISummaryData(ComplaintAdmissionDto dto) throws ApplicationException;;
+    Response getAISummaryData(ComplaintAdmissionDto dto) throws ApplicationException;
 }

@@ -91,7 +91,6 @@ public class ConsentTypeMasterDaoImpl extends GenericDao<ConsentTypeMaster, Inte
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -103,7 +102,7 @@ public class ConsentTypeMasterDaoImpl extends GenericDao<ConsentTypeMaster, Inte
 			ConsentTypeMaster consentTypeMaster = findById(consentTypeMasterDto.getConsentTypeMasterId());
 			consentTypeMaster.setConsentTypeMasterCode(consentTypeMasterDto.getConsentTypeMasterCode());
 			consentTypeMaster.setConsentTypeMasterName(consentTypeMasterDto.getConsentTypeMasterName());
-			consentTypeMaster.setAdmissionConsent(consentTypeMasterDto.getAdmissionConsent());;
+			consentTypeMaster.setAdmissionConsent(consentTypeMasterDto.getAdmissionConsent());
 			consentTypeMaster.setUpdatedBy(consentTypeMasterDto.getUpdatedBy());
 			consentTypeMaster.setUpdatedDate(
 					ADTCommonDateUtils.getDate(consentTypeMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
@@ -116,7 +115,6 @@ public class ConsentTypeMasterDaoImpl extends GenericDao<ConsentTypeMaster, Inte
 			
 			return new Response<ConsentTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -174,7 +172,6 @@ public class ConsentTypeMasterDaoImpl extends GenericDao<ConsentTypeMaster, Inte
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

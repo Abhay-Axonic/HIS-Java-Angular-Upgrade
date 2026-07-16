@@ -54,7 +54,6 @@ public class DeliveryTypeMasterDaoImpl extends GenericDao<DeliveryTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -92,7 +91,6 @@ public class DeliveryTypeMasterDaoImpl extends GenericDao<DeliveryTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -116,7 +114,6 @@ public class DeliveryTypeMasterDaoImpl extends GenericDao<DeliveryTypeMaster, In
 			
 			return new Response<StateMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -134,7 +131,6 @@ public class DeliveryTypeMasterDaoImpl extends GenericDao<DeliveryTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -157,7 +153,6 @@ public class DeliveryTypeMasterDaoImpl extends GenericDao<DeliveryTypeMaster, In
 			
 			return new Response<StateMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -174,7 +169,6 @@ public class DeliveryTypeMasterDaoImpl extends GenericDao<DeliveryTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -195,7 +189,6 @@ public class DeliveryTypeMasterDaoImpl extends GenericDao<DeliveryTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

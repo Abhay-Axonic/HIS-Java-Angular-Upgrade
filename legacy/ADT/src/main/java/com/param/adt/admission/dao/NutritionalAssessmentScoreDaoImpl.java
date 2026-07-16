@@ -86,7 +86,7 @@ public class NutritionalAssessmentScoreDaoImpl extends GenericDao<NutritionalAss
             			" from adt.t_nutritional_assessment_score_master  where nutritional_assessment_score_master_id = :NutritionalAssessmentScoreMasterId " ;
     			
     			NabhAssessmentDTO obj = (NabhAssessmentDTO)sessionFactory.getCurrentSession().createSQLQuery(query)
-    					.setParameter("NutritionalAssessmentScoreMasterId",getAllSaveAsDraftNutritionalAssessmentScore.get(0).getNutritionalAssessmentScoreMasterId())
+    					.setParameter("NutritionalAssessmentScoreMasterId",getAllSaveAsDraftNutritionalAssessmentScore.getFirst().getNutritionalAssessmentScoreMasterId())
     					.setResultTransformer(Transformers.aliasToBean(NabhAssessmentDTO.class)).uniqueResult();
     			return new com.param.adt.common.Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, getAllSaveAsDraftNutritionalAssessmentScore, obj);
             }

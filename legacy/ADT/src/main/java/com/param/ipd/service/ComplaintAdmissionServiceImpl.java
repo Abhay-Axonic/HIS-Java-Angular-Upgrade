@@ -306,7 +306,7 @@ public class ComplaintAdmissionServiceImpl implements IComplaintAdmissionService
 				String mapAsString = objectMapper.writeValueAsString(doctorCoverPageDtoMap);
 				JSONArray summaryListJson = new JSONArray(docList);//
 				payload.put("summary_list", docList!=null && docList.size()>0 ? summaryListJson : "No");
-				payload.put("latest_medical_summary",latestSummaryReport!=null && latestSummaryReport.size()>0 ? latestSummaryReport.get(0) : "No");
+				payload.put("latest_medical_summary",latestSummaryReport!=null && latestSummaryReport.size()>0 ? latestSummaryReport.getFirst() : "No");
 //				payload.put("latest_medical_summary",latestSummaryReport!=null  ? latestSummaryReport : "No");
 
 				payload.put("CallBackUrl", callBackUrl);

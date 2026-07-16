@@ -55,7 +55,6 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -93,7 +92,6 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -115,7 +113,6 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 			
 			return new Response<MaritalStatusDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 		
 	}
@@ -134,7 +131,6 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -153,7 +149,6 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -174,7 +169,6 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -199,7 +193,6 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 			
 			return new Response<MaritalStatusDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 	

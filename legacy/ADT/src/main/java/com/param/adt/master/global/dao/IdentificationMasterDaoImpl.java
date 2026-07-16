@@ -55,7 +55,6 @@ public class IdentificationMasterDaoImpl extends GenericDao<IdentificationMaster
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -96,7 +95,6 @@ public class IdentificationMasterDaoImpl extends GenericDao<IdentificationMaster
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -118,7 +116,6 @@ public class IdentificationMasterDaoImpl extends GenericDao<IdentificationMaster
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -147,7 +144,6 @@ public class IdentificationMasterDaoImpl extends GenericDao<IdentificationMaster
 			
 			return new Response<IdentificationMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -165,7 +161,6 @@ public class IdentificationMasterDaoImpl extends GenericDao<IdentificationMaster
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -189,7 +184,6 @@ public class IdentificationMasterDaoImpl extends GenericDao<IdentificationMaster
 			
 			return new Response<IdentificationMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -207,7 +201,6 @@ public class IdentificationMasterDaoImpl extends GenericDao<IdentificationMaster
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

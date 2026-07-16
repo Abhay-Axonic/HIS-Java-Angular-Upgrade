@@ -54,7 +54,6 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -92,7 +91,6 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -111,7 +109,6 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -130,7 +127,6 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -152,7 +148,6 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -174,7 +169,6 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 			
 			return new Response<PatientSourceMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -195,7 +189,6 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 			
 			return new Response<PatientSourceMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 	

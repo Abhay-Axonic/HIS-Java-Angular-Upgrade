@@ -53,7 +53,6 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -90,7 +89,6 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -109,7 +107,6 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -128,7 +125,6 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -150,7 +146,6 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -173,7 +168,6 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 			
 			return new Response<ReferralTypeMaster, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -195,7 +189,6 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 			
 			return new Response<ReferralTypeMaster, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 	

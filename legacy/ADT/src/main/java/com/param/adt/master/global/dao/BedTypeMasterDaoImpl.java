@@ -128,7 +128,6 @@ public class BedTypeMasterDaoImpl  extends GenericDao<BedTypeMaster, Integer> im
 			
 			return new Response<BedTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -166,7 +165,6 @@ public class BedTypeMasterDaoImpl  extends GenericDao<BedTypeMaster, Integer> im
 			
 			return new Response<BedTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

@@ -54,7 +54,6 @@ public class ReligionMasterDaoImpl extends GenericDao<ReligionMaster, Integer>
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -92,7 +91,6 @@ public class ReligionMasterDaoImpl extends GenericDao<ReligionMaster, Integer>
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -112,7 +110,6 @@ public class ReligionMasterDaoImpl extends GenericDao<ReligionMaster, Integer>
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -131,7 +128,6 @@ public class ReligionMasterDaoImpl extends GenericDao<ReligionMaster, Integer>
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 
@@ -154,7 +150,6 @@ public class ReligionMasterDaoImpl extends GenericDao<ReligionMaster, Integer>
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -177,7 +172,6 @@ public class ReligionMasterDaoImpl extends GenericDao<ReligionMaster, Integer>
 			
 			return new Response<ReligionMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -198,7 +192,6 @@ public class ReligionMasterDaoImpl extends GenericDao<ReligionMaster, Integer>
 			
 			return new Response<ReligionMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 	
