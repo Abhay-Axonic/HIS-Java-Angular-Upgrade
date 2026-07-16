@@ -656,3 +656,32 @@ Only the else-branch (second operand) of each ternary was swapped; the already-c
 Classification: **Financial Correctness**. Owner Decision: Approved and applied, per `docs/DECISION_NEEDED_ConsumeServiceFromContractBalanceCapSwap.md`.
 
 **Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 85/85, Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. The broader targeted characterization of `consumeServiceFromContract`'s remaining risky branches (and of `consumeServiceFromContractPackage`/`consumePackageFromContract`) remains paused pending owner direction, unrelated to this fix's completion.
+
+## BR-PENDING-shadow-wave2-consumeservicefromcontract-batch1 — URGENT finding, NOT fixed: second-round quantity-cap branch discards the first-priority contract's entire credit contribution (2026-07-16)
+
+**Found while resuming targeted characterization of `consumeServiceFromContract` (Step 2 resumed), specifically while checking the whole method for repeats of the balance-cap swap pattern fixed 2026-07-15.** No repeat of that exact pattern was found — every other `creaditPayable`/`selfPayable` assignment pair in the method was traced and confirmed correct in direction. This is a *different* defect, found in the adjacent second-round quantity-cap branch.
+
+**Finding 1 — URGENT, flagged live to the owner: `Global/.../billing/service/ContractConsumptionServiceImpl.java:1103-1108`, the second-round loop's quantity-tracked-cap branch, REASSIGNS `totalCreditPayable`/`totalSelfPayable` instead of accumulating onto them, discarding whatever the first-priority contract already contributed.**
+
+```java
+if(secondRound.getBalanceQuantity()!=null && secondRound.getBalanceQuantity()>0)
+{
+    orderDetailsPayeeMapperDtosList=new LinkedList<>();
+    creaditPayableSecondRound = netAmt;
+    totalCreditPayable = netAmt;
+    totalSelfPayable = 0.0;
+```
+
+Its sibling branch nine lines earlier (the amount-tracked-cap branch, lines 1015/1023-1024) gets this right — `totalCreditPayable = totalCreditPayable+creaditPayableSecondRound; totalSelfPayable = totalSelfPayable-creaditPayableSecondRound;` — accumulating the second contract's contribution onto the running total. The quantity-tracked-cap branch does the same conceptual step with `=` instead of `+=`/`-=`, wiping the running total instead of adding to it. Confirmed via a passing test (`ConsumeServiceFromContractCharacterizationTest.SecondRoundTypeTwoQuantityCap#quantityCapBranch_totalCreditPayableAssignment`): a first-priority contract correctly contributes $300; by the time the quantity-capped second contract's branch runs, `totalCreditPayable` is $400 (this round's own amount alone) instead of $700 — the $300 has vanished from the total that reaches `finalDto.setCreaditPayable(...)` and the caller.
+
+**Severity:** same class as the pharmacy co-share leak — a real dollar amount vanishes from the system's own running total, not merely landing on the wrong party. Reachable whenever a first-priority contract leaves residual self-pay (the ordinary trigger for the second-round loop, not an edge case) and the second-priority contract found happens to use a quantity-tracked cap rather than an amount-tracked one.
+
+**Secondary, non-urgent finding in the same branch:** unlike the resDto-level quantity-cap branch (lines 798-826), which properly compares `resDto.getBalanceQuantity()` against `consumptionDto.getQuantity()` and splits proportionally when insufficient, this second-round branch has no such comparison at all — any positive `secondRound.getBalanceQuantity()` is treated as fully covering the entire `netAmt`, and `1.00` is hardcoded as the quantity-to-deduct regardless of how much was actually needed. Same shape as the previously-logged batch-2 hardcoded-quantity findings (createOrderDetailsPackageMapperForMultiEncounter). Not folded into the urgent fix proposal — a separate, more involved judgment call about how a genuinely-insufficient quantity cap should split.
+
+**Owner instruction:** log clearly, do not fix (Finding 1 flagged live and fast-tracked immediately per the owner's standing instruction for this batch — proposal doc written the same session as found, not held for a batch summary). No code change made to `ContractConsumptionServiceImpl.java`. Proposal: `docs/DECISION_NEEDED_SecondRoundQuantityCapCreditLoss.md`. Confirmed via a passing test assertion, not just described in prose.
+
+**Also characterized this batch, no further findings:** `resDto.getType()==1` consultation routing into `calculateSelfCreditAndFinalAmount`; `resDto.getType()==2` quantity-cap-exceeded split (correctly splits available-vs-excess units, not a repeat of the balance-cap swap); second-round loop `secondRound.getType()==1`; second-round loop `secondRound.getType()==2` amount-cap (correctly caps at the smaller of leftover self-pay or the second contract's own remaining balance).
+
+Classification: **Financial Correctness** (Finding 1, pending decision). Owner Decision: Pending — proposal awaiting review, same fast-track process as the pharmacy leak and the balance-cap swap.
+
+**Notes:** `mvn -pl Global,Billing -am clean test`: BUILD SUCCESS, Global 90/90 (5 new tests this batch), Billing 29/29 (verified from a clean `target/` wipe). No local `try/catch` touched, no database column changed, no business term introduced. Further targeted characterization of `consumeServiceFromContract` is paused pending owner review of this finding, per standing instruction.
