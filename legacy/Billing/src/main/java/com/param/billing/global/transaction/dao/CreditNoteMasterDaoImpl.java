@@ -429,7 +429,7 @@ public class CreditNoteMasterDaoImpl extends GenericDao<CreditNoteMaster, Intege
 			c.add(Restrictions.eq("status", 'A'));
 			List<BillPayeeDetails> billDetailsList = c.list();
 
-			return billDetailsList.get(0);
+			return billDetailsList.getFirst();
 		} catch (Exception e) {
 			
 			throw e;
@@ -446,7 +446,7 @@ public class CreditNoteMasterDaoImpl extends GenericDao<CreditNoteMaster, Intege
 			c.add(Restrictions.eq("status", 'A'));
 			List<BillingMaster> billingMasters = c.list();
 
-			return billingMasters.get(0);
+			return billingMasters.getFirst();
 		} catch (Exception e) {
 			
 			throw e;
@@ -461,7 +461,7 @@ public class CreditNoteMasterDaoImpl extends GenericDao<CreditNoteMaster, Intege
 				c.add(Restrictions.eq("creditNoteId", creditNoteId));
 			List<CreditNoteMaster> creditNoteMastersList = c.list();
 
-			return creditNoteMastersList.get(0);
+			return creditNoteMastersList.getFirst();
 		} catch (Exception e) {
 			
 			throw e;

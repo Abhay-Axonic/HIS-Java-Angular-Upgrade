@@ -183,8 +183,8 @@ public class RefundController {
 			refundCollectionReqDto.getPaymentRefundMasterDto().setCounterId(0);
 			refundCollectionReqDto.getPaymentRefundMasterDto().setCancelOrDiscount(2);
 			refundCollectionReqDto.getPaymentRefundMasterDto().setCreatedBy(unitApplicationConfigurationDto.getWebAppUserId());
-			refundCollectionReqDto.getListPaymentRefundDetails().get(0).setPaymentModeId(8);
-			refundCollectionReqDto.getListPaymentRefundDetails().get(0).setCreatedBy(unitApplicationConfigurationDto.getWebAppUserId());
+			refundCollectionReqDto.getListPaymentRefundDetails().getFirst().setPaymentModeId(8);
+			refundCollectionReqDto.getListPaymentRefundDetails().getFirst().setCreatedBy(unitApplicationConfigurationDto.getWebAppUserId());
 
 			return iPaymentRefundMasterService.saveRefundAgainstCreditNote(refundCollectionReqDto, billMasterId, billPayeeId);
 		}catch(Exception e){

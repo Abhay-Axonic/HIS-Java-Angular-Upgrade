@@ -214,8 +214,8 @@ class PaymentDepositConsumptionServiceImplCharacterizationTest {
             verify(iDepositMasterService, times(2)).updateDepositDetails(captor.capture());
             List<PaymentDepositDetailsDto> updates = captor.getAllValues();
 
-            assertThat(updates.get(0).getConsumedAmount()).isEqualTo(400.0); // first row fully drained
-            assertThat(updates.get(0).getBalanceAmount()).isEqualTo(0.0);
+            assertThat(updates.getFirst().getConsumedAmount()).isEqualTo(400.0); // first row fully drained
+            assertThat(updates.getFirst().getBalanceAmount()).isEqualTo(0.0);
             assertThat(updates.get(1).getConsumedAmount()).isEqualTo(200.0); // remaining 600-400
             assertThat(updates.get(1).getBalanceAmount()).isEqualTo(800.0); // 1000 - 200
             assertThat(result.getObject()).isEqualTo(600.0); // finalConsumption across both rows

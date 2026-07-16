@@ -171,7 +171,7 @@ public class PaymentDepositConsumptionDaoImpl extends GenericDao<PaymentDepositC
 											+ " consumed_deposit = consumed_deposit - :amt "
 											+ " where deposit_master_id = :depositMasterId")
 							.setParameter("depositMasterId", consumptionDetails.getDepositId())
-							.setParameter("amt", new Double(OrderMasterServiceImpl.df2.format(consumptionDetails.getConsumedAmount())))
+							.setParameter("amt", Double.valueOf(OrderMasterServiceImpl.df2.format(consumptionDetails.getConsumedAmount())))
 						.executeUpdate();
 					
 					
@@ -436,7 +436,7 @@ public class PaymentDepositConsumptionDaoImpl extends GenericDao<PaymentDepositC
 			//to solve concurrency issue
 			List<Integer> billIds= null;
 			List<Integer> saleIds= null;
-			List<Integer> invoiceIds= new ArrayList<>();;
+			List<Integer> invoiceIds= new ArrayList<>();
 			List<BillingPaymentDetailsReqDto> dueAmountList= null;
 			List<BillingPaymentDetailsReqDto> dueAmountListResult= null;
 			List<BillingPaymentDetailsReqDto> dueAmountListNew= null;

@@ -133,7 +133,7 @@ public class CreditNoteMasterServiceImpl implements ICreditNoteMasterService, IC
 			Response creditNoteRes =  iCreditNoteMasterDao.saveCreditNote(creditNoteMasterDto);
 			
 			OrderMasterDto orderMasterDto = new OrderMasterDto();
-			orderMasterDto.setOrderId(creditNoteMasterDto.getListCreditNoteDetails().get(0).getOrderId());
+			orderMasterDto.setOrderId(creditNoteMasterDto.getListCreditNoteDetails().getFirst().getOrderId());
 			orderMasterDto.setOrgId(creditNoteMasterDto.getOrgnisationId());
 			orderMasterDto.setOrgUnitId(creditNoteMasterDto.getUnitId());
 			orderMasterDto.setOrderDate(date.getTime());

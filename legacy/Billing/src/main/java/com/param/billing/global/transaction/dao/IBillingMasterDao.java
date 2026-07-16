@@ -72,15 +72,13 @@ public interface  IBillingMasterDao extends IGenericDao<BillingMaster, Integer>{
 	public Response billlistForBookView(Integer patientId,Integer unitId, Integer orgId, String fromDate, String toDate)throws BillingException;
 	public Response readSmartCard(Claim claim)throws ApplicationException, SQLException, Exception;
 	Integer updateFinalBill(Integer admssionId) throws ApplicationException;
-	public BillPayeeDetailsDto getSelfPayeeAmount(Integer encounterId, Integer unitId, boolean debitNoteService)throws BillingException;;
-	public List<BillPayeeDetailsDto> getCreditPayeeAmount(Integer encounterId, Integer unitId,boolean debitNoteService)throws BillingException;;
-	public Response updateBillMasterIsInvoiceCreationByBillId(Integer billId, Integer payeeId, Integer assoiciateComId)throws BillingException;;
-
-	/*public BillPayeeDetailsDto getSelfPayeeAmountForAdmission(Integer encounterId, Integer unitId)throws BillingException;;
+	public BillPayeeDetailsDto getSelfPayeeAmount(Integer encounterId, Integer unitId, boolean debitNoteService)throws BillingException;
+	public List<BillPayeeDetailsDto> getCreditPayeeAmount(Integer encounterId, Integer unitId,boolean debitNoteService)throws BillingException;
+	public Response updateBillMasterIsInvoiceCreationByBillId(Integer billId, Integer payeeId, Integer assoiciateComId)throws BillingException;/*public BillPayeeDetailsDto getSelfPayeeAmountForAdmission(Integer encounterId, Integer unitId)throws BillingException;;
 	public List<BillPayeeDetailsDto> getCreditPayeeAmountForAdmission(Integer encounterId, Integer unitId)throws BillingException;*/
 	public Response submitSmartCard(SmartcardClaimDto smartcardClaimDto)throws ApplicationException, SQLException;
 
-	public BillPayeeDetailsDto getSelfPayeeAmountForAdmission(Integer encounterId, Integer unitId,boolean debitNoteService, Set<Integer> orderDetailsIdsList)throws BillingException;;
+	public BillPayeeDetailsDto getSelfPayeeAmountForAdmission(Integer encounterId, Integer unitId,boolean debitNoteService, Set<Integer> orderDetailsIdsList)throws BillingException;
 	public List<BillPayeeDetailsDto> getCreditPayeeAmountForAdmission(Integer encounterId, Integer unitId,boolean debitNoteService, Set<Integer> orderDetailsIdsList)throws BillingException;
 	BillListResDto getBillSumsAdmissionId(Integer admissionId);
 	

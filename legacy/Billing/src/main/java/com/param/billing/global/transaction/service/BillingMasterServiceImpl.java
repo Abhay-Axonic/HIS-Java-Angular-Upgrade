@@ -2,6 +2,7 @@ package com.param.billing.global.transaction.service;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -1011,11 +1012,11 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 								BillingDetailsDto billingDetailsDto = new BillingDetailsDto();
 									billingDetailsDto.setBillingMasterId(billMasterId);
 									billingDetailsDto.setServiceId(detailsByEncounterIdDto.getServiceMasterId());
-									billingDetailsDto.setRate(detailsByEncounterIdDto.getBasePrice() != null ? new Double(detailsByEncounterIdDto.getBasePrice().doubleValue())	: 0.00);
-									billingDetailsDto.setQuantity(detailsByEncounterIdDto.getQuantity() != null	? new Double(detailsByEncounterIdDto.getQuantity().doubleValue()) : 0.00);
-									billingDetailsDto.setConcession(detailsByEncounterIdDto.getConcession() != null	? new Double(detailsByEncounterIdDto.getConcession().doubleValue())	: 0.00);
-									billingDetailsDto.setGrossAmount(detailsByEncounterIdDto.getTotalAmt() != null	? new Double(detailsByEncounterIdDto.getTotalAmt().doubleValue()): 0.00);
-									billingDetailsDto.setCoPayPercentage(detailsByEncounterIdDto.getCoPayPer() != null? new Double(detailsByEncounterIdDto.getCoPayPer().doubleValue())	: new Double(0.00)); 
+									billingDetailsDto.setRate(detailsByEncounterIdDto.getBasePrice() != null ? Double.valueOf(detailsByEncounterIdDto.getBasePrice().doubleValue())	: 0.00);
+									billingDetailsDto.setQuantity(detailsByEncounterIdDto.getQuantity() != null	? Double.valueOf(detailsByEncounterIdDto.getQuantity().doubleValue()) : 0.00);
+									billingDetailsDto.setConcession(detailsByEncounterIdDto.getConcession() != null	? Double.valueOf(detailsByEncounterIdDto.getConcession().doubleValue())	: 0.00);
+									billingDetailsDto.setGrossAmount(detailsByEncounterIdDto.getTotalAmt() != null	? Double.valueOf(detailsByEncounterIdDto.getTotalAmt().doubleValue()): 0.00);
+									billingDetailsDto.setCoPayPercentage(detailsByEncounterIdDto.getCoPayPer() != null? Double.valueOf(detailsByEncounterIdDto.getCoPayPer().doubleValue())	: Double.valueOf(0.00)); 
 									billingDetailsDto.setUnitId(detailsByEncounterIdDto.getOrgUnitId());
 									billingDetailsDto.setOrganizationId(detailsByEncounterIdDto.getOrgId());
 									billingDetailsDto.setStatus('A');
@@ -1023,26 +1024,26 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 									billingDetailsDto.setUpdatedBy(billingMasterDto.getUpdatedBy());
 									billingDetailsDto.setCreatedDate(billingMasterDto.getCreatedDate());
 									billingDetailsDto.setUpdatedDate(billingMasterDto.getUpdatedDate());
-									billingDetailsDto.setDiscount(detailsByEncounterIdDto.getDiscount() != null	? new Double(detailsByEncounterIdDto.getDiscount().doubleValue()) : 0.00);
+									billingDetailsDto.setDiscount(detailsByEncounterIdDto.getDiscount() != null	? Double.valueOf(detailsByEncounterIdDto.getDiscount().doubleValue()) : 0.00);
 									billingDetailsDto.setTaxId(detailsByEncounterIdDto.getTaxId());
-									billingDetailsDto.setTaxPer(detailsByEncounterIdDto.getTaxPercentage() != null ? new Double(detailsByEncounterIdDto.getTaxPercentage().doubleValue()) : 0.00);
-									billingDetailsDto.setTaxAmount(detailsByEncounterIdDto.getTaxAmt() != null ? new Double(detailsByEncounterIdDto.getTaxAmt().doubleValue()): 0.00);
-									billingDetailsDto.setNetAmt(detailsByEncounterIdDto.getNetPay() != null	? new Double(detailsByEncounterIdDto.getNetPay().doubleValue())	: 0.00);
+									billingDetailsDto.setTaxPer(detailsByEncounterIdDto.getTaxPercentage() != null ? Double.valueOf(detailsByEncounterIdDto.getTaxPercentage().doubleValue()) : 0.00);
+									billingDetailsDto.setTaxAmount(detailsByEncounterIdDto.getTaxAmt() != null ? Double.valueOf(detailsByEncounterIdDto.getTaxAmt().doubleValue()): 0.00);
+									billingDetailsDto.setNetAmt(detailsByEncounterIdDto.getNetPay() != null	? Double.valueOf(detailsByEncounterIdDto.getNetPay().doubleValue())	: 0.00);
 									billingDetailsDto.setOrdDocId(detailsByEncounterIdDto.getDoctorId());
 									billingDetailsDto.setOrdDocSplId(detailsByEncounterIdDto.getDoctorSpecialityId()!=null && detailsByEncounterIdDto.getDoctorSpecialityId().intValue()>0 ? detailsByEncounterIdDto.getDoctorSpecialityId(): detailsByEncounterIdDto.getSpecialityId());
 									billingDetailsDto.setDrugId(detailsByEncounterIdDto.getDrugId());
 									billingDetailsDto.setBatchId(detailsByEncounterIdDto.getBatchId());
 									// billingDetailsDto.setOrderDate(GlobalCommonDateUtils.getLongDateFromStrigDate(detailsByEncounterIdDto.getOrderDateString()));
 									// billingDetailsDto.setOrderSchDate(detailsByEncounterIdDto.getOrderSchDate());
-									billingDetailsDto.setSelfPayable(detailsByEncounterIdDto.getSelfPayable() != null ? new Double(detailsByEncounterIdDto.getSelfPayable().doubleValue()): 0.00);
+									billingDetailsDto.setSelfPayable(detailsByEncounterIdDto.getSelfPayable() != null ? Double.valueOf(detailsByEncounterIdDto.getSelfPayable().doubleValue()): 0.00);
 									selfDueAmount = detailsByEncounterIdDto.getSelfPayable();
-									billingDetailsDto.setCreditPayable(detailsByEncounterIdDto.getCreditPayable() != null ? new Double(detailsByEncounterIdDto.getCreditPayable().doubleValue()): 0.00);
+									billingDetailsDto.setCreditPayable(detailsByEncounterIdDto.getCreditPayable() != null ? Double.valueOf(detailsByEncounterIdDto.getCreditPayable().doubleValue()): 0.00);
 									creditDueAmount = creditDueAmount.add(detailsByEncounterIdDto.getCreditPayable());
 									billingDetailsDto.setPayeeId(detailsByEncounterIdDto.getPayeeId());
 									billingDetailsDto.setOrderDetailsId(detailsByEncounterIdDto.getOrderDetailsId());
 									billingDetailsDto.setPackageId(detailsByEncounterIdDto.getPackageId());
-									billingDetailsDto.setPackageConsumptionAmt(detailsByEncounterIdDto.getPackageConsumptionAmt() != null? new Double(detailsByEncounterIdDto.getPackageConsumptionAmt().doubleValue()): new Double(0.00));
-                                    billingDetailsDto.setCoSharePer(billingDetailsDto.getSelfPayable()>0 ? (billingDetailsDto.getSelfPayable()/billingDetailsDto.getNetAmt())*100 : new Double(0.00));
+									billingDetailsDto.setPackageConsumptionAmt(detailsByEncounterIdDto.getPackageConsumptionAmt() != null? Double.valueOf(detailsByEncounterIdDto.getPackageConsumptionAmt().doubleValue()): Double.valueOf(0.00));
+                                    billingDetailsDto.setCoSharePer(billingDetailsDto.getSelfPayable()>0 ? (billingDetailsDto.getSelfPayable()/billingDetailsDto.getNetAmt())*100 : Double.valueOf(0.00));
 									billingDetailsDto.setIsDoctorSharePosted('N');
 									billingDetailsDto.setOrderDetailsPayeeMapperDtosList(detailsByEncounterIdDto.getOrderDetailsPayeeMapperDtosList());
 									billingDetailsDto.setOrderDetailsPackageMapperDtosList(detailsByEncounterIdDto.getOrderDetailsPackageMapperDtosList());
@@ -2006,7 +2007,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 					paymentRecieptMasterDto.setEncounterId(reqDto.getEncounterId());// encounterId
 					paymentRecieptMasterDto.setPatientId(reqDto.getPatientId());// patientId
 					paymentRecieptMasterDto.setVisitTypeId(reqDto.getVisitTypeId());// visitTypeId
-					paymentRecieptMasterDto.setReceivedFrom(reqDto.getPaymentReceiptDetailsDtosList()!=null && reqDto.getPaymentReceiptDetailsDtosList().size()!=0 ? reqDto.getPaymentReceiptDetailsDtosList().get(0).getReceivedFrom():(reqDto.getReceivedFrom()!=null ? reqDto.getReceivedFrom():""));
+					paymentRecieptMasterDto.setReceivedFrom(reqDto.getPaymentReceiptDetailsDtosList()!=null && reqDto.getPaymentReceiptDetailsDtosList().size()!=0 ? reqDto.getPaymentReceiptDetailsDtosList().getFirst().getReceivedFrom():(reqDto.getReceivedFrom()!=null ? reqDto.getReceivedFrom():""));
 				if (reqDto.getDisallowedAmount() != null && reqDto.getDisallowedAmount() > 0 && reqDto.getDisallowedAgainstInvoiceDtlsId() != null	&& reqDto.getDisallowedAgainstInvoiceDtlsId() > 0)
 					paymentRecieptMasterDto.setAgainstDisallowedAmount('Y');
 
@@ -2198,12 +2199,10 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				billingMasterDao.updateBillsDisallowedAmount(reqDto.getDisallowedAmount(), reqDto.getBillingMasterId());
 			}
 
-			BigDecimal roundOffNetAmount = new BigDecimal(reqDto.getAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-			BigDecimal roundOffSelfAmount = new BigDecimal(reqDto.getTotalSelfPayable()).setScale(2,
-					BigDecimal.ROUND_HALF_EVEN);
-			BigDecimal roundOffCreditAmount = new BigDecimal(reqDto.getTotalCreditPayable()).setScale(2,
-					BigDecimal.ROUND_HALF_EVEN);
-			BigDecimal roundOutstandingAmount = new BigDecimal(dueAmount).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			BigDecimal roundOffNetAmount = new BigDecimal(reqDto.getAmount()).setScale(2, RoundingMode.HALF_EVEN);
+			BigDecimal roundOffSelfAmount = new BigDecimal(reqDto.getTotalSelfPayable()).setScale(2, RoundingMode.HALF_EVEN);
+			BigDecimal roundOffCreditAmount = new BigDecimal(reqDto.getTotalCreditPayable()).setScale(2, RoundingMode.HALF_EVEN);
+			BigDecimal roundOutstandingAmount = new BigDecimal(dueAmount).setScale(2, RoundingMode.HALF_EVEN);
 
 			SmsUtilityConfigInfoDto smsInfo1 = null;
 			  
@@ -2237,13 +2236,13 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				smsInfo.setOrganizationId(reqDto.getOrgnizationId());
 				smsInfo.setPatientId(reqDto.getPatientId());
 				smsInfo.setTreatingDoctorId(reqDto.getDoctorId());
-				smsInfo.setBillAmount(new BigDecimal(dto.getNetAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+				smsInfo.setBillAmount(new BigDecimal(dto.getNetAmount()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setSelfAmount(
-						new BigDecimal(dto.getTotalSelfPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(dto.getTotalSelfPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setCreditAmount(
-						new BigDecimal(dto.getTotalCreditPayable()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(dto.getTotalCreditPayable()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setOutstandingAmount(
-						new BigDecimal(dto.getOutstanding()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						new BigDecimal(dto.getOutstanding()).setScale(2, RoundingMode.HALF_EVEN));
 				smsInfo.setDateTime(reqDto.getDateOfReciept());
 				smsInfo.setReferringDoctorId(reqDto.getReferalDocId());
 				smsInfo.setRecieptNo(savePaymentres.getCode()!=null ? (String) savePaymentres.getCode() : null);
@@ -2679,7 +2678,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				List<OrderDetailsPayeeMapperDto> list = res2.getListObject();
 				orderDetailsByEncounterIdDto.setOrderDetailsPayeeMapperDtosList(res2.getListObject());
 				if(list.size()>0) {
-					orderDetailsByEncounterIdDto.setIsTariffRateApplicable(list.get(0).getIsTariffRateApplicable());	
+					orderDetailsByEncounterIdDto.setIsTariffRateApplicable(list.getFirst().getIsTariffRateApplicable());	
 				}
 
 				// for package
@@ -2825,7 +2824,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 			if(encRes.getCode().equals("Y"))
 				iEncounterMasterService.updateAutorenderServicesAfterEncounter((EncounterMasterDto)encRes.getObject(),2);
 			if(encRes.getListObject()!=null)
-				iEncounterMasterService.saveOrderDetailsAfterEncounter((EncounterMasterDto)encRes.getObject(), (Integer)encRes.getListObject().get(0),2);
+				iEncounterMasterService.saveOrderDetailsAfterEncounter((EncounterMasterDto)encRes.getObject(), (Integer)encRes.getListObject().getFirst(),2);
 			
 			
 			// save bill call
@@ -3008,7 +3007,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 			if(encRes.getCode().equals("Y"))
 				iEncounterMasterService.updateAutorenderServicesAfterEncounter((EncounterMasterDto)encRes.getObject(),2);
 			if(encRes.getListObject()!=null)
-				iEncounterMasterService.saveOrderDetailsAfterEncounter((EncounterMasterDto)encRes.getObject(), (Integer)encRes.getListObject().get(0),2);
+				iEncounterMasterService.saveOrderDetailsAfterEncounter((EncounterMasterDto)encRes.getObject(), (Integer)encRes.getListObject().getFirst(),2);
 			
 			
 			if (encRes.getStatus().equals(ERROR))
@@ -3087,7 +3086,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 			paymentCollectionDto.setBillingMasterId(billId);
 			paymentCollectionDto.setBillPayeeDetailsId(billPayeeDetailsId);
 			paymentCollectionDto.setDateOfReciept(GlobalCommonDateUtils.getStringDate(encounterMasterDto.getEncounterMasterDto().getCreatedDate(), "dd-M-yyyy HH:mm:ss"));
-			paymentCollectionDto.setPayeeId(encounterMasterDto.getEncounterMasterDto().getPatientSponsorDetailsDtosList().get(0).getPayeeId());
+			paymentCollectionDto.setPayeeId(encounterMasterDto.getEncounterMasterDto().getPatientSponsorDetailsDtosList().getFirst().getPayeeId());
 			paymentCollectionDto.setOrgnizationId(encounterMasterDto.getEncounterMasterDto().getOrganizationId());
 			paymentCollectionDto.setUnitId(encounterMasterDto.getEncounterMasterDto().getUnitId());
 			paymentCollectionDto.setIsPreOrPostBilling(encounterMasterDto.getEncounterMasterDto().getIsPreOrPostBilling());
@@ -3405,7 +3404,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 			if (orderDetailsRes.getListObject() != null && orderDetailsRes.getListObject().size() > 0) 
 			{
 				List<OrderDetailsMasterDto> list = orderDetailsRes.getListObject();
-				Integer ordId = list.get(0).getOrderId();
+				Integer ordId = list.getFirst().getOrderId();
 
 				OrderMasterDto orderMasterDto = new OrderMasterDto();
 					orderMasterDto.setOrderId(ordId);
@@ -3504,20 +3503,20 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				billingDetailsDto.setBillingMasterId(vistDetailsObj.getBillId());
 				billingDetailsDto.setServiceId(detailsByEncounterIdDto.getServiceMasterId());
 				billingDetailsDto.setRate(detailsByEncounterIdDto.getBasePrice() != null
-						? new Double(detailsByEncounterIdDto.getBasePrice().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getBasePrice().doubleValue())
 						: 0.00);
 				billingDetailsDto.setQuantity(detailsByEncounterIdDto.getQuantity() != null
-						? new Double(detailsByEncounterIdDto.getQuantity().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getQuantity().doubleValue())
 						: 0.00);
 				billingDetailsDto.setConcession(detailsByEncounterIdDto.getConcession() != null
-						? new Double(detailsByEncounterIdDto.getConcession().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getConcession().doubleValue())
 						: 0.00);
 				billingDetailsDto.setGrossAmount(detailsByEncounterIdDto.getTotalAmt() != null
-						? new Double(detailsByEncounterIdDto.getTotalAmt().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getTotalAmt().doubleValue())
 						: 0.00);
 				billingDetailsDto.setCoPayPercentage(detailsByEncounterIdDto.getCoPayPer() != null
-						? new Double(detailsByEncounterIdDto.getCoPayPer().doubleValue())
-						: new Double(0.00));
+						? Double.valueOf(detailsByEncounterIdDto.getCoPayPer().doubleValue())
+						: Double.valueOf(0.00));
 				billingDetailsDto.setUnitId(detailsByEncounterIdDto.getOrgUnitId());
 				billingDetailsDto.setOrganizationId(detailsByEncounterIdDto.getOrgId());
 				billingDetailsDto.setStatus('A');
@@ -3526,37 +3525,37 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				billingDetailsDto.setCreatedDate(orderDetailsMasterDto.getCreatedDate());
 				billingDetailsDto.setUpdatedDate(orderDetailsMasterDto.getUpdatedDate());
 				billingDetailsDto.setDiscount(detailsByEncounterIdDto.getDiscount() != null
-						? new Double(detailsByEncounterIdDto.getDiscount().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getDiscount().doubleValue())
 						: 0.00);
 				billingDetailsDto.setTaxId(detailsByEncounterIdDto.getTaxId());
 				billingDetailsDto.setTaxPer(detailsByEncounterIdDto.getTaxPercentage() != null
-						? new Double(detailsByEncounterIdDto.getTaxPercentage().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getTaxPercentage().doubleValue())
 						: 0.00);
 				billingDetailsDto.setTaxAmount(detailsByEncounterIdDto.getTaxAmt() != null
-						? new Double(detailsByEncounterIdDto.getTaxAmt().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getTaxAmt().doubleValue())
 						: 0.00);
 				billingDetailsDto.setNetAmt(detailsByEncounterIdDto.getNetPay() != null
-						? new Double(detailsByEncounterIdDto.getNetPay().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getNetPay().doubleValue())
 						: 0.00);
 				billingDetailsDto.setOrdDocId(detailsByEncounterIdDto.getDoctorId());
 				billingDetailsDto.setOrdDocSplId(detailsByEncounterIdDto.getSpecialityId());
 				billingDetailsDto.setDrugId(detailsByEncounterIdDto.getDrugId());
 				billingDetailsDto.setBatchId(detailsByEncounterIdDto.getBatchId());
 				billingDetailsDto.setSelfPayable(detailsByEncounterIdDto.getSelfPayable() != null
-						? new Double(detailsByEncounterIdDto.getSelfPayable().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getSelfPayable().doubleValue())
 						: 0.00);
 				billingDetailsDto.setCreditPayable(detailsByEncounterIdDto.getCreditPayable() != null
-						? new Double(detailsByEncounterIdDto.getCreditPayable().doubleValue())
+						? Double.valueOf(detailsByEncounterIdDto.getCreditPayable().doubleValue())
 						: 0.00);
 				billingDetailsDto.setPayeeId(detailsByEncounterIdDto.getPayeeId());
 				billingDetailsDto.setOrderDetailsId(detailsByEncounterIdDto.getOrderDetailsId());
 				billingDetailsDto.setPackageId(detailsByEncounterIdDto.getPackageId());
 				billingDetailsDto.setPackageConsumptionAmt(detailsByEncounterIdDto.getPackageConsumptionAmt() != null
-						? new Double(detailsByEncounterIdDto.getPackageConsumptionAmt().doubleValue())
-						: new Double(0.00));
+						? Double.valueOf(detailsByEncounterIdDto.getPackageConsumptionAmt().doubleValue())
+						: Double.valueOf(0.00));
 				billingDetailsDto.setCoSharePer(detailsByEncounterIdDto.getCoPayPer() != null
-						? new Double(detailsByEncounterIdDto.getCoPayPer().doubleValue())
-						: new Double(0.00));
+						? Double.valueOf(detailsByEncounterIdDto.getCoPayPer().doubleValue())
+						: Double.valueOf(0.00));
 				billingDetailsDto.setIsDoctorSharePosted('N');
 				billingDetailsDto.setOrderDetailsPayeeMapperDtosList(
 						detailsByEncounterIdDto.getOrderDetailsPayeeMapperDtosList());
@@ -3717,7 +3716,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 			if(encRes.getCode().equals("Y"))
 				iEncounterMasterService.updateAutorenderServicesAfterEncounter((EncounterMasterDto)encRes.getObject(),2);
 			if(encRes.getListObject()!=null)
-				iEncounterMasterService.saveOrderDetailsAfterEncounter((EncounterMasterDto)encRes.getObject(), (Integer)encRes.getListObject().get(0),2);
+				iEncounterMasterService.saveOrderDetailsAfterEncounter((EncounterMasterDto)encRes.getObject(), (Integer)encRes.getListObject().getFirst(),2);
 
 			
 			// save bill call
@@ -4672,7 +4671,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 	@Transactional
 	public Response generateCyclicServiceAppointment(List<SlotMasterDto> slotMasterDto) {
 		try {
-			Date currentDate = TimeZoneComponent.getDateByzone(slotMasterDto.get(0).getUnitId());
+			Date currentDate = TimeZoneComponent.getDateByzone(slotMasterDto.getFirst().getUnitId());
 			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			String strCurrentDate = formatter.format(currentDate);
 			BigDecimal serviceAmt = BigDecimal.ZERO;
@@ -4687,11 +4686,11 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 			EncounterMasterDto encounterMasterDto = null;
 			AdmissionListIpdChargesResDto admissionListIpdChargesResDto = null;
 			
-			if (slotMasterDto.get(0).getParentPackageId() != null || slotMasterDto.get(0).getIsFromCoversheet().equals('Y')) {
+			if (slotMasterDto.getFirst().getParentPackageId() != null || slotMasterDto.getFirst().getIsFromCoversheet().equals('Y')) {
 			
 				UnitApplicationConfigurationDto unitApplicationConfigurationDto = new UnitApplicationConfigurationDto();
-				unitApplicationConfigurationDto.setOrganizationId(slotMasterDto.get(0).getOrganizationId());
-				unitApplicationConfigurationDto.setUnitId(slotMasterDto.get(0).getUnitId());
+				unitApplicationConfigurationDto.setOrganizationId(slotMasterDto.getFirst().getOrganizationId());
+				unitApplicationConfigurationDto.setUnitId(slotMasterDto.getFirst().getUnitId());
 				Response appConfigRes = iUnitApplicationBillingConfigurationDao.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
 				unitApplicationConfigurationDtos = (UnitApplicationConfigurationDto) appConfigRes
 						.getObject();
@@ -4701,18 +4700,18 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				Integer billingBedCatId;
 				Integer patientCatId;
 				Integer payementEntilementId;
-				if(slotMasterDto.get(0).getEncounterId()!=null) 
+				if(slotMasterDto.getFirst().getEncounterId()!=null) 
 				{
-					Response encounterRes = iEncounterMasterService.getEncounterDetailsById(slotMasterDto.get(0).getEncounterId());
+					Response encounterRes = iEncounterMasterService.getEncounterDetailsById(slotMasterDto.getFirst().getEncounterId());
 					encounterMasterDto = (EncounterMasterDto) encounterRes.getObject();
 					referralId = encounterMasterDto.getReferralId();
 					billingBedCatId = unitApplicationConfigurationDtos.getOpdBillingCatId();
-					payementEntilementId = encounterMasterDto.getPatientSponsorDetailsDtosList().get(0).getPaymentEntitlementId();
+					payementEntilementId = encounterMasterDto.getPatientSponsorDetailsDtosList().getFirst().getPaymentEntitlementId();
 					patientCatId = encounterMasterDto.getPatientCategoryId();
 				}
 				else
 				{
-					Response admissionRes = ipdChargesDao.getAdmissionsById(slotMasterDto.get(0).getAdmissionId());
+					Response admissionRes = ipdChargesDao.getAdmissionsById(slotMasterDto.getFirst().getAdmissionId());
 					admissionListIpdChargesResDto=(AdmissionListIpdChargesResDto)admissionRes.getObject();
 					referralId = admissionListIpdChargesResDto.getReferralId();
 					billingBedCatId = admissionListIpdChargesResDto.getBedBillingCategoryId();
@@ -4722,15 +4721,15 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 			
 		
 				ContractConsumptionDto consumptionDtoReq = new ContractConsumptionDto();
-				if(slotMasterDto.get(0).getEncounterId()!=null) 
+				if(slotMasterDto.getFirst().getEncounterId()!=null) 
 				{
-					consumptionDtoReq.setOrganizationId(slotMasterDto.get(0).getOrganizationId());
-					consumptionDtoReq.setUnitId(slotMasterDto.get(0).getUnitId());
+					consumptionDtoReq.setOrganizationId(slotMasterDto.getFirst().getOrganizationId());
+					consumptionDtoReq.setUnitId(slotMasterDto.getFirst().getUnitId());
 					consumptionDtoReq.setVisitTypeId(OP);
 					consumptionDtoReq.setPatientTypeId(encounterMasterDto.getPatientCategoryId());
 					consumptionDtoReq.setBillingBedCategoryId(unitApplicationConfigurationDtos.getOpdBillingCatId());
 					consumptionDtoReq.setPaymentEntitlementId(encounterMasterDto.getPaymentEntitlementTypeId());
-					consumptionDtoReq.setServiceId(slotMasterDto.get(0).getServiceMasterId());
+					consumptionDtoReq.setServiceId(slotMasterDto.getFirst().getServiceMasterId());
 					//consumptionDtoReq.setCurrentDate(GlobalCommonDateUtils.getStringDate(TimeZoneComponent.getDateByzone(unitId), "yyyy-MM-dd"));
 					consumptionDtoReq.setContractId(encounterMasterDto.getContractId());
 					consumptionDtoReq.setEncounterId(encounterMasterDto.getEncounterId());
@@ -4742,13 +4741,13 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				}
 				else
 				{
-					consumptionDtoReq.setOrganizationId(slotMasterDto.get(0).getOrganizationId());
-					consumptionDtoReq.setUnitId(slotMasterDto.get(0).getUnitId());
-					consumptionDtoReq.setVisitTypeId(slotMasterDto.get(0).getVisitTypeId());
+					consumptionDtoReq.setOrganizationId(slotMasterDto.getFirst().getOrganizationId());
+					consumptionDtoReq.setUnitId(slotMasterDto.getFirst().getUnitId());
+					consumptionDtoReq.setVisitTypeId(slotMasterDto.getFirst().getVisitTypeId());
 					consumptionDtoReq.setPatientTypeId(admissionListIpdChargesResDto.getPatientCategoryId());
 					consumptionDtoReq.setBillingBedCategoryId(admissionListIpdChargesResDto.getBedBillingCategoryId());
 					consumptionDtoReq.setPaymentEntitlementId(admissionListIpdChargesResDto.getPaymentEntitlementId());
-					consumptionDtoReq.setServiceId(slotMasterDto.get(0).getServiceMasterId());
+					consumptionDtoReq.setServiceId(slotMasterDto.getFirst().getServiceMasterId());
 					//consumptionDtoReq.setCurrentDate(GlobalCommonDateUtils.getStringDate(TimeZoneComponent.getDateByzone(unitId), "yyyy-MM-dd"));
 					consumptionDtoReq.setContractId(admissionListIpdChargesResDto.getContractId());
 					consumptionDtoReq.setAdmissionId(admissionListIpdChargesResDto.getAdmissionId());
@@ -4828,7 +4827,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 			
 			
 			// save order master
-				SlotMasterDto slotMasterDto1 = slotMasterDto.get(0);
+				SlotMasterDto slotMasterDto1 = slotMasterDto.getFirst();
 				OrderMasterDto orderMasterDto = new OrderMasterDto();
 				orderMasterDto.setPatientId(slotMasterDto1.getPatientId());
 				orderMasterDto.setCreatedBy(slotMasterDto1.getCreatedBy());
@@ -4863,19 +4862,19 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				orderDetailsIdList.addAll(orderRes.getListObject());
 
 
-				if (slotMasterDto.get(0).getParentPackageId() != null && slotMasterDto.get(0).getBillId() != null) {
-					OrderDetailsMasterDto orderDetailsMasterDto = orderDetailsMasterList.get(0);
+				if (slotMasterDto.getFirst().getParentPackageId() != null && slotMasterDto.getFirst().getBillId() != null) {
+					OrderDetailsMasterDto orderDetailsMasterDto = orderDetailsMasterList.getFirst();
 					for (i = 0; i < slotMasterDto.size(); i++) {
 						BillingDetailsDto billingDetailsDto = new BillingDetailsDto();
-						billingDetailsDto.setBillingMasterId(slotMasterDto.get(0).getBillId());
+						billingDetailsDto.setBillingMasterId(slotMasterDto.getFirst().getBillId());
 						billingDetailsDto.setServiceId(orderDetailsMasterDto.getServiceId());
 						billingDetailsDto.setRate(orderDetailsMasterDto.getServiceAmt().doubleValue());
 						billingDetailsDto.setQuantity(1.00);
 						billingDetailsDto.setConcession(0.00);
 						billingDetailsDto.setGrossAmount(orderDetailsMasterDto.getServiceAmt().doubleValue());
-						billingDetailsDto.setCoPayPercentage(new Double(0.00));
-						billingDetailsDto.setUnitId(slotMasterDto.get(0).getUnitId());
-						billingDetailsDto.setOrganizationId(slotMasterDto.get(0).getOrganizationId());
+						billingDetailsDto.setCoPayPercentage(Double.valueOf(0.00));
+						billingDetailsDto.setUnitId(slotMasterDto.getFirst().getUnitId());
+						billingDetailsDto.setOrganizationId(slotMasterDto.getFirst().getOrganizationId());
 						billingDetailsDto.setStatus('A');
 						billingDetailsDto.setCreatedBy(orderDetailsMasterDto.getCreatedBy());
 						billingDetailsDto.setUpdatedBy(orderDetailsMasterDto.getUpdatedBy());
@@ -5025,7 +5024,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 								Double per = 0.0;
 								double amount = 0.0;
 									if(dto.getPayeeAmount().doubleValue() != 0 && billingDetails.getCreditPayable() != 0){
-										per = new Double(OrderMasterServiceImpl.df2.format((dto.getPayeeAmount().doubleValue()/billingDetails.getCreditPayable())*100)); 
+										per = Double.valueOf(OrderMasterServiceImpl.df2.format((dto.getPayeeAmount().doubleValue() / billingDetails.getCreditPayable()) * 100)); 
 										amount = (per/100) * creditPayable;
 									}
 										
@@ -5044,12 +5043,12 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 						}
 						
 						
-						selfPayable =selfPayable!=0 ? new Double(OrderMasterServiceImpl.df2.format(selfPayable)) : 0 ;
-						creditPayable = creditPayable!=0 ? new Double(OrderMasterServiceImpl.df2.format(creditPayable)) : 0 ;
-						concession = concession !=0 ? new Double(OrderMasterServiceImpl.df2.format(concession)) : 0 ;
-						discount = discount !=0 ? new Double(OrderMasterServiceImpl.df2.format(discount)) : 0 ;
-						taxAmt = taxAmt !=0 ? new Double(OrderMasterServiceImpl.df2.format(taxAmt)) : 0 ;
-						netAmt = netAmt !=0 ? new Double(OrderMasterServiceImpl.df2.format(netAmt)) : 0 ;
+						selfPayable =selfPayable!=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(selfPayable)) : 0 ;
+						creditPayable = creditPayable!=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(creditPayable)) : 0 ;
+						concession = concession !=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(concession)) : 0 ;
+						discount = discount !=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(discount)) : 0 ;
+						taxAmt = taxAmt !=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(taxAmt)) : 0 ;
+						netAmt = netAmt !=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(netAmt)) : 0 ;
 						
 						billingDetails.setSelfPayable(selfPayable);
 						billingDetails.setCreditPayable(creditPayable);
@@ -5089,35 +5088,35 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 						iOrderDetailsMasterService.updateOrderDetailsObj(orderDetailsMasterDto,0.00/*(crNetAmount)*/);
 						
 						
-						totalConcession = totalConcession + (concession !=0 ? new Double(OrderMasterServiceImpl.df2.format(concession)) : 0);
-						totalDiscount = totalDiscount + (discount!=0 ? new Double(OrderMasterServiceImpl.df2.format(discount)):0);
-						totalTaxAmt = totalTaxAmt + (taxAmt!=0 ? new Double(OrderMasterServiceImpl.df2.format(taxAmt)):0);
-						totalSelfPayable = totalSelfPayable + (selfPayable !=0 ? new Double(OrderMasterServiceImpl.df2.format(selfPayable)):0);
-						totalCreditPayable = totalCreditPayable + (creditPayable !=0 ? new Double(OrderMasterServiceImpl.df2.format(creditPayable)):0);
-						totalNetAmt = totalNetAmt + (netAmt !=0 ? new Double(OrderMasterServiceImpl.df2.format(netAmt)):0);
+						totalConcession = totalConcession + (concession !=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(concession)) : 0);
+						totalDiscount = totalDiscount + (discount!=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(discount)):0);
+						totalTaxAmt = totalTaxAmt + (taxAmt!=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(taxAmt)):0);
+						totalSelfPayable = totalSelfPayable + (selfPayable !=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(selfPayable)):0);
+						totalCreditPayable = totalCreditPayable + (creditPayable !=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(creditPayable)):0);
+						totalNetAmt = totalNetAmt + (netAmt !=0 ? Double.valueOf(OrderMasterServiceImpl.df2.format(netAmt)):0);
 					}
 				}
 				
 			}
 			double paidAmt = billObj.getNetAmount()-billObj.getOutstanding();
 			
-			billObj.setSelfPayable(new Double(OrderMasterServiceImpl.df2.format(billingMasterDto.getSelfPayable())));
-			billObj.setCreditPayable(new Double(OrderMasterServiceImpl.df2.format(billingMasterDto.getCreditPayable())));
-			billObj.setRoundOff(new Double(OrderMasterServiceImpl.df2.format(billingMasterDto.getRoundOff())));
-			billObj.setNetAmount(new Double(OrderMasterServiceImpl.df2.format(billingMasterDto.getNetAmount())));
+			billObj.setSelfPayable(Double.valueOf(OrderMasterServiceImpl.df2.format(billingMasterDto.getSelfPayable())));
+			billObj.setCreditPayable(Double.valueOf(OrderMasterServiceImpl.df2.format(billingMasterDto.getCreditPayable())));
+			billObj.setRoundOff(Double.valueOf(OrderMasterServiceImpl.df2.format(billingMasterDto.getRoundOff())));
+			billObj.setNetAmount(Double.valueOf(OrderMasterServiceImpl.df2.format(billingMasterDto.getNetAmount())));
 			
 			totalNetAmt = billingMasterDto.getNetAmount();
 			totalSelfPayable = billObj.getSelfPayable();
 			totalCreditPayable = billObj.getCreditPayable();
 			
-			billObj.setConcessionAmount(new Double(OrderMasterServiceImpl.df2.format(totalConcession)));
-			billObj.setDiscountAmount(new Double(OrderMasterServiceImpl.df2.format(totalDiscount)));
-			billObj.setGst(new Double(OrderMasterServiceImpl.df2.format(totalTaxAmt)));
+			billObj.setConcessionAmount(Double.valueOf(OrderMasterServiceImpl.df2.format(totalConcession)));
+			billObj.setDiscountAmount(Double.valueOf(OrderMasterServiceImpl.df2.format(totalDiscount)));
+			billObj.setGst(Double.valueOf(OrderMasterServiceImpl.df2.format(totalTaxAmt)));
 			
 			if(billObj.getBillStatusId()==1)
-				billObj.setOutstanding(new Double(OrderMasterServiceImpl.df2.format(totalNetAmt)));
+				billObj.setOutstanding(Double.valueOf(OrderMasterServiceImpl.df2.format(totalNetAmt)));
 			else {
-				billObj.setOutstanding(new Double(OrderMasterServiceImpl.df2.format(totalNetAmt-(paidAmt))));
+				billObj.setOutstanding(Double.valueOf(OrderMasterServiceImpl.df2.format(totalNetAmt - (paidAmt))));
 			}
 			
 			if(billObj.getOutstanding().equals(0.00))
@@ -6440,7 +6439,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 				
 				List<TPackageConsumptionCapDetailsDto> list = res.getListObject();
 				
-				return iBillingMasterDao.checkCapWithPackageBalanceAmountAndOrderAmount(billingMasterDto,list.get(0).getPackageApplicableDate());
+				return iBillingMasterDao.checkCapWithPackageBalanceAmountAndOrderAmount(billingMasterDto,list.getFirst().getPackageApplicableDate());
 				
 			}
 			return new Response(SUCCESS, null, null,null, null/*,null,pharreturnList*/);

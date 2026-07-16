@@ -84,7 +84,7 @@ public class TPeriodicityServiceOrdersServiceImpl implements ITPeriodicityServic
 	public Response orderTPeriodicityServices(List<TPeriodicityServiceOrdersDto> listPserv) throws BillingException {
 		try{
 			ListIterator<TPeriodicityServiceOrdersDto> pservItr = listPserv.listIterator();
-			String dateTime = GlobalCommonDateUtils.getStringDate(TimeZoneComponent.getDateByzone(listPserv.get(0).getUnitId()), "dd-MM-yyyy HH:mm:ss");
+			String dateTime = GlobalCommonDateUtils.getStringDate(TimeZoneComponent.getDateByzone(listPserv.getFirst().getUnitId()), "dd-MM-yyyy HH:mm:ss");
 			TPeriodicityServiceOrdersDto dto = null;
 			while(pservItr.hasNext())
 			{
@@ -463,11 +463,11 @@ public class TPeriodicityServiceOrdersServiceImpl implements ITPeriodicityServic
 	
 	public Response orderPeriodicityServices(List<TPeriodicityServiceOrdersDto> listPserv){
 		try{
-			Date today = TimeZoneComponent.getDateByzone(listPserv.get(0).getUnitId());
+			Date today = TimeZoneComponent.getDateByzone(listPserv.getFirst().getUnitId());
 			if(listPserv != null && listPserv.size() > 0){
 				
 			//get admission details
-			Response admRes = iTPeriodicityServiceOrdersDao.getAdmissionByIdForBatchPServicePosting(listPserv.get(0).getAdmissionId());
+			Response admRes = iTPeriodicityServiceOrdersDao.getAdmissionByIdForBatchPServicePosting(listPserv.getFirst().getAdmissionId());
 			if(admRes.getCode().equals(SUCCESS_CODE) && admRes.getObject() != null){
 				AdmissionsForBatchProcessDto admission = (AdmissionsForBatchProcessDto)admRes.getObject();
 

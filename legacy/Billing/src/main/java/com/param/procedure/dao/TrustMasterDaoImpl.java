@@ -313,7 +313,6 @@ public class TrustMasterDaoImpl extends GenericDao<TrustMaster, Integer>
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -340,7 +339,6 @@ public class TrustMasterDaoImpl extends GenericDao<TrustMaster, Integer>
 		} catch (Exception e) { 
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

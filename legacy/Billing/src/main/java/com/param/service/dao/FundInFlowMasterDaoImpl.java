@@ -104,28 +104,28 @@ public class FundInFlowMasterDaoImpl extends GenericDao<FundInFlowMaster, Intege
 		try{
 			   
             FundInFlowMaster FundInFlowMaster = new FundInFlowMaster();
-            if(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getTrustId()!=null){
-			FundInFlowMaster.setTrustId(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getTrustId());
-			FundInFlowMaster.setTotalCollectedAmount(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getFinalAmount());
-			FundInFlowMaster.setAvailableAmount(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getFinalAmount());
-			FundInFlowMaster.setUnitId(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getUnitId());
-			FundInFlowMaster.setOrgId(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getOrgId());
+            if(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getTrustId()!=null){
+			FundInFlowMaster.setTrustId(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getTrustId());
+			FundInFlowMaster.setTotalCollectedAmount(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getFinalAmount());
+			FundInFlowMaster.setAvailableAmount(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getFinalAmount());
+			FundInFlowMaster.setUnitId(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getUnitId());
+			FundInFlowMaster.setOrgId(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getOrgId());
 			FundInFlowMaster.setCreatedBy(fundInFlowDetails.getCreatedBy());
 			FundInFlowMaster.setStatus("A");
 			FundInFlowMaster.setBillConsumeAmount(0.0);
-			FundInFlowMaster.setCreatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getUnitId()));
+			FundInFlowMaster.setCreatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getUnitId()));
 			FundInFlowMaster.setUpdatedBy(fundInFlowDetails.getUpdatedBy());
-			FundInFlowMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getUnitId()));
-			if(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getFundRemark()!=null) {
-				FundInFlowMaster.setFundRemark(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getFundRemark());
+			FundInFlowMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getUnitId()));
+			if(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getFundRemark()!=null) {
+				FundInFlowMaster.setFundRemark(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getFundRemark());
 			}
 			if(fundInFlowDetails.getFundInFlowDiagnosisDetails()!=null && fundInFlowDetails.getFundInFlowDiagnosisDetails().size() > 0  && fundInFlowDetails.getFundtypeId()==3) {
 				//agianst Diagnosis
 				FundInFlowMaster.setFundtypeId(3);
 			}
-			if(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getPatientId()!=null && fundInFlowDetails.getFundtypeId()==2) {
+			if(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getPatientId()!=null && fundInFlowDetails.getFundtypeId()==2) {
 				//agianst Patient
-				FundInFlowMaster.setPatientId(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getPatientId());
+				FundInFlowMaster.setPatientId(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getPatientId());
 				FundInFlowMaster.setFundtypeId(2);
 			}
 			if(fundInFlowDetails.getFundSanctionAcceptanceRequestDto()!=null && fundInFlowDetails.getFundSanctionAcceptanceRequestDto().size() > 0 && fundInFlowDetails.getFundtypeId()==4) {
@@ -149,7 +149,7 @@ public class FundInFlowMasterDaoImpl extends GenericDao<FundInFlowMaster, Intege
                 		fundInFlowDiagnosisMaster.setFundInflowId(FundInFlowMaster.getFundInFlowId());
                 		fundInFlowDiagnosisMaster.setDiagnosisId(diagnosis);
                 		fundInFlowDiagnosisMaster.setCreatedBy(fundInFlowDetails.getCreatedBy());
-                		fundInFlowDiagnosisMaster.setCreatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getUnitId()));
+                		fundInFlowDiagnosisMaster.setCreatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getUnitId()));
                 		sessionFactory.getCurrentSession().save(fundInFlowDiagnosisMaster);
                 	}
     			}
@@ -169,7 +169,7 @@ public class FundInFlowMasterDaoImpl extends GenericDao<FundInFlowMaster, Intege
                 		virtualAcceptance.setFundApprovalAmount(virtualacceptaceDto.getRequestApprovalAmount());
                 		virtualAcceptance.setCreatedBy(fundInFlowDetails.getCreatedBy());
                 		virtualAcceptance.setVirtualAcceptancePaidAmmount(virtualacceptaceDto.getVirtualAcceptancePaidAmmount());
-                		virtualAcceptance.setCreatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getUnitId()));
+                		virtualAcceptance.setCreatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getUnitId()));
                 		sessionFactory.getCurrentSession().save(virtualAcceptance);
                 		
                 		
@@ -195,7 +195,7 @@ public class FundInFlowMasterDaoImpl extends GenericDao<FundInFlowMaster, Intege
 							for(FundInFlowDetailsDto fundInFlowDetailsDto:fundInFlowDetails.getFundInFlowDetailsDto()){
 							
 						       FundInFlowDetails fundInFlowDetail = new FundInFlowDetails();
-						     if( fundInFlowDetails.getFundInFlowDetailsDto().get(0).getTrustId()!=null){
+						     if( fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getTrustId()!=null){
 						    	 fundInFlowDetail.setFundInFlowId(FundInFlowMaster.getFundInFlowId());
 						    	 fundInFlowDetail.setPaymentModeId(fundInFlowDetailsDto.getPaymentModeId());
 						    	 fundInFlowDetail.setBankId(fundInFlowDetailsDto.getBankId());
@@ -230,9 +230,9 @@ public class FundInFlowMasterDaoImpl extends GenericDao<FundInFlowMaster, Intege
 									 fundInFlowDetail.setOrgId(fundInFlowDetailsDto.getOrgId());
 									 fundInFlowDetail.setCreatedBy(fundInFlowDetails.getCreatedBy());
 									 fundInFlowDetail.setStatus('A');
-									 fundInFlowDetail.setCreatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getUnitId()));
+									 fundInFlowDetail.setCreatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getUnitId()));
 									 fundInFlowDetail.setUpdatedBy(fundInFlowDetails.getCreatedBy());
-									 fundInFlowDetail.setUpdatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().get(0).getUnitId()));
+									 fundInFlowDetail.setUpdatedDate(TimeZoneComponent.getDateByzone(fundInFlowDetails.getFundInFlowDetailsDto().getFirst().getUnitId()));
 									 sessionFactory.getCurrentSession().save(fundInFlowDetail);
 									}
 						         } 

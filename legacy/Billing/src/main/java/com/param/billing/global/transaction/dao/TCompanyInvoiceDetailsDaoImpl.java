@@ -114,7 +114,7 @@ public class TCompanyInvoiceDetailsDaoImpl extends GenericDao<TCompanyInvoiceDet
 						.setResultTransformer(Transformers.aliasToBean(PatientSponsorDetailsDto.class)).list();
 
 				if(!listsponserdetails.isEmpty()){
-				comInvDetailsDto.setClaimNumber(listsponserdetails.get(0).getClaimNumber());
+				comInvDetailsDto.setClaimNumber(listsponserdetails.getFirst().getClaimNumber());
 				}
 			}
 			
@@ -158,7 +158,7 @@ public class TCompanyInvoiceDetailsDaoImpl extends GenericDao<TCompanyInvoiceDet
 			if(c.list()!=null && c.list().size()>0)
 			{
 			
-				TCompanyInvoiceDetails companyInvoiceDetails = (TCompanyInvoiceDetails) c.list().get(0);
+				TCompanyInvoiceDetails companyInvoiceDetails = (TCompanyInvoiceDetails) c.list().getFirst();
 				
 				MCompanyInvoiceMaster companyInvoiceMaster = (MCompanyInvoiceMaster) sessionFactory.getCurrentSession().get(MCompanyInvoiceMaster.class, companyInvoiceDetails.getCompanyInvoiceId());
 	

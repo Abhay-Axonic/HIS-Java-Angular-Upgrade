@@ -235,7 +235,7 @@ public class BillingDetailsServiceImpl implements IBillingDetailsService, ICommo
 			           com.param.global.common.Response  responseRate =	iMPackageMasterService.getPackageRate(billingCommonMethods.createPackageRateFromServiceForPackageDto(updatePayeeDto,dto));
 			           if(responseRate.getListObject()!=null && !responseRate.getListObject().isEmpty())
 			           {
-			        	   ServiceSearchResDto serviceSearchResDto = (ServiceSearchResDto) responseRate.getListObject().get(0);
+			        	   ServiceSearchResDto serviceSearchResDto = (ServiceSearchResDto) responseRate.getListObject().getFirst();
 			        	   serviceSearchResDto.setContractId(updatePayeeDto.getContractId());
 			        	   serviceSearchResDto.setBillingBedCategoryId(updatePayeeDto.getBillingBedCategoryId());
 			        	   serviceSearchResDto.setPatientCategoryId(updatePayeeDto.getPatientCategoryId());

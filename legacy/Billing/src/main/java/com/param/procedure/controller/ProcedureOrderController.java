@@ -86,8 +86,8 @@ public class ProcedureOrderController implements ICommonConstants{
 		try{
 			
 			Response res1 = null;
-			if(procedureOrderMasterDtoList.get(0).getProReqId() != 0 &&  procedureOrderMasterDtoList.get(0).getIsPrimarySecondary() == 'Y' && procedureOrderMasterDtoList.get(0).getProcedureReqMasterDto()!=null) {
-				Response res = iProcedureOrderService.getProcedureOrderListByProReqID(procedureOrderMasterDtoList.get(0).getProReqId());
+			if(procedureOrderMasterDtoList.getFirst().getProReqId() != 0 &&  procedureOrderMasterDtoList.getFirst().getIsPrimarySecondary() == 'Y' && procedureOrderMasterDtoList.getFirst().getProcedureReqMasterDto()!=null) {
+				Response res = iProcedureOrderService.getProcedureOrderListByProReqID(procedureOrderMasterDtoList.getFirst().getProReqId());
 				if(res.getStatus().equals(SUCCESS)) {
 					 res1 = iProcedureOrderService.saveProcedureList(procedureOrderMasterDtoList);
 				}

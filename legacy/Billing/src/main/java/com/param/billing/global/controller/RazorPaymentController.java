@@ -962,8 +962,7 @@ public String confirmPayment(@RequestBody String resStatus) {
 
 public static String getCharacterDataFromElement(Element e) {
     Node child = e.getFirstChild();
-    if (child instanceof CharacterData) {
-       CharacterData cd = (CharacterData) child;
+    if (child instanceof CharacterData cd) {
        return cd.getData();
     }
     return "?";

@@ -208,13 +208,13 @@ public class GlobalDoctorShareServiceImpl implements IGlobalDoctorShareService, 
 				}else{
 					
 					Double tempShare = ((dto.getAmount()/rate)*100);
-					dto.setServiceShare(new Double(OrderMasterServiceImpl.df2.format(tempShare)));
+					dto.setServiceShare(Double.valueOf(OrderMasterServiceImpl.df2.format(tempShare)));
 					}
 				}
 				
 				if(dto.getServiceShare()!=null && dto.getServiceShare()>0.00)
 				{
-					 dto.setAmount(new Double(OrderMasterServiceImpl.df2.format(rate * (dto.getServiceShare()/100))));
+					 dto.setAmount(Double.valueOf(OrderMasterServiceImpl.df2.format(rate * (dto.getServiceShare() / 100))));
 					 if(rate == 0.00) {
 						 dto.setServiceShare(0.00);
 					 }

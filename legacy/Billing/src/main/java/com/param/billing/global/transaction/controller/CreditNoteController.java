@@ -197,7 +197,7 @@ public class CreditNoteController  implements ICommonConstants,IBillingStatusMas
 				List<BillListDetailsCNDto> listBillListDetailsCNDto = (List<BillListDetailsCNDto>) resServiceDeatils.getObject();
 
 				creditNoteMasterDto.setBillPayeeId(unitApplicationConfigurationDto.getSelfPayeeId());
-				creditNoteMasterDto.setBillPayeeDetailsId(listBillPayeeDetailsResDto.get(0).getBillPayeeDetailsId());
+				creditNoteMasterDto.setBillPayeeDetailsId(listBillPayeeDetailsResDto.getFirst().getBillPayeeDetailsId());
 				creditNoteMasterDto.setStatus('A');
 				creditNoteMasterDto.setCreatedBy(unitApplicationConfigurationDto.getWebAppUserId());
 				creditNoteMasterDto.setUpdatedBy(unitApplicationConfigurationDto.getWebAppUserId());
