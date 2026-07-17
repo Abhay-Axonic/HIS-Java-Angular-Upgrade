@@ -81,13 +81,15 @@
 
 ## Known gaps and things that need runtime verification, not guessing
 
-- **9 states reference a controller name that could not be matched to any controller file on disk** by static registration-pattern search (e.g. component-style controllers, unconventional naming, or possibly dead/unused states). Listed individually in the appendix below. These need someone to load the actual screen and confirm what controller (if any) really runs.
+- **5 states reference a controller name that could not be matched to any controller file on disk** by static registration-pattern search (e.g. component-style controllers, unconventional naming, or possibly dead/unused states). Listed individually in the appendix below. These need someone to load the actual screen and confirm what controller (if any) really runs.
 - **3 states have no resolvable `templateUrl`** (they use a multi-view `views: {...}` block instead of a single template, which this pass did not expand). Listed below.
 - **13 states point at a `templateUrl` that does not exist on disk** at the expected path — likely dead routes, renamed files, or a build-time template pipeline this pass didn't account for. Listed below.
 - **372 states share one of a small number of generic, reused controllers** (the largest being a single shared `common-controller.js` used by 353 different screens as `MasterController`, a generic CRUD controller that likely branches internally on the current state/URL). For these, the "API calls" and "cross-screen coupling" columns in the table below reflect the *entire shared controller file*, not the specific screen — they are marked accordingly and are not meaningfully per-screen. Determining the real per-screen behavior for these 372 requires either reading the branching logic inside that shared controller or a runtime trace (planned for Phase 1's golden-trace tooling), not a static list.
 - **Form field counts** are a raw count of `<input>`, `<select>`, and `<textarea>` tags in the view's HTML file. This over-counts on views that conditionally show/hide fields with `ng-if`/`ng-show` (all variants are counted even if only one is ever visible at a time) and under-counts any field injected dynamically by the controller rather than written directly in the template. Treat it as a rough complexity signal, not an exact form-field census.
 - **Risk tags are keyword/module-heuristic, not a reading of each screen's actual clinical or billing logic.** A screen tagged "no" for clinical risk could still be clinical-safety relevant if its name doesn't contain any of the scanned keywords (for example, screens named after a specific procedure type that wasn't in the keyword list). The module-level defaults (e.g. "everything in Blood Bank is clinical") catch most of this, but the keyword scan alone is imperfect. This is exactly the kind of judgment call Phase 6 assigns to a real clinician/billing reviewer, not to this automated pass.
 - **Bed management and appointment-scheduling screens were tagged administrative (low-risk) by default in this pass**, but bed placement can carry real infection-control/isolation implications in some hospitals. Worth a specific yes/no from you or a clinical lead before treating those 10 bed-management screens as safe to rebuild casually.
+- **`accessControlController` (the controller behind the `accessControl`/`accessControl1` states) is registered twice, in two different files** — `resources/assets/js/controller/access-control/access-control.js` and `resources/assets/accessControl/controller/accessControlController.js`. AngularJS resolves duplicate registrations by "last script tag loaded wins" at bootstrap, silently — there's no error, just whichever one index.html happens to load second. This pass can't tell you which one is actually live without checking `index.html`'s script order or a runtime check; both are excluded from the API-call/coupling columns for these two states rather than guessing which file is real.
+- **Four unrelated files under `views/Nursing/pharmacy` controller path are unresolved git-merge-tool conflict artifacts** (`addNewbillableConsumptionController_REMOTE_6240.js`, `_BASE_6240.js`, `_BACKUP_6240.js`, `_LOCAL_6240.js`, sitting alongside the real `addNewbillableConsumptionController.js`) — leftover debris from a past merge conflict that was never cleaned up. They were excluded from controller resolution in this pass. Not a routing problem, but worth a separate, low-priority cleanup pass since dead merge-artifact files sitting in the live source tree are exactly the kind of thing that can get accidentally re-registered or loaded by a future refactor.
 
 ---
 
@@ -97,7 +99,7 @@
 
 **Module classification:** derived entirely from the view template's folder path (e.g. `views/master/UnitMaster/billingMaster/...` → Billing; `views/ICU/...` → ICU). Cross-checked against the actual `views/` directory tree on disk, not guessed from naming conventions alone.
 
-**Controller resolution:** every controller file under `resources/assets/js/controller/` (1,205 files) was scanned for its actual `.controller('Name', [...])` registration (handling registrations split across multiple lines, which a simple line-based `grep` misses). This matched a registration for 658 of the 660 distinct controller names referenced by states; the remainder are listed as unresolved above.
+**Controller resolution:** every `.js` file under the whole `webapp/` tree (vendor libraries — AngularJS itself, Kendo, CKEditor — and 4 known dead git-merge-artifact files excluded) was scanned for its actual `.controller('Name', [...])` registration, handling registrations split across multiple lines (which a simple line-based `grep` misses) and controller names containing a literal `.` (e.g. `"OtBillingDetailsComp.Controller"`). **Corrected 2026-07-17, after the owner asked for a targeted investigation of 2 specific "unresolved" findings** (`roleManagement`, `userAuthentication`): the original pass only scanned `resources/assets/js/controller/` and used a regex that excluded `.` from controller names, which produced 4 false-"unresolved" findings — both of the owner-flagged ones (their real controllers live in a sibling `resources/assets/accessControl/controller/` directory the original scan never visited) plus 2 more found during the same recheck (`noteMaster`, `otBillingCompletionDetails`). This matched a registration for 653 of the 658 distinct controller names referenced by states; the remaining 5 are listed as unresolved above and are believed to be genuine.
 
 **API-call complexity:** counted as calls to the app's shared HTTP service wrappers (`GenericService.*`, `BillingGenericService.*`, `GenericServiceParamHeader.*`) or raw `$http.get/post/put/delete` inside the resolved controller file. Only meaningful for the ~726 states whose controller is used by 3 or fewer states; states sharing a heavily-reused generic controller (≥4 states) are marked "shared" and show the aggregate count for that shared file instead.
 
@@ -113,12 +115,8 @@
 |---|---|---|
 | viewMacroscopicExamination | masterController | Lab/LIS |
 | detailsMicroscopicExamination | masterController | Lab/LIS |
-| noteMaster | noteMasterTemplateController | OT/Theatre |
 | SpeechToText | SpeechToText | OPD |
-| roleManagement | roleManagementMasterController | Admin - User Management |
-| userAuthentication | userAuthenticationMasterController | Admin - User Management |
 | radiologyReportReleaseWorkList | radiologyReportReleaseWorkListController | Radiology |
-| otBillingCompletionDetails | OtBillingDetailsComp.Controller | OT/Theatre |
 | medicineInfo | masterController | Appointment Scheduling |
 
 ### No single templateUrl (multi-view state, not expanded by this pass)
@@ -482,8 +480,8 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | pharmacyPaymentCollection.cash | /cash | views/common/cash.html | shared×353 | 1 | 0 | no | yes (keyword match: cash) | bc:0/on:1/rs:1 [on:customEvent] |
 | pharmacyPaymentCollection.cheque | /cheque | views/common/cheque.html | shared×353 | 4 | 0 | no | yes (keyword match: cheque) | bc:0/on:1/rs:1 [on:customEvent] |
 | pharmacyPaymentCollection.creditDebitCard | /creditDebitCard | views/common/credit-debit-card.html | shared×353 | 6 | 0 | no | yes (keyword match: card, credit, debit) | bc:0/on:1/rs:1 [on:customEvent] |
-| accessControl | /accessControl | views/common/access-control.html | access-control.js | 11 | 9 | no | no | bc:0/on:0/rs:2 |
-| accessControl1 | /accessControl1 | views/access-control.html | access-control.js | 1 | 9 | no | no | bc:0/on:0/rs:2 |
+| accessControl | /accessControl | views/common/access-control.html | access-control.js | 11 | – | no | no | bc:0/on:0/rs:0 |
+| accessControl1 | /accessControl1 | views/access-control.html | access-control.js | 1 | – | no | no | bc:0/on:0/rs:0 |
 | accessDenied | /accessDenied | views/access-denied.html | – | 0 | – | no | no | – |
 | adviceConfig | /adviceConfig | views/common/appointments/Master Management/advice-config.html | shared×353 | 5 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | appointmentList | /appointmentList | views/common/appointments/appointment-list.html | shared×4 | 154 | 77 | no | no | bc:0/on:0/rs:8 |
@@ -655,7 +653,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | OTbillOfMaterial | /OTbillOfMaterial | views/master/TheatreManagement/OT-bill-of-material.html | billOfMaterialController.js | 13 | 12 | yes (keyword match: ot) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | billOfMaterialMaster | /billOfMaterialMaster | views/master/TheatreManagement/bill-of-material-master.html | billOfMaterialMasterController.js | 10 | 9 | yes (module default: OT/Theatre) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | insuranceCompany | /insuranceCompany | views/master/GlobalMaster/OTIMS/insurance_company.html | shared×353 | 4 | 0 | yes (keyword match: otims) | yes (keyword match: insurance) | bc:0/on:1/rs:1 [on:customEvent] |
-| otBillingCompletionDetails | /detailsOTBillingCompletion | views/master/TheatreManagement/details-OT-billing-completion.html | ? | 165 | – | yes (keyword match: ot) | yes (keyword match: bill) | – |
+| otBillingCompletionDetails | /detailsOTBillingCompletion | views/master/TheatreManagement/details-OT-billing-completion.html | otBillingCompletionDetailsController.js | 165 | 64 | yes (keyword match: ot) | yes (keyword match: bill) | bc:0/on:0/rs:4 |
 | otIndent | /otIndent | views/master/TheatreManagement/ot-Indent.html | shared×353 | 20 | 0 | yes (keyword match: ot) | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
 | resourceChargesConfiguration | /resourceChargesConfiguration | views/master/GlobalMaster/OTIMS/resource-charges-configuration.html | resourceChargesConfigurationController.js | 7 | 8 | yes (keyword match: otims) | yes (keyword match: charge) | bc:0/on:0/rs:1 |
 | NewOTreservation | /NewOTreservation | views/master/TheatreManagement/New-OT-reservation.html | NewOTreservationController.js | 128 | 99 | yes (keyword match: ot) | no | bc:0/on:0/rs:5 |
@@ -683,7 +681,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | intraOperative | /intraOperative | views/master/TheatreManagement/intra-oprative.html | intraOprativeController.js | 39 | 14 | yes (module default: OT/Theatre) | no | bc:0/on:0/rs:0 |
 | inventoryItem | /inventoryItem | views/master/GlobalMaster/OTIMS/inventory-item.html | shared×353 | 7 | 0 | yes (keyword match: otims) | no | bc:0/on:1/rs:1 [on:customEvent] |
 | inventoryItemType | /inventoryItemType | views/master/GlobalMaster/OTIMS/inventory-item-type.html | shared×353 | 7 | 0 | yes (keyword match: otims) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| noteMaster | /noteMaster | views/master/GlobalMaster/OTMS/note-master.html | ? | 7 | – | yes (keyword match: otms) | no | – |
+| noteMaster | /noteMaster | views/master/GlobalMaster/OTMS/note-master.html | noteTemplate.js | 7 | 0 | yes (keyword match: otms) | no | bc:0/on:0/rs:0 |
 | notesMaster | /notesMaster | views/master/GlobalMaster/OTIMS/notes-master.html | notesMasterController.js | 13 | 9 | yes (keyword match: otims) | no | bc:0/on:0/rs:1 |
 | operationTable | /operationTable | views/master/GlobalMaster/OTIMS/operation_Table.html | operationTableMasterController.js | 8 | 9 | yes (keyword match: otims) | no | bc:0/on:0/rs:1 |
 | operationTableType | /operationTableType | views/master/GlobalMaster/OTIMS/operation_Table_Type.html | operationTableTypeMasterController.js | 6 | 7 | yes (keyword match: otims) | no | bc:0/on:0/rs:1 |
@@ -1240,8 +1238,8 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | userNursingStationMapper | /userNursingStationMapper | views/master/UnitMaster/userManagement/user-nursing-station-mapper.html | userNursingStationMapperController.js | 8 | 10 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
 | doctorCabinMapper | /doctorCabinMapper | views/master/UnitMaster/userManagement/doctor-cabin-mapper.html | doctorCabinMapperController.js | 7 | 10 | no | no | bc:0/on:0/rs:1 |
 | roleCreation | /roleCreation | views/master/UnitMaster/userManagement/role-creation.html | roleCreationMasterController.js | 16 | 10 | no | no | bc:0/on:0/rs:1 |
-| roleManagement | /roleManagement | views/master/UnitMaster/userManagement/role-management.html | ? | 3 | – | no | no | – |
-| userAuthentication | /userAuthentication | views/master/UnitMaster/userManagement/user-authentication.html | ? | 8 | – | no | no | – |
+| roleManagement | /roleManagement | views/master/UnitMaster/userManagement/role-management.html | roleManagementMasterController.js | 3 | 4 | no | no | bc:0/on:0/rs:1 |
+| userAuthentication | /userAuthentication | views/master/UnitMaster/userManagement/user-authentication.html | userAuthenticationMasterController.js | 8 | 10 | no | no | bc:0/on:0/rs:3 |
 | userCounterMapper | /userCounterMapper | views/master/UnitMaster/userManagement/user-counter-mapper.html | userCounterMapperController.js | 7 | 10 | no | no | bc:0/on:0/rs:1 |
 | userRoleManagement | /userRoleManagement | views/master/UnitMaster/userManagement/user-role-management.html | userRoleManagementMasterController.js | 87 | 23 | no | no | bc:0/on:0/rs:1 |
 | userStoreMapper | /userStoreMapper | views/master/UnitMaster/userManagement/user-store-mapper.html | userStoreMapperController.js | 7 | 11 | no | no | bc:0/on:0/rs:1 |
