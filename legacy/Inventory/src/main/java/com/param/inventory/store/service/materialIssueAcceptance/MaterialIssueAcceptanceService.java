@@ -196,7 +196,7 @@ public class MaterialIssueAcceptanceService implements IMaterialIssueAcceptanceS
 					materialIssueDetail.getItem().getId(),unitId);
 			Long availableStock = Util.ConvertQuantity(storeStock, 
 					materialIssueDetail.getMaterialIssueBatchMappers()!=null && materialIssueDetail.getMaterialIssueBatchMappers().size()>0 ?
-					materialIssueDetail.getMaterialIssueBatchMappers().get(0).getBatch().getBatchUomList():null, materialIssueDetail.getMaterialIssueBatchMappers()!=null && materialIssueDetail.getMaterialIssueBatchMappers().size()>0 ?  materialIssueDetail.getMaterialIssueBatchMappers().get(0).getUomType():null);
+					materialIssueDetail.getMaterialIssueBatchMappers().getFirst().getBatch().getBatchUomList():null, materialIssueDetail.getMaterialIssueBatchMappers()!=null && materialIssueDetail.getMaterialIssueBatchMappers().size()>0 ?  materialIssueDetail.getMaterialIssueBatchMappers().getFirst().getUomType():null);
 
 			List<MaterialPickerDetailResponse> materialPickerDetails = MaterialIssuePendingDao.getMaterialIssuePendingDetail(id);
 			Integer indentQty = 0;
@@ -211,7 +211,7 @@ public class MaterialIssueAcceptanceService implements IMaterialIssueAcceptanceS
 			Integer maxStoreQuantity = GlobalDao.getStoreMaxQuantityByItem(materialIssue.getFromStore().getStoreId(),
 					materialIssueDetail.getItem().getId(),orgId);
 			Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit);
-			Long maxStoreQty = Util.ConvertQuantity(maxOrderQuantity,materialIssueDetail.getMaterialIssueBatchMappers().get(0).getBatch().getBatchUomList(), materialIssueDetail.getMaterialIssueBatchMappers().get(0).getUomType());
+			Long maxStoreQty = Util.ConvertQuantity(maxOrderQuantity,materialIssueDetail.getMaterialIssueBatchMappers().getFirst().getBatch().getBatchUomList(), materialIssueDetail.getMaterialIssueBatchMappers().getFirst().getUomType());
 			Integer pendingQunatity = 0;
 			if(materialIssue.getStoreIndent() != null )
 			{

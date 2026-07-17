@@ -411,7 +411,7 @@ public class RejectedMaterialAcceptanceService implements IRejectedMaterialAccep
 	//	reject.setUpdatedBy(reject.getUser());
 		reject.setUpdatedByUser(request.getUserId());
 		RejectedMaterialAcceptanceDao.updateReject(reject);
-		RejectedMaterialAcceptanceDao.updatereturn(request.getReturnId(),reject.getRejectDetails().get(0).getAcceptedQuantity());
+		RejectedMaterialAcceptanceDao.updatereturn(request.getReturnId(),reject.getRejectDetails().getFirst().getAcceptedQuantity());
 		
 		
 		/*
@@ -475,7 +475,7 @@ public class RejectedMaterialAcceptanceService implements IRejectedMaterialAccep
 			}
 			else
 			{
-				fromStoreStock.get(0).settQty(newTQty);	
+				fromStoreStock.getFirst().settQty(newTQty);	
 				//saveStockTransaction(true,leaseAcceptQuantity, fromStoreStock.get(0), request,d.getId(),d.getReject().getReturnNo(),reject,balanceQuantity,d,leaseRejectQuantity);
 			}
 			
@@ -486,9 +486,9 @@ public class RejectedMaterialAcceptanceService implements IRejectedMaterialAccep
 				.collect(Collectors.toList());
 		if (toStoreStock != null && toStoreStock.size() > 0) {
 
-			toStoreStock.get(0).settQty(tQty);
-			toStoreStock.get(0).setAvailableQty(balanceQuantity);
-			saveStockTransaction(true,leaseAcceptQuantity,toStoreStock.get(0), request,d.getId(),d.getReject().getReturnNo(),reject,balanceQuantity,d,leaseRejectQuantity);
+			toStoreStock.getFirst().settQty(tQty);
+			toStoreStock.getFirst().setAvailableQty(balanceQuantity);
+			saveStockTransaction(true,leaseAcceptQuantity,toStoreStock.getFirst(), request,d.getId(),d.getReject().getReturnNo(),reject,balanceQuantity,d,leaseRejectQuantity);
 			//saveStockTransaction(true,tQty, toStoreStock.get(0), request,d.getMaterialIssueBatchMapper().getBatch().getItem().getId(),d.getReject().getReturnNo());
 
 			/*StockTransaction stockTransaction=new StockTransaction(avaialableStoreStock, screen, screen.getCode(),

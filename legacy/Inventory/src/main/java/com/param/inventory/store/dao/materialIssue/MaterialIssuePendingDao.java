@@ -367,7 +367,7 @@ public class MaterialIssuePendingDao extends AbstractDao<Integer, MaterialIssue>
 		query.setParameter("id", id);
 
 		if (query.list().size() > 0) {
-			return (MaterialIssueDetail) query.list().get(0);
+			return (MaterialIssueDetail) query.list().getFirst();
 		} else {
 			return null;
 		}

@@ -201,7 +201,7 @@ class ReturnableGatepassServiceCharacterizationTest {
 
             List<TaxComponentDetailsDto> saved = captor.getAllValues();
             assertThat(saved).hasSize(2);
-            assertThat(saved.get(0).getTaxComponentAmount()).isEqualTo((2000.0 / 100) * 9.0);
+            assertThat(saved.getFirst().getTaxComponentAmount()).isEqualTo((2000.0 / 100) * 9.0);
             assertThat(saved.get(1).getTaxComponentAmount()).isEqualTo((2000.0 / 100) * 9.0);
         }
     }

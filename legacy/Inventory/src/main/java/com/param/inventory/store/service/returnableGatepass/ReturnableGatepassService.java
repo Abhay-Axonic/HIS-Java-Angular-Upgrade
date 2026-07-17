@@ -412,7 +412,7 @@ public class ReturnableGatepassService implements IReturnableGatepassService {
 
 				ReturnableGatepassTaxComponent returnableGatepassTaxComponent = new ReturnableGatepassTaxComponent(
 						calTaxAmt, taxPercentage,
-						new ReturnableGatepassDetail(gatepass.getReturnableGatepassDetails().get(0).getId()),
+						new ReturnableGatepassDetail(gatepass.getReturnableGatepassDetails().getFirst().getId()),
 						new TaxComponent(taxCompId));
 				// sessionService.setEntityDefaults(returnableGatepassTaxComponent);
 				returnableGatepassTaxComponent.setCreateDefaults(request.getOrganizationId(), request.getUnitId(),
@@ -628,7 +628,7 @@ public class ReturnableGatepassService implements IReturnableGatepassService {
 					ires.setPhyRejectQuantity(detail.getGoodReceiptNoteDetail()!=null ? detail.getGoodReceiptNoteDetail().getRejectedQuantity() : 0);
 					if(ires.getPhyRejectQuantity()==null || ires.getPhyRejectQuantity()==0)
 					{
-						ires.setPhyRejectQuantity(detail.getGoodReceiptNoteDetail()!=null && detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail()!=null && detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail().get(0).getRejectQuantity()!=null ? detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail().get(0).getRejectQuantity():0);					}
+						ires.setPhyRejectQuantity(detail.getGoodReceiptNoteDetail()!=null && detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail()!=null && detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail().getFirst().getRejectQuantity()!=null ? detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail().getFirst().getRejectQuantity():0);					}
 					if(detail.getGoodReceiptNoteDetail() != null) {
 					Integer bonusApprovedQuantity=GlobalDao.getBonusApprovedQty(detail.getGoodReceiptNoteDetail().getId());
 					ires.setBonusApprovedQuantity(bonusApprovedQuantity);
@@ -659,7 +659,7 @@ public class ReturnableGatepassService implements IReturnableGatepassService {
 	                    Integer getBonusTypeId=GlobalDao.getBonusTypeId(detail.getGoodReceiptNoteDetail().getId());
                     	if(getBonusTypeId.equals(1) && (detail.getBatch().getBatchUomList() != null && detail.getBatch().getBatchUomList().size() != 0 ))
 						{
-                    		ires.setBonusApprovedQuantity(ires.getBonusApprovedQuantity()*(detail.getBatch().getBatchUomList().get(0).getConversions()*detail.getBatch().getBatchUomList().get(1).getConversions()));
+                    		ires.setBonusApprovedQuantity(ires.getBonusApprovedQuantity()*(detail.getBatch().getBatchUomList().getFirst().getConversions()*detail.getBatch().getBatchUomList().get(1).getConversions()));
 						}
 						if(getBonusTypeId.equals(2) && (detail.getBatch().getBatchUomList() != null && detail.getBatch().getBatchUomList().size() != 0 ))
 						{
@@ -723,7 +723,7 @@ public class ReturnableGatepassService implements IReturnableGatepassService {
 	                    ires.setPhyRejectQuantity(detail.getGoodReceiptNoteDetail()!=null ? detail.getGoodReceiptNoteDetail().getRejectedQuantity() : 0);
 	                    if(ires.getPhyRejectQuantity()==null || ires.getPhyRejectQuantity()==0)
 						{
-	                    	ires.setPhyRejectQuantity(detail.getGoodReceiptNoteDetail()!=null && detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail()!=null && detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail().get(0).getRejectQuantity()!=null ? detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail().get(0).getRejectQuantity():0);						}
+	                    	ires.setPhyRejectQuantity(detail.getGoodReceiptNoteDetail()!=null && detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail()!=null && detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail().getFirst().getRejectQuantity()!=null ? detail.getGoodReceiptNoteDetail().getPhysicalInspectionDetail().getFirst().getRejectQuantity():0);						}
 	                    response.addItems(ires);
 	                    List<returnableBonusBatchExpiry> getList= GlobalDao.getReturnableBonusBatchExpiryByGrnDetailId(detail.getId());
 	                    List<com.param.inventory.store.dto.returnableGatepass.returnableBonusBatchExpiry> getList3=new ArrayList<>();

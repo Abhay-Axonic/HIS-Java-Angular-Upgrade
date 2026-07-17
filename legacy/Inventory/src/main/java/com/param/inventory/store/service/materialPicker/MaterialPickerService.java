@@ -180,7 +180,7 @@ public class MaterialPickerService implements IMaterialPickerService {
 						} else if (batchMapper.getBatch().getBatchNo() == null && batchMapper.getBatch().getLotNo() != null) {
 							availableQty1 = GlobalDao.getClubBatchWiseAvailableStockLotNo(batchMapper.getBatch().getLotNo(), batchMapper.getBatch().getIsConsignment(), pickerDetails.getItemId(), response.getToStoreId());
 						} else {
-							availableQty1 = BigInteger.valueOf(batchMapper.getBatch().getStoreStockList().get(0).getAvailableQty());
+							availableQty1 = BigInteger.valueOf(batchMapper.getBatch().getStoreStockList().getFirst().getAvailableQty());
 						}
 						issueBatch.setAvailableStockQuantity(availableQty1.intValue());
 				pickerDetails.addBatch(issueBatch);
@@ -215,7 +215,7 @@ public class MaterialPickerService implements IMaterialPickerService {
 		} else if (batch.getBatchNo() == null && batch.getLotNo() != null) {
 			availableQty1 = GlobalDao.getClubBatchWiseAvailableStockLotNo(batch.getLotNo(), batch.getIsConsignment(), itemId, storeId);
 		} else {
-			availableQty1 = BigInteger.valueOf(batch.getStoreStockList().get(0).getAvailableQty());
+			availableQty1 = BigInteger.valueOf(batch.getStoreStockList().getFirst().getAvailableQty());
 		}
 		BatchResponse batchData=new BatchResponse(batch.getId(), batch.getBatchNo(), batch.getExpiryDate(), batch.getSellingPrice(),
 				availableQty1.intValue(), batch.getMarkup(), batch.getRate(), Util.PopulateUom(batch));
@@ -233,7 +233,7 @@ public class MaterialPickerService implements IMaterialPickerService {
 					batch.getIsConsignment(), storeId);
 
 		} else {
-			availableQty1 = BigInteger.valueOf(batch.getStoreStockList().get(0).getAvailableQty());
+			availableQty1 = BigInteger.valueOf(batch.getStoreStockList().getFirst().getAvailableQty());
 		}
 
 		return new BatchResponse(batch.getId(), batch.getBatchNo(), batch.getExpiryDate(), batch.getSellingPrice(),

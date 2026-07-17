@@ -155,8 +155,8 @@ public class UploadStockService implements IUploadStockService {
 
 		}
 		if(uploadDetails != null && uploadDetails.size()>0) {
-			response.setAsseteTypeId(uploadDetails.get(0).getBatch().getItem().getGeneric()!=null ? uploadDetails.get(0).getBatch().getItem().getGeneric().getProductCategory().getAssetCategory().getAssetType().getId() 
-					: uploadDetails.get(0).getBatch().getItem().getProductCategory().getAssetCategory().getAssetType().getId());
+			response.setAsseteTypeId(uploadDetails.getFirst().getBatch().getItem().getGeneric()!=null ? uploadDetails.getFirst().getBatch().getItem().getGeneric().getProductCategory().getAssetCategory().getAssetType().getId() 
+					: uploadDetails.getFirst().getBatch().getItem().getProductCategory().getAssetCategory().getAssetType().getId());
 		}
 		Collections.sort(items, (s1, s2) ->
 	    Integer.compare(s2.getId(), s1.getId()));
@@ -508,7 +508,7 @@ public class UploadStockService implements IUploadStockService {
 		    		itemDtoList = itemStream.filter(str -> str.getItemName().toLowerCase().equals(strServices[4].trim().toLowerCase())).collect(Collectors.toList());
 		    		if(itemDtoList != null && itemDtoList.size()>0) {
 		    			
-		    			Response BatchRes =  iItemDao.getBatchByItemId(itemDtoList.get(0).getItemId(),dto.getStoreId());
+		    			Response BatchRes =  iItemDao.getBatchByItemId(itemDtoList.getFirst().getItemId(),dto.getStoreId());
 		    			
 		    			if(BatchRes.getListObject() != null && BatchRes.getListObject().size()>0) {
 		    				List<BatchDto>  batchList = new ArrayList<>();
@@ -546,8 +546,8 @@ public class UploadStockService implements IUploadStockService {
 			    			 return new Response("error","500", errorMessages, null, null);
 		    		  }
 		    		  
-		    		  UploadStockDetail	uploadStockDetail=new UploadStockDetail(new Batch(batchList1.get(0).getLongBatchId().longValue()),
-								new UomType(uomType.get(0).getUomTypeId()), new UomUnit(uomUnit.get(0).getId()),
+		    		  UploadStockDetail	uploadStockDetail=new UploadStockDetail(new Batch(batchList1.getFirst().getLongBatchId().longValue()),
+								new UomType(uomType.getFirst().getUomTypeId()), new UomUnit(uomUnit.getFirst().getId()),
 								new Status(dto.getStatusId()));
 		    		  	uploadStockDetail.setQty(Integer. parseInt(strServices[11].trim()));
 		    		  	uploadStockDetail.setApprovedUploadQuantity(Integer. parseInt(strServices[12].trim()));

@@ -214,7 +214,7 @@ public class ConsumableAcceptanceService implements IConsumableAcceptanceService
 		Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 		// Deduct issued quantity from the batch store stock
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 		// Calculate current batch quantity
 
@@ -223,7 +223,7 @@ public class ConsumableAcceptanceService implements IConsumableAcceptanceService
 
 		// Add stock transaction
 		StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-				batch.getStoreStockList().get(0).getStore(), nonBillableConsumptionDetail.getId());
+				batch.getStoreStockList().getFirst().getStore(), nonBillableConsumptionDetail.getId());
 		stockTransaction.setTransactionId(nonBillableConsumptionDetail.getNonBillableConsumption().getId());
 		stockTransaction.setBatch(batch);
 		stockTransaction.setItem(batch.getItem());

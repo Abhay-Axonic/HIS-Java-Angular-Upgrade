@@ -334,8 +334,8 @@ public class MaterialReturnService implements IMaterialReturnService {
 			String issueNo = "";
 			Date issueDate = null;
 			if (materialReturnIssue.size() > 0) {
-				issueNo = materialReturnIssue.get(0).getIssueno();
-				issueDate = materialReturnIssue.get(0).getIsuedate();
+				issueNo = materialReturnIssue.getFirst().getIssueno();
+				issueDate = materialReturnIssue.getFirst().getIsuedate();
 			}
 			// detail.getMateria
 			/*
@@ -438,16 +438,16 @@ public class MaterialReturnService implements IMaterialReturnService {
 			Integer leaseQuantity = Util.GetLeaseQuantity(quantity, batch.getBatchUomList(), uomType);
 
 			Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
-			batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity < 0 ? 0 : balanceQuantity);
+			batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity < 0 ? 0 : balanceQuantity);
 
 			// Deduct issued quantity from the batch store stock
 			Integer inTransitQuantity = GlobalDao.getTransitQuantityByBatch(storeId, batch.getId());
 			Integer tQty = inTransitQuantity + leaseQuantity;
-			batch.getStoreStockList().get(0).settQty(tQty);
+			batch.getStoreStockList().getFirst().settQty(tQty);
 
 			// Add stock transaction
 			StockTransaction stockTransaction = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-					leaseQuantity, batch.getStoreStockList().get(0).getStore(), d.getId());
+					leaseQuantity, batch.getStoreStockList().getFirst().getStore(), d.getId());
 			// sessionService.setEntityDefaults(stockTransaction);
 			stockTransaction.setIsTransit(true);
 			stockTransaction.setItem(new Item(item));
@@ -613,7 +613,7 @@ public class MaterialReturnService implements IMaterialReturnService {
 					issueQty = Util.ConvertQuantity(mData.getIssueQuantity().longValue(),
 							mData.getBatch().getBatchUomList(), mData.getUomType());
 					if (data.size() > 0) {
-						com.param.global.dto.items.BatchResponse1 rData = data.get(0);
+						com.param.global.dto.items.BatchResponse1 rData = data.getFirst();
 
 						if (rData.getLotno() != null) {
 							// Integer sCstock =
@@ -762,7 +762,7 @@ public class MaterialReturnService implements IMaterialReturnService {
 					 issueQty = Util.ConvertQuantity(mData.getIssueQuantity().longValue(),
 								mData.getBatch().getBatchUomList(), mData.getUomType());
 					if (data.size() > 0) {
-						com.param.global.dto.items.BatchResponse1 rData = data.get(0);
+						com.param.global.dto.items.BatchResponse1 rData = data.getFirst();
 
 						if (rData.getLotno() != null) {
 							// Integer sCstock =
@@ -877,17 +877,17 @@ public class MaterialReturnService implements IMaterialReturnService {
 		
 		List<StoreStock> fromStoreStock = batch.getStoreStockList().stream().filter(i -> i.getStore().getStoreId() == returnData.getFromStore().getStoreId()).collect(Collectors.toList());
 		if(fromStoreStock!=null &&  fromStoreStock.size()>0) {
-			fromStoreStock.get(0).settQty(tQty);
-			saveStockTransaction(true,rejectQty1, fromStoreStock.get(0),request,d.getId(), d.getMreturn().getReturnNo());
+			fromStoreStock.getFirst().settQty(tQty);
+			saveStockTransaction(true,rejectQty1, fromStoreStock.getFirst(),request,d.getId(), d.getMreturn().getReturnNo());
 
 		}
 		
 		List<StoreStock> toStoreStock = batch.getStoreStockList().stream().filter(i -> i.getStore().getStoreId() == returnData.getToStore().getStoreId()).collect(Collectors.toList());
 		if(toStoreStock!=null &&  toStoreStock.size()>0) {
-			toStoreStock.get(0).setAvailableQty(balanceQuantity);
+			toStoreStock.getFirst().setAvailableQty(balanceQuantity);
 	    	
 			StockTransaction stockTransaction=	new StockTransaction(avaialableStoreStock, screen, screen.getCode(),
-					leaseQuantity, batch.getStoreStockList().get(0).getStore(),d.getId());
+					leaseQuantity, batch.getStoreStockList().getFirst().getStore(),d.getId());
 			stockTransaction.setTransitNo(returnData.getReturnNo());
 		//	sessionService.setEntityDefaults(stockTransaction);	
 			stockTransaction.setCreateDefaults(request.getOrganizationId()!=null ? request.getOrganizationId() : sessionService.getOrganizationId(),
@@ -906,7 +906,7 @@ public class MaterialReturnService implements IMaterialReturnService {
 			MaterialReturnDao.saveStoreStock(storeStockNew);
 			
 			StockTransaction stockTransaction=new StockTransaction(avaialableStoreStock, screen, screen.getCode(),
-					leaseQuantity, batch.getStoreStockList().get(0).getStore(), d.getId());
+					leaseQuantity, batch.getStoreStockList().getFirst().getStore(), d.getId());
 			stockTransaction.setTransitNo(returnData.getReturnNo());
 		//	sessionService.setEntityDefaults(stockTransaction);
 			stockTransaction.setCreateDefaults(request.getOrganizationId()!=null ? request.getOrganizationId() : sessionService.getOrganizationId(),

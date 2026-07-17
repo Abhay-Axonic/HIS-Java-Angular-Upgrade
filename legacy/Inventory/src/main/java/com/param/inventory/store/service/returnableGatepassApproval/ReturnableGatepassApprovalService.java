@@ -397,7 +397,7 @@ public class ReturnableGatepassApprovalService implements IReturnableGatepassApp
 											accessories.getId(), gatepass.getStore().getStoreId(),
 											item.getApprovedQuantity(), accessories.getApprovedQuantity(),
 											gatepass.getRequestType().getId(), request.getUnitId(), request,detail,item.getRejectedQuantity()));
-									detail.getReturnableGatepassAccessoriesList().get(0)
+									detail.getReturnableGatepassAccessoriesList().getFirst()
 											.setApprovedQty(accessories.getApprovedQuantity());
 								}	
 							}
@@ -548,7 +548,7 @@ public class ReturnableGatepassApprovalService implements IReturnableGatepassApp
 			balanceQuantity = 0;
 		}
 		// Deduct issued quantity from the batch store stock
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 		// Calculate current batch quantity
 
@@ -576,7 +576,7 @@ public class ReturnableGatepassApprovalService implements IReturnableGatepassApp
 			
 			// Add stock transaction
 			StockTransaction stoptr = new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-					batch.getStoreStockList().get(0).getStore(),d.getId());
+					batch.getStoreStockList().getFirst().getStore(),d.getId());
 			stoptr.setOutQty(leaseQuantity);
 			stoptr.setTransactionId(d.getReturnableGatepass().getId());
 			stoptr.setCreateDefaults(request.getOrganizationId(), request.getUnitId(), request.getUserId());
@@ -632,7 +632,7 @@ public class ReturnableGatepassApprovalService implements IReturnableGatepassApp
 		}
 
 		// Deduct issued quantity from the batch store stock
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 		// Calculate current batch quantity
 
@@ -658,7 +658,7 @@ public class ReturnableGatepassApprovalService implements IReturnableGatepassApp
 			if (batch.getId().equals(detailBatchId)) {
 				// Add stock transaction
 				StockTransaction stockTransaction1 = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-						detailApprovedQty, batch.getStoreStockList().get(0).getStore(),d.getId());
+						detailApprovedQty, batch.getStoreStockList().getFirst().getStore(),d.getId());
 				// sessionService.setEntityDefaults(stockTransaction1);
 				stockTransaction1.setOutQty(accessoriesApprovedty);
 				stockTransaction1.setTransactionId(d.getReturnableGatepass().getId());
@@ -670,7 +670,7 @@ public class ReturnableGatepassApprovalService implements IReturnableGatepassApp
 				// Add stock transaction
 
 				StockTransaction stockTransaction2 = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-						accessoriesApprovedty, batch.getStoreStockList().get(0).getStore(),d.getId());
+						accessoriesApprovedty, batch.getStoreStockList().getFirst().getStore(),d.getId());
 				// sessionService.setEntityDefaults(stockTransaction2);
 				stockTransaction2.setOutQty(accessoriesApprovedty);
 				stockTransaction2.setTransactionId(d.getReturnableGatepass().getId());
@@ -739,7 +739,7 @@ public class ReturnableGatepassApprovalService implements IReturnableGatepassApp
 											accessories.getId(), gatepass.getStore().getStoreId(),
 											item.getApprovedQuantity(), accessories.getApprovedQuantity(),
 											gatepass.getRequestType().getId(), request.getUnitId(), request,detail,item.getRejectedQuantity()));
-									detail.getReturnableGatepassAccessoriesList().get(0)
+									detail.getReturnableGatepassAccessoriesList().getFirst()
 											.setApprovedQty(accessories.getApprovedQuantity());
 								}
 							}

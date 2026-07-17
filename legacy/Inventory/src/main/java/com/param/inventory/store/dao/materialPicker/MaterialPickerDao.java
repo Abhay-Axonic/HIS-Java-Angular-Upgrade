@@ -267,7 +267,7 @@ public class MaterialPickerDao extends AbstractDao<Integer, MaterialPicker> impl
 
 		if(query.list().size() >0)
 		{
-			return (MaterialPickerResponse) query.list().get(0);
+			return (MaterialPickerResponse) query.list().getFirst();
 		}
 		else
 		{

@@ -288,7 +288,7 @@ public class MaterialIssueListService implements IMaterialIssueListService {
 		MaterialIssue master = MaterialIssuePendingDao.saveMaterialIssuePending(materialIssue);
 		
 		if(master != null){
-			Long id= new Long(master.getId());//first way.
+			Long id= Long.valueOf(master.getId());//first way.
 			for (MaterialPickerDetailRequest items : request.getItems()) {
 				for (BatchResponse batch : items.getBatches()) 
 				{
@@ -355,17 +355,17 @@ public class MaterialIssueListService implements IMaterialIssueListService {
 			Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 			// Deduct issued quantity from the batch store stock
-			batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+			batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 			
 			// start code for set tQty by minesh.
 			Integer inTransitQuantity = GlobalDao.getTransitQuantityByBatch(storeId, batch.getId());
 			Integer tQty = inTransitQuantity + leaseQuantity;
-			batch.getStoreStockList().get(0).settQty(tQty);
+			batch.getStoreStockList().getFirst().settQty(tQty);
 			// end code of for set tQty by minesh.
 
 			// Add stock transaction
 			StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-					batch.getStoreStockList().get(0).getStore(),0);
+					batch.getStoreStockList().getFirst().getStore(),0);
 			//sessionService.setEntityDefaults(stockTransaction);	
 			stockTransaction.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),request.getUserId());
 			batch.addStockTransaction(stockTransaction);
@@ -387,17 +387,17 @@ public class MaterialIssueListService implements IMaterialIssueListService {
 			Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 			// Deduct issued quantity from the batch store stock
-			batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+			batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 			
 			// start code for set tQty by minesh.
 			Integer inTransitQuantity = GlobalDao.getTransitQuantityByBatch(storeId, batch.getId());
 			Integer tQty = inTransitQuantity + leaseQuantity;
-			batch.getStoreStockList().get(0).settQty(tQty);
+			batch.getStoreStockList().getFirst().settQty(tQty);
 			// end code of for set tQty by minesh.
 
 			// Add stock transaction
 			StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-					batch.getStoreStockList().get(0).getStore(),0);
+					batch.getStoreStockList().getFirst().getStore(),0);
 			stockTransaction.setTransactionDetialsId(detailsId);
 			stockTransaction.setTransactionId(id.intValue());
 			stockTransaction.setOutQty(leaseQuantity);
@@ -517,8 +517,8 @@ public class MaterialIssueListService implements IMaterialIssueListService {
 			Long availableStock = 0l;
 			if(materialIssueDetail.getMaterialIssueBatchMappers().size()>0) {
 				availableStock =Util.ConvertQuantity(storeStock,
-						materialIssueDetail.getMaterialIssueBatchMappers().get(0).getBatch().getBatchUomList(),
-						materialIssueDetail.getMaterialIssueBatchMappers().get(0).getUomType());
+						materialIssueDetail.getMaterialIssueBatchMappers().getFirst().getBatch().getBatchUomList(),
+						materialIssueDetail.getMaterialIssueBatchMappers().getFirst().getUomType());
 			}
 			
 
@@ -536,8 +536,8 @@ public class MaterialIssueListService implements IMaterialIssueListService {
 			if(materialIssueDetail.getMaterialIssueBatchMappers().size()>0) {
 				
 				maxStoreQty = Util.ConvertQuantity(maxOrderQuantity,
-						materialIssueDetail.getMaterialIssueBatchMappers().get(0).getBatch().getBatchUomList(),
-						materialIssueDetail.getMaterialIssueBatchMappers().get(0).getUomType());
+						materialIssueDetail.getMaterialIssueBatchMappers().getFirst().getBatch().getBatchUomList(),
+						materialIssueDetail.getMaterialIssueBatchMappers().getFirst().getUomType());
 			}	
 					
 			Integer pendingQunatity = 0;

@@ -199,7 +199,7 @@ public class MaterialReturnAcceptanceService implements IMaterialReturnAcceptanc
 		
 		List<StoreStock> fromStoreStock = batch.getStoreStockList().stream().filter(i -> i.getStore().getStoreId() == returnData.getFromStore().getStoreId()).collect(Collectors.toList());
 		if(fromStoreStock!=null &&  fromStoreStock.size()>0) {
-			fromStoreStock.get(0).settQty(tQty);
+			fromStoreStock.getFirst().settQty(tQty);
 			if(rejectQty1 != null && rejectQty1>0) {
 				//saveStockTransaction(true,rejectQty1, fromStoreStock.get(0),request,d.getId(), d.getMreturn().getReturnNo(),returnData);
 			}
@@ -208,7 +208,7 @@ public class MaterialReturnAcceptanceService implements IMaterialReturnAcceptanc
 		
 		List<StoreStock> toStoreStock = batch.getStoreStockList().stream().filter(i -> i.getStore().getStoreId() == returnData.getToStore().getStoreId()).collect(Collectors.toList());
 		if(toStoreStock!=null &&  toStoreStock.size()>0) {
-			toStoreStock.get(0).setAvailableQty(balanceQuantity);
+			toStoreStock.getFirst().setAvailableQty(balanceQuantity);
 	    	
 			StockTransaction stockTransaction=	new StockTransaction(balanceQuantity, screen, screen.getCode(),
 					leaseQuantity, new Store(request.getStoreId()),d.getId());
@@ -326,8 +326,8 @@ public class MaterialReturnAcceptanceService implements IMaterialReturnAcceptanc
 			Date issueDate=null;
 			if(materialReturnIssue.size() > 0)
 			{
-				issueNo=materialReturnIssue.get(0).getIssueno();
-				issueDate=materialReturnIssue.get(0).getIsuedate();
+				issueNo=materialReturnIssue.getFirst().getIssueno();
+				issueDate=materialReturnIssue.getFirst().getIsuedate();
 			}
 			
 			response.addItems(new ItemRespone(detail.getBatch().getItem().getId(),

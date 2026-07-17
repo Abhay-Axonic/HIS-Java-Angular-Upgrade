@@ -132,10 +132,10 @@ private SessionService sessionService;
 							detail.getStatus() != null ? detail.getStatus().getId() : null,
 							detail.getStatus() != null ? detail.getStatus().getStatus() : null, detail.getMarkup(),
 							//detail.getReturnableGatepassId().getReturnableGatepassDetails().get(0).getApprovedQty(),
-							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().get(0).getApprovedQty(), /* change code for resolved HIS-5496 Material Inward - Replacement - Not working */
+							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().getFirst().getApprovedQty(), /* change code for resolved HIS-5496 Material Inward - Replacement - Not working */
 							detail.getMrp(), detail.getSpecification(),
 							//detail.getReturnableGatepassId().getTotalAmt(),
-							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().get(0).getTotalAmt(), /* change code for resolved HIS-5496 Material Inward - Replacement - Not working */
+							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().getFirst().getTotalAmt(), /* change code for resolved HIS-5496 Material Inward - Replacement - Not working */
 							detail.getUomType().getId(),
 							GlobalDao.getUnitOfMeasurementListByItem(detail.getItem().getId(), detail.getOrganizationId()), detail.getApprovedQuantity()!=null ? detail.getApprovedQuantity() :0,detail.getRejectQuantity()!=null ? detail.getRejectQuantity() : 0,
 						    detail.getItem().getIsThreeUOMApplicable());
@@ -161,10 +161,10 @@ private SessionService sessionService;
 							detail.getStatus() != null ? detail.getStatus().getId() : null,
 							detail.getStatus() != null ? detail.getStatus().getStatus() : null, detail.getMarkup(),
 							//detail.getReturnableGatepassId().getReturnableGatepassDetails().get(0).getApprovedQty(),
-							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().get(0).getApprovedQty(), /* change code for resolved HIS-5496 Material Inward - Replacement - Not working */
+							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().getFirst().getApprovedQty(), /* change code for resolved HIS-5496 Material Inward - Replacement - Not working */
 							detail.getMrp(), detail.getSpecification(),
 							//detail.getReturnableGatepassId().getTotalAmt(),
-							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().get(0).getTotalAmt(), /* change code for resolved HIS-5496 Material Inward - Replacement - Not working */
+							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().getFirst().getTotalAmt(), /* change code for resolved HIS-5496 Material Inward - Replacement - Not working */
 							PopulateAccessories(MaterialInwardDao.getInwardAccessoriesList(detail.getId())), detail.getItem().getIsThreeUOMApplicable());
 				
 					m.setApprovedQuantity(detail.getApprovedQuantity()!=null ? detail.getApprovedQuantity() :0);
@@ -253,11 +253,11 @@ private SessionService sessionService;
 										{
 									 for (MaterialInwardAccessoriesRequest accessories : item.getMaterialInwardAccessoriesRequest()) {
 										 
-											 if (accessories.getId() != null && accessories.getId().equals(detail.getMaterialInwardAccessories().get(0).getId())) {
+											 if (accessories.getId() != null && accessories.getId().equals(detail.getMaterialInwardAccessories().getFirst().getId())) {
 													
-											 detail.getMaterialInwardAccessories().get(0).setApprovedQty(accessories.getApprovedQuantity());
-											 detail.getMaterialInwardAccessories().get(0).setUpdatedDate(new Date());
-											 detail.getMaterialInwardAccessories().get(0).setUpdatedByUser(request.getUserId());
+											 detail.getMaterialInwardAccessories().getFirst().setApprovedQty(accessories.getApprovedQuantity());
+											 detail.getMaterialInwardAccessories().getFirst().setUpdatedDate(new Date());
+											 detail.getMaterialInwardAccessories().getFirst().setUpdatedByUser(request.getUserId());
 											 
 											
 										 
