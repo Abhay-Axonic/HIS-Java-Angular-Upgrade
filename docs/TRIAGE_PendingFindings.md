@@ -1,6 +1,6 @@
 # Triage: remaining pending findings from the shadow-test harness work
 
-*Written 2026-07-15, for a single owner sit-down. Covers everything still marked "Pending" in `docs/BUSINESS_RULE_MANIFEST.md` after the GRN null-tax-reference crash was split out and fixed separately (see `docs/DECISION_NEEDED_GrnNullTaxReferenceCrash.md`). No urgency on any of these — this document exists so you can go through them in one sitting instead of digging through session logs. Plain language throughout; each section links back to the full technical write-up in `docs/BUSINESS_RULE_MANIFEST.md` if you want more detail on any one of them.*
+*Written 2026-07-15, for a single owner sit-down. Covers everything still marked "Pending" in `docs/BUSINESS_RULE_MANIFEST.md` after the GRN null-tax-reference crash was split out and fixed separately (see `docs/DECISION_NEEDED_GrnNullTaxReferenceCrash.md`). No urgency on any of these — this document exists so you can go through them in one sitting instead of digging through session logs. Plain language throughout; each section links back to the full technical write-up in `docs/BUSINESS_RULE_MANIFEST.md` if you want more detail on any one of them. Section 6 added 2026-07-17, same format, two findings from the Pharmacy characterization pass that likewise need an outside answer rather than a coding decision.*
 
 **How to read the "recommendation" in each section:** these aren't instructions — they're my read on which way each one leans, and why, so you have a starting point rather than a blank page. Several of these need a business-judgment answer only you (or your finance/accounting side) can actually give; I've said so plainly where that's the case rather than guessing.
 
@@ -80,6 +80,24 @@
 
 ---
 
+## 6. Two findings from Pharmacy's bill-payment characterization
+
+**Where:** `BillListService.saveBillDetails`, the method that finalizes a pharmacy bill payment (outstanding-amount calculation and, when a patient overpays, creating a deposit for the extra). Full detail: `BR-PENDING-pharmacy-billlistservice-savebilldetails-batch1`.
+
+### 6a. The same overpayment produces a different leftover balance depending on one flag
+
+**What it is, plainly:** when a patient pays more than the amount currently due, the system needs to decide what's left owing on the bill. If a flag called "invoice generated" is set to yes, it just resets the owing amount straight to zero. If that same flag is set to no — with the exact same payment amount, same amount due, same starting balance — it instead does a real subtraction (the old balance minus the amount due), which lands on a different, non-zero number. Same payment, same bill shape, two different answers depending only on that one flag.
+
+**My recommendation:** this is a genuine "which one is right?" question, not a coding question — I can't tell from the code alone whether the "invoice generated" case is supposed to mean "this balance is already accounted for elsewhere, so zero it out here" (in which case today's behavior might be intentional) or whether it's simply an inconsistency that should match the other branch's subtraction. Worth a quick question to whoever owns the pharmacy billing/invoicing workflow; not urgent since both branches at least produce a defined number — the concern is that the two don't agree, not that either produces something wild.
+
+### 6b. Skipping the balance amount can push a bill's owing amount negative
+
+**What it is, plainly:** normally, whoever calls this bill-payment step is expected to say how much of the bill they're paying against. If they leave that blank, the system quietly fills it in using the patient's own full self-pay total instead. If the patient then pays exactly that filled-in amount, the balance that's left owing can go negative — and because the payment exactly matched (not exceeded) that filled-in number, the system's "you overpaid, here's a deposit for the difference" logic never kicks in, since it only fires when the payment is *strictly more* than the amount being paid against, not equal to it.
+
+**My recommendation:** needs a business-intent answer before touching it — a negative owing amount might already be your system's normal way of representing "this patient has a credit," in which case nothing is actually broken here. Or it might be a real gap where an overpayment should have been converted into a deposit and wasn't. I have no evidence either way — no live trace of this actually happening with real money, unlike the fixes made earlier this session. Worth a quick check with whoever knows how a negative outstanding balance is supposed to be handled downstream (billing reports, patient statements, etc.) before deciding if this needs a fix.
+
+---
+
 ## Summary table
 
 | # | Finding | Touches money math? | My lean |
@@ -92,6 +110,8 @@
 | 4b | Backwards-looking bill-reference check | No | Needs a business-intent answer first, not urgent |
 | 4c | Dead-code no-op line | No | Harmless, delete whenever convenient |
 | 5 | Misleading "already in process" message | No | Low priority, easy improvement when convenient |
+| 6a | Same overpayment leaves a different balance depending on the "invoice generated" flag | **Yes** | Needs a business-workflow answer, not a coding decision — ask, then align both branches |
+| 6b | Skipping the balance amount can push owing amount negative, bypassing the deposit-creation step | **Yes** | Needs a business-intent answer — may already be intended as "patient credit"; no evidence of real impact found |
 
 Everything above is still exactly as found — nothing in this document has been changed in code. This is a reading list for your triage session, not a to-do list I've started on.
 
