@@ -202,13 +202,43 @@ This is a third, distinct failure mode found this session, different from both p
 
 No recommendation implied by the ordering above — genuinely a judgment call on how far this pilot's scope should stretch to accommodate what the app actually looks like versus what a risk-tier table suggested it looked like.
 
+**Owner decision: don't resolve this inside the pilot.** Logged as its own entry in `docs/ANGULAR_PENDING_FINDINGS.md` (entry 2), swapped the pilot slot instead of picking one of options (a)/(b)/(c) above unilaterally.
+
+---
+
+## 8. addItemPOCreation's completeness check, and the pilot's final replacement
+
+**Completeness check on `addNewPOController.js`, as requested — read the actual code, not just confirmed it exists.** 4,833 lines. No TODO/FIXME/"not implemented"/placeholder markers found anywhere. `SavePurchaseOrder` → `CreatePurchaseOrder`/`UpdatePurchaseOrder` is a complete, real flow: correct field mapping for two different PO types (with type-specific branches for warranty/UOM/bonus-quantity fields), discount/tax/other-charges computation, a genuine `GenericService.serviceAction("POST", ...)` save call, and proper post-save handling (navigation, conditional document upload). 353 `self.model.*` assignments define its full public API surface. **This is finished, working code, not abandoned or unfinished** — read in full detail in `docs/ANGULAR_PENDING_FINDINGS.md` entry 2, which also covers what this led to: `addNewPOController.js` self-registers its own state, `addItemPO` (not `addItemPOCreation`), which is live and correctly wired (`controllerAs: 'vm'` set this time) — and Phase 0 never knew this state existed at all, because it's registered outside `app.js`. That discovery turned out to generalize far beyond this one screen — see `docs/ANGULAR_PENDING_FINDINGS.md` entry 3: **468 more live states exist across 465 other files, none of them in Phase 0's inventory.** Read that entry in full; it's a materially bigger finding than anything else in this pilot.
+
+**Pilot slot swapped, per instruction, to a screen from the 58 confirmed-real `MasterController` screens (section 6) rather than resolving `addItemPOCreation`'s three-way decision inside the pilot.** Didn't just pick from the static-binding list again blind (that list is what led to `addItemPOCreation` in the first place) — verified candidates empirically via golden-trace capture first:
+
+| Candidate | API calls captured |
+|---|---:|
+| `addNewStaffRegistration` | 0 (template only) |
+| `fundApproval` | 0 (template only) |
+| **`billingGroupMaster`** | **4 (real: speciality list, group master list, group master count)** |
+
+**`billingGroupMaster` (Billing, `views/master/UnitMaster/billingMaster/billing-group-master.html`) is the confirmed replacement.** Its state definition routes through `MasterController` same as before, but — a fourth distinct wiring pattern found this pilot, and this one *works* — its view embeds its own `<div ng-controller="BillingGroupMasterController">` directly in the HTML (line 2), layering a real, dedicated, `$scope`-based controller (`resources/assets/js/controller/billing/global/BillingGroupMasterController.js`) as a nested scope on top of `MasterController`'s generic one. Confirmed both by reading the source and by the golden trace: `BillingGroupMasterController` appears in the trace's controller-instantiation list alongside `MasterController`, and the 4 real API calls match what a billing group master screen should need. Billing-only risk tier, moderate size (7 fields), genuinely representative of a large class of screens in this app (state → `MasterController` for scaffolding, view → embedded `ng-controller` for the real logic) that's now a fourth confirmed-working wiring pattern worth knowing about for the rebuild, alongside dedicated controllers, `addNewPOController`-style self-registration, and (not-working) `controllerAs` without a matching state config.
+
+**Final pilot batch, golden-trace captured and verified for all 5:**
+
+| Screen | Risk tier | API calls (real) |
+|---|---|---:|
+| `MISReports` | low-risk | 4 |
+| `insuranceMaster` | billing-only | 6 |
+| `inputOutputCharts` | clinical-only | 3 |
+| `organizationMaster` | low-risk + coupling | 8 |
+| `billingGroupMaster` | billing-only | 4 |
+
 ---
 
 ## Summary — status as of 2026-07-17
 
 1. **organizationMaster's missing-`$state`-injection bug** (section 4): **Fixed**, held for review on `fix/organizationmaster-state-injection`.
-2. **homecareMedicationApproval, non-functional mockup** (section 5): **Slot swap approved and completed** — replaced with `addItemPOCreation` (section 6), which itself turned out to be broken in a third, different way (section 7).
-3. **insuranceMaster's redundant double validation path** (section 2): **Preserved as-is for the pilot**, logged as a cleanup candidate in `docs/ANGULAR_PENDING_FINDINGS.md`.
-4. **~83% of `MasterController`-routed screens appear non-functional** (section 6): confirmed exhaustively (287/346 checked), not just the ones this pilot happened to touch. Recommend a full sweep before scaling the rebuild process, separately from this pilot.
-5. **Golden-trace capture completed for all 5 final screens** (section 7): 4/5 (`MISReports`, `insuranceMaster`, `inputOutputCharts`, `organizationMaster`) show real, multi-call traces matching the source-reading audit exactly. The 5th, `addItemPOCreation`, accurately captured its current inert behavior — a real controller (`addNewPOController.js`) exists but is orphaned from the route. Decision point on how to handle it for the rebuild, not resolved here.
-6. **A capture-tooling bug was found and fixed along the way** (section 7): `capture.js` seeded cookies before page load, which `loginController`'s unconditional cookie-wipe silently discarded on every run, making 4 of 5 initial traces look like "nothing happens" when the real screens do plenty. Fixed by seeding after bootstrap; documented in the code, not just here.
+2. **homecareMedicationApproval, non-functional mockup** (section 5): swapped for `addItemPOCreation` (section 6), which turned out broken a third way (section 7), **now swapped again for `billingGroupMaster`** (section 8) — confirmed genuinely working, empirically and by source.
+3. **insuranceMaster's redundant double validation path** (section 2): **Preserved as-is for the pilot**, logged as a cleanup candidate in `docs/ANGULAR_PENDING_FINDINGS.md` entry 1.
+4. **addItemPOCreation's disconnected-but-complete controller** (sections 7-8): logged as its own decision point in `docs/ANGULAR_PENDING_FINDINGS.md` entry 2, not resolved inside the pilot.
+5. **~83% of `MasterController`-routed screens appear non-functional** (section 6): confirmed exhaustively (287/346 checked). Recommend a full sweep before scaling the rebuild process, separately from this pilot.
+6. **Phase 0's inventory only ever scanned `app.js` — 468 more live, real states exist** (`docs/ANGULAR_PENDING_FINDINGS.md` entry 3, discovered while chasing entry 2): the app has roughly 1,566 real screens, not 1,098. Every downstream Phase 0 number (module counts, risk tiers, the 353-`MasterController`-screens figure) was computed against the smaller, incomplete set. **The single biggest finding of this pilot**, flagged prominently rather than absorbed silently — needs an owner decision on priority before Phase 4/5 scale anything, separate from this pilot's own scope.
+7. **Golden-trace capture completed and verified for the final 5 screens** (section 8): all 5 show real, multi-call traces, cross-checked against the source-reading audit.
+8. **A capture-tooling bug was found and fixed along the way** (section 7): `capture.js` seeded cookies before page load, which `loginController`'s unconditional cookie-wipe silently discarded on every run. Fixed by seeding after bootstrap.
