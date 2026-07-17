@@ -102,13 +102,13 @@ public class ImplantReturnAcceptanceService implements IImplantReturnAcceptanceS
 			/*List<DoctorSpecialityMapper> doctorSpeciality = GlobalDao.doctorSearchByIdValue(patientIssueReturn.getPatientIssueReturnDetail().get(0)
 							.getIssueDetailBatchMapper().getIssueDetail().getIssue().getDoctor().getDoctorId());*/
 			String doctorDetail = "";
-			if(patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+			if(patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 					.getIssueDetail().getIssue()!=null)
 			{
-				doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
-						.getIssueDetail().getIssue().getDoctor().getFirstName()+ " "+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
-						.getIssueDetail().getIssue().getDoctor().getMiddleName()+ " "+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
-						.getIssueDetail().getIssue().getDoctor().getLastName()+ " | " +patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+				doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
+						.getIssueDetail().getIssue().getDoctor().getFirstName()+ " "+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
+						.getIssueDetail().getIssue().getDoctor().getMiddleName()+ " "+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
+						.getIssueDetail().getIssue().getDoctor().getLastName()+ " | " +patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 						.getIssueDetail().getIssue().getSpecialityMaster().getSpecialityName();
 			}
 			
@@ -148,13 +148,13 @@ public class ImplantReturnAcceptanceService implements IImplantReturnAcceptanceS
 			ImplantReturnAcceptanceResponse implantReturnAcceptanceResponse = new ImplantReturnAcceptanceResponse();
 			
 			String doctorDetail = "";
-			if(patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+			if(patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 					.getIssueDetail().getIssue()!=null)
 			{
-				doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
-						.getIssueDetail().getIssue().getDoctor().getFirstName()+ " | "+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
-						.getIssueDetail().getIssue().getDoctor().getMiddleName()+ " "+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
-						.getIssueDetail().getIssue().getDoctor().getLastName()+ " | " + patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+				doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
+						.getIssueDetail().getIssue().getDoctor().getFirstName()+ " | "+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
+						.getIssueDetail().getIssue().getDoctor().getMiddleName()+ " "+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
+						.getIssueDetail().getIssue().getDoctor().getLastName()+ " | " + patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 						.getIssueDetail().getIssue().getSpecialityMaster().getSpecialityName();
 			}
 			
@@ -167,7 +167,7 @@ public class ImplantReturnAcceptanceService implements IImplantReturnAcceptanceS
 			implantReturnAcceptanceResponse = new ImplantReturnAcceptanceResponse(patientIssueReturn.getId(),
 					patientIssueReturn.getReturnNo(), patientIssueReturn.getAddedDate(),patientIssueReturn.getPatient().getUhidNumber(), patientDetail, doctorDetail,
 					patientIssueReturn.getVisitType().getVisitTypeCode(), patientIssueReturn.getStore().getStoreName(),
-					patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail().getIssue().getImplantIndent().getImplantIndentNo()
+					patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail().getIssue().getImplantIndent().getImplantIndentNo()
 					);
 
 			implantReturnAcceptanceResponse.setStatus(patientIssueReturn.getStatus().getStatus());
@@ -196,18 +196,18 @@ public class ImplantReturnAcceptanceService implements IImplantReturnAcceptanceS
 		
 		String doctorDetail = "";
 		
-		if(patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+		if(patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 				.getIssueDetail().getIssue()!=null)
 		{
-			doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+			doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 					.getIssueDetail().getIssue().getDoctor().getFirstName()
 					+ " "
-					+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail()
+					+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail()
 							.getIssue().getDoctor().getMiddleName()
 					+ " "
-					+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail()
+					+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail()
 							.getIssue().getDoctor().getLastName()
-					+ " | " + patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail()
+					+ " | " + patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail()
 					.getIssue().getSpecialityMaster().getSpecialityName();
 		}
 		
@@ -219,7 +219,7 @@ public class ImplantReturnAcceptanceService implements IImplantReturnAcceptanceS
 				+ patientIssueReturn.getPatient().getGender().getGenderCode();
 		
 		implantReturnAcceptanceResponse = new ImplantReturnAcceptanceResponse(patientIssueReturn.getId(),
-				patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail().getIssue().getImplantIndent().getAdmission().getAdmissionNumber(),
+				patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail().getIssue().getImplantIndent().getAdmission().getAdmissionNumber(),
 				patientIssueReturn.getReturnNo(), patientIssueReturn.getAddedDate(),
 				patientIssueReturn.getPatient().getUhidNumber(), patientDetail, doctorDetail,
 				patientIssueReturn.getVisitType().getVisitTypeCode(), patientIssueReturn.getStore().getStoreName());
@@ -352,7 +352,7 @@ public class ImplantReturnAcceptanceService implements IImplantReturnAcceptanceS
 				Integer currentQuantity = batch.getCurrentQuantity() + leaseQuantity;
 				batch.setCurrentQuantity(currentQuantity);
 				StockTransaction stockTransaction=	new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-						batch.getStoreStockList().get(0).getStore(), bm.getId());
+						batch.getStoreStockList().getFirst().getStore(), bm.getId());
 //				sessionService.setEntityDefaults(stockTransaction);	
 				stockTransaction.setCreateDefaults(imlantReturnAcceptanceSave.getOrganizationId(),imlantReturnAcceptanceSave.getUnitId(),
 						imlantReturnAcceptanceSave.getUserId());
@@ -370,7 +370,7 @@ public class ImplantReturnAcceptanceService implements IImplantReturnAcceptanceS
 			Integer currentQuantity = batch.getCurrentQuantity() + leaseQuantity;
 			batch.setCurrentQuantity(currentQuantity);
 			StockTransaction stockTransaction =new StockTransaction(avaialableStoreStock, screen, screen.getCode(),
-					leaseQuantity, batch.getStoreStockList().get(0).getStore(), bm.getId());
+					leaseQuantity, batch.getStoreStockList().getFirst().getStore(), bm.getId());
 //			sessionService.setEntityDefaults(stockTransaction);	
 			stockTransaction.setCreateDefaults(imlantReturnAcceptanceSave.getOrganizationId(),imlantReturnAcceptanceSave.getUnitId(),
 					imlantReturnAcceptanceSave.getUserId());

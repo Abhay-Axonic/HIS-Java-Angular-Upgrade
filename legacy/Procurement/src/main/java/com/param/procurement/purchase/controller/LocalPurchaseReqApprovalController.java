@@ -105,7 +105,7 @@ public class LocalPurchaseReqApprovalController {
 	public ResponseEntity<Object> cancelStoreIndent(@PathVariable Long id, @RequestBody LocPurchaseRequestDto locPurchaseReqDto)
 			throws Exception {
 		try {
-			locPurchaseReqDto.setId(id);;
+			locPurchaseReqDto.setId(id);
 			return new ResponseEntity<Object>(locPurchaseReqApprovalService.cancelLocalPurchaseRequest(locPurchaseReqDto), HttpStatus.OK);
 		} catch (Exception ex) {
 			logger.error("cancelStoreIndent failed", ex);

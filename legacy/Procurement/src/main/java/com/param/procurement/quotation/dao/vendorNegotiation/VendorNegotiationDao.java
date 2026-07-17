@@ -136,7 +136,7 @@ public class VendorNegotiationDao extends AbstractDao<Integer, VendorNegotiation
 		try {
 			
 			Query query=null;
-			if(ids.get(0) != null) {
+			if(ids.getFirst() != null) {
 				String sql = "select " + 
 						"	distinct vendornego0_.id as \"id\", " + 
 //						"	vendornego0_.added_by as \"addedBy\", " + 

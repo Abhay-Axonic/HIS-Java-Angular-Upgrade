@@ -89,7 +89,7 @@ public class PatientWisePOIssueList {
 		this.issueTaxPercentage=issueTaxPercentage;
 		this.issueNetAmount=issueNetAmount;
 		this.patientId=patientId;
-		this.issueId=issueId;;
+		this.issueId=issueId;
 	}
 
 	

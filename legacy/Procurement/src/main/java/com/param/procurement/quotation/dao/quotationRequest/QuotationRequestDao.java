@@ -69,7 +69,7 @@ public class QuotationRequestDao extends AbstractDao<Integer, QuotationRequest> 
 		query.setParameter("itemId", itemId);
 		
          //return (QuotationRequestDetail) query.uniqueResult();
-		return (QuotationRequestDetail) query.list().get(0);
+		return (QuotationRequestDetail) query.list().getFirst();
 	}
 	
 	@Override

@@ -149,7 +149,7 @@ public class VendorSelectionDao extends AbstractDao<Integer, VendorSelection> im
 		query.setParameter("id", id);
 
 		if (query.list().size() > 0) {
-			return (VendorNegotiationDetail) query.list().get(0);
+			return (VendorNegotiationDetail) query.list().getFirst();
 		} else {
 			return null;
 		}

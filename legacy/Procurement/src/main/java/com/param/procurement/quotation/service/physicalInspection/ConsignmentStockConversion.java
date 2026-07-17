@@ -567,7 +567,7 @@ public class ConsignmentStockConversion implements IConsignmentStockConversionSe
 		GlobalDao.saveStockTransaction(stockTransaction);
 	}
 	private void updateGRNConversionStatus(Batch batch, Integer unitId, DetailsConsignmentStockConversionSaveRequest request) {
-		GoodReceiptNote goodReceiptNote = batch.getGoodReceiptNoteDetail().get(0).getGoodReceiptNote();
+		GoodReceiptNote goodReceiptNote = batch.getGoodReceiptNoteDetail().getFirst().getGoodReceiptNote();
 		goodReceiptNote.setConsignmentStockConversionRemark(request.getRemarks()!=null ? request.getRemarks() :null);
 		List<Batch> batchList = GlobalDao.getBatchListForConversion(goodReceiptNote.getId(),unitId);
 		int totalCurrentQuantity = 0;
@@ -579,7 +579,7 @@ public class ConsignmentStockConversion implements IConsignmentStockConversionSe
 		for (ConsignmentStockConversionItemSaveRequest req : request.getItems()) {
 			totalConsignStock+=req.getReceivedQuantity();
 			convertedConsignStock+=req.getConvertedConsignmentStock()+req.getConversionQuantity();
-		};
+		}
 		if(request.getStatusId()==18)
 		{
 			goodReceiptNote.setConversionStatus(new Status(com.param.common.constants.Status.PartiallyCompleted.getStatus()));
@@ -598,7 +598,7 @@ public class ConsignmentStockConversion implements IConsignmentStockConversionSe
 	//not in use
 	private void updateGRNConversionStatus(Long batchId, int storId,Integer unitId) {
 		Batch batch = GlobalDao.getBatch(storId, batchId,unitId);
-		GoodReceiptNote goodReceiptNote = batch.getGoodReceiptNoteDetail().get(0).getGoodReceiptNote();
+		GoodReceiptNote goodReceiptNote = batch.getGoodReceiptNoteDetail().getFirst().getGoodReceiptNote();
 		if (goodReceiptNote.getIsConsignment()) {
 			List<Batch> batchList = GlobalDao.getBatchListForConversion(batch.getLotNo(), storId,unitId);
 			int totalConsignmentQuantity = 0;

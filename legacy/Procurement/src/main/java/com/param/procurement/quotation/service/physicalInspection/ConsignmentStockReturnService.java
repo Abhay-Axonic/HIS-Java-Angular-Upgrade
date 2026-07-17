@@ -1041,7 +1041,7 @@ public class ConsignmentStockReturnService implements IConsignmentStockReturnSer
 	}*/
 	
 	private void updateGRNConversionStatus(Batch batch) {
-		GoodReceiptNote goodReceiptNote = batch.getGoodReceiptNoteDetail().get(0).getGoodReceiptNote();
+		GoodReceiptNote goodReceiptNote = batch.getGoodReceiptNoteDetail().getFirst().getGoodReceiptNote();
 		List<Batch> batchList = GlobalDao.getBatchListForConversion(goodReceiptNote.getId(),null);
 		int totalCurrentQuantity = 0;
 		for (Batch batchObj : batchList) {

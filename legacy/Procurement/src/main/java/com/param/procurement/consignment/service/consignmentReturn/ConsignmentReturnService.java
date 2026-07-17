@@ -260,7 +260,7 @@ public class ConsignmentReturnService implements IConsignmentReturnService {
 			List<Issue> issueList = ConsignmentReturnDao.patientIssueReturnAddItemByItemId(patientIssueReturnAddItem);
 			if(!issueList.isEmpty())
 			{
-				Issue issue = issueList.get(0);
+				Issue issue = issueList.getFirst();
 				if(issue.getAdmission() != null)
 				{
 					Integer wardId = 0;
@@ -305,7 +305,7 @@ public class ConsignmentReturnService implements IConsignmentReturnService {
 			List<Issue> issueList = ConsignmentReturnDao.patientIssueReturnAddItemByIssueId(patientIssueReturnAddItem);
 			if(!issueList.isEmpty())
 			{
-				Issue issue = issueList.get(0);
+				Issue issue = issueList.getFirst();
 				if(issue.getAdmission() != null)
 				{
 					Integer wardId = 0;

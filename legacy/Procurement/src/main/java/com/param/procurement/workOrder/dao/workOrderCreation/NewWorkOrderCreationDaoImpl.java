@@ -1434,7 +1434,7 @@ try {
 		    		{
 		    			count++;
 		    		}
-		    	};
+		    	}
 		    	if(count>0)
 		    	{
 		    	newWorkOrderCompletionDetails details = new  newWorkOrderCompletionDetails();
@@ -1899,7 +1899,7 @@ try {
 //                {
 //                	workOrderCreationRequestDto.setIsSettled(false);
 //                }
-                workOrderCreationRequestDto.setWorkOrderCompletionId(completionId);;
+                workOrderCreationRequestDto.setWorkOrderCompletionId(completionId);
 //                workOrderCreationRequestDto.setCompletionCount(completionCount);
 			}
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, listrequestDto, null);

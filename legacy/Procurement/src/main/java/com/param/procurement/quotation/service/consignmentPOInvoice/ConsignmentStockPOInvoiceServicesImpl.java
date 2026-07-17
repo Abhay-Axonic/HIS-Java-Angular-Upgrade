@@ -102,7 +102,7 @@ public class ConsignmentStockPOInvoiceServicesImpl implements IConsignmentStockP
 	public CommonResponse saveConsignmentStockPOInvoice(List<ConsignmentStockPOResponseDto> consignmentStockPOResponseDtoList) throws Exception {
 		CommonResponse response = new CommonResponse();		
 		//try {
-			String invoiceNumber = consignmentStockPOResponseDtoList.get(0).getInvoiceNumber();
+			String invoiceNumber = consignmentStockPOResponseDtoList.getFirst().getInvoiceNumber();
 			BigInteger countInvoiceNumber= consignmentStockPOInvoiceDao.getInvoiceNumberCount(invoiceNumber);
 			if(countInvoiceNumber.longValue() > 0) {
 				throw new CustomException("Invoice number already exists");

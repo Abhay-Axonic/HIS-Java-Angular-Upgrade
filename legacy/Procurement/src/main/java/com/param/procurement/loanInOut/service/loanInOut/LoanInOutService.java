@@ -393,10 +393,10 @@ public class LoanInOutService implements ILoanInOutService {
 		List<LoanInDetail> detailList = loanInOutDao.getLoanInItemDetails(request);
 		if(!detailList.isEmpty())
 		{
-			 response.setId(detailList.get(0).getLoanIn().getId());
-			 response.setDcNo(detailList.get(0).getLoanIn().getDcNo());
-			 response.setDcDate(detailList.get(0).getLoanIn().getDcDate());
-			 response.setLoanInNo(detailList.get(0).getLoanIn().getInwardNo());
+			 response.setId(detailList.getFirst().getLoanIn().getId());
+			 response.setDcNo(detailList.getFirst().getLoanIn().getDcNo());
+			 response.setDcDate(detailList.getFirst().getLoanIn().getDcDate());
+			 response.setLoanInNo(detailList.getFirst().getLoanIn().getInwardNo());
 		}
 		for(LoanInDetail detail : detailList)
 		{
@@ -408,7 +408,7 @@ public class LoanInOutService implements ILoanInOutService {
 			}
 			
 			LoanInOutResponseItem item = null;
-			if(detailList.get(0).getLoanIn().getAssetType().getId().equals(Constants.getConsumableId())) {
+			if(detailList.getFirst().getLoanIn().getAssetType().getId().equals(Constants.getConsumableId())) {
 				item = new LoanInOutResponseItem(detail.getId(), detail.getItem().getId(),
 					detail.getItem().getCode(), detail.getItem().getName(), detail.getUomType().getId(), detail.getUomType().getType(),
 					detail.getUomUnit().getId(), detail.getUomUnit().getUnits(), detail.getBatchNo(), detail.getExpiryDate(),
@@ -418,7 +418,7 @@ public class LoanInOutService implements ILoanInOutService {
 				item.setAvailableForReturn(detail.getApprovedQuantity() - returnQty);
 				item.setRemark(detail.getRemark()!=null ? detail.getRemark() :null);
 			}
-			else if(detailList.get(0).getLoanIn().getAssetType().getId().equals(Constants.getFixedAssetId())) {
+			else if(detailList.getFirst().getLoanIn().getAssetType().getId().equals(Constants.getFixedAssetId())) {
 				item = new LoanInOutResponseItem(detail.getId(), detail.getItem().getId(),
 						detail.getItem().getCode(), detail.getItem().getName(), detail.getBatchNo(), detail.getExpiryDate(),
 						detail.getApprovedQuantity(), detail.getCop());

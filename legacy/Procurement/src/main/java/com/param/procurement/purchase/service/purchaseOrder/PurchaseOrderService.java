@@ -335,14 +335,14 @@ public class PurchaseOrderService implements IPurchaseOrderService {
 			if (purchaseOrderDto.getPoTypeId() == com.param.common.constants.RequestType.AgainstPurchaseRequest
 					.getRequestType() && item.getPrId() != null) {
 
-				purchaseOrderDetail.setPutchRequestDetail(new PurchaseRequestDetail(item.getPrId().get(0)));
+				purchaseOrderDetail.setPutchRequestDetail(new PurchaseRequestDetail(item.getPrId().getFirst()));
 				purchaseOrderDetail.setPendingQuantity(item.getPendingQuantity()!=null ? item.getPendingQuantity():0);
 
 			}
 			if (purchaseOrderDto.getPoTypeId() == com.param.common.constants.RequestType.AgainstQuotationRequest
 					.getRequestType() && item.getQrId() != null) {
 
-				purchaseOrderDetail.setQuotationRequestDetail(new QuotationRequestDetail(item.getQrId().get(0)));
+				purchaseOrderDetail.setQuotationRequestDetail(new QuotationRequestDetail(item.getQrId().getFirst()));
 				Integer pendingQuantity;
 				for (Integer qrDetailId : item.getQrId()) {
 					QuotationRequestDetail quotationRequestDetail = quotationRequestDao
@@ -697,14 +697,14 @@ public class PurchaseOrderService implements IPurchaseOrderService {
 						.equals(com.param.common.constants.RequestType.AgainstPurchaseRequest.getRequestType())
 						&& item.getPrId() != null) {
 
-					purchaseOrderDetail.setPutchRequestDetail(new PurchaseRequestDetail(item.getPrId().get(0)));
+					purchaseOrderDetail.setPutchRequestDetail(new PurchaseRequestDetail(item.getPrId().getFirst()));
 					purchaseOrderDetail.setPendingQuantity(item.getPendingQuantity()!=null ? item.getPendingQuantity():null);
 
 				}
 				if (purchaseOrderDto.getPoTypeId() == com.param.common.constants.RequestType.AgainstQuotationRequest
 						.getRequestType() && item.getQrId() != null) {
 
-					purchaseOrderDetail.setQuotationRequestDetail(new QuotationRequestDetail(item.getQrId().get(0)));
+					purchaseOrderDetail.setQuotationRequestDetail(new QuotationRequestDetail(item.getQrId().getFirst()));
 					purchaseOrderDetail.setPendingQuantity(item.getPendingQuantity()!=null ? item.getPendingQuantity():null);
 					Integer pendingQuantity;
 					for (Integer qrDetailId : item.getQrId()) {
@@ -945,15 +945,15 @@ public class PurchaseOrderService implements IPurchaseOrderService {
 					.collect(Collectors.toList());
 
 			if (storeStock1 != null && !storeStock1.isEmpty()) {
-				storeStock = storeStock1.get(0).getQuantity();
+				storeStock = storeStock1.getFirst().getQuantity();
 				purchaseOrderDetailsRespDto.setStockAvailable(storeStock);
 			}
 			if (stockInTransit1 != null && !stockInTransit1.isEmpty())
-				stockInTransit = stockInTransit1.get(0).getQuantity();
+				stockInTransit = stockInTransit1.getFirst().getQuantity();
 			if (maxStoreQuantity1 != null && !maxStoreQuantity1.isEmpty())
-				maxStoreQuantity = maxStoreQuantity1.get(0).getIntQuantity();
+				maxStoreQuantity = maxStoreQuantity1.getFirst().getIntQuantity();
 			if (leaseQuantity != null && !leaseQuantity.isEmpty())
-				leaseQty = leaseQuantity.get(0).getQuantity();
+				leaseQty = leaseQuantity.getFirst().getQuantity();
 			if (approvedPRAndPOQuantities.stream()
 					.filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
 					.collect(Collectors.toList()) != null
@@ -962,7 +962,7 @@ public class PurchaseOrderService implements IPurchaseOrderService {
 							.collect(Collectors.toList()).isEmpty()) {
 				approvedPRAndPOQuantity = approvedPRAndPOQuantities.stream()
 						.filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (approvedPOQuantities.stream().filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
 					.collect(Collectors.toList()) != null
@@ -971,7 +971,7 @@ public class PurchaseOrderService implements IPurchaseOrderService {
 							.collect(Collectors.toList()).isEmpty()) {
 				approvedPOQuantity = approvedPOQuantities.stream()
 						.filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			/*Long maxOrderQuantity = maxStoreQuantity
 					- (storeStock + stockInTransit + approvedPRAndPOQuantity + approvedPOQuantity);*/

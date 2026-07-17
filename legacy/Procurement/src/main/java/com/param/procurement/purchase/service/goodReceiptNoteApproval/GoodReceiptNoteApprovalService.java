@@ -258,13 +258,13 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 			List<Quantities> leaseQuantity = leaseQuantities.stream()
 					.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId())).collect(Collectors.toList());
 			if (storeStock1 != null && !storeStock1.isEmpty())
-				storeStock = storeStock1.get(0).getQuantity();
+				storeStock = storeStock1.getFirst().getQuantity();
 			if (stockInTransit1 != null && !stockInTransit1.isEmpty())
-				stockInTransit = stockInTransit1.get(0).getQuantity();
+				stockInTransit = stockInTransit1.getFirst().getQuantity();
 			if (maxStoreQuantity1 != null && !maxStoreQuantity1.isEmpty())
-				maxStoreQuantity = maxStoreQuantity1.get(0).getIntQuantity();
+				maxStoreQuantity = maxStoreQuantity1.getFirst().getIntQuantity();
 			if (leaseQuantity != null && !leaseQuantity.isEmpty())
-				leaseQty = leaseQuantity.get(0).getQuantity();
+				leaseQty = leaseQuantity.getFirst().getQuantity();
 			// Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit +
 			// leaseQty);
 			// Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit);
@@ -313,7 +313,7 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 								.collect(Collectors.toList()).isEmpty()) {
 					approvedPRAndPOQuantity = approvedPRAndPOQuantities.stream()
 							.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
-							.collect(Collectors.toList()).get(0).getQuantity();
+							.collect(Collectors.toList()).getFirst().getQuantity();
 				}
 				if (approvedPOQuantities.stream().filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
 						.collect(Collectors.toList()) != null
@@ -322,7 +322,7 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 								.collect(Collectors.toList()).isEmpty()) {
 					approvedPOQuantity = approvedPOQuantities.stream()
 							.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
-							.collect(Collectors.toList()).get(0).getQuantity();
+							.collect(Collectors.toList()).getFirst().getQuantity();
 				}
 				maxOrderQuantity = maxStoreQuantity
 						- (storeStock + stockInTransit + approvedPRAndPOQuantity + approvedPOQuantity);
@@ -367,7 +367,7 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 								.collect(Collectors.toList()).isEmpty()) {
 					approvedPRAndPOQuantity = approvedPRAndPOQuantities.stream()
 							.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
-							.collect(Collectors.toList()).get(0).getQuantity();
+							.collect(Collectors.toList()).getFirst().getQuantity();
 				}
 				if (approvedPOQuantities.stream().filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
 						.collect(Collectors.toList()) != null
@@ -376,7 +376,7 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 								.collect(Collectors.toList()).isEmpty()) {
 					approvedPOQuantity = approvedPOQuantities.stream()
 							.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
-							.collect(Collectors.toList()).get(0).getQuantity();
+							.collect(Collectors.toList()).getFirst().getQuantity();
 				}
 				maxOrderQuantity = maxStoreQuantity
 						- (storeStock + stockInTransit + approvedPRAndPOQuantity + approvedPOQuantity);
@@ -653,7 +653,7 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 		boolean isSkipPhysicalInspection = false;
           HashMap<Integer, Long> map=new HashMap<>();
 		List<PhysicalInspection> physicalInspectionList = new ArrayList<>();
-		isSkipPhysicalInspection = grnDao.getApplicationConfiguration(grnStatusDtoList.get(0).getUnitId()).getIsSkipPhysicalInspection();
+		isSkipPhysicalInspection = grnDao.getApplicationConfiguration(grnStatusDtoList.getFirst().getUnitId()).getIsSkipPhysicalInspection();
         List<Integer> grnIds = grnStatusDtoList.stream().map(GRNStatusDto::getGrnId).collect(Collectors.toList());
         List<GoodReceiptNote> goodReceiptNoteAll=grnDao.getGoodReceiptNoteAll(grnIds);
 		for (GRNStatusDto grnStatusDto : grnStatusDtoList) {
@@ -1942,13 +1942,13 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 			List<Quantities> leaseQuantity = leaseQuantities.stream()
 					.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId())).collect(Collectors.toList());
 			if (storeStock1 != null && !storeStock1.isEmpty())
-				storeStock = storeStock1.get(0).getQuantity();
+				storeStock = storeStock1.getFirst().getQuantity();
 			if (stockInTransit1 != null && !stockInTransit1.isEmpty())
-				stockInTransit = stockInTransit1.get(0).getQuantity();
+				stockInTransit = stockInTransit1.getFirst().getQuantity();
 			if (maxStoreQuantity1 != null && !maxStoreQuantity1.isEmpty())
-				maxStoreQuantity = maxStoreQuantity1.get(0).getIntQuantity();
+				maxStoreQuantity = maxStoreQuantity1.getFirst().getIntQuantity();
 			if (leaseQuantity != null && !leaseQuantity.isEmpty())
-				leaseQty = leaseQuantity.get(0).getQuantity();
+				leaseQty = leaseQuantity.getFirst().getQuantity();
 			// Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit +
 			// leaseQty);
 			Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit);
@@ -1995,7 +1995,7 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 								.collect(Collectors.toList()).isEmpty()) {
 					approvedPRAndPOQuantity = approvedPRAndPOQuantities.stream()
 							.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
-							.collect(Collectors.toList()).get(0).getQuantity();
+							.collect(Collectors.toList()).getFirst().getQuantity();
 				}
 				if (approvedPOQuantities.stream().filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
 						.collect(Collectors.toList()) != null
@@ -2004,7 +2004,7 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 								.collect(Collectors.toList()).isEmpty()) {
 					approvedPOQuantity = approvedPOQuantities.stream()
 							.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
-							.collect(Collectors.toList()).get(0).getQuantity();
+							.collect(Collectors.toList()).getFirst().getQuantity();
 				}
 				maxOrderQuantity = maxStoreQuantity
 						- (storeStock + stockInTransit + approvedPRAndPOQuantity + approvedPOQuantity);
@@ -2029,7 +2029,7 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 								.collect(Collectors.toList()).isEmpty()) {
 					approvedPRAndPOQuantity = approvedPRAndPOQuantities.stream()
 							.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
-							.collect(Collectors.toList()).get(0).getQuantity();
+							.collect(Collectors.toList()).getFirst().getQuantity();
 				}
 				if (approvedPOQuantities.stream().filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
 						.collect(Collectors.toList()) != null
@@ -2038,7 +2038,7 @@ public class GoodReceiptNoteApprovalService implements IGoodReceiptNoteApprovalS
 								.collect(Collectors.toList()).isEmpty()) {
 					approvedPOQuantity = approvedPOQuantities.stream()
 							.filter(x -> x.getItemId().equals(grnDetailResponse.getItemId()))
-							.collect(Collectors.toList()).get(0).getQuantity();
+							.collect(Collectors.toList()).getFirst().getQuantity();
 				}
 				maxOrderQuantity = maxStoreQuantity
 						- (storeStock + stockInTransit + approvedPRAndPOQuantity + approvedPOQuantity);

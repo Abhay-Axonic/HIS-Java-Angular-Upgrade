@@ -117,8 +117,8 @@ public class ImplantIndentAcceptanceService implements IImplantIndentAcceptanceS
 				Long storeStock = GlobalDao.getStoreStockByItem(issue.getImplantIndent().getStore().getStoreId(),
 						issueDetail.getImplantIndentDetail().getItem().getId(),unitId);
 				Long availableStock = Util.ConvertQuantity(storeStock,
-						issueDetail.getIssueDetailBatchMapper().get(0).getBatch().getBatchUomList(),
-						issueDetail.getIssueDetailBatchMapper().get(0).getUomType());
+						issueDetail.getIssueDetailBatchMapper().getFirst().getBatch().getBatchUomList(),
+						issueDetail.getIssueDetailBatchMapper().getFirst().getUomType());
 
 				Long stockInTransit = GlobalDao.getStoreStockInTransitByItem(
 						issue.getImplantIndent().getStore().getStoreId(),
@@ -130,10 +130,10 @@ public class ImplantIndentAcceptanceService implements IImplantIndentAcceptanceS
 						issue.getImplantIndent().getStore().getStoreId(), issueDetail.getImplantIndentDetail().getId(),unitId);
 				Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit);
 				Long maxStoreQty = Util.ConvertQuantity(maxOrderQuantity,
-						issueDetail.getIssueDetailBatchMapper().get(0).getBatch().getBatchUomList(),
-						issueDetail.getIssueDetailBatchMapper().get(0).getUomType());
+						issueDetail.getIssueDetailBatchMapper().getFirst().getBatch().getBatchUomList(),
+						issueDetail.getIssueDetailBatchMapper().getFirst().getUomType());
 				Integer pendingQunatity = issueDetail.getImplantIndentDetail().getIndentQuantity()
-						- issueDetail.getIssueDetailBatchMapper().get(0).getIssueQuantity();
+						- issueDetail.getIssueDetailBatchMapper().getFirst().getIssueQuantity();
 
 				for (IssueDetailBatchMapper issueDetailBatchMapper : issueDetail.getIssueDetailBatchMapper()) {
 
@@ -154,7 +154,7 @@ public class ImplantIndentAcceptanceService implements IImplantIndentAcceptanceS
 							availableStock, batchObj.getId(),
 							batchObj.getBatchNo(), batchObj.getExpiryDate(),
 							issueDetail.getImplantIndentDetail().getIndentQuantity(),
-							issueDetail.getIssueDetailBatchMapper().get(0).getIssueQuantity(), maxOrderQuantity,
+							issueDetail.getIssueDetailBatchMapper().getFirst().getIssueQuantity(), maxOrderQuantity,
 							issueDetailBatchMapper.getId(), issueDetailBatchMapper.getAcceptedQuantity(),
 							issueDetailBatchMapper.getRejectedQuantity());
 
@@ -244,11 +244,11 @@ public class ImplantIndentAcceptanceService implements IImplantIndentAcceptanceS
 
 		Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 		// Add stock transaction
 		StockTransaction stockTransaction=	new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-				batch.getStoreStockList().get(0).getStore(), d.getId());
+				batch.getStoreStockList().getFirst().getStore(), d.getId());
 //		sessionService.setEntityDefaults(stockTransaction);	
 		stockTransaction.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),
 				request.getUserId());

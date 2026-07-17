@@ -556,7 +556,7 @@ public class PatientConsumptionService implements IPatientConsumptionService {
 								//Don't throw - get first object and set data.
 							}
 							
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;
@@ -1121,7 +1121,7 @@ public class PatientConsumptionService implements IPatientConsumptionService {
 		Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 		// Deduct issued quantity from the batch store stock
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 		// Deduct issued quantity from the batch
 		Integer currentQuantity = batch.getCurrentQuantity() - leaseQuantity;
@@ -1129,7 +1129,7 @@ public class PatientConsumptionService implements IPatientConsumptionService {
 
 		// Add stock transaction
 		StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-				batch.getStoreStockList().get(0).getStore(), d.getId());
+				batch.getStoreStockList().getFirst().getStore(), d.getId());
 //		sessionService.setEntityDefaults(stockTransaction);
 		stockTransaction.setCreateDefaults(organizationId,unitId, userId);
 		batch.addStockTransaction(stockTransaction);

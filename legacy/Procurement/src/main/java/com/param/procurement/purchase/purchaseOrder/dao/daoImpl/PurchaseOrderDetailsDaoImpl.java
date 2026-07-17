@@ -82,7 +82,7 @@ public class PurchaseOrderDetailsDaoImpl extends AbstractDao<Integer, LocPurchas
 				}
 				if(purchaseOrderDeatilsDto.getTotalDiscount()!=null)
 				{
-					locPurchaseOrderDetails.setTotalDiscount(purchaseOrderDeatilsDto.getTotalDiscount());;
+					locPurchaseOrderDetails.setTotalDiscount(purchaseOrderDeatilsDto.getTotalDiscount());
 				}
 				/*if(purchaseOrderDeatilsDto.getTotalOtherCharges()!=null )
 				{
