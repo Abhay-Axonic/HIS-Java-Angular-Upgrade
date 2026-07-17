@@ -136,7 +136,7 @@ public class TDoctorShareImpl implements IDoctorShare, ICommonConstants{
 								MDoctorReferralShareDto dtoList=null;
 									Response referalResponse=iMDoctorReferralShareDao.getReferralDetails(dto.getReferraledDocId(),dto.getVisitTypeId(),dto.getOrgId(),dto.getUnitId());
 									if(referalResponse.getListObject()!=null && referalResponse.getListObject().size()>0){
-											dtoList=(MDoctorReferralShareDto)referalResponse.getListObject().get(0);
+											dtoList=(MDoctorReferralShareDto)referalResponse.getListObject().getFirst();
 											//save the no of referral a day 
 											DoctorReferalShareCountMapper mapper=new DoctorReferalShareCountMapper();
 											mapper.setCreatedDate(GlobalCommonDateUtils.getDate(TimeZoneComponent.getDateByzone(0), "dd-M-yyyy HH:mm:ss"));//											
@@ -155,7 +155,7 @@ public class TDoctorShareImpl implements IDoctorShare, ICommonConstants{
 											
 										Response countDetailsResponse=	iMDoctorReferralShareDao.getAllReferralCountDetails(dto.getReferraledDocId(),dto.getVisitTypeId(),dto.getOrgId(),dto.getUnitId());
 										if(countDetailsResponse.getListObject()!=null && countDetailsResponse.getListObject().size()>0){
-											MDoctorReferralShareReqDto reqDto=(MDoctorReferralShareReqDto)countDetailsResponse.getListObject().get(0);
+											MDoctorReferralShareReqDto reqDto=(MDoctorReferralShareReqDto)countDetailsResponse.getListObject().getFirst();
 											Date firstDate=GlobalCommonDateUtils.getDate(reqDto.getCreatedDate(),"dd-M-yyyy");
 											int diffOfDays=getDifferenceDays(firstDate,currentDate);
 											List <MDoctorReferralShareReqDto> listDto = countDetailsResponse.getListObject();
@@ -167,7 +167,7 @@ public class TDoctorShareImpl implements IDoctorShare, ICommonConstants{
 													MDoctorReferralShareReqDto shareAndCaseDto=null;
 													Integer share=null;
 													if(referralShareResponse.getListObject().size()==1){
-														 shareAndCaseDto=(MDoctorReferralShareReqDto)referralShareResponse.getListObject().get(0);
+														 shareAndCaseDto=(MDoctorReferralShareReqDto)referralShareResponse.getListObject().getFirst();
 														 share=shareAndCaseDto.getShare();
 														 
 													}else{
@@ -341,8 +341,8 @@ public class TDoctorShareImpl implements IDoctorShare, ICommonConstants{
 	        		noOfShare=noOfCases.get(i);
 	        		break;
 	        	}else 
-	        	if(toFind>=noOfCases.get(noOfCases.size()-1)){
-	        		noOfShare=noOfCases.get(noOfCases.size()-1);
+	        	if(toFind>=noOfCases.getLast()){
+	        		noOfShare=noOfCases.getLast();
 	        		break;
 	        	}
 	        	else if(toFind>noOfCases.get(i) && toFind<=noOfCases.get(i+1)){

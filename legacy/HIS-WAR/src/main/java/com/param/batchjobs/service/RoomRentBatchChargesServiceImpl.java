@@ -49,7 +49,7 @@ public class RoomRentBatchChargesServiceImpl implements IRoomRentBatchChargesSer
 	public void postRoomRentCharges( List<Integer> unitIds) {
 		try {
 
-			Date zoneDate = TimeZoneComponent.getDateByzone(unitIds.get(0));
+			Date zoneDate = TimeZoneComponent.getDateByzone(unitIds.getFirst());
 			
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(zoneDate);
@@ -285,7 +285,7 @@ public class RoomRentBatchChargesServiceImpl implements IRoomRentBatchChargesSer
 	public void postPeriodicServices(List<Integer> unitIds) {
 		try {
 
-			Date zoneDate = TimeZoneComponent.getDateByzone(unitIds.get(0));
+			Date zoneDate = TimeZoneComponent.getDateByzone(unitIds.getFirst());
 			
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(zoneDate);
@@ -295,7 +295,7 @@ public class RoomRentBatchChargesServiceImpl implements IRoomRentBatchChargesSer
 	        cal.set(Calendar.MINUTE, 59);
 	        cal.set(Calendar.SECOND, 59);
 	        cal.set(Calendar.MILLISECOND, 999);
-	        Date previosDate = cal.getTime();;
+	        Date previosDate = cal.getTime();
 			
 			int startPoint = 0;
 			int maxResults = 1000;

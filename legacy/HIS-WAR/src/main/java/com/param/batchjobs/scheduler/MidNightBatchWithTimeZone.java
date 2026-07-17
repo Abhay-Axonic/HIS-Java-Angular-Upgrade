@@ -294,7 +294,7 @@ public class MidNightBatchWithTimeZone {
 				try{
 					String pattern = "dd";
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-					String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.get(0)));
+					String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.getFirst()));
 					if(date.toString().equals("01"))
 					{
 						roomRentBatchChargesServ.postPeriodicServices(unitIds);

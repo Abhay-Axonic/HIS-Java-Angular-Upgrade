@@ -38,10 +38,10 @@ public class SessionHandlerInterceptor implements HandlerInterceptor {
         		 List<Cookie> appConfig = Arrays.stream(request.getCookies())
                          .filter(cookie -> cookie.getName().equals("cookieObjectAppConfig")).collect(Collectors.toList());
         		 if (cookies != null && cookies.size() > 0) {
-                     sessionService.setCookieObjectDto(new Gson().fromJson(java.net.URLDecoder.decode(cookies.get(0).getValue(), StandardCharsets.UTF_8.name()), CookieObjectDto.class));
+                     sessionService.setCookieObjectDto(new Gson().fromJson(java.net.URLDecoder.decode(cookies.getFirst().getValue(), StandardCharsets.UTF_8.name()), CookieObjectDto.class));
                  }
         		 if (appConfig != null && appConfig.size() > 0) {
-        			 sessionService.setCookieObjectAppConfig(new Gson().fromJson(java.net.URLDecoder.decode(appConfig.get(0).getValue(), StandardCharsets.UTF_8.name()), CookieObjectAppConfig.class));
+        			 sessionService.setCookieObjectAppConfig(new Gson().fromJson(java.net.URLDecoder.decode(appConfig.getFirst().getValue(), StandardCharsets.UTF_8.name()), CookieObjectAppConfig.class));
                  }
         	}
 
