@@ -257,7 +257,7 @@ public class MaterialInwardService implements IMaterialInwardService {
 
 					Double calTaxAmt = (amt * taxPercentage) / 100;
 					InwardTaxComponent inwardTaxComponent = new InwardTaxComponent(calTaxAmt,
-							new MaterialInwardDetail(materialInward.getMaterialInwardsDetailList().get(0).getId()),
+							new MaterialInwardDetail(materialInward.getMaterialInwardsDetailList().getFirst().getId()),
 							taxPercentage, new TaxComponent(taxCompId));
 				//	sessionService.setEntityDefaults(inwardTaxComponent);
 					inwardTaxComponent.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),request.getUserId());
@@ -486,7 +486,7 @@ public class MaterialInwardService implements IMaterialInwardService {
 							Double calTaxAmt = (amt * taxPercentage) / 100;
 							InwardTaxComponent inwardTaxComponentData=new InwardTaxComponent(calTaxAmt,
 									new MaterialInwardDetail(
-											materialInward.getMaterialInwardsDetailList().get(0).getId()),
+											materialInward.getMaterialInwardsDetailList().getFirst().getId()),
 									taxPercentage, new TaxComponent(taxCompId));
 							inwardTaxComponentData.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),request.getUserId());
 							detail.addInwardTaxCom(inwardTaxComponentData);
@@ -576,7 +576,7 @@ public class MaterialInwardService implements IMaterialInwardService {
 
 					Double calTaxAmt = (amt * taxPercentage) / 100;
 					InwardTaxComponent inwardTaxComponent = new InwardTaxComponent(calTaxAmt,
-							new MaterialInwardDetail(materialInward.getMaterialInwardsDetailList().get(0).getId()),
+							new MaterialInwardDetail(materialInward.getMaterialInwardsDetailList().getFirst().getId()),
 							taxPercentage, new TaxComponent(taxCompId));
 					inwardTaxComponent.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),request.getUserId());
 					materialInwardDetail.addInwardTaxCom(inwardTaxComponent);
@@ -686,10 +686,10 @@ public class MaterialInwardService implements IMaterialInwardService {
 							detail.getStatus() != null ? detail.getStatus().getStatus() : null,
 							detail.getMarkup() != null ? detail.getMarkup() : null,
 							//detail.getReturnableGatepassId().getReturnableGatepassDetails().get(0).getApprovedQty(),
-							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().get(0).getApprovedQty(),
+							detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().getFirst().getApprovedQty(),
 							detail.getMrp(), detail.getSpecification(),
 							//detail.getMrp() != null ? null : detail.getReturnableGatepassId().getNetAmount(),
-							detail.getMrp() != null ? null : detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().get(0).getNetAmount(),
+							detail.getMrp() != null ? null : detail.getMaterialInward().getReturnableGatepass().getReturnableGatepassDetails().getFirst().getNetAmount(),
 							PopulateAccessories(MaterialInwardDao.getInwardAccessoriesList(detail.getId())),
 							getTaxList(orgId), detail.getItem().getIsThreeUOMApplicable()));
 					totalAmount = totalAmount + detail.getTotalAmount();
@@ -1103,7 +1103,7 @@ public class MaterialInwardService implements IMaterialInwardService {
 
 					Double calTaxAmt = (amt * taxPercentage) / 100;
 					InwardTaxComponent inwardTaxComponent = new InwardTaxComponent(calTaxAmt,
-							new MaterialInwardDetail(materialInward.getMaterialInwardsDetailList().get(0).getId()),
+							new MaterialInwardDetail(materialInward.getMaterialInwardsDetailList().getFirst().getId()),
 							taxPercentage, new TaxComponent(taxCompId));
 				//	sessionService.setEntityDefaults(inwardTaxComponent);
 					inwardTaxComponent.setCreateDefaults(organizationId ,unitId,userId);

@@ -185,7 +185,7 @@ public class OpeningBalanceService implements IOpeningBalanceService {
 
 				Double calTaxAmt = (amt * taxPercentage) / 100;
 				OpbTaxComponent opbTaxComponent = new OpbTaxComponent(calTaxAmt,
-						new OpeningBalanceDetail(openingBalance.getOpeningBalanceDetailList().get(0).getId()),
+						new OpeningBalanceDetail(openingBalance.getOpeningBalanceDetailList().getFirst().getId()),
 						taxPercentage, new TaxComponent(taxCompId));
 				// sessionService.setEntityDefaults(opbTaxComponent);
 				opbTaxComponent.setCreateDefaults(request.getOrganizationId(), request.getUnitId(),

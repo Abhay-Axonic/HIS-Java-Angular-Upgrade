@@ -268,7 +268,7 @@ public class StoreIndentService implements IStoreIndentService {
             Long storeStock = (long) 0;
             if(storeStockList!=null && storeStockList.size()>0)
             {
-            	storeStock = storeStockList.get(0).getStockAvailable();
+            	storeStock = storeStockList.getFirst().getStockAvailable();
             }
 			Long availableStock = Util.ConvertQuantityByUom(storeStock, detail.getItem().getUnitOfMeasurementList(), detail.getUomType());
 			
@@ -279,7 +279,7 @@ public class StoreIndentService implements IStoreIndentService {
             Long stockInTransit = (long) 0;
             if(stockInTransitQty!=null && stockInTransitQty.size()>0 )
             {
-            	stockInTransit = stockInTransitQty.get(0).getStockInTransitQty();
+            	stockInTransit = stockInTransitQty.getFirst().getStockInTransitQty();
             }
 			Long tQuantity = Util.ConvertQuantityByUom(stockInTransit, detail.getItem().getUnitOfMeasurementList(), detail.getUomType());
 			
@@ -290,7 +290,7 @@ public class StoreIndentService implements IStoreIndentService {
             Long lastMonSale = (long) 0;
             if(lastMonSaleQty!=null && lastMonSaleQty.size()>0)
             {
-            	lastMonSale = lastMonSaleQty.get(0).getLastMonthSale();
+            	lastMonSale = lastMonSaleQty.getFirst().getLastMonthSale();
             }
 			Long lastMonthSale = Util.ConvertQuantityByUom(lastMonSale, detail.getItem().getUnitOfMeasurementList(), detail.getUomType());
 			
@@ -301,7 +301,7 @@ public class StoreIndentService implements IStoreIndentService {
             Long currentMonSale = (long) 0;
             if(currentMonSaleQty!=null && currentMonSaleQty.size()>0)
             {
-            	currentMonSale = currentMonSaleQty.get(0).getCurrentMonthSale();
+            	currentMonSale = currentMonSaleQty.getFirst().getCurrentMonthSale();
             }
 			Long currentMonthSale = Util.ConvertQuantityByUom(currentMonSale, detail.getItem().getUnitOfMeasurementList(), detail.getUomType());
 			
@@ -312,7 +312,7 @@ public class StoreIndentService implements IStoreIndentService {
             Integer maxStoreQuantity =  0;
             if(maxStoreQuantityitemWise!=null && maxStoreQuantityitemWise.size()>0)
             {
-            	maxStoreQuantity = maxStoreQuantityitemWise.get(0).getMaxStoreQty();
+            	maxStoreQuantity = maxStoreQuantityitemWise.getFirst().getMaxStoreQty();
             }
 			
 			Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit);
@@ -324,7 +324,7 @@ public class StoreIndentService implements IStoreIndentService {
             Long approvedPRAndPOQuantity =  (long)0;
             if(approvedPRAndPOQuantityitemWise!=null && approvedPRAndPOQuantityitemWise.size()>0)
             {
-            	approvedPRAndPOQuantity = approvedPRAndPOQuantityitemWise.get(0).getApprovedPRAndPOQty();
+            	approvedPRAndPOQuantity = approvedPRAndPOQuantityitemWise.getFirst().getApprovedPRAndPOQty();
             }
 			// System.out.println("approvedPRAndPOQuantity:-" + approvedPRAndPOQuantity);
 
@@ -335,7 +335,7 @@ public class StoreIndentService implements IStoreIndentService {
             Long approvedPOQuantity =  (long)0;
             if(approvedPOQuantityitemWise!=null && approvedPOQuantityitemWise.size()>0)
             {
-            	approvedPOQuantity = approvedPOQuantityitemWise.get(0).getApprovedPOQty();
+            	approvedPOQuantity = approvedPOQuantityitemWise.getFirst().getApprovedPOQty();
             }
 			
 			Long maxOrderQuantity1= GlobalDao.getMaxOrderQuantity(maxStoreQuantity, storeStock, stockInTransit, approvedPRAndPOQuantity, approvedPOQuantity);

@@ -130,7 +130,7 @@ public class StopTransactionService implements IStopTransactionService {
 //		
 		
 		for (StopTransactionItemRequest item : request.getItems()) {
-			Boolean isExist = isStopTransactionItemDetail(request.getStopTransactionId().get(0),item.getBatchId());
+			Boolean isExist = isStopTransactionItemDetail(request.getStopTransactionId().getFirst(),item.getBatchId());
 			if(!isExist){
 				StopTransactionItemDetail itemDetails=  new StopTransactionItemDetail(new Batch(item.getBatchId()), new Status(request.getStatusId()),
 						new UomType(item.getUomTypeId()),new UomUnit(item.getUomUnitId()),item.getItemId());
@@ -149,7 +149,7 @@ public class StopTransactionService implements IStopTransactionService {
 		for (StopTransactionProductExclusionRequest prductItem : request.getProductCategoryExclusion()) {
 			if (prductItem.getProductCategoryId() != null) { 
 				for (Integer productCategoryId : prductItem.getProductCategoryId()) {							
-					Boolean isExist = isProductExclusionExist(request.getStopTransactionId().get(0),productCategoryId);
+					Boolean isExist = isProductExclusionExist(request.getStopTransactionId().getFirst(),productCategoryId);
 					if(!isExist){
 						StopTransactionProdCatExclDetail stopTransactionProdCatExclDetailData = new StopTransactionProdCatExclDetail(
 								new ProductCategory(productCategoryId), new Status(request.getStatusId()));
@@ -181,7 +181,7 @@ public class StopTransactionService implements IStopTransactionService {
 					stopTransactionItemExclusionDetail.setUnitId(request.getUnitId());
 
 									
-					Boolean isExist = isItemWiseExclutionExist(request.getStopTransactionId().get(0),itemId);
+					Boolean isExist = isItemWiseExclutionExist(request.getStopTransactionId().getFirst(),itemId);
 					if(!isExist){
 						stopTransaction.addStopTransactionItemExclusionDetail(stopTransactionItemExclusionDetail);
 					}
@@ -516,7 +516,7 @@ public class StopTransactionService implements IStopTransactionService {
 	@Transactional
 	public Object removeItembyItemId(StopTransactionRequest request) {		
 		try {	
-			List<StopTransactionItemDetail> stopTransactionItemDetail  = StopTransactionDao.getStopTransactionItemDetailByItemId(request.getItemIds(),request.getStopTransactionId().get(0));
+			List<StopTransactionItemDetail> stopTransactionItemDetail  = StopTransactionDao.getStopTransactionItemDetailByItemId(request.getItemIds(),request.getStopTransactionId().getFirst());
 			  
 			for(StopTransactionItemDetail detail : stopTransactionItemDetail){				
 				detail.setIsDeleted(true);		

@@ -235,7 +235,7 @@ public class WitnessApprovalService implements IWitnessApprovalService {
 				
 				
 				StockTransaction stockTransaction = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-						approvedDisposedQuantity, batch.getRate(), batch.getStoreStockList().get(0).getStore(),
+						approvedDisposedQuantity, batch.getRate(), batch.getStoreStockList().getFirst().getStore(),
 						batch,d.getId());
 				//sessionService.setEntityDefaults(stockTransaction);
 				

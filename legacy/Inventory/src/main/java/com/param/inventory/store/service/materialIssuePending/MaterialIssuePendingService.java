@@ -172,12 +172,12 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 					//	StoreIndentDetail storeIndentDetail = detail.getStoreIndentDetail();
 						StoreIndentDetail storeIndentDetail =	StoreIndentDao.getStoreIndentDetailById(detail.getStoreIndentDetail().getId());
 						Integer tQty = getIssueQuantity(item.getItemId(), item.getIssueQuantity(),
-								item.getBatches().get(0).getUomTypeId(), request.getOrganizationId());
+								item.getBatches().getFirst().getUomTypeId(), request.getOrganizationId());
 	// update in store stock total_qty
 						Integer pendingQty1=getIssueQuantity(item.getItemId(), storeIndentDetail.getAuthorizedQuantity(),
-								item.getBatches().get(0).getUomTypeId(), request.getOrganizationId());
+								item.getBatches().getFirst().getUomTypeId(), request.getOrganizationId());
 						Integer pendingQty2=getIssueQuantity(item.getItemId(), item.getIssueQuantity(),
-								item.getBatches().get(0).getUomTypeId(), request.getOrganizationId());
+								item.getBatches().getFirst().getUomTypeId(), request.getOrganizationId());
 						storeIndentDetail.setPendingQuantity((pendingQty1-pendingQty2) <0 ? 0 : pendingQty1-pendingQty2);
 						Integer pendingQty = storeIndentDetail.getPendingQuantity();
 						StoreIndentDao.updateStoreIndentD(pendingQty2,detail.getStoreIndentDetail().getId());
@@ -505,11 +505,11 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 
 						StoreIndentDetail storeIndentDetail =	StoreIndentDao.getStoreIndentDetailById(storeIndentSubDetail.getId());
 						Integer tQty = getIssueQuantity(item.getItemId(), item.getIssueQuantity(),
-								item.getBatches().get(0).getUomTypeId(), request.getOrganizationId());
+								item.getBatches().getFirst().getUomTypeId(), request.getOrganizationId());
 						Integer pendingQty1=getIssueQuantity(item.getItemId(), storeIndentDetail.getAuthorizedQuantity(),
-								item.getBatches().get(0).getUomTypeId(), request.getOrganizationId());
+								item.getBatches().getFirst().getUomTypeId(), request.getOrganizationId());
 						Integer pendingQty2=getIssueQuantity(item.getItemId(), item.getIssueQuantity(),
-								item.getBatches().get(0).getUomTypeId(), request.getOrganizationId());
+								item.getBatches().getFirst().getUomTypeId(), request.getOrganizationId());
 						storeIndentDetail.setPendingQuantity((pendingQty1-pendingQty2) <0 ? 0 : pendingQty1-pendingQty2);
 						Integer pendingQty = storeIndentDetail.getPendingQuantity();
 						StoreIndentDao.updateStoreIndentD(pendingQty2,mterialDtl.getStoreIndentDetail().getId());
@@ -833,7 +833,7 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 	            .collect(Collectors.toList());
 	            Long stockAvailable = (long) 0;
 	            if(storeStock != null && storeStock.size() > 0){
-	            	stockAvailable = storeStock.get(0).getStockAvailable();
+	            	stockAvailable = storeStock.getFirst().getStockAvailable();
 	            }
 				
 				if (stockAvailable < 0) {
@@ -876,7 +876,7 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
             MaterialIssueDetail materialIssueDetail=new MaterialIssueDetail();
 			if(materialIssueDetailList!=null && materialIssueDetailList.size()>0)
 			{
-				 materialIssueDetail = materialIssueDetailList.get(0);
+				 materialIssueDetail = materialIssueDetailList.getFirst();
 			}
 			Integer pickerQty = 0;
 			if (materialIssueDetail != null) {
@@ -933,7 +933,7 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 				bth.setBatchNo(batchMapper.getBatch().getBatchNo());
 				bth.setExpiry(batchMapper.getBatch().getExpiryDate());
 				bth.setUom(Util.PopulateUom(batchMapper.getBatch()));
-				bth.setAvailableStockQuantity(batchMapper.getBatch().getStoreStockList().get(0).getAvailableQty());
+				bth.setAvailableStockQuantity(batchMapper.getBatch().getStoreStockList().getFirst().getAvailableQty());
 				bth.setPickerQty(pickerQty);
 				issueDetails.addBatch(bth);
 			}
@@ -957,7 +957,7 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 	        List<UomResponse> uomListNew=uomStream
 	        .filter(str -> str.getUomTypeId()!=null && str.getUomTypeId().equals(uomTypeId))
 	        .collect(Collectors.toList());
-	        dispenseConversion = uomListNew.get(0).getConversion();
+	        dispenseConversion = uomListNew.getFirst().getConversion();
 		}
 		if(uomTypeId==2)
 		{
@@ -965,7 +965,7 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 	        List<UomResponse> uomListNew=uomStream
 	        .filter(str -> str.getUomTypeId()!=null && str.getUomTypeId().equals(uomTypeId))
 	        .collect(Collectors.toList());
-	        stockConversion = uomListNew.get(0).getConversion();
+	        stockConversion = uomListNew.getFirst().getConversion();
 		}
 		if(uomTypeId==1)
 		{
@@ -973,7 +973,7 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 	        List<UomResponse> uomListNew=uomStream
 	        .filter(str -> str.getUomTypeId()!=null && str.getUomTypeId().equals(uomTypeId))
 	        .collect(Collectors.toList());
-	        purchaseConversion = uomListNew.get(0).getConversion();
+	        purchaseConversion = uomListNew.getFirst().getConversion();
 		}
 				Integer originalQty = pendingQuantity;
 				Integer dispenseConversionQty = originalQty / dispenseConversion;
@@ -1025,19 +1025,19 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 		Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 		// Deduct issued quantity from the batch store stock
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
-		batch.getStoreStockList().get(0).setTotalQty(batch.getStoreStockList().get(0).getTotalQty() - totQty);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setTotalQty(batch.getStoreStockList().getFirst().getTotalQty() - totQty);
 		// batch.getStoreStockList().get(0).setTotalQty(totQty);
 
 		Integer inTransitQuantity = GlobalDao.getTransitQuantityByBatch(storeId, batch.getId());
 
 		Integer tQty = inTransitQuantity + leaseQuantity;
 
-		batch.getStoreStockList().get(0).settQty(tQty);
+		batch.getStoreStockList().getFirst().settQty(tQty);
 
 		// Add stock transaction
 		StockTransaction stockTransaction = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-				leaseQuantity, batch.getStoreStockList().get(0).getStore(),0);
+				leaseQuantity, batch.getStoreStockList().getFirst().getStore(),0);
 		// sessionService.setEntityDefaults(stockTransaction);
 		stockTransaction.setCreateDefaults(request.getOrganizationId(), request.getUnitId(), request.getUserId());
 		batch.addStockTransaction(stockTransaction);
@@ -1091,7 +1091,7 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 		if (batch.getStoreStockList() == null) {
 
 		} else {
-			batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+			batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 			// start code by minesh for resolved bug no HIS-8018, HIS-8415
 			// batch.getStoreStockList().get(0).setTotalQty(batch.getStoreStockList().get(0).getTotalQty()-leaseQuantity);
@@ -1099,7 +1099,7 @@ public class MaterialIssuePendingService implements IMaterialIssuePendingService
 
 			inTransitQuantity = GlobalDao.getTransitQuantityByBatch(storeId, batchId);
 			Integer tQty = inTransitQuantity + leaseQuantity;
-			batch.getStoreStockList().get(0).settQty(tQty);
+			batch.getStoreStockList().getFirst().settQty(tQty);
 		}
 
 		// }

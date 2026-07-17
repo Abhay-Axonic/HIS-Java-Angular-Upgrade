@@ -725,7 +725,7 @@ public class StoreStockDao extends AbstractDao<Integer, StoreStockRequest> imple
 		query.setResultTransformer(Transformers.aliasToBean(com.param.global.dto.items.BatchResponse1.class));
 
 		if (query.list().size() > 0) {
-			return (BatchResponse1) query.list().get(0);
+			return (BatchResponse1) query.list().getFirst();
 		} else {
 			return null;
 		}
