@@ -89,7 +89,7 @@ public class FhirOPBundleBuilder {
 	       .setValue("555-555-5555");
 
 	    // Change the patient given name to another
-	    patient.getName().get(0).getGiven().set(0,  new StringType("AnotherGivenName"));
+	    patient.getName().getFirst().getGiven().set(0,  new StringType("AnotherGivenName"));
 
 	    // Update the resource patient on the server
 	    MethodOutcome outcome2 = client.update()

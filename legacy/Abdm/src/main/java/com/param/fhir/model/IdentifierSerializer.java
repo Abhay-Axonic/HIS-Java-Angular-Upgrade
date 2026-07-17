@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 public class IdentifierSerializer extends JsonSerializer<Object> {
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        if (value instanceof String) {
-            gen.writeString((String) value);
+        if (value instanceof String string) {
+            gen.writeString(string);
         } else if (value instanceof List) {
             gen.writeStartArray();
             for (String identifier : (List<String>) value) {
