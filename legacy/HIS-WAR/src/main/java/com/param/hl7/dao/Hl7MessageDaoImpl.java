@@ -448,115 +448,117 @@ public class Hl7MessageDaoImpl extends GenericDao<Hl7MessageQueue, Integer> {
         try {
             if(admissionId != null && admissionId > 0) {
 
-                String Query = "select\n" +
-                        "\tto_char(sm.appointment_date,\n" +
-                        "\t'dd/MM/yyyy') as \"appointmentDate\",\n" +
-                        "\tam.appointment_id as \"appointmentId\",\n" +
-                        "\tsm.slot_id as \"slotId\",\n" +
-                        "\tconcat(to_char(sm.from_time,\n" +
-                        "\t'HH24:MI')) as \"fromTimeString\",\n" +
-                        "\tconcat(to_char(sm.to_time,\n" +
-                        "\t'HH24:MI')) as \"toTimeString\",\n" +
-                        "\tam.remark as \"remark\",\n" +
-                        "\tsm.doctor_id as \"doctorId\",\n" +
-                        "\tam.appointment_type_id as \"appointmentTypeId\",\n" +
-                        "\tam.appointment_status_id as \"appointmentStatusId\",\n" +
-                        "\tasm.appointment_status_desc as \"appointmentStatusDesc\",\n" +
-                        "\tconcat('Dr. ',\n" +
-                        "\tcoalesce(doc.first_name),\n" +
-                        "\t' ',\n" +
-                        "\tcoalesce(doc.middle_name),\n" +
-                        "\t' ',\n" +
-                        "\tcoalesce(doc.last_name)) as \"doctorName\",\n" +
-                        "\tsm.speciality_id as \"specialityId\",\n" +
-                        "\tspeciaityMaster.speciality_name as \"specialityName\",\n" +
-                        "\tconcat(coalesce(patient.first_name) ,\n" +
-                        "\t' ',\n" +
-                        "\tcoalesce(patient.middle_name) ,\n" +
-                        "\t' ',\n" +
-                        "\tcoalesce(patient.last_name)) as \"patientName\",\n" +
-                        "\tconcat(to_char(extract(year\n" +
-                        "from\n" +
-                        "\tAGE(CURRENT_TIMESTAMP,\n" +
-                        "\tpatient.dob)),\n" +
-                        "\t'999'),\n" +
-                        "\t'Y') as \"age\",\n" +
-                        "\tpatient.mobile_number as \"mobileNumber\",\n" +
-                        "\tpatient.email as \"email\",\n" +
-                        "\tpatient.patient_id as \"patientId\",\n" +
-                        "\tconcat(extract(year\n" +
-                        "from\n" +
-                        "\tAGE(current_timestamp,\n" +
-                        "\tpatient.dob))) as \"ageYear\",\n" +
-                        "\tpatient.uhid_number as \"uhidNumber\",\n" +
-                        "\tpatient.prefix_id as \"prefixId\",\n" +
-                        "\tprefix.prefix_code as \"prefixCode\",\n" +
-                        "\tprefix.prefix_desc as \"prefixDesc\",\n" +
-                        "\tpatient.first_name as \"firstName\",\n" +
-                        "\tpatient.middle_name as \"middleName\",\n" +
-                        "\tpatient.last_name as \"lastName\",\n" +
-                        "\tpatient.gender_id as \"genderId\",\n" +
-                        "\tpatientDetails.country_id as \"countryId\",\n" +
-                        "\tpatientDetails.state_id as \"stateId\",\n" +
-                        "\tpatientDetails.district_id as \"districtId\",\n" +
-                        "\tpatientDetails.city_id as \"cityId\",\n" +
-                        "\tpatientDetails.area_id as \"areaId\",\n" +
-                        "\tpatientDetails.zip_code as \"zipCode\",\n" +
-                        "\tpatientDetails.address as \"address\",\n" +
-                        "\tpatientDetails.marital_status_id as \"maritalStatusId\",\n" +
-                        "\tgender.gender_code as \"genderCode\",\n" +
-                        "\tto_char(patient.dob,\n" +
-                        "\t'DD/MM/YYYY') as \"dob\",\n" +
-                        "\tsm.modality_id as \"modalityId\",\n" +
-                        "\tmodality.modality_desc as \"modalityDesc\",\n" +
-                        "\tadm.admission_id as \"admissionId\",\n" +
-                        "\tslud.reason_id as \"reasonId\",\n" +
-                        "\treason.reason_desc as \"reasonDesc\",\n" +
-                        "\tslud.remark as \"blockedRemark\",\n" +
-                        "\tto_char(slud.created_date,\n" +
-                        "\t'dd/mm/yyyy HH:MI') as \"createdDate\",\n" +
-                        "\tto_char(am.arrival_time,\n" +
-                        "\t'HH:MI') as \"arrivalTime\",\n" +
-                        "\tam.token_number as \"tokenNumber\",\n" +
-                        "\tam.call_count as \"count\"\n" +
-                        "from\n" +
-                        "\topd.m_appointment_master am\n" +
-                        "left join opd.m_slot_master sm on\n" +
-                        "\tam.slot_id = sm.slot_id\n" +
-                        "inner join patient.t_patient_registration patient on\n" +
-                        "\tam.patient_id = patient.patient_id\n" +
-                        "inner join opd.m_appointment_status_master asm on\n" +
-                        "\tam.appointment_status_id = asm.appointment_status_id\n" +
-                        "left outer join adt.t_admission adm on\n" +
-                        "\tadm.patient_id = am.patient_id\n" +
-                        "\tand am.appointment_status_id = 1\n" +
-                        "\tand adm.status = 'A'\n" +
-                        "left join opd.t_encounter_master enc on\n" +
-                        "\tenc.appointment_id = am.appointment_id\n" +
-                        "left join opd.t_encounter_details enDet on\n" +
-                        "\tenDet.encounter_id = enc.encounter_id\n" +
-                        "left outer join doctor.m_speciality_master speciaityMaster on\n" +
-                        "\tsm.speciality_id = speciaityMaster.speciality_id\n" +
-                        "left outer join doctor.m_doctor_master doc on\n" +
-                        "\tsm.doctor_id = doc.doctor_id\n" +
-                        "left outer join opd.t_slot_block_unblock_detail slud on\n" +
-                        "\tslud.slot_id = sm.slot_id\n" +
-                        "left outer join adt.m_reason_master reason on\n" +
-                        "\tslud.reason_id = reason.reason_master_id\n" +
-                        "left outer join public.m_modality_master modality on\n" +
-                        "\tsm.modality_id = modality.modality_id\n" +
-                        "inner join public.m_gender_master gender on\n" +
-                        "\tpatient.gender_id = gender.gender_id\n" +
-                        "inner join public.m_prefix_master prefix on\n" +
-                        "\tpatient.prefix_id = prefix.prefix_id\n" +
-                        "inner join patient.t_patient_details patientDetails on\n" +
-                        "\tpatient.patient_id = patientDetails.patient_id\n" +
-                        "where\n" +
-                        "\tam.organization_id =2\n" +
-                        "\tand am.unit_id =2\n" +
-                        "\tand am.appointment_id=199222\n" +
-                        "order by\n" +
-                        "\tsm.appointment_date + sm.from_time desc ";
+                String Query = """
+                        select
+                        \tto_char(sm.appointment_date,
+                        \t'dd/MM/yyyy') as "appointmentDate",
+                        \tam.appointment_id as "appointmentId",
+                        \tsm.slot_id as "slotId",
+                        \tconcat(to_char(sm.from_time,
+                        \t'HH24:MI')) as "fromTimeString",
+                        \tconcat(to_char(sm.to_time,
+                        \t'HH24:MI')) as "toTimeString",
+                        \tam.remark as "remark",
+                        \tsm.doctor_id as "doctorId",
+                        \tam.appointment_type_id as "appointmentTypeId",
+                        \tam.appointment_status_id as "appointmentStatusId",
+                        \tasm.appointment_status_desc as "appointmentStatusDesc",
+                        \tconcat('Dr. ',
+                        \tcoalesce(doc.first_name),
+                        \t' ',
+                        \tcoalesce(doc.middle_name),
+                        \t' ',
+                        \tcoalesce(doc.last_name)) as "doctorName",
+                        \tsm.speciality_id as "specialityId",
+                        \tspeciaityMaster.speciality_name as "specialityName",
+                        \tconcat(coalesce(patient.first_name) ,
+                        \t' ',
+                        \tcoalesce(patient.middle_name) ,
+                        \t' ',
+                        \tcoalesce(patient.last_name)) as "patientName",
+                        \tconcat(to_char(extract(year
+                        from
+                        \tAGE(CURRENT_TIMESTAMP,
+                        \tpatient.dob)),
+                        \t'999'),
+                        \t'Y') as "age",
+                        \tpatient.mobile_number as "mobileNumber",
+                        \tpatient.email as "email",
+                        \tpatient.patient_id as "patientId",
+                        \tconcat(extract(year
+                        from
+                        \tAGE(current_timestamp,
+                        \tpatient.dob))) as "ageYear",
+                        \tpatient.uhid_number as "uhidNumber",
+                        \tpatient.prefix_id as "prefixId",
+                        \tprefix.prefix_code as "prefixCode",
+                        \tprefix.prefix_desc as "prefixDesc",
+                        \tpatient.first_name as "firstName",
+                        \tpatient.middle_name as "middleName",
+                        \tpatient.last_name as "lastName",
+                        \tpatient.gender_id as "genderId",
+                        \tpatientDetails.country_id as "countryId",
+                        \tpatientDetails.state_id as "stateId",
+                        \tpatientDetails.district_id as "districtId",
+                        \tpatientDetails.city_id as "cityId",
+                        \tpatientDetails.area_id as "areaId",
+                        \tpatientDetails.zip_code as "zipCode",
+                        \tpatientDetails.address as "address",
+                        \tpatientDetails.marital_status_id as "maritalStatusId",
+                        \tgender.gender_code as "genderCode",
+                        \tto_char(patient.dob,
+                        \t'DD/MM/YYYY') as "dob",
+                        \tsm.modality_id as "modalityId",
+                        \tmodality.modality_desc as "modalityDesc",
+                        \tadm.admission_id as "admissionId",
+                        \tslud.reason_id as "reasonId",
+                        \treason.reason_desc as "reasonDesc",
+                        \tslud.remark as "blockedRemark",
+                        \tto_char(slud.created_date,
+                        \t'dd/mm/yyyy HH:MI') as "createdDate",
+                        \tto_char(am.arrival_time,
+                        \t'HH:MI') as "arrivalTime",
+                        \tam.token_number as "tokenNumber",
+                        \tam.call_count as "count"
+                        from
+                        \topd.m_appointment_master am
+                        left join opd.m_slot_master sm on
+                        \tam.slot_id = sm.slot_id
+                        inner join patient.t_patient_registration patient on
+                        \tam.patient_id = patient.patient_id
+                        inner join opd.m_appointment_status_master asm on
+                        \tam.appointment_status_id = asm.appointment_status_id
+                        left outer join adt.t_admission adm on
+                        \tadm.patient_id = am.patient_id
+                        \tand am.appointment_status_id = 1
+                        \tand adm.status = 'A'
+                        left join opd.t_encounter_master enc on
+                        \tenc.appointment_id = am.appointment_id
+                        left join opd.t_encounter_details enDet on
+                        \tenDet.encounter_id = enc.encounter_id
+                        left outer join doctor.m_speciality_master speciaityMaster on
+                        \tsm.speciality_id = speciaityMaster.speciality_id
+                        left outer join doctor.m_doctor_master doc on
+                        \tsm.doctor_id = doc.doctor_id
+                        left outer join opd.t_slot_block_unblock_detail slud on
+                        \tslud.slot_id = sm.slot_id
+                        left outer join adt.m_reason_master reason on
+                        \tslud.reason_id = reason.reason_master_id
+                        left outer join public.m_modality_master modality on
+                        \tsm.modality_id = modality.modality_id
+                        inner join public.m_gender_master gender on
+                        \tpatient.gender_id = gender.gender_id
+                        inner join public.m_prefix_master prefix on
+                        \tpatient.prefix_id = prefix.prefix_id
+                        inner join patient.t_patient_details patientDetails on
+                        \tpatient.patient_id = patientDetails.patient_id
+                        where
+                        \tam.organization_id =2
+                        \tand am.unit_id =2
+                        \tand am.appointment_id=199222
+                        order by
+                        \tsm.appointment_date + sm.from_time desc\s\
+                        """;
 
                 PidDto pr1Dto = (PidDto) sessionFactory.getCurrentSession()
                         .createSQLQuery(Query)
@@ -692,10 +694,10 @@ public class Hl7MessageDaoImpl extends GenericDao<Hl7MessageQueue, Integer> {
                 .uniqueResult();
 
         // Convert safely to Boolean
-        if (result instanceof Boolean) {
-            return (Boolean) result;
-        } else if (result instanceof Number) {
-            return ((Number) result).intValue() == 1;
+        if (result instanceof Boolean boolean1) {
+            return boolean1;
+        } else if (result instanceof Number number) {
+            return number.intValue() == 1;
         } else if (result != null) {
             return Boolean.parseBoolean(result.toString());
         }

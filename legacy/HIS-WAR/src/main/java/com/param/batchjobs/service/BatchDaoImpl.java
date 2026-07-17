@@ -49,7 +49,7 @@ public class BatchDaoImpl implements IBatchDao,ICommonConstants{
 			String pattern = "yyyy-MM-dd";
         	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.get(0)));
+        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.getFirst()));
 			
 			List list =sessionFactory.getCurrentSession()
 					.createSQLQuery("select updated_date from m_batch_log  where is_called_again='N' AND to_char(updated_date,'yyyy-mm-dd')='"
@@ -63,7 +63,7 @@ public class BatchDaoImpl implements IBatchDao,ICommonConstants{
 						connection = driverManager.getConnection();
 						List<String> ipMac = getMACANDIP();
 						 statement = connection.prepareStatement("INSERT INTO public.m_batch_log "
-				        		+ "(ip_address,mac_address,is_called_again,time_zone)VALUES('"+ipMac.get(0)+"','"+ipMac.get(1)+"','Y','"+timeZone+"');"); 
+				        		+ "(ip_address,mac_address,is_called_again,time_zone)VALUES('"+ipMac.getFirst()+"','"+ipMac.get(1)+"','Y','"+timeZone+"');"); 
 						int i = statement.executeUpdate();
 						//connection.commit();
 				}catch(Exception e){
@@ -96,13 +96,13 @@ public class BatchDaoImpl implements IBatchDao,ICommonConstants{
 			String pattern = "yyyy-MM-dd HH:mm:ss";
         	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.get(0)));
+        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.getFirst()));
 
         	
 				connection = driverManager.getConnection();
 				List<String> ipMac = getMACANDIP();
 				 statement = connection.prepareStatement("INSERT INTO public.m_batch_log "
-		        		+ "(updated_date,ip_address,mac_address,is_called_again,time_zone)VALUES('"+date+"','"+ipMac.get(0)+"','"+ipMac.get(1)+"','N','"+timeZone+"');"); 
+		        		+ "(updated_date,ip_address,mac_address,is_called_again,time_zone)VALUES('"+date+"','"+ipMac.getFirst()+"','"+ipMac.get(1)+"','N','"+timeZone+"');"); 
 				int i = statement.executeUpdate();
 				//connection.commit();
 				return true;
@@ -150,7 +150,7 @@ public class BatchDaoImpl implements IBatchDao,ICommonConstants{
 			String pattern = "yyyy-MM-dd";
         	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.get(0)));
+        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.getFirst()));
 			
 			List list =sessionFactory.getCurrentSession()
 					.createSQLQuery("select updated_date from m_batch_log_room_rent  where is_called_again='N' AND to_char(updated_date,'yyyy-mm-dd')='"
@@ -164,7 +164,7 @@ public class BatchDaoImpl implements IBatchDao,ICommonConstants{
 						connection = driverManager.getConnection();
 						List<String> ipMac = getMACANDIP();
 						 statement = connection.prepareStatement("INSERT INTO public.m_batch_log_room_rent "
-				        		+ "(ip_address,mac_address,is_called_again,time_zone)VALUES('"+ipMac.get(0)+"','"+ipMac.get(1)+"','Y','"+timeZone+"');"); 
+				        		+ "(ip_address,mac_address,is_called_again,time_zone)VALUES('"+ipMac.getFirst()+"','"+ipMac.get(1)+"','Y','"+timeZone+"');"); 
 						int i = statement.executeUpdate();
 						//connection.commit();
 				}catch(Exception e){
@@ -198,12 +198,12 @@ public class BatchDaoImpl implements IBatchDao,ICommonConstants{
 			String pattern = "yyyy-MM-dd HH:mm:ss";
         	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.get(0)));
+        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.getFirst()));
         	
 				connection = driverManager.getConnection();
 				List<String> ipMac = getMACANDIP();
 				 statement = connection.prepareStatement("INSERT INTO public.m_batch_log_room_rent "
-		        		+ "(updated_date,ip_address,mac_address,is_called_again,time_zone)VALUES('"+date+"','"+ipMac.get(0)+"','"+ipMac.get(1)+"','N','"+timeZone+"');"); 
+		        		+ "(updated_date,ip_address,mac_address,is_called_again,time_zone)VALUES('"+date+"','"+ipMac.getFirst()+"','"+ipMac.get(1)+"','N','"+timeZone+"');"); 
 				int i = statement.executeUpdate();
 				//connection.commit();
 				return true;
@@ -354,7 +354,7 @@ public class BatchDaoImpl implements IBatchDao,ICommonConstants{
 			String pattern = "yyyy-MM-dd";
         	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.get(0)));
+        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.getFirst()));
 			List list =sessionFactory.getCurrentSession()
 					.createSQLQuery("select updated_date from m_batch_log_room_rent  where to_char(updated_date,'yyyy-mm-dd')='"
 							+ date + "' and time_zone='"+timeZone+"'")
@@ -375,7 +375,7 @@ public class BatchDaoImpl implements IBatchDao,ICommonConstants{
 			
 			String pattern = "yyyy-MM-dd";
         	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.get(0)));
+        	String date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitIds.getFirst()));
 
 			List list =sessionFactory.getCurrentSession()
 					.createSQLQuery("select updated_date from m_batch_log  where to_char(updated_date,'yyyy-mm-dd')='"
@@ -402,7 +402,7 @@ public class BatchDaoImpl implements IBatchDao,ICommonConstants{
         	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         	String date = simpleDateFormat.format(new Date());
         	if(unitId != null){
-        		 date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitId.get(0)));
+        		 date = simpleDateFormat.format(TimeZoneComponent.getDateByzone(unitId.getFirst()));
         	}
 
 			connection = driverManager.getConnection();

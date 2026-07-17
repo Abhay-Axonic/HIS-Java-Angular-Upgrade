@@ -97,7 +97,7 @@ public class RevertAllocatedQuantity {
 				{
 					for (Map.Entry<String, List<Integer>> entry : timeZoneAndUnitsMap.entrySet()) 
 					{
-						Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().get(0));
+						Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().getFirst());
 						Integer zoneDateMin = currentZoneDate.getMinutes();
 						Integer zoneDateHr = currentZoneDate.getHours();
 
@@ -156,7 +156,7 @@ public class RevertAllocatedQuantity {
 				for (Map.Entry<String, List<Integer>> entry : timeZoneAndUnitsMap.entrySet()) 
 				{
 					
-					Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().get(0));
+					Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().getFirst());
 					Integer zoneDateMin = currentZoneDate.getMinutes();
 					Integer zoneDateHr = currentZoneDate.getHours();
 					if (zoneDateHr == 00 && zoneDateMin >= 05 && zoneDateMin <= 55) 
@@ -186,7 +186,7 @@ public class RevertAllocatedQuantity {
 			{
 				for (Map.Entry<String, List<Integer>> entry : timeZoneAndUnitsMap.entrySet()) 
 				{
-					Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().get(0));
+					Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().getFirst());
 					Integer zoneDateMin = currentZoneDate.getMinutes();
 					Integer zoneDateHr = currentZoneDate.getHours();
 					if (zoneDateHr == 00 && zoneDateMin >= 05 && zoneDateMin <= 55) 
@@ -231,7 +231,7 @@ public class RevertAllocatedQuantity {
 			{
 				for (Map.Entry<String, List<Integer>> entry : timeZoneAndUnitsMap.entrySet()) 
 				{
-					Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().get(0));
+					Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().getFirst());
 					Integer zoneDateMin = currentZoneDate.getMinutes();
 					Integer zoneDateHr = currentZoneDate.getHours();
 					// in between 00:05 to 00:15
@@ -343,7 +343,7 @@ public class RevertAllocatedQuantity {
 			{
 				for (Map.Entry<String, List<Integer>> entry : timeZoneAndUnitsMap.entrySet()) 
 				{
-					Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().get(0));
+					Date currentZoneDate = TimeZoneComponent.getDateByzone(entry.getValue().getFirst());
 					Integer zoneDateMin = currentZoneDate.getMinutes();
 					Integer zoneDateHr = currentZoneDate.getHours();
 					if (zoneDateHr == 02 && zoneDateMin >= 05 && zoneDateMin <= 55) 

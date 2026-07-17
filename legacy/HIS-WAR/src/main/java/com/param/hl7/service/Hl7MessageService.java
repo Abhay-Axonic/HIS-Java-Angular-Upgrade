@@ -278,11 +278,11 @@ public class Hl7MessageService {
         try {
 
 
-            Integer proReqId = procList.get(0).getProReqId();
-            Integer admissionId = procList.get(0).getAdmissionId();
-            Integer patientId = procList.get(0).getPatientId();
-            Integer orgId = procList.get(0).getOrgId();
-            Integer unitId = procList.get(0).getUnitId();
+            Integer proReqId = procList.getFirst().getProReqId();
+            Integer admissionId = procList.getFirst().getAdmissionId();
+            Integer patientId = procList.getFirst().getPatientId();
+            Integer orgId = procList.getFirst().getOrgId();
+            Integer unitId = procList.getFirst().getUnitId();
             Pv1_2Dto pv1_2Dto = dao.getPv1_2(admissionId);
             if (pv1_2Dto != null) {
                 PidDto pidDto = dao.getPID(patientId);

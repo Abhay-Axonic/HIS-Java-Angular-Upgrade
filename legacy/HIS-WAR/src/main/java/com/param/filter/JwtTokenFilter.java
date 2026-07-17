@@ -44,8 +44,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			String requestUrl = request.getRequestURI();
 			String[] splitUrl = requestUrl.split("/");
 
-			if (request instanceof HttpServletRequest) {
-				String url = ((HttpServletRequest)request).getRequestURL().toString();
+			if (request instanceof HttpServletRequest servletRequest) {
+				String url = servletRequest.getRequestURL().toString();
 
 				domain = url.replace(requestUrl, "");
 				boolean isdomainAllowed = checkDomain(UserComponent.getAllowedDomains(),domain);
@@ -66,8 +66,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 
 
-			Integer userId = request.getHeader("userId") != null ? new Integer(request.getHeader("userId")) : 0;
-			Integer unitId = request.getHeader("unitId") != null ? new Integer(request.getHeader("unitId")) : null;
+			Integer userId = request.getHeader("userId") != null ? Integer.valueOf(request.getHeader("userId")) : 0;
+			Integer unitId = request.getHeader("unitId") != null ? Integer.valueOf(request.getHeader("unitId")) : null;
 
 
   if (unitId != null && userId != null && authorizationHeader != null

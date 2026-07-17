@@ -108,7 +108,7 @@ public class Hl7Listner {
             " and args(procedureList)")
     public void afterProcedureOrder(JoinPoint joinPoint, List<ProcedureOrderMasterDto> procedureList) {
 
-        Integer admissionId = procedureList.get(0).getAdmissionId();
+        Integer admissionId = procedureList.getFirst().getAdmissionId();
         if (admissionId != null && admissionId > 0) {
             service.afterProcedureOrder(procedureList);
         }
