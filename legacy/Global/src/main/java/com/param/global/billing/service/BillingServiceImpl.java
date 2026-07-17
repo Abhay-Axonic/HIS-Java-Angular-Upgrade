@@ -724,10 +724,12 @@ public class BillingServiceImpl implements IBillingService,ICommonConstants,IBil
 						}
 					
 						orderMasterIds.add(orderDetailsMasterDto.getOrderId());
-				
-					iOrderDetailsMasterDao.saveOrderDetailsMaster(orderDetailsMasterDto,
-							consumptionDto.getOrderDetailsPayeeMapperDtosList(),
-							consumptionDto.getOrderDetailsPackageMapperDtosList());
+
+					if (consumptionDto != null) {
+						iOrderDetailsMasterDao.saveOrderDetailsMaster(orderDetailsMasterDto,
+								consumptionDto.getOrderDetailsPayeeMapperDtosList(),
+								consumptionDto.getOrderDetailsPackageMapperDtosList());
+					}
 			}
 			
 			

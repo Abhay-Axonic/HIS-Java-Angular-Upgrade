@@ -47,13 +47,15 @@ import com.param.opd.coversheet.service.IMedicationService;
 import com.param.opd.coversheet.service.IPatientDiagnosisService;
 import com.param.utility.TimeZoneComponent;
 
+import org.apache.log4j.Logger;
 
 @Controller
 @RequestMapping("/adt")
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class BedAllocationController implements ICommonConstants, IADTConstants 
+public class BedAllocationController implements ICommonConstants, IADTConstants
 {
-	
+	private static final Logger logger = Logger.getLogger(BedAllocationController.class);
+
 	@Autowired
 	IBedAllocationService iBedAllocationService;
 	@Autowired
@@ -341,13 +343,13 @@ public class BedAllocationController implements ICommonConstants, IADTConstants
 					}
 				}
 			return res;
-			
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("savePatientAdmission failed", e);
 		}
 		return new Response(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
 	}
-	
+
 	@RequestMapping(value = "/isPatientAlreadyAdmitted/{patientId}/{orgId}/{unitId}", method = RequestMethod.GET)
 	public @ResponseBody Boolean isPatientAlreadyAdmitted(@PathVariable("patientId")int patientId,
 														  @PathVariable("orgId")int orgId,

@@ -1,7 +1,6 @@
 package com.param.global.billing.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.lenient;
@@ -132,28 +131,24 @@ class DepositMasterServiceImplAddDepositAgainstAdmissionCharacterizationTest {
     }
 
     @Test
-    @DisplayName("NOTED, NOT FIXED: deposit save fails (non-success Response) -> the method CRASHES (BillingException wrapping an NPE) rather than returning any response -- more severe than the equivalent Pharmacy gap, which silently continues instead of throwing")
-    void depositSaveFails_crashesInsteadOfReturning() throws Exception {
-        // NOTE (characterization only, not a fix): production declares `DepositMaster
-        // depositMaster = null;` up front, only assigns it inside the
-        // `depositRes.getCode().equalsIgnoreCase(SUCCESS_CODE) && depositRes.getObject() != null`
-        // success branch, then UNCONDITIONALLY dereferences it on the method's success return
-        // path (`depositMaster.getDepositMasterId()`, source line ~528) -- with no guard for the
-        // failure case. So when the deposit-master save itself doesn't succeed as expected, this
-        // isn't a silent skip (unlike the analogous gap already logged for Pharmacy's
-        // saveBillDetails, BR-PENDING-pharmacy-billlistservice-savebilldetails-batch1) -- it's an
-        // outright crash: no payment-detail record is created AND the caller gets an exception,
-        // not any kind of response object. Confirmed via this passing test asserting
-        // BillingException is thrown, not by inspecting a returned Response.
+    @DisplayName("FIXED 2026-07-17: deposit save fails (non-success Response) -> returns an ERROR Response instead of crashing (was: BillingException wrapping an NPE)")
+    void depositSaveFails_returnsErrorResponseInsteadOfCrashing() throws Exception {
+        // FIXED (docs/DECISION_NEEDED_ADTFinancialCallsCrashBugs.md, fix 2): a
+        // `if (depositMaster == null) { return ... }` guard now sits directly before the
+        // method's success-return line, mirroring the file's own pre-existing early-return
+        // idiom used a few lines earlier for "Please Configure Deposit Number." When the
+        // deposit-master save doesn't succeed as expected, the caller now gets a defined
+        // ERROR Response instead of an uncaught NPE wrapped as BillingException.
         when(iGlobalUnitMasterDao.getGeneratedNo(0, 0, 123)).thenReturn("DEP-003");
         when(iDepositMasterDao.saveDeposit(any(DepositMasterDto.class)))
                 .thenReturn(new Response<>(ICommonConstants.SUCCESS, ICommonConstants.SUCCESS_CODE, null, null, null));
 
         DepositCollectionReqDto req = request(2, 400, 300);
 
-        assertThatThrownBy(() -> service.addDepositAgainstAdmission(req))
-                .isInstanceOf(com.param.global.billing.controller.BillingException.class);
+        Response result = service.addDepositAgainstAdmission(req);
 
+        assertThat(result.getStatus()).isEqualTo(ICommonConstants.ERROR);
+        assertThat(result.getMessage()).isEqualTo("Failed to save deposit.");
         verify(iPaymentDepositDetailsDao, never()).savePaymentDepositDetails(any());
     }
 }

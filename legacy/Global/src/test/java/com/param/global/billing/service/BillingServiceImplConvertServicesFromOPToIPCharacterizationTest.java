@@ -1,7 +1,6 @@
 package com.param.global.billing.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.lenient;
@@ -23,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.param.billing.global.ConvertServicesFromOptoIpDto;
-import com.param.global.billing.controller.BillingException;
 import com.param.global.billing.dao.IBillingDao;
 import com.param.global.billing.dto.AdmissionListIpdChargesResDto;
 import com.param.global.dao.IGlobalUnitMasterDao;
@@ -165,8 +163,8 @@ class BillingServiceImplConvertServicesFromOPToIPCharacterizationTest {
     }
 
     @Test
-    @DisplayName("NOTED, NOT FIXED: no package/contract found for the service -> the WHOLE conversion throws BillingException (wrapping an NPE), not a graceful per-line skip")
-    void contractNotFound_wholeConversionThrows() throws Exception {
+    @DisplayName("FIXED 2026-07-17: no package/contract found for the service -> that order-detail's IP-side save is skipped, the conversion no longer crashes (was: BillingException wrapping an NPE)")
+    void contractNotFound_skipsSaveForThatOrderDetailButDoesNotCrash() throws Exception {
         when(iBillingDao.getAdmissionsById(400)).thenReturn(admission());
         OrderDetailsMaster od = orderDetail(7001, 0, 1, 55);
         when(iOrderDetailsMasterDao.getOrderDetailsByIdForPayeeUpdate(7001)).thenReturn(od);
@@ -177,21 +175,19 @@ class BillingServiceImplConvertServicesFromOPToIPCharacterizationTest {
         when(iMPackageMasterService.checkServiceAvailableInPackageContract(any(ContractConsumptionDto.class)))
                 .thenReturn(new com.param.global.common.Response<>("success", null, null, null, null));
 
-        // NOTE (characterization only, not a fix): production code reassigns its own local
-        // `consumptionDto` variable to `res.getObject()` (line ~700 of the source) before
-        // checking it for null, and unconditionally dereferences that same variable 2 lines
-        // later (`consumptionDto.getOrderDetailsPayeeMapperDtosList()`) to build the DAO save
-        // call -- regardless of whether the null-check block above it ran. When no
-        // package/contract is found, this throws a NullPointerException, caught by the
-        // method's own outer catch and rethrown as BillingException. This means ONE order-detail
-        // with no matching package/contract aborts the ENTIRE conversion for every order-detail
-        // in the batch (nothing already looped is rolled back either, since each iteration's
-        // saveOrderDetailsMaster call for earlier order-details has already committed
-        // independently) -- not a graceful "skip this one, keep this OP-side pricing" fallback.
-        assertThatThrownBy(() -> service.convertServicesFromOPToIP(request(Arrays.asList(7001))))
-                .isInstanceOf(BillingException.class);
+        // FIXED (docs/DECISION_NEEDED_ADTFinancialCallsCrashBugs.md, fix 1a): the
+        // `iOrderDetailsMasterDao.saveOrderDetailsMaster(...)` call is now guarded by
+        // `if (consumptionDto != null)`. When no package/contract is found, this one
+        // order-detail's IP-side save is skipped instead of throwing an NPE that aborted the
+        // WHOLE conversion (every other order-detail in the same batch, including ones already
+        // processed earlier in the loop, used to be left in an inconsistent half-committed state
+        // by the crash). The method now completes normally and returns success.
+        com.param.global.common.Response result = service.convertServicesFromOPToIP(request(Arrays.asList(7001)));
 
-        // The order-detail was fetched, but never got its IP-side pricing saved.
+        assertThat(result.getStatus()).isEqualTo("success");
+
+        // The order-detail was fetched, but its IP-side pricing was never saved -- this order
+        // detail simply doesn't get converted, rather than crashing the whole batch.
         verify(iOrderDetailsMasterDao, org.mockito.Mockito.never())
                 .saveOrderDetailsMaster(any(), any(), any());
     }
