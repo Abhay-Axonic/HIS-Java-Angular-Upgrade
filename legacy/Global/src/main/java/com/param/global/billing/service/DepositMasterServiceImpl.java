@@ -525,11 +525,14 @@ public class DepositMasterServiceImpl implements IDepositMasterService, ICommonC
 					return admissionNoteRes;*/
 			}
 			
+			if(depositMaster == null) {
+				return new Response<>(ERROR, ERROR_CODE, "Failed to save deposit.", null, null);
+			}
 			return new Response<>(SUCCESS, SUCCESS_CODE, DEPOSIT_ADDED_MSG + deposit.getDepositNo(), null, depositMaster.getDepositMasterId());
 		}catch(BillingException be){
 			throw be;
 		}catch(Exception e){
-			
+
 			throw new BillingException(e.getMessage());
 		}
 	}

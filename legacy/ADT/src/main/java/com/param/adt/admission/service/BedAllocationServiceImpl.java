@@ -59,9 +59,13 @@ import com.param.utility.TimeZoneComponent;
 
 import in.param.exception.ApplicationException;
 
+import org.apache.log4j.Logger;
+
 @Service
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BedAllocationServiceImpl implements IBedAllocationService, ICommonConstants,IADTConstants{
+
+	private static final Logger logger = Logger.getLogger(BedAllocationServiceImpl.class);
 
 	@Autowired
 	IBedAllocationDao iBedAllocationDao;
@@ -681,11 +685,11 @@ public Response acceptNursingAcceptanceRequet(AdmissionDto admission) throws App
 				
 			globalBillingService.convertServicesFromOPToIP(costEstimationDto);
 		}
-		
+
 		return res;
-		
+
 	} catch (Exception e) {
-		
+		logger.error("acceptNursingAcceptanceRequet failed", e);
 	}
 	return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
 }
