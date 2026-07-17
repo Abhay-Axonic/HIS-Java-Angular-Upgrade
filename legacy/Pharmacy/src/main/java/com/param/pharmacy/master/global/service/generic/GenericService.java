@@ -196,9 +196,9 @@ public class GenericService implements IGenericService {
 		}
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Generic Updated Successfully");
-		Long GenericCountFromItem = new Long(0);
-		Long GenericCountFromStoreWise = new Long(0);
-		Long GenericCountFromProductCategory = new Long(0);
+		Long GenericCountFromItem = Long.valueOf(0);
+		Long GenericCountFromStoreWise = Long.valueOf(0);
+		Long GenericCountFromProductCategory = Long.valueOf(0);
 		if (!generic.getIsActive()) {
 			GenericCountFromItem = GenericDao.getGenericCountFromItem(genericRequest.getId());
 			GenericCountFromStoreWise = GenericDao.getGenericCountFromStoreWiseMapper(genericRequest.getId());

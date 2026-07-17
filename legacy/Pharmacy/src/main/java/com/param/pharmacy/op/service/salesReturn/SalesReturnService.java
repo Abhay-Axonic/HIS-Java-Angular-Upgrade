@@ -482,7 +482,7 @@ public class SalesReturnService implements ISalesReturnService {
 							.filter(x -> x.getSaleDetailId().equals(saleDetail.getId())).collect(Collectors.toList());
 
 					if (salesReturnQtyDetailSpecific != null && !salesReturnQtyDetailSpecific.isEmpty())
-						totalReturnQuantity = salesReturnQtyDetailSpecific.get(0).getTotalReturnQuantity().intValue();
+						totalReturnQuantity = salesReturnQtyDetailSpecific.getFirst().getTotalReturnQuantity().intValue();
 					
 					
 					if (patientIssueReturnList != null && patientIssueReturnList.size() > 0) {
@@ -491,7 +491,7 @@ public class SalesReturnService implements ISalesReturnService {
 								.filter(x -> x.getSaleDetailsId().equals(saleDetail.getId().intValue())).collect(Collectors.toList());
 						
 						if (se != null && !se.isEmpty())
-							totalReturnQuantity = totalReturnQuantity + se.get(0).getQuantityReturned();
+							totalReturnQuantity = totalReturnQuantity + se.getFirst().getQuantityReturned();
 					}
 					
 					
@@ -674,7 +674,7 @@ public class SalesReturnService implements ISalesReturnService {
                     Double calTaxAmt = (amt * taxPercentage)/(100 + item.getTaxPercentage());
 
 					SaleReturnDetailTaxComponenet saleReturnDetailTaxComponenet = new SaleReturnDetailTaxComponenet(
-							calTaxAmt, new ReturnDetail(returnObject.getReturnDetailList().get(0).getId()),
+							calTaxAmt, new ReturnDetail(returnObject.getReturnDetailList().getFirst().getId()),
 							taxPercentage, new TaxComponent(taxCompId));
 					// sessionService.setEntityDefaults(saleReturnDetailTaxComponenet);
 					saleReturnDetailTaxComponenet.setCreateDefaults(

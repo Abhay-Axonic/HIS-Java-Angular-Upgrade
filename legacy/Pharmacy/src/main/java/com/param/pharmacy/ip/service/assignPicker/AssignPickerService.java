@@ -598,7 +598,7 @@ public class AssignPickerService implements IAssignPickerService {
 										if(pharcheck.getSelectedItems() != null) {
 											for (PharmacologyItem subitem : pharcheck.getSelectedItems()) {
 												
-												if(subitem.getParentSubstituteId().equals(substututeList.get(0).getParentSubstituteId())) {
+												if(subitem.getParentSubstituteId().equals(substututeList.getFirst().getParentSubstituteId())) {
 													checkexist = true;
 												}
 											}
@@ -935,7 +935,7 @@ public class AssignPickerService implements IAssignPickerService {
 			List<Quantities> storeStockSpecific = storeStocks.stream()
 					.filter(x -> x.getItemId().equals(pharmacologyItem.getItemId())).collect(Collectors.toList());
 			if (storeStockSpecific != null && storeStockSpecific.isEmpty())
-				pharmacologyItem.setStockAvailable(storeStockSpecific.get(0).getQuantity());
+				pharmacologyItem.setStockAvailable(storeStockSpecific.getFirst().getQuantity());
 
 		}
 		return pharmacologyItemList;

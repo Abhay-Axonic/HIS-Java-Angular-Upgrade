@@ -132,8 +132,8 @@ public class TaxService implements ITaxService {
 				detail.setAddedDate(TimeZoneComponent.getDateByzone(tax.getUnitId()));
 			}
 		}
-		Long countFromItem = new Long(0);
-		Long countFromTaxComponent = new Long(0);
+		Long countFromItem = Long.valueOf(0);
+		Long countFromTaxComponent = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (!tax.getIsActive()) {
 			countFromItem = TaxDao.getTaxFromItem(request.getId());

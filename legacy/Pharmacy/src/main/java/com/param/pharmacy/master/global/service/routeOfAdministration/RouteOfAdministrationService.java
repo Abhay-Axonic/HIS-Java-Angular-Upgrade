@@ -118,7 +118,7 @@ public class RouteOfAdministrationService implements IRouteOfAdministrationServi
 
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Route Of Administration Updated Successfully");
-		Long countFromItem = new Long(0);
+		Long countFromItem = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (!routeOfAdministration.getIsActive()) {
 			countFromItem = RouteOfAdministrationDao

@@ -401,7 +401,7 @@ public class PendingIssuesAcceptanceConsumableService implements ICommonConstant
 			Integer rejectleaseQty = Util.GetLeaseQuantity(issueDetailBatchMapper.getRejectQuantity()!=null ? issueDetailBatchMapper.getRejectQuantity() : 0, batch.getBatchUomList(), uomType);
 			
 			// Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
-			StoreStock storeStock = fromStoreStock1.get(0);
+			StoreStock storeStock = fromStoreStock1.getFirst();
 			// storeStock.setAvailableQty(balanceQuantity);
 			Integer inTransitQuantity = GlobalDao.getTransitQuantityByBatch(request.getStoreId(), batch.getId());
 			Integer tQty = inTransitQuantity - leaseQuantity;

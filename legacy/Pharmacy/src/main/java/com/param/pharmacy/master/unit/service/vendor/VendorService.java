@@ -351,7 +351,7 @@ public class VendorService implements IVendorService {
 				}
 
 				
-				Long countFromManufacture = new Long(0);
+				Long countFromManufacture = Long.valueOf(0);
 				Boolean UnableToUpdateStatus = false;
 				/*if (!vendor.getIsActive()) {
 					countFromManufacture = VendorDao.getVendorFromManufacturer(vendorRequest.getId());
@@ -546,7 +546,7 @@ public class VendorService implements IVendorService {
 		List<RegistrationFieldConfigurationDto> registrationFieldConfiguration = (List<RegistrationFieldConfigurationDto>) res
 				.getListObject();
 		if (registrationFieldConfiguration.size() > 0) {
-			response.setMobileDigit(registrationFieldConfiguration.get(0).getMobileDigit());
+			response.setMobileDigit(registrationFieldConfiguration.getFirst().getMobileDigit());
 		}
 
 		return response;

@@ -216,10 +216,10 @@ public class ImplantItemMasterService implements IImplantItemMasterService
 		response.setMessage("Item updated successfully");
 		
 
-		Long productCategoryCount = new Long(0);
-		Long manufactoreCount = new Long(0);
-		Long storageUnitCount = new Long(0);
-		Long taxCount = new Long(0);
+		Long productCategoryCount = Long.valueOf(0);
+		Long manufactoreCount = Long.valueOf(0);
+		Long storageUnitCount = Long.valueOf(0);
+		Long taxCount = Long.valueOf(0);
 
 		if (item.getIsActive()) {
 			productCategoryCount = ImlantItemMasterDao.getproductCategoryCount(itemRequest.getId());

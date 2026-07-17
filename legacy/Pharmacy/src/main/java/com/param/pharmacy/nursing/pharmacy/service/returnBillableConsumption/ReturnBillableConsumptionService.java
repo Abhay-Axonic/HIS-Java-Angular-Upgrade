@@ -351,7 +351,7 @@ public class ReturnBillableConsumptionService implements IReturnBillableConsumpt
             .filter(str -> str.getBillbleConsumptionDetailId().equals(items.getBillbleConsumptionDetailId()))
             .collect(Collectors.toList());
             
-			PharmacySaleReturnDto phSRDto =billableDetailsList.get(0);
+			PharmacySaleReturnDto phSRDto =billableDetailsList.getFirst();
 			
 			Long batchId = saveStoreStockDetails(request.getStoreId(), items.getBatchId(), items.getReturnQuantity(),
 					new UomType(items.getUomTypeId()),request.getUnitId(),request.getCookieStoreId(), request, items.getBillbleConsumptionDetailId(),returnBillNumber);

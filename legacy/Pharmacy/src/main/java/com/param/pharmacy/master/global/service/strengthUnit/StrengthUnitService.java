@@ -123,7 +123,7 @@ public class StrengthUnitService implements IStrengthUnitService {
 
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Strength Unit Updated Successfully");
-		Long countFromItem = new Long(0);
+		Long countFromItem = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (!strengthUnit.getIsActive()) {
 			countFromItem = StrengthUnitDao.getStrengthUnitDaoCountFromItem(strengthUnitRequest.getId());

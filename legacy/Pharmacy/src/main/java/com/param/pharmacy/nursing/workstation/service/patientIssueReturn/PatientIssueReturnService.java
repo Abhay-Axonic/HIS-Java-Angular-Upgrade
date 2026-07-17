@@ -386,7 +386,7 @@ public class PatientIssueReturnService implements IPatientIssueReturnService {
 			}
 
 			if (!issueList.isEmpty()) {
-				Issue issue = issueList.get(0);
+				Issue issue = issueList.getFirst();
 				if (issue.getAdmission() != null) {
 					Integer wardId = 0;
 					Integer bedId = 0;
@@ -470,7 +470,7 @@ public class PatientIssueReturnService implements IPatientIssueReturnService {
 			List<Object> items = new ArrayList<Object>();
 			List<Issue> issueList = patientIssueReturnDao.patientIssueReturnAddItemByIssueId(patientIssueReturnAddItem);
 			if (!issueList.isEmpty()) {
-				Issue issue = issueList.get(0);
+				Issue issue = issueList.getFirst();
 				if (issue.getAdmission() != null) {
 					Integer wardId = 0;
 					Integer bedId = 0;

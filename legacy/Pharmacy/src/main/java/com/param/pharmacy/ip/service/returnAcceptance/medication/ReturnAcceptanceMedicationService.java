@@ -119,15 +119,15 @@ public class ReturnAcceptanceMedicationService implements ICommonConstants,IRetu
 
 			String doctorDetail = "";
 			if(patientIssueReturn.getPatientIssueReturnDetail().equals(null)  
-					&& patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail().equals(null) 
-					&& patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail().getIssue().equals(null) 
-					&& patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail().getIssue().getDoctor().equals(null)) {
-				doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+					&& patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail().equals(null) 
+					&& patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail().getIssue().equals(null) 
+					&& patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail().getIssue().getDoctor().equals(null)) {
+				doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 						.getIssueDetail().getIssue().getDoctor().getFirstName()
 						+ " "
-						+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+						+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 								.getIssueDetail().getIssue().getDoctor().getMiddleName()
-						+ " " + patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+						+ " " + patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 								.getIssueDetail().getIssue().getDoctor().getLastName();
 			}
 
@@ -147,13 +147,13 @@ public class ReturnAcceptanceMedicationService implements ICommonConstants,IRetu
 			 * .getIssueDetail().getIssue().getSale().getDoctor().getLastName() ; }
 			 */
 
-			if (patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail()
+			if (patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail()
 					.getIssue().getSpecialityMaster() != null) {
 				doctorDetail = doctorDetail + " | "
-						+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+						+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 								.getIssueDetail().getIssue().getSpecialityMaster().getSpecialityName();
 			}
-            BigInteger saleId =returnAcceptanceMedicationDao.getSaleId(patientIssueReturn.getPatientIssueReturnDetail().get(0).getId());
+            BigInteger saleId =returnAcceptanceMedicationDao.getSaleId(patientIssueReturn.getPatientIssueReturnDetail().getFirst().getId());
             if(saleId!=null)
             {
             	String doctorName=returnAcceptanceMedicationDao.getDoctorName(saleId);
@@ -284,7 +284,7 @@ public class ReturnAcceptanceMedicationService implements ICommonConstants,IRetu
 		returnAcceptanceResponse.setStatus(patientIssueReturn.getStatus().getStatus());
 		returnAcceptanceResponse.setStatusId(patientIssueReturn.getStatus().getId());
 		returnAcceptanceResponse.setStoreId(patientIssueReturn.getStore().getStoreId());
-		returnAcceptanceResponse.setIssueId(patientIssueReturn.getPatientIssueReturnDetail().get(0)
+		returnAcceptanceResponse.setIssueId(patientIssueReturn.getPatientIssueReturnDetail().getFirst()
 				.getIssueDetailBatchMapper().getIssueDetail().getIssue().getId());
 
 		if (patientIssueReturn.getAdmission() != null) {
@@ -554,7 +554,7 @@ public class ReturnAcceptanceMedicationService implements ICommonConstants,IRetu
 				 store=StoreStock.getStore();
 			 }else
 			 {
-				 store= batch.getStoreStockList().get(0).getStore();
+				 store= batch.getStoreStockList().getFirst().getStore();
 			 }
 			StockTransaction stockTransaction = new StockTransaction(avaialableStoreStock, screen, screen.getCode(),
 					leaseQuantity,store, bm.getId());

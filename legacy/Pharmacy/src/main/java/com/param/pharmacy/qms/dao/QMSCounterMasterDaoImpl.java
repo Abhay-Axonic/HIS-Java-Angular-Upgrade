@@ -166,8 +166,8 @@ public class QMSCounterMasterDaoImpl extends GenericDao<QMSCounterMaster, Intege
 				
 				if(dtoList != null && dtoList.size()>0) {
 					
-					counterDto.setQmsKioskMasterId(dtoList.get(0).getQmsKioskMasterId());
-					counterDto.setQmsDesc(dtoList.get(0).getQmsDesc());
+					counterDto.setQmsKioskMasterId(dtoList.getFirst().getQmsKioskMasterId());
+					counterDto.setQmsDesc(dtoList.getFirst().getQmsDesc());
 					counterDto.setDepartmentList(dtoList);
 					
 					return new Response<>(SUCCESS, SUCCESS_CODE, null, null, counterDto);

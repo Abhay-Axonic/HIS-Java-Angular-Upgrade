@@ -122,12 +122,12 @@ public class HandoverWorkListService implements IHandoverWorkListService {
 							handoverObject.setGenderId(result.getGenderId());
 							handoverObject.setPatientName(result.getPatientName());
 							handoverObject.setAgeString(result.getAgeString());
-							handoverObject.setPrescriptionDate(prescrDetailSpecific.get(0).getPrescriptionDate());
-							handoverObject.setPrescriptionId(prescrDetailSpecific.get(0).getPrescriptionId());
+							handoverObject.setPrescriptionDate(prescrDetailSpecific.getFirst().getPrescriptionDate());
+							handoverObject.setPrescriptionId(prescrDetailSpecific.getFirst().getPrescriptionId());
 							handoverObject.setUhid(result.getUhid());
 							handoverObject.setPatientDetail(result.getPatientDetail());
 							handoverObject.setDoctorDetail(result.getDoctorDetail());
-							handoverObject.setPriority(prescrDetailSpecific.get(0).getDesc());
+							handoverObject.setPriority(prescrDetailSpecific.getFirst().getDesc());
 							handoverObject.setStatus(result.getStatus());
 							handoverObject.setStatusId(result.getStatusId());
 							handoverObject.setPaymentStatus("");
@@ -158,7 +158,7 @@ public class HandoverWorkListService implements IHandoverWorkListService {
 				List<PharmacologyValidationSearchResult> handoverWorkList = HandoverworkListDao.getDoctorDetail(id,unitId);
 				if(handoverWorkList.size() >0)
 				{
-					handoverDetails.setDoctorDetail(handoverWorkList.get(0).getDoctorDetail());
+					handoverDetails.setDoctorDetail(handoverWorkList.getFirst().getDoctorDetail());
 					
 				}
 				

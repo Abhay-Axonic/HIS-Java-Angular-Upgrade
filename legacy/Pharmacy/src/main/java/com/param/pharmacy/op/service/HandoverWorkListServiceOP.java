@@ -116,11 +116,11 @@ public class HandoverWorkListServiceOP implements IHandoverWorkListServiceOP {
 									sale.getId(),
 									sale.getVisitType().getVisitTypeCode(), 
 									sale.getVisitType().getCreatedDate(), 
-									prescriptionDetail.get(0).getPrescription().getPrescriptionDate(),
+									prescriptionDetail.getFirst().getPrescription().getPrescriptionDate(),
 									sale.getPatient().getUhidNumber(), 
 									patientDetail, 
 									doctorDetail, 
-									prescriptionDetail.get(0).getPrescription().getPriority().getPriorityDesc(),
+									prescriptionDetail.getFirst().getPrescription().getPriority().getPriorityDesc(),
 									sale.getStatus().getStatus(), 
 									sale.getStatus().getId());
 							
@@ -148,11 +148,11 @@ public class HandoverWorkListServiceOP implements IHandoverWorkListServiceOP {
 									sale.getId(),
 									sale.getVisitType().getVisitTypeCode(), 
 									sale.getVisitType().getCreatedDate(), 
-									prescriptionDetail.get(0).getPrescription().getPrescriptionDate(),
+									prescriptionDetail.getFirst().getPrescription().getPrescriptionDate(),
 									sale.getPatient().getUhidNumber(), 
 									patientDetail, 
 									sale.getTempDoctor().getDoctorName() + " " + sale.getTempDoctor().getDoctorAddress(), 
-									prescriptionDetail.get(0).getPrescription().getPriority().getPriorityDesc(),
+									prescriptionDetail.getFirst().getPrescription().getPriority().getPriorityDesc(),
 									sale.getStatus().getStatus(), 
 									sale.getStatus().getId());
 							

@@ -60,7 +60,7 @@ public class ReturnAcceptanceSaveItem
 	}
 
 	public void setRejectedQuantity(Integer rejectedQuantity) {
-		this.rejectedQuantity = rejectedQuantity==null?0:rejectedQuantity;;
+		this.rejectedQuantity = rejectedQuantity==null?0:rejectedQuantity;
 	}
 
 	public Integer getRejectReason() {

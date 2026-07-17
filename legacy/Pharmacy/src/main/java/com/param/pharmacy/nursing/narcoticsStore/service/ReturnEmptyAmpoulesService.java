@@ -262,7 +262,6 @@ public class ReturnEmptyAmpoulesService implements IReturnEmptyAmpoulesService {
 						returedQty = item.getQuantityAccepted();
 					}
 					detail.setReturnedQuantity(returedQty);
-					;
 					break;
 				}
 			}

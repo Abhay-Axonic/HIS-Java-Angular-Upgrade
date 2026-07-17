@@ -99,7 +99,7 @@ public class StorageUnitService implements IStorageUnitService {
 		}
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Storage Unit Updated Successfully");
-		Long countFromItem = new Long(0);
+		Long countFromItem = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (!storageUnit.getIsActive()) {
 			countFromItem = StorageUnitDao.getStorageUnitCountFromItem(storageUnitRequest.getId());

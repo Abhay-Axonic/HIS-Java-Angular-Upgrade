@@ -43,7 +43,6 @@ public class GeneralInsuranceMasterDao extends AbstractDao<Integer, GeneralInsur
 	@Override
 	public Integer update(GeneralInsurance genralInsurance) {
 		getSession().update(genralInsurance);
-		;
 		return genralInsurance.getId();
 	}
 	

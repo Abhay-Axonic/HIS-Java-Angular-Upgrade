@@ -80,9 +80,9 @@ public class PatientIssueReturnConsumableService implements IPatientIssueReturnC
 				
 				if(patientIssueReturn.getPatientIssueReturnDetail() !=null && patientIssueReturn.getPatientIssueReturnDetail().size() >0)
 				{
-					if(patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent()!=null)
+					if(patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent()!=null)
 					{
-						indentNo=patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent().getIndentNo();
+						indentNo=patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent().getIndentNo();
 					}
 					
 				}
@@ -101,9 +101,9 @@ public class PatientIssueReturnConsumableService implements IPatientIssueReturnC
 				
 				if(patientIssueReturn.getPatientIssueReturnDetail() !=null && patientIssueReturn.getPatientIssueReturnDetail().size() >0)
 				{
-					if(patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent()!=null)
+					if(patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent()!=null)
 					{
-						indentNo=patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent().getIndentNo();
+						indentNo=patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent().getIndentNo();
 					}
 					
 				}

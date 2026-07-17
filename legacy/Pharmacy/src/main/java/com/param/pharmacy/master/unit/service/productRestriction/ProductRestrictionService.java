@@ -191,7 +191,7 @@ public class ProductRestrictionService implements IProductRestrictionService {
 				&& productRestrictionRequest.getProductCategoryId() > 0) {
 			ProductCategory productCategory = ProductRestrictionDao
 					.getProductCategory(productRestrictionRequest.getProductCategoryId());
-			Long countFromProductCategory = new Long(0);
+			Long countFromProductCategory = Long.valueOf(0);
 
 			if (!productRestrictionRequest.getStatus()) {
 				UnableToUpdateStatus = false;

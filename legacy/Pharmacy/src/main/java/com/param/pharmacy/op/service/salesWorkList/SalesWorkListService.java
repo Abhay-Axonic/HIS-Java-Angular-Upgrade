@@ -158,7 +158,7 @@ public class SalesWorkListService implements ISalesWorkListService {
 		WorkListSearch.setToDate((new DateTime(WorkListSearch.getToDate())).plusDays(1).toDate());
 		
 		List<ApplicationConfiguration> applicationConfigurations = iApplicationConfigurationDao.getAll(WorkListSearch.getUnitId());
-		if(applicationConfigurations != null && !applicationConfigurations.isEmpty() && applicationConfigurations.get(0).getIsDeptPharmacyRequired()) {
+		if(applicationConfigurations != null && !applicationConfigurations.isEmpty() && applicationConfigurations.getFirst().getIsDeptPharmacyRequired()) {
 			Response resp = iDepartmentStoreMapperDao.getDeptStoremappings(WorkListSearch.getUnitId(), WorkListSearch.getStoreId());
 			List<DepartmentStoreMapperDto> deptList = resp.getListObject();
 			if(deptList == null || deptList.isEmpty())
@@ -354,7 +354,7 @@ public class SalesWorkListService implements ISalesWorkListService {
 		try 
 		{
 			List<PrescriptionDetailResponse> itemListObjects = salesWorkListDao.prescriptionByIdValueBP(prescriptionId);
-			itemListObject = itemListObjects.get(0);
+			itemListObject = itemListObjects.getFirst();
 			if(itemListObject != null)
 			{
 //				List<DoctorSpecialityResp> docSpeciality = IGlobalDao.doctorSearchByIdValueBP(itemListObject.getDoctorId());
@@ -597,13 +597,13 @@ public class SalesWorkListService implements ISalesWorkListService {
 						
 						
 						Long quantityDispensed = 0L;
-						quantityDispensed = (quantitySpecific != null && !quantitySpecific.isEmpty() ? quantitySpecific.get(0).getQty() : 0L)
-								- (quantityReturnedSpecific != null && !quantityReturnedSpecific.isEmpty() ? quantityReturnedSpecific.get(0).getQty() : 0L);
+						quantityDispensed = (quantitySpecific != null && !quantitySpecific.isEmpty() ? quantitySpecific.getFirst().getQty() : 0L)
+								- (quantityReturnedSpecific != null && !quantityReturnedSpecific.isEmpty() ? quantityReturnedSpecific.getFirst().getQty() : 0L);
 					
 						
 						
 						if(saleDetails != null && !saleDetails.isEmpty())
-							itemList.setBatchDetails(saleDetails.get(0).getBatchDetails());
+							itemList.setBatchDetails(saleDetails.getFirst().getBatchDetails());
 						
 						itemList.setBatch(finalBatchList);
 
@@ -715,7 +715,7 @@ public class SalesWorkListService implements ISalesWorkListService {
 									List<SaleDetailResp> saleDetailsSub = saleDetailsAllSub.stream()
 											.filter(x -> x.getDetailId().equals(substituteList.getPrescriptionDetailid().longValue())).collect(Collectors.toList());
 									if(saleDetailsSub != null && !saleDetailsSub.isEmpty())
-										itm.setBatchDetails(saleDetailsSub.get(0).getBatchDetails());
+										itm.setBatchDetails(saleDetailsSub.getFirst().getBatchDetails());
 									itm.setBatch(finalSubBatchList);
 									
 									boolean checkExits = false;
@@ -775,7 +775,7 @@ public class SalesWorkListService implements ISalesWorkListService {
 										//Don't throw - get first object and set data.
 									}
 									
-									PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+									PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 									itemList.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 									itemList.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 									break;
@@ -924,7 +924,7 @@ public class SalesWorkListService implements ISalesWorkListService {
 								//Don't throw - get first object and set data.
 							}
 							
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							itemList.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							itemList.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;

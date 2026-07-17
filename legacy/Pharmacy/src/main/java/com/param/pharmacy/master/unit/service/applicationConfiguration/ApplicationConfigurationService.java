@@ -80,7 +80,7 @@ public class ApplicationConfigurationService implements IApplicationConfiguratio
 		ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDao.getApplicationConfiguration(request.getUnitId());
 		if (applicationConfiguration != null) {
 			applicationConfiguration.setUpdatedByUser(request.getUserId()!=null ? request.getUserId() : sessionService.getUserId());
-			Long appliConfiguration = new Long(0);
+			Long appliConfiguration = Long.valueOf(0);
 
 			appliConfiguration = ApplicationConfigurationDao.getCountApplicationConfiguration(request.getUnitId());
 
@@ -244,7 +244,7 @@ public class ApplicationConfigurationService implements IApplicationConfiguratio
 		ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDao
 				.getApplicationConfiguration(request.getUnitId());
 
-		Long appliConfiguration = new Long(0);
+		Long appliConfiguration = Long.valueOf(0);
 
 		appliConfiguration = ApplicationConfigurationDao.getCountApplicationConfiguration(request.getUnitId());
 

@@ -107,18 +107,18 @@ public class DrugAdministrationService implements IDrugAdministrationService ,IC
 		DrugAdministrationItem responseObj2 = null;
 		if (!issue.isEmpty()) {
 			String doctorDetail="";
-			if(issue.get(0).getDoctor()!=null && issue.get(0).getSpecialityMaster()!=null) {
-			doctorDetail = issue.get(0).getDoctor().getFirstName() + " "
-					+ issue.get(0).getDoctor().getMiddleName() + " " + issue.get(0).getDoctor().getLastName() + " | "
-					+ issue.get(0).getSpecialityMaster().getSpecialityName() ;
+			if(issue.getFirst().getDoctor()!=null && issue.getFirst().getSpecialityMaster()!=null) {
+			doctorDetail = issue.getFirst().getDoctor().getFirstName() + " "
+					+ issue.getFirst().getDoctor().getMiddleName() + " " + issue.getFirst().getDoctor().getLastName() + " | "
+					+ issue.getFirst().getSpecialityMaster().getSpecialityName() ;
 			}
-			if (issue.get(0).getAdmission() != null) {
+			if (issue.getFirst().getAdmission() != null) {
 				String wardName = "";
 				String bedNumber = "";
 				Date doa = null;
 				Date pdd = null;
 				AdmissionDetail admissionDetail = GlobalDao
-						.getPatientWardBedDetails(issue.get(0).getAdmission().getAdmissionId());
+						.getPatientWardBedDetails(issue.getFirst().getAdmission().getAdmissionId());
 				if (admissionDetail != null) {
 					doa = admissionDetail.getDoa();
 					pdd = admissionDetail.getPdd();
@@ -132,54 +132,54 @@ public class DrugAdministrationService implements IDrugAdministrationService ,IC
 					}
 				}
 				Integer age = Util.getAgeByBirthDate(
-						issue.get(0).getAdmission().getPatient().getDob().toLocalDateTime().toLocalDate());
-				String patientDetail = issue.get(0).getAdmission().getPatient().getPrefix().getPrefixCode() + " "
-						+ issue.get(0).getAdmission().getPatient().getFirstName() + " "
-						+ issue.get(0).getAdmission().getPatient().getMiddleName() + " "
-						+ issue.get(0).getAdmission().getPatient().getLastName() + " | " + age + " | "
-						+ issue.get(0).getAdmission().getPatient().getGender().getGenderCode();
+						issue.getFirst().getAdmission().getPatient().getDob().toLocalDateTime().toLocalDate());
+				String patientDetail = issue.getFirst().getAdmission().getPatient().getPrefix().getPrefixCode() + " "
+						+ issue.getFirst().getAdmission().getPatient().getFirstName() + " "
+						+ issue.getFirst().getAdmission().getPatient().getMiddleName() + " "
+						+ issue.getFirst().getAdmission().getPatient().getLastName() + " | " + age + " | "
+						+ issue.getFirst().getAdmission().getPatient().getGender().getGenderCode();
 
 				drugAdministrationResponse = new DrugAdministrationResponse(
-						issue.get(0).getAdmission().getPatient().getPatientId(),
-						issue.get(0).getAdmission().getPatient() != null
-								? issue.get(0).getAdmission().getPatient().getUhidNumber()
+						issue.getFirst().getAdmission().getPatient().getPatientId(),
+						issue.getFirst().getAdmission().getPatient() != null
+								? issue.getFirst().getAdmission().getPatient().getUhidNumber()
 								: null,
-						patientDetail, doctorDetail, issue.get(0).getAdmission().getPatient().getDob(),
-						issue.get(0).getPrescription() != null ? issue.get(0).getPrescription().getAddedDate() : null);
+						patientDetail, doctorDetail, issue.getFirst().getAdmission().getPatient().getDob(),
+						issue.getFirst().getPrescription() != null ? issue.getFirst().getPrescription().getAddedDate() : null);
 				drugAdministrationResponse.setWardName(!wardName.equals("") ? wardName : null);
 				drugAdministrationResponse.setBedNo(!bedNumber.equals("") ? bedNumber : null);
 				drugAdministrationResponse.setDoa(doa != null ? doa : null);
 				drugAdministrationResponse.setPdd(pdd != null ? pdd : null);
-				drugAdministrationResponse.setAdmissionId(issue.get(0).getAdmission().getAdmissionId());
-				drugAdministrationResponse.setVisitType(issue.get(0).getAdmission().getVisitType().getVisitTypeCode());
-				drugAdministrationResponse.setVisitTypeId(issue.get(0).getAdmission().getVisitType().getVisitTypeId());
+				drugAdministrationResponse.setAdmissionId(issue.getFirst().getAdmission().getAdmissionId());
+				drugAdministrationResponse.setVisitType(issue.getFirst().getAdmission().getVisitType().getVisitTypeCode());
+				drugAdministrationResponse.setVisitTypeId(issue.getFirst().getAdmission().getVisitType().getVisitTypeId());
 				drugAdministrationResponse.setPrescriptionId(
-						issue.get(0).getPrescription() != null ? issue.get(0).getPrescription().getId() : null);
-			} else if (issue.get(0).getEncounter() != null) {
+						issue.getFirst().getPrescription() != null ? issue.getFirst().getPrescription().getId() : null);
+			} else if (issue.getFirst().getEncounter() != null) {
 				Integer age = Util.getAgeByBirthDate(
-						issue.get(0).getEncounter().getPatient().getDob().toLocalDateTime().toLocalDate());
-				String patientDetail = issue.get(0).getEncounter().getPatient().getPrefix().getPrefixCode() + " "
-						+ issue.get(0).getEncounter().getPatient().getFirstName() + " "
-						+ issue.get(0).getEncounter().getPatient().getMiddleName() + " "
-						+ issue.get(0).getEncounter().getPatient().getLastName() + " | " + age + " | "
-						+ issue.get(0).getEncounter().getPatient().getGender().getGenderCode();
+						issue.getFirst().getEncounter().getPatient().getDob().toLocalDateTime().toLocalDate());
+				String patientDetail = issue.getFirst().getEncounter().getPatient().getPrefix().getPrefixCode() + " "
+						+ issue.getFirst().getEncounter().getPatient().getFirstName() + " "
+						+ issue.getFirst().getEncounter().getPatient().getMiddleName() + " "
+						+ issue.getFirst().getEncounter().getPatient().getLastName() + " | " + age + " | "
+						+ issue.getFirst().getEncounter().getPatient().getGender().getGenderCode();
 
 				drugAdministrationResponse = new DrugAdministrationResponse(
-						issue.get(0).getEncounter().getPatient() != null
-								? issue.get(0).getEncounter().getPatient().getPatientId()
+						issue.getFirst().getEncounter().getPatient() != null
+								? issue.getFirst().getEncounter().getPatient().getPatientId()
 								: null,
-						issue.get(0).getEncounter().getPatient() != null
-								? issue.get(0).getEncounter().getPatient().getUhidNumber()
+						issue.getFirst().getEncounter().getPatient() != null
+								? issue.getFirst().getEncounter().getPatient().getUhidNumber()
 								: null,
-						patientDetail, doctorDetail, issue.get(0).getEncounter().getPatient().getDob(),
-						issue.get(0).getPrescription() != null ? issue.get(0).getPrescription().getAddedDate() : null);
+						patientDetail, doctorDetail, issue.getFirst().getEncounter().getPatient().getDob(),
+						issue.getFirst().getPrescription() != null ? issue.getFirst().getPrescription().getAddedDate() : null);
 				drugAdministrationResponse.setEncounterId(
-						issue.get(0).getEncounter() != null ? issue.get(0).getEncounter().getEncounterId() : null);
-				drugAdministrationResponse.setVisitType(issue.get(0).getEncounter().getVisitType() != null
-						? issue.get(0).getEncounter().getVisitType().getVisitTypeCode()
+						issue.getFirst().getEncounter() != null ? issue.getFirst().getEncounter().getEncounterId() : null);
+				drugAdministrationResponse.setVisitType(issue.getFirst().getEncounter().getVisitType() != null
+						? issue.getFirst().getEncounter().getVisitType().getVisitTypeCode()
 						: null);
-				drugAdministrationResponse.setVisitTypeId(issue.get(0).getEncounter().getVisitType() != null
-						? issue.get(0).getEncounter().getVisitType().getVisitTypeId()
+				drugAdministrationResponse.setVisitTypeId(issue.getFirst().getEncounter().getVisitType() != null
+						? issue.getFirst().getEncounter().getVisitType().getVisitTypeId()
 						: null);
 			}
 
@@ -197,18 +197,18 @@ public class DrugAdministrationService implements IDrugAdministrationService ,IC
 					drSpeciality = doctorSpeciality.get(0).getSpeciality().getSpecialityName();
 				}*/
 				String doctorDetail="";
-				if(prescriptions.get(0).getDoctor()!=null && prescriptions.get(0).getSpecialityMaster()!=null) {
-				 doctorDetail = prescriptions.get(0).getDoctor().getFirstName() + " "
-						+ prescriptions.get(0).getDoctor().getMiddleName() + " "
-						+ prescriptions.get(0).getDoctor().getLastName() + " | " + prescriptions.get(0).getSpecialityMaster().getSpecialityName();
+				if(prescriptions.getFirst().getDoctor()!=null && prescriptions.getFirst().getSpecialityMaster()!=null) {
+				 doctorDetail = prescriptions.getFirst().getDoctor().getFirstName() + " "
+						+ prescriptions.getFirst().getDoctor().getMiddleName() + " "
+						+ prescriptions.getFirst().getDoctor().getLastName() + " | " + prescriptions.getFirst().getSpecialityMaster().getSpecialityName();
 				}
-				if (prescriptions.get(0).getAdmission() != null) {
+				if (prescriptions.getFirst().getAdmission() != null) {
 					String wardName = "";
 					String bedNumber = "";
 					Date doa = null;
 					Date pdd = null;
 					AdmissionDetail admissionDetail = GlobalDao
-							.getPatientWardBedDetails(prescriptions.get(0).getAdmission().getAdmissionId());
+							.getPatientWardBedDetails(prescriptions.getFirst().getAdmission().getAdmissionId());
 					if (admissionDetail != null) {
 						doa = admissionDetail.getDoa();
 						pdd = admissionDetail.getPdd();
@@ -222,31 +222,31 @@ public class DrugAdministrationService implements IDrugAdministrationService ,IC
 						}
 					}
 					Integer age = Util.getAgeByBirthDate(
-							prescriptions.get(0).getAdmission().getPatient().getDob().toLocalDateTime().toLocalDate());
-					String patientDetail = prescriptions.get(0).getAdmission().getPatient().getPrefix().getPrefixCode()
-							+ " " + prescriptions.get(0).getAdmission().getPatient().getFirstName() + " "
-							+ prescriptions.get(0).getAdmission().getPatient().getMiddleName() + " "
-							+ prescriptions.get(0).getAdmission().getPatient().getLastName() + " | " + age + " | "
-							+ prescriptions.get(0).getAdmission().getPatient().getGender().getGenderCode();
+							prescriptions.getFirst().getAdmission().getPatient().getDob().toLocalDateTime().toLocalDate());
+					String patientDetail = prescriptions.getFirst().getAdmission().getPatient().getPrefix().getPrefixCode()
+							+ " " + prescriptions.getFirst().getAdmission().getPatient().getFirstName() + " "
+							+ prescriptions.getFirst().getAdmission().getPatient().getMiddleName() + " "
+							+ prescriptions.getFirst().getAdmission().getPatient().getLastName() + " | " + age + " | "
+							+ prescriptions.getFirst().getAdmission().getPatient().getGender().getGenderCode();
 
 					drugAdministrationResponse = new DrugAdministrationResponse(
-							prescriptions.get(0).getAdmission().getPatient().getPatientId(),
-							prescriptions.get(0).getAdmission().getPatient() != null
-									? prescriptions.get(0).getAdmission().getPatient().getUhidNumber()
+							prescriptions.getFirst().getAdmission().getPatient().getPatientId(),
+							prescriptions.getFirst().getAdmission().getPatient() != null
+									? prescriptions.getFirst().getAdmission().getPatient().getUhidNumber()
 									: null,
-							patientDetail, doctorDetail, prescriptions.get(0).getAdmission().getPatient().getDob(),
-							prescriptions.get(0) != null ? prescriptions.get(0).getAddedDate() : null);
+							patientDetail, doctorDetail, prescriptions.getFirst().getAdmission().getPatient().getDob(),
+							prescriptions.getFirst() != null ? prescriptions.getFirst().getAddedDate() : null);
 					drugAdministrationResponse.setWardName(!wardName.equals("") ? wardName : null);
 					drugAdministrationResponse.setBedNo(!bedNumber.equals("") ? bedNumber : null);
 					drugAdministrationResponse.setDoa(doa != null ? doa : null);
 					drugAdministrationResponse.setPdd(pdd != null ? pdd : null);
-					drugAdministrationResponse.setAdmissionId(prescriptions.get(0).getAdmission().getAdmissionId());
+					drugAdministrationResponse.setAdmissionId(prescriptions.getFirst().getAdmission().getAdmissionId());
 					drugAdministrationResponse
-							.setVisitType(prescriptions.get(0).getAdmission().getVisitType().getVisitTypeCode());
+							.setVisitType(prescriptions.getFirst().getAdmission().getVisitType().getVisitTypeCode());
 					drugAdministrationResponse
-							.setVisitTypeId(prescriptions.get(0).getAdmission().getVisitType().getVisitTypeId());
+							.setVisitTypeId(prescriptions.getFirst().getAdmission().getVisitType().getVisitTypeId());
 					drugAdministrationResponse
-							.setPrescriptionId(prescriptions.get(0) != null ? prescriptions.get(0).getId() : null);
+							.setPrescriptionId(prescriptions.getFirst() != null ? prescriptions.getFirst().getId() : null);
 				}
 			}
 		}
@@ -462,7 +462,7 @@ public class DrugAdministrationService implements IDrugAdministrationService ,IC
 				if(res2.getListObject() != null && res2.getListObject().size()>0) {
 					
 					  List<AntibioticTestDoseDto> list =res2.getListObject();
-					  mapDto.setAllergyTypeId(list.get(0).getAllergyTypeId());
+					  mapDto.setAllergyTypeId(list.getFirst().getAllergyTypeId());
 				}else {
 					 mapDto.setAllergyTypeId(0);
 				}

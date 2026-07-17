@@ -279,14 +279,14 @@ public class CrashCartApprovalService implements ICrashCartApprovalService {
 				}
 				// code end by minesh for consignment and consumption logic.
 
-				SaleDetail saleDetail = new SaleDetail(batch, /* items.getDiscountAmount() */ new Double(0),
+				SaleDetail saleDetail = new SaleDetail(batch, /* items.getDiscountAmount() */ Double.valueOf(0),
 						items.getLeaseQuantity(), items.getNetAmount(), /* items.getOrderDetailId() */ null,
 						/*
 						 * (items.getPrescriptionDetailId() != null) ? new
 						 * PrescriptionDetail(items.getPrescriptionDetailId()) :
 						 */ null, items.getQuantity(), items.getRate(), items.getTaxAmount(), new Tax(items.getTaxId()),
 						items.getTaxPercentage(), items.getTotalAmount(),
-						/* items.getUnitDiscountAmount() */new Double(0),
+						/* items.getUnitDiscountAmount() */Double.valueOf(0),
 						items.getUomTypeId() != null ? new UomType(items.getUomTypeId()) : null,
 						items.getUomUnitId() != null ? new UomUnit(items.getUomUnitId()) : null,
 						new Status(com.param.common.constants.Status.Pending.getStatus()), items.getSelfPayable(),
@@ -509,7 +509,7 @@ public class CrashCartApprovalService implements ICrashCartApprovalService {
 							// Don't throw - get first object and set data.
 						}
 
-						PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+						PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 						item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 						item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 
@@ -593,7 +593,7 @@ public class CrashCartApprovalService implements ICrashCartApprovalService {
 							// Don't throw - get first object and set data.
 						}
 
-						PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+						PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 						item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 						item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 
@@ -916,14 +916,14 @@ public class CrashCartApprovalService implements ICrashCartApprovalService {
 				}
 				// code end by minesh for consignment and consumption logic.
 
-				SaleDetail saleDetail = new SaleDetail(batch, /* items.getDiscountAmount() */ new Double(0),
+				SaleDetail saleDetail = new SaleDetail(batch, /* items.getDiscountAmount() */ Double.valueOf(0),
 						items.getLeaseQuantity(), items.getNetAmount(), /* items.getOrderDetailId() */ null,
 						/*
 						 * (items.getPrescriptionDetailId() != null) ? new
 						 * PrescriptionDetail(items.getPrescriptionDetailId()) :
 						 */ null, items.getQuantity(), items.getRate(), items.getTaxAmount(), new Tax(items.getTaxId()),
 						items.getTaxPercentage(), items.getTotalAmount(),
-						/* items.getUnitDiscountAmount() */new Double(0),
+						/* items.getUnitDiscountAmount() */Double.valueOf(0),
 						items.getUomTypeId() != null ? new UomType(items.getUomTypeId()) : null,
 						items.getUomUnitId() != null ? new UomUnit(items.getUomUnitId()) : null,
 						new Status(com.param.common.constants.Status.Pending.getStatus()), items.getSelfPayable(),

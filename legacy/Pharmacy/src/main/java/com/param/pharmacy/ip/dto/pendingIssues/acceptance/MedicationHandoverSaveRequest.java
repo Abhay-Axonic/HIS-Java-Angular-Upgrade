@@ -45,7 +45,7 @@ public class MedicationHandoverSaveRequest extends CookieObjectDto{
 	public void setPrescriptionDetailsList(List<PrescriptionDetailsList> prescriptionDetailsList) {
 		this.prescriptionDetailsList = prescriptionDetailsList;
 	}
-	private Integer prescriptionId;;
+	private Integer prescriptionId;
 	private String receiverName;
 	private String receiverContactDetails;
 	private Integer relationshipId;

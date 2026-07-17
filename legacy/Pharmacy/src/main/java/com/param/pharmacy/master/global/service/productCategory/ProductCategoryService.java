@@ -173,10 +173,10 @@ public class ProductCategoryService implements IProductCategoryService {
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Product Category Updated Successfully");
 
-		Long productCategoryCount = new Long(0);
-		Long genericCount = new Long(0);
-		Long productRestrictionCount = new Long(0);
-		Long AssetcategoryCount = new Long(0);
+		Long productCategoryCount = Long.valueOf(0);
+		Long genericCount = Long.valueOf(0);
+		Long productRestrictionCount = Long.valueOf(0);
+		Long AssetcategoryCount = Long.valueOf(0);
 		if (!productCategory.getIsActive()) {
 			productCategoryCount = ProductCategoryDao.getProductCategoryCountFromItem(productCategoryRequest.getId());
 			genericCount = ProductCategoryDao.getProductCategoryCountFromGeneric(productCategoryRequest.getId());

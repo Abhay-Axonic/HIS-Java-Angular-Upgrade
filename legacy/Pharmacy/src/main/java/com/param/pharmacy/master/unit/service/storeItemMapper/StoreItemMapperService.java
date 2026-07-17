@@ -267,7 +267,7 @@ public class StoreItemMapperService implements IStoreItemMapperService {
 	        req.setItemId(request.getItemId());
 	        List<com.param.pharmacy.master.unit.dto.StoreStockResponse> stockResponse= StoreItemMapperDao.checkStock(req);
 	        
-	        if(stockResponse.size() > 0 && stockResponse.get(0).getCurrentStock() > 0)
+	        if(stockResponse.size() > 0 && stockResponse.getFirst().getCurrentStock() > 0)
 	        {
 	        	
 	        //	throw new CustomeException(null, "Stock is available", null);
