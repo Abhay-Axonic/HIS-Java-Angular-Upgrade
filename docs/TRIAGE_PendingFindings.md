@@ -1,6 +1,6 @@
 # Triage: remaining pending findings from the shadow-test harness work
 
-*Written 2026-07-15, for a single owner sit-down. Covers everything still marked "Pending" in `docs/BUSINESS_RULE_MANIFEST.md` after the GRN null-tax-reference crash was split out and fixed separately (see `docs/DECISION_NEEDED_GrnNullTaxReferenceCrash.md`). No urgency on any of these — this document exists so you can go through them in one sitting instead of digging through session logs. Plain language throughout; each section links back to the full technical write-up in `docs/BUSINESS_RULE_MANIFEST.md` if you want more detail on any one of them. Section 6 added 2026-07-17, same format, two findings from the Pharmacy characterization pass that likewise need an outside answer rather than a coding decision.*
+*Written 2026-07-15, for a single owner sit-down. Covers everything still marked "Pending" in `docs/BUSINESS_RULE_MANIFEST.md` after the GRN null-tax-reference crash was split out and fixed separately (see `docs/DECISION_NEEDED_GrnNullTaxReferenceCrash.md`). No urgency on any of these — this document exists so you can go through them in one sitting instead of digging through session logs. Plain language throughout; each section links back to the full technical write-up in `docs/BUSINESS_RULE_MANIFEST.md` if you want more detail on any one of them. Section 6 added 2026-07-17, same format, two findings from the Pharmacy characterization pass that likewise need an outside answer rather than a coding decision. Sections 7-8 added 2026-07-17, closing out the remaining Pharmacy/HIS-WAR/Procurement characterization scope — section 7 touches money math directly and is the most significant new finding of this batch.*
 
 **How to read the "recommendation" in each section:** these aren't instructions — they're my read on which way each one leans, and why, so you have a starting point rather than a blank page. Several of these need a business-judgment answer only you (or your finance/accounting side) can actually give; I've said so plainly where that's the case rather than guessing.
 
@@ -98,6 +98,30 @@
 
 ---
 
+## 7. Package add-on services can be billed to the patient without being added to the bill's own total
+
+**Where:** the process that posts newly-ordered services onto a bill that's already open (used, among other places, when a pharmacy walk-in sale gets attached to an existing bill). Specifically, the path that fires when the service being posted is part of a package AND the visit is an outpatient visit. Full detail: `BR-PENDING-pharmacy-postservicesintoexistingbill-ehc-payeepriority-batch5`.
+
+**What it is, plainly:** when a package service has "add-on" services bundled with it (the system calls these EHC services), each add-on gets its own line item saved to the bill — so it shows up in the itemized detail. But the running total that gets added to the bill's overall amount owed only ever includes the ONE main package service, never the add-on services riding alongside it. So a patient could have, say, three add-on services totaling a real amount, all three appear as line items on the bill, but the bill's headline total/outstanding-balance figures don't reflect any of them.
+
+**How often this actually matters:** unknown without real billing data — this only fires for package services on outpatient visits that actually have add-on (EHC) services attached, not every bill.
+
+**My recommendation:** this is the one finding in this whole document I'd treat as an active, not just theoretical, money-accounting gap — line items exist in the system that the bill's own total doesn't count. Worth checking against real billing history (once that access is available) for whether this combination has actually occurred, and if so, whether those add-on amounts ever got collected some other way (a separate invoice, a manual adjustment) or whether they've genuinely gone uncounted. I would not guess at the fix here — before touching it, I'd want someone who understands how EHC add-on billing is supposed to work to confirm the total SHOULD include them (I believe it should, but that's a billing-workflow judgment, not something the code tells me on its own).
+
+---
+
+## 8. A manually-triggered doctor-share calculation could double-post if ever run twice
+
+**Where:** a doctor-share calculation job that is NOT the live nightly batch (that's a separate, different piece of code) — this one only runs if someone manually hits a specific internal developer URL. Full detail: `BR-PENDING-hiswar-tdoctorshare-getdoctorshareservice`.
+
+**What it is, plainly:** two things compound here. First, this job is supposed to mark each billing record as "already processed for doctor-share" once it's done with it, so a second run doesn't process the same records again — but that marking step is commented out in the code, so it never actually happens. Second, the way this job pages through records grows its page size every round (page 1 asks for up to 1,000 records, page 2 asks for up to 2,000, page 3 up to 3,000, and so on) rather than a fixed page size, which is unusual and worth a second look even independent of the first issue. Put together: if this manual endpoint is ever triggered more than once over the same data, there's nothing stopping it from calculating and saving a doctor's share a second time for records it already processed.
+
+**How often this actually matters:** very low likelihood in practice — this isn't the live nightly job (see caveat above), it's a manual, rarely-used endpoint. I have no evidence it has ever actually been run twice over the same window.
+
+**My recommendation:** low urgency given how rarely this path is actually exercised, but cheap and low-risk to fix whenever convenient — restoring the "mark as processed" call is a small, contained change. I'd flag it for fixing rather than leaving indefinitely, since the failure mode (a doctor's share silently calculated twice) is the kind of thing that's hard to notice after the fact. The growing-page-size pagination pattern is worth a separate look but is not itself a correctness bug on its own — noting it here so it doesn't get lost.
+
+---
+
 ## Summary table
 
 | # | Finding | Touches money math? | My lean |
@@ -112,6 +136,8 @@
 | 5 | Misleading "already in process" message | No | Low priority, easy improvement when convenient |
 | 6a | Same overpayment leaves a different balance depending on the "invoice generated" flag | **Yes** | Needs a business-workflow answer, not a coding decision — ask, then align both branches |
 | 6b | Skipping the balance amount can push owing amount negative, bypassing the deposit-creation step | **Yes** | Needs a business-intent answer — may already be intended as "patient credit"; no evidence of real impact found |
+| 7 | Package add-on (EHC) service amounts excluded from the bill's own total | **Yes** | Active money-accounting gap, worth checking against real billing history first; likely should be fixed but needs a workflow-behavior confirmation, not a guess |
+| 8 | Manually-triggered doctor-share job could double-post if run twice (mark-as-posted is commented out) | **Yes** | Low urgency (rarely-run manual endpoint, not the live nightly batch), but cheap to fix — recommend fixing when convenient |
 
 Everything above is still exactly as found — nothing in this document has been changed in code. This is a reading list for your triage session, not a to-do list I've started on.
 
