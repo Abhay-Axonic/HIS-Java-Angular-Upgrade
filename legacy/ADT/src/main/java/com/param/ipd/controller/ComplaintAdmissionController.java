@@ -34,7 +34,7 @@ public class ComplaintAdmissionController implements ICommonConstants{
 			ComplaintAdmissionDto complaintAdmissionDto= new ComplaintAdmissionDto();
 			complaintAdmissionDto.setUnitId(unitId);
 			complaintAdmissionDto.setOrganizationId(organizationId);
-			complaintAdmissionDto.setAdmissionId(admissionId);;
+			complaintAdmissionDto.setAdmissionId(admissionId);
 			complaintAdmissionDto.setRoleId(roleId);
 			return iComplaintAdmissionService.getComplaintAdmission(complaintAdmissionDto);
 		}catch(Exception e)

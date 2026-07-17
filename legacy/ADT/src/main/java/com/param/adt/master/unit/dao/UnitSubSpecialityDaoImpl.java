@@ -75,7 +75,6 @@ public class UnitSubSpecialityDaoImpl extends GenericDao<UnitSubSpecialityMapper
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -117,7 +116,6 @@ public class UnitSubSpecialityDaoImpl extends GenericDao<UnitSubSpecialityMapper
 			
 			return new Response<SpecialityMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

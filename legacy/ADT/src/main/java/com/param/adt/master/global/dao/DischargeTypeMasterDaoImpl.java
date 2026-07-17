@@ -113,7 +113,6 @@ public class DischargeTypeMasterDaoImpl extends GenericDao<DischargeTypeMaster, 
 			
 			return new Response<DischargeTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -188,7 +187,6 @@ public class DischargeTypeMasterDaoImpl extends GenericDao<DischargeTypeMaster, 
 			
 			return new Response<DischargeTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

@@ -116,7 +116,6 @@ public class OccupancyUnitMasterDaoImpl extends GenericDao<OccupancyUnitMaster, 
 			
 			return new Response<OccupancyUnitMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -191,7 +190,6 @@ public class OccupancyUnitMasterDaoImpl extends GenericDao<OccupancyUnitMaster, 
 			
 			return new Response<OccupancyUnitMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 	

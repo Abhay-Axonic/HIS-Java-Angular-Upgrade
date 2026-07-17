@@ -8,12 +8,19 @@ public interface IMailConstants {
 			String SMTP_USER_ID = "info@clinivantage.com";//"katkar.yogesh7350@gmail.com";
 
 			String MAIL_SUBJECT = "Password Reset";
-			String MESSAGE = "You recently requested to reset your password for your Clinivantage account. "
-							+ "\nBased on request we have successfully changed your password,  "
-							+ "\nand your new password is :  ";
-			String NOTE = "\n\nNote : Please don't forget to change your password once you logged in to your Clinivantage system from my profile section. "
-						+ "\n\nRegards, "
-						+ "\nClinivantage Team ";
+			String MESSAGE = """
+							You recently requested to reset your password for your Clinivantage account.\s
+							Based on request we have successfully changed your password, \s
+							and your new password is : \s\
+							""";
+			String NOTE = """
+						
+						
+						Note : Please don't forget to change your password once you logged in to your Clinivantage system from my profile section.\s
+						
+						Regards,\s
+						Clinivantage Team\s\
+						""";
 			
 			
 			public String SALUTATION = "Hi ";
@@ -22,9 +29,12 @@ public interface IMailConstants {
 			public String DOCTOR_REG_CONTENT = "\nYour Registration as Doctor is successful with Clinivantage.\nFurther are the login credentials for Application ";
 			public String EMPLOYEE_REG_CONTENT = "\nYour Registration is successful with Clinivantage.\nFurther are the login credentials for Application ";
 			
-			public String CHANGE_PASSWORD_NOTE = "Note:  Please don't forget to change your password once you logged in to your Clinivantage system from my profile section."
-												+ "\n\nRegards, "
-												+ "\nClinivantage Team ";
+			public String CHANGE_PASSWORD_NOTE = """
+												Note:  Please don't forget to change your password once you logged in to your Clinivantage system from my profile section.
+												
+												Regards,\s
+												Clinivantage Team\s\
+												""";
 			public String USERNAME = "\nUsername: ";
 			public String PASSWORD = "\nPassword: ";
 			

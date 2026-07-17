@@ -1093,7 +1093,6 @@ implements IAdmittedPatientListDao, ICommonConstants {
 			
 		}
 		finally {
-			;
 		}
 		return new Response(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -1910,7 +1909,7 @@ try {
 				 String emergencyNumber = "";
 				if(res2.getListObject().size()>0){
 					List<KinDetailsDto> list = res2.getListObject();
-					KinDetailsDto kin = list.get(0);
+					KinDetailsDto kin = list.getFirst();
 					emergencyNumber = kin.getMobileNo();
 				}
 				
@@ -1996,7 +1995,7 @@ try {
 			            String emergencyNumber = "";
 						if(res2.getListObject().size()>0){
 							List<KinDetailsDto> list = res2.getListObject();
-							KinDetailsDto kin = list.get(0);
+							KinDetailsDto kin = list.getFirst();
 							emergencyNumber = kin.getMobileNo();
 						}
 						

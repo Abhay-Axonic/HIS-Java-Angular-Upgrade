@@ -1,5 +1,6 @@
 package com.param.adt.common;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(proxyMode=ScopedProxyMode.TARGET_CLASS, value = "session")
 public class SessionObject implements Serializable{
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private LinkedHashMap<Integer, String> allUrlMap;

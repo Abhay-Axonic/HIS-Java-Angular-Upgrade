@@ -97,7 +97,6 @@ public class PatientConsentVideoDetailsDaoImpl extends GenericDao<PatientConsent
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

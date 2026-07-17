@@ -663,7 +663,7 @@ public class MarkedForDischargeDaoImpl extends GenericDao<Discharge, Integer>
 	public Response getPatientFinalDischargeListNewForListAndCount(DischargeDto dischargeDto)
 	throws ApplicationException {
 	try {
-	String query = sessionFactory.getCurrentSession().getNamedQuery("GET_PATIENT_FINAL_DISCHARGE_LIST_NEW_FOR_LIST_AND_COUNT").getQueryString().toString();;
+	String query = sessionFactory.getCurrentSession().getNamedQuery("GET_PATIENT_FINAL_DISCHARGE_LIST_NEW_FOR_LIST_AND_COUNT").getQueryString().toString();
 	StringBuilder sb = new StringBuilder(query);
 	StringBuilder sb1 = sb;
 	Integer count=0;
@@ -857,7 +857,7 @@ public class MarkedForDischargeDaoImpl extends GenericDao<Discharge, Integer>
 	public Response getDischargedPatientsList(DischargeDto dischargeDto) throws ApplicationException {
 
 		try {
-		String query = sessionFactory.getCurrentSession().getNamedQuery("GET_DISCHARGED_PATIENT_LIST_AND_COUNT").getQueryString().toString();;
+		String query = sessionFactory.getCurrentSession().getNamedQuery("GET_DISCHARGED_PATIENT_LIST_AND_COUNT").getQueryString().toString();
 		StringBuilder sb = new StringBuilder(query);
 		Integer count=0;
 		List<AdmissionDto> admissionDtosList=null;

@@ -58,7 +58,6 @@ public class BedReservationListDaoImpl extends GenericDao<UnreservedPatient, Int
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

@@ -110,7 +110,7 @@ public class TransferToICUDaoImpl extends GenericDao<TransferRequest, Integer> i
 			
 			if(listServiceMasterDto.size() > 0) 
 			{
-				transferDto.setOldTransferId(listServiceMasterDto.get(0).getTransferId());
+				transferDto.setOldTransferId(listServiceMasterDto.getFirst().getTransferId());
 			}
 			
 			Query q=sessionFactory.getCurrentSession().createQuery("update Transfer traReq set "

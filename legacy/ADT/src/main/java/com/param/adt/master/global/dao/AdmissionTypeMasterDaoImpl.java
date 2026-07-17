@@ -134,7 +134,6 @@ public class AdmissionTypeMasterDaoImpl   extends GenericDao<AdmissionTypeMaster
 			
 			return new Response<AdmissionTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -173,7 +172,6 @@ public class AdmissionTypeMasterDaoImpl   extends GenericDao<AdmissionTypeMaster
 			
 			return new Response<AdmissionTypeMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 

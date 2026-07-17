@@ -114,7 +114,7 @@ public class ConsentMasterServiceImpl implements IConsentMasterService,ICommonCo
 				Response ConsentTyperes =  iConsentTypeDao.getConsentTypeById(dto);
 				dto1=ConsentTyperes.getListObject();
 				
-				consentMasDto.setConsentTypeMasterName(dto1.get(0).getConsentTypeMasterName());
+				consentMasDto.setConsentTypeMasterName(dto1.getFirst().getConsentTypeMasterName());
 				consentMasDto.setConsentMasterId(consentMaster.getConsentMasterId());
 				consentMasDto.setConsentMasterName(consentMaster.getConsentMasterName());
 				consentMasDto.setConsentTypeMasterId(consentMasterDto.getConsentTypeMasterId());
@@ -165,7 +165,7 @@ public class ConsentMasterServiceImpl implements IConsentMasterService,ICommonCo
 				dto1=ConsentTyperes.getListObject();
 				
 				ConsentMasterDto consentMasDto = new ConsentMasterDto();
-				consentMasDto.setConsentTypeMasterName(dto1.get(0).getConsentTypeMasterName());
+				consentMasDto.setConsentTypeMasterName(dto1.getFirst().getConsentTypeMasterName());
 				consentMasDto.setConsentMasterId(consentMasterDto.getConsentMasterId());
 				consentMasDto.setConsentMasterName(consentMasterDto.getConsentMasterName());
 				consentMasDto.setConsentTypeMasterId(consentMasterDto.getConsentTypeMasterId());
@@ -312,7 +312,7 @@ public class ConsentMasterServiceImpl implements IConsentMasterService,ICommonCo
 			String dateTime = GlobalCommonDateUtils.getStringDate(TimeZoneComponent.getDateByzone(0), "dd-M-yyyy HH:mm:ss");
 			
 			UnitTemplateConfigDto reqDto = new UnitTemplateConfigDto();
-			reqDto.setUnitId(list.get(0).getUnitId());
+			reqDto.setUnitId(list.getFirst().getUnitId());
 			com.param.global.common.Response tempalteConfigRes = iTemplateMasterService.getTemplateConfigByUnit(reqDto);
 			reqDto = (UnitTemplateConfigDto) tempalteConfigRes.getObject();
 			

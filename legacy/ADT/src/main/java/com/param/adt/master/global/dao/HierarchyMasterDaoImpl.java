@@ -162,7 +162,6 @@ public class HierarchyMasterDaoImpl extends GenericDao<HierarchyMaster, Integer>
 			
 			return new Response<HierarchyMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -183,7 +182,6 @@ public class HierarchyMasterDaoImpl extends GenericDao<HierarchyMaster, Integer>
 			
 			return new Response<HierarchyMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 
 	}

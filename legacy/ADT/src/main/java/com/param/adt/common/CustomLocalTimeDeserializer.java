@@ -1,6 +1,7 @@
 package com.param.adt.common;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.time.LocalTime;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -9,7 +10,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 public class CustomLocalTimeDeserializer extends StdDeserializer<LocalTime>{
-	
+
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public CustomLocalTimeDeserializer(){

@@ -50,7 +50,6 @@ public class DeliveryTypeMasterController implements ICommonConstants{
 		}catch(Exception e){
 			
 		}finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null,null);
 	}

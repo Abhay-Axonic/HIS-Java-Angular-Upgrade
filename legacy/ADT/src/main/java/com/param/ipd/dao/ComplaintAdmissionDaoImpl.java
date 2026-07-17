@@ -178,7 +178,7 @@ public class ComplaintAdmissionDaoImpl extends GenericDao<ComplaintAdmission, In
 				//complaintAppointmentMapper.setIsReviewedFlag(YES);
 				complaintAdmission.setCreatedBy(complaintAdmissionDto.getCreatedBy());
 				complaintAdmission.setIsComplaintStop('N');
-				complaintAdmission.setIsResolved('N');;
+				complaintAdmission.setIsResolved('N');
 				complaintAdmission.setUpdatedBy(complaintAdmissionDto.getUpdatedBy());
 				complaintAdmission.setUpdatedDate(GlobalCommonDateUtils.getDate(complaintAdmissionDto.getUpdatedDate(), "dd-MM-yyyy HH:mm:ss"));
 				complaintAdmission.setStatus(complaintAdmissionDto.getStatus());

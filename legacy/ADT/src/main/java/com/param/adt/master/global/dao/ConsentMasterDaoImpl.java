@@ -89,7 +89,6 @@ public class ConsentMasterDaoImpl extends GenericDao<ConsentMaster, Integer> imp
 			
 			return new Response<ConsentMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -109,7 +108,6 @@ public class ConsentMasterDaoImpl extends GenericDao<ConsentMaster, Integer> imp
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -131,7 +129,6 @@ public class ConsentMasterDaoImpl extends GenericDao<ConsentMaster, Integer> imp
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -150,7 +147,6 @@ public class ConsentMasterDaoImpl extends GenericDao<ConsentMaster, Integer> imp
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -172,7 +168,6 @@ public class ConsentMasterDaoImpl extends GenericDao<ConsentMaster, Integer> imp
 			
 			return new Response<ConsentMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -191,7 +186,6 @@ public class ConsentMasterDaoImpl extends GenericDao<ConsentMaster, Integer> imp
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -213,7 +207,6 @@ public class ConsentMasterDaoImpl extends GenericDao<ConsentMaster, Integer> imp
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

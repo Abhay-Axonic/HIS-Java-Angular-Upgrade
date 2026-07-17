@@ -54,7 +54,6 @@ public class NationalityMasterDaoImpl extends GenericDao<NationalityMaster, Inte
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -75,7 +74,6 @@ public class NationalityMasterDaoImpl extends GenericDao<NationalityMaster, Inte
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -94,7 +92,6 @@ public class NationalityMasterDaoImpl extends GenericDao<NationalityMaster, Inte
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -113,7 +110,6 @@ public class NationalityMasterDaoImpl extends GenericDao<NationalityMaster, Inte
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -134,7 +130,6 @@ public class NationalityMasterDaoImpl extends GenericDao<NationalityMaster, Inte
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -159,7 +154,6 @@ public class NationalityMasterDaoImpl extends GenericDao<NationalityMaster, Inte
 			
 			return new Response<NationalityMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -198,7 +192,6 @@ public class NationalityMasterDaoImpl extends GenericDao<NationalityMaster, Inte
 			
 			return new Response<NationalityMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 
 	}
@@ -234,7 +227,6 @@ public class NationalityMasterDaoImpl extends GenericDao<NationalityMaster, Inte
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}

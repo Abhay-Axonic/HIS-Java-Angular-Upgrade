@@ -54,7 +54,6 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -75,7 +74,6 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 		}catch (Exception e) {
 			
 		}finally{
-			 ;
 		}
 		return new Response(ERROR, null, null, null,null);
 	}
@@ -110,7 +108,6 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
@@ -132,7 +129,6 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 		}catch (Exception e) {
 			
 		}finally{
-			 ;
 		}
 		return new Response(ERROR, null, null, null,null);
 	}
@@ -154,7 +150,6 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 			
 			return new Response<OccupationMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -178,7 +173,6 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 			
 			return new Response<OccupationMasterDto, Integer>(ERROR, null, null, null, null);
 		} finally {
-			 ;
 		}
 	}
 
@@ -196,7 +190,6 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 		} catch (Exception e) {
 			
 		} finally {
-			 ;
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
