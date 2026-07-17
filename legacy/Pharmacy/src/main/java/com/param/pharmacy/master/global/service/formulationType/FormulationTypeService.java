@@ -117,8 +117,8 @@ public class FormulationTypeService implements IFormulationTypeService {
 
 		CommonResponse response = new CommonResponse();
 		response.setMessage("FormulationType Updated Successfully");
-		Long countFromItem = new Long(0);
-		Long countFromFormulaROA = new Long(0);
+		Long countFromItem = Long.valueOf(0);
+		Long countFromFormulaROA = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (!formulationType.getIsActive()) {
 			countFromItem = FormulationTypeDao.getFormulationTypeCountFromItem(formulationTypeRequest.getId());

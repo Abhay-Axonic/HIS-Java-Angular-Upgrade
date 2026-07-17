@@ -143,9 +143,9 @@ public class AntibioticTestDoseDaoImpl extends GenericDao<AntibioticTestDose, In
 							.setResultTransformer(Transformers.aliasToBean(AntibioticTestDoseDto.class)).list();
 					
 					Integer flag =0;
-					if(list.get(0).getAntibioticTestDoseId() != null) {
+					if(list.getFirst().getAntibioticTestDoseId() != null) {
 						
-						if(list.get(0).getObservationDate() != null) {
+						if(list.getFirst().getObservationDate() != null) {
 							flag =1;
 						}
 						

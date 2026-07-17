@@ -371,9 +371,9 @@ public class PendingIssuesAcceptanceMedicationService implements ICommonConstant
 								ampoules = new ReturnOfEmptyAmpoules(new Issue(issue.getId()),
 										new PatientRegistration(
 												issue.getPrescription().getAdmission().getPatient().getPatientId()),
-										new WardMasters(issue.getAdmission().getAdmissionDetail().get(0).getWardMaster()
+										new WardMasters(issue.getAdmission().getAdmissionDetail().getFirst().getWardMaster()
 												.getWardId()),
-										new BedMaster(issue.getAdmission().getAdmissionDetail().get(0).getBedMaster()
+										new BedMaster(issue.getAdmission().getAdmissionDetail().getFirst().getBedMaster()
 												.getBedId()),
 										new Priority(issue.getPrescription().getPriority().getPriorityId()),
 										new Status(com.param.common.constants.Status.New.getStatus()));
@@ -416,9 +416,9 @@ public class PendingIssuesAcceptanceMedicationService implements ICommonConstant
 										new PatientRegistration(
 												issue.getPrescription().getAdmission().getPatient().getPatientId()),
 
-										new WardMasters(issue.getAdmission().getAdmissionDetail().get(0).getWardMaster()
+										new WardMasters(issue.getAdmission().getAdmissionDetail().getFirst().getWardMaster()
 												.getWardId()),
-										new BedMaster(issue.getAdmission().getAdmissionDetail().get(0).getBedMaster()
+										new BedMaster(issue.getAdmission().getAdmissionDetail().getFirst().getBedMaster()
 												.getBedId()),
 										new Priority(issue.getPrescription().getPriority().getPriorityId()),
 										new Status(com.param.common.constants.Status.New.getStatus()));
@@ -806,9 +806,9 @@ public class PendingIssuesAcceptanceMedicationService implements ICommonConstant
 				BigInteger totalIssuedQty = GlobalDao.getTotalIssuedQty(patientId,
 						prescriptionDetail.getItem().getId());
 				BatchDetail bthDetail = pharmacologyValidationDao.getBatchDetail(prescriptionDetail.getId());
-				BigInteger consumedQty =BigInteger.valueOf(0);;
+				BigInteger consumedQty =BigInteger.valueOf(0);
 				if(bthDetail!=null) { 
-					consumedQty = GlobalDao.getConsumedQty(patientId, prescriptionDetail.getItem().getId(), new Long(bthDetail.getBatchId()), 0);
+					consumedQty = GlobalDao.getConsumedQty(patientId, prescriptionDetail.getItem().getId(), Long.valueOf(bthDetail.getBatchId()), 0);
 				}
 				
 				// prescriptionDetail.getItem().get

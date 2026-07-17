@@ -74,7 +74,7 @@ public class SalesReturnController implements ICommonConstants, IError{
 		try {
 			List<Long> saleIds=new ArrayList<Long>();
 			for (RequestSaleReturnSave iterable_element : requestSaleReturnSave.getReuquestSaleReturnList()) {
-				saleIds.add(iterable_element.getSaleIds().get(0)); 
+				saleIds.add(iterable_element.getSaleIds().getFirst()); 
 			}
 			Double getSalesAmount=ISalesReturnService.getsalesAmount(saleIds,requestSaleReturnSave.getSelfPayeeId());
 			Double getReturnedAmount=ISalesReturnService.getReturnedAmount(saleIds);

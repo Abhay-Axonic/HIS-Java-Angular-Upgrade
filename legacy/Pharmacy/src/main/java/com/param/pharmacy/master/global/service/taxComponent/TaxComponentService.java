@@ -102,7 +102,7 @@ public class TaxComponentService implements ITaxComponentService {
 
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Tax Component Updated Successfully");
-		Long count = new Long(0);
+		Long count = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (!taxComponent.getIsActive()) {
 			count = TaxComponentDao.getTaxComponentFromTax(taxComponentRequest.getId(),taxComponentRequest.getOrganizationId());

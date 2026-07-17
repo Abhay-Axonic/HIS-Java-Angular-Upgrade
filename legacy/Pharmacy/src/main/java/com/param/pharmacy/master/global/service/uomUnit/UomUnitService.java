@@ -129,7 +129,7 @@ public class UomUnitService implements IUomUnitService {
 
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Uom Unit Updated Successfully");
-		Long count = new Long(0);
+		Long count = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (!uomUnit.getIsActive()) {
 			count = UomUnitDao.getUnitOfMesurementCountFromUnit(uomUnit.getId(),uomUnitRequest.getOrganizationId());

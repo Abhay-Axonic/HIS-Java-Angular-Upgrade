@@ -441,8 +441,8 @@ public class QMSTokenMasterDaoImpl extends GenericDao<QMSTokenMaster, Integer>
 				sessionFactory.getCurrentSession().createSQLQuery("update pharmacy.t_broadcast_qms_msg set "
 						+ "status='I'"
 						+ "WHERE broadcast_qms_msg_id=:id and qms_kiosk_master_id=:kioskId")
-					.setParameter("id", dtoList.get(0).getBroadcastQmsMsgId())
-					.setParameter("kioskId", dtoList.get(0).getQmsKioskMasterId())
+					.setParameter("id", dtoList.getFirst().getBroadcastQmsMsgId())
+					.setParameter("kioskId", dtoList.getFirst().getQmsKioskMasterId())
 				.executeUpdate();
 			}
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, dtoList, null);

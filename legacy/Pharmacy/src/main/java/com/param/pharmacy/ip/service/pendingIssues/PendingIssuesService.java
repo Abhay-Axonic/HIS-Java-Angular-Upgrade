@@ -596,12 +596,12 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 				item.setIsSolution(issueDetail.getPrescriptionDetail().getIsSolution());
 				if(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().size()>0)
 				{
-					item.setFrequencyDesc(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0)
+					item.setFrequencyDesc(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst()
 							.getFrequency().getDescription());
 					item.setStartDate(
-							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0).getStartDate());
+							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst().getStartDate());
 					item.setStopDate(
-							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0).getStopDate());
+							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst().getStopDate());
 				}
 				
 				// ,
@@ -648,12 +648,12 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 						issueDetail.getSaleDetail()!=null && issueDetail.getSaleDetail().getPackageConsumptionAmt() != null ? issueDetail.getSaleDetail().getPackageConsumptionAmt() : null);
 				if(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().size()>0)
 				{
-					item.setFrequencyDesc(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0)
+					item.setFrequencyDesc(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst()
 							.getFrequency().getDescription());
 					item.setStartDate(
-							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0).getStartDate());
+							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst().getStartDate());
 					item.setStopDate(
-							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0).getStopDate());
+							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst().getStopDate());
 				}
 				if (pharmacologyItemListAddedItems != null && pharmacologyItemListAddedItems.size() > 0) {
 
@@ -662,7 +662,7 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 						if (issueDetail.getId().equals(issuedto.getId())) {
 
 							for (PharmacologyItem pharmacologyItemDto : pharmacologyItemListAddedItems) {
-								if (new Long(issuedto.getBatchId()).equals(pharmacologyItemDto.getBatchId())) {
+								if (Long.valueOf(issuedto.getBatchId()).equals(pharmacologyItemDto.getBatchId())) {
 									item.setPickedQuantity(pharmacologyItemDto.getQuantity());
 								}
 							}
@@ -699,7 +699,7 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 								// Don't throw - get first object and set data.
 							}
 
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 
@@ -776,10 +776,10 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 							if(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().size()>0)
 							{
 								itm.setFrequencyDesc(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails()
-										.get(0).getFrequency().getDescription());
+										.getFirst().getFrequency().getDescription());
 								itm.setStartDate(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails()
-										.get(0).getStartDate());
-								itm.setStopDate(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0)
+										.getFirst().getStartDate());
+								itm.setStopDate(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst()
 										.getStopDate());
 							}
 							
@@ -787,7 +787,7 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 
 								for (PharmacologyItem pharmacologyItemDto : pharmacologyItemListAddedItems) {
 
-									if (new Long(substituteList.getBatchid())
+									if (Long.valueOf(substituteList.getBatchid())
 											.equals(pharmacologyItemDto.getBatchId())) {
 
 										itm.setPickedQuantity(substituteList.getQuantityIssued() != null
@@ -923,7 +923,7 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 
 
 
-								PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+								PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 								itm.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 								itm.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 
@@ -1095,7 +1095,7 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 											// Don't throw - get first object and set data.
 										}
 
-										PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+										PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 										itm.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 										itm.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 
@@ -1467,7 +1467,7 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 				(pendingIssuesSave.getVisitTypeId() != null) ? new VisitType(pendingIssuesSave.getVisitTypeId()) : null,
 				(pendingIssuesSave.getSaleTypeId() != null) ? new SaleType(pendingIssuesSave.getSaleTypeId()) : null,
 				(pendingIssuesSave.getPrescriptionId() != null)
-						? new Prescription(new Long(pendingIssuesSave.getPrescriptionId())) : null,
+						? new Prescription(Long.valueOf(pendingIssuesSave.getPrescriptionId())) : null,
 				pendingIssuesSave.getTotalSelfPayable(), pendingIssuesSave.getTotalCreditPayable(),
                 pendingIssuesSave.getRemark());
 //		sale.setConsolidatedBill(pendingIssuesSave.getIsConsolidatedFlag());
@@ -1492,7 +1492,7 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 			sale.setEncounter(new Encounter(pendingIssuesSave.getEncounterId()));
 		}
 		if (pendingIssuesSave.getPrescriptionId() != null) {
-			sale.setPrescription(new Prescription(new Long(pendingIssuesSave.getPrescriptionId())));
+			sale.setPrescription(new Prescription(Long.valueOf(pendingIssuesSave.getPrescriptionId())));
 		}
 		sale.setStatus(new Status(com.param.common.constants.Status.Completed.getStatus()));
 		boolean isPreAuthExsist = iContractConsumptionDao.getPreAuthAmutByVisitId(pendingIssuesSave.getEncounterId(),
@@ -1504,7 +1504,7 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 			Integer storeId = pendingIssuesSave.getStoreId();
 			Integer unitId = pendingIssuesSave.getUnitId();
 			Long prescriptionDetailsId = item.getPrescriptionDetailId() != null
-					? new Long(item.getPrescriptionDetailId()) : null;
+					? Long.valueOf(item.getPrescriptionDetailId()) : null;
 
 			if (item.getPrescriptionDetailId() != null) {
 
@@ -1917,7 +1917,7 @@ public class PendingIssuesService implements IPendingIssuesService, ICommonConst
 				} else {
 					newItem.setIssue(new Issue(issue.getId()));
 					newItem.setIsFromAssignPicker(issueDetails.size() > 0
-							? (issueDetails.get(0).getAssignPickerDetail() != null ? true : false) : false);
+							? (issueDetails.getFirst().getAssignPickerDetail() != null ? true : false) : false);
 				}
 
 				Batch batchObj = GlobalDao.getBatch(item.getBatchId());

@@ -121,7 +121,7 @@ public class AssetCategoryService implements IAssetCategoryService {
 
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Asset Category Updated Successfully");
-		Long count = new Long(0);
+		Long count = Long.valueOf(0);
 		if (!assetCategory.getIsActive()) {
 			count = AssetCategoryDao.getProductCategory(assetCategoryRequest.getId());
 		}

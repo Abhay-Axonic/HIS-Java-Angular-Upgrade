@@ -156,7 +156,7 @@ public class StorewiseGenericMapperService implements IStorewiseGenericMapperSer
 		CommonResponse response = new CommonResponse();
 
 		response.setMessage("Storewise Generic Mapper Updated Successfully");
-		Long countFromGeneric = new Long(0);
+		Long countFromGeneric = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (!storewiseGenericMapper.getIsActive()) {
 			countFromGeneric = StorewiseGenericMapperDao.getStorewiseGenericFromGeneric(storewiseGenericMapper.getId());

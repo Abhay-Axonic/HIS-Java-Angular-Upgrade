@@ -110,14 +110,14 @@ public class ReturnAcceptanceConsumableService implements IReturnAcceptanceConsu
 					.getAgeByBirthDate(patientIssueReturn.getPatient().getDob().toLocalDateTime().toLocalDate());
 
 			String doctorDetail = "";
-			if (patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail()
+			if (patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail()
 					.getIssue().getDoctor() != null) {
-				doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+				doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 						.getIssueDetail().getIssue().getDoctor().getFirstName()
 						+ " "
-						+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+						+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 								.getIssueDetail().getIssue().getDoctor().getMiddleName()
-						+ " " + patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+						+ " " + patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 								.getIssueDetail().getIssue().getDoctor().getLastName();
 			}
 			/*
@@ -142,7 +142,7 @@ public class ReturnAcceptanceConsumableService implements IReturnAcceptanceConsu
 					patientIssueReturn.getPatient().getUhidNumber(), patientDetail, doctorDetail,
 					patientIssueReturn.getVisitType().getVisitTypeCode(),
 					patientIssueReturn.getTostore().getStoreName(),
-					patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail()
+					patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail()
 							.getIssue().getPatientIndent().getIndentNo());
 			returnAcceptanceResponse.setStatus(patientIssueReturn.getStatus().getStatus());
 			returnAcceptanceResponse.setStatusId(patientIssueReturn.getStatus().getId());
@@ -177,19 +177,19 @@ public class ReturnAcceptanceConsumableService implements IReturnAcceptanceConsu
 		PatientIssueReturn patientIssueReturn = patientIssueReturnDao.patientIssueReturnById(id, unitId);
 
 		String doctorDetail = "";
-		if (patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail()
+		if (patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail()
 				.getIssue().getDoctor() != null
-				&& patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper().getIssueDetail()
+				&& patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper().getIssueDetail()
 						.getIssue().getSpecialityMaster() != null) {
-			doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+			doctorDetail = patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 					.getIssueDetail().getIssue().getDoctor().getFirstName()
 					+ " "
-					+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+					+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 							.getIssueDetail().getIssue().getDoctor().getMiddleName()
 					+ " "
-					+ patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+					+ patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 							.getIssueDetail().getIssue().getDoctor().getLastName()
-					+ " | " + patientIssueReturn.getPatientIssueReturnDetail().get(0).getIssueDetailBatchMapper()
+					+ " | " + patientIssueReturn.getPatientIssueReturnDetail().getFirst().getIssueDetailBatchMapper()
 							.getIssueDetail().getIssue().getSpecialityMaster().getSpecialityName();
 		}
 
@@ -205,13 +205,13 @@ public class ReturnAcceptanceConsumableService implements IReturnAcceptanceConsu
 				patientIssueReturn.getVisitType().getVisitTypeCode(), patientIssueReturn.getTostore().getStoreName(),
 				patientIssueReturn.getPatient().getPatientId());
 		returnAcceptanceResponse.setStoreId(patientIssueReturn.getTostore().getStoreId());
-		returnAcceptanceResponse.setIndentId(patientIssueReturn.getPatientIssueReturnDetail().get(0)
+		returnAcceptanceResponse.setIndentId(patientIssueReturn.getPatientIssueReturnDetail().getFirst()
 				.getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent().getId());
-		returnAcceptanceResponse.setIndentNo(patientIssueReturn.getPatientIssueReturnDetail().get(0)
+		returnAcceptanceResponse.setIndentNo(patientIssueReturn.getPatientIssueReturnDetail().getFirst()
 				.getIssueDetailBatchMapper().getIssueDetail().getIssue().getPatientIndent().getIndentNo());
 		returnAcceptanceResponse.setStatus(patientIssueReturn.getStatus().getStatus());
 		returnAcceptanceResponse.setStatusId(patientIssueReturn.getStatus().getId());
-		returnAcceptanceResponse.setIssueId(patientIssueReturn.getPatientIssueReturnDetail().get(0)
+		returnAcceptanceResponse.setIssueId(patientIssueReturn.getPatientIssueReturnDetail().getFirst()
 				.getIssueDetailBatchMapper().getIssueDetail().getIssue().getId());
 		if (patientIssueReturn.getAdmission() != null) {
 			returnAcceptanceResponse.setWardName(
@@ -453,7 +453,7 @@ public class ReturnAcceptanceConsumableService implements IReturnAcceptanceConsu
 							(storeStock.getAvailableQty() != null ? storeStock.getAvailableQty() : 0) + leaseQuantity);
 					GlobalDao.updateStoreStockLeaseQuantity(storeStock);
 					StockTransaction stockTransaction = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-							rejectQty, batch.getStoreStockList().get(0).getStore(), patientIssueReturnDetail.getId());
+							rejectQty, batch.getStoreStockList().getFirst().getStore(), patientIssueReturnDetail.getId());
 					stockTransaction.setIsTransit(false);
 					stockTransaction.setInQty(leaseQuantity);
 					stockTransaction.setTransactionId(patientIssueReturn.getId());

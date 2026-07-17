@@ -492,7 +492,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 						);
 					
 						if (issueDetail.getIssueDetailBatchMapper().size() > 0) {
-							item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().get(0).getId());
+							item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().getFirst().getId());
 						}
 						item.setTaxId(texId);
 						item.setFormulationTypeId(issueDetail.getPatientIndentDetail().getItem().getFormulationType().getId());
@@ -502,8 +502,8 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 						item.setGenericId(issueDetail.getPatientIndentDetail().getItem().getGeneric() != null
 								? issueDetail.getPatientIndentDetail().getItem().getGeneric().getId()
 								: null);
-						item.setBatchNo(batchList.size() > 0 ? batchList.get(0).getBatchNo() : null);
-						item.setExpiry(batchList.size() > 0 ? batchList.get(0).getExpiryDate() : null);
+						item.setBatchNo(batchList.size() > 0 ? batchList.getFirst().getBatchNo() : null);
+						item.setExpiry(batchList.size() > 0 ? batchList.getFirst().getExpiryDate() : null);
 						Integer productCategoryId = null;
 						if (issueDetail.getPatientIndentDetail().getItem().getGeneric() != null) {
 							productCategoryId = issueDetail.getPatientIndentDetail().getItem().getGeneric()
@@ -533,7 +533,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 										// Don't throw - get first object and set data.
 									}
 
-									PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.get(0)
+									PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.getFirst()
 											: null;
 									item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 									item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
@@ -628,12 +628,12 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 								issueDetail.getImplantIndentDetail().getIndentQuantity(), issueQuantity, stockAvailable,
 								medicineBatches);
 						if (issueDetail.getIssueDetailBatchMapper().size() > 0) {
-							item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().get(0).getId());
+							item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().getFirst().getId());
 						}
 						item.setStatus(issueDetail.getStatus().getStatus());
 						item.setStatusId(issueDetail.getStatus().getId());
-						item.setBatchNo(batchList.size() > 0 ? batchList.get(0).getBatchNo() : null);
-						item.setExpiry(batchList.size() > 0 ? batchList.get(0).getExpiryDate() : null);
+						item.setBatchNo(batchList.size() > 0 ? batchList.getFirst().getBatchNo() : null);
+						item.setExpiry(batchList.size() > 0 ? batchList.getFirst().getExpiryDate() : null);
 						Integer productCategoryId = null;
 						if (issueDetail.getImplantIndentDetail().getItem().getGeneric() != null) {
 							productCategoryId = issueDetail.getImplantIndentDetail().getItem().getGeneric()
@@ -660,7 +660,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 										// Don't throw - get first object and set data.
 									}
 
-									PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.get(0)
+									PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.getFirst()
 											: null;
 
 									item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
@@ -935,7 +935,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 								issueDetail.getPatientIndentDetail().getItem().getIsLasa() != null ? issueDetail.getPatientIndentDetail().getItem().getIsLasa() : false
 						);
 						if (issueDetail.getIssueDetailBatchMapper().size() > 0) {
-							item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().get(0).getId());
+							item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().getFirst().getId());
 						}
 						item.setSelectedItems(subItemsList);
 						item.setFormulationTypeId(issueDetail.getPatientIndentDetail().getItem().getFormulationType().getId());
@@ -946,8 +946,8 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 						item.setGenericId(issueDetail.getPatientIndentDetail().getItem().getGeneric() != null
 								? issueDetail.getPatientIndentDetail().getItem().getGeneric().getId()
 								: null);
-						item.setBatchNo(batchList.size() > 0 ? batchList.get(0).getBatchNo() : null);
-						item.setExpiry(batchList.size() > 0 ? batchList.get(0).getExpiryDate() : null);
+						item.setBatchNo(batchList.size() > 0 ? batchList.getFirst().getBatchNo() : null);
+						item.setExpiry(batchList.size() > 0 ? batchList.getFirst().getExpiryDate() : null);
 						Integer productCategoryId = null;
 						if (issueDetail.getPatientIndentDetail().getItem().getGeneric() != null) {
 							productCategoryId = issueDetail.getPatientIndentDetail().getItem().getGeneric()
@@ -977,7 +977,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 										// Don't throw - get first object and set data.
 									}
 
-									PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.get(0)
+									PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.getFirst()
 											: null;
 									item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 									item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
@@ -1038,7 +1038,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 								// itemList.add(fillPatientConsumableIssueItem(item,batchMapper,true)); // true
 								// for getPatientIndentDetail
 								PatientConsumableIssueItem ba=new PatientConsumableIssueItem();
-                                ba.setBatchId(batchMapper.getBatch().getId());;
+                                ba.setBatchId(batchMapper.getBatch().getId());
                                 ba.setIssueQuantity(batchMapper.getIssueQuantity());
                                 b2.add(ba);
                                 
@@ -1747,7 +1747,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 		Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 		// Deduct issued quantity from the batch store stock
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 		// added by minesh  HIS-21466	
 		/*
@@ -1763,7 +1763,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 
 		// Add stock transaction
 		StockTransaction stockTransaction = new StockTransaction(balanceQuantity, screen, screen.getCode(),
-				leaseQuantity, batch.getStoreStockList().get(0).getStore(), issue.getId());
+				leaseQuantity, batch.getStoreStockList().getFirst().getStore(), issue.getId());
 		stockTransaction.setIsTransit(false);
 		stockTransaction.setTransitNo(issue.getIssue().getIssueNo());
 		stockTransaction.setItem(item);
@@ -2012,16 +2012,16 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 							issueDetail.getPatientIndentDetail().getItem().getIsLasa() != null ? issueDetail.getPatientIndentDetail().getItem().getIsLasa() : false
 							);
 					if (issueDetail.getIssueDetailBatchMapper().size() > 0) {
-						item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().get(0).getId());
+						item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().getFirst().getId());
 					}
 					item.setStatus(issueDetail.getStatus().getStatus());
 					item.setStatusId(issueDetail.getStatus().getId());
 					item.setGenericId(issueDetail.getPatientIndentDetail().getItem().getGeneric() != null
 							? issueDetail.getPatientIndentDetail().getItem().getGeneric().getId()
 							: null);
-					item.setBatchNo(batchList.size() > 0 ? batchList.get(0).getBatchNo() : null);
-					item.setExpiry(batchList.size() > 0 ? batchList.get(0).getExpiryDate() : null);
-					item.setRate(batchList.size() > 0 ? batchList.get(0).getRate() : 0.0d);
+					item.setBatchNo(batchList.size() > 0 ? batchList.getFirst().getBatchNo() : null);
+					item.setExpiry(batchList.size() > 0 ? batchList.getFirst().getExpiryDate() : null);
+					item.setRate(batchList.size() > 0 ? batchList.getFirst().getRate() : 0.0d);
 					Integer productCategoryId = null;
 					if (issueDetail.getPatientIndentDetail().getItem().getGeneric() != null) {
 						productCategoryId = issueDetail.getPatientIndentDetail().getItem().getGeneric()
@@ -2044,7 +2044,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 									// Don't throw - get first object and set data.
 								}
 
-								PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.get(0)
+								PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.getFirst()
 										: null;
 								item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 								item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
@@ -2140,13 +2140,13 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 							issueDetail.getImplantIndentDetail().getIndentQuantity(), issueQuantity, stockAvailable,
 							medicineBatches);
 					if (issueDetail.getIssueDetailBatchMapper().size() > 0) {
-						item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().get(0).getId());
+						item.setBatchMapperId(issueDetail.getIssueDetailBatchMapper().getFirst().getId());
 					}
 					item.setStatus(issueDetail.getStatus().getStatus());
 					item.setStatusId(issueDetail.getStatus().getId());
-					item.setBatchNo(batchList.size() > 0 ? batchList.get(0).getBatchNo() : null);
-					item.setExpiry(batchList.size() > 0 ? batchList.get(0).getExpiryDate() : null);
-					item.setRate(batchList.size() > 0 ? batchList.get(0).getRate() : null);
+					item.setBatchNo(batchList.size() > 0 ? batchList.getFirst().getBatchNo() : null);
+					item.setExpiry(batchList.size() > 0 ? batchList.getFirst().getExpiryDate() : null);
+					item.setRate(batchList.size() > 0 ? batchList.getFirst().getRate() : null);
 					Integer productCategoryId = null;
 					if (issueDetail.getImplantIndentDetail().getItem().getGeneric() != null) {
 						productCategoryId = issueDetail.getImplantIndentDetail().getItem().getGeneric()
@@ -2173,7 +2173,7 @@ public class PatientConsumableIssueService implements ICommonConstants,IPatientC
 									// Don't throw - get first object and set data.
 								}
 
-								PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.get(0)
+								PharmacyTariff pharmacyTariff = pharmacyTariffs.size() > 0 ? pharmacyTariffs.getFirst()
 										: null;
 
 								item.setMarkUpDown(pharmacyTariff.getMarkUpDown());

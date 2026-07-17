@@ -255,7 +255,7 @@ public class BillListService implements IBillListService ,IBillingCommonConstant
 			List<Long> saleIds = new ArrayList<>();
 			saleIds.add(id);
 			List<BillListResponse>  issueReturnList=BillListDao.isIssueReturn(saleIds);
-			billResp.setIsIssueReturn(issueReturnList != null && issueReturnList.size()>0 && issueReturnList.get(0).getIsIssueReturn()? issueReturnList.get(0).getIsIssueReturn() : false);
+			billResp.setIsIssueReturn(issueReturnList != null && issueReturnList.size()>0 && issueReturnList.getFirst().getIsIssueReturn()? issueReturnList.getFirst().getIsIssueReturn() : false);
 			billResp.setCreditDueAmount(creditDeu.getCreditDueAmount());
 			billResp.setPatientId(billResp.getPatientId());
 			billResp.setUhid(billResp.getUhid());
@@ -319,7 +319,7 @@ public class BillListService implements IBillListService ,IBillingCommonConstant
 		}
 		Integer depositMasterIdToUpdateUsingSalePaymentMode =null;
 		Sale sale = BillListDao.getBillDetails(request.getBillingMasterId());
-		sale.setReceivedFrom(request.getPaymentReceiptDetailsDtosList()!=null && request.getPaymentReceiptDetailsDtosList().size()!=0 ? request.getPaymentReceiptDetailsDtosList().get(0).getReceivedFrom():(request.getReceivedFrom()!=null ? request.getReceivedFrom():""));
+		sale.setReceivedFrom(request.getPaymentReceiptDetailsDtosList()!=null && request.getPaymentReceiptDetailsDtosList().size()!=0 ? request.getPaymentReceiptDetailsDtosList().getFirst().getReceivedFrom():(request.getReceivedFrom()!=null ? request.getReceivedFrom():""));
 		if(sale.getSaleType().getId() ==1 ) {
 			
 			sale.setSaleType(new SaleType(3));
@@ -702,7 +702,7 @@ public class BillListService implements IBillListService ,IBillingCommonConstant
 					dto.setUnitId(request.getUnitId() != null ?request.getUnitId() : sessionService.getUnitId());
 					Response loyalityCardResponse=iPatientLoyaltyCardMapperDao.getPatientDetailsByLoyaltiCardNo(dto);
 					if(loyalityCardResponse.getListObject().size() >0 && loyalityCardResponse.getListObject()!=null){
-						PatientLoyaltyCardMapperDto patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)loyalityCardResponse.getListObject().get(0);
+						PatientLoyaltyCardMapperDto patientLoyaltyCardMapperDto=(PatientLoyaltyCardMapperDto)loyalityCardResponse.getListObject().getFirst();
 						//checking that front end amount should be less than or equal to card amount
 						if(patientLoyaltyCardMapperDto.getCardAmount()>=paymentDetail.getAmount())
 							{

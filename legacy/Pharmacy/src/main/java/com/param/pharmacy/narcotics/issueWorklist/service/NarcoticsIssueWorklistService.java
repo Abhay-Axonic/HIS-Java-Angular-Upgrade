@@ -501,13 +501,13 @@ public class NarcoticsIssueWorklistService implements INarcoticsIssueWorklistSer
 						: null);
 				// item.setFrequencyDesc(issueDetail.get);
 				if(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails() != null && issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().size()>0) {
-					item.setFrequencyDesc(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0)
+					item.setFrequencyDesc(issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst()
 							.getFrequency().getDescription());
 					item.setStartDate(
-							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0).getStartDate());
+							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst().getStartDate());
 					
 					item.setStopDate(
-							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().get(0).getStopDate());
+							issueDetail.getPrescriptionDetail().getPrescriptionFrequencyDetails().getFirst().getStopDate());
 				}else {
 					item.setFrequencyDesc("");
 					item.setStartDate(null);
@@ -534,7 +534,7 @@ public class NarcoticsIssueWorklistService implements INarcoticsIssueWorklistSer
 						if (issueDetail.getId().equals(issuedto.getId())) {
 
 							for (PharmacologyItem pharmacologyItemDto : pharmacologyItemListAddedItems) {
-								if (new Long(issuedto.getBatchId()).equals(pharmacologyItemDto.getBatchId())) {
+								if (Long.valueOf(issuedto.getBatchId()).equals(pharmacologyItemDto.getBatchId())) {
 									item.setPickedQuantity(pharmacologyItemDto.getQuantity());
 								}
 							}
@@ -559,7 +559,7 @@ public class NarcoticsIssueWorklistService implements INarcoticsIssueWorklistSer
 								// Don't throw - get first object and set data.
 							}
 
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;
@@ -632,7 +632,7 @@ public class NarcoticsIssueWorklistService implements INarcoticsIssueWorklistSer
 
 								for (PharmacologyItem pharmacologyItemDto : pharmacologyItemListAddedItems) {
 
-									if (new Long(substituteList.getBatchid())
+									if (Long.valueOf(substituteList.getBatchid())
 											.equals(pharmacologyItemDto.getBatchId())) {
 
 										itm.setPickedQuantity(substituteList.getQuantityIssued() != null

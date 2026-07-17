@@ -126,8 +126,8 @@ public class FormulationTypeAndROAService implements IFormulationTypeAndROAServi
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Formulation And Roa Updated Successfully");
 
-		Long countFromFormulationType = new Long(0);
-		Long countFromFormulaROA = new Long(0);
+		Long countFromFormulationType = Long.valueOf(0);
+		Long countFromFormulaROA = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (formulationAndRoa.getIsActive()) {
 			countFromFormulationType = FormulationTypeAndROADao

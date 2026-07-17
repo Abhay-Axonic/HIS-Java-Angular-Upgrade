@@ -103,7 +103,6 @@ public class VendorDao extends AbstractDao<Integer, Vendor> implements IVendorDa
 	@Override
 	public Integer update(Vendor vendor) {
 		getSession().update(vendor);
-		;
 		return vendor.getId();
 	}
 
@@ -225,7 +224,7 @@ public class VendorDao extends AbstractDao<Integer, Vendor> implements IVendorDa
 		List<Vendor>  vendorList =query.list();
 		if(vendorList.size()>0)
 		{
-			return vendorList.get(0);
+			return vendorList.getFirst();
 			
 		}
 		else

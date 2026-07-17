@@ -296,7 +296,7 @@ public class PatientPendingIssuesRejectionService implements IPatientPendingIssu
 								//Don't throw - get first object and set data.
 							}
 							
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							item.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							item.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 							break;

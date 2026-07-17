@@ -393,7 +393,7 @@ public class PharmacologyValidationDao extends AbstractDao<Integer, Prescription
 			Query query = getSession().createQuery(hql);
 			query.setParameter("admissionId", admissionId);
 
-			return (Prescription) query.list().get(0);
+			return (Prescription) query.list().getFirst();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			throw new ServiceException(e.getMessage());

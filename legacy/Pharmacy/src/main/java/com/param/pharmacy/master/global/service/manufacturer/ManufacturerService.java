@@ -119,8 +119,8 @@ public class ManufacturerService implements IManufacturerService {
 
 		response.setMessage("Manufacturer Updated Successfully");
 
-		Long countFromItem = new Long(0);
-		Long countFromVendor = new Long(0);
+		Long countFromItem = Long.valueOf(0);
+		Long countFromVendor = Long.valueOf(0);
 		if (!manufacturer.getIsActive()) {
 			countFromItem = ManufacturerDao.getManufacturerCountFromItem(manufacturerRequset.getId());
 			countFromVendor = ManufacturerDao.getManufacturerCountFromVendor(manufacturerRequset.getId());

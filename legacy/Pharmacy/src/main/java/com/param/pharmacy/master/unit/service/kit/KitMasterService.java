@@ -355,7 +355,7 @@ public class KitMasterService implements IKitMasterService,ICommonConstants{
 				prodCatId.add(dto.getProductCategoryId());
 				List<PharmacyTariff> pharmacyTariffs = GlobalDao.getTariff(prodCatId, paymentEntitlementId);
 				if (pharmacyTariffs != null && !pharmacyTariffs.isEmpty()) {
-					PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+					PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 					dto.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 					dto.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 				}
@@ -407,7 +407,7 @@ public class KitMasterService implements IKitMasterService,ICommonConstants{
 					prodCatId.add(dto.getProductCategoryId());
 					List<PharmacyTariff> pharmacyTariffs = GlobalDao.getTariff(prodCatId, paymentEntitlementId);
 					if (pharmacyTariffs != null && !pharmacyTariffs.isEmpty()) {
-						PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+						PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 						dto.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 						dto.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 					}

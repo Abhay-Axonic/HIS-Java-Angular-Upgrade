@@ -99,7 +99,7 @@ public class NarcoticsDeliveryWorklistService implements INarcoticsDeliveryWorkl
 		for(Sale sale : narcoticsDeliveryWorklistDao.narcoticsDeliveryWorklistSearch(narcoticsRequest, screenId))
 		{
 				//Issue issue = narcoticsDeliveryWorklistDao.getIssueBySaleId(sale.getId());
-				Issue issue = sale.getIssueList().get(0);
+				Issue issue = sale.getIssueList().getFirst();
 
 				//List<DoctorSpecialityMapper> doctorSpeciality = GlobalDao.doctorSearchByIdValue(sale.getDoctor().getDoctorId());
 				String doctorDetail = "";
@@ -146,8 +146,8 @@ public class NarcoticsDeliveryWorklistService implements INarcoticsDeliveryWorkl
 							List<PrescriptionDetail> prescriptionDetail = SalesWorkListDao.prescriptionDetailsByIdValue(saleDetail.getPrescriptionDetail().getPrescription().getId());
 							if(!prescriptionDetail.isEmpty())
 							{
-								narcoticsResponse.setPrescriptionDate(prescriptionDetail.get(0).getPrescription().getPrescriptionDate());
-								narcoticsResponse.setPriority(prescriptionDetail.get(0).getPrescription().getPriority().getPriorityDesc());
+								narcoticsResponse.setPrescriptionDate(prescriptionDetail.getFirst().getPrescription().getPrescriptionDate());
+								narcoticsResponse.setPriority(prescriptionDetail.getFirst().getPrescription().getPriority().getPriorityDesc());
 							}
 						}
 					}
@@ -175,9 +175,9 @@ public class NarcoticsDeliveryWorklistService implements INarcoticsDeliveryWorkl
 							List<PrescriptionDetail> prescriptionDetail = SalesWorkListDao.prescriptionDetailsByIdValue(saleDetail.getPrescriptionDetail().getPrescription().getId());
 							if(prescriptionDetail!=null && !prescriptionDetail.isEmpty())
 							{
-								narcoticsResponse.setPrescriptionId(prescriptionDetail.get(0).getPrescription().getId().intValue());
-								narcoticsResponse.setPrescriptionDate(prescriptionDetail.get(0).getPrescription().getPrescriptionDate());
-								narcoticsResponse.setPriority(prescriptionDetail.get(0).getPrescription().getPriority().getPriorityDesc());
+								narcoticsResponse.setPrescriptionId(prescriptionDetail.getFirst().getPrescription().getId().intValue());
+								narcoticsResponse.setPrescriptionDate(prescriptionDetail.getFirst().getPrescription().getPrescriptionDate());
+								narcoticsResponse.setPriority(prescriptionDetail.getFirst().getPrescription().getPriority().getPriorityDesc());
 							}
 							}
 						}

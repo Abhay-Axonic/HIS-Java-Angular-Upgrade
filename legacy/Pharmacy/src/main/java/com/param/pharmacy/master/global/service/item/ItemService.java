@@ -470,7 +470,7 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 			unitOfMeasurementRequest.setOrganizationId(itemRequest.getOrganizationId());
 			unitOfMeasurementRequest.setUnitId(itemRequest.getUnitId());
 			unitOfMeasurementRequest.setUserId(itemRequest.getUserId());
-			if(!matchingObject.isPresent())
+			if(matchingObject.isEmpty())
 			{
 				unitOfMeasurementRequest.setItemId(itemId.intValue());
 				unitOfMeasurementService.create(Arrays.asList(unitOfMeasurementRequest),itemRequest.getUserId(),itemRequest.getOrganizationId());
@@ -731,21 +731,21 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 			Optional<UOMResponse> matchingObject = unitOfMeasurementRequest.getUomList().stream().
 				    filter(p -> p.getConversion()==null || p.getConversion()==0).
 				    findAny();
-			if(!matchingObject.isPresent())
+			if(matchingObject.isEmpty())
 			{
 				unitOfMeasurementRequest.setItemId(itemRequest.getId());
 				unitOfMeasurementService.update1(unitOfMeasurementRequest,item);
 			}
 		}
 		response.setMessage("Item Updated Successfully");
-		Long productCategoryCount = new Long(0);
-		Long genericCount = new Long(0);
-		Long storeWiseCount = new Long(0);
-		Long formulationTypeCount = new Long(0);
-		Long manufactoreCount = new Long(0);
-		Long storageUnitCount = new Long(0);
-		Long strengthUnitCount = new Long(0);
-		Long taxCount = new Long(0);
+		Long productCategoryCount = Long.valueOf(0);
+		Long genericCount = Long.valueOf(0);
+		Long storeWiseCount = Long.valueOf(0);
+		Long formulationTypeCount = Long.valueOf(0);
+		Long manufactoreCount = Long.valueOf(0);
+		Long storageUnitCount = Long.valueOf(0);
+		Long strengthUnitCount = Long.valueOf(0);
+		Long taxCount = Long.valueOf(0);
 		if (item.getIsActive()) {
 			productCategoryCount = ItemDao.getproductCategoryCount(itemRequest.getId());
 			genericCount = ItemDao.getgenericCount(itemRequest.getId());
@@ -1095,7 +1095,7 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 										: sessionService.getOrganizationId(),
 								dto.getUnitId() != null ? dto.getUnitId() : sessionService.getUnitId(),
 								dto.getUserId() != null ? dto.getUserId() : sessionService.getUserId());
-						formulationType.setId(formulationTypeListfilter.get(0).getId());
+						formulationType.setId(formulationTypeListfilter.getFirst().getId());
 					}else {
 						failCount =1;
 						if(remark.length()==0) {
@@ -1110,7 +1110,7 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 		    		
 					Generic generic = new Generic();
 					if(genericListfilter != null && genericListfilter.size()>0) {
-						 generic = GenericDao.getById(genericListfilter.get(0).getId(), dto.getOrganizationId());
+						 generic = GenericDao.getById(genericListfilter.getFirst().getId(), dto.getOrganizationId());
 					}else {
 						failCount =1;
 						if(remark.length()==0) {
@@ -1134,7 +1134,7 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 								dto.getUnitId() != null ? dto.getUnitId() : sessionService.getUnitId(),
 								dto.getUserId() != null ? dto.getUserId() : sessionService.getUserId());
 
-						strengthUnit.setId(strengthUnitListfilter.get(0).getId());
+						strengthUnit.setId(strengthUnitListfilter.getFirst().getId());
 						StrengthUnit strengthUnitObj = new StrengthUnit();
 						if (strengthUnit.getId() != null) {
 							strengthUnitObj = ItemDao.getStrengthUnit(strengthUnit.getId());
@@ -1157,7 +1157,7 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 								dto.getUnitId() != null ? dto.getUnitId() : sessionService.getUnitId(),
 								dto.getUserId() != null ? dto.getUserId() : sessionService.getUserId());
 
-						pharmacologicalClassification.setId(pharmacologicalClassificationListfilter.get(0).getId());
+						pharmacologicalClassification.setId(pharmacologicalClassificationListfilter.getFirst().getId());
 						
 					}else {
 						failCount =1;
@@ -1179,7 +1179,7 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 								dto.getUnitId() != null ? dto.getUnitId() : sessionService.getUnitId(),
 								dto.getUserId() != null ? dto.getUserId() : sessionService.getUserId());
 
-						manufacturer.setId(manufacturerListfilter.get(0).getId());
+						manufacturer.setId(manufacturerListfilter.getFirst().getId());
 					}else {
 						failCount =1;
 						if(remark.length()==0) {
@@ -1200,7 +1200,7 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 								dto.getUnitId() != null ? dto.getUnitId() : sessionService.getUnitId(),
 								dto.getUserId() != null ? dto.getUserId() : sessionService.getUserId());
 
-						sTax.setId(staxListfilter.get(0).getId());
+						sTax.setId(staxListfilter.getFirst().getId());
 					}else {
 						failCount =1;
 						if(remark.length()==0) {
@@ -1221,7 +1221,7 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 								dto.getUnitId() != null ? dto.getUnitId() : sessionService.getUnitId(),
 								dto.getUserId() != null ? dto.getUserId() : sessionService.getUserId());
 
-						pTax.setId(ptaxListfilter.get(0).getId());
+						pTax.setId(ptaxListfilter.getFirst().getId());
 					}else {
 						failCount =1;
 						if(remark.length()==0) {
@@ -1243,7 +1243,7 @@ public class ItemService implements IItemService, ICommonConstants,IBillingCommo
 								dto.getUnitId() != null ? dto.getUnitId() : sessionService.getUnitId(),
 								dto.getUserId() != null ? dto.getUserId() : sessionService.getUserId());
 
-						storageUnit.setId(StorageUnitListfilter.get(0).getId());
+						storageUnit.setId(StorageUnitListfilter.getFirst().getId());
 					}else {
 						failCount =1;
 						if(remark.length()==0) {
