@@ -70,10 +70,10 @@ def main():
         w(f"| {r['state']} | {reached} | {ctrls} | {apis} | {bcs} |")
 
     w("")
-    w("## Confirmed: MasterController's branching is keyed on state name")
+    w("## MasterController activity in this run")
     w("")
     mc_rows = [r for r in rows if "MasterController" in r["controllersWhileActive"]]
-    w(f"{len(mc_rows)} of {len(rows)} sampled states show `MasterController` as the controller active *specifically while that state's name was current* — i.e. the same shared controller file genuinely re-runs its instantiation logic per-state, keyed on `$state.current.name` at the moment `$controller` is invoked (this is captured directly by the `$controller` decorator in `tracer.js`, not inferred). This confirms the Phase 0 hypothesis empirically rather than by reading source.")
+    w(f"{len(mc_rows)} of {len(rows)} sampled states show `MasterController` active while that state's name was current. **Note, corrected during the Phase 2 pilot audit** (`docs/PHASE2_PILOT_AUDIT.md`, section 5): reading all 463 lines of `common-controller.js` directly showed it has NO `$state.current.name`/URL branching anywhere — it's a flat generic scope-initializer, identical regardless of which of the 353 sharing screens is active. `stateName` above is metadata this *tracer* attaches from its own `$stateChangeStart` listener, not something `MasterController` itself reads or branches on. What differs per-screen is entirely which of `MasterController`'s generic scope properties that screen's own view template happens to bind to (or, per several pilot findings, sometimes nothing at all — see the audit doc for confirmed non-functional and mis-wired examples).")
     w("")
     not_reached = [r for r in rows if not r["reachedSuccessfully"]]
     if not_reached:

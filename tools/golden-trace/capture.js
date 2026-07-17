@@ -73,16 +73,46 @@ function startStaticServer() {
 // blocked by the app's real (data-driven) access-control resolve guards --
 // test-harness seeding only, not a real user session. Module IDs 1-999
 // covers every numeric ID this app's resolve blocks were observed to check.
-const SEED_SCRIPT = `
+// isSuperUser: 'Y' added 2026-07-17 after organizationMaster's resolve block
+// (app.js, not its controller) turned out to gate on
+// `$cookies.getObject('cookieObject').isSuperUser` -- without it, that one
+// unconditional property read throws when the harness's synthetic cookie
+// doesn't carry the field, a real defensive-coding gap worth flagging
+// separately (see docs/PHASE2_PILOT_AUDIT.md), not something to route
+// around silently. Setting it here is a test-harness convenience (there's
+// no real backend to authenticate against) so future captures of any other
+// superuser-gated screen aren't blocked by the same gap.
+//
+// permissions (localStorage) is safe to seed before page load. cookieObject
+// is NOT: loginController.js (lines 44-48) unconditionally clears every
+// browser cookie via `$cookies.getAll()` + `.remove()` on each key, every
+// time it instantiates -- and every capture transits through the 'login'
+// state first as part of normal app bootstrap (confirmed empirically, not
+// assumed), so any cookie seeded before page load is wiped before the
+// target state is ever reached. cookieObject is seeded separately, in
+// captureOne() below, AFTER bootstrap completes -- i.e. after
+// loginController's one-time wipe has already run.
+const PERMISSIONS_SEED_SCRIPT = `
 try {
   localStorage.setItem('permissions', JSON.stringify({
     modules: Array.from({length: 999}, (_, i) => ({ id: i + 1 }))
   }));
-  document.cookie = 'cookieObject=' + encodeURIComponent(JSON.stringify({
-    unitId: 1, organizationId: 1, userId: 1, doctorId: 0
-  })) + '; path=/';
 } catch (e) {}
 `;
+
+const COOKIE_OBJECT = {
+  unitId: 1, organizationId: 1, userId: 1, doctorId: 0, isSuperUser: 'Y',
+};
+// A second cookie several controllers check via $rootScope.checkCookies()
+// (app.js) in addition to cookieObject -- e.g. MISReportsController and
+// inputOutputChartsController both redirect to 'applicationConfiguration'
+// (a real, separate app state) when this one is missing, exactly like the
+// cookieObject guard. Found empirically the same way: capture without it
+// first, read the resulting state-change trace and console errors, then
+// seed what was missing -- not assumed up front.
+const COOKIE_OBJECT_APP_CONFIG = {
+  defaultSelfTariffId: 1, isPreOrPostBilling: 'Pre', isAppointmentRequired: 'N',
+};
 
 async function captureOne(context, state) {
   const page = await context.newPage();
@@ -112,6 +142,14 @@ async function captureOne(context, state) {
     result.bootstrapped = await page.evaluate('!!window.__goldenTraceState');
 
     if (result.bootstrapped) {
+      // Seed cookieObject NOW, after loginController's one-time
+      // clear-all-cookies has already run during the bootstrap redirect
+      // through 'login' -- see the comment above COOKIE_OBJECT.
+      await page.evaluate(({ cookieObj, appConfigObj }) => {
+        document.cookie = 'cookieObject=' + encodeURIComponent(JSON.stringify(cookieObj)) + '; path=/';
+        document.cookie = 'cookieObjectAppConfig=' + encodeURIComponent(JSON.stringify(appConfigObj)) + '; path=/';
+      }, { cookieObj: COOKIE_OBJECT, appConfigObj: COOKIE_OBJECT_APP_CONFIG });
+
       result.navigationAttempted = true;
       try {
         await page.evaluate((name) => {
@@ -156,7 +194,7 @@ async function main() {
 
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
-  await context.addInitScript({ content: SEED_SCRIPT });
+  await context.addInitScript({ content: PERMISSIONS_SEED_SCRIPT });
   await context.addInitScript({ content: TRACER_SRC });
 
   console.error(`Capturing ${targets.length} state(s)...`);
