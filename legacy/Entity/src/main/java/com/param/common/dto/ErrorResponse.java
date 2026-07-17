@@ -26,25 +26,27 @@ public class ErrorResponse {
 	public ErrorResponse(String code, String message, Exception ex) {
 		super();
 
-		StringWriter writer = new StringWriter();
-		ex.printStackTrace(new PrintWriter(writer));
-		
 		this.code = code;
 		this.message = message;
-		this.summary = ex.getMessage();
-		this.stackTrace = writer.toString(); 
+		if (ex != null) {
+			StringWriter writer = new StringWriter();
+			ex.printStackTrace(new PrintWriter(writer));
+			this.summary = ex.getMessage();
+			this.stackTrace = writer.toString();
+		}
 	}
 	public ErrorResponse(String code, String message, com.param.common.dto.CustomException ex ) {
 		super();
 
-		StringWriter writer = new StringWriter();
-		ex.printStackTrace(new PrintWriter(writer));
-		
 		this.code = code;
 		this.message = message;
-		this.summary = ex.getMessage();
-		this.stackTrace = writer.toString(); 
-		this.errors=ex.getErrors();
+		if (ex != null) {
+			StringWriter writer = new StringWriter();
+			ex.printStackTrace(new PrintWriter(writer));
+			this.summary = ex.getMessage();
+			this.stackTrace = writer.toString();
+			this.errors = ex.getErrors();
+		}
 	}
 	public String getCode() {
 		return code;

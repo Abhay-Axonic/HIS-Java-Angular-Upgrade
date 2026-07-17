@@ -585,7 +585,7 @@ Ran OpenRewrite's `UpgradeToJava21` recipe scoped to HIS-WAR (run with `-am` sin
 |----|-----------|----------------------|------------------|-----------------|-----------------|-------|
 | BR-PENDING-java21-hiswar-source-changes | 2026-07-16 | OpenRewrite's UpgradeToJava21 recipe modernized ~24 `getFirst()`/`getLast()` calls, 2 `valueOf()` wrapper constructions, 3 `instanceof` pattern-matches, and 1 text-block conversion (verified byte-identical via a standalone program) across HIS-WAR's 11 touched files; `pom.xml` now compiles at Java 21 (manual property fix). Re-verified: HIS-WAR is the only module with a formal, direct `Billing` dependency, and its real financial exposure (doctor-share/referral-share batch computation) is confirmed entirely outside this session's characterization scope, with zero test coverage module-wide — the same elevated-risk combination as Pharmacy, given the same individually-line-traced review. Closes out Step 4. | 11 files across `legacy/HIS-WAR/src/main/java/...` (see commit on branch `upgrade/java21-hiswar`) | Refactoring (Safe) — every conversion in the doctor-share/billing-adjacent files individually traced against catch-block breadth or structural unreachability | Pending | Reviewed every catch block across all 11 touched files: broad only. Confirmed one `getLast()` pair is structurally unreachable-when-empty by the enclosing loop's own condition, not merely runtime-guarded. Confirmed the 110-line text-block conversion is byte-identical via a standalone Java program. No try/catch structure removed/altered. No DB/schema/business-term change. Full reactor (141/141) re-verified green after this change. This is the final Step 4 module. |
 
-## BR-PENDING-globalexceptionhandler-null-customexception-crash — Found live, Step 5 wave-1 smoke pass: the centralized exception handler itself crashes on its own generic catch-all path, pre-existing and unrelated to the Java 21 work (2026-07-17)
+## BR-FIXED-globalexceptionhandler-null-customexception-crash — FIXED: the centralized exception handler no longer crashes on its own generic catch-all path (2026-07-17)
 
 **Found during Step 5's live wave-1 smoke pass** (deploying the current `main` build to the local Tomcat + Postgres dev environment and driving the 5 wave-1 entry points via real HTTP requests, not just unit tests) — hitting `PATCH /api/procurements/quotation/grn/approve` (GRN approval, the tax-computation entry point) produced a plain `HTTP 500` with no useful correlation-tracked detail, unlike the other 4 wave-1 entry points which all failed cleanly (missing seed data, correctly wrapped by the centralized handler with a correlation ID).
 
@@ -595,11 +595,46 @@ Ran OpenRewrite's `UpgradeToJava21` recipe scoped to HIS-WAR (run with `-am` sin
 
 **Blast radius, checked rather than assumed:** this specific `new ErrorResponse(..., null)` call is the **only** call site anywhere in the reactor that passes a null exception argument — confirmed via `grep -rn "new ErrorResponse("` across `legacy/*/src/main/java/`: roughly 80 other call sites exist (concentrated in `Global/.../ItemsController.java`, `GlobalController.java`, several Procurement controllers), and every one of those passes a real, non-null exception from its own local `catch` block. The bug is confined to the centralized handler's own generic fallback. That fallback is reachable from any of the **195 controller methods across the reactor that return `ResponseEntity<...>`**, whenever an exception isn't caught by a local try/catch or one of `GlobalExceptionHandler`'s other, more specific `@ExceptionHandler` branches (`BillingException`, `MethodArgumentNotValidException`, etc.) — so the exposure, while real, is narrower than "195 endpoints are broken": it only fires for genuinely-uncaught exceptions on that specific subset of endpoints.
 
-**Not fixed — proposal only, awaiting owner review**, same discipline as every other finding this session. No code touched.
+**FIXED, owner-approved 2026-07-17** — proposal doc `docs/DECISION_NEEDED_GlobalExceptionHandlerNullCustomExceptionCrash.md` reviewed and approved; fix applied same day. Root-cause fix applied at `ErrorResponse.java`'s two constructors (`Exception`-typed and `CustomException`-typed), not at the `GlobalExceptionHandler.java` call site — both constructors now null-guard the exception argument before calling `.printStackTrace()`/`.getMessage()`/`.getErrors()` on it, leaving `summary`/`stackTrace`/`errors` unset (not populated) when no exception is supplied, instead of throwing. This protects all ~80 call sites in the reactor (all of which currently pass a real, non-null exception) against ever repeating this exact mistake, not just the one call site that triggered it. `GlobalExceptionHandler.java` itself was not touched — the correlation-ID hardening's security intent (never returning a raw exception/stack trace to the client) is fully preserved.
+
+Before:
+```java
+public ErrorResponse(String code, String message, com.param.common.dto.CustomException ex ) {
+    super();
+    StringWriter writer = new StringWriter();
+    ex.printStackTrace(new PrintWriter(writer));   // NPE when ex is null
+    this.code = code;
+    this.message = message;
+    this.summary = ex.getMessage();
+    this.stackTrace = writer.toString();
+    this.errors = ex.getErrors();
+}
+```
+
+After:
+```java
+public ErrorResponse(String code, String message, com.param.common.dto.CustomException ex ) {
+    super();
+    this.code = code;
+    this.message = message;
+    if (ex != null) {
+        StringWriter writer = new StringWriter();
+        ex.printStackTrace(new PrintWriter(writer));
+        this.summary = ex.getMessage();
+        this.stackTrace = writer.toString();
+        this.errors = ex.getErrors();
+    }
+}
+```
+(The `Exception`-typed constructor received the identical guard.)
+
+5 new tests added (`ErrorResponseNullExceptionFixTest`, Entity module): both constructors confirmed to no longer throw on a null exception; a test reproducing the exact production call shape (`new ErrorResponse(code, message, null)`, letting Java's own overload resolution pick the `CustomException` constructor, same as `GlobalExceptionHandler.java:134`) confirms it no longer crashes; two regression tests confirm non-null-exception behavior is byte-for-byte unchanged (summary/stackTrace/errors still populate exactly as before).
+
+**Side effect worth noting**: this also fixes the double-counting side effect flagged in the Tier 0+1 circuit-breaker proposal — since the handler's own internal crash no longer occurs, `ErrorCorrelationUtil.newCorrelationId()` is no longer called a second time per incident on this path, so the condition-7 exception counter (`BR-PENDING-circuitbreaker-tier0-tier1`) is now accurate on this specific path, not just self-consistent.
 
 | ID | Date Found | Rule (plain English) | Legacy Location | Classification | Owner Decision | Notes |
 |----|-----------|----------------------|------------------|-----------------|-----------------|-------|
-| BR-PENDING-globalexceptionhandler-null-customexception-crash | 2026-07-17 | The centralized exception handler's generic catch-all passes `null` to `ErrorResponse`'s `CustomException`-typed constructor, which calls `.printStackTrace()` on it with no null check — crashing the handler itself and silently losing the original exception's detail/correlation logging, for any of 195 `ResponseEntity`-returning controller methods whose uncaught exception reaches this specific branch. Found live via Step 5's wave-1 smoke pass (`PATCH /api/procurements/quotation/grn/approve`), confirmed pre-existing (untouched since the repo's first commit) and unrelated to any track of this session's Java 21 work. | `legacy/HIS-WAR/src/main/java/com/param/exception/GlobalExceptionHandler.java:134`, `legacy/Entity/src/main/java/com/param/common/dto/ErrorResponse.java:37-48` | Behavioral — an existing, real defect in production error-handling, not introduced by any refactor | Pending | Confirmed the sole `new ErrorResponse(..., null)` call site in the whole reactor (~80 other call sites all pass a real exception). Confirmed via full git history that `ErrorResponse.java` predates this entire session. No code touched — this is a proposal-stage finding, same as the GRN null-tax crash and other fast-tracked fixes earlier this session, awaiting owner sign-off before any fix is applied. |
+| BR-FIXED-globalexceptionhandler-null-customexception-crash | 2026-07-17 | The centralized exception handler's generic catch-all passed `null` to `ErrorResponse`'s `CustomException`-typed constructor, which called `.printStackTrace()` on it with no null check — crashing the handler itself and silently losing the original exception's detail/correlation logging, for any of 195 `ResponseEntity`-returning controller methods whose uncaught exception reached this specific branch. Found live via Step 5's wave-1 smoke pass (`PATCH /api/procurements/quotation/grn/approve`), confirmed pre-existing (untouched since the repo's first commit) and unrelated to any track of this session's Java 21 work. **Fixed via a null-guard in `ErrorResponse.java`'s two constructors**, not at the `GlobalExceptionHandler.java` call site. | `legacy/Entity/src/main/java/com/param/common/dto/ErrorResponse.java:26-48` (fix applied here), `legacy/HIS-WAR/src/main/java/com/param/exception/GlobalExceptionHandler.java:134` (unaffected call site, confirmed still correct) | Robustness/Reliability — an existing, real defect in production error-handling, not introduced by any refactor; no money calculation touched | Approved | Confirmed the sole `new ErrorResponse(..., null)` call site in the whole reactor (~80 other call sites all pass a real exception, all unaffected by this fix). Confirmed via full git history that `ErrorResponse.java` predates this entire session. Proposal doc `docs/DECISION_NEEDED_GlobalExceptionHandlerNullCustomExceptionCrash.md` reviewed and approved by owner before any code was written. Full reactor: 170/170 (165 baseline + 5 new). |
 
 ## BR-FIXED-copay-preauth-split-return-value-gap — FIXED: second-round co-pay/pre-auth adjustment now reaches the patient's own bill total, not just the insurance/cap ledger (2026-07-15)
 
