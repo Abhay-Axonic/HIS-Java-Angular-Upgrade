@@ -1021,3 +1021,29 @@ None of the skipped branches were judged likely to hide a NEW defect class beyon
 Classification: Neither (characterization only, no code change this batch).
 
 **Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 138/138 across all modules (Global 91/91 on this branch's own lineage; does not yet include the sibling fix branches' tests, each held separately per standing instruction). No local `try/catch` touched, no database column changed, no business term introduced.
+
+## BR-PENDING-circuitbreaker-tier0-tier1 — new infrastructure: circuit-breaker feature flag (Tier 0) and its two cheapest RULES.md trip conditions, automated (Tier 1) (2026-07-17)
+
+**Implements Tier 0 and Tier 1 exactly as scoped in `docs/DECISION_NEEDED_CircuitBreakerMonitoringGap.md`, the owner-reviewed proposal for the RULES.md circuit-breaker/monitoring gap.** This is new, additive infrastructure — no existing behavior, calculation, or code path changes. Nothing here is wired into any request-routing decision yet (there is no legacy-vs-new-path split anywhere in the codebase to route between); it only makes the flag and two of the seven trip conditions real for the first time.
+
+**Tier 0 — the flag mechanism:**
+- New table `public.m_circuit_breaker_state` (`docs/br099_circuit_breaker_state.sql`), single row (id=1, seeded `NORMAL`), system-wide (deliberately not org/unit-scoped — a breaker trip is about the shared codebase's health).
+- New `CircuitBreakerState` entity (extends `CommonEntity`, not `BaseEntity` — no org/unit scoping), DTO, DAO (`ICircuitBreakerStateDao`/`CircuitBreakerStateDaoImpl`), service (`ICircuitBreakerStateService`/`CircuitBreakerStateServiceImpl`), and REST controller (`CircuitBreakerController`: `GET /global/circuitbreaker/state`, `POST /global/circuitbreaker/flip`, `POST /global/circuitbreaker/reset`) — all following this codebase's existing DAO/Service/Controller/`Response<>` conventions exactly (see `UnitApplicationBillingConfigurationDaoImpl`/`ReferalDetailsController` as the templates used).
+
+**Tier 1 — condition 3 (shadow test failure rate), automated:**
+- New `.github/workflows/reactor-tests.yml`: runs the full 141-test (now 146, +5 from this change) reactor suite (`mvn -f legacy/pom.xml clean test`) on every push/PR to `main`. Any test failure fails the CI job — that IS the trip signal for condition 3. This does not auto-flip the Tier 0 flag (CI has no access to the running app's database); it's a red build, same as any other CI failure, for a human to act on.
+
+**Tier 1 — condition 7 (unhandled exception count > 5 / 24h), automated:**
+- `ErrorCorrelationUtil.newCorrelationId()` (already called at all 11 existing call sites across ADT/Global/HIS-WAR's `GlobalExceptionHandler`) now also records the occurrence in a rolling 24h window (`ConcurrentLinkedDeque<Instant>`, pruned on read); new `countInLast24Hours()` query method. Correlation IDs are generated before any downstream handler logic runs, so this correctly counts the original error event even in the one path where the handler itself later crashes (`BR-PENDING-globalexceptionhandler-null-customexception-crash`) — see the proposal doc's note correcting an earlier claim that this bug would undermine the counter.
+- New `CircuitBreakerMonitorScheduler` in HIS-WAR (`@Scheduled(fixedRate = 60000)`, matching RULES.md's 60-second interval literally): reads the count, and if it exceeds 5 AND the flag is currently `NORMAL`, flips it to `LEGACY` with a reason and logs a distinctly-tagged `CIRCUIT_BREAKER_TRIP` line. Never auto-resets — returning to `NORMAL` is a deliberate owner action via the `/reset` endpoint, not something the scheduler decides. No external alert channel (email/Slack) is wired — explicitly named as an open decision in the proposal doc's summary, not invented here.
+
+**Tier 1 — condition 6 (try/catch removed without centralized routing), automated:**
+- New `scripts/check_trycatch_removal.py`: diff-based heuristic PR check (same "candidate for manual verification" spirit as this project's other heuristic scripts, e.g. `find_swallowed_return_pattern.py`) — scans the diff for removed `catch (` lines; fails if none of the diff or PR body references `GlobalExceptionHandler`/`ErrorCorrelationUtil`/"centralized handler"/"routed to". Wired into `reactor-tests.yml` on `pull_request` events.
+
+**Not implemented (explicitly out of scope for this change, per the proposal doc's Tiers 2/3):** condition 1 ($0.01 divergence — blocked on the same real-data-access decision as `docs/DECISION_NEEDED_ShadowTestHarnessApproach.md`), condition 2 (feature-flag-service health check — trivial once needed, not built since nothing depends on flag availability yet), conditions 4/5 (DB replication lag / CPU — infrastructure provisioning, not application code).
+
+**Owner instruction:** implement Tier 0+1 exactly as scoped in the proposal doc; full reactor suite must still pass; commit on its own branch, do not merge/push without review.
+
+Classification: Neither (new infrastructure, no existing calculation/behavior changed). Owner Decision: Pending.
+
+**Notes:** `mvn clean test` (full reactor, all 19 modules): BUILD SUCCESS, 146/146 (141 baseline + 5 new — `ErrorCorrelationUtilCircuitBreakerCounterTest` (2), `CircuitBreakerStateServiceImplTest` (3)). Verified via literal `javac [debug target 21]`/`[debug release 21]` invocation across all recompiled modules (Global's 2676-file compile includes all new Tier 0+1 source). One local `try/catch`-adjacent change: none — no existing try/catch blocks removed or altered anywhere in this change. One new database table added (`m_circuit_breaker_state`), applied via `docs/br099_circuit_breaker_state.sql`, additive only, Expand-Migrate-Contract compliant. No business term used outside `docs/GLOSSARY.json`'s existing vocabulary — this is infrastructure terminology (circuit breaker, feature flag), not a new billing/clinical business term.
