@@ -145,10 +145,10 @@ public class ConsignmentPOApprovalService implements IConsignmentPOApprovalServi
 					consignmentPOCreationDetailResponse.getTaxPercentage(),consignmentPOCreationDetailResponse.getMrp(),
 					consignmentPOCreationDetailResponse.getTotalAmount(),consignmentPOCreationDetailResponse.getTaxAmount(),
 					consignmentPOCreationDetailResponse.getNetAmount(),issueList,consignmentPOCreationDetailResponse.getTax().getId(),
-					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().get(0).getIssue().getIssueDetail().get(0).getIssueDetailBatchMapper().get(0).getUomType() != null ?
-					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().get(0).getIssue().getIssueDetail().get(0).getIssueDetailBatchMapper().get(0).getUomType().getId() : null,
-					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().get(0).getIssue().getIssueDetail().get(0).getIssueDetailBatchMapper().get(0).getUnit() != null ?
-					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().get(0).getIssue().getIssueDetail().get(0).getIssueDetailBatchMapper().get(0).getUnit().getUnitId() : null,
+					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().getFirst().getIssue().getIssueDetail().getFirst().getIssueDetailBatchMapper().getFirst().getUomType() != null ?
+					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().getFirst().getIssue().getIssueDetail().getFirst().getIssueDetailBatchMapper().getFirst().getUomType().getId() : null,
+					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().getFirst().getIssue().getIssueDetail().getFirst().getIssueDetailBatchMapper().getFirst().getUnit() != null ?
+					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().getFirst().getIssue().getIssueDetail().getFirst().getIssueDetailBatchMapper().getFirst().getUnit().getUnitId() : null,
 					consignmentPOCreationDetailResponse.getId(),consignmentPOCreationDetailResponse.getRemark());
 			
 			purchaseOrderSearchDtoList.add(purchaseReqSearchDto);
@@ -158,8 +158,8 @@ public class ConsignmentPOApprovalService implements IConsignmentPOApprovalServi
 
 			ConsignmentPOCreationResponse consignmentPOCreationResponse=new ConsignmentPOCreationResponse(consignmentPurchaseOrder.getId(),consignmentPurchaseOrder.getTotalAmount(),consignmentPurchaseOrder.getTotalTaxAmount(),
 					consignmentPurchaseOrder.getNetAmount(),purchaseOrderSearchDtoList,
-					consignmentPurchaseOrder.getStore().getStoreId(),consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().get(0).getBatch().getVendor().getId(),
-					consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().get(0).getBatch().getVendor().getName(),consignmentPurchaseOrder.getRemark(),
+					consignmentPurchaseOrder.getStore().getStoreId(),consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().getFirst().getBatch().getVendor().getId(),
+					consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().getFirst().getBatch().getVendor().getName(),consignmentPurchaseOrder.getRemark(),
 					consignmentPurchaseOrder.getAddedDate(),consignmentPurchaseOrder.getPoNumber());
 
 			
@@ -192,8 +192,8 @@ public class ConsignmentPOApprovalService implements IConsignmentPOApprovalServi
 					new RequestType(com.param.common.constants.RequestType.AgainstPurchaseOrder.getRequestType()),
 					new Status(consignmentPOCreationRequest.getStatusId()), new Store(consignmentPurchaseOrder.getStore().getStoreId()), 
 					consignmentPurchaseOrder.getTotalAmount(),consignmentPurchaseOrder.getTotalTaxAmount(),
-					new Vendor(consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().get(0).getBatch().getVendor().getId() != null ? 
-					consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().get(0).getBatch().getVendor().getId() : null));
+					new Vendor(consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().getFirst().getBatch().getVendor().getId() != null ? 
+					consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().getFirst().getBatch().getVendor().getId() : null));
 			grn.setConsignmentPurchaseOrder(new ConsignmentPurchaseOrder(consignmentPurchaseOrder.getId()));
 			
 			GoodReceiptNoteDetail grnDetail = null;

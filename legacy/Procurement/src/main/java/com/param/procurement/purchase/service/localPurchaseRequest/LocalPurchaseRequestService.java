@@ -198,7 +198,7 @@ public class LocalPurchaseRequestService implements ILocalPurchaseRequestService
 						purchaseRequestDetail.setIndentQuantity(item.getIndentQuantity());
 						List<AssetIndentDetail> storeIndentDetails = new ArrayList<>();
 
-						storeIndentDetails.add(GlobalDao.getAssetIndentDetail(item.getIndentId().get(0)));
+						storeIndentDetails.add(GlobalDao.getAssetIndentDetail(item.getIndentId().getFirst()));
 
 						for (AssetIndentDetail storeIndentDetail : storeIndentDetails) {
 							purchaseRequestDetail.addassetIndentDetailList(storeIndentDetail);

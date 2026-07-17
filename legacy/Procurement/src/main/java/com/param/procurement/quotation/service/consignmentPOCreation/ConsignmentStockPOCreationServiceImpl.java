@@ -769,15 +769,15 @@ public class ConsignmentStockPOCreationServiceImpl implements IConsignmentStockP
 					.collect(Collectors.toList());
 
 			if (storeStock1 != null && !storeStock1.isEmpty()) {
-				storeStock = storeStock1.get(0).getQuantity();
+				storeStock = storeStock1.getFirst().getQuantity();
 				purchaseOrderDetailsRespDto.setStockAvailable(storeStock);
 			}
 			if (stockInTransit1 != null && !stockInTransit1.isEmpty())
-				stockInTransit = stockInTransit1.get(0).getQuantity();
+				stockInTransit = stockInTransit1.getFirst().getQuantity();
 			if (maxStoreQuantity1 != null && !maxStoreQuantity1.isEmpty())
-				maxStoreQuantity = maxStoreQuantity1.get(0).getIntQuantity();
+				maxStoreQuantity = maxStoreQuantity1.getFirst().getIntQuantity();
 			if (leaseQuantity != null && !leaseQuantity.isEmpty())
-				leaseQty = leaseQuantity.get(0).getQuantity();
+				leaseQty = leaseQuantity.getFirst().getQuantity();
 			if (approvedPRAndPOQuantities.stream()
 					.filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
 					.collect(Collectors.toList()) != null
@@ -786,7 +786,7 @@ public class ConsignmentStockPOCreationServiceImpl implements IConsignmentStockP
 							.collect(Collectors.toList()).isEmpty()) {
 				approvedPRAndPOQuantity = approvedPRAndPOQuantities.stream()
 						.filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (approvedPOQuantities.stream().filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
 					.collect(Collectors.toList()) != null
@@ -795,7 +795,7 @@ public class ConsignmentStockPOCreationServiceImpl implements IConsignmentStockP
 							.collect(Collectors.toList()).isEmpty()) {
 				approvedPOQuantity = approvedPOQuantities.stream()
 						.filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			Long maxOrderQuantity = GlobalDao.getMaxOrderQuantity(maxStoreQuantity,storeStock,stockInTransit , approvedPRAndPOQuantity , approvedPOQuantity);
 			

@@ -239,15 +239,15 @@ public class PurchaseOrderApprovalService implements IPurchaseOrderApprovalServi
 					.collect(Collectors.toList());
 
 			if (storeStock1 != null && !storeStock1.isEmpty()) {
-				storeStock = storeStock1.get(0).getQuantity();
+				storeStock = storeStock1.getFirst().getQuantity();
 				purchaseOrderDetailsRespDto.setStockAvailable(storeStock);
 			}
 			if (stockInTransit1 != null && !stockInTransit1.isEmpty())
-				stockInTransit = stockInTransit1.get(0).getQuantity();
+				stockInTransit = stockInTransit1.getFirst().getQuantity();
 			if (maxStoreQuantity1 != null && !maxStoreQuantity1.isEmpty())
-				maxStoreQuantity = maxStoreQuantity1.get(0).getIntQuantity();
+				maxStoreQuantity = maxStoreQuantity1.getFirst().getIntQuantity();
 			if (leaseQuantity != null && !leaseQuantity.isEmpty())
-				leaseQty = leaseQuantity.get(0).getQuantity();
+				leaseQty = leaseQuantity.getFirst().getQuantity();
 			if (approvedPRAndPOQuantities.stream()
 					.filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
 					.collect(Collectors.toList()) != null
@@ -256,7 +256,7 @@ public class PurchaseOrderApprovalService implements IPurchaseOrderApprovalServi
 							.collect(Collectors.toList()).isEmpty()) {
 				approvedPRAndPOQuantity = approvedPRAndPOQuantities.stream()
 						.filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			if (approvedPOQuantities.stream().filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
 					.collect(Collectors.toList()) != null
@@ -265,7 +265,7 @@ public class PurchaseOrderApprovalService implements IPurchaseOrderApprovalServi
 							.collect(Collectors.toList()).isEmpty()) {
 				approvedPOQuantity = approvedPOQuantities.stream()
 						.filter(x -> x.getItemId().equals(purchaseOrderDetailsRespDto.getItemId()))
-						.collect(Collectors.toList()).get(0).getQuantity();
+						.collect(Collectors.toList()).getFirst().getQuantity();
 			}
 			// Long maxOrderQuantity = maxStoreQuantity - (storeStock + stockInTransit +
 			// approvedPRAndPOQuantity + approvedPOQuantity);
@@ -557,7 +557,7 @@ public class PurchaseOrderApprovalService implements IPurchaseOrderApprovalServi
 					.filter(x -> x.getId().equals(PurchaseOrderStatusDto.getPoId())).collect(Collectors.toList());
 
 			if (purchaseOrders1 != null && !purchaseOrders1.isEmpty()) {
-				PurchaseOrder purchaseOrder = purchaseOrders1.get(0);
+				PurchaseOrder purchaseOrder = purchaseOrders1.getFirst();
 				boolean finalPOApprovalFlag=purchaseOrderDao.getFinalPOApprovalFlag(purchaseOrder.getUnitId());
 				if(finalPOApprovalFlag==false)
 				{

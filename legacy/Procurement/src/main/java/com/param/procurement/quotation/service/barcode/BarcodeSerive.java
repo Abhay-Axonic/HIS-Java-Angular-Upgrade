@@ -59,9 +59,9 @@ public class BarcodeSerive implements IBarcodeService {
 	            		&& str.getExpiry().equals(batchRes.getExpiry()))
 	            .collect(Collectors.toList());
 				if(grnRes.size()>0 && grnRes != null){
-					batchRes.setGrnNo(grnRes.get(0).getGrnNo() != null ? grnRes.get(0).getGrnNo() :"-");
-					batchRes.setVendorName(grnRes.get(0).getVendorName() != null ? grnRes.get(0).getVendorName() :"-");
-					batchRes.setGrnDate(grnRes.get(0).getGrnDate() != null ? grnRes.get(0).getGrnDate() :"-");
+					batchRes.setGrnNo(grnRes.getFirst().getGrnNo() != null ? grnRes.getFirst().getGrnNo() :"-");
+					batchRes.setVendorName(grnRes.getFirst().getVendorName() != null ? grnRes.getFirst().getVendorName() :"-");
+					batchRes.setGrnDate(grnRes.getFirst().getGrnDate() != null ? grnRes.getFirst().getGrnDate() :"-");
 				}
 				else{
 					batchRes.setGrnNo("-");

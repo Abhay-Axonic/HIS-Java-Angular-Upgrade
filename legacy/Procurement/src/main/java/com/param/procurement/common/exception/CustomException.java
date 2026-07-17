@@ -1,10 +1,13 @@
 package com.param.procurement.common.exception;
 
+import java.io.Serial;
+
 /**
  * @author Nilesh
  */
 public class CustomException extends Exception {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private String message;

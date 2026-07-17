@@ -971,7 +971,7 @@ public class GoodReceiptNoteDao extends AbstractDao<Integer, GoodReceiptNote> im
 
 		// need to set search parameter
 		query.setResultTransformer(Transformers.aliasToBean(GRNSettledDetailsResponse.class));
-		return (GRNSettledDetailsResponse) query.list().get(0);
+		return (GRNSettledDetailsResponse) query.list().getFirst();
 
 	}
 

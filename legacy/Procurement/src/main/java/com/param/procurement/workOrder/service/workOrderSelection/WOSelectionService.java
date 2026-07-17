@@ -187,9 +187,9 @@ public class WOSelectionService implements IWOSelectionService{
 						detail.getQuotationRequestDetail().getItem().getName(),detail.getQuotationRequestDetail().getSpecification(),
 						detail.getStatus().getId(), detail.getStatus().getStatus(), getWOSelectionMapperResponse(detail),
 						detail.getQuotationRequestDetail().getBatch().getId(),detail.getQuotationRequestDetail().getBatch().getBatchNo(),
-						detail.getQuotationRequestDetail().getWorkOrderQuotationRequest().getWoQuotationVendor().get(0).getWoQuotationEntry().get(0).getWoQuotationEntryDetailList().get(0).getExpectedExclusion(),
-						detail.getQuotationRequestDetail().getWorkOrderQuotationRequest().getWoQuotationVendor().get(0).getWoQuotationEntry().get(0).getWoQuotationEntryDetailList().get(0).getExpectedInclusion(),
-						detail.getQuotationRequestDetail().getWorkOrderQuotationRequest().getWoQuotationVendor().get(0).getWoQuotationEntry().get(0).getWoQuotationEntryDetailList().get(0).getPaymentTerm()));
+						detail.getQuotationRequestDetail().getWorkOrderQuotationRequest().getWoQuotationVendor().getFirst().getWoQuotationEntry().getFirst().getWoQuotationEntryDetailList().getFirst().getExpectedExclusion(),
+						detail.getQuotationRequestDetail().getWorkOrderQuotationRequest().getWoQuotationVendor().getFirst().getWoQuotationEntry().getFirst().getWoQuotationEntryDetailList().getFirst().getExpectedInclusion(),
+						detail.getQuotationRequestDetail().getWorkOrderQuotationRequest().getWoQuotationVendor().getFirst().getWoQuotationEntry().getFirst().getWoQuotationEntryDetailList().getFirst().getPaymentTerm()));
 						
 						
 					}

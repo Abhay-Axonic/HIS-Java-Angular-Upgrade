@@ -276,10 +276,10 @@ public class LoanOutReceiveService implements ILoanOutReceiveService {
 		List<LoanOutDetail> details = LoanOutReceiveDao.getLoanOutItemsDetails(request);
 
 		if (!details.isEmpty()) {
-			response.setId(details.get(0).getLoanOut().getId());
-			response.setDcNo(details.get(0).getLoanOut().getDcNo());
-			response.setDcDate(details.get(0).getLoanOut().getDcDate());
-			response.setLoanOutNo(details.get(0).getLoanOut().getLoanOutNo());
+			response.setId(details.getFirst().getLoanOut().getId());
+			response.setDcNo(details.getFirst().getLoanOut().getDcNo());
+			response.setDcDate(details.getFirst().getLoanOut().getDcDate());
+			response.setLoanOutNo(details.getFirst().getLoanOut().getLoanOutNo());
 		}
 		for (LoanOutDetail detail : details) {
 			LoanInOutResponseItem item = null;
@@ -411,11 +411,11 @@ public class LoanOutReceiveService implements ILoanOutReceiveService {
 		}
 		batch.setCurrentQuantity(currentQuantity);
 
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 		// Add stock transaction
 		StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-				batch.getStoreStockList().get(0).getStore(), d.getId());
+				batch.getStoreStockList().getFirst().getStore(), d.getId());
 //		sessionService.setEntityDefaults(stockTransaction);
 		stockTransaction.setCreateDefaults(request.getOrganizationId(),request.getUnitId(),
 				request.getUserId());

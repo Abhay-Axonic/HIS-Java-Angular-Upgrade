@@ -293,11 +293,11 @@ public class LoanOutService implements ILoanOutService {
 		
 		batch.setCurrentQuantity(currentQuantity);
 
-		batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+		batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 		// Add stock transaction
 		StockTransaction stockTransaction=new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-				batch.getStoreStockList().get(0).getStore(), d.getId());
+				batch.getStoreStockList().getFirst().getStore(), d.getId());
 		stockTransaction.setCreateDefaults(orgId,unitId,userId);
 		batch.addStockTransaction(stockTransaction);
 

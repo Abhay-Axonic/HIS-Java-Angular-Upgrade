@@ -261,10 +261,10 @@ public class ConsignmentPOCreationService implements IConsignmentPOCreationServi
 					consignmentPOCreationDetailResponse.getTaxPercentage(),consignmentPOCreationDetailResponse.getMrp(),
 					consignmentPOCreationDetailResponse.getTotalAmount(),consignmentPOCreationDetailResponse.getTaxAmount(),
 					consignmentPOCreationDetailResponse.getNetAmount(),issueList,consignmentPOCreationDetailResponse.getTax().getId(),
-					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().get(0).getIssue().getIssueDetail().get(0).getIssueDetailBatchMapper().get(0).getUomType() != null ?
-					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().get(0).getIssue().getIssueDetail().get(0).getIssueDetailBatchMapper().get(0).getUomType().getId() : null,
-					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().get(0).getIssue().getIssueDetail().get(0).getIssueDetailBatchMapper().get(0).getUnit() != null ?
-					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().get(0).getIssue().getIssueDetail().get(0).getIssueDetailBatchMapper().get(0).getUnit().getUnitId() : null,
+					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().getFirst().getIssue().getIssueDetail().getFirst().getIssueDetailBatchMapper().getFirst().getUomType() != null ?
+					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().getFirst().getIssue().getIssueDetail().getFirst().getIssueDetailBatchMapper().getFirst().getUomType().getId() : null,
+					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().getFirst().getIssue().getIssueDetail().getFirst().getIssueDetailBatchMapper().getFirst().getUnit() != null ?
+					consignmentPOCreationDetailResponse.getConsignmentPurchaseOrderPatient().getFirst().getIssue().getIssueDetail().getFirst().getIssueDetailBatchMapper().getFirst().getUnit().getUnitId() : null,
 					consignmentPOCreationDetailResponse.getId(),consignmentPOCreationDetailResponse.getRemark());
 			
 			purchaseOrderSearchDtoList.add(purchaseReqSearchDto);
@@ -278,8 +278,8 @@ public class ConsignmentPOCreationService implements IConsignmentPOCreationServi
 		
 		ConsignmentPOCreationResponse consignmentPOCreationResponse=new ConsignmentPOCreationResponse(consignmentPurchaseOrder.getId(),consignmentPurchaseOrder.getTotalAmount(),consignmentPurchaseOrder.getTotalTaxAmount(),
 				consignmentPurchaseOrder.getNetAmount(),purchaseOrderSearchDtoList,
-				consignmentPurchaseOrder.getStore().getStoreId(),consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().get(0).getBatch().getVendor().getId(),
-				consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().get(0).getBatch().getVendor().getName(),consignmentPurchaseOrder.getRemark(),
+				consignmentPurchaseOrder.getStore().getStoreId(),consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().getFirst().getBatch().getVendor().getId(),
+				consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().getFirst().getBatch().getVendor().getName(),consignmentPurchaseOrder.getRemark(),
 				consignmentPurchaseOrder.getAddedDate(),consignmentPurchaseOrder.getPoNumber());
 
 		
@@ -346,8 +346,8 @@ public class ConsignmentPOCreationService implements IConsignmentPOCreationServi
 								{
 						 			detail.setRemark(items.getRemark());
 								}
-						 		consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().get(0).setUpdatedDate(TimeZoneComponent.getDateByzone(consignmentPurchaseOrder.getUnitId()));
-						 		consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().get(0).setUpdatedByUser(consignmentPOCreationRequest.getUserId());
+						 		consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().getFirst().setUpdatedDate(TimeZoneComponent.getDateByzone(consignmentPurchaseOrder.getUnitId()));
+						 		consignmentPurchaseOrder.getConsignmentPurchaseOrderDetail().getFirst().setUpdatedByUser(consignmentPOCreationRequest.getUserId());
 						 		
 						 	}
 						 

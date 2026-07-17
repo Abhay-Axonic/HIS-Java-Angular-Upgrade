@@ -226,7 +226,7 @@ class GoodReceiptNoteServiceCharacterizationTest {
 
             List<TaxComponentDetailsDto> saved = captor.getAllValues();
             assertThat(saved).hasSize(2);
-            assertThat(saved.get(0).getTaxComponentAmount()).isEqualTo(2000.0 * (9.0 / 100));
+            assertThat(saved.getFirst().getTaxComponentAmount()).isEqualTo(2000.0 * (9.0 / 100));
             assertThat(saved.get(1).getTaxComponentAmount()).isEqualTo(2000.0 * (9.0 / 100));
         }
     }

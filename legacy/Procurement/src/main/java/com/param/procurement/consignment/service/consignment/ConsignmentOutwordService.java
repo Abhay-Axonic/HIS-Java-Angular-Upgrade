@@ -339,7 +339,7 @@ public class ConsignmentOutwordService implements IConsignmentOutwordService {
 				Integer balanceQuantity = avaialableStoreStock - leaseQuantity;
 
 				// Deduct issued quantity from the batch store stock
-				batch.getStoreStockList().get(0).setAvailableQty(balanceQuantity);
+				batch.getStoreStockList().getFirst().setAvailableQty(balanceQuantity);
 
 				// Calculate current batch quantity
 
@@ -350,7 +350,7 @@ public class ConsignmentOutwordService implements IConsignmentOutwordService {
 
 				// Add stock transaction
 					StockTransaction stockTransaction = new StockTransaction(balanceQuantity, screen, screen.getCode(), leaseQuantity,
-							batch.getStoreStockList().get(0).getStore(), detail.getId());
+							batch.getStoreStockList().getFirst().getStore(), detail.getId());
 					stockTransaction.setCreateDefaults(detail.getOrganizationId(), detail.getUnitId(), detail.getUpdatedByUser());
 				batch.addStockTransaction(stockTransaction);
 		

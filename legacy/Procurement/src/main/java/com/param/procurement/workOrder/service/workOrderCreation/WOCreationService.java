@@ -155,7 +155,7 @@ public class WOCreationService implements IWOCreationService {
 					workOrderQuotationRequest.getApprovedBy() != null ? workOrderQuotationRequest.getApprovedBy().getUserName() : null,
 					workOrderQuotationRequest.getApprovedDate(), workOrderQuotationRequest.getRequestType().getType(),
 					workOrderQuotationRequest.getStatus().getStatus(), workOrderQuotationRequest.getAddedBy().getUserName(),
-					workOrderQuotationRequest.getRequestForNegotiation(),workOrderQuotationRequest.getWoQuotationVendor().get(0).getQvNo());
+					workOrderQuotationRequest.getRequestForNegotiation(),workOrderQuotationRequest.getWoQuotationVendor().getFirst().getQvNo());
 
 			for (WorkOrderQuotationRequestDetail detail : workOrderQuotationRequest.getWorkOrderQRDetailsList()) {
 
@@ -169,7 +169,7 @@ public class WOCreationService implements IWOCreationService {
 						detail.getCurrentVendor() != null ? detail.getCurrentVendor().getName(): null,
 						detail.getStatus().getId(), detail.getBatch().getExpiryDate(),
 						detail.getId(),
-						detail.getSpecification(),detail.getRemark(),detail.getWoQuotationVendorDetail().get(0).getWoQuotationEntryDetailList().get(0).getVendorCop(),
+						detail.getSpecification(),detail.getRemark(),detail.getWoQuotationVendorDetail().getFirst().getWoQuotationEntryDetailList().getFirst().getVendorCop(),
 						detail.getQuantity()));
 				
 
@@ -205,7 +205,7 @@ public class WOCreationService implements IWOCreationService {
 					workOrderQuotationRequest.getApprovedBy() != null ? workOrderQuotationRequest.getApprovedBy().getUserName() : null,
 					workOrderQuotationRequest.getApprovedDate(), workOrderQuotationRequest.getRequestType().getType(),
 					workOrderQuotationRequest.getStatus().getStatus(), workOrderQuotationRequest.getAddedBy().getUserName(),
-					workOrderQuotationRequest.getRequestForNegotiation(),workOrderQuotationRequest.getWoQuotationVendor().get(0).getQvNo());
+					workOrderQuotationRequest.getRequestForNegotiation(),workOrderQuotationRequest.getWoQuotationVendor().getFirst().getQvNo());
 
 			for (WorkOrderQuotationRequestDetail detail : workOrderQuotationRequest.getWorkOrderQRDetailsList()) {
 
@@ -221,7 +221,7 @@ public class WOCreationService implements IWOCreationService {
 						detail.getId(),
 						detail.getSpecification(),detail.getRemark(),detail.getBatch().getTax() != null ? detail.getBatch().getTax().getId() : null,
 						detail.getBatch().getTax() != null ? detail.getBatch().getTax().getName() : null,detail.getBatch().getTaxPercentage(),
-						detail.getWoQuotationVendorDetail().get(0).getWoQuotationEntryDetailList().get(0).getVendorCop(),
+						detail.getWoQuotationVendorDetail().getFirst().getWoQuotationEntryDetailList().getFirst().getVendorCop(),
 						detail.getQuantity()));
 
 			}
@@ -245,7 +245,7 @@ public class WOCreationService implements IWOCreationService {
 		for (WorkOrderRequest workOrderRequest : wOCreationDao.searchWorkOrderCreationListByWR(woCreationRequest,
 				screenId, woAgainstWR)) {
 
-			if (workOrderRequest.getWorkOrderDetailList().get(0).getSendWorkOrderCreation().equals(true)) {
+			if (workOrderRequest.getWorkOrderDetailList().getFirst().getSendWorkOrderCreation().equals(true)) {
 
 				WOCreationResponse response = new WOCreationResponse(workOrderRequest.getId(),
 						workOrderRequest.getStore().getStoreId(), workOrderRequest.getStore().getStoreName(),
@@ -288,7 +288,7 @@ public class WOCreationService implements IWOCreationService {
 
 		WorkOrderRequest workOrderRequest = wOCreationDao.searchWorkOrderCreationWRId(woCreationRequest);
 
-			if (workOrderRequest.getWorkOrderDetailList().get(0).getSendWorkOrderCreation().equals(true)) {
+			if (workOrderRequest.getWorkOrderDetailList().getFirst().getSendWorkOrderCreation().equals(true)) {
 
 				WOCreationResponse response = new WOCreationResponse(workOrderRequest.getId(),
 						workOrderRequest.getStore().getStoreId(), workOrderRequest.getStore().getStoreName(),
@@ -659,7 +659,7 @@ public class WOCreationService implements IWOCreationService {
 							detail.getTax().getName(), detail.getTax().getTaxPercentage(), detail.getTotalAmount(),
 							detail.getDiscountAmount(), detail.getNetAmount(), detail.getTaxAmount(),
 							detail.getWorkOrderQuotationDetail().getQuantity(),
-							detail.getWorkOrderQuotationDetail().getWoQuotationVendorDetail().get(0).getWoQuotationEntryDetailList().get(0).getVendorCop(),
+							detail.getWorkOrderQuotationDetail().getWoQuotationVendorDetail().getFirst().getWoQuotationEntryDetailList().getFirst().getVendorCop(),
 							detail.getWoQuantity(),detail.getDiscountPercentage()));
 				
 				}

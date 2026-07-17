@@ -99,8 +99,8 @@ public class ServiceWorkOrderCreationServiceImpl implements IServiceWorkOrderCre
 		{
 			WorkOrderCreationRequestDto woCreationRequest = new WorkOrderCreationRequestDto();
 				woCreationRequest.setRequestDetailsDto(forFilteration.stream().filter(detailsList->detailsList.getVendorId().equals(vendor)).collect(Collectors.toList()));
-				woCreationRequest.setWorkorderRequestId(woCreationRequest.getRequestDetailsDto().get(0).getWorkorderRequestId());
-				woCreationRequest.setWorkorderRequestNumber(woCreationRequest.getRequestDetailsDto().get(0).getWorkorderRequestNumber());
+				woCreationRequest.setWorkorderRequestId(woCreationRequest.getRequestDetailsDto().getFirst().getWorkorderRequestId());
+				woCreationRequest.setWorkorderRequestNumber(woCreationRequest.getRequestDetailsDto().getFirst().getWorkorderRequestNumber());
 				woCreationRequest.setVendorId(vendor);
 				woCreationRequest.setStoreId(workOrderCreationRequestDto.getStoreId());
 				woCreationRequest.setGuaranteeWarranty(workOrderCreationRequestDto.getGuaranteeWarranty());
