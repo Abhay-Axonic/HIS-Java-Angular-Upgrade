@@ -284,7 +284,7 @@ public class ProcedureTemplateServiceImpl implements IProcedureTemplateService, 
 			if(procedureOrderRes.getListObject()!=null&& procedureOrderRes.getListObject().size()>0  ) {
 				
 				List<ProcedureConfigurationConsentDto> list =  procedureOrderRes.getListObject();
-				responseDto.setProcedureConfigId(list.get(0).getProcedureConfigId());
+				responseDto.setProcedureConfigId(list.getFirst().getProcedureConfigId());
 			}
 			responseDto.setConsentDetailList(procedureOrderRes.getListObject());
 
@@ -293,7 +293,7 @@ public class ProcedureTemplateServiceImpl implements IProcedureTemplateService, 
 			if(procedureChecklist.getListObject()!=null&& procedureChecklist.getListObject().size()>0  ) {
 				
 				List<ProcedureConfigurationChecklistDto> list =  procedureChecklist.getListObject();
-				responseDto.setProcedureConfigId(list.get(0).getProcedureConfigId());
+				responseDto.setProcedureConfigId(list.getFirst().getProcedureConfigId());
 			}
 			responseDto.setChecklistDetailList(procedureChecklist.getListObject());
 			
@@ -301,7 +301,7 @@ public class ProcedureTemplateServiceImpl implements IProcedureTemplateService, 
 			if(procedureStafflist.getListObject()!=null&& procedureStafflist.getListObject().size()>0  ) {
 				
 				List<ProcedureConfigurationStaffDto> list =  procedureStafflist.getListObject();
-				responseDto.setProcedureConfigId(list.get(0).getProcedureConfigId());
+				responseDto.setProcedureConfigId(list.getFirst().getProcedureConfigId());
 			}
 			
 			responseDto.setStaffDetailList(procedureStafflist.getListObject());
@@ -310,7 +310,7 @@ public class ProcedureTemplateServiceImpl implements IProcedureTemplateService, 
 			if(procedureInventoryItemlist.getListObject()!=null&& procedureInventoryItemlist.getListObject().size()>0  ) {
 				
 				List<ProcedureConfigurationInventoryItemDto> list =  procedureInventoryItemlist.getListObject();
-				responseDto.setProcedureConfigId(list.get(0).getProcedureConfigId());
+				responseDto.setProcedureConfigId(list.getFirst().getProcedureConfigId());
 			}
 			responseDto.setInventoryItemList(procedureInventoryItemlist.getListObject());
 			
@@ -318,7 +318,7 @@ public class ProcedureTemplateServiceImpl implements IProcedureTemplateService, 
 			if(procedureNoteItemlist.getListObject()!=null&& procedureNoteItemlist.getListObject().size()>0  ) {
 				
 				List<ProcedureConfigurationNoteDto> list =  procedureNoteItemlist.getListObject();
-				responseDto.setProcedureConfigId(list.get(0).getProcedureConfigId());
+				responseDto.setProcedureConfigId(list.getFirst().getProcedureConfigId());
 			}
 			responseDto.setNoteList(procedureNoteItemlist.getListObject());
 
@@ -326,7 +326,7 @@ public class ProcedureTemplateServiceImpl implements IProcedureTemplateService, 
 			if(procedureEquipmentlist.getListObject()!=null&& procedureEquipmentlist.getListObject().size()>0  ) {
 				
 				List<ProcedureConfigurationEquipmentDto> list =  procedureEquipmentlist.getListObject();
-				responseDto.setProcedureConfigId(list.get(0).getProcedureConfigId());
+				responseDto.setProcedureConfigId(list.getFirst().getProcedureConfigId());
 			}
 			responseDto.setEquipmentDetailList(procedureEquipmentlist.getListObject());
 
@@ -342,7 +342,7 @@ public class ProcedureTemplateServiceImpl implements IProcedureTemplateService, 
 			if(procedureServiceList.getListObject()!=null&& procedureServiceList.getListObject().size()>0  ) {
 				
 				List<ProcedureConfigurationServiceDto> list =  procedureServiceList.getListObject();
-				responseDto.setProcedureConfigId(list.get(0).getProcedureConfigId());
+				responseDto.setProcedureConfigId(list.getFirst().getProcedureConfigId());
 			}
 			responseDto.setServiceList(procedureServiceList.getListObject());
 			
@@ -469,7 +469,7 @@ public class ProcedureTemplateServiceImpl implements IProcedureTemplateService, 
 						payeeId = encounterMasterDto.getPayeeId();
 						patientClassId = encounterMasterDto.getPatientClassId();
 						billingBedCategoryId = uAppConfDto.getOpdBillingCatId();
-						defaultSelfTariffId = encounterMasterDto.getPatientSponsorDetailsDtosList().get(0).getTariffId();
+						defaultSelfTariffId = encounterMasterDto.getPatientSponsorDetailsDtosList().getFirst().getTariffId();
 				}
 				
 				
@@ -626,7 +626,7 @@ public class ProcedureTemplateServiceImpl implements IProcedureTemplateService, 
 						prodCatId.add(prodCategId);
 						List<PharmacyTariff> pharmacyTariffs = GlobalDao.getTariff(prodCatId, paymentEntitlementId);
 						if (pharmacyTariffs != null && !pharmacyTariffs.isEmpty()) {
-							PharmacyTariff pharmacyTariff = pharmacyTariffs.get(0);
+							PharmacyTariff pharmacyTariff = pharmacyTariffs.getFirst();
 							dto.setMarkUpDown(pharmacyTariff.getMarkUpDown());
 							dto.setMarkUpDownPer(pharmacyTariff.getMarkUpDownPer());
 						}

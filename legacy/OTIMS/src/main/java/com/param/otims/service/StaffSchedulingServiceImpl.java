@@ -155,7 +155,7 @@ public class StaffSchedulingServiceImpl  implements IStaffSchedulingService ,ICo
 						
 						if(staffRes.getListObject().size()>0) {
 							finalObj.setStaffList(staffRes.getListObject());
-							finalObj.setRoleId(finalObj.getStaffList().get(0).getRoleId());
+							finalObj.setRoleId(finalObj.getStaffList().getFirst().getRoleId());
 							finalStafflist.add(finalObj);
 						}
 					}
