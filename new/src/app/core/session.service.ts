@@ -49,6 +49,30 @@ export class SessionService {
     return this.cached?.['authToken'] as string | undefined;
   }
 
+  get isSuperUser(): boolean {
+    return this.cached?.isSuperUser === 'Y';
+  }
+
+  /**
+   * Mirrors legacy's per-state resolve-block check: `app.js` reads
+   * `localStorage.getItem('permissions').modules` and filters for the
+   * route's required module id (e.g. `organizationMaster`'s state at
+   * app.js:8279 requires module 377). Same key, same shape, same check --
+   * see docs/ANGULAR_PENDING_FINDINGS.md entry 13 for why this needs to
+   * exist on the rebuild side at all (legacy enforces this only in its
+   * frontend router; there is no backend-level check to fall back on).
+   */
+  hasModuleAccess(moduleId: number): boolean {
+    try {
+      const raw = localStorage.getItem('permissions');
+      if (!raw) return false;
+      const parsed = JSON.parse(raw) as { modules?: Array<{ id: number }> };
+      return (parsed.modules ?? []).some((m) => m.id === moduleId);
+    } catch {
+      return false;
+    }
+  }
+
   private readCookieObject(): CookieObject | null {
     const match = document.cookie
       .split('; ')
