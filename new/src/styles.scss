@@ -146,12 +146,45 @@ legend {
   }
 }
 
+// Colors/transitions match legacy's own .slider exactly
+// (resources/assets/css/param.common.master.css:4945-4990) -- this was
+// previously missing an `input:checked` state entirely, making the switch
+// look static/disabled regardless of its real status. See
+// docs/ANGULAR_PENDING_FINDINGS.md entry 12.
 .slider {
   position: absolute;
   inset: 0;
-  background: #ccc;
+  background-color: #fff;
+  border: 1px solid #00003b;
   border-radius: 20px;
   cursor: pointer;
+  transition: 0.4s;
+
+  &::before {
+    position: absolute;
+    content: '';
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    top: 2px;
+    border-radius: 50%;
+    background-color: #dadada;
+    transition: 0.4s;
+  }
+}
+
+input:checked + .slider {
+  background-color: #e0f3f2;
+  border: 1px solid #03a096;
+
+  &::before {
+    background-color: #03a096;
+    transform: translateX(20px);
+  }
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
 }
 
 .pagination {
