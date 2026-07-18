@@ -45,6 +45,10 @@ export class SessionService {
     return this.cached?.userId;
   }
 
+  get authToken(): string | undefined {
+    return this.cached?.['authToken'] as string | undefined;
+  }
+
   private readCookieObject(): CookieObject | null {
     const match = document.cookie
       .split('; ')
