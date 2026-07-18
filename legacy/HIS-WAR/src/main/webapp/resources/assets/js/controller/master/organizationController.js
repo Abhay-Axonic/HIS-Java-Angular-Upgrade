@@ -14,6 +14,7 @@ angular.module('myApp').controller(
 				'$sessionStorage',
 				'$cookies',
 				'$rootScope',
+				'$state',
 				'fileReader',
 				'GenericService',
 				'GenericServiceFileUpload',
@@ -22,9 +23,9 @@ angular.module('myApp').controller(
 				'growl',
 				'BillingGenericService',
 				'ivhTreeviewOptions', 'ivhTreeviewMgr', 'ivhTreeviewBfs','CONSTANTS',
-				
+
 				function($scope, $http, $localStorage, $sessionStorage,
-						$cookies, $rootScope,fileReader,GenericService,GenericServiceFileUpload,PagerService,promiseFactory,growl, BillingGenericService,ivhTreeviewOptions, ivhTreeviewMgr, ivhTreeviewBfs,CONSTANTS) {
+						$cookies, $rootScope,$state,fileReader,GenericService,GenericServiceFileUpload,PagerService,promiseFactory,growl, BillingGenericService,ivhTreeviewOptions, ivhTreeviewMgr, ivhTreeviewBfs,CONSTANTS) {
 					$rootScope.loginpage = true;
 					
 					$scope.imageSrc = "";
