@@ -107,17 +107,26 @@
                     </select>
                   }
                   @case ('unit') {
-                    <!-- auto-populated from session, not user-editable -- see withDefaultValue() -->
+                    <!-- Same dropdown pattern as 'list', defaulted to the session's
+                         own unit (see withDefaultValue()) but user-editable, matching
+                         legacy's real <select> -- see docs/ANGULAR_PENDING_FINDINGS.md
+                         entry 14. -->
                     <label>{{ param.lable }}</label>
-                    <input type="text" [value]="param.paramValue" disabled />
+                    <select [ngModel]="param.paramValue" (ngModelChange)="updateParameter(i, { paramValue: $event })">
+                      @for (opt of param.metaDataDetailsDtosList; track opt.id) { <option [value]="opt.id">{{ opt.name }}</option> }
+                    </select>
                   }
                   @case ('user') {
                     <label>{{ param.lable }}</label>
-                    <input type="text" [value]="param.paramValue" disabled />
+                    <select [ngModel]="param.paramValue" (ngModelChange)="updateParameter(i, { paramValue: $event })">
+                      @for (opt of param.metaDataDetailsDtosList; track opt.id) { <option [value]="opt.id">{{ opt.name }}</option> }
+                    </select>
                   }
                   @case ('org') {
                     <label>{{ param.lable }}</label>
-                    <input type="text" [value]="param.paramValue" disabled />
+                    <select [ngModel]="param.paramValue" (ngModelChange)="updateParameter(i, { paramValue: $event })">
+                      @for (opt of param.metaDataDetailsDtosList; track opt.id) { <option [value]="opt.id">{{ opt.name }}</option> }
+                    </select>
                   }
                   @case ('ItemSearch') {
                     <label>{{ param.lable }} (search not wired in this pilot, see doc comment)</label>
