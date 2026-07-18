@@ -215,7 +215,15 @@ export class BillingGroupMaster {
       .subscribe({
         next: (res) => {
           if (res.status === 'success') {
-            row.status = nextStatus;
+            // Update via the list signal, not a direct mutation of `row` --
+            // mutating a plain object nested inside a signal's array doesn't
+            // reliably trigger a re-render on its own (docs/
+            // ANGULAR_PENDING_FINDINGS.md entry 12); replacing the array via
+            // `.update()` does, matching legacy's own full-list-reload
+            // pattern (`initBillingGroupMaster()`) in spirit.
+            this.list.update((rows) =>
+              rows.map((r) => (r.billingGroupId === row.billingGroupId ? { ...r, status: nextStatus } : r)),
+            );
             this.notify.success(res.message ?? 'Status updated');
           }
         },

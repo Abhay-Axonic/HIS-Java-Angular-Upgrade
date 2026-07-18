@@ -436,11 +436,17 @@ export class ImplantMaster {
   }
 
   // ---- status toggle ----
+  // Update via the rows signal, not a direct mutation of `row` -- see
+  // docs/ANGULAR_PENDING_FINDINGS.md entry 12. The success path already
+  // reloads via loadList() (a real signal .set()), but the optimistic
+  // set below and the error-path revert were still direct mutations with
+  // no guaranteed re-render of their own.
   toggleStatus(row: ImplantMasterRow, nextStatus: boolean): void {
-    row.status = nextStatus;
+    this.rows.update((rows) => rows.map((r) => (r.id === row.id ? { ...r, status: nextStatus } : r)));
     this.api.toggleStatus(row.id, nextStatus).subscribe({
       next: () => this.loadList(),
-      error: () => (row.status = !nextStatus),
+      error: () =>
+        this.rows.update((rows) => rows.map((r) => (r.id === row.id ? { ...r, status: !nextStatus } : r))),
     });
   }
 }

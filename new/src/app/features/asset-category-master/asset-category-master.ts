@@ -314,15 +314,21 @@ export class AssetCategoryMaster {
   }
 
   // ---- status toggle (mirrors ToggleStatus) ----
+  // Update via the list signal, not a direct mutation of `row` -- see
+  // docs/ANGULAR_PENDING_FINDINGS.md entry 12.
   toggleStatus(row: AssetCategoryRow, nextStatus: boolean): void {
-    row.status = nextStatus;
+    this.assetCategories.update((rows) =>
+      rows.map((r) => (r.id === row.id ? { ...r, status: nextStatus } : r)),
+    );
     if (!nextStatus) this.clearFields();
     this.api.toggleStatus(row.id, nextStatus, this.unitId, this.organizationId, this.userId).subscribe({
       next: () => this.notify.success('Status changed successfully'),
       error: (err) => {
         if (err?.status === 406) {
           this.notify.error(err?.error?.message ?? 'Status change failed');
-          row.status = true;
+          this.assetCategories.update((rows) =>
+            rows.map((r) => (r.id === row.id ? { ...r, status: true } : r)),
+          );
         }
       },
     });

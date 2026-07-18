@@ -305,7 +305,11 @@ export class OrganizationMaster {
     this.api.updateStatus(row.organizationId as number, next).subscribe({
       next: (res) => {
         if (res.status === 'success') {
-          row.status = next;
+          // Update via the list signal, not a direct mutation of `row` --
+          // see docs/ANGULAR_PENDING_FINDINGS.md entry 12.
+          this.list.update((rows) =>
+            rows.map((r) => (r.organizationId === row.organizationId ? { ...r, status: next } : r)),
+          );
           this.notify.success(res.message ?? 'Status updated');
         }
       },
