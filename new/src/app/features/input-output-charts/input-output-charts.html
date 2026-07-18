@@ -2,7 +2,8 @@
   <fieldset class="patient-search">
     <legend>Patient Search</legend>
     <div class="search-row">
-      <input type="text" placeholder="Search by UHID or name" [ngModel]="patientSearchTerm()" (ngModelChange)="patientSearchTerm.set($event)" />
+      <input type="text" placeholder="UHID" [ngModel]="uhidSearchTerm()" (ngModelChange)="uhidSearchTerm.set($event)" />
+      <input type="text" placeholder="Patient Name" [ngModel]="patientNameSearchTerm()" (ngModelChange)="patientNameSearchTerm.set($event)" />
       <button type="button" class="btn-primary" (click)="searchPatients()">Search</button>
     </div>
     @if (patientResults().length) {

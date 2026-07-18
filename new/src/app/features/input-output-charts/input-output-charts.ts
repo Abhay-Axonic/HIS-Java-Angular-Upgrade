@@ -56,7 +56,8 @@ export class InputOutputCharts {
 
   // ---- patient search (simplified, see class doc comment) ----
   private readonly nursingWardList: unknown[] = this.readNursingWardList();
-  patientSearchTerm = signal('');
+  uhidSearchTerm = signal('');
+  patientNameSearchTerm = signal('');
   patientResults = signal<PatientSearchResult[]>([]);
   selectedPatient = signal<PatientSearchResult | null>(null);
 
@@ -69,13 +70,26 @@ export class InputOutputCharts {
     }
   }
 
+  /**
+   * Two separate fields, matching legacy's real UI (`patSearchObj.uhIdNumber`
+   * and `patSearchObj.patientName` are always distinct inputs there -- see
+   * views/Nursing/input-output-charts.html). Legacy's backend AND-combines
+   * whichever fields are non-empty (UnknownPatientRegistrationDaoImpl.
+   * searchPatientsByWardId), so sending both with the same value (this
+   * screen's original single-search-box shortcut) made a combined search
+   * return zero results for virtually any real patient -- confirmed and
+   * logged as docs/ANGULAR_PENDING_FINDINGS.md entry 15. Only send the
+   * field(s) the user actually filled in, same as legacy's own conditional
+   * request-building (`if (patSearchObj.uhIdNumber) ...`).
+   */
   searchPatients(): void {
-    const term = this.patientSearchTerm().trim();
-    if (!term) return;
+    const uhIdNumber = this.uhidSearchTerm().trim();
+    const patientName = this.patientNameSearchTerm().trim();
+    if (!uhIdNumber && !patientName) return;
     this.api
       .searchPatients({
-        uhIdNumber: term,
-        patientName: term,
+        ...(uhIdNumber ? { uhIdNumber } : {}),
+        ...(patientName ? { patientName } : {}),
         unitId: this.unitId,
         organizationId: this.organizationId,
         wardList: this.nursingWardList,
