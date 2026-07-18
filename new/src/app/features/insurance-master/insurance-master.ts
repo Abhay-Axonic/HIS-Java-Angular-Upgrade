@@ -380,7 +380,11 @@ export class InsuranceMaster {
     this.api.updateStatus(row.insuranceId as number, next, this.userId, new Date().toISOString()).subscribe({
       next: (res) => {
         if (res.status === 'success') {
-          row.status = next;
+          // Update via the list signal, not a direct mutation of `row` --
+          // see docs/ANGULAR_PENDING_FINDINGS.md entry 12.
+          this.list.update((rows) =>
+            rows.map((r) => (r.insuranceId === row.insuranceId ? { ...r, status: next } : r)),
+          );
           this.notify.success(res.message ?? 'Updated successfully');
         }
       },

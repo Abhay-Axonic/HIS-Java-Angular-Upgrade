@@ -22,8 +22,8 @@ export class InputOutputChartsService {
   private readonly base = inject(API_BASE_URL);
 
   searchPatients(payload: {
-    uhIdNumber: string;
-    patientName: string;
+    uhIdNumber?: string;
+    patientName?: string;
     unitId: number;
     organizationId: number;
     wardList: unknown[];
