@@ -5,6 +5,9 @@ import { Routes } from '@angular/router';
  * state's `url` exactly (see docs/PHASE2_PILOT_AUDIT.md) so this is a
  * drop-in replacement path for whichever ngUpgrade routing strategy Phase 7
  * ends up using -- not decided in this pilot, kept out of scope here.
+ *
+ * Second pilot batch (controllerAs:'vm' self-registered screens, see
+ * docs/PHASE2_PILOT_BATCH2_AUDIT.md) added below the first 5.
  */
 export const routes: Routes = [
   {
@@ -36,6 +39,31 @@ export const routes: Routes = [
   {
     path: 'MISReports',
     loadComponent: () => import('./features/mis-reports/mis-reports').then((m) => m.MisReports),
+  },
+  {
+    path: 'GRN',
+    loadComponent: () => import('./features/grn/grn').then((m) => m.Grn),
+  },
+  {
+    path: 'assetCategoryMaster',
+    loadComponent: () =>
+      import('./features/asset-category-master/asset-category-master').then((m) => m.AssetCategoryMaster),
+  },
+  {
+    path: 'periodicityService',
+    loadComponent: () =>
+      import('./features/periodicity-service/periodicity-service').then((m) => m.PeriodicityService),
+  },
+  {
+    path: 'assigningPickerDispenser',
+    loadComponent: () =>
+      import('./features/assigning-picker-dispenser/assigning-picker-dispenser').then(
+        (m) => m.AssigningPickerDispenser,
+      ),
+  },
+  {
+    path: 'implantMaster',
+    loadComponent: () => import('./features/implant-master/implant-master').then((m) => m.ImplantMaster),
   },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];

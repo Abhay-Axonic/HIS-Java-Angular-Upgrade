@@ -1,0 +1,62 @@
+// Screen-specific layout only -- shared table/pagination/modal/toolbar
+// styles live in src/styles.scss (see that file's header comment).
+
+.store-row {
+  text-align: right;
+  margin-bottom: 8px;
+}
+
+.store-name {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.patient-cell {
+  .patient-name {
+    font-weight: 600;
+  }
+
+  .patient-details {
+    font-size: 12px;
+    color: #666;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  i {
+    cursor: pointer;
+    font-style: normal;
+
+    &.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+  }
+
+  .icon-print::after {
+    content: '🖶';
+  }
+
+  .icon-cancel::after {
+    content: '⊘';
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+}
