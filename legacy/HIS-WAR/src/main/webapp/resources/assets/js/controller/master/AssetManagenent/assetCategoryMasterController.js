@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-  function assetCategoryMasterController($scope, $rootScope, $http, $cookies, CONSTANTS, GenericService, growl,PaginationService) {
+  function assetCategoryMasterController($scope, $rootScope, $http, $cookies, $state, CONSTANTS, GenericService, growl,PaginationService) {
     var self = this;
 
     //Default Constructor
