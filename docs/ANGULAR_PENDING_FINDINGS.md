@@ -73,3 +73,102 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 - **Make it byte-for-byte identical to legacy**, including the bug: change `enrichedList` to a one-shot snapshot join performed only inside the insurance-list response handler (using whatever `fullLedgerList()` holds at that exact moment, not reactively), so the rebuild can also show blank names when the ledger list resolves second. This would be a strange thing to deliberately build in exchange for parity-for-parity's-sake.
 
 **My read:** the self-correcting version is very likely what any reasonable reviewer would want kept — but per the standing "no deviation without sign-off, however small" rule, this is exactly the kind of case that rule exists for, so it isn't decided here.
+
+---
+
+## 5. GRN's Cancel button calls a function that doesn't exist anywhere in its controller
+
+**Where:** `views/procurement/quotation/GRN.html` line 357 (`ng-click="...; vm.model.PopulateReasonDropdown()"`) vs. `resources/assets/js/controller/procurement/quotation/grnController.js` (full file, 605 lines). Found during the second Phase 2 pilot batch's audit of `GRN` (`docs/PHASE2_PILOT_BATCH2_AUDIT.md` section 1).
+
+**What it is, plainly:** every time a user clicks the Cancel icon on a GRN row, the view calls `vm.model.PopulateReasonDropdown()` — a function that is never defined anywhere in `grnController.js` (confirmed by grep of the full file). This produces a silent console error on every click. Harmless in practice: the `reasons` dropdown it presumably meant to refresh is already loaded once at controller init (`cancelReasonService.GetReason()`, which also memoizes across the session), so the cancel modal shows the correct reasons regardless.
+
+**Owner decision, per pilot instruction:** not fixed — the rebuild reproduces legacy's actual observable behavior (cancel modal opens with the already-loaded reasons list, no refresh call), which is correct once the broken call is discounted. This entry exists so the dead reference itself is tracked, in case anyone later wants to either delete the dead call site in legacy or wire up a real `PopulateReasonDropdown` if a refresh was actually intended.
+
+**My read:** trivial, no urgency — same severity class as a stray console warning, not a functional bug.
+
+---
+
+## 6. SurgicalSiteInfection is a non-functional copy-pasted mockup, not a real screen
+
+**Where:** `views/Nursing/surgical-site-infection.html` (215 lines) vs. `resources/assets/js/controller/nursing/nutritionalAssessment/surgicalSiteInfectionController.js` (186 lines). Found while auditing this screen as part of the second Phase 2 pilot batch, before it was swapped out for `periodicityService` (`docs/PHASE2_PILOT_BATCH2_AUDIT.md` section 2).
+
+**What it is, plainly:** the view has **zero** `ng-model` bindings anywhere in its SSI-specific markup (58 form fields per the static scan, all checkboxes/radios with no two-way binding at all), and every one of them has `ng-click="prescribing($index)"` — a function that does not exist in `surgicalSiteInfectionController.js`. Neither does `submitForm()`, referenced by the surrounding `<form ng-submit="submitForm()">`. Both functions exist only in **sibling** controllers in the same directory (`handHygieneSurveyController.js`, `patientFallReportingController.js`, `InitialAssessmentController.js`) — and the form's own `name` attribute is literally `medicationErrorReporting`, confirming this markup was copy-pasted from one of those screens and never adapted for SSI. The only real, working part of this screen is the shared patient-search partial it includes (`views/common/nutritional-patient-search.html`), which functions correctly via `$scope`-style bindings — that part isn't in question.
+
+**Owner decision, per pilot instruction:** not resolved here — swapped the pilot slot for `periodicityService` rather than rebuilding a mockup, same discipline the first pilot used for `homecareMedicationApproval`. Two things worth a decision, not resolved in this pilot: (a) whether this screen should be finished (someone clearly intended a real SSI-tracking form here and never built it), or (b) whether it should be flagged to end users as non-functional until it is.
+
+**My read:** worth flagging to whoever owns Nursing/Infection-Control workflows — if staff believe they can log Surgical Site Infection data through this screen today, they can't; nothing they enter is captured.
+
+---
+
+## 7. OTBillingCompletion's view is a stale clone of a completely different screen's template
+
+**Where:** `views/master/TheatreManagement/OT-billing-completion.html` (1,172 lines) vs. `resources/assets/js/controller/otims/otBillingCompletionController.js` (129 lines, the controller actually wired to this route). Found while auditing this screen as part of the second Phase 2 pilot batch, before it was swapped out for `implantMaster` (`docs/PHASE2_PILOT_BATCH2_AUDIT.md` section 3).
+
+**What it is, plainly:** this is a bigger, structurally different instance of the same failure class as entry 2 above (`addItemPOCreation`/`addNewPOController`) — a real, complete controller sitting disconnected from its intended view. The controller ui-router actually instantiates for `/OTBillingCompletion` implements a small "search procedure orders by date range" feature and fires exactly one real on-load call whose result its own view never reads. But the *view* rendered for this state is an almost-complete clone of `details-OT-billing-completion.html` — the template for a **separate**, correctly-wired state (`detailsOTBillingCompletion`) backed by a genuinely complete, 7,000+-line controller (`otBillingCompletionDetailsController.js`, `OtBillingDetailsComp.Controller`). Of roughly 35 distinct `vm.model.*` tokens the wired view references, effectively none resolve against the small controller actually driving this route — every tab, every button including Save, is inert. Two bare (non-`vm`-prefixed) `ng-change` handlers (`selectProcedure`, `getRate`) reference functions that also don't exist in the wired controller and would throw on interaction, not just render blank.
+
+**Three options, not resolved here** (same shape as entry 2's three options):
+- Rebuild the *current* (broken, inert) behavior for true parity.
+- Treat `otBillingCompletionDetailsController.js` as the real intended behavior and rebuild *that* instead — a much bigger scope change (7,000+ lines) than a single pilot slot should absorb without explicit sign-off.
+- Leave this screen alone for now (what this pilot did) and flag it for a dedicated pass later.
+
+**My read:** structurally identical to entry 2, and probably deserves the same eventual resolution path (confirm which of the two controllers represents what users actually rely on today, if either) — but given the controller backing `detailsOTBillingCompletion` is far larger than anything audited in either pilot so far, this is a bigger undertaking than entry 2 and shouldn't be scoped casually.
+
+---
+
+## 8. implantMaster: a second missing-`$state`-injection crash bug, and a real speciality-ID data-loss bug on edit
+
+**Where:** `resources/assets/js/controller/master/unit/implantMasterController.js` (836 lines). Found during the second Phase 2 pilot batch's audit of `implantMaster` (`docs/PHASE2_PILOT_BATCH2_AUDIT.md` section 3).
+
+**What it is, plainly — two distinct bugs:**
+1. **Same missing-`$state`-DI crash bug as `organizationMaster`'s already-fixed finding** (`fix/organizationmaster-state-injection`), a second, independent occurrence in a different file: `$state` isn't in this controller's DI list, but `$state.go('login')` is called when the session cookie is missing (line 8). Throws `ReferenceError: $state is not defined` instead of redirecting to `/login` — a blank/broken page on session expiry instead of a clean redirect.
+2. **A real data-loss bug in `UpdateFixedAssetType`** (lines 581-587): the update payload's speciality list is built as `specialityarray.push({id: x.id})` for every row in `self.model.specialityDetailList`. Rows loaded from the original edit fetch have a real top-level `.id`. But rows added *during* the same edit session via the "+" button (`AddSpeciality`) only ever get a `.specialityName` field, never a top-level `.id` — so a speciality added while editing an existing implant is sent to the backend with `id: undefined` and silently dropped. Pre-existing specialities (untouched during the edit) save correctly.
+
+**Owner decision, not resolved here:** the `$state` bug is the same class already approved for a fix on `organizationMaster` (`fix/organizationmaster-state-injection`) — worth considering whether that fix (or an equivalent one) should be applied here too rather than treated as a fresh one-off decision, given this is now the *third* confirmed occurrence across this project's screens (see also entry 10 below, `assetCategoryMaster`). The speciality-ID-loss bug is reproduced verbatim in the rebuild (`new/src/app/features/implant-master/`) for byte-for-byte parity, pending a decision on whether to fix it.
+
+**My read:** the `$state` bug pattern recurring a third time across unrelated files suggests it's worth a codebase-wide grep for the same DI omission rather than fixing instances one at a time as they're discovered — flagging that as a suggestion, not deciding it here. The speciality-ID-loss bug is a genuine, reproducible data-loss defect worth fixing once approved; it doesn't corrupt existing data, only silently drops newly-added specialities on save.
+
+---
+
+## 9. assigningPickerDispenser: a real crash bug, confirmed live by the golden-trace capture itself
+
+**Where:** `resources/assets/js/controller/pharmacy/assigningPickerDispenserController.js` lines 50-55. Found during the second Phase 2 pilot batch's audit (`docs/PHASE2_PILOT_BATCH2_AUDIT.md` section 4).
+
+**What it is, plainly:** `initializeController()` does `JSON.parse(sessionStorage.getItem('selectedTopStore')).storeName` — dereferencing `.storeName` **before** checking whether the parsed result is `null`. If a user reaches this screen with nothing having populated `selectedTopStore` yet (e.g. a multi-store user who hasn't been through the store-selection flow this session), `JSON.parse(null)` returns `null`, and the very next statement throws `TypeError: Cannot read properties of null (reading 'storeName')` — aborting the rest of `initializeController()` entirely. Everything after that point in the function (the Currency call, the cancel-reasons call, the dropdown-then-search chain) never runs; the user gets a page with static chrome but no working dropdowns and no data.
+
+**Unusually strong evidence for this one, worth noting:** this wasn't just read from source — it was independently reproduced by `tools/golden-trace/capture.js` itself. The captured trace for `assigningPickerDispenser` shows only 2 API calls (`getPharmacyUserRoleType` + the template fetch) instead of the 5 a full, uncrashed load would produce — exactly the signature this crash would leave, in a real browser session with nothing seeded into `sessionStorage.selectedTopStore`.
+
+**Compared directly against the sibling OP screen** (`OPassigningPickerDispenserController.js`), which has the identical `sessionStorage` read but in the correct order (the `null` check runs first, and that variant never reads `.storeName` off the parsed object at all) — confirming this bug is isolated to the IP variant, not a systemic pattern across both siblings, the same comparison technique the first pilot used to isolate `organizationMaster`'s bug.
+
+**Owner decision, not resolved here:** not fixed in legacy. Not reproduced in the rebuild (`new/src/app/features/assigning-picker-dispenser/`) — `sessionStorage` is read defensively there, the same "use the safe pattern, don't reproduce the crash" precedent already established for `organizationMaster`'s `$state` fix.
+
+**My read:** this is a real, user-facing crash bug (not a cosmetic one) — recommend prioritizing a fix in legacy over the other findings in this batch, since it can leave affected users looking at a non-functional page with no error message explaining why.
+
+---
+
+## 10. assetCategoryMaster: a third missing-`$state`-injection crash bug, plus three smaller bugs
+
+**Where:** `resources/assets/js/controller/master/AssetManagenent/assetCategoryMasterController.js` (354 lines). Found during the second Phase 2 pilot batch's audit (`docs/PHASE2_PILOT_BATCH2_AUDIT.md` section 5).
+
+**What it is, plainly — four distinct findings:**
+1. **Third occurrence of the missing-`$state`-DI crash bug** (see entry 8 above for the second occurrence, `implantMaster`; `organizationMaster` was the first, already fixed). Same shape: `$state` not injected, `$state.go('login')` called on a missing cookie, throws instead of redirecting.
+2. **Search box bypasses `PaginationService` entirely.** The visible search input filters only the current page's already-fetched rows (`vm.model.pagination.data`) via a bare Angular `filter` pipe, never the full `assetCategories` list the way `PaginationService.searchData` (which exists on this screen and is used correctly for the initial load) would. A user searching for a category that exists but isn't on the currently-displayed page sees "No Record Found" incorrectly.
+3. **`ToggleStatus`'s 406-error handler always reverts `status` to `true`**, regardless of which direction the toggle was attempted — correct behavior for a failed deactivation, a silent no-op (not a real revert, but also not visibly wrong since the checkbox is already `true`) for a failed activation.
+4. **Copy-paste error-message bug:** the Asset Category Description field's "required" validation message reads "Enter Asset Category Code" — identical to the Code field's own error text, never updated for Description.
+
+**Owner decision, not resolved here:** none of the four fixed in legacy. All four are reproduced verbatim in the rebuild (`new/src/app/features/asset-category-master/`) except the `$state` crash, which — same as entries 8 and 9 — isn't reproducible in this rebuild's architecture (`SessionService` never throws).
+
+**My read:** findings 2-4 are all low-severity, easy, independent fixes whenever someone has a reason to touch this screen — none produce wrong *data*, just a confusing search result or a mislabeled error message. Finding 1 (the `$state` bug) is the one worth prioritizing, for the same reason as entry 9's crash bug, though this screen's blast radius (Asset Category Master, a low-traffic admin screen) is smaller than `assigningPickerDispenser`'s.
+
+---
+
+## 11. `controllerAs:'vm'` in a state's config doesn't reliably mean the view uses `vm.*` bindings
+
+**Where:** discovered while searching for a replacement clinical-only screen for entry 6 above. Checked `resources/assets/js/controller/nursing/handHygieneSurveyController.js`, `patientFallReportingController.js`, and `resources/assets/js/controller/services/unit/pocWorklistController.js` — all three declare `controllerAs: 'vm'` in their self-registered state config, matching the "91% of the 468 newly-found screens use `controllerAs:'vm'`" figure in entry 3 above.
+
+**What it is, plainly:** all three controllers assign almost exclusively to `$scope.*`, not `self.*`/`this.*` (1 `self.` vs. 166 `$scope.` assignments in `handHygieneSurveyController.js`; 0 vs. 505 in `patientFallReportingController.js`; 3 vs. 538 in `pocWorklistController.js`). Their views confirm this isn't just a style quirk — all three have **zero** `vm.*` bindings anywhere (confirmed by grep). The `controllerAs:'vm'` declared in their state config is dead, unused configuration; the screens function entirely through classic `$scope` inheritance, the same wiring pattern 4 of the *first* pilot's 5 screens already tested and validated.
+
+**Why this matters:** entry 3's 91%-`controllerAs:'vm'` figure is accurate as a count of what each state's config *declares*, but it doesn't verify that the corresponding view actually *uses* `vm.*` bindings. These three examples show that at least some meaningful fraction of the 468 newly-found screens declare `controllerAs:'vm'` without it doing anything — meaning the real population of screens that need this pattern's specific rebuild handling (as opposed to the already-tested `$scope` pattern) is smaller than 91% of 468, by an unknown amount.
+
+**Not resolved here:** re-quantifying this precisely would mean checking `vm.` usage in all 468 newly-found views, a scan on the same order as the Phase 0 re-scan itself — out of scope for this pilot batch. Flagged for whoever scopes the next phase of work: worth doing this check before using the 91% figure to plan Phase 3+ sequencing or effort estimates for this specific wiring pattern.
+
+**My read:** doesn't change anything about *this* pilot batch's conclusions (the second pilot still found real, functioning `vm.*`-pattern screens and confirmed the process/tooling works against them) — but it's a data-quality caveat worth attaching to entry 3's headline number before anyone treats "91%" as precise.
