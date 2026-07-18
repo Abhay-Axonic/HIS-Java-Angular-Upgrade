@@ -1,7 +1,7 @@
 
 (function () {
     "use strict";
-    function implantMasterController($scope, $rootScope, $http, $filter, $cookies, CONSTANTS, GenericService,PaginationService, growl, commonDetailService) {
+    function implantMasterController($scope, $rootScope, $http, $filter, $cookies, $state, CONSTANTS, GenericService,PaginationService, growl, commonDetailService) {
         var self = this;
 
         //Default Constructor
