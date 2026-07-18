@@ -77,10 +77,32 @@ export class InsuranceMaster {
   totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize())));
   pageNumbers = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
 
+  // Legacy's initInsuranceList() cross-references a separately-fetched
+  // full ledger list to backfill each row's generalLedgerName --
+  // getInsuranceMasterList's own response isn't reliably populated with
+  // it (confirmed by the legacy controller's own client-side join, see
+  // getLedgerList()). Reproduced here as a computed join against a full
+  // ledger list fetched on load, rather than a mutate-in-place forEach,
+  // so it stays correct regardless of which of the two requests resolves
+  // first. Found missing during the golden-trace re-audit -- the initial
+  // rebuild only wired this endpoint to the typeahead search, never the
+  // unconditional load-on-init call the golden trace shows firing.
+  private fullLedgerList = signal<{ generalLedgerId: number; generalLedgerName: string }[]>([]);
+
+  enrichedList = computed(() => {
+    const ledgerNameById = new Map(this.fullLedgerList().map((l) => [l.generalLedgerId, l.generalLedgerName]));
+    return this.list().map((row) =>
+      row.generalLedgerId != null && ledgerNameById.has(row.generalLedgerId)
+        ? { ...row, generalLedgerName: ledgerNameById.get(row.generalLedgerId) }
+        : row,
+    );
+  });
+
   filteredList = computed(() => {
     const keyword = this.searchKeyword().trim().toLowerCase();
-    if (!keyword) return this.list();
-    return this.list().filter((row) =>
+    const source = this.enrichedList();
+    if (!keyword) return source;
+    return source.filter((row) =>
       [row.insuranceCode, row.insuranceDesc, row.email, row.contactPerson]
         .filter(Boolean)
         .some((f) => f!.toLowerCase().includes(keyword)),
@@ -93,9 +115,18 @@ export class InsuranceMaster {
   constructor() {
     this.loadCountryList();
     this.loadList();
+    this.loadFullLedgerList();
 
     this.ledgerSearch$.pipe(debounceTime(250), switchMap((term) => this.api.getGeneralLedgerList(this.organizationId, term))).subscribe({
       next: (res) => this.ledgerResults.set(res.status === 'success' ? res.listObject ?? [] : []),
+    });
+  }
+
+  private loadFullLedgerList(): void {
+    this.api.getGeneralLedgerList(this.organizationId).subscribe({
+      next: (res) => {
+        if (res.status === 'success') this.fullLedgerList.set(res.listObject ?? []);
+      },
     });
   }
 
