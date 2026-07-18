@@ -1,6 +1,8 @@
 # Phase 0 re-scope: effort estimate and timeline impact
 
-*Short summary requested by the owner in response to `docs/ANGULAR_PENDING_FINDINGS.md` entry 3 (the 468-additional-live-states discovery). This is deliberately NOT the re-scan itself — just the sizing the owner asked for before deciding when to schedule it. See that entry for the full discovery writeup.*
+*Short summary requested by the owner in response to `docs/ANGULAR_PENDING_FINDINGS.md` entry 3 (the 468-additional-live-states discovery). This was originally written before the re-scan itself was greenlit — the estimate below is kept as-written for the record.*
+
+**Status: the re-scan this document estimates has since been run (2026-07-18), on explicit go-ahead.** Actual results — the corrected inventory, the risk-tier/`MasterController` comparison against the original numbers, and the pilot-generalization findings — are in `docs/ANGULAR_PENDING_FINDINGS.md` entry 3's "Update" note and the regenerated `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md`. The estimate below turned out conservative: the mechanical extraction/reconciliation work (extending `extract_states.py`, re-running the pipeline, diffing against the old numbers) was done directly rather than over several days of manual review, since the tooling changes were small and the comparison could be computed and verified programmatically rather than eyeballed.
 
 ---
 

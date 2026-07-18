@@ -4,78 +4,83 @@
 
 **How this document was built, in plain terms:** the AngularJS app defines every screen as a "state" (a URL + a view template + a controller) in one central routing file. Instead of reading all of those definitions by hand — which would be slow and inconsistent — this was done with a small, reusable tool suite (`tools/angular-audit/`) that parses the actual routing file and cross-references it against the real view and controller files on disk. Risk tags (clinical-safety / billing) were then applied by scanning each screen's name, URL, and file path for a curated list of keywords (e.g. "transfusion", "dose", "invoice", "tariff"), plus a per-module default for departments that are clinical or billing by nature (e.g. everything under Blood Bank defaults to clinical-safety-relevant even if the individual screen name doesn't contain an obvious keyword).
 
-**This is a first-pass heuristic sort, not a clinical or billing sign-off.** It exists to separate the ~259 screens that are most likely safe to rebuild quickly from the ~836 that touch money, patient safety, or both, so the right expert reviews the right screens later (Phase 6). Treat every "yes" and "unclear" tag below as a starting point for that expert review, not a final verdict — and treat every "no" as provisional too: keyword/module matching can miss things a human reader would catch. Where the tooling genuinely couldn't tell (missing files, unresolvable controllers, states with no view), that is called out explicitly below rather than guessed at.
+**This is a first-pass heuristic sort, not a clinical or billing sign-off.** It exists to separate the ~345 screens that are most likely safe to rebuild quickly from the ~1204 that touch money, patient safety, or both, so the right expert reviews the right screens later (Phase 6). Treat every "yes" and "unclear" tag below as a starting point for that expert review, not a final verdict — and treat every "no" as provisional too: keyword/module matching can miss things a human reader would catch. Where the tooling genuinely couldn't tell (missing files, unresolvable controllers, states with no view), that is called out explicitly below rather than guessed at.
 
 ---
 
 ## Headline numbers
 
-- **Total screens/routes found: 1098** (parsed from `resources/assets/js/config/app.js`, the app's single `$stateProvider` configuration — one line per `.state(...)` call, live code only, commented-out state definitions excluded).
-- **51 modules/departments** identified from the view-template folder structure.
+- **Total screens/routes found: 1567** — 1098 from `resources/assets/js/config/app.js` (the app's central `$stateProvider` configuration) plus **469 more from 469 other files that self-register their own state(s) from their own `.config($stateProvider)` block**, outside app.js entirely. This second category was missed by the original version of this scan (corrected 2026-07-18 — see `docs/ANGULAR_PENDING_FINDINGS.md` entry 3 for how the gap was found). Only live, currently-loaded code counts toward either number: commented-out state definitions are excluded, and so are states defined by a file whose own `<script>` tag in `index.html` is commented out or absent (`tools/angular-audit/data/dead_states.json` lists those separately, for anyone who wants to see what was deliberately excluded rather than silently dropped).
+- **56 modules/departments** identified from the view-template folder structure.
 - **Risk tiers:**
-  - Both clinical-safety AND billing relevant: **48** (4%)
-  - Clinical-safety relevant only: **483** (43%)
-  - Billing relevant only: **305** (27%)
-  - Low risk (neither, by this pass): **259** (23%)
-  - Unclear / needs runtime verification: **3** (0%)
+  - Both clinical-safety AND billing relevant: **81** (5%)
+  - Clinical-safety relevant only: **521** (33%)
+  - Billing relevant only: **602** (38%)
+  - Low risk (neither, by this pass): **345** (22%)
+  - Unclear / needs runtime verification: **18** (1%)
 
-**In plain terms: 836 out of 1098 screens (roughly 76%) touch either patient safety or money in some way.** Only 259 screens (about 23%) look administrative/low-risk on this first pass.
+**In plain terms: 1204 out of 1567 screens (roughly 76%) touch either patient safety or money in some way.** Only 345 screens (about 22%) look administrative/low-risk on this first pass.
 
 ## Screens by module
 
 | Module | Screens | Both | Clinical-only | Billing-only | Low-risk | Unclear |
 |---|---:|---:|---:|---:|---:|---:|
-| Billing | 170 | 12 | 0 | 158 | 0 | 0 |
-| Lab/LIS | 118 | 6 | 112 | 0 | 0 | 0 |
-| Common/Shared | 64 | 0 | 4 | 21 | 39 | 0 |
-| ADT - Admission/Discharge | 58 | 5 | 53 | 0 | 0 | 0 |
-| CSSD | 58 | 6 | 52 | 0 | 0 | 0 |
-| OT/Theatre | 54 | 6 | 48 | 0 | 0 | 0 |
+| Pharmacy | 210 | 26 | 0 | 184 | 0 | 0 |
+| Billing | 186 | 14 | 0 | 172 | 0 | 0 |
+| Procurement | 168 | 1 | 0 | 167 | 0 | 0 |
+| Lab/LIS | 119 | 6 | 113 | 0 | 0 | 0 |
+| Asset Management | 77 | 0 | 2 | 11 | 64 | 0 |
+| Common/Shared | 66 | 0 | 4 | 21 | 41 | 0 |
+| Admin - Global Master (general) | 65 | 0 | 10 | 5 | 50 | 0 |
+| OT/Theatre | 64 | 13 | 51 | 0 | 0 | 0 |
+| Nursing | 61 | 1 | 60 | 0 | 0 | 0 |
+| ADT - Admission/Discharge | 60 | 5 | 55 | 0 | 0 | 0 |
+| CSSD | 59 | 6 | 53 | 0 | 0 | 0 |
 | Blood Bank | 51 | 3 | 48 | 0 | 0 | 0 |
-| Nursing | 49 | 1 | 48 | 0 | 0 | 0 |
-| Procurement | 49 | 0 | 0 | 49 | 0 | 0 |
-| Admin - Global Master (general) | 43 | 0 | 6 | 1 | 36 | 0 |
-| Pharmacy | 42 | 4 | 0 | 38 | 0 | 0 |
-| Linen & Laundry | 40 | 0 | 0 | 2 | 38 | 0 |
-| Admin - Org/Unit Master | 33 | 0 | 7 | 2 | 24 | 0 |
-| OPD | 30 | 0 | 4 | 1 | 25 | 0 |
-| Asset Management | 23 | 0 | 2 | 2 | 19 | 0 |
-| Appointment Scheduling | 22 | 0 | 0 | 0 | 22 | 0 |
+| Admin - Org/Unit Master | 50 | 0 | 9 | 2 | 39 | 0 |
+| Linen & Laundry | 50 | 0 | 1 | 7 | 42 | 0 |
+| OPD | 31 | 0 | 4 | 1 | 26 | 0 |
+| Appointment Scheduling | 24 | 0 | 0 | 0 | 24 | 0 |
 | ADT - Bed Management | 18 | 0 | 8 | 0 | 10 | 0 |
 | Diet & Nutrition | 16 | 0 | 16 | 0 | 0 | 0 |
+| Clinical - Global Master | 13 | 0 | 13 | 0 | 0 | 0 |
 | Billing - Doctor Share | 12 | 3 | 0 | 9 | 0 | 0 |
-| Clinical - Global Master | 11 | 0 | 11 | 0 | 0 | 0 |
+| Admin - User Management | 11 | 0 | 4 | 0 | 7 | 0 |
 | Billing - Global Master | 10 | 0 | 0 | 10 | 0 | 0 |
-| Admin - User Management | 10 | 0 | 3 | 0 | 7 | 0 |
 | Clinical - Encounter Master | 9 | 1 | 8 | 0 | 0 | 0 |
+| Common - Template | 9 | 0 | 7 | 0 | 2 | 0 |
+| Unclassified (views/Asset Management) | 9 | 0 | 0 | 0 | 0 | 9 |
 | ICU | 8 | 0 | 8 | 0 | 0 | 0 |
 | Radiology | 8 | 0 | 8 | 0 | 0 | 0 |
+| Billing - Fund Management | 8 | 0 | 0 | 8 | 0 | 0 |
 | ADT - Ambulance | 8 | 0 | 0 | 2 | 6 | 0 |
 | Admin - HR/Staff Master | 7 | 0 | 0 | 1 | 6 | 0 |
-| Billing - Fund Management | 7 | 0 | 0 | 7 | 0 | 0 |
 | Admin - Queue Management | 7 | 0 | 0 | 0 | 7 | 0 |
 | ADT - Registration | 6 | 0 | 1 | 0 | 5 | 0 |
 | Morgue | 6 | 0 | 6 | 0 | 0 | 0 |
+| Quality - Incident Reporting | 6 | 0 | 6 | 0 | 0 | 0 |
 | ADT - Admission | 5 | 0 | 0 | 0 | 5 | 0 |
-| Common - Template | 5 | 0 | 3 | 0 | 2 | 0 |
 | Clinical - IVF | 5 | 0 | 5 | 0 | 0 | 0 |
 | Reports - Custom (MPShah) | 5 | 0 | 4 | 0 | 1 | 0 |
 | Clinical - Diagnostic Procedure | 5 | 0 | 5 | 0 | 0 | 0 |
 | Clinical Workstation | 4 | 0 | 4 | 0 | 0 | 0 |
 | Unknown (no templateUrl / multi-view state) | 3 | 0 | 0 | 0 | 0 | 3 |
+| Clinical - Doctor Desk | 3 | 0 | 3 | 0 | 0 | 0 |
+| Admin - Configuration | 3 | 0 | 0 | 0 | 3 | 0 |
+| Unclassified (views/Abdm) | 3 | 0 | 0 | 0 | 0 | 3 |
 | Admin - Master (other) | 2 | 0 | 0 | 0 | 2 | 0 |
 | ADT - Transfer | 2 | 0 | 1 | 0 | 1 | 0 |
-| Clinical - Doctor Desk | 2 | 0 | 2 | 0 | 0 | 0 |
+| Procurement - Inventory | 2 | 1 | 0 | 1 | 0 | 0 |
 | Clinical - Chemotherapy | 2 | 1 | 1 | 0 | 0 | 0 |
 | Clinical - Hemodialysis | 2 | 0 | 2 | 0 | 0 | 0 |
-| Quality - Incident Reporting | 2 | 0 | 2 | 0 | 0 | 0 |
+| Unclassified (views/PatientPos) | 2 | 0 | 0 | 0 | 0 | 2 |
 | Clinical - Physiotherapy | 1 | 0 | 1 | 0 | 0 | 0 |
-| Procurement - Inventory | 1 | 0 | 0 | 1 | 0 | 0 |
 | Billing - Promotions/Loyalty | 1 | 0 | 0 | 1 | 0 | 0 |
 | Other Apps | 1 | 0 | 0 | 0 | 1 | 0 |
-| Admin - Configuration | 1 | 0 | 0 | 0 | 1 | 0 |
 | Admin - Unit Master (qms-call.html) | 1 | 0 | 0 | 0 | 1 | 0 |
 | Admin - Procedure Configuration | 1 | 0 | 0 | 0 | 1 | 0 |
+| Unclassified (views/MRD-file-management.html) | 1 | 0 | 0 | 0 | 0 | 1 |
+| Admin - Unit Master (tally-interfacing.html) | 1 | 0 | 0 | 0 | 1 | 0 |
 
 ---
 
@@ -95,7 +100,7 @@
 
 ## Methodology detail
 
-**Route extraction:** every `.state('name', { ... })` call in `app.js` is parsed with a balanced-paren scanner (not a regex-only pass, to correctly handle nested objects like `resolve` blocks). Commented-out state definitions are stripped first and excluded. See `tools/angular-audit/extract_states.py`.
+**Route extraction:** every `.state('name', { ... })` call in `app.js` **and** in any other `.js` file under the whole webapp tree that self-registers its own state(s) from its own `.config($stateProvider)` block is parsed with a balanced-paren scanner (not a regex-only pass, to correctly handle nested objects like `resolve` blocks). Commented-out state definitions are stripped first and excluded, as are `.state()`-shaped calls belonging to unrelated bundled libraries (jQuery UI, Kendo UI both have their own, unrelated `.state()` widget methods — filtered both by known vendor file path and, as a second line of defense, by requiring a resolvable literal string state name). A state registered by a file outside `app.js` only counts as live if that file's own `<script>` tag in `index.html` is actually present and not commented out — cross-referenced directly against `index.html`, not assumed. See `tools/angular-audit/extract_states.py`.
 
 **Module classification:** derived entirely from the view template's folder path, cross-checked against the actual `views/` directory tree on disk. See `classify_risk.py::classify_module`.
 
@@ -153,7 +158,222 @@ Grouped by module. Within each module, sorted risk-first (both → clinical-only
 
 Column notes: **View** = template file relative to `webapp/` (✗ = not found on disk). **Ctrl** = resolved controller file basename, `shared×N` = one of the reused generic controllers, `?` = unresolved, `–` = no controller/multi-view. **Fields** = raw `<input>+<select>+<textarea>` count. **API** = attributable HTTP/service-call count (aggregate when Ctrl is `shared×N`). **Clinical / Billing** = yes/no/unclear with reason. **Coupling** = broadcast(bc)/listen(on)/rootScope-write(rs) counts, aggregate when shared.
 
-### Billing (170 screens)
+### Pharmacy (210 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| AddNewDrugRecall | /AddNewDrugRecall | views/PharmacyInventory/Store/add-new-drug-recall.html | addNewDrugRecallController.js | 30 | 13 | yes (keyword match: drug) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| DetailsImplantOpeningBalance | /DetailsImplantOpeningBalance | views/PharmacyInventory/Store/details-implant-opening-balance.html | implantOpeningBalanceDetailsController.js | 2 | 2 | yes (keyword match: implant) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addNewImplantOpeningBalance | /addNewImplantOpeningBalance | views/PharmacyInventory/Store/add-new-implant-opening-balance.html | addNewImplantOpeningBalanceController.js | 55 | 9 | yes (keyword match: implant) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addNewMedicationPatientIssueReturn | /addNewMedicationPatientIssueReturn | views/PharmacyInventory/InPatient/add-new-medication-patient-issue-return.html | addNewMedicationPatientIssueReturnController.js | 46 | 16 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| administrationApproval | /administrationApproval | views/PharmacyInventory/InPatient/crash-cart-medication-administration-approval.html | crashCartAdministrationApprovalController.js | 15 | 3 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| combinationMedicationMaster | /combinationMedicationMaster | views/PharmacyInventory/combination-medication-master.html | shared×353 | 9 | 0 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| deliveryWorklist | /deliveryWorklist | views/PharmacyInventory/NarcoticsStore/delivery-wokrlist.html | deliveryWokrlistController.js | 13 | 6 | yes (keyword match: delivery) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsAdministrationApproval | /detailsAdministrationApproval | views/PharmacyInventory/InPatient/details-crash-cart-medication-administration-approval.html | detailsCrashCartAdministrationApprovalController.js | 9 | 2 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsDeliveryWokrlist | /detailsDeliveryWorklist | views/PharmacyInventory/NarcoticsStore/details-delivery-wokrlist.html | detailsDeliveryWokrlistController.js | 1 | 3 | yes (keyword match: delivery) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsDrugRecall | /detailsDrugRecall | views/PharmacyInventory/Store/details-drug-recall.html | drugRecallDetailsController.js | 1 | 1 | yes (keyword match: drug) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPatientIssueRejectionMedication | /detailsPatientIssueRejectionMedication | views/PharmacyInventory/InPatient/details-patient-issue-rejection-medication.html | detailsPatientIssueRejectionMedicationController.js | 12 | 5 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPatientIssueReturnMedication | /detailsPatientIssueReturnMedication | views/PharmacyInventory/InPatient/details-patient-issue-medication.html | detailsPatientIssueReturnMedicationController.js | 4 | 1 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPatientReturnAcceptanceMedication | /detailsPatientReturnAcceptanceMedication | views/PharmacyInventory/InPatient/details-medication-patient-return-acceptance.html | detailsPatientReturnAcceptanceMedicationController.js | 11 | 5 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPendingRejectedRejectionMedication | /detailsPendingRejectedRejectionMedication | views/PharmacyInventory/InPatient/details-pending-rejected-rejection-medication.html | detailsPendingRejectedRejectionMedicationController.js | 8 | 5 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| dischargeMedicationHandover | /dischargeMedicationHandover | views/PharmacyInventory/InPatient/discharge-medication-hand-over.html | dischargeMedicationHandoverController.js | 15 | 8 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| dischargeMedicationReconciliation | /dischargeMedicationReconciliation | views/PharmacyInventory/InPatient/discharge-medication-reconciliation.html | dischargeMedicationReconcilationController.js | 14 | 4 | yes (keyword match: medication) | yes (keyword match: reconcil) | bc:0/on:0/rs:1 |
+| drugRecall | /drugRecall | views/PharmacyInventory/Store/drug-recall.html | drugRecallController.js | 11 | 3 | yes (keyword match: drug) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| erDischargeMedicationHandover | /erDischargeMedicationHandover | views/PharmacyInventory/InPatient/er-discharge-medication-hand-over.html | erDischargeMedicationHandoverController.js | 5 | 0 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:0 |
+| homecareMedicationApproval | /homecareMedicationApproval | views/PharmacyInventory/InPatient/homecare-medication-approval.html | shared×353 | 12 | 0 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| homecareMedicationEntry | /homecareMedicationEntry | views/PharmacyInventory/InPatient/homecare-medication-entry.html | homecareMedicationEntryController.js | 17 | 11 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| implantOpeningBalance | /implantOpeningBalance | views/PharmacyInventory/Store/implant-opening-balance.html | implantOpeningBalanaceController.js | 19 | 4 | yes (keyword match: implant) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pharmacyStrengthUnitMaster | /pharmacyStrengthUnitMaster | views/PharmacyInventory/pharmacy-strength-unit-master.html | strengthUnitMasterController.js | 6 | 5 | yes (keyword match: clinical) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pharmacyunitMaster | /pharmacyunitMaster | views/PharmacyInventory/pharmacy-unit-master.html | unitMasterController.js | 6 | 5 | yes (keyword match: clinical) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| recallDrugs | /recallDrugs | views/PharmacyInventory/Store/recall-drugs.html | recallDrugsController.js | 2 | 1 | yes (keyword match: drug) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| unitofMeasurement | /unitofMeasurement | views/PharmacyInventory/unit-Measurement.html | uomController.js | 27 | 8 | yes (keyword match: clinical) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| walkinPrescription | /walkinPrescription | views/PharmacyInventory/InPatient/walkin-prescription.html | walkinPrescriptionController.js | 33 | 35 | yes (keyword match: prescri) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| DetailsOpeningBalance | /DetailsOpeningBalance | views/PharmacyInventory/Store/details-opening-balance.html | openingBalanceDetailsController.js | 5 | 3 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| DetailsStoreIndenting | /DetailsStoreIndenting | views/PharmacyInventory/InPatient/details-store-indenting.html | storeIndentingDetailsController.js | 1 | 1 | no | yes (keyword match: indent) | bc:0/on:0/rs:0 |
+| ETOitemConfig | /ETOitemConfig | views/PharmacyInventory/Store/ETO-item-config.html | shared×353 | 17 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| KITmasterPharmacy | /KITmasterPharmacy | views/master/UnitMaster/pharmacy/KIT-master-pharmacy.html | KITmasterPharmacyController.js | 4 | 3 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| KitTypeMaster | /KitTypeMaster | views/master/UnitMaster/pharmacy/kit-type-master.html | kitTypeMasterController.js | 6 | 6 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| OPassigningPickerDispenser | /OPassigningPickerDispenser | views/PharmacyInventory/InPatient/op-assigning-picker-dispenser.html | OPassigningPickerDispenserController.js | 13 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| OPassigningPickerDispenserDetails | /OPassigningPickerDispenserDetails | views/PharmacyInventory/InPatient/op-assigning-picker-dispenser-details.html | OPassigningPickerDispenserDetailsController.js | 21 | 7 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| OPpendingHandoverWorklist | /OPpendingHandoverWorklist | views/PharmacyInventory/InPatient/op-pending-handover-worklist.html | OPpendingHandoverWorklistController.js | 11 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| OPpendingHandoverWorklistDetails | /OPpendingHandoverWorklistDetails | views/PharmacyInventory/InPatient/op-pending-handover-worklist-details.html | OPpendingHandoverWorklistDetailsController.js | 1 | 0 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| OPpharmacologyValidationWorklist | /OPpharmacologyValidationWorklist | views/PharmacyInventory/InPatient/op-pharmacology-validation-worklist.html | OPpharmacologyValidationWorklistController.js | 17 | 8 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| OPpharmacologyValidationWorklistDetails | /OPpharmacologyValidationWorklistDetails | views/PharmacyInventory/InPatient/op-pharmacology-validation-worklist-details.html | OPpharmacologyValidationWorklistDetailsController.js | 4 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| acceptanceOfEmptyAmpoules | /acceptanceOfEmptyAmpoules | views/PharmacyInventory/NarcoticsStore/acceptance-of-empty-ampoules.html | acceptanceOfEmptyAmpoulesController.js | 10 | 6 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addItemMaterialInwards | /addItemMaterialInwards | views/PharmacyInventory/Store/add-item-material-inwords.html | addNewMaterialInwardController.js | 67 | 12 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addItemRequestForAssestDisposalWorklist | /addItemRequestForAssestDisposalWorklist | views/PharmacyInventory/Store/add-item-request-for-assest-disposal-worklist.html | shared×353 | 19 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| addItemScrapApproval | /addItemScrapApproval | views/PharmacyInventory/Store/scrap-approval-add-new-item.html | addNewScrapRequestController.js | 53 | 11 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addItemWasteAssestDisposalWorklist | /addItemWasteAssestDisposalWorklist | views/PharmacyInventory/Store/add-item-waste-disposal-worklist.html | shared×353 | 19 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| addKITmasterPharmacy | /addKITmasterPharmacy | views/master/UnitMaster/pharmacy/add-KIT-master-pharmacy.html | addKITmasterPharmacyController.js | 16 | 8 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addNewComsumablePatientIssueReturn | /addNewComsumablePatientIssueReturn | views/PharmacyInventory/InPatient/add-new-Comsumable-patient-issue-return.html | addNewComsumablePatientIssueReturnController.js | 41 | 15 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addNewCrashCartRequest | /addNewCrashCartRequest | views/PharmacyInventory/InPatient/add-new-crash-cart-request.html | addNewCrashCartRequestController.js | 32 | 16 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addNewDepartmentConsumption | /addNewDepartmentConsumption | views/PharmacyInventory/InPatient/add-new-non-billable-consumption.html | addDepartmentConsumption.js | 19 | 12 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| addNewItem | /addNewItem | views/PharmacyInventory/Store/add-new-item.html | shared×353 | 31 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewMaterialIssue | /addNewMaterialIssue | views/PharmacyInventory/InPatient/add-new-material-issue.html | shared×353 | 24 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewMaterialReturn | /addNewMaterialReturn | views/PharmacyInventory/InPatient/add-new-material-return.html | addNewMaterialReturnController.js | 30 | 11 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addNewOpeningBalance | /addNewOpeningBalance | views/PharmacyInventory/Store/add-new-opening-balance.html | addNewOpeningBalanceController.js | 66 | 13 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addNewReturnBillableConsumption | /addNewReturnBillableConsumption | views/PharmacyInventory/InPatient/add-new-return-billable-consumption.html | addNewReturnBillableConsumptionController.js | 29 | 13 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| addNewReturnableGatepass | /addNewReturnableGatepass | views/PharmacyInventory/InPatient/add-new-returnable-gatepass.html | addNewReturnableGatepassController.js | 66 | 13 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addNewStopTransaction | /addNewStopTransaction | views/PharmacyInventory/StockAdjustment/add-new-stop-transaction.html | addNewStopTransactionController.js | 31 | 16 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addNewStoreIndenting | /addNewStoreIndenting | views/PharmacyInventory/InPatient/add-new-store-indenting.html | addNewStoreIndenting.js | 65 | 9 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| addNewbillSalesReturn | /addNewbillSalesReturn | views/PharmacyInventory/InPatient/add-new-bill-sales-return.html | addNewBillSalesReturnController.js | 57 | 14 | no | yes (keyword match: bill, sales return) | bc:0/on:0/rs:1 |
+| addNewbillableConsumption | /addNewbillableConsumption | views/PharmacyInventory/InPatient/add-new-billable-consumption.html | addNewbillableConsumptionController.js | 36 | 22 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| addNewnonbillableConsumption | /addNewnonbillableConsumption | views/PharmacyInventory/InPatient/add-new-non-billable-consumption.html | addNewNonBillableConsumptionController.js | 19 | 12 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| additemBatchChange | /additemBatchChange | views/PharmacyInventory/Store/add-item-batch-exp-date-change.html | addNewBatchExpDateChangeController.js | 23 | 10 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| addstorewiseGenericMapper | /addstorewiseGenericMapper | views/master/UnitMaster/pharmacy/add-new-storewise-generic-mapper.html | shared×353 | 9 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| approvalScrapRequest | /approvalScrapRequest | views/PharmacyInventory/Store/approved-scrap-request.html | scrapRequestApprovalController.js | 9 | 3 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| assetIssue | /assetIssue | views/PharmacyInventory/Consumable-Inventory/asset-issue.html | shared×353 | 7 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| assetIssueDetails | /assetIssueDetails | views/PharmacyInventory/Consumable-Inventory/asset-issue-details.html | shared×353 | 14 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| assetsSupportStatus | /assetsSupportStatus | views/PharmacyInventory/Store/assets-support-status.html | shared×353 | 3 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| assigningPickerDispenser | /assigningPickerDispenser | views/PharmacyInventory/InPatient/assigning-picker-dispenser.html | assigningPickerDispenserController.js | 15 | 8 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| assigningPickerDispenserDetails | /assigningPickerDispenserDetails | views/PharmacyInventory/InPatient/assigning-picker-dispenser-details.html | assigningPickerDispenserDetailsController.js | 23 | 10 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| batchExpDateChange | /batchExpDateChange | views/PharmacyInventory/Store/batch-exp-date-change.html | batchExpDateChangeController.js | 14 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| batchExpDateChangeApproval | /batchExpDateChangeApproval | views/PharmacyInventory/Store/batch-exp-date-change-approval.html | batchChangeApprovalController.js | 16 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| billSalesReturn | /billSalesReturn | views/PharmacyInventory/InPatient/bill-sales-return.html | billSalesReturnController.js | 40 | 17 | no | yes (keyword match: bill, sales return) | bc:0/on:0/rs:1 |
+| billableConsumption | /billableConsumption | views/PharmacyInventory/InPatient/billable-consumption.html | billableConsumptionController.js | 14 | 12 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| computeStock | /computeStock | views/PharmacyInventory/StockAdjustment/compute-stock.html | computeStockController.js | 13 | 4 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| confirmStock | /confirmStock | views/PharmacyInventory/StockAdjustment/confirm-stock.html | confirmStockController.js | 16 | 4 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| consumableAcceptance | /consumableAcceptance | views/PharmacyInventory/InPatient/consumable-acceptance.html | consumableAcceptanceController.js | 13 | 3 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| consumableIndent | /consumableIndent | views/PharmacyInventory/InPatient/consuable-indent-add-new.html | consumableIndentController.js | 38 | 22 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| consumbleAssetIndent | /consumbleAssetIndent | views/PharmacyInventory/Consumable-Inventory/consumble-asset-indent.html | shared×353 | 6 | 0 | no | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
+| crashCartRequest | /crashCartRequest | views/PharmacyInventory/InPatient/crash-cart-request.html | crashCartRequestController.js | 17 | 12 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| crashCartRequestApproval | /crashCartRequestApproval | views/PharmacyInventory/InPatient/crash-cart-request-approval.html | crashCartRequestApprovalController.js | 12 | 11 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| deatilsPatientIndent | /deatilsPatientIndent | views/PharmacyInventory/InPatient/details-patient-indent.html | deatilsPatientIndentController.js | 1 | 5 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| departmentConsumption | /departmentConsumption | views/PharmacyInventory/non-billable-consumption.html | departmentConsumption.js | 13 | 4 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| detailBatchChange | /detailBatchChange | views/PharmacyInventory/Store/details-batch-change.html | batchChangeDetailsController.js | 2 | 1 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailBatchChangeApproval | /detailBatchChangeApproval | views/PharmacyInventory/Store/details-batch-change-approval.html | batchChangeApprovalDetailsController.js | 10 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsAcceptanceOfEmptyAmpoules | /detailsAcceptanceOfEmptyAmpoules | views/PharmacyInventory/NarcoticsStore/details-acceptance-of-empty-ampoules.html | detailsAcceptanceOfEmptyAmpoulesController.js | 3 | 3 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsApprovalScrapRequest | /detailsApprovalScrapRequest | views/PharmacyInventory/Store/details-approved-scrap-request.html | scrapRequestApprovalDetailsController.js | 15 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsComputeStock | /detailsComputeStock | views/PharmacyInventory/StockAdjustment/details-compute-stock.html | computeStockDetailsController.js | 13 | 2 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| detailsConfirmStock | /detailsConfirmStock | views/PharmacyInventory/StockAdjustment/details-confirm-stock.html | confirmStockDetailsController.js | 12 | 4 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| detailsConsumableAcceptance | /detailsConsumableAcceptance | views/PharmacyInventory/InPatient/details-consumable-acceptance.html | consumableAcceptanceDetailsController.js | 12 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsConsumablePatientIssueAcceptance | /detailsConsumablePatientIssueAcceptance | views/PharmacyInventory/InPatient/details-consumable-patient-issue-acceptance.html | detailsConsumablePatientIssueAcceptanceController.js | 17 | 7 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsCrashCartRequest | /detailsCrashCartRequest | views/PharmacyInventory/InPatient/details-crash-cart-request.html | detailsCrashCartRequestController.js | 1 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsCrashCartRequestApproval | /detailsCrashCartRequestApproval | views/PharmacyInventory/InPatient/details-crash-cart-request-approval.html | detailsCrashCartRequestApprovalController.js | 7 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsIssueList | /detailsIssueList | views/PharmacyInventory/InPatient/details-issue-list.html | issueListDetailsController.js | 1 | 1 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsMaterialInwards | /detailsMaterialInwards | views/PharmacyInventory/Store/details-material-inwords.html | materialInwardsDetailController.js | 1 | 1 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsMaterialInwardsApproval | /detailsMaterialInwardsApproval | views/PharmacyInventory/Store/details-material-inwords-approval.html | materialInwardApprovalDetailsController.js | 15 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsMaterialPending | /detailsMaterialPending | views/PharmacyInventory/InPatient/details-material-pending.html | materialPendingListDetailsController.js | 55 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsMaterialReturn | /detailsMaterialReturn | views/PharmacyInventory/InPatient/details-material-return.html | materialReturnDetailsController.js | 5 | 1 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsMaterialReturnAcceptance | /detailsMaterialReturnAcceptance | views/PharmacyInventory/InPatient/details-material-return-acceptance.html | returnMaterialAcceptanceDetailsController.js | 14 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsNarcoticsIssueWorklist | /detailsNarcoticsIssueWorklist | views/PharmacyInventory/NarcoticsStore/details-narcotics-issue-worklist.html | detailsNarcoticsIssueWorklistController.js | 43 | 21 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPatientIssueAcceptance | /detailsPatientIssueAcceptance | views/PharmacyInventory/InPatient/details-patient-issue-acceptance.html | detailsPatientIssueAcceptanceController.js | 18 | 7 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPatientIssueList | /detailsPatientIssueList | views/PharmacyInventory/InPatient/details-patient-issue-list.html | detailsPatientIssueListController.js | 12 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPatientIssueRejectionConsumable | /detailsPatientIssueRejectionConsumable | views/PharmacyInventory/InPatient/details-patient-issue-rejection-consumable.html | detailsPatientIssueRejectionConsumableController.js | 8 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPatientIssueReturnComsumable | /detailsPatientIssueReturnComsumable | views/PharmacyInventory/InPatient/details-patient-issue-consumable.html | detailsPatientIssueReturnComsumableController.js | 4 | 1 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPatientPendingIndent | /detailsPatientPendingIndent | views/PharmacyInventory/InPatient/details-patient-pending-Indent.html | detailsPatientPendingIndentController.js | 39 | 8 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsPatientRejectedRejectionConsumable | /detailsPatientRejectedRejectionConsumable | views/PharmacyInventory/InPatient/details-patient-rejected-rejection-consumable.html ✗ | shared×353 | – | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsPatientReturnAcceptanceConsumable | /detailsPatientReturnAcceptanceConsumable | views/PharmacyInventory/InPatient/details-consumable-patient-return-acceptance.html | detailsPatientReturnAcceptanceConsumableController.js | 11 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsPendingRejectedRejectionConsumable | /detailsPendingRejectedRejectionConsumable | views/PharmacyInventory/InPatient/details-pending-rejected-rejection-consumable.html | detailsPendingRejectedRejectionConsumableController.js | 8 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsRejectedMaterialAcceptance | /detailsRejectedMaterialAcceptance | views/PharmacyInventory/InPatient/details-rejected-material-acceptance.html | rejectedMaterialAcceptanceDetailsController.js | 12 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsRequestForAssestDisposalWorklist | /detailsRequestForAssestDisposalWorklist | views/PharmacyInventory/Store/details-request-for-assest-disposal-worklist.html | requestForAssetDisposalDetailsController.js | 3 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsReturnBillableConsumption | /detailsReturnBillableConsumption | views/PharmacyInventory/InPatient/details-return-billable-consumption.html | detailsReturnBillableConsumptionController.js | 1 | 4 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| detailsReturnOfEmptyAmpoules | /detailsReturnOfEmptyAmpoules | views/PharmacyInventory/NarcoticsStore/details-return-of-empty-ampoules.html | detailsReturnOfEmptyAmpoulesController.js | 5 | 3 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsReturnableGatepass | /detailsReturnableGatepass | views/PharmacyInventory/InPatient/details-returnable-gatepass.html | returnableGatepassDetailsController.js | 9 | 1 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsReturnableGatepassRequest | /detailsReturnableGatepassRequest | views/PharmacyInventory/InPatient/details-returnable-gatepass-pending-list.html | shared×353 | 6 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsReturnableGatepassRequestList | /detailsReturnableGatepassRequestList | views/PharmacyInventory/InPatient/details-returnable-gatepass-list.html | shared×353 | 3 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsReturnablegatepassReceiveIssueList | /detailsReturnablegatepassReceiveIssueList | views/PharmacyInventory/Store/details-returnable-gatepass-receive-issue-list.html | shared×353 | 0 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsReturnablegatepassReceivePendingList | /detailsReturnablegatepassReceivePendingList | views/PharmacyInventory/Store/details-returnable-gatepass-receive-pending-list.html | shared×353 | 0 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsScrapApproval | /detailsScrapApproval | views/PharmacyInventory/Store/details-scrap-approval.html | scrapRequestDetailsController.js | 2 | 1 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsStockAdjustment | /detailsStockAdjustment | views/PharmacyInventory/StockAdjustment/details-stock-adjustment.html | stockAdjustmentDetailsController.js | 25 | 9 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| detailsStopTransaction | /detailsStopTransaction | views/PharmacyInventory/StockAdjustment/details-stop-transaction.html | shared×353 | 0 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsStoreIndentApproval | /detailsStoreIndentApproval | views/PharmacyInventory/InPatient/details-store-indent-approval.html | storeIndentApprovaDetailsController.js | 12 | 2 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsUploadStock | /detailsUploadStock | views/PharmacyInventory/StockAdjustment/details-upload-stock.html | uploadStockDetailsController.js | 30 | 8 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| detailsUploadStockApproval | /detailsUploadStockApproval | views/PharmacyInventory/StockAdjustment/details-upload-stock-approval.html | uploadStockApprovalDetailsController.js | 16 | 2 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| detailsVarianceApproval | /detailsVarianceApproval | views/PharmacyInventory/StockAdjustment/details-variance-approval.html | varianceApprovalDetailsController.js | 9 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsWasteStore | /detailsWasteStore | views/PharmacyInventory/Store/details-waste-store.html | shared×353 | 1 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsWitnessApproval | /detailsWitnessApproval | views/PharmacyInventory/Store/details-witness-approval.html | witnessApprovalDetailsController.js | 14 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsbillableConsumption | /detailsbillableConsumption | views/PharmacyInventory/InPatient/details-billable-consumption.html | detailsbillableConsumptionController.js | 1 | 4 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| detailsmaterialIssueAcceptance | /detailsmaterialIssueAcceptance | views/PharmacyInventory/InPatient/details-material-issue-acceptance.html | materialIssueAcceptanceDetailController.js | 12 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailsnonbillableConsumption | /detailsnonbillableConsumption | views/PharmacyInventory/InPatient/details-non-billable-consumption.html | nonBIllableConsumptionDetailsController.js | 1 | 1 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| detailspendingStoreIndents | /detailspendingStoreIndents | views/PharmacyInventory/InPatient/details-pending-store-indents.html | detailsPendingStoreIndentController.js | 1 | 1 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsreturnaleGatepassApproval | /detailsreturnaleGatepassApproval | views/PharmacyInventory/Store/details-returnable-gatepass-approval.html | returnableGatepassAppprovalDetailsController.js | 24 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| detailswasteAssetDisposalWorklist | /detailswasteAssetDisposalWorklist | views/PharmacyInventory/Store/details-waste-disposal-worklist.html | wasteAssetDisposalWorklistDetailsController.js | 5 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| dispensingMaster | /dispensingMaster | views/PharmacyInventory/dispensing-master.html | shared×353 | 5 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| expiredItemsReturns | /expiredItemsReturns | views/PharmacyInventory/InPatient/expired-items-returns.html | shared×353 | 11 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| expiredReturnAcceptance | /expiredReturnAcceptance | views/PharmacyInventory/InPatient/expired-return-acceptance.html | shared×353 | 12 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| externalSiteVisit | /externalSiteVisit | views/PharmacyInventory/Consumable-Inventory/external-site-visit.html | shared×353 | 8 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| internalSiteVisit | /internalSiteVisit | views/PharmacyInventory/Consumable-Inventory/internal-site-visit.html | shared×353 | 8 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| issueListdirectIssue | /issueListdirectIssue | views/PharmacyInventory/InPatient/issue-list-directIssue.html | issueListDirectIssueController.js | 22 | 8 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| itemLocationAllocation | /itemLocationAllocation | views/PharmacyInventory/Store/item-location-allocation.html | shared×353 | 17 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| itemWiseMarkUp | /itemWiseMarkUp | views/PharmacyInventory/Store/item-wise-markup.html | shared×353 | 12 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| kitMaster | /kitMaster | views/PharmacyInventory/kit-master.html | shared×353 | 8 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| mainstoremaster | /mainstoremaster | views/PharmacyInventory/StockAdjustment/main-store-master.html | mainStoreMasterController.js | 15 | 8 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialInwards | /materialInwards | views/PharmacyInventory/Store/material-inwords.html | materialInwardsController.js | 13 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialInwardsApproval | /materialInwardsApproval | views/PharmacyInventory/Store/material-inwords-approval.html | materialInwardsApprovalController.js | 9 | 3 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialIssue | /materialIssue | views/PharmacyInventory/InPatient/material-issue.html | materialIssueController.js | 10 | 0 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialIssue.issueList | /issueList | views/PharmacyInventory/InPatient/material-issue-list.html | materialIssueListController.js | 10 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialIssue.pendingIssue | /pendingIssue | views/PharmacyInventory/InPatient/material-pending-issue.html | materialPendingListController.js | 9 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialIssueAcceptance | /materialIssueAcceptance | views/PharmacyInventory/InPatient/material-issue-acceptance.html | materialIssueAcceptanceController.js | 8 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialPicker | /materialPicker | views/PharmacyInventory/InPatient/material-picker.html | materialPickerController.js | 9 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialPickerDetails | /detailsMaterialPicker | views/PharmacyInventory/InPatient/details-material-picker.html | materialPickerDetailsController.js | 24 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialReturn | /materialReturn | views/PharmacyInventory/InPatient/material-return.html | materialReturnController.js | 13 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| materialReturnAcceptance | /materialReturnAcceptance | views/PharmacyInventory/InPatient/material-return-acceptance.html | returnMaterialAcceptanceController.js | 7 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| medicinesAddSub | /medicinesAddSub | views/PharmacyInventory/StockAdjustment/medicinesAddSub.html | medicinesAddSubController.js | 12 | 9 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| narcoticsIssueWorklist | /narcoticsIssueWorklist | views/PharmacyInventory/NarcoticsStore/narcotics-issue-worklist.html | narcoticsIssueWorklistController.js | 12 | 7 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| nonBillableConsumption | /nonBillableConsumption | views/PharmacyInventory/non-billable-consumption.html | nonBillableConsumptionController.js | 13 | 4 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| openingBalance | /openingBalance | views/PharmacyInventory/Store/opening-balance.html | openingBalanaceController.js | 19 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| outPatientSalesWorklist | /outPatientSalesWorklist | views/PharmacyInventory/InPatient/out-patient-sales-worklist.html | outPatientSalesWorklistController.js | 33 | 10 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| outPatientSalesWorklistDetails | /outPatientSalesWorklistDetails | views/PharmacyInventory/InPatient/out-patient-sales-worklist-details.html | outPatientSalesWorklistDetailsController.js | 78 | 70 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| patientConsumableIssue | /patientConsumableIssue | views/PharmacyInventory/InPatient/patient-consumable-Issue.html | patientConsumableIssueController.js | 41 | 8 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| patientIndent | /patientIndent | views/PharmacyInventory/InPatient/patient-indent.html | patientIndentController.js | 29 | 15 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| patientIssueAcceptance | /patientIssueAcceptance | views/PharmacyInventory/InPatient/patient-issue-acceptance.html | patientIssueAcceptanceController.js | 43 | 14 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| patientIssueRejection | /patientIssueRejection | views/PharmacyInventory/InPatient/patient-issue-rejection.html | patientIssueRejectionController.js | 32 | 9 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| patientIssueReturn | /patientIssueReturn | views/PharmacyInventory/InPatient/patient-issue-return.html | patientIssueReturnController.js | 33 | 15 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| patientReturnAcceptance | /patientReturnAcceptance | views/PharmacyInventory/InPatient/patient-return-acceptance.html | patientReturnAcceptanceController.js | 32 | 11 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pendingForShelfAllocation | /pendingForShelfAllocation | views/PharmacyInventory/Store/pending-for-shelf-allocation.html | pendingForShelfAllocationController.js | 16 | 10 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pendingHandoverWorkList | /pendingHandoverWorkList | views/PharmacyInventory/Store/pending-handover-worklist.html | pendingHandoverWorklistController.js | 14 | 7 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pendingHandoverWorkListDetails | /pendingHandoverWorkListDetails | views/PharmacyInventory/Store/pending-handover-worklist-details.html | pendingHandoverWorklistDetailsController.js | 2 | 3 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pendingIssues | /pendingIssues | views/PharmacyInventory/InPatient/pending-issues.html | pendingIssuesController.js | 38 | 7 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pendingIssuesDetails | /pendingIssuesDetails | views/PharmacyInventory/InPatient/pending-issues-details.html | pendingIssuesDetailsController.js | 45 | 29 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pendingRejectedRejections | /pendingRejectedRejections | views/PharmacyInventory/InPatient/pending-rejected-rejections.html | pendingRejectedRejectionsController.js | 54 | 9 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pendingReturnablegatepassReceive  | /pendingReturnablegatepassReceive | views/PharmacyInventory/Store/returnable-gatepass-receive.html | shared×353 | 12 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| pendingStoreIndents | /pendingStoreIndents | views/PharmacyInventory/InPatient/pending-store-indents.html | pendingStoreIndentController.js | 14 | 4 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| pharmacologicalClassificationMaster | /pharmacologicalClassificationMaster | views/PharmacyInventory/StockAdjustment/pharmacological-classification-master.html | pharmalogicalClassificationMasterController.js | 7 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pharmacologyValidaionWorklist | /pharmacologyValidaionWorklist | views/PharmacyInventory/InPatient/pharmacology-validation-worklist.html | pharmacologyValidationWorklistController.js | 20 | 9 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pharmacologyValidationWorklistDetails | /pharmacologyValidationWorklistDetails | views/PharmacyInventory/InPatient/pharmacology-validation-worklist-details.html | pharmacologyValidationWorklistDetailsController.js | 5 | 6 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| pharmacyBillList | /pharmacyBillList | views/PharmacyInventory/InPatient/pharmacy-bill-list.html | pharmacyBillListController.js | 15 | 43 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| pharmacyPaymentCollection | /pharmacyPaymentCollection | views/PharmacyInventory/pharmacy-payment-collection.html | shared×353 | 18 | 0 | no | yes (keyword match: collection, pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
+| procurementunitMaster | /procurementunitMaster | views/PharmacyInventory/procurement-unit-master.html | shared×353 | 5 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| productRestriction | /productRestriction | views/PharmacyInventory/StockAdjustment/product-restriction.html | productRestrictionController.js | 0 | 0 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| productRestriction.itemRestriction | /itemRestriction | views/PharmacyInventory/StockAdjustment/item-restriction.html | itemRestrictionController.js | 12 | 10 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| productRestriction.productCategoryMapping | /productCategoryMapping | views/PharmacyInventory/StockAdjustment/product-category-mapping.html | productCategroyMappingController.js | 4 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| rackMaster | /rackMaster | views/PharmacyInventory/StockAdjustment/rack-master.html | rackMasterController.js | 15 | 6 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| rejectedMaterialAcceptance | /rejectedMaterialAcceptance | views/PharmacyInventory/InPatient/rejected-material-acceptance.html | rejectedMaterialAcceptanceController.js | 5 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| rejectedUploaded | /rejectedUploaded | views/PharmacyInventory/StockAdjustment/rejected-uploaded.html | shared×353 | 5 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| requestForAssetDisposalWorklist | /requestForAssetDisposalWorklist | views/PharmacyInventory/Store/request-for-assest-disposal-worklist.html | requestForAssetDisposalWorklistController.js | 11 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| returnBillableConsumption | /returnBillableConsumption | views/PharmacyInventory/InPatient/return-billable-consumption.html | returnBillableConsumptionController.js | 14 | 12 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| returnOfEmptyAmpoules | /returnOfEmptyAmpoules | views/PharmacyInventory/NarcoticsStore/return-of-empty-ampoules.html | returnOfEmptyAmpoulesController.js | 13 | 11 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| returnableGatepass | /returnableGatepass | views/PharmacyInventory/InPatient/returnable-gatepass.html | returnableGatepassController.js | 19 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| returnableGatepassRequest | /returnableGatepassRequest | views/PharmacyInventory/InPatient/returnable-gatepass-request-pending-list.html | shared×353 | 0 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| returnableGatepassRequest.list | /list | views/PharmacyInventory/InPatient/returnable-gatepass-list.html | shared×353 | 7 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| returnableGatepassRequest.pendingList | /pendingList | views/PharmacyInventory/InPatient/returnable-gatepass-pending-list.html ✗ | shared×353 | – | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| returnaleGatepassApproval | /returnaleGatepassApproval | views/PharmacyInventory/Store/returnable-gatepass-approval.html | returnableGatepassApprovalController.js | 13 | 3 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| scrapRequest | /scrapRequest | views/PharmacyInventory/Store/scrap-approval-worklist.html | scrapRequestController.js | 13 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| stockAdjustment | /stockAdjustment | views/PharmacyInventory/StockAdjustment/stock-adjustment.html | stockAdjustmentController.js | 11 | 4 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| stockAdjustmentApproval | /stockAdjustmentApproval | views/PharmacyInventory/StockAdjustment/stock-adjustment-approval.html | stockAdjustmentApprovalController.js | 10 | 4 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| stockAdjustmentApprovalDetails | /stockAdjustmentApprovalDetails | views/PharmacyInventory/StockAdjustment/details-stock-adjustment-approval.html | stockAdjustmentApprovalDetailsController.js | 6 | 2 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| stockRegister | /stockRegister | views/PharmacyInventory/Store/stock-register.html | shared×353 | 5 | 0 | no | yes (keyword match: stock) | bc:0/on:1/rs:1 [on:customEvent] |
+| stopTransaction | /stopTransaction | views/PharmacyInventory/StockAdjustment/stop-transaction.html | stopTransactionController.js | 18 | 10 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| storageLocationMasterForSlideBlocks | /storageLocationMasterForSlideBlocks | views/PharmacyInventory/InPatient/storage-location-master-for-slide-blocks.html | storageLocationMstForSlideBlocksController.js | 10 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| storageunitMaster | /storageunitMaster | views/PharmacyInventory/storage-unit-master.html | storageUnitMasterController.js | 6 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| storeIndentApproval | /storeIndentApproval | views/PharmacyInventory/InPatient/store-indent-approval.html | storeIndentApprovalController.js | 16 | 5 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| storeIndenting | /storeIndenting | views/PharmacyInventory/InPatient/store-indenting.html | storeIndentingController.js | 17 | 4 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| storeStockDashboard | /storeStockDashboard | views/PharmacyInventory/Store/store-stock-dashboard.html | storeStockDashboardController.js | 22 | 26 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| storewiseGenericMapper | /storewiseGenericMapper | views/master/UnitMaster/pharmacy/storewise-generic-mapper.html | storeWiseGenericMapperController.js | 11 | 11 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| substoremaster | /substoremaster | views/PharmacyInventory/StockAdjustment/sub-store-master.html | subStoreMaster.js | 20 | 10 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| topOrderList | /topOrderList | views/PharmacyInventory/InPatient/top-order-up-list.html | – | 1 | – | no | yes (module default: Pharmacy) | – |
+| topUpIndent | /topUpIndent | views/PharmacyInventory/InPatient/top-up-indent.html | shared×353 | 8 | 0 | no | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
+| uploadStock | /uploadStock | views/PharmacyInventory/StockAdjustment/upload-stock.html | uploadStockController.js | 19 | 4 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| uploadStockApproval | /uploadStockApproval | views/PharmacyInventory/StockAdjustment/upload-stock-approval.html | uploadStockApprovalController.js | 18 | 4 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| varianceApproval | /varianceApproval | views/PharmacyInventory/StockAdjustment/variance-approval.html | varianceApprovalController.js | 11 | 4 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| vendormaster | /vendormaster | views/PharmacyInventory/StockAdjustment/vendor-master.html | vendorMasterController.js | 28 | 14 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| walkInSales | /walkInSales | views/PharmacyInventory/InPatient/walk-in-sales.html | walkInSalesController.js | 106 | 97 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| wasteAssetDisposalWorklist | /wasteAssetDisposalWorklist | views/PharmacyInventory/Store/waste-disposal-worklist.html | wasteAssetDisposalWorklistController.js | 12 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
+| wasteStore | /wasteStore | views/PharmacyInventory/Store/waste-store.html | shared×353 | 14 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
+| witnessApproval | /witnessApproval | views/PharmacyInventory/Store/witness-approval.html | witnessApprovalController.js | 13 | 2 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:2 |
+
+### Billing (186 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
@@ -164,6 +384,8 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | OPConsulationConfigurationMaster | /OPConsulationConfigurationMaster | views/master/UnitMaster/billingMaster/op-consultation-configuration-master.html | OPConsultationConfigurationMasterController.js | 11 | 7 | yes (keyword match: consult) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | addNewDoctorReferralShareMaster | /addNewDoctorReferralShareMaster | views/master/UnitMaster/billingMaster/add-new-doctor-referrel-share-master.html | addNewDoctorReferralShareMasterController.js | 27 | – | yes (keyword match: referral) | yes (keyword match: bill) | bc:0/on:0/rs:0 |
 | addNewMultiEncounter | /addNewMultiEncounter | views/master/UnitMaster/billingMaster/add-new-multi-encounter.html | addNewMultiEncounterController.js | 17 | 16 | yes (keyword match: encounter) | yes (keyword match: bill, package) | bc:0/on:0/rs:1 |
+| consentPrint | /consentPrint | views/master/UnitMaster/billingMaster/common/consentsPrint.html | consentPrintController.js | 6 | 19 | yes (keyword match: consent) | yes (keyword match: bill) | bc:0/on:0/rs:5 |
+| corporateStatementChecklist | /corporateStatementChecklist | views/master/UnitMaster/billingMaster/corporate-statement-checklist.html | corporateStatementChecklistController.js | 5 | 7 | yes (keyword match: checklist) | yes (keyword match: bill, corporate) | bc:0/on:0/rs:1 |
 | detailsDoctorReferralShareMaster | /detailsDoctorReferralShareMaster | views/master/UnitMaster/billingMaster/details-doctor-referrel-share-master.html | detailsDoctorReferralShareMasterController.js | 4 | 3 | yes (keyword match: referral) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | doctorConsulationMaster | /doctorConsulationMaster | views/master/UnitMaster/billingMaster/doctor-consultation-master.html | doctorConsulationMasterController.js | 38 | 14 | yes (keyword match: consult) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | doctorReferralShareMaster | /doctorReferralShareMaster | views/master/UnitMaster/billingMaster/doctor-referrel-share-master.html | doctorReferralShareMasterController.js | 9 | 7 | yes (keyword match: referral) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
@@ -184,6 +406,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | ERCharges.serviceDetailsForIPDCharge | /serviceDetailsForIPDCharge | views/master/UnitMaster/billingMaster/IPDCharge/service-details-IPD-charge.html | shared×353 | 8 | 0 | no | yes (keyword match: bill, charge) | bc:0/on:1/rs:1 [on:customEvent] |
 | ERCharges.transferHistoryForIPDCharge | /transferHistoryForIPDCharge | views/master/UnitMaster/billingMaster/IPDCharge/transfer-history-IPD.html | shared×353 | 0 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
 | GLcode | /GLcode | views/master/UnitMaster/billingMaster/GL-code.html | gLcodeMasterController.js | 7 | 7 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| IPDCharges | /IPDCharges | views/master/UnitMaster/billingMaster/IPDCharge/IPD-charge.html | IPDChargesController.js | 191 | 123 | no | yes (keyword match: bill, charge) | bc:0/on:0/rs:7 |
 | IPDCharges.cancelServiceForIPDCharge | /cancelServiceForIPDCharge | views/master/UnitMaster/billingMaster/IPDCharge/cancel-service-IPD.html | shared×353 | 0 | 0 | no | yes (keyword match: bill, charge) | bc:0/on:1/rs:1 [on:customEvent] |
 | IPDCharges.depositDetailsForIPDCharge | /depositDetailsForIPDCharge | views/master/UnitMaster/billingMaster/IPDCharge/deposit-details-IPD.html | shared×353 | 0 | 0 | no | yes (keyword match: bill, charge, deposit) | bc:0/on:1/rs:1 [on:customEvent] |
 | IPDCharges.groupWiseForIPDCharge | /groupWiseForIPDCharge | views/master/UnitMaster/billingMaster/IPDCharge/group-wise-IPD.html | shared×353 | 5 | 0 | no | yes (keyword match: bill, charge) | bc:0/on:1/rs:1 [on:customEvent] |
@@ -229,6 +452,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | billCancellation.groupDetailsPrePost | /groupDetailsPrePost | views/master/UnitMaster/billingMaster/common/group-details-pre-post-bad-debit.html | – | 5 | – | no | yes (keyword match: bill, debit, receipt) | – |
 | billCancellation.packageDetails | /packageDetails | views/master/UnitMaster/billingMaster/common/package-details-bill-cancellation.html | – | 3 | – | no | yes (keyword match: bill, package, receipt) | – |
 | billCancellation.serviceDetails | /serviceDetails | views/master/UnitMaster/billingMaster/common/service-details-bill-cancellation.html | – | 8 | – | no | yes (keyword match: bill, receipt) | – |
+| billEstimation | /billEstimation | views/master/UnitMaster/billingMaster/bill-estimation.html | billEstimationController.js | 20 | 1 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | billList | /billList | views/master/UnitMaster/billingMaster/bill-list.html | billListController.js | 19 | 67 | no | yes (keyword match: bill) | bc:0/on:0/rs:8 |
 | billList.groupDetails | /groupDetails | views/master/UnitMaster/billingMaster/common/group-details.html | – | 20 | – | no | yes (keyword match: bill) | – |
 | billList.groupDetailsPrePost | /groupDetailsPrePost | views/master/UnitMaster/billingMaster/common/group-details-pre-post.html | – | 5 | – | no | yes (keyword match: bill) | – |
@@ -240,14 +464,19 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | cancelledBillList.groupDetailsPrePost | /groupDetailsPrePost | views/master/UnitMaster/billingMaster/common/group-details-pre-post-cancelled-bill.html | – | 1 | – | no | yes (keyword match: bill) | – |
 | cancelledBillList.packageDetails | /packageDetails | views/master/UnitMaster/billingMaster/common/package-details-cencelled-bill.html | – | 1 | – | no | yes (keyword match: bill, package) | – |
 | cancelledBillList.serviceDetails | /serviceDetails | views/master/UnitMaster/billingMaster/common/service-details-cencelled-bill.html | – | 6 | – | no | yes (keyword match: bill) | – |
+| cashInOut | /cashInOut | views/master/UnitMaster/billingMaster/IPDCharge/cash-in-out.html | cashInOutController.js | 16 | 7 | no | yes (keyword match: bill, cash) | bc:0/on:0/rs:1 |
 | cashOpeningBalance | /cashOpeningBalance | views/master/UnitMaster/billingMaster/cash-opening-balance.html | cashOpeningBalanceController.js | 17 | 6 | no | yes (keyword match: bill, cash) | bc:0/on:0/rs:1 |
 | chargeConversion | /chargeConversion | views/master/UnitMaster/billingMaster/charge-conversion.html | chargeConversionController.js | 14 | 7 | no | yes (keyword match: bill, charge) | bc:0/on:0/rs:1 |
 | companyContractMaster | /companyContractMaster | views/master/UnitMaster/billingMaster/company-contract-master.html | companyContractController.js | 9 | 14 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | companyInvoiceCreation | /companyInvoiceCreation | views/master/UnitMaster/billingMaster/company-invoice-creation.html | companyInvoiceCreationController.js | 13 | 8 | no | yes (keyword match: bill, invoice) | bc:0/on:0/rs:1 |
+| companyQueryResponseMaster | /companyQueryResponseMaster | views/master/UnitMaster/billingMaster/company-query-response-master.html | companyQueryResponseMasterController.js | 18 | 9 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | companyReceipts | /companyReceipts | views/master/UnitMaster/billingMaster/company-receipts.html | companyReceiptsController.js | 15 | 9 | no | yes (keyword match: bill, receipt) | bc:0/on:0/rs:1 |
 | companyReminder | /companyReminder | views/master/UnitMaster/billingMaster/company-remainder.html | companyRemainderController.js | 17 | 7 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| companySettlement | /companySettlement | views/master/UnitMaster/billingMaster/company-settlement.html | companySettlementController.js | 64 | 23 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| concessionManager | /concessionManager | views/master/UnitMaster/billingMaster/concession-management.html | concessionManagementController.js | 37 | 6 | no | yes (keyword match: bill) | bc:0/on:0/rs:7 |
 | corporateEmployee | /corporateEmployee | views/master/UnitMaster/billingMaster/corporate-employee.html | shared×353 | 2 | 0 | no | yes (keyword match: bill, corporate) | bc:0/on:1/rs:1 [on:customEvent] |
 | corporateMasterUnit | /corporateMasterUnit | views/master/UnitMaster/billingMaster/corporate-master-unit.html | shared×353 | 13 | 0 | no | yes (keyword match: bill, corporate) | bc:0/on:1/rs:1 [on:customEvent] |
+| corporateStatement | /corporateStatement | views/master/UnitMaster/billingMaster/corporate-statement.html | corporateStatementMasterController.js | 66 | 5 | no | yes (keyword match: bill, corporate) | bc:0/on:0/rs:1 |
 | couponTemplate | /couponTemplate | views/master/UnitMaster/billingMaster/coupon_template.html | couponTemplateController.js | 23 | 7 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | couponTemplateMaster | /couponTemplateMaster | views/master/UnitMaster/billingMaster/coupon_template_Master.html | couponTemplateMasterController.js | 4 | 3 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | creditNote | /creditNote | views/master/UnitMaster/billingMaster/credit-note-new.html | creditNoteNewController.js | 64 | 32 | no | yes (keyword match: bill, credit) | bc:0/on:0/rs:5 |
@@ -260,6 +489,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | detailsCompanyContract | /detailsCompanyContract | views/master/UnitMaster/billingMaster/details-company-contract.html | detailCompanyContractController.js | 11 | 1 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | detailsCompanyInvoiceCreation | /detailsCompanyInvoiceCreation | views/master/UnitMaster/billingMaster/details-company-invoice-creation.html | detailsCompanyInvoiceCreationController.js | 2 | 0 | no | yes (keyword match: bill, invoice) | bc:0/on:0/rs:1 |
 | detailsCompanyQueryResponseMaster | /detailsCompanyQueryResponseMaster | views/master/UnitMaster/billingMaster/details-company-query-response-master.html | shared×353 | 3 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsCorporateStatement | /detailsCorporateStatement | views/master/UnitMaster/billingMaster/corporate-statement-details.html | detailsCorporateStatementController.js | 52 | 14 | no | yes (keyword match: bill, corporate) | bc:0/on:0/rs:1 |
 | detailsDoctorShareM | /detailsDoctorShareM | views/master/UnitMaster/billingMaster/details-doctor-share-master-temp.html | shared×353 | 4 | 0 | no | yes (keyword match: bill, doctor share) | bc:0/on:1/rs:1 [on:customEvent] |
 | detailsDoctorWiseShare | /detailsDoctorWiseShare | views/master/UnitMaster/billingMaster/details-doctorwise-share-master.html | detailsDoctorWiseShareMasterController.js | 5 | 1 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | detailsGlobalDoctorShare | /detailsGlobalDoctorShare | views/master/UnitMaster/billingMaster/details-doctor-share-master.html | detailsGlobalDoctorShareMasterController.js | 4 | 1 | no | yes (keyword match: bill, doctor share) | bc:0/on:0/rs:1 |
@@ -291,6 +521,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | opdBilling | /opdBilling/:patientId/:encounterId | views/master/UnitMaster/billingMaster/opd-billing.html ✗ | OpdBillingController.js | – | 16 | no | yes (keyword match: bill) | bc:0/on:0/rs:2 |
 | orderSet | /orderSet | views/master/UnitMaster/billingMaster/order-set.html | shared×353 | 9 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
 | orderSetList | /orderSetList | views/master/UnitMaster/billingMaster/order-set-list.html | shared×353 | 7 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
+| outsourcedServiceWorkOrder | /outsourcedServiceWorkOrder | views/master/UnitMaster/billingMaster/outsourced-service-workorder.html | outsourcedServiceWorkOrderController.js | 33 | 70 | no | yes (keyword match: bill) | bc:0/on:0/rs:8 |
 | packageDefEitherOr | /packageDefEitherOr | views/master/UnitMaster/billingMaster/package-definition-eitheror.html | shared×353 | 17 | 0 | no | yes (keyword match: bill, package) | bc:0/on:1/rs:1 [on:customEvent] |
 | packageDefinition | /packageDefinition | views/master/UnitMaster/billingMaster/package-definition.html | shared×353 | 25 | 0 | no | yes (keyword match: bill, package) | bc:0/on:1/rs:1 [on:customEvent] |
 | packageList | /packageList | views/master/UnitMaster/billingMaster/package-list.html | shared×353 | 7 | 0 | no | yes (keyword match: bill, package) | bc:0/on:1/rs:1 [on:customEvent] |
@@ -300,6 +531,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | patientType | /patientType | views/master/UnitMaster/billingMaster/patient-type.html | patientTypeController.js | 9 | 12 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | patientTypeDetails | /patientTypeDetails | views/master/UnitMaster/billingMaster/patient-type-details.html | patientTypeDetailsController.js | 23 | 18 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | paymentCollection | /paymentCollection | views/master/UnitMaster/billingMaster/payment-collection.html | shared×353 | 18 | 0 | no | yes (keyword match: bill, collection, pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
+| periodicityServiceConfig | /periodicityServiceConfig | views/master/UnitMaster/billingMaster/periodicity-Service-Config.html | periodicityServiceConfigController.js | 19 | 10 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | pharmacyTariffMaster | /pharmacyTariffMaster | views/master/UnitMaster/billingMaster/pharmacy-tariff-master.html | pharmacyTariffMasterController.js | 12 | 8 | no | yes (keyword match: bill, tariff) | bc:0/on:0/rs:1 |
 | preAuthorizationRequest | /preAuthorizationRequest | views/master/UnitMaster/billingMaster/pre-authorization-request.html | preAuthorizationRequestController.js | 13 | 12 | no | yes (keyword match: bill) | bc:0/on:0/rs:2 |
 | refund | /refund | views/master/UnitMaster/billingMaster/refund.html | shared×353 | 18 | 0 | no | yes (keyword match: bill, refund) | bc:0/on:1/rs:1 [on:customEvent] |
@@ -315,7 +547,9 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | scheduledWorklist | /scheduledWorklist | views/master/UnitMaster/billingMaster/scheduled-worklist.html | cyclicScheduledWorklistController.js | 11 | 12 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | schedulingWorking | /schedulingWorking | views/master/UnitMaster/billingMaster/scheduling-working.html | schedulingWorkingController.js | 13 | 14 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | serviceTariffMaster | /serviceTariffMaster | views/master/UnitMaster/billingMaster/service-tariff-master.html | serviceTariffMasterController.js | 9 | 24 | no | yes (keyword match: bill, tariff) | bc:0/on:0/rs:1 |
+| settledInvoices | /settledInvoices | views/master/UnitMaster/billingMaster/settled-invoices.html | settledInvoicesMasterController.js | 10 | 5 | no | yes (keyword match: bill, invoice) | bc:0/on:0/rs:1 |
 | shiftClosing | /shiftClosing | views/master/UnitMaster/billingMaster/shift-closing.html | shiftClosingController.js | 37 | 19 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| shortLeaveRequestApproval | /shortLeaveRequestApproval | views/master/UnitMaster/billingMaster/short-leave-request-approval.html | shortLeaveRequestApprovalController.js | 4 | 6 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | splitBill | /splitBill | views/master/UnitMaster/billingMaster/split-bill.html ✗ | shared×353 | – | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
 | unitServiceBasePrice | /unitServiceBasePrice | views/master/UnitMaster/billingMaster/unit-service-base-price.html | unitServiceBasePriceController.js | 10 | 10 | no | yes (keyword match: bill, price) | bc:0/on:0/rs:2 |
 | updatePayeeInformation | /updatePayeeInformation | views/master/UnitMaster/billingMaster/update-payee-information.html | updatePayeeInformationController.js | 20 | 28 | no | yes (keyword match: bill, pay) | bc:0/on:0/rs:3 |
@@ -323,12 +557,187 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | variableSquencePricing | /variableSquencePricing | views/master/UnitMaster/billingMaster/variable-squence-pricing.html | shared×353 | 2 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
 | variableSquencePricing.sequencePricing | /sequencePricing | views/master/UnitMaster/billingMaster/sequence-of-variable.html | shared×353 | 21 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
 | variableSquencePricing.variablePricing | /variablePricing | views/master/UnitMaster/billingMaster/variable-pricing.html | shared×353 | 33 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
+| vendorServiceRateCreation | /vendorServiceRateCreation | views/master/UnitMaster/billingMaster/vendor-service-rate-creation.html | vendorServiceRateCreationController.js | 12 | 12 | no | yes (keyword match: bill, rate) | bc:0/on:0/rs:1 |
+| vendorServiceRateMaster | /vendorServiceRateMaster | views/master/UnitMaster/billingMaster/vendor-service-rate-master.html | vendorServiceRateMasterController.js | 3 | 23 | no | yes (keyword match: bill, rate) | bc:0/on:0/rs:1 |
 | workloadDashboard.packageDetails | /packageDetails | views/master/UnitMaster/billingMaster/common/work-order-package-details.html | – | 2 | – | no | yes (keyword match: bill, package) | – |
 | workloadDashboard.serviceDetails | /serviceDetails | views/master/UnitMaster/billingMaster/common/work-order-service-details.html | – | 2 | – | no | yes (keyword match: bill) | – |
 | writeOff | /writeOff | views/master/UnitMaster/billingMaster/write-off.html | shared×353 | 8 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
 | writeOffDetails | /writeOffDetails | views/master/UnitMaster/billingMaster/write-off-details.html | shared×353 | 11 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
 
-### Lab/LIS (118 screens)
+### Procurement (168 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| detailsImplantReturnAcceptance | /detailsImplantReturnAcceptance | views/procurement/consignment/details-implant-return-acceptance.html | detailsImplantReturnAcceptanceController.js | 10 | 2 | yes (keyword match: implant) | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| GRN | /GRN | views/procurement/quotation/GRN.html | grnController.js | 18 | 6 | no | yes (keyword match: grn, receipt) | bc:0/on:0/rs:1 |
+| GRNAgainstPO | /GRNAgainstPO | views/procurement/purchase/GRN-Against-PO-Status.html | grnAgainstPOController.js | 8 | 5 | no | yes (keyword match: grn, purchase) | bc:0/on:0/rs:1 |
+| GRNApproval | /GRNApproval | views/procurement/quotation/GRN-approval.html | grnApprovalController.js | 16 | 7 | no | yes (keyword match: grn, receipt) | bc:0/on:0/rs:1 |
+| GRNdetails | /GRNdetails | views/procurement/quotation/GRN-details.html | detailsGRNController.js | 11 | 4 | no | yes (keyword match: grn, receipt) | bc:0/on:0/rs:1 |
+| POApproval | /POApproval | views/procurement/quotation/PO-approval.html | poApprovalController.js | 14 | 6 | no | yes (keyword match: purchase) | bc:0/on:0/rs:2 |
+| POCreation | /POCreation | views/procurement/quotation/PO-creation.html | poCreationController.js | 14 | 7 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| POFinalApproval | /POFinalApproval | views/procurement/quotation/PO-final-approval.html | poFinalApprovalController.js | 14 | 6 | no | yes (keyword match: purchase) | bc:0/on:0/rs:2 |
+| POSubmit | /POSubmit | views/procurement/quotation/PO-submit.html | poSubmitController.js | 13 | 6 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| addItemGRN | /addItemGRN | views/procurement/quotation/add-item-GRN.html | addNewGRNController.js | 123 | 24 | no | yes (keyword match: grn, receipt) | bc:0/on:0/rs:1 |
+| addItemPO | /addItemPO | views/procurement/quotation/add-item-PO-creation.html | addNewPOController.js | 124 | 25 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| addItemPOCreation | /addItemPOCreation | views/procurement/quotation/add-item-PO-creation.html | shared×353 | 124 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| addItemWorkorder | /addItemWorkorder | views/procurement/workOrder/add-item-workorder-request.html | addNewWorkOrderController.js | 21 | 9 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addItemWorkorderCreation | /addItemWorkorderCreation | views/procurement/workOrder/add-item-workorder-creation.html | addNewWorkOrderCreationController.js | 52 | 16 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addItemWorkorderQEntry | /addItemWorkorderQEntry | views/procurement/workOrder/add-item-workorder-quotation-entry.html | addWorkOrderQEntryController.js | 22 | 10 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addItemquotationEnquiry | /addItemquotationEnquiry | views/procurement/quotation/add-item-quotation-enquiry.html | addNewQuotationController.js | 51 | 11 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addItemquotationEnquiry.expectedPaymentTerms | /expectedPaymentTerms | views/procurement/quotation/expected-payment-terms.html | shared×353 | 1 | 0 | no | yes (keyword match: pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
+| addItemquotationEnquiry.expectedSupportTerms | /expectedSupportTerms | views/procurement/quotation/expected-support-terms.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| addItemquotationEnquiry.expectedTechnicalSpec | /expectedTechnicalSpec | views/procurement/quotation/expected-technical-specification.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| addItemquotationEnquiry.warrantyPeriod | /warrantyPeriod | views/procurement/quotation/warranty-period.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewConsignmentInward | /addNewConsignmentInward | views/procurement/consignment/add-new-consignment-inward.html | addNewConsignmentInwardController.js | 28 | 11 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewConsignmentOutward | /addNewConsignmentOutward | views/procurement/consignment/add-new-consignment-outward.html | addNewConsignmentOutwardController.js | 19 | 9 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewConsignmentPOInvoice | /addNewConsignmentPOInvoice | views/procurement/quotation/add-new-consignment-PO-invoice.html | addNewConsignmentPOInvoiceController.js | 31 | 8 | no | yes (keyword match: invoice) | bc:0/on:0/rs:1 |
+| addNewConsignmentPoCreat | /addNewConsignmentPoCreat | views/procurement/quotation/add-New-Consignment-Po-Creat.html | addNewConsignmentPoCreatController.js | 82 | 20 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| addNewConsignmentReturn | /addNewConsignmentReturn | views/procurement/quotation/add-new-consignment-return.html | addNewConsignmentReturnController.js | 30 | 10 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewEnquirySentToVendor | /addNewEnquirySentToVendor | views/procurement/quotation/add-new-enquiry-sentto-vendor.html | addNewEnquirySentController.js | 17 | 12 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewLoanIn | /addNewLoanIn | views/procurement/consignment/add-new-loan-in.html | addNewLoanInController.js | 27 | 11 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewLoanInOut | /addNewLoanInOut | views/procurement/consignment/add-new-loan-in-out.html | addNewLoanInOutController.js | 20 | 13 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewLoanOut | /addNewLoanOut | views/procurement/consignment/add-new-loan-out.html | addNewLoanOutController.js | 20 | 9 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewLoanOutReceive | /addNewLoanOutReceive | views/procurement/consignment/add-new-loan-out-receive.html | addNewLoanOutReceiveController.js | 19 | 13 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewVendorSpecificPOCreation | /addNewVendorSpecificPOCreation | views/procurement/quotation/add-new-vendor-specific-po-creation.html | shared×353 | 22 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewVendorSpecificPODefinition | /addNewVendorSpecificPODefinition | views/procurement/quotation/add-new-vendor-specific-po-definition.html | shared×353 | 12 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewWorkOrderCreation | /addNewWorkOrderCreation | views/procurement/workOrder/add-new-workorder-creation.html | addNewWorkorderLabourController.js | 61 | 18 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewitemRequest | /addNewitemRequest | views/procurement/purchase/add-item-request-purchase.html | addNewItemRequestController.js | 13 | 5 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| addNewlocalPurchhaseRequest | /addNewlocalPurchhaseRequest | views/procurement/purchase/add-new-local-purchase-request.html | addNewLocalPRController.js | 30 | 12 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| addNewpurchaseRequest | /addNewpurchaseRequest | views/procurement/purchase/add-new-purchase-request.html | addNewPurchaseRequestController.js | 33 | 12 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| addNewquotationFillIn | /addNewquotationFillIn | views/procurement/quotation/add-new-quotation-fill-in.html | addNewQuotationFillInController.js | 45 | 11 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| addNewquotationFillIn.expectedPaymentTermsfillIn | /expectedPaymentTermsfillIn | views/procurement/quotation/expected-payment-terms-fillin.html | shared×353 | 2 | 0 | no | yes (keyword match: pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewquotationFillIn.expectedSupportTermsfillIn | /expectedSupportTermsfillIn | views/procurement/quotation/expected-support-terms-fillin.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewquotationFillIn.expectedTechnicalSfillIn | /expectedTechnicalSfillIn | views/procurement/quotation/expected-technical-specification-fillin.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewquotationFillIn.warrantyPeriodFillin | /warrantyPeriodFillin | views/procurement/quotation/warranty-period-fillin.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewquotationS | /addNewquotationS | views/procurement/workOrder/add-new-quotation-send-to-vendor.html | addNewQuotationSentController.js | 15 | 11 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| additemwPhysicalInven | /additemwPhysicalInven | views/procurement/purchase/add-item-physical-inventory.html | shared×353 | 12 | 0 | no | yes (keyword match: purchase) | bc:0/on:1/rs:1 [on:customEvent] |
+| addnewWorkorderQuotation | /addnewWorkorderQuotation | views/procurement/workOrder/add-new-workorder-quotation-request.html | addNewWorkOrderQuotationController.js | 29 | 12 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| barcodePrinting | /barcodePrinting | views/procurement/quotation/barcode-printing.html | barcodePrintingController.js | 42 | 15 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| consignmentInward | /consignmentInward | views/procurement/consignment/consignment-inward.html | consignmentInwardController.js | 13 | 5 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| consignmentManagerDashboard | /consignmentManagerDashboard | views/procurement/consignment/consignment-manager-dashboard.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| consignmentOutward | /consignmentOutward | views/procurement/consignment/consignment-outward.html | consignmentOutwardController.js | 12 | 5 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| consignmentPOApproval | /consignmentPOApproval | views/procurement/consignment/consignment-po-approval.html | consignmentPOApprovalController.js | 9 | 4 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| consignmentPOCreation | /consignmentPOCreation | views/procurement/consignment/consignment-po-creation.html | consignmentPOCreationController.js | 11 | 5 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| consignmentPOInvoice | /consignmentPOInvoice | views/procurement/quotation/consignment-PO-invoice.html | consignmentPOInvoiceController.js | 15 | 7 | no | yes (keyword match: invoice, purchase) | bc:0/on:0/rs:1 |
+| consignmentPoCreat | /consignmentPoCreat | views/procurement/quotation/consignment-po-creat.html | consignmentPoCreatController.js | 13 | 5 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| consignmentReturn | /consignmentReturn | views/procurement/quotation/consignment-return.html | consignmentReturnController.js | 11 | 4 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| consignmentStockConversion | /consignmentStockConversion | views/procurement/quotation/consignment-stock-conversion.html | consignmentStockConversionController.js | 6 | 2 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| deatilsWorkOrderSettlement | /deatilsWorkOrderSettlement | views/procurement/workOrder/details-work-order-settlement.html | addNewWorkorderApprovalDetailsSettlementController.js | 15 | 16 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| deatilsWorkorderApproval | /deatilsWorkorderApproval | views/procurement/workOrder/details-work-order-approval.html | addNewWorkorderApprovalDetailsController.js | 23 | 16 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsConsignmentInward | /detailsConsignmentInward | views/procurement/consignment/details-consignment-inward.html | detailsConsignmentInwardController.js | 2 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsConsignmentManagerDashboard | /detailsConsignmentManagerDashboard | views/procurement/consignment/details-consignment-manager-dashboard.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsConsignmentOutward | /detailsConsignmentOutward | views/procurement/consignment/details-consignment-outward.html | detailsConsignmentOutwardController.js | 2 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsConsignmentPOApproval | /detailsConsignmentPOApproval | views/procurement/consignment/details-consignment-po-approval.html | detailsConsignmentPOApprovalController.js | 7 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsConsignmentPOCreat | /detailsConsignmentPOCreat | views/procurement/quotation/details-consignment-po-creat.html | detailsConsignmentPOCreatController.js | 12 | 3 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| detailsConsignmentPOCreation | /detailsConsignmentPOCreation | views/procurement/consignment/consignment-details-PO-Creation.html | detailsConsignmentPOCreationController.js | 4 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsConsignmentPOInvoice | /detailsConsignmentPOInvoice | views/procurement/quotation/details-consignment-PO-invoice.html | detailsConsignmentPOInvoiceController.js | 10 | 1 | no | yes (keyword match: invoice) | bc:0/on:0/rs:1 |
+| detailsConsignmentReturn | /detailsConsignmentReturn | views/procurement/quotation/details-consignment-return.html | detailsConsignmentReturnController.js | 6 | 5 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsConsignmentReturnAcceptance | /detailsConsignmentReturnAcceptance | views/procurement/consignment/details-consignment-return-acceptance.html | detailsConsignmentReturnAcceptanceController.js | 10 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsConsignmentStockConversion | /detailsConsignmentStockConversion | views/procurement/quotation/details-consignment-stock-conversion.html | detailsConsignmentStockConversionController.js | 7 | 3 | no | yes (keyword match: stock) | bc:0/on:0/rs:1 |
+| detailsEnquirySentToVendor | /detailsEnquirySentToVendor | views/procurement/quotation/details-enquiry-sentto-vendor.html | detailsEnquirySentController.js | 5 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsGRNApproval | /detailsGRNApproval | views/procurement/quotation/details-GRN-approval.html | detailsGRNApprovalController.js | 47 | 7 | no | yes (keyword match: grn, receipt) | bc:0/on:0/rs:1 |
+| detailsGRNAssets | /detailsGRNAssets | views/procurement/quotation/details-GRN-assets.html | shared×353 | 0 | 0 | no | yes (keyword match: grn) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsGRNConsumable | /detailsGRNConsumable | views/procurement/quotation/details-GRN-consumable.html | shared×353 | 20 | 0 | no | yes (keyword match: grn) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsGRNSettlementApproval | /detailsGRNSettlementApproval | views/procurement/quotation/details-GRN-Settlement-Approval.html | detailsGRNSettlementApprovalController.js | 16 | 4 | no | yes (keyword match: grn, receipt) | bc:0/on:0/rs:1 |
+| detailsLoanIn | /detailsLoanIn | views/procurement/consignment/details-loan-in.html | detailsLoanInController.js | 2 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsLoanInOut | /detailsLoanInOut | views/procurement/consignment/details-loan-in-out.html | detailsLoanInOutController.js | 2 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsLoanOut | /detailsLoanOut | views/procurement/consignment/details-loan-out.html | detailsLoanOutController.js | 2 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsLoanOutReceive | /detailsLoanOutReceive | views/procurement/consignment/details-loan-out-receive.html | detailsLoanOutReceiveController.js | 2 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsPOApproval | /detailsPOApproval | views/procurement/quotation/details-PO-approval.html | detailsPOApprovalController.js | 33 | 6 | no | yes (keyword match: purchase) | bc:0/on:0/rs:2 |
+| detailsPOApprovalAssets | /detailsPOApprovalAssets | views/procurement/quotation/details-PO-creation-assets.html | shared×353 | 13 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsPOApprovalConsumable | /detailsPOApprovalConsumable | views/procurement/quotation/details-PO-creation-consumables.html | shared×353 | 13 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsPOCreation | /detailsPOCreation | views/procurement/quotation/details-PO-creation.html | detailsPOController.js | 5 | 3 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| detailsPOFinalApproval | /detailsPOFinalApproval | views/procurement/quotation/details-POFinal-approval.html | detailsPOFinalApprovalController.js | 34 | 5 | no | yes (keyword match: purchase) | bc:0/on:0/rs:2 |
+| detailsPOSubmitCreation | /detailsPOSubmitCreation | views/procurement/quotation/details-PO-submit.html | detailsPOSubmitController.js | 5 | 3 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| detailsPatientConsignmentIssue | /detailsPatientConsignmentIssue | views/procurement/consignment/details-patient-indent-issue-list.html | detailsPatientConsignmentIssueController.js | 1 | 1 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsPatientConsignmentPendingIndent | /detailsPatientConsignmentPendingIndent | views/procurement/consignment/details-patient-consignment-pending.html | detailsPatientConsignmentPendingController.js | 20 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsPurchaseRequest | /detailsPurchaseRequest | views/procurement/purchase/details-purchase-request.html | detailsPurchaseRequestController.js | 1 | 1 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| detailsPurchaseRequestApproval | /detailsPurchaseRequestApproval | views/procurement/purchase/details-purchase-request-approval.html | detailsPRApprovalController.js | 13 | 2 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| detailsQuotationNegotiation | /detailsQuotationNegotiation | views/procurement/workOrder/details-quotation-negotiation.html | quotationNegotiationDetailsController.js | 14 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsQuotationS | /detailsQuotationS | views/procurement/workOrder/details-quotation-send-to-vendor.html | detailsQuotationSentController.js | 3 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsQuotationSelect | /detailsQuotationSelect | views/procurement/workOrder/details-workorder-quotation-selection.html | detailsQuotationSelectController.js | 28 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsReturnAcceptance | /detailsReturnAcceptance | views/procurement/consignment/details-return-acceptance.html | shared×353 | 3 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsSettle | /detailsSettle | views/procurement/quotation/details-settled-list.html | detailsSettleController.js | 1 | 1 | no | yes (keyword match: receipt) | bc:0/on:0/rs:1 |
+| detailsVendorNegotitation | /detailsVendorNegotitation | views/procurement/quotation/details-vendor-negotitation.html | detailsVendorNegotiationController.js | 15 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsVendorSelection | /detailsVendorSelection | views/procurement/quotation/details-vendor-selection.html | detailsVendorSelectionController.js | 35 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsVendorSpecificPOApproval | /detailsVendorSpecificPOApproval | views/procurement/quotation/details-vendor-specific-po-approval.html | shared×353 | 10 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsVendorSpecificPOCreation | /detailsVendorSpecificPOCreation | views/procurement/quotation/details-vendor-specific-po-creation.html | shared×353 | 10 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsWorkorder | /detailsWorkorder | views/procurement/workOrder/details-workorder-request.html | detailsWorkOrderController.js | 2 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsWorkorderApprovalWorklist | /detailsWorkorderApprovalWorklist | views/procurement/workOrder/details-workorder-approval-worklist.html | detailWorkOrderApprovalController.js | 12 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsWorkorderCreation | /detailsWorkorderCreation | views/procurement/workOrder/details-workorder-creation.html | detailsWorkOrderCreationController.js | 5 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsWorkorderQEntry | /detailsWorkorderQEntry | views/procurement/workOrder/details-workorder-quotation-entry.html | detailsWorkOrderQEntryController.js | 5 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsWorkorderQuotation | /detailsWorkorderQuotation | views/procurement/workOrder/details-workorder-quotation-request.html | detailsWorkOrderQuotationController.js | 3 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsWorkorderQuotationNegotiation | /detailsWorkorderQuotationNegotiation | views/procurement/workOrder/details-workorder-quotation-negotiation.html | shared×353 | 37 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailslocalPurchhaseRequest | /detailslocalPurchhaseRequest | views/procurement/purchase/details-local-purchase-request.html | detailsLocalPRCotroller.js | 2 | 1 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| detailslocalPurchhaseRequestApproval | /detailslocalPurchhaseRequestApproval | views/procurement/purchase/details-local-purchase-approval.html | detailsLocalPRApprovalController.js | 9 | 2 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| detailsphysicalInspec | /detailsphysicalInspec | views/procurement/quotation/details-physical-inspection.html | detailsPhysicalInspectionController.js | 25 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| detailsphysicalInspecAssets | /detailsphysicalInspecAssets | views/procurement/quotation/details-physical-inspection-assets.html | shared×353 | 13 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsphysicalInspecConsumables | /detailsphysicalInspecConsumables | views/procurement/quotation/details-physical-inspection-consumables.html | shared×353 | 16 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| detailstechnicalApproval | /detailstechnicalApproval | views/procurement/quotation/details-technical-approval.html | detailsTechnicalApprovalController.js | 32 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| enquirySentToVendor | /enquirySentToVendor | views/procurement/quotation/enquiry-sentto-vendor.html | enquirySentToVendorController.js | 12 | 5 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| grnSettlement | /grnSettlement | views/procurement/quotation/GRN-Settlement.html | grnSettlementController.js | 37 | 9 | no | yes (keyword match: grn, receipt) | bc:0/on:0/rs:13 |
+| holdOnFillInDetails | /holdOnFillInDetails | views/procurement/quotation/quotation-fillinHoldon-details.html | shared×353 | 11 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| itemApproval | /itemApproval | views/procurement/purchase/item-approval.html | itemApprovalController.js | 8 | 4 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| itemApprovalDetails | /itemApprovalDetails | views/procurement/purchase/item-approval-details.html | itemApprovalDetailsController.js | 7 | 2 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| itemCreationDetails | /itemCreationDetails | views/procurement/purchase/item-creation-details.html | itemCreationDetailsController.js | 5 | 1 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| itemCreationPendingList | /itemCreationPendingList | views/procurement/purchase/item-creation-pending-list.html | itemCreationController.js | 4 | 3 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| itemRequest | /itemRequest | views/procurement/purchase/item-request.html | itemRequestController.js | 10 | 4 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| itemRequestDetails | /itemRequestDetails | views/procurement/purchase/item-request-details.html | itemRequestDetailsController.js | 7 | 2 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| loanIn | /loanIn | views/procurement/consignment/loan-in.html | loanInController.js | 14 | 6 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| loanInOut | /loanInOut | views/procurement/consignment/loan-in-out.html | loanInOutController.js | 14 | 6 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| loanOut | /loanOut | views/procurement/consignment/loan-out.html | loanOutController.js | 14 | 8 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| loanOutReceive | /loanOutReceive | views/procurement/consignment/loan-out-receive.html | loanOutReceiveController.js | 14 | 6 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| localPurchhaseRequest | /localPurchhaseRequest | views/procurement/purchase/local-purchase-request.html | localPurchaseRequestController.js | 13 | 4 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| localPurchhaseRequestApproval | /localPurchhaseRequestApproval | views/procurement/purchase/local-purchase-approval.html | localPRApporvalController.js | 18 | 3 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| patientConsignmentIssue | /patientConsignmentIssue | views/procurement/consignment/patient-consignment-issue.html | patientConsignmentssueController.js | 27 | 7 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| pendingForPOCreation | /pendingForPOCreation | views/procurement/consignment/pending-for-po-creation.html | addNewConsignmentPOCreationController.js | 11 | 6 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| physicalInspec | /physicalInspec | views/procurement/quotation/physical-inspection.html | physicalInspectionController.js | 6 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| physicalInventory | /physicalInventory | views/procurement/purchase/physical-inventory.html | shared×353 | 7 | 0 | no | yes (keyword match: purchase) | bc:0/on:1/rs:1 [on:customEvent] |
+| purchaseRequest | /purchaseRequest | views/procurement/purchase/purchase-request.html | purchaseRequestController.js | 13 | 4 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| purchaseRequestApproval | /purchaseRequestApproval | views/procurement/purchase/purchase-request-approval.html | purchaseRequestApprovalController.js | 19 | 3 | no | yes (keyword match: purchase) | bc:0/on:0/rs:1 |
+| qfillInDetails | /qfillInDetails | views/procurement/quotation/quotation-fillin-details.html | detailsQFillInController.js | 13 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| qfillInDetails.expectedPaymentTfillIn | /expectedPaymentTfillIn | views/procurement/quotation/expected-payment-terms-fillinDetails.html | shared×353 | 2 | 0 | no | yes (keyword match: pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
+| qfillInDetails.expectedSTermsfillIn | /expectedSTermsfillIn | views/procurement/quotation/expected-support-terms-fillinDetails.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| qfillInDetails.expectedTSpecificationfillIn | /expectedTSpecificationfillIn | views/procurement/quotation/expected-technical-specification-fillinDetails.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| qfillInDetails.warrantyPFillin | /warrantyPFillin | views/procurement/quotation/warranty-period-fillinDetails.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| quotationEArrovalDetails | /quotationEArrovalDetails | views/procurement/quotation/quotation-enquiry-approval-details.html | shared×353 | 9 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| quotationEDetails | /quotationEDetails | views/procurement/quotation/quotation-enquiry-details.html | detailsQuotationController.js | 41 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| quotationEDetails.expectedPaymentTerms | /expectedPaymentTerms | views/procurement/quotation/expected-payment-terms.html | shared×353 | 1 | 0 | no | yes (keyword match: pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
+| quotationEDetails.expectedSupportTerms | /expectedSupportTerms | views/procurement/quotation/expected-support-terms.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| quotationEDetails.expectedTechnicalS | /expectedTechnicalS | views/procurement/quotation/expected-technical-specification.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| quotationEDetails.warrantyPeriod | /warrantyPeriod | views/procurement/quotation/warranty-period.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| quotationEnquiry | /quotationEnquiry | views/procurement/quotation/quotation-enquiry.html | quotationEnquiryController.js | 12 | 5 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| quotationEnquiryApproval | /quotationEnquiryApproval | views/procurement/quotation/quotation-enquiry-approval.html | shared×353 | 9 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| quotationFillIn | /quotationFillIn | views/procurement/quotation/quotation-fill-in.html | quotationFillInController.js | 14 | 5 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| quotationNegotiation | /quotationNegotiation | views/procurement/workOrder/quotation-negotiation.html | quotationNegotiationController.js | 8 | 3 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| quotationSendToVendor | /quotationSendToVendor | views/procurement/workOrder/quotation-send-to-vendor.html | quotationSentToVendorController.js | 13 | 5 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| returnAcceptance | /returnAcceptance | views/procurement/consignment/return-acceptance.html | returnAcceptanceController.js | 52 | 8 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| technicalApproval | /technicalApproval | views/procurement/quotation/technical-approval.html | technicalApprovalController.js | 9 | 4 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| userItemBilling | /userItemBilling | views/procurement/consignment/user-item-billing.html | shared×353 | 6 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
+| vendorNegotitation | /vendorNegotitation | views/procurement/quotation/vendor-negotitation.html | vendorNegotiationController.js | 9 | 3 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| vendorSelection | /vendorSelection | views/procurement/quotation/vendor-selection.html | vendorSelectionController.js | 6 | 3 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| vendorSpecificPOApproval | /vendorSpecificPOApproval | views/procurement/quotation/vendor-specific-po-approval.html | shared×353 | 10 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| vendorSpecificPOCreation | /vendorSpecificPOCreation | views/procurement/quotation/vendor-specific-po-creation.html | shared×353 | 9 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| vendorSpecificPODefinition | /vendorSpecificPODefinition | views/procurement/quotation/vendor-specific-po-definition.html | shared×353 | 8 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| viewQuotationNegotiation | /viewQuotationNegotiation | views/procurement/workOrder/view-quotation-negotiation.html | viewQuotationNegotiationController.js | 8 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| viewQuotationSelect | /viewQuotationSelect | views/procurement/workOrder/view-quotation-selection.html | viewQuotationSelectionController.js | 27 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| viewVendorNegotitation | /viewVendorNegotitation | views/procurement/quotation/view-vendor-negotiation.html | viewVendorNegotiationController.js | 20 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| viewVendorSelection | /viewVendorSelection | views/procurement/quotation/view-vendor-selection.html | viewVendorSelectionController.js | 33 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| viewtechnicalApproval | /viewtechnicalApproval | views/procurement/quotation/view-Technical-Approval.html | viewTechnicalApprovalController.js | 26 | 1 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workOrderApproval | /workOrderApproval | views/procurement/workOrder/work-order-approval.html | addNewWorkorderApprovalListController.js | 13 | 16 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workOrderCompletion | /workOrderCompletion | views/procurement/workOrder/work-order-completion.html | workOrderCompletionController.js | 13 | 18 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workOrderCompletionDetails | /workOrderCompletionDetails | views/procurement/workOrder/details-work-order-completion.html | workOrderCompletionDetailsController.js | 28 | 16 | no | yes (keyword match: invoice) | bc:0/on:0/rs:1 |
+| workOrderCreation | /workOrderCreation | views/procurement/workOrder/work-order-creation.html | addNewWorkorderLabourListController.js | 13 | 12 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workOrderSettlement | /workOrderSettlement | views/procurement/workOrder/work-order-Settlement.html | workOrderSettlementController.js | 31 | 14 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workorderApprovalWorklist | /workorderApprovalWorklist | views/procurement/workOrder/workorder-approval-worklist.html | workOrderApprovalWorklistController.js | 7 | 3 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workorderCreation | /workorderCreation | views/procurement/workOrder/workorder-creation.html | workOrderCreationController.js | 14 | 6 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workorderQuotationEntry | /workorderQuotationEntry | views/procurement/workOrder/workorder-quotation-entry.html | workOrderQEntryController.js | 12 | 5 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workorderQuotationNegotiation | /workorderQuotationNegotiation | views/procurement/workOrder/workorder-quotation-negotiation.html | shared×353 | 10 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
+| workorderQuotationRequest | /workorderQuotationRequest | views/procurement/workOrder/workorder-quotation-request.html | workOrderQuotationRequestController.js | 18 | 6 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workorderQuotationSelect | /workorderQuotationSelect | views/procurement/workOrder/workorder-quotation-selection.html | woQuotationSelectionController.js | 6 | 2 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+| workorderRequest | /workorderRequest | views/procurement/workOrder/workorder-request.html | workOrderRequestController.js | 12 | 4 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
+
+### Lab/LIS (119 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
@@ -343,6 +752,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | addendumReport | /addendumReport | views/LIS/Histopathology/addendum-report.html | shared×353 | 4 | 0 | yes (keyword match: lis) | no | bc:0/on:1/rs:1 [on:customEvent] |
 | additionofAntibiotic | /additionofAntibiotic | views/master/LIS/antibiotic-addition.html | antibioticAdditionController.js | 7 | 8 | yes (keyword match: lis) | no | bc:0/on:0/rs:1 |
 | ageGroupMaster | /ageGroupMaster | views/master/LIS/age-group-master.html | ageGroupController.js | 10 | 6 | yes (keyword match: lis) | no | bc:0/on:0/rs:1 |
+| amendmentWorklist | /amendmentWorklist | views/LIS/CentralArea/amendment-worklist.html | amendmentWorklistController.js | 41 | 22 | yes (keyword match: lis) | no | bc:0/on:0/rs:1 |
 | antibiotic | /antibiotic | views/master/LIS/antibiotic.html | shared×353 | 4 | 0 | yes (keyword match: lis) | no | bc:0/on:1/rs:1 [on:customEvent] |
 | antibioticAdditionGroupMaster | /antibioticAdditionGroupMaster | views/master/LIS/antibiotic-addition-group-master.html | antibioticGroupAddAntibioticMapperController.js | 7 | 8 | yes (keyword match: lis) | no | bc:0/on:0/rs:1 |
 | antibioticsClass | /antibioticsClass | views/master/LIS/antibiotic_class.html | shared×353 | 4 | 0 | yes (keyword match: lis) | no | bc:0/on:1/rs:1 [on:customEvent] |
@@ -451,7 +861,89 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | worklistForValidation | /worklistForValidation/:subDeptId | views/LIS/CentralArea/validation-worklist.html | worklistForValidationController.js | 16 | 7 | yes (keyword match: lis) | no | bc:0/on:0/rs:1 |
 | workloadDashboard | /workloadDashboard | views/LIS/workload-dash-board.html | workloadDashboardController.js | 32 | 23 | yes (keyword match: lis) | no | bc:0/on:0/rs:1 |
 
-### Common/Shared (64 screens)
+### Asset Management (77 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| checklistEquipmentMapper | /checklistEquipmentMapper | views/master/GlobalMaster/EquipmentMaster/checklist-equipment-mapper.html | checklistEquipmentMapperMasterController.js | 8 | 6 | yes (keyword match: checklist) | no | bc:0/on:0/rs:1 |
+| checklistEquipmentMaster | /checklistEquipmentMaster | views/master/GlobalMaster/EquipmentMaster/checklist-equipment-master.html | checklistEquipmentMasterController.js | 10 | 7 | yes (keyword match: checklist) | no | bc:0/on:0/rs:1 |
+| addNewAssetIndent | /addNewAssetIndent | views/master/UnitMaster/assetManagement/add-new-asset-indent.html | addNewAssetIndentController.js | 33 | 10 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| addNewIndentTemplateMaster | /addNewIndentTemplateMaster | views/master/UnitMaster/assetManagement/add-new-indent-template-master.html | shared×353 | 8 | 0 | no | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
+| assetIndent | /assetIndent | views/master/UnitMaster/assetManagement/asset-indent.html | assetIndentController.js | 14 | 4 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| assetIndentApproval | /assetIndentApproval | views/master/UnitMaster/assetManagement/asset-indent-approval.html | assetIndentApprovalController.js | 11 | 3 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsAssetIndent | /detailsAssetIndent | views/master/UnitMaster/assetManagement/details-asset-indent.html | assetIndentDetailsController.js | 2 | 1 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsAssetIndentApproval | /detailsAssetIndentApproval | views/master/UnitMaster/assetManagement/details-asset-indent-approval.html | assetIndentApprovalDetailsController.js | 19 | 2 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsAssetIssueIndent | /detailsAssetIssueIndent | views/master/UnitMaster/assetManagement/details-asset-issue-indent.html | detailsAssetIssueIndentController.js | 12 | 2 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsAssetIssueIndentList | /detailsAssetIssueIndentList | views/master/UnitMaster/assetManagement/details-asset-issue-indent-list.html | detailsAssetIssueIndentListController.js | 1 | 1 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| directIssueAssetIssueIndent | /directIssueAssetIssueIndent | views/master/UnitMaster/assetManagement/direct-issue-asset-issue-indent.html | directIssueAssetIssueIndentController.js | 17 | 8 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| generalInsuranceMaster | /generalInsuranceMaster | views/master/GlobalMaster/AssetManagenent/Master/general-insurance-master.html | generalInsuranceMasterController.js | 13 | 9 | no | yes (keyword match: insurance) | bc:0/on:0/rs:1 |
+| indentTemplateMaster | /indentTemplateMaster | views/master/UnitMaster/assetManagement/indent-template-master.html | shared×353 | 6 | 0 | no | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
+| DetailsAssetPendingIssue | /DetailsAssetPendingIssue | views/master/UnitMaster/assetManagement/details-asset-pending-issue.html | detailsAssetPendingIssueController.js | 21 | 2 | no | no | bc:0/on:0/rs:1 |
+| ETOItemConfiguration | /ETOItemConfiguration | views/master/UnitMaster/assetManagement/ETO-item-configuration.html | shared×353 | 5 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| PMRequest | /PMRequest | views/master/UnitMaster/assetManagement/PM-request.html | pmRequestController.js | 23 | 10 | no | no | bc:0/on:0/rs:1 |
+| PMSchedule | /PMSchedule | views/master/UnitMaster/assetManagement/PM-schedule.html | pmScheduleController.js | 16 | 11 | no | no | bc:0/on:0/rs:0 |
+| addNewAssetReturn | /addNewAssetReturn | views/master/UnitMaster/assetManagement/add-new-asset-return.html | addNewAssetReturnController.js | 40 | 11 | no | no | bc:0/on:0/rs:1 |
+| addNewAuctionEnquirySentToVendor | /addNewAuctionEnquirySentToVendor | views/master/GlobalMaster/AssetManagenent/Master/add-new-auction-enquiry-sent-to-vendor.html | addNewAuctionEnquirySentToVendorController.js | 18 | 4 | no | no | bc:0/on:0/rs:1 |
+| addNewAuctionQuotationFillin | /addNewAuctionQuotationFillin | views/master/GlobalMaster/AssetManagenent/Master/add-new-auction-quotation-fill-in.html | addNewAuctionQuotationFillinController.js | 45 | 4 | no | no | bc:0/on:0/rs:1 |
+| addNewAuctionRequistion | /addNewAuctionRequistion | views/master/GlobalMaster/AssetManagenent/Master/add-new-auction-requistion.html | addNewAuctionRequistionController.js | 41 | 8 | no | no | bc:0/on:0/rs:1 |
+| addNewCorrectiveMaintenance | /addNewCorrectiveMaintenance | views/master/UnitMaster/assetManagement/add-new-corrective-maintenance-worklist.html | addNewCorrectiveMaintenanceController.js | 37 | 6 | no | no | bc:0/on:0/rs:1 |
+| addNewETOItemConfiguration | /addNewETOItemConfiguration | views/master/UnitMaster/assetManagement/add-new-ETO-item-configuration.html | shared×353 | 7 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewfixedAssetMaster | /addNewfixedAssetMaster | views/master/UnitMaster/assetManagement/add-new-fixed-asset-master.html | addNewFixedAssetController.js | 72 | 16 | no | no | bc:0/on:0/rs:1 |
+| addfixedAssetMaster | /addfixedAssetMaster | views/master/UnitMaster/assetManagement/add-fixed-asset-master.html | addFixedAssetMasterController.js | 12 | 4 | no | no | bc:0/on:0/rs:1 |
+| assetCategoryMaster | /assetCategoryMaster | views/master/GlobalMaster/AssetManagenent/Master/asset-category-master.html | assetCategoryMasterController.js | 8 | 6 | no | no | bc:0/on:0/rs:1 |
+| assetIssueAcceptance | /assetIssueAcceptance | views/master/UnitMaster/assetManagement/asset-issue-acceptance.html | assetIssueAcceptanceController.js | 10 | 2 | no | no | bc:0/on:0/rs:1 |
+| assetIssueDirectIssue | /assetIssueDirectIssue | views/master/UnitMaster/assetManagement/asset-issue-direct-issue.html | assetIssueDirectIssueController.js | 15 | 7 | no | no | bc:0/on:0/rs:1 |
+| assetIssueIndent | /assetIssueIndent | views/master/UnitMaster/assetManagement/asset-issue.html | assetIssueIndentController.js | 19 | 4 | no | no | bc:0/on:0/rs:1 |
+| assetIssueMaster | /assetIssueMaster | views/master/UnitMaster/assetManagement/asset-issue-master.html | assetIssueMasterController.js | 17 | 4 | no | no | bc:0/on:0/rs:1 |
+| assetPMSScheduler | /assetPMSScheduler | views/master/UnitMaster/assetManagement/asset-PMS-scheduler.html | preventiveMaintenanceController.js | 13 | 9 | no | no | bc:0/on:0/rs:1 |
+| assetReturn | /assetReturn | views/master/UnitMaster/assetManagement/asset-return.html | assetReturnController.js | 13 | 4 | no | no | bc:0/on:0/rs:1 |
+| assetReturnAcceptance | /assetReturnAcceptance | views/master/UnitMaster/assetManagement/asset-return-acceptance.html | assetReturnAcceptanceController.js | 9 | 2 | no | no | bc:0/on:0/rs:1 |
+| assetReturnAcceptanceDetails | /detailsAssetReturnAcceptance | views/master/UnitMaster/assetManagement/details-asset-return-acceptance.html | assetReturnAcceptanceDetailsController.js | 12 | 2 | no | no | bc:0/on:0/rs:1 |
+| assetScheduler | /assetScheduler | views/master/UnitMaster/assetManagement/create-asset-scheduler.html | createAssetSchedulerController.js | 22 | 10 | no | no | bc:0/on:0/rs:0 |
+| assetTypeMaster | /assetTypeMaster | views/master/GlobalMaster/AssetManagenent/Master/asset-type-master.html | assetTypeMasterController.js | 6 | 5 | no | no | bc:0/on:0/rs:1 |
+| auctionEnquirySentToVendor | /auctionEnquirySentToVendor | views/master/GlobalMaster/AssetManagenent/Master/auction-enquiry-sent-to-vendor.html | auctionEnquirySentToVendorController.js | 10 | 2 | no | no | bc:0/on:0/rs:1 |
+| auctionQuationFillin | /auctionQuationFillin | views/master/GlobalMaster/AssetManagenent/Master/auction-quotation-fill-in.html | auctionQuationFillinController.js | 10 | 2 | no | no | bc:0/on:0/rs:1 |
+| auctionQuotationFillinDetails | /auctionQuotationFillinDetails | views/master/GlobalMaster/AssetManagenent/Master/auction-quotation-fill-in-details.html | auctionQuotationFillinDetailsController.js | 12 | 0 | no | no | bc:0/on:0/rs:1 |
+| auctionRequistion | /auctionRequistion | views/master/GlobalMaster/AssetManagenent/Master/auction-requistion.html | auctionRequistionController.js | 12 | 4 | no | no | bc:0/on:0/rs:1 |
+| auctionVendorNegotiation | /auctionVendorNegotiation | views/master/GlobalMaster/AssetManagenent/Master/auction-vendor-negotiation.html | auctionVendorNegotiationController.js | 7 | 2 | no | no | bc:0/on:0/rs:1 |
+| auctionVendorSelection | /auctionVendorSelection | views/master/GlobalMaster/AssetManagenent/Master/auction-vendor-selection.html | auctionVendorSelectionController.js | 6 | 2 | no | no | bc:0/on:0/rs:1 |
+| consumableBarcodeConfig | /consumableBarcodeConfig | views/master/UnitMaster/assetManagement/consumable-barcode-configuration.html | consumableBarcodeConfigController.js | 12 | 3 | no | no | bc:0/on:0/rs:1 |
+| correctiveMaintenance | /correctiveMaintenance | views/master/UnitMaster/assetManagement/corrective-maintenance.html | correctiveMaintenanceController.js | 15 | 6 | no | no | bc:0/on:0/rs:1 |
+| correctiveMaintenanceReturnWorklist | /correctiveMaintenanceReturnWorklist | views/master/UnitMaster/assetManagement/corrective-maintenance-return-worklist.html | correctiveMaintenanceReturnWorklistController.js | 36 | 7 | no | no | bc:0/on:0/rs:2 |
+| correctiveMaintenanceScheduleWorklist | /correctiveMaintenanceScheduleWorklist | views/master/UnitMaster/assetManagement/corrective-maintenance-schedule-worklist.html | correctiveMaintenanceScheduleWorklistController.js | 11 | 3 | no | no | bc:0/on:0/rs:1 |
+| correctiveMaintenanceWorklist | /correctiveMaintenanceWorklist | views/master/UnitMaster/assetManagement/corrective-maintenance-worklist.html | correctiveMaintenanceWorklistController.js | 10 | 2 | no | no | bc:0/on:0/rs:1 |
+| departmentStoreMapper | /departmentStoreMapper | views/master/UnitMaster/assetManagement/department-store-mapper.html | departmentStoreMapperController.js | 5 | 12 | no | no | bc:0/on:0/rs:1 |
+| detailScheduleWorklist | /detailScheduleWorklist | views/master/UnitMaster/assetManagement/details-schedule-worklist.html | detailScheduleWorklistController.js | 37 | 10 | no | no | bc:0/on:0/rs:0 |
+| detailsAssetIssueAcceptance | /detailsAssetIssueAcceptance | views/master/UnitMaster/assetManagement/details-asset-issue-acceptance.html | detailsAssetIssueAcceptanceController.js | 15 | 2 | no | no | bc:0/on:0/rs:1 |
+| detailsAssetIssueList | /detailsAssetIssueList | views/master/UnitMaster/assetManagement/details-asset-issue-list.html | detailsAssetIssueListController.js | 2 | 1 | no | no | bc:0/on:0/rs:1 |
+| detailsAssetReturn | /detailsAssetReturn | views/master/UnitMaster/assetManagement/details-asset-return.html | detailAssetReturnController.js | 2 | 1 | no | no | bc:0/on:0/rs:1 |
+| detailsAuctionEnquirySentToVendor | /detailsAuctionEnquirySentToVendor | views/master/GlobalMaster/AssetManagenent/Master/details-auction-enquiry-sent-to-vendor.html | detailsAuctionEnquirySentToVendorController.js | 5 | 0 | no | no | bc:0/on:0/rs:1 |
+| detailsAuctionVendorNegotiation | /detailsAuctionVendorNegotiation | views/master/GlobalMaster/AssetManagenent/Master/details-auction-vendor-negotitation.html | detailsAuctionVendorNegotiationController.js | 15 | 0 | no | no | bc:0/on:0/rs:1 |
+| detailsAuctionVendorSelection | /detailsAuctionVendorSelection | views/master/GlobalMaster/AssetManagenent/Master/details-auction-vendor-selection.html | detailsAuctionVendorSelectionController.js | 28 | 0 | no | no | bc:0/on:0/rs:1 |
+| detailsCorrectiveMaintenance | /detailsCorrectiveMaintenance | views/master/UnitMaster/assetManagement/details-corrective-maintenance.html | detailsCorrectiveMaintenanceController.js | 22 | 3 | no | no | bc:0/on:0/rs:1 |
+| detailsCorrectiveMaintenanceScheduleWorklist | /detailsCorrectiveMaintenanceScheduleWorklist | views/master/UnitMaster/assetManagement/details-corrective-maintenance-schedule-worklist.html | detailsCorrectiveMaintenanceScheduleWorklistController.js | 45 | 11 | no | no | bc:0/on:0/rs:1 |
+| detailsCorrectiveMaintenanceWorklist | /detailsCorrectiveMaintenanceWorklist | views/master/UnitMaster/assetManagement/details-corrective-maintenance-worklist.html | detailsCorrectiveMaintenanceWorklistController.js | 21 | 2 | no | no | bc:0/on:0/rs:1 |
+| detailsFixedAssetMaster | /detailsFixedAssetMaster | views/master/UnitMaster/assetManagement/details-fixed-asset-master.html | detailsFixedAssetMasterController.js | 6 | 1 | no | no | bc:0/on:0/rs:1 |
+| detailsRejectedAssetAcceptance | /detailsRejectedAssetAcceptance | views/master/UnitMaster/assetManagement/details-rejected-asset-acceptance.html | detailsRejectedAssetAcceptance.js | 11 | 2 | no | no | bc:0/on:0/rs:1 |
+| detailsauctionRequistion | /detailsauctionRequistion | views/master/GlobalMaster/AssetManagenent/Master/details-auction-requistion.html | detailsauctionRequistionController.js | 1 | 1 | no | no | bc:0/on:0/rs:1 |
+| fixedAssetAddAcessory | /fixedAssetAddAcessory | views/master/UnitMaster/assetManagement/fixed-asset-add-accessory.html | fixedAssetAddAcessoryController.js | 16 | 4 | no | no | bc:0/on:0/rs:1 |
+| fixedAssetMaster | /fixedAssetMaster | views/master/UnitMaster/assetManagement/fixed-asset-master.html | fixedAssetMasterController.js | 20 | 10 | no | no | bc:0/on:0/rs:1 |
+| fixedAssetType | /fixedAssetType | views/master/UnitMaster/assetManagement/fixed-asset-type.html | fixedAssetTypeController.js | 4 | 6 | no | no | bc:0/on:0/rs:1 |
+| formulationTypeROAMaster | /formulationTypeROAMaster | views/master/GlobalMaster/AssetManagenent/Master/formulation-type-ROA-master.html | formulationTypeROAMasterController.js | 8 | 8 | no | no | bc:0/on:0/rs:1 |
+| frequencyMaster | /frequencyMaster | views/master/GlobalMaster/AssetManagenent/Master/frequency-master.html | frequencyMasterController.js | 19 | 9 | no | no | bc:0/on:0/rs:1 |
+| genericMaster | /genericMaster | views/master/GlobalMaster/AssetManagenent/Master/generic-master.html | genericMasterController.js | 17 | 11 | no | no | bc:0/on:0/rs:1 |
+| itemMasterGlobal | /itemMasterGlobal | views/master/GlobalMaster/AssetManagenent/Master/item-master.html | itemMasterController.js | 61 | 25 | no | no | bc:0/on:0/rs:1 |
+| productCategoryMaster | /productCategoryMaster | views/master/GlobalMaster/AssetManagenent/Master/product-category-master.html | shared×353 | 6 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| rejectedAssetAcceptance | /rejectedAssetAcceptance | views/master/UnitMaster/assetManagement/rejected-asset-acceptance.html | rejectedAssetAcceptanceController.js | 8 | 3 | no | no | bc:0/on:0/rs:1 |
+| routeAdministration | /routeAdministration | views/master/GlobalMaster/AssetManagenent/Master/route-of-adminstration.html | routeOfAdministrationController.js | 7 | 5 | no | no | bc:0/on:0/rs:1 |
+| scheduleWorklist | /scheduleWorklist | views/master/UnitMaster/assetManagement/schedule-worklist.html | preventiveScheduleWorklistController.js | 8 | 3 | no | no | bc:0/on:0/rs:0 |
+| supplyDaysMaster | /supplyDaysMaster | views/master/GlobalMaster/AssetManagenent/Master/supply-days-master.html | supplyDaysMasterController.js | 5 | 5 | no | no | bc:0/on:0/rs:1 |
+| viewAssetScheduler | /viewAssetScheduler | views/master/UnitMaster/assetManagement/view-asset-scheduler.html | viewAssetSchedulerController.js | 4 | 3 | no | no | bc:0/on:0/rs:0 |
+| viewAuctionVendorNegotiation | /viewAuctionVendorNegotiation | views/master/GlobalMaster/AssetManagenent/Master/view-Auction-Vendor-negotiation.html | viewAuctionVendorNegotiationController.js | 13 | 0 | no | no | bc:0/on:0/rs:1 |
+| viewAuctionVendorSelection | /viewAuctionVendorSelection | views/master/GlobalMaster/AssetManagenent/Master/view-auction-vendor-selection.html | viewAuctionVendorSelectionController.js | 22 | 2 | no | no | bc:0/on:0/rs:1 |
+| wardStoreMapper | /wardStoreMapper | views/master/UnitMaster/assetManagement/ward-store-mapper.html | wardStoreMapperController.js | 5 | 10 | no | no | bc:0/on:0/rs:1 |
+
+### Common/Shared (66 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
@@ -517,146 +1009,100 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | pesapalProcessPage | /pesapalProcessPage | views/common/pesapal-success-page.html | pesapalSuccessPageController.js | 0 | 1 | no | no | bc:0/on:0/rs:0 |
 | physicalExaminationConfig | /physicalExaminationConfig | views/common/appointments/Master Management/physical-examination-config.html | shared×353 | 5 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | resetPwd | /resetPwd | views/reset-password.html | shared×353 | 8 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| resetPwdconfirmPwd | /resetPwdconfirmPwd | views/reset-password-confirm-pwd.html | resetPwdconfirmPwdController.js | 5 | 1 | no | no | bc:0/on:0/rs:1 |
 | smsConfig | /smsConfig | views/common/appointments/Master Management/sms-config.html | shared×353 | 9 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | test | /test | views/common/dashboard-quick-links.html | shared×353 | 0 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| videoConferenceNew | /videoConferenceNew | views/common/video-conference.html | videoConferenceNew.js | 8 | 1 | no | no | bc:0/on:0/rs:1 |
 
-### ADT - Admission/Discharge (58 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| ERreadyForBilling | /ERreadyForBilling | views/AdmissionDischarge/ready-for-billing.html | ERReadyForBillingController.js | 6 | 3 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
-| IPDCharges.NOKForIPDCharge | /NOKForIPDCharge | views/AdmissionDischarge/nok-details-only.html | shared×353 | 0 | 0 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: charge) | bc:0/on:1/rs:1 [on:customEvent] |
-| costEstimation | /costEstimation | views/AdmissionDischarge/cost-estimation.html | costEstimationController.js | 39 | 28 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
-| dayCareReadyForBilling | /dayCareReadyForBilling | views/AdmissionDischarge/ready-for-billing.html | dayCarReadyForBillingController.js | 6 | 2 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
-| readyForBilling | /readyForBilling | views/AdmissionDischarge/ready-for-billing.html | readyForBillingController.js | 6 | 3 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
-| ERCharges.NOKForIPDCharge | /NOKForIPDCharge | views/AdmissionDischarge/nok-details-only.html | shared×353 | 0 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| ERdueForDischarge | /ERdueForDischarge | views/er-due-for-discharge.html | ERDueForDischargeController.js | 7 | 9 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| ERfinalDischarge | /ERfinalDischarge | views/AdmissionDischarge/final-discharge.html | ERfinalDischargeController.js | 11 | 5 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| addNewDoctorRegistration | /addNewDoctorRegistration | views/AdmissionDischarge/add-new-doctor-registration.html | shared×353 | 75 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewStaffRegistration | /addNewStaffRegistration | views/AdmissionDischarge/add-new-staff-registration.html | shared×353 | 108 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| bedTypeAllocation | /bedTypeAllocation | views/AdmissionDischarge/ER/bed-type-allocation.html | bedTypeAllocationERController.js | 65 | 7 | yes (keyword match: triage) | no | bc:0/on:0/rs:1 |
-| bedUnderMaintenance | /bedUnderMaintenance | views/AdmissionDischarge/bed-under-maintenance.html | shared×353 | 4 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| cancelDischarge | /cancelDischarge | views/AdmissionDischarge/cancel-discharge.html | cancelPatientDischargeController.js | 5 | 6 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:2 |
-| cancelForDischarge | /cancelForDischarge | views/AdmissionDischarge/cancel-for-discharge.html | cancelForDischargeController.js | 4 | 2 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| cradleBedAllocation | /cradleBedAllocation | views/AdmissionDischarge/cradle-bed-allocation.html | shared×353 | 1 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| dayCareDischargeSummary | /dayCareDischargeSummary | views/AdmissionDischarge/discharge-summary.html | dayCareDischargeSummaryController.js | 98 | 43 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
-| dayCareFinalDischarge | /dayCareFinalDischarge | views/AdmissionDischarge/final-discharge.html | dayCareFinalDischargeController.js | 11 | 2 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| dayCarePatientForDischarge | /dayCarePatientForDischarge | views/AdmissionDischarge/patient-for-discharge.html | dayCarePatientForDischargeController.js | 37 | 15 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
-| dayCareWorklist | /dayCareWorklist | views/AdmissionDischarge/day-care-worklist.html | dayCareWorklistMasterController.js | 0 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| deathRegistration | /deathRegistration | views/AdmissionDischarge/death-registration.html | deathRegistrationController.js | 45 | 13 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| demoFooter | /demoFooter | views/AdmissionDischarge/demo-footer.html | shared×353 | 0 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| dischargeSummary | /dischargeSummary | views/AdmissionDischarge/discharge-summary.html | masterDischargeSummaryController.js | 98 | 72 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
-| dischargedPatients | /dischargedPatients | views/AdmissionDischarge/discharged-patients.html | dischargedPatientsController.js | 9 | 7 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| doctorRegistration | /doctorRegistration | views/AdmissionDischarge/doctor-master.html | doctorRegistrationController.js | 115 | 69 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| dueForDischarge | /dueForDischarge | views/due-for-discharge.html | dueForDischargeController.js | 7 | 9 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:2 |
-| encounter.nextOfKin | /nextOfKin | views/AdmissionDischarge/next-of-kin.html | – | 62 | – | yes (keyword match: encounter) | no | – |
-| erInitiateBedTransfer.erInitiateRequestTransferBed | /erInitiateRequestTransferBed | views/AdmissionDischarge/er-initiate-request-transfer-bed.html | erInitiateBedTransferController.js | 8 | 13 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
-| erMarkForDischarge | /erMarkForDischarge | views/AdmissionDischarge/ER/Er-mark-for-discharge.html | erMarkForDischargeController.js | 21 | 19 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
-| erPatientList | /erPatientList | views/AdmissionDischarge/ER/Er-patient-list.html | erPatientListController.js | 4 | 12 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| erTransferRequestAcceptance | /erTransferRequestAcceptance | views/AdmissionDischarge/er-transfer-request-acceptance.html | erTransferRequestAcceptanceController.js | 13 | 7 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| finalDischarge | /finalDischarge | views/AdmissionDischarge/final-discharge.html | finalDischargeController.js | 11 | 9 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| icuBedBookingStatus | /icuBedBookingStatus | views/AdmissionDischarge/icu-bed-booking-status.html | shared×353 | 1 | 0 | yes (keyword match: icu) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| intiateTransferCare | /intiateTransferCare | views/initiate-transfer-care.html | intiateTransferCareController.js | 12 | 13 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:12 |
-| newBornDetails | /newBornDetails | views/AdmissionDischarge/new-born-Details.html | newBornBabyDisplayController.js | 123 | 26 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| newBornRegistration | /newBornRegistration | views/AdmissionDischarge/new-born-registration.html | newBornBabyRegController.js | 18 | 4 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| patientDischarge | /patientDischarge | views/AdmissionDischarge/patient-discharge.html | cleanedBedAcceptController.js | 6 | 12 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| patientDischarged | /patientDischarged | views/AdmissionDischarge/patient-discharged.html | patientDischargedMasterController.js | 5 | 1 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| patientDischargedList | /patientDischargedList | views/AdmissionDischarge/patient-discharged-list.html | patientDischargedListController.js | 9 | 5 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| patientForDischarge | /patientForDischarge | views/AdmissionDischarge/patient-for-discharge.html | patientForDischargeController.js | 37 | 20 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
-| patientRegistration | /patientRegistration | views/AdmissionDischarge/patient-registration.html | patientRegistrationController.js | 527 | 54 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| patientRegistration.company | /company | views/AdmissionDischarge/company-patient-registration.html | – | 10 | – | yes (module default: ADT - Admission/Discharge) | no | – |
-| patientRegistration.contact | /contact | views/AdmissionDischarge/contact-registration.html | – | 19 | – | yes (module default: ADT - Admission/Discharge) | no | – |
-| patientRegistration.personal | /personal | views/AdmissionDischarge/personal-registration.html | – | 18 | – | yes (module default: ADT - Admission/Discharge) | no | – |
-| pendingInterConsult | /pendingInterConsult | views/pending-inter-consult.html | shared×353 | 9 | 0 | yes (keyword match: consult) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| pendingShortLeave | /pendingShortLeave | views/AdmissionDischarge/pending-short-leave.html | pendingShortLeaveController.js | 3 | 4 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| requestInterConsult | /requestInterConsult | views/request-inter-consult.html | shared×353 | 4 | 0 | yes (keyword match: consult) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| shortLeaveDischarge | /shortLeaveDischarge | views/AdmissionDischarge/short-leave-discharge.html | shortLeaveDischargeController.js | 7 | 4 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| shortLeaveStatus | /shortLeaveStatus | views/AdmissionDischarge/short-leave-status.html | shortLeaveStatusController.js | 16 | 9 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| staffRegistration | /staffRegistration | views/AdmissionDischarge/staff-master.html | staffRegistrationController.js | 132 | 51 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| transfer | /transfer | views/AdmissionDischarge/direct-transfer.html | directTransferController.js | 13 | 22 | yes (keyword match: bed transfer) | no | bc:0/on:0/rs:5 |
-| transferRequest | /transferRequest | views/AdmissionDischarge/transfer-request.html | shared×4 | 4 | 15 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
-| transferRequest.initiateRequestTransferBed | /initiateRequestTransferBed | views/AdmissionDischarge/transfer-bed-initiate-request.html | shared×4 | 8 | 15 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
-| transferRequest.physicalTransferBed | /physicalTransferBed | views/AdmissionDischarge/transfer-bed-physical.html | shared×4 | 4 | 15 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
-| transferRequestAcceptance | /transferRequestAcceptance | views/AdmissionDischarge/transfer-request-acceptance.html | transferRequestAcceptanceController.js | 17 | 8 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
-| unknownPatientReg | /unknownPatientReg | views/AdmissionDischarge/ER/unknown-patient-reg.html | unknownPatientRegController.js | 131 | 50 | yes (keyword match: encounter) | no | bc:0/on:0/rs:6 |
-| unknownPatientReg.nextKinDetailsForUnknown | /nextKinDetailsForUnknown | views/AdmissionDischarge/next-of-kin.html | unknownPatientRegController.js | 62 | 50 | yes (keyword match: encounter) | no | bc:0/on:0/rs:6 |
-| unknownPatientReg.personalForUnknown | /personalForUnknown | views/AdmissionDischarge/ER/unknown-personal.html | unknownPatientRegController.js | 15 | 50 | yes (keyword match: encounter) | no | bc:0/on:0/rs:6 |
-| updateDischargeSummary | /updateDischargeSummary | views/AdmissionDischarge/update-discharge-summary.html | updateDischargeSummaryController.js | 70 | 47 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
-
-### CSSD (58 screens)
+### Admin - Global Master (general) (65 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
-| KitIndent | /KitIndent | views/master/UnitMaster/CSSD/kit-indent.html | kitIndentController.js | 13 | 8 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
-| KitIndentAcceptance | /KitIndentAcceptance | views/master/UnitMaster/CSSD/kit-indent-acceptance.html | kitIndentAcceptanceController.js | 9 | 4 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
-| KitIndentApproval | /KitIndentApproval | views/master/UnitMaster/CSSD/kit-indent-approval.html | kitIndentApprovalController.js | 19 | 10 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
-| addNewKitIndent | /addNewKitIndent | views/master/UnitMaster/CSSD/add-new-kit-indent.html | addNewKitIndentController.js | 16 | 7 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
-| detailsKitIndentAcceptance | /detailsKitIndentAcceptance/:issueNo | views/master/UnitMaster/CSSD/details-kit-indent-acceptance.html | detailsKitIndentAcceptanceController.js | 15 | 5 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
-| updateKitIndent | /updateKitIndent/:indentNo | views/master/UnitMaster/CSSD/update-kit-indent.html | updateKitIndentController.js | 14 | 7 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
-| KitReturn | /KitReturn | views/master/UnitMaster/CSSD/kit-return.html | kitReturnController.js | 16 | 7 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| addNewCssdFixedAssetMaster | /addNewCssdFixedAssetMaster | views/master/UnitMaster/CSSD/add-new-cssd-fixed-asset-master.html | cssdOpeningStockController.js | 16 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| addNewKitReturn | /addNewKitReturn | views/master/UnitMaster/CSSD/add-new-kit-return.html | addNewKitReturnController.js | 23 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| addNewPreSterilizationCleaning | /addNewPreSterilizationCleaning | views/master/UnitMaster/CSSD/add-new-pre-sterilization-cleaning.html | addNewPreSterilizationCleaningController.js | 11 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| addNewSterilizationLoadBatch | /addNewSterilizationLoadBatch | views/master/UnitMaster/CSSD/add-new-sterilization-load-batch.html | addNewSterilizationLoadBatchController.js | 17 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| addNewSterilizationPendingIndicators | /addNewSterilizationPendingIndicators | views/master/UnitMaster/CSSD/add-new-sterilization-pending-indicators.html | shared×353 | 6 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewSterilizationProcess | /addNewSterilizationProcess | views/master/UnitMaster/CSSD/add-new-sterilization-process.html | shared×353 | 10 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewkitIssue | /addNewkitIssue | views/master/UnitMaster/CSSD/add-new-kit-Issue.html | addNewkitIssueController.js | 39 | 13 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| addNewpreSterilizationProcess | /addNewpreSterilizationProcess | views/master/UnitMaster/CSSD/add-new-pre-sterilization-process.html | shared×353 | 3 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewpreSterilizationProcess.dis-Infection | /dis-Infection | views/master/UnitMaster/CSSD/dis-Infection.html | shared×353 | 1 | 0 | yes (keyword match: infection) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewpreSterilizationProcess.inspection | /inspection | views/master/UnitMaster/CSSD/inspection.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewpreSterilizationProcess.instrumentCleaning | /instrumentCleaning | views/master/UnitMaster/CSSD/instrumentCleaning.html | shared×353 | 4 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewpreSterilizationProcess.kitFormation | /kitFormation | views/master/UnitMaster/CSSD/kit-Formation.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewpreSterilizationProcess.wrapper | /wrapper | views/master/UnitMaster/CSSD/wrapper.html | shared×353 | 2 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| application | /application | views/master/UnitMaster/CSSD/application.html | shared×353 | 5 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| autoclaveMaster | /autoclaveMaster | views/master/UnitMaster/CSSD/autoclave-master.html | autoClaveMasterController.js | 10 | 7 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| detailsApplication | /detailsApplication | views/master/UnitMaster/CSSD/details-application.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsApplicationKit | /detailsApplicationKit | views/master/UnitMaster/CSSD/details-application-kit.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsKitReturn | /detailsKitReturn/:returnNo | views/master/UnitMaster/CSSD/details-kit-return.html | detailsKitReturnController.js | 5 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| detailsSendtoMicrobiology | /detailsSendtoMicrobiology/:batchNo | views/master/UnitMaster/CSSD/details-send-to-microbiology.html | detailsSendtoMicrobiologyController.js | 1 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| detailsSterilizationRequest | /detailsSterilizationRequest/:requestNo | views/master/UnitMaster/CSSD/details-sterilization-request.html | detailsSterilizationRequestController.js | 2 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| detailsSterilizationRequestAcceptance | /detailsSterilizationRequestAcceptance/:requestNo | views/master/UnitMaster/CSSD/details-sterilization-request-acceptance.html | detailsSterilizationRequestAcceptanceController.js | 9 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| detailskitIssue | /detailskitIssue/:issueNo | views/master/UnitMaster/CSSD/details-kit-Issue.html | detailskitIssueController.js | 2 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| kitCreation | /kitCreation | views/master/UnitMaster/CSSD/kit-creation.html | kitCreationController.js | 41 | 9 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| kitIssue | /kitIssue | views/master/UnitMaster/CSSD/kit-Issue.html | kitIssueController.js | 17 | 11 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| preSterilizationCleaning | /preSterilizationCleaning | views/master/UnitMaster/CSSD/pre-sterilization-cleaning.html | preSterilizationCleaningController.js | 14 | 4 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| preSterilizationDisInfection | /preSterilizationDisInfection | views/master/UnitMaster/CSSD/pre-sterilization-disinfection.html | preSterilizationDisInfectionController.js | 4 | 2 | yes (keyword match: infection) | no | bc:0/on:0/rs:3 |
-| preSterilizationInspection | /preSterilizationInspection | views/master/UnitMaster/CSSD/pre-sterilization-inspection.html | preSterilizationInspectionController.js | 4 | 2 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| preSterilizationKitFormation | /preSterilizationKitFormation | views/master/UnitMaster/CSSD/pre-sterilization-kit-formation.html | preSterilizationKitFormationController.js | 4 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| preSterilizationProcess | /preSterilizationProcess | views/master/UnitMaster/CSSD/pre-sterilization-process.html | preSterilizationCleaningController.js | 4 | 4 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| sendtoMicrobiology | /sendtoMicrobiology | views/master/UnitMaster/CSSD/send-to-microbiology.html | sendtoMicrobiologyController.js | 4 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| showPreSterilizationCleaning | /showPreSterilizationCleaning/:kitId | views/master/UnitMaster/CSSD/view-pre-sterilization-cleaning.html ✗ | viewPreSterilizationCleaningController.js | – | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| showPreSterilizationDisInfection | /showPreSterilizationDisInfection/:transitionNumber | views/master/UnitMaster/CSSD/view-pre-sterilization-disinfection.html | viewPreSterilizationDisInfectionController.js | 22 | 5 | yes (keyword match: infection) | no | bc:0/on:0/rs:2 |
-| showPreSterilizationInspection | /showPreSterilizationInspection/:transitionNumber | views/master/UnitMaster/CSSD/view-pre-sterilization-inspection.html | viewPreSterilizationInspectionController.js | 26 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| showPreSterilizationKitFormation | /showPreSterilizationKitFormation/:transitionNumber | views/master/UnitMaster/CSSD/view-pre-sterilization-kit-formation.html | viewPreSterilizationKitFormationController.js | 28 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| showSterilizationLoadBatch | /showSterilizationLoadBatch/:batchNo | views/master/UnitMaster/CSSD/view-sterilization-load-batch.html | viewSterilizationLoadBatchController.js | 1 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| showSterilizationPendingIndicators | /showSterilizationPendingIndicators/:batchNo | views/master/UnitMaster/CSSD/view-sterilization-pending-indicators.html | viewSterilizationPendingIndicatorsController.js | 8 | 4 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| sterilizationDirectIssue | /sterilizationDirectIssue | views/master/UnitMaster/CSSD/sterilization-direct-issue.html | sterilizationDirectIssueController.js | 21 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| sterilizationLoadBatch | /sterilizationLoadBatch | views/master/UnitMaster/CSSD/sterilization-load-batch.html | sterilizationLoadBatchController.js | 7 | 2 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| sterilizationPendingIndicators | /sterilizationPendingIndicators | views/master/UnitMaster/CSSD/sterilization-pending-indicators.html | sterilizationPendingIndicatorsController.js | 5 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| sterilizationProcess | /sterilizationProcess | views/master/UnitMaster/CSSD/sterilization-process.html | shared×353 | 3 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| sterilizationRequest | /sterilizationRequest | views/master/UnitMaster/CSSD/sterilization-request.html | sterilizationRequestController.js | 11 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| sterilizationRequestAcceptance | /sterilizationRequestAcceptance | views/master/UnitMaster/CSSD/sterilization-request-acceptance.html | sterilizationRequestAcceptanceController.js | 10 | 4 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| sterilizationTypeMaster | /sterilizationTypeMaster | views/master/UnitMaster/CSSD/sterilization-type-master.html | sterilizationTypeMasterController.js | 5 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
-| updateKitIssue | /updateKitIssue/:issueNo | views/master/UnitMaster/CSSD/update-kit-issue.html | updateKitIssueController.js | 42 | 13 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| updateKitReturn | /updateKitReturn/:returnNo | views/master/UnitMaster/CSSD/update-kit-return.html | updateKitReturnController.js | 21 | 7 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| updateSterilizationRequest | /updateSterilizationRequest/:requestNo | views/master/UnitMaster/CSSD/update-sterilization-request.html | updateSterilizationRequestController.js | 21 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| viewCleanedList | /viewCleanedList/:transitionNumber | views/master/UnitMaster/CSSD/view-Cleaned-List.html | viewPreSterilizationCleaningController.js | 2 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| viewPendingCleaningList | /viewPendingCleaningList/:transitionNumber | views/master/UnitMaster/CSSD/view-Pending-Cleaning-List.html | viewPreSterilizationPendingCleaningController.js | 22 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
-| viewPendingList | /viewPendingList | views/master/UnitMaster/CSSD/view-pending-list.html | shared×353 | 3 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| viewSterilizationProcess | /viewSterilizationProcess | views/master/UnitMaster/CSSD/view-sterilization-process.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| wrapperExpiryMaster | /wrapperExpiryMaster | views/master/UnitMaster/CSSD/wrapper-expiry-master.html | wrapperExpiryMasterController.js | 7 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| consentMaster | /consentMaster | views/master/GlobalMaster/consent-master.html | consentMasterController.js | 21 | 11 | yes (keyword match: consent) | no | bc:0/on:0/rs:1 |
+| consentTypeMaster | /consentTypeMaster | views/master/GlobalMaster/consent-type-master.html | consentTypeMasterController.js | 11 | 7 | yes (keyword match: consent) | no | bc:0/on:0/rs:1 |
+| deliveryTypeMaster | /deliveryTypeMaster | views/master/GlobalMaster/delivery-type-master.html | deliveryTypeMasterController.js | 8 | 5 | yes (keyword match: delivery) | no | bc:0/on:0/rs:1 |
+| encounterTypeMaster | /encounterTypeMaster | views/master/GlobalMaster/encounter-type-master.html | encounterTypeMasterController.js | 10 | 8 | yes (keyword match: encounter) | no | bc:0/on:0/rs:1 |
+| formulationTypeToDosageMapper | /formulationTypeToDosageMapper | views/master/GlobalMaster/formulation-type-to-dosage-mapper.html | formulationTypeToDosageTypeMapperController.js | 13 | 7 | yes (keyword match: dosage) | no | bc:0/on:0/rs:2 |
+| patientSourceMaster | /patientSourceMaster | views/master/GlobalMaster/patient-source-master.html | patientSourceMasterController.js | 6 | 7 | yes (keyword match: referral) | no | bc:0/on:0/rs:1 |
+| referralTypeMaster | /referralTypeMaster | views/master/GlobalMaster/referral-type-master.html | referralTypeMasterController.js | 6 | 7 | yes (keyword match: referral) | no | bc:0/on:0/rs:1 |
+| unitMaster | /unitMaster | views/master/GlobalMaster/unit-master.html | shared×353 | 16 | 0 | yes (keyword match: clinical) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| vitalQualifierMapper | /vitalQualifierMapper | views/master/GlobalMaster/vital-qualifier-mapper.html | vitalQualifierMapperController.js | 11 | 10 | yes (keyword match: vital) | no | bc:0/on:0/rs:1 |
+| vitalQualifierMaster | /vitalQualifierMaster | views/master/GlobalMaster/vital-qualifier-master.html | vitalQualifierMasterController.js | 6 | 8 | yes (keyword match: vital) | no | bc:0/on:0/rs:1 |
+| cardTypeMaster | /cardTypeMaster | views/master/GlobalMaster/card-type-master.html | cardTypeMasterController.js | 6 | 4 | no | yes (keyword match: card) | bc:0/on:0/rs:1 |
+| identificationMaster | /identificationMaster | views/master/GlobalMaster/identificationMaster.html | identificationMasterController.js | 15 | 7 | no | yes (keyword match: card) | bc:0/on:0/rs:1 |
+| otherCharges | /otherCharges | views/master/GlobalMaster/other-charges.html | otherChargesMasterController.js | 6 | 5 | no | yes (keyword match: charge) | bc:0/on:0/rs:1 |
+| taxComponentMaster | /taxComponentMaster | views/master/GlobalMaster/tax-component-master.html | taxComponentMasterController.js | 7 | 5 | no | yes (keyword match: tax) | bc:0/on:0/rs:1 |
+| taxMaster | /taxMaster | views/master/GlobalMaster/tax-master.html | taxMasterController.js | 12 | 9 | no | yes (keyword match: tax) | bc:0/on:0/rs:1 |
+| ICPCMapper | /ICPCMapper | views/master/GlobalMaster/ICPC-mapper.html | iCPCMapperController.js | 4 | 10 | no | no | bc:0/on:0/rs:1 |
+| Qmslogo | /qmslogo | views/master/GlobalMaster/qms-logo.html | qmslogo.js | 8 | 0 | no | no | bc:0/on:0/rs:1 |
+| activitiesMaster | /activity | views/master/GlobalMaster/activity.html | activityMasterController.js | 5 | 4 | no | no | bc:0/on:0/rs:2 |
+| areaMaster | /areaMaster | views/master/GlobalMaster/area-master.html | areaMasterController.js | 15 | 12 | no | no | bc:0/on:0/rs:1 |
+| bankBranch | /bankBranch | views/master/GlobalMaster/bank-Branch.html | bankBranchController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| bankMaster | /bankMaster | views/master/GlobalMaster/bank-master.html | bankMasterController.js | 7 | 8 | no | no | bc:0/on:0/rs:1 |
+| careplanMaster | /careplan | views/master/GlobalMaster/care-plan.html | carePlanMasterController.js | 5 | 5 | no | no | bc:0/on:0/rs:2 |
+| cityMaster | /cityMaster | views/master/GlobalMaster/city-master.html | cityMasterController.js | 13 | 11 | no | no | bc:0/on:0/rs:1 |
+| clinicMaster | /clinicMaster | views/master/GlobalMaster/clinic-master.html | clinicMasterController.js | 9 | 7 | no | no | bc:0/on:0/rs:1 |
+| countryMaster | /countryMaster | views/master/GlobalMaster/country-master.html | countryMasterController.js | 13 | 7 | no | no | bc:0/on:0/rs:1 |
+| districtMaster | /districtMaster | views/master/GlobalMaster/district-master.html | districtMasterController.js | 12 | 9 | no | no | bc:0/on:0/rs:1 |
+| doorToNeedle | /doorToNeedle | views/master/GlobalMaster/door_to_needle.html | doorToNeedleController.js | 4 | 4 | no | no | bc:0/on:0/rs:1 |
+| employeeCategory | /employeeCategory | views/master/GlobalMaster/emplyoee-category.html | employeeCategoryController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| genericScheduleMaster | /genericScheduleMaster | views/master/GlobalMaster/generic-schedule-master.html | genericScheduleMasterController.js | 8 | 10 | no | no | bc:0/on:0/rs:1 |
+| globalServiceMaster | /globalServiceMaster | views/master/GlobalMaster/global-service-master.html | globalServiceMasterController.js | 30 | 15 | no | no | bc:0/on:0/rs:2 |
+| gradeCreationMaster | /gradeCreationMaster | views/master/GlobalMaster/grade-creation-master.html | gradeCreationMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| holidayCalenderMaster | /holidayCalenderMaster | views/master/GlobalMaster/holiday-calendar-master.html | holidayCalenderMasterController.js | 14 | 9 | no | no | bc:0/on:0/rs:1 |
+| hospitalMaster | /hospitalMaster | views/master/GlobalMaster/hospital-master.html | hospitalMasterController.js | 48 | 27 | no | no | bc:0/on:1/rs:2 [on:fileProgress] |
+| instructionMaster | /instructionMaster | views/master/GlobalMaster/instruction-master.html | inspectionMasterController.js | 11 | 14 | no | no | bc:0/on:0/rs:1 |
+| interventionsMaster | /intervention | views/master/GlobalMaster/intervention.html | interventionMasterController.js | 5 | 5 | no | no | bc:0/on:0/rs:2 |
+| mailConfiguration | /mailConfiguration | views/master/GlobalMaster/mail-utility-configuration.html | mailUtilityConfigurationController.js | 32 | 7 | no | no | bc:0/on:0/rs:1 |
+| manufacturerMaster | /manufacturerMaster | views/master/GlobalMaster/manufacturer-master.html | manufacturerMasterController.js | 9 | 6 | no | no | bc:0/on:0/rs:1 |
+| maritalstatusMaster | /maritalstatusMaster | views/master/GlobalMaster/marital-status-master.html | maritalstatusMasterController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
+| nationalityMaster | /nationalityMaster | views/master/GlobalMaster/nationality-master.html | nationalityMasterController.js | 11 | 8 | no | no | bc:0/on:0/rs:1 |
+| occupationMaster | /occupationMaster | views/master/GlobalMaster/occupation-master.html | occupationMasterController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
+| organizationMaster | /organizationMaster | views/master/GlobalMaster/organizationMaster.html | organizationController.js | 31 | 18 | no | no | bc:0/on:1/rs:3 [on:fileProgress] |
+| outSideHospitalMaster | /outSideHospitalMaster | views/master/GlobalMaster/out-side-hospital-master.html | outSideHospitalMasterController.js | 15 | 11 | no | no | bc:0/on:0/rs:1 |
+| patientCategory | /patientCategory | views/master/GlobalMaster/patient-category-master.html | patientCategoryController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
+| pharmacyformulationTypeMaster | /pharmacyformulationTypeMaster | views/master/GlobalMaster/pharmacy-formulation-type-master.html | formulationTypeMasterController.js | 9 | 5 | no | no | bc:0/on:0/rs:1 |
+| pharmacyproductCategoryMaster | /pharmacyproductCategoryMaster | views/master/GlobalMaster/pharmacy-product-category-master.html | productCategoryController.js | 11 | 10 | no | no | bc:0/on:0/rs:1 |
+| prefixMaster | /prefixMaster | views/master/GlobalMaster/prefix-master.html | prefixMasterController.js | 12 | 9 | no | no | bc:0/on:0/rs:1 |
+| productstrengthMaster | /productstrengthMaster | views/master/GlobalMaster/product-strength-master.html | shared×353 | 6 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| raceMaster | /raceMaster | views/master/GlobalMaster/race-master.html | raceMasterController.js | 11 | 8 | no | no | bc:0/on:0/rs:1 |
+| reasonMaster | /reasonMaster | views/master/GlobalMaster/reason-master.html | reasonMasterController.js | 7 | 13 | no | no | bc:0/on:0/rs:1 |
+| reasonTypeMaster | /reasonTypeMaster | views/master/GlobalMaster/reason-type-master.html | reasonTypeMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| rejectionMaster | /rejectionMaster | views/master/GlobalMaster/rejection-master.html | rejectionMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| relationMaster | /relationMaster | views/master/GlobalMaster/relation-master.html | relationMasterController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
+| religionMaster | /religionMaster | views/master/GlobalMaster/religion-master.html | religionMasterController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
+| scoreMaster | /score | views/master/GlobalMaster/score-master.html | scoreMasterController.js | 10 | 5 | no | no | bc:0/on:0/rs:2 |
+| serviceMaster | /serviceMaster | views/master/GlobalMaster/service-master.html | serviceMasterController.js | 17 | 18 | no | no | bc:0/on:0/rs:1 |
+| siteOfAdministration | /siteOfAdministration | views/master/GlobalMaster/site-of-administration.html | siteOfAdministartionController.js | 5 | 8 | no | no | bc:0/on:0/rs:1 |
+| smsConfiguration | /smsConfiguration | views/master/GlobalMaster/sms-utility-configuration.html | smsUtilityConfigurationController.js | 31 | 9 | no | no | bc:0/on:0/rs:1 |
+| specialityMaster | /specialityMaster | views/master/GlobalMaster/department-master-global.html | specialityMasterController.js | 20 | 11 | no | no | bc:0/on:0/rs:1 |
+| stateMaster | /stateMaster | views/master/GlobalMaster/state-master.html | stateMasterController.js | 11 | 9 | no | no | bc:0/on:0/rs:1 |
+| subSpecialityMaster | /subSpecialityMaster | views/master/GlobalMaster/sub-department-Master.html | subSpecialityMasterController.js | 17 | 10 | no | no | bc:0/on:0/rs:1 |
+| systemMaster | /systemMaster | views/master/GlobalMaster/system-master.html | systemMasterController.js | 8 | 7 | no | no | bc:0/on:0/rs:1 |
+| systemObservationMaster | /systemObservationMaster | views/master/GlobalMaster/system-observation-master.html | systemObservationMasterController.js | 14 | 8 | no | no | bc:0/on:0/rs:1 |
+| transactionLog | /transactionLog | views/master/GlobalMaster/transaction-log.html | billingTransactionLogController.js | 5 | 3 | no | no | bc:0/on:0/rs:1 |
+| transactionTypeMaster | /transactionTypeMaster | views/master/GlobalMaster/transaction-type-master.html | transactionTypeMasterController.js | 6 | 4 | no | no | bc:0/on:0/rs:1 |
+| uhidMergeRequest | /uhidMergeRequest | views/master/GlobalMaster/uhid-merge.html | uhidMergeRequestController.js | 20 | 6 | no | no | bc:0/on:0/rs:3 |
 
-### OT/Theatre (54 screens)
+### OT/Theatre (64 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
+| OTBillingCompletion | /OTBillingCompletion | views/master/TheatreManagement/OT-billing-completion.html | otBillingCompletionController.js | 74 | 3 | yes (keyword match: ot) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
 | OTbillOfMaterial | /OTbillOfMaterial | views/master/TheatreManagement/OT-bill-of-material.html | billOfMaterialController.js | 13 | 12 | yes (keyword match: ot) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| addNewImplantIndent | /addNewImplantIndent | views/master/TheatreManagement/add-new-implant-indent.html | addNewImplantIndentController.js | 23 | 12 | yes (keyword match: implant) | yes (keyword match: indent) | bc:0/on:0/rs:1 |
 | billOfMaterialMaster | /billOfMaterialMaster | views/master/TheatreManagement/bill-of-material-master.html | billOfMaterialMasterController.js | 10 | 9 | yes (module default: OT/Theatre) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| detailsImplantIndent | /detailsImplantIndent | views/master/TheatreManagement/details-implant-indent.html | detailsImplantIndentController.js | 2 | 1 | yes (keyword match: implant) | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsImplantIndentAcceptance | /detailsImplantIndentAcceptance | views/master/TheatreManagement/details-implant-indent -acceptance.html | detailsImplantIndentAcceptanceController.js | 9 | 2 | yes (keyword match: implant) | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| detailsOTBillingCompletion | /detailsOTBillingCompletion | views/master/TheatreManagement/details-OT-billing-completion.html | otBillingCompletionDetailsController.js | 165 | 64 | yes (keyword match: ot) | yes (keyword match: bill) | bc:0/on:0/rs:4 |
+| implantIndent | /implantIndent | views/master/TheatreManagement/implant-indent.html | implantIndentController.js | 11 | 4 | yes (keyword match: implant) | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| implantIndentAcceptance | /implantIndentAcceptance | views/master/TheatreManagement/implant-indent -acceptance.html | implantIndentAcceptanceController.js | 8 | 4 | yes (keyword match: implant) | yes (keyword match: indent) | bc:0/on:0/rs:1 |
 | insuranceCompany | /insuranceCompany | views/master/GlobalMaster/OTIMS/insurance_company.html | shared×353 | 4 | 0 | yes (keyword match: otims) | yes (keyword match: insurance) | bc:0/on:1/rs:1 [on:customEvent] |
 | otBillingCompletionDetails | /detailsOTBillingCompletion | views/master/TheatreManagement/details-OT-billing-completion.html | otBillingCompletionDetailsController.js | 165 | 64 | yes (keyword match: ot) | yes (keyword match: bill) | bc:0/on:0/rs:4 |
 | otIndent | /otIndent | views/master/TheatreManagement/ot-Indent.html | shared×353 | 20 | 0 | yes (keyword match: ot) | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
 | resourceChargesConfiguration | /resourceChargesConfiguration | views/master/GlobalMaster/OTIMS/resource-charges-configuration.html | resourceChargesConfigurationController.js | 7 | 8 | yes (keyword match: otims) | yes (keyword match: charge) | bc:0/on:0/rs:1 |
 | NewOTreservation | /NewOTreservation | views/master/TheatreManagement/New-OT-reservation.html | NewOTreservationController.js | 128 | 99 | yes (keyword match: ot) | no | bc:0/on:0/rs:5 |
+| OTCompletion | /OTCompletion | views/master/TheatreManagement/OT-completion.html | otCompletionController.js | 6 | 3 | yes (keyword match: ot) | no | bc:0/on:0/rs:1 |
 | OTIMSUser | /OTIMSUser | views/master/GlobalMaster/OTMS/OTIMS-user-master.html | shared×353 | 9 | 0 | yes (keyword match: otims, otms) | no | bc:0/on:1/rs:1 [on:customEvent] |
 | OTIMSdashboard | /OTIMSdashboard | views/master/GlobalMaster/OTIMS/OTIMS-dashboard.html | OTIMSdashboardController.js | 6 | 7 | yes (keyword match: otims) | no | bc:0/on:0/rs:1 |
 | OTIMSdashboardInfo | /OTIMSdashboardInfo | views/master/GlobalMaster/OTIMS/OTIMS-dashboard-info.html | OTIMSdashboardInfoController.js | 17 | 17 | yes (keyword match: otims) | no | bc:0/on:0/rs:1 |
@@ -666,8 +1112,10 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | OTreservation | /OTreservation | views/master/TheatreManagement/OT-reservation.html | OTreservationController.js | 90 | 28 | yes (keyword match: ot) | no | bc:0/on:0/rs:2 |
 | OTreservationCancellation | /OTreservationCancellation | views/master/TheatreManagement/OT-reservation-cancellation.html | OTreservationCancellationController.js | 45 | 7 | yes (keyword match: ot) | no | bc:0/on:0/rs:1 |
 | addNewConsumablePatientImplantReturn | /addNewConsumablePatientImplantReturn | views/master/TheatreManagement/add-new-consumable-patient-implant-return.html | shared×353 | 19 | 0 | yes (keyword match: implant) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| additionalOtTimeConfiguration | /additionalOtTimeConfiguration | views/master/GlobalMaster/OTIMS/addtionalOtTimeConfig.html | addtionOtTimeConfig.js | 6 | 4 | yes (keyword match: ot, otims) | no | bc:0/on:0/rs:1 |
 | anaesthesiaType | /anaesthesiaType | views/master/GlobalMaster/OTIMS/anaesthesia_type.html | anaesthesiaTypeController.js | 6 | 7 | yes (keyword match: anaesthes, otims) | no | bc:0/on:0/rs:1 |
 | anesthesiaNote | /anesthesiaNote | views/master/TheatreManagement/anesthesia-note.html | anesthesiaNoteMasterController.js | 6 | 6 | yes (keyword match: anesthes) | no | bc:0/on:0/rs:1 |
+| appointmentTemplateMaster | /appointmentTemplateMaster | views/master/TheatreManagement/appointment-template-master.html | appointmentTemplateMasterController.js | 21 | 7 | yes (module default: OT/Theatre) | no | bc:0/on:0/rs:1 |
 | cancellationMaster | /cancellationMaster | views/master/GlobalMaster/OTIMS/cancellation-reason.html | shared×353 | 4 | 0 | yes (keyword match: otims) | no | bc:0/on:1/rs:1 [on:customEvent] |
 | checklistItem | /checklistItem | views/master/GlobalMaster/OTIMS/checklist_master.html | checklistItemMasterController.js | 5 | 4 | yes (keyword match: checklist, otims) | no | bc:0/on:0/rs:1 |
 | checklistMaster | /checklistMaster | views/master/GlobalMaster/OTIMS/checklist-item-master.html | checklistMasterController.js | 12 | 7 | yes (keyword match: checklist, otims) | no | bc:0/on:0/rs:1 |
@@ -704,6 +1152,201 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | surgicalCalendar | /surgicalCalendar | views/master/GlobalMaster/OTIMS/surgical-calender.html | surgicalCalendarMasterController.js | 13 | 9 | yes (keyword match: otims) | no | bc:0/on:0/rs:1 |
 | typeOfStay | /typeOfStay | views/master/GlobalMaster/OTIMS/type_of_stay.html | shared×353 | 4 | 0 | yes (keyword match: otims) | no | bc:0/on:1/rs:1 [on:customEvent] |
 | uomMaster | /uomMaster | views/master/GlobalMaster/OTMS/uom-master.html | shared×353 | 4 | 0 | yes (keyword match: otms) | no | bc:0/on:1/rs:1 [on:customEvent] |
+
+### Nursing (61 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| sampleCollection | /patientDiagnostic | views/Nursing/sample-collection.html | sampleCollectionIPController.js | 11 | 22 | yes (keyword match: diagnos, nursing) | yes (keyword match: collection) | bc:0/on:0/rs:1 |
+| HandHygieneSurvey | /handHygieneSurvey | views/Nursing/hand-hygiene-survey.html | handHygieneSurveyController.js | 32 | 3 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| LaboratoryInspectionChecklist | /laboratoryInspectionChecklist | views/Nursing/laboratory-inspection-checklist.html | laboratoryInspectionChecklistController.js | 16 | 6 | yes (keyword match: checklist, nursing) | no | bc:0/on:0/rs:1 |
+| OTRequest | /OTRequest | views/Nursing/OT-request.html | OTRequestController.js | 3 | 3 | yes (keyword match: nursing, ot) | no | bc:0/on:0/rs:1 |
+| PatientFallReporting | /patientFallReporting | views/Nursing/patient-fall-reporting.html | patientFallReportingController.js | 74 | 5 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| SurgicalSiteInfection | /surgicalSiteInfection | views/Nursing/surgical-site-infection.html | surgicalSiteInfectionController.js | 58 | 1 | yes (keyword match: infection, nursing) | no | bc:0/on:0/rs:1 |
+| UtiReporting | /utiReporting | views/Nursing/uti-reporting.html | utiReportingController.js | 28 | 1 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| abscondingPatient | /abscondingPatient | views/Nursing/absconding-patient.html | shared×353 | 3 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewVitals | /addNewVitals | views/Nursing/add-new-vitals.html | VitalAddController.js | 17 | 2 | yes (keyword match: nursing, vital) | no | bc:0/on:0/rs:1 |
+| addnewDaywiseRotaCreation | /addnewDaywiseRotaCreation | views/Nursing/add-new-day-wise-rota-creation.html | shared×353 | 7 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addnewRotaCreation | /addnewRotaCreation | views/Nursing/add-new-rota-creation.html | shared×353 | 6 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| administrationWorklist | /administrationWorklist | views/Nursing/administration-worklist.html | administrationWorklistMasterController.js | 36 | 18 | yes (keyword match: nursing) | no | bc:0/on:0/rs:2 |
+| allergies | /allergies | views/Nursing/allergies.html | allergiesController.js | 18 | 17 | yes (keyword match: allerg, nursing) | no | bc:0/on:0/rs:1 |
+| bloodIssueAcceptanceWorklist | /bloodIssueAcceptanceWorklist | views/Nursing/blood-issue-acceptance-worklist.html | bloodIssueAcceptanceWorklistController.js | 38 | 11 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| cabinDisplay | /cabinDisplay/:orgId/:unitId/:doctorId | views/Nursing/cabin-display.html | cabinDisplayController.js | 0 | 0 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| consultantDisplay | /consultantDisplay/:orgId/:unitId/:cabinId | views/Nursing/consultant-display.html | consultantDisplayController.js | 0 | 0 | yes (keyword match: consult, nursing) | no | bc:0/on:0/rs:1 |
+| dayCareNursingCoversheet | /dayCareNursingCoversheet | views/Nursing/nursing-coversheet.html | dayCareNurshingCoversheetController.js | 1253 | 347 | yes (keyword match: nursing) | no | bc:0/on:0/rs:22 |
+| drugAdministrator | /drugAdministrator | views/Nursing/drug-administrator.html | drugAdministratorController.js | 42 | 20 | yes (keyword match: drug, nursing) | no | bc:0/on:0/rs:1 |
+| erInitiateBedTransfer | /erInitiateBedTransfer | views/Nursing/er-initiate-bed-transfer.html | erInitiateBedTransferController.js | 1 | 13 | yes (keyword match: bed transfer, nursing) | no | bc:0/on:0/rs:4 |
+| erInitiateBedTransfer.erPhysicalInitiateTransferBed | /erPhysicalInitiateTransferBed | views/Nursing/er-initiate-bed-physical.transfer.html | shared×353 | 2 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| erNursingCoversheet | /erNursingCoversheet | views/Nursing/nursing-coversheet.html | erNursingCoverSheetController.js | 1253 | 358 | yes (keyword match: nursing) | no | bc:0/on:0/rs:22 |
+| growthChart | /growthChart | views/Nursing/growth-chart.html | growthChartController.js | 16 | 8 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| hemodialysisRoomTransferRequestAcceptance | /hemodialysisRoomTransferRequestAcceptance | views/Nursing/hemodialysis-room-transfer-request-acceptance.html | hemodialysisRoomTransferRequestAcceptanceController.js | 15 | 5 | yes (keyword match: hemodialysis, nursing) | no | bc:0/on:0/rs:1 |
+| initiateBedTransfer | /initiateBedTransfer | views/Nursing/initiate-bed-transfer.html | initiateBedTransferController.js | 1 | 12 | yes (keyword match: bed transfer, nursing) | no | bc:0/on:0/rs:4 |
+| initiateBedTransfer.initiateRequestTransferBed | /initiateRequestTransferBed | views/Nursing/initiate-request-transfer-bed.html | initiateBedTransferController.js | 8 | 12 | yes (keyword match: bed transfer, nursing) | no | bc:0/on:0/rs:4 |
+| initiateBedTransfer.physicalInitiateTransferBed | /physicalInitiateTransferBed | views/Nursing/initiate-bed-physical-transfer.html | initiateBedTransferController.js | 6 | 12 | yes (keyword match: nursing) | no | bc:0/on:0/rs:4 |
+| inputOutputChartHistory | /inputOutputChartHistory | views/Nursing/input-output-chart-history.html | inputOutputChartHistoryController.js | 4 | 11 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| inputOutputCharts | /inputOutputCharts | views/Nursing/input-output-charts.html | inputOutputChartsController.js | 36 | 15 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| laborRoomTransferRequestAcceptance | /laborRoomTransferRequestAcceptance | views/Nursing/labor-room-transfer-request-acceptance.html | laborRoomTransferRequestAcceptanceController.js | 17 | 11 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| medicationAcceptance | /medicationAcceptance | views/Nursing/medication-acceptance.html | shared×353 | 27 | 0 | yes (keyword match: medication, nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| medicationErrorReporting | /medicationErrorReporting | views/Nursing/medicationErrorReporting.html | medicationErrorReportingController.js | 40 | 1 | yes (keyword match: medication, nursing) | no | bc:0/on:0/rs:1 |
+| newPeriodicityService | /newPeriodicityService | views/Nursing/new-periodicity-Service.html | shared×353 | 3 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| nurseAllocationMsaster | /nurseAllocationMsaster | views/Nursing/nurse-Allocation-master.html | nurseAllocationMsasterController.js | 23 | 14 | yes (keyword match: nursing) | no | bc:0/on:0/rs:2 |
+| nursingAllocationDashboard | /nursingAllocationDashboard | views/Nursing/nursing-Allocation-Dashboard.html | nurseAllocationDashboardController.js | 11 | 13 | yes (keyword match: nursing) | no | bc:0/on:0/rs:2 |
+| nursingCoversheet | /nursingCoversheet | views/Nursing/nursing-coversheet.html | nursingCoverSheetController.js | 1253 | 354 | yes (keyword match: nursing) | no | bc:1/on:2/rs:22 [bc:coversheetSpeech:stop; on:$destroy,coversheetSpeech:stop] |
+| nursingDisplay | /nursingDisplay/:orgId/:unitId/:nursingStationId | views/Nursing/nursing-assesment.html | nursingAssesmentDisplayController.js | 0 | 1 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| nursingHandover | /nursingHandover | views/Nursing/nursing-handover.html | shared×353 | 148 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| nursingOrder | /nursingOrder | views/Nursing/nursing-order.html | shared×353 | 6 | 0 | yes (keyword match: nursing, nursing order) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| nursingOrderForNurse | /nursingOrderForNurse | views/Nursing/nursing-order-for-nurse.html | shared×353 | 8 | 0 | yes (keyword match: nursing, nursing order) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| nursingOrderView | /nursingOrderView | views/Nursing/nursing-order-view.html | nursingOrderViewMasterController.js | 4 | 9 | yes (keyword match: nursing, nursing order) | no | bc:0/on:0/rs:1 |
+| nursingProgressNote | /nursingProgressNote | views/Nursing/nursing-progress-note.html | shared×353 | 4 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| nursingShiftDashboard | /nursingShiftDashboard | views/Nursing/nursing-Shift-Dashboard.html | nursingShiftDashboardController.js | 2 | 2 | yes (keyword match: nursing) | no | bc:0/on:0/rs:2 |
+| nutritionalAssessment | /nutritionalAssessment | views/Nursing/nutritional-assessment.html | nutritionalAssessmentController.js | 28 | 7 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| pendingConsultOrderRequest | /pendingConsultOrderRequest | views/Nursing/pending-inter-consult-request.html | pendingInterConsultRequestController.js | 4 | 7 | yes (keyword match: consult, nursing) | no | bc:0/on:0/rs:12 |
+| pendingNursingOrder | /pendingNursingOrder | views/Nursing/pending-nursing-order.html | shared×353 | 1 | 0 | yes (keyword match: nursing, nursing order) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| pendingOrders | /pendingOrders | views/Nursing/pending-orders.html | allPendingOrdersForNursingController.js | 14 | 14 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| periodicityService | /periodicityService | views/Nursing/periodicity-Service.html | periodicityServiceOrdersController.js | 24 | 11 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| pocWorklist | /pocWorklist | views/Nursing/poc-worklist.html | pocWorklistController.js | 16 | 14 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| rotaCreation | /rotaCreation | views/Nursing/rota-creation.html | shared×353 | 1 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| scheduleStatus | /scheduleStatus | views/Nursing/schedule-status.html | scheduleStatusController.js | 9 | 3 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| serviceRendering | /serviceRendering | views/Nursing/service-rendering.html | serviceRendering.js | 21 | 13 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| shiftMaster | /shiftMaster | views/Nursing/shift-master.html | shiftMasterController.js | 7 | 7 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| tokenDisplay | /tokenDisplay | views/Nursing/token-display.html | tokenMasterController.js | 0 | 2 | yes (keyword match: nursing) | no | bc:0/on:2/rs:1 [on:customEvent,sendTokenScreenEvent] |
+| transferForInvestigation | /transferForInvestigation | views/Nursing/transfer-for-investigation.html | transferForInvestigationController.js | 1 | 6 | yes (keyword match: nursing) | no | bc:0/on:0/rs:7 |
+| transferForInvestigation.investigationTransferRequest | /investigationTransferRequest | views/Nursing/transfer-modality-initiate-request.html | transferForInvestigationController.js | 9 | 6 | yes (keyword match: nursing) | no | bc:0/on:0/rs:7 |
+| transferForInvestigation.modalityTransferRequestStatus | /modalityTransferRequestStatus | views/Nursing/modality-transfer-request-status.html | transferForInvestigationController.js | 1 | 6 | yes (keyword match: nursing) | no | bc:0/on:0/rs:7 |
+| transferToOT | /transferToOT | views/Nursing/transfer-to-OT.html | transferToOTController.js | 1 | 14 | yes (keyword match: nursing, ot) | no | bc:0/on:0/rs:11 |
+| transferToOT.OTTransferRequest | /OTTransferRequest | views/Nursing/transfer-OT-initiate-request.html | transferToOTController.js | 10 | 14 | yes (keyword match: nursing, ot) | no | bc:0/on:0/rs:11 |
+| transferToOT.OTTransferRequestStatus | /OTTransferRequestStatus | views/Nursing/OT-Transfer-request-status.html | transferToOTController.js | 7 | 14 | yes (keyword match: nursing, ot) | no | bc:0/on:0/rs:11 |
+| triageDisplay | /triageDisplay/:orgId/:unitId/:nursingStationId | views/Nursing/triage-display.html | triageDisplayController.js | 0 | 0 | yes (keyword match: nursing, triage) | no | bc:0/on:0/rs:1 |
+| vitals | /vitals | views/Nursing/vitals.html | VitalsController.js | 5 | 5 | yes (keyword match: nursing, vital) | no | bc:0/on:0/rs:1 |
+
+### ADT - Admission/Discharge (60 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| ERreadyForBilling | /ERreadyForBilling | views/AdmissionDischarge/ready-for-billing.html | ERReadyForBillingController.js | 6 | 3 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| IPDCharges.NOKForIPDCharge | /NOKForIPDCharge | views/AdmissionDischarge/nok-details-only.html | shared×353 | 0 | 0 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: charge) | bc:0/on:1/rs:1 [on:customEvent] |
+| costEstimation | /costEstimation | views/AdmissionDischarge/cost-estimation.html | costEstimationController.js | 39 | 28 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| dayCareReadyForBilling | /dayCareReadyForBilling | views/AdmissionDischarge/ready-for-billing.html | dayCarReadyForBillingController.js | 6 | 2 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| readyForBilling | /readyForBilling | views/AdmissionDischarge/ready-for-billing.html | readyForBillingController.js | 6 | 3 | yes (module default: ADT - Admission/Discharge) | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| ERCharges.NOKForIPDCharge | /NOKForIPDCharge | views/AdmissionDischarge/nok-details-only.html | shared×353 | 0 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| ERdueForDischarge | /ERdueForDischarge | views/er-due-for-discharge.html | ERDueForDischargeController.js | 7 | 9 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| ERfinalDischarge | /ERfinalDischarge | views/AdmissionDischarge/final-discharge.html | ERfinalDischargeController.js | 11 | 5 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| ErPatientDashboard | /Er-PatientDashboard | views/AdmissionDischarge/ER/erPatient-dashboard.html | erPatientDashboard.js | 5 | 10 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| addNewDoctorRegistration | /addNewDoctorRegistration | views/AdmissionDischarge/add-new-doctor-registration.html | shared×353 | 75 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewStaffRegistration | /addNewStaffRegistration | views/AdmissionDischarge/add-new-staff-registration.html | shared×353 | 108 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| bedTypeAllocation | /bedTypeAllocation | views/AdmissionDischarge/ER/bed-type-allocation.html | bedTypeAllocationERController.js | 65 | 7 | yes (keyword match: triage) | no | bc:0/on:0/rs:1 |
+| bedUnderMaintenance | /bedUnderMaintenance | views/AdmissionDischarge/bed-under-maintenance.html | shared×353 | 4 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| cancelDischarge | /cancelDischarge | views/AdmissionDischarge/cancel-discharge.html | cancelPatientDischargeController.js | 5 | 6 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:2 |
+| cancelForDischarge | /cancelForDischarge | views/AdmissionDischarge/cancel-for-discharge.html | cancelForDischargeController.js | 4 | 2 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| cradleBedAllocation | /cradleBedAllocation | views/AdmissionDischarge/cradle-bed-allocation.html | shared×353 | 1 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| dayCareDischargeSummary | /dayCareDischargeSummary | views/AdmissionDischarge/discharge-summary.html | dayCareDischargeSummaryController.js | 98 | 43 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
+| dayCareFinalDischarge | /dayCareFinalDischarge | views/AdmissionDischarge/final-discharge.html | dayCareFinalDischargeController.js | 11 | 2 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| dayCarePatientForDischarge | /dayCarePatientForDischarge | views/AdmissionDischarge/patient-for-discharge.html | dayCarePatientForDischargeController.js | 37 | 15 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
+| dayCareWorklist | /dayCareWorklist | views/AdmissionDischarge/day-care-worklist.html | dayCareWorklistMasterController.js | 0 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| deathRegistration | /deathRegistration | views/AdmissionDischarge/death-registration.html | deathRegistrationController.js | 45 | 13 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| demoFooter | /demoFooter | views/AdmissionDischarge/demo-footer.html | shared×353 | 0 | 0 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| dischargeSummary | /dischargeSummary | views/AdmissionDischarge/discharge-summary.html | masterDischargeSummaryController.js | 98 | 72 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
+| dischargedPatients | /dischargedPatients | views/AdmissionDischarge/discharged-patients.html | dischargedPatientsController.js | 9 | 7 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| doctorRegistration | /doctorRegistration | views/AdmissionDischarge/doctor-master.html | doctorRegistrationController.js | 115 | 69 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| dueForDischarge | /dueForDischarge | views/due-for-discharge.html | dueForDischargeController.js | 7 | 9 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:2 |
+| encounter.nextOfKin | /nextOfKin | views/AdmissionDischarge/next-of-kin.html | – | 62 | – | yes (keyword match: encounter) | no | – |
+| erInitiateBedTransfer.erInitiateRequestTransferBed | /erInitiateRequestTransferBed | views/AdmissionDischarge/er-initiate-request-transfer-bed.html | erInitiateBedTransferController.js | 8 | 13 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
+| erMarkForDischarge | /erMarkForDischarge | views/AdmissionDischarge/ER/Er-mark-for-discharge.html | erMarkForDischargeController.js | 21 | 19 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
+| erPatientList | /erPatientList | views/AdmissionDischarge/ER/Er-patient-list.html | erPatientListController.js | 4 | 12 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| erTransferRequestAcceptance | /erTransferRequestAcceptance | views/AdmissionDischarge/er-transfer-request-acceptance.html | erTransferRequestAcceptanceController.js | 13 | 7 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| finalDischarge | /finalDischarge | views/AdmissionDischarge/final-discharge.html | finalDischargeController.js | 11 | 9 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| icuBedBookingStatus | /icuBedBookingStatus | views/AdmissionDischarge/icu-bed-booking-status.html | shared×353 | 1 | 0 | yes (keyword match: icu) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| intiateTransferCare | /intiateTransferCare | views/initiate-transfer-care.html | intiateTransferCareController.js | 12 | 13 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:12 |
+| newBornDetails | /newBornDetails | views/AdmissionDischarge/new-born-Details.html | newBornBabyDisplayController.js | 123 | 26 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| newBornRegistration | /newBornRegistration | views/AdmissionDischarge/new-born-registration.html | newBornBabyRegController.js | 18 | 4 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| patientDischarge | /patientDischarge | views/AdmissionDischarge/patient-discharge.html | cleanedBedAcceptController.js | 6 | 12 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| patientDischarged | /patientDischarged | views/AdmissionDischarge/patient-discharged.html | patientDischargedMasterController.js | 5 | 1 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| patientDischargedList | /patientDischargedList | views/AdmissionDischarge/patient-discharged-list.html | patientDischargedListController.js | 9 | 5 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| patientForDischarge | /patientForDischarge | views/AdmissionDischarge/patient-for-discharge.html | patientForDischargeController.js | 37 | 20 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
+| patientOrdersWorkbench | /patientOrdersWorkbench | views/AdmissionDischarge/ER/patient-orders-workbench.html | patientOrdersWorkbench.js | 21 | 12 | yes (keyword match: patient order) | no | bc:0/on:0/rs:2 |
+| patientRegistration | /patientRegistration | views/AdmissionDischarge/patient-registration.html | patientRegistrationController.js | 527 | 54 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| patientRegistration.company | /company | views/AdmissionDischarge/company-patient-registration.html | – | 10 | – | yes (module default: ADT - Admission/Discharge) | no | – |
+| patientRegistration.contact | /contact | views/AdmissionDischarge/contact-registration.html | – | 19 | – | yes (module default: ADT - Admission/Discharge) | no | – |
+| patientRegistration.personal | /personal | views/AdmissionDischarge/personal-registration.html | – | 18 | – | yes (module default: ADT - Admission/Discharge) | no | – |
+| pendingInterConsult | /pendingInterConsult | views/pending-inter-consult.html | shared×353 | 9 | 0 | yes (keyword match: consult) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| pendingShortLeave | /pendingShortLeave | views/AdmissionDischarge/pending-short-leave.html | pendingShortLeaveController.js | 3 | 4 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| requestInterConsult | /requestInterConsult | views/request-inter-consult.html | shared×353 | 4 | 0 | yes (keyword match: consult) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| shortLeaveDischarge | /shortLeaveDischarge | views/AdmissionDischarge/short-leave-discharge.html | shortLeaveDischargeController.js | 7 | 4 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| shortLeaveStatus | /shortLeaveStatus | views/AdmissionDischarge/short-leave-status.html | shortLeaveStatusController.js | 16 | 9 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| staffRegistration | /staffRegistration | views/AdmissionDischarge/staff-master.html | staffRegistrationController.js | 132 | 51 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| transfer | /transfer | views/AdmissionDischarge/direct-transfer.html | directTransferController.js | 13 | 22 | yes (keyword match: bed transfer) | no | bc:0/on:0/rs:5 |
+| transferRequest | /transferRequest | views/AdmissionDischarge/transfer-request.html | shared×4 | 4 | 15 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
+| transferRequest.initiateRequestTransferBed | /initiateRequestTransferBed | views/AdmissionDischarge/transfer-bed-initiate-request.html | shared×4 | 8 | 15 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
+| transferRequest.physicalTransferBed | /physicalTransferBed | views/AdmissionDischarge/transfer-bed-physical.html | shared×4 | 4 | 15 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:4 |
+| transferRequestAcceptance | /transferRequestAcceptance | views/AdmissionDischarge/transfer-request-acceptance.html | transferRequestAcceptanceController.js | 17 | 8 | yes (module default: ADT - Admission/Discharge) | no | bc:0/on:0/rs:1 |
+| unknownPatientReg | /unknownPatientReg | views/AdmissionDischarge/ER/unknown-patient-reg.html | unknownPatientRegController.js | 131 | 50 | yes (keyword match: encounter) | no | bc:0/on:0/rs:6 |
+| unknownPatientReg.nextKinDetailsForUnknown | /nextKinDetailsForUnknown | views/AdmissionDischarge/next-of-kin.html | unknownPatientRegController.js | 62 | 50 | yes (keyword match: encounter) | no | bc:0/on:0/rs:6 |
+| unknownPatientReg.personalForUnknown | /personalForUnknown | views/AdmissionDischarge/ER/unknown-personal.html | unknownPatientRegController.js | 15 | 50 | yes (keyword match: encounter) | no | bc:0/on:0/rs:6 |
+| updateDischargeSummary | /updateDischargeSummary | views/AdmissionDischarge/update-discharge-summary.html | updateDischargeSummaryController.js | 70 | 47 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
+
+### CSSD (59 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| KitIndent | /KitIndent | views/master/UnitMaster/CSSD/kit-indent.html | kitIndentController.js | 13 | 8 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
+| KitIndentAcceptance | /KitIndentAcceptance | views/master/UnitMaster/CSSD/kit-indent-acceptance.html | kitIndentAcceptanceController.js | 9 | 4 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
+| KitIndentApproval | /KitIndentApproval | views/master/UnitMaster/CSSD/kit-indent-approval.html | kitIndentApprovalController.js | 19 | 10 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
+| addNewKitIndent | /addNewKitIndent | views/master/UnitMaster/CSSD/add-new-kit-indent.html | addNewKitIndentController.js | 16 | 7 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
+| detailsKitIndentAcceptance | /detailsKitIndentAcceptance/:issueNo | views/master/UnitMaster/CSSD/details-kit-indent-acceptance.html | detailsKitIndentAcceptanceController.js | 15 | 5 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
+| updateKitIndent | /updateKitIndent/:indentNo | views/master/UnitMaster/CSSD/update-kit-indent.html | updateKitIndentController.js | 14 | 7 | yes (module default: CSSD) | yes (keyword match: indent) | bc:0/on:0/rs:2 |
+| KitReturn | /KitReturn | views/master/UnitMaster/CSSD/kit-return.html | kitReturnController.js | 16 | 7 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| addNewCssdFixedAssetMaster | /addNewCssdFixedAssetMaster | views/master/UnitMaster/CSSD/add-new-cssd-fixed-asset-master.html | cssdOpeningStockController.js | 16 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| addNewKitReturn | /addNewKitReturn | views/master/UnitMaster/CSSD/add-new-kit-return.html | addNewKitReturnController.js | 23 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| addNewPreSterilizationCleaning | /addNewPreSterilizationCleaning | views/master/UnitMaster/CSSD/add-new-pre-sterilization-cleaning.html | addNewPreSterilizationCleaningController.js | 11 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| addNewSterilizationLoadBatch | /addNewSterilizationLoadBatch | views/master/UnitMaster/CSSD/add-new-sterilization-load-batch.html | addNewSterilizationLoadBatchController.js | 17 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| addNewSterilizationPendingIndicators | /addNewSterilizationPendingIndicators | views/master/UnitMaster/CSSD/add-new-sterilization-pending-indicators.html | shared×353 | 6 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewSterilizationProcess | /addNewSterilizationProcess | views/master/UnitMaster/CSSD/add-new-sterilization-process.html | shared×353 | 10 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewkitIssue | /addNewkitIssue | views/master/UnitMaster/CSSD/add-new-kit-Issue.html | addNewkitIssueController.js | 39 | 13 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| addNewpreSterilizationProcess | /addNewpreSterilizationProcess | views/master/UnitMaster/CSSD/add-new-pre-sterilization-process.html | shared×353 | 3 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewpreSterilizationProcess.dis-Infection | /dis-Infection | views/master/UnitMaster/CSSD/dis-Infection.html | shared×353 | 1 | 0 | yes (keyword match: infection) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewpreSterilizationProcess.inspection | /inspection | views/master/UnitMaster/CSSD/inspection.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewpreSterilizationProcess.instrumentCleaning | /instrumentCleaning | views/master/UnitMaster/CSSD/instrumentCleaning.html | shared×353 | 4 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewpreSterilizationProcess.kitFormation | /kitFormation | views/master/UnitMaster/CSSD/kit-Formation.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| addNewpreSterilizationProcess.wrapper | /wrapper | views/master/UnitMaster/CSSD/wrapper.html | shared×353 | 2 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| application | /application | views/master/UnitMaster/CSSD/application.html | shared×353 | 5 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| autoclaveMaster | /autoclaveMaster | views/master/UnitMaster/CSSD/autoclave-master.html | autoClaveMasterController.js | 10 | 7 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| cssdFixedAssetMaster | /cssdFixedAssetMaster | views/master/UnitMaster/CSSD/cssd-fixed-asset-master.html | addCssdOpeningStockController.js | 19 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:1 |
+| detailsApplication | /detailsApplication | views/master/UnitMaster/CSSD/details-application.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsApplicationKit | /detailsApplicationKit | views/master/UnitMaster/CSSD/details-application-kit.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| detailsKitReturn | /detailsKitReturn/:returnNo | views/master/UnitMaster/CSSD/details-kit-return.html | detailsKitReturnController.js | 5 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| detailsSendtoMicrobiology | /detailsSendtoMicrobiology/:batchNo | views/master/UnitMaster/CSSD/details-send-to-microbiology.html | detailsSendtoMicrobiologyController.js | 1 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| detailsSterilizationRequest | /detailsSterilizationRequest/:requestNo | views/master/UnitMaster/CSSD/details-sterilization-request.html | detailsSterilizationRequestController.js | 2 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| detailsSterilizationRequestAcceptance | /detailsSterilizationRequestAcceptance/:requestNo | views/master/UnitMaster/CSSD/details-sterilization-request-acceptance.html | detailsSterilizationRequestAcceptanceController.js | 9 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| detailskitIssue | /detailskitIssue/:issueNo | views/master/UnitMaster/CSSD/details-kit-Issue.html | detailskitIssueController.js | 2 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| kitCreation | /kitCreation | views/master/UnitMaster/CSSD/kit-creation.html | kitCreationController.js | 41 | 9 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| kitIssue | /kitIssue | views/master/UnitMaster/CSSD/kit-Issue.html | kitIssueController.js | 17 | 11 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| preSterilizationCleaning | /preSterilizationCleaning | views/master/UnitMaster/CSSD/pre-sterilization-cleaning.html | preSterilizationCleaningController.js | 14 | 4 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| preSterilizationDisInfection | /preSterilizationDisInfection | views/master/UnitMaster/CSSD/pre-sterilization-disinfection.html | preSterilizationDisInfectionController.js | 4 | 2 | yes (keyword match: infection) | no | bc:0/on:0/rs:3 |
+| preSterilizationInspection | /preSterilizationInspection | views/master/UnitMaster/CSSD/pre-sterilization-inspection.html | preSterilizationInspectionController.js | 4 | 2 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| preSterilizationKitFormation | /preSterilizationKitFormation | views/master/UnitMaster/CSSD/pre-sterilization-kit-formation.html | preSterilizationKitFormationController.js | 4 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| preSterilizationProcess | /preSterilizationProcess | views/master/UnitMaster/CSSD/pre-sterilization-process.html | preSterilizationCleaningController.js | 4 | 4 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| sendtoMicrobiology | /sendtoMicrobiology | views/master/UnitMaster/CSSD/send-to-microbiology.html | sendtoMicrobiologyController.js | 4 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| showPreSterilizationCleaning | /showPreSterilizationCleaning/:kitId | views/master/UnitMaster/CSSD/view-pre-sterilization-cleaning.html ✗ | viewPreSterilizationCleaningController.js | – | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| showPreSterilizationDisInfection | /showPreSterilizationDisInfection/:transitionNumber | views/master/UnitMaster/CSSD/view-pre-sterilization-disinfection.html | viewPreSterilizationDisInfectionController.js | 22 | 5 | yes (keyword match: infection) | no | bc:0/on:0/rs:2 |
+| showPreSterilizationInspection | /showPreSterilizationInspection/:transitionNumber | views/master/UnitMaster/CSSD/view-pre-sterilization-inspection.html | viewPreSterilizationInspectionController.js | 26 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| showPreSterilizationKitFormation | /showPreSterilizationKitFormation/:transitionNumber | views/master/UnitMaster/CSSD/view-pre-sterilization-kit-formation.html | viewPreSterilizationKitFormationController.js | 28 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| showSterilizationLoadBatch | /showSterilizationLoadBatch/:batchNo | views/master/UnitMaster/CSSD/view-sterilization-load-batch.html | viewSterilizationLoadBatchController.js | 1 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| showSterilizationPendingIndicators | /showSterilizationPendingIndicators/:batchNo | views/master/UnitMaster/CSSD/view-sterilization-pending-indicators.html | viewSterilizationPendingIndicatorsController.js | 8 | 4 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| sterilizationDirectIssue | /sterilizationDirectIssue | views/master/UnitMaster/CSSD/sterilization-direct-issue.html | sterilizationDirectIssueController.js | 21 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| sterilizationLoadBatch | /sterilizationLoadBatch | views/master/UnitMaster/CSSD/sterilization-load-batch.html | sterilizationLoadBatchController.js | 7 | 2 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| sterilizationPendingIndicators | /sterilizationPendingIndicators | views/master/UnitMaster/CSSD/sterilization-pending-indicators.html | sterilizationPendingIndicatorsController.js | 5 | 3 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| sterilizationProcess | /sterilizationProcess | views/master/UnitMaster/CSSD/sterilization-process.html | shared×353 | 3 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| sterilizationRequest | /sterilizationRequest | views/master/UnitMaster/CSSD/sterilization-request.html | sterilizationRequestController.js | 11 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| sterilizationRequestAcceptance | /sterilizationRequestAcceptance | views/master/UnitMaster/CSSD/sterilization-request-acceptance.html | sterilizationRequestAcceptanceController.js | 10 | 4 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| sterilizationTypeMaster | /sterilizationTypeMaster | views/master/UnitMaster/CSSD/sterilization-type-master.html | sterilizationTypeMasterController.js | 5 | 5 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
+| updateKitIssue | /updateKitIssue/:issueNo | views/master/UnitMaster/CSSD/update-kit-issue.html | updateKitIssueController.js | 42 | 13 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| updateKitReturn | /updateKitReturn/:returnNo | views/master/UnitMaster/CSSD/update-kit-return.html | updateKitReturnController.js | 21 | 7 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| updateSterilizationRequest | /updateSterilizationRequest/:requestNo | views/master/UnitMaster/CSSD/update-sterilization-request.html | updateSterilizationRequestController.js | 21 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| viewCleanedList | /viewCleanedList/:transitionNumber | views/master/UnitMaster/CSSD/view-Cleaned-List.html | viewPreSterilizationCleaningController.js | 2 | 1 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| viewPendingCleaningList | /viewPendingCleaningList/:transitionNumber | views/master/UnitMaster/CSSD/view-Pending-Cleaning-List.html | viewPreSterilizationPendingCleaningController.js | 22 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:2 |
+| viewPendingList | /viewPendingList | views/master/UnitMaster/CSSD/view-pending-list.html | shared×353 | 3 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| viewSterilizationProcess | /viewSterilizationProcess | views/master/UnitMaster/CSSD/view-sterilization-process.html | shared×353 | 1 | 0 | yes (module default: CSSD) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| wrapperExpiryMaster | /wrapperExpiryMaster | views/master/UnitMaster/CSSD/wrapper-expiry-master.html | wrapperExpiryMasterController.js | 7 | 6 | yes (module default: CSSD) | no | bc:0/on:0/rs:3 |
 
 ### Blood Bank (51 screens)
 
@@ -761,215 +1404,73 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | transfusionPrecheckMaster | /transfusionPrecheckMaster | views/master/UnitMaster/bloodBank/transfusion-precheck-master.html | transfusionPrecheckMasterController.js | 5 | 6 | yes (keyword match: bloodbank, transfusion) | no | bc:0/on:0/rs:1 |
 | transfusionTransmittedDiseases | /transfusionTransmittedDiseases | views/master/bloodBankDonor/transfusion-transmitted-diseases.html | transfusionTransmittedDiseasesController.js | 5 | 1 | yes (keyword match: transfusion) | no | bc:0/on:0/rs:1 |
 
-### Nursing (49 screens)
+### Admin - Org/Unit Master (50 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
-| sampleCollection | /patientDiagnostic | views/Nursing/sample-collection.html | sampleCollectionIPController.js | 11 | 22 | yes (keyword match: diagnos, nursing) | yes (keyword match: collection) | bc:0/on:0/rs:1 |
-| OTRequest | /OTRequest | views/Nursing/OT-request.html | OTRequestController.js | 3 | 3 | yes (keyword match: nursing, ot) | no | bc:0/on:0/rs:1 |
-| abscondingPatient | /abscondingPatient | views/Nursing/absconding-patient.html | shared×353 | 3 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewVitals | /addNewVitals | views/Nursing/add-new-vitals.html | VitalAddController.js | 17 | 2 | yes (keyword match: nursing, vital) | no | bc:0/on:0/rs:1 |
-| addnewDaywiseRotaCreation | /addnewDaywiseRotaCreation | views/Nursing/add-new-day-wise-rota-creation.html | shared×353 | 7 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| addnewRotaCreation | /addnewRotaCreation | views/Nursing/add-new-rota-creation.html | shared×353 | 6 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| administrationWorklist | /administrationWorklist | views/Nursing/administration-worklist.html | administrationWorklistMasterController.js | 36 | 18 | yes (keyword match: nursing) | no | bc:0/on:0/rs:2 |
-| allergies | /allergies | views/Nursing/allergies.html | allergiesController.js | 18 | 17 | yes (keyword match: allerg, nursing) | no | bc:0/on:0/rs:1 |
-| bloodIssueAcceptanceWorklist | /bloodIssueAcceptanceWorklist | views/Nursing/blood-issue-acceptance-worklist.html | bloodIssueAcceptanceWorklistController.js | 38 | 11 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| cabinDisplay | /cabinDisplay/:orgId/:unitId/:doctorId | views/Nursing/cabin-display.html | cabinDisplayController.js | 0 | 0 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| dayCareNursingCoversheet | /dayCareNursingCoversheet | views/Nursing/nursing-coversheet.html | dayCareNurshingCoversheetController.js | 1253 | 347 | yes (keyword match: nursing) | no | bc:0/on:0/rs:22 |
-| erInitiateBedTransfer | /erInitiateBedTransfer | views/Nursing/er-initiate-bed-transfer.html | erInitiateBedTransferController.js | 1 | 13 | yes (keyword match: bed transfer, nursing) | no | bc:0/on:0/rs:4 |
-| erInitiateBedTransfer.erPhysicalInitiateTransferBed | /erPhysicalInitiateTransferBed | views/Nursing/er-initiate-bed-physical.transfer.html | shared×353 | 2 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| erNursingCoversheet | /erNursingCoversheet | views/Nursing/nursing-coversheet.html | erNursingCoverSheetController.js | 1253 | 358 | yes (keyword match: nursing) | no | bc:0/on:0/rs:22 |
-| growthChart | /growthChart | views/Nursing/growth-chart.html | growthChartController.js | 16 | 8 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| hemodialysisRoomTransferRequestAcceptance | /hemodialysisRoomTransferRequestAcceptance | views/Nursing/hemodialysis-room-transfer-request-acceptance.html | hemodialysisRoomTransferRequestAcceptanceController.js | 15 | 5 | yes (keyword match: hemodialysis, nursing) | no | bc:0/on:0/rs:1 |
-| initiateBedTransfer | /initiateBedTransfer | views/Nursing/initiate-bed-transfer.html | initiateBedTransferController.js | 1 | 12 | yes (keyword match: bed transfer, nursing) | no | bc:0/on:0/rs:4 |
-| initiateBedTransfer.initiateRequestTransferBed | /initiateRequestTransferBed | views/Nursing/initiate-request-transfer-bed.html | initiateBedTransferController.js | 8 | 12 | yes (keyword match: bed transfer, nursing) | no | bc:0/on:0/rs:4 |
-| initiateBedTransfer.physicalInitiateTransferBed | /physicalInitiateTransferBed | views/Nursing/initiate-bed-physical-transfer.html | initiateBedTransferController.js | 6 | 12 | yes (keyword match: nursing) | no | bc:0/on:0/rs:4 |
-| inputOutputChartHistory | /inputOutputChartHistory | views/Nursing/input-output-chart-history.html | inputOutputChartHistoryController.js | 4 | 11 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| inputOutputCharts | /inputOutputCharts | views/Nursing/input-output-charts.html | inputOutputChartsController.js | 36 | 15 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| laborRoomTransferRequestAcceptance | /laborRoomTransferRequestAcceptance | views/Nursing/labor-room-transfer-request-acceptance.html | laborRoomTransferRequestAcceptanceController.js | 17 | 11 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| medicationAcceptance | /medicationAcceptance | views/Nursing/medication-acceptance.html | shared×353 | 27 | 0 | yes (keyword match: medication, nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| newPeriodicityService | /newPeriodicityService | views/Nursing/new-periodicity-Service.html | shared×353 | 3 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| nurseAllocationMsaster | /nurseAllocationMsaster | views/Nursing/nurse-Allocation-master.html | nurseAllocationMsasterController.js | 23 | 14 | yes (keyword match: nursing) | no | bc:0/on:0/rs:2 |
-| nursingAllocationDashboard | /nursingAllocationDashboard | views/Nursing/nursing-Allocation-Dashboard.html | nurseAllocationDashboardController.js | 11 | 13 | yes (keyword match: nursing) | no | bc:0/on:0/rs:2 |
-| nursingCoversheet | /nursingCoversheet | views/Nursing/nursing-coversheet.html | nursingCoverSheetController.js | 1253 | 354 | yes (keyword match: nursing) | no | bc:1/on:2/rs:22 [bc:coversheetSpeech:stop; on:$destroy,coversheetSpeech:stop] |
-| nursingDisplay | /nursingDisplay/:orgId/:unitId/:nursingStationId | views/Nursing/nursing-assesment.html | nursingAssesmentDisplayController.js | 0 | 1 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| nursingHandover | /nursingHandover | views/Nursing/nursing-handover.html | shared×353 | 148 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| nursingOrder | /nursingOrder | views/Nursing/nursing-order.html | shared×353 | 6 | 0 | yes (keyword match: nursing, nursing order) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| nursingOrderForNurse | /nursingOrderForNurse | views/Nursing/nursing-order-for-nurse.html | shared×353 | 8 | 0 | yes (keyword match: nursing, nursing order) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| nursingOrderView | /nursingOrderView | views/Nursing/nursing-order-view.html | nursingOrderViewMasterController.js | 4 | 9 | yes (keyword match: nursing, nursing order) | no | bc:0/on:0/rs:1 |
-| nursingProgressNote | /nursingProgressNote | views/Nursing/nursing-progress-note.html | shared×353 | 4 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| nursingShiftDashboard | /nursingShiftDashboard | views/Nursing/nursing-Shift-Dashboard.html | nursingShiftDashboardController.js | 2 | 2 | yes (keyword match: nursing) | no | bc:0/on:0/rs:2 |
-| pendingConsultOrderRequest | /pendingConsultOrderRequest | views/Nursing/pending-inter-consult-request.html | pendingInterConsultRequestController.js | 4 | 7 | yes (keyword match: consult, nursing) | no | bc:0/on:0/rs:12 |
-| pendingNursingOrder | /pendingNursingOrder | views/Nursing/pending-nursing-order.html | shared×353 | 1 | 0 | yes (keyword match: nursing, nursing order) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| pendingOrders | /pendingOrders | views/Nursing/pending-orders.html | allPendingOrdersForNursingController.js | 14 | 14 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| rotaCreation | /rotaCreation | views/Nursing/rota-creation.html | shared×353 | 1 | 0 | yes (keyword match: nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| serviceRendering | /serviceRendering | views/Nursing/service-rendering.html | serviceRendering.js | 21 | 13 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| shiftMaster | /shiftMaster | views/Nursing/shift-master.html | shiftMasterController.js | 7 | 7 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| tokenDisplay | /tokenDisplay | views/Nursing/token-display.html | tokenMasterController.js | 0 | 2 | yes (keyword match: nursing) | no | bc:0/on:2/rs:1 [on:customEvent,sendTokenScreenEvent] |
-| transferForInvestigation | /transferForInvestigation | views/Nursing/transfer-for-investigation.html | transferForInvestigationController.js | 1 | 6 | yes (keyword match: nursing) | no | bc:0/on:0/rs:7 |
-| transferForInvestigation.investigationTransferRequest | /investigationTransferRequest | views/Nursing/transfer-modality-initiate-request.html | transferForInvestigationController.js | 9 | 6 | yes (keyword match: nursing) | no | bc:0/on:0/rs:7 |
-| transferForInvestigation.modalityTransferRequestStatus | /modalityTransferRequestStatus | views/Nursing/modality-transfer-request-status.html | transferForInvestigationController.js | 1 | 6 | yes (keyword match: nursing) | no | bc:0/on:0/rs:7 |
-| transferToOT | /transferToOT | views/Nursing/transfer-to-OT.html | transferToOTController.js | 1 | 14 | yes (keyword match: nursing, ot) | no | bc:0/on:0/rs:11 |
-| transferToOT.OTTransferRequest | /OTTransferRequest | views/Nursing/transfer-OT-initiate-request.html | transferToOTController.js | 10 | 14 | yes (keyword match: nursing, ot) | no | bc:0/on:0/rs:11 |
-| transferToOT.OTTransferRequestStatus | /OTTransferRequestStatus | views/Nursing/OT-Transfer-request-status.html | transferToOTController.js | 7 | 14 | yes (keyword match: nursing, ot) | no | bc:0/on:0/rs:11 |
-| triageDisplay | /triageDisplay/:orgId/:unitId/:nursingStationId | views/Nursing/triage-display.html | triageDisplayController.js | 0 | 0 | yes (keyword match: nursing, triage) | no | bc:0/on:0/rs:1 |
-| vitals | /vitals | views/Nursing/vitals.html | VitalsController.js | 5 | 5 | yes (keyword match: nursing, vital) | no | bc:0/on:0/rs:1 |
+| ICUtypeMasterUnit | /ICUtypeMasterUnit | views/master/UnitMaster/organizationMaster/ICU-type-master-unit.html | shared×353 | 12 | 0 | yes (keyword match: icu) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| anesthesiaAssement | /anesthesiaAssement | views/master/UnitMaster/organizationMaster/anesthesia-assesment.html | anesthesiaAssesmentController.js | 155 | 12 | yes (keyword match: anesthes) | no | bc:0/on:0/rs:1 |
+| dischargeSummaryFieldMaster | /dischargeSummaryFieldMaster | views/master/UnitMaster/organizationMaster/discharge-summary-field-master.html | dischargeSummaryFieldMasterController.js | 12 | 13 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
+| dischargeSummaryTemplate | /dischargeSummaryTemplate | views/master/UnitMaster/organizationMaster/discharge-summary-template.html | dischargeSummaryTemplateMasterController.js | 13 | 13 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
+| icutypeMaster | /icutypeMaster | views/master/UnitMaster/organizationMaster/icu-type-master.html | icuTypeController.js | 13 | 7 | yes (keyword match: icu) | no | bc:0/on:0/rs:1 |
+| nursingStationMaster | /nursingStationMaster | views/master/UnitMaster/organizationMaster/nursing-station-master.html | nursingStationMasterController.js | 7 | 8 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| nursingStationWardMapping | /nursingStationWardMapping | views/master/UnitMaster/organizationMaster/nursing-station-ward-mapping.html | nursingStationWardMappingController.js | 5 | 10 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| nursingtemplate | /nursingTemplate | views/master/UnitMaster/organizationMaster/nursing-template-ISBR.html | nursingTemplateISBRController.js | 51 | 1 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| referralMaster | /referralMaster | views/master/UnitMaster/organizationMaster/referral-master.html | referralMasterController.js | 20 | 13 | yes (keyword match: referral) | no | bc:0/on:0/rs:3 |
+| billingBedCategoryMapper | /billingBedCategoryMapper | views/master/UnitMaster/organizationMaster/bed-category-master-unit.html | bedCategoryMasterUnitController.js | 4 | 2 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| billingBedCategoryMaster | /billingBedCategoryMaster | views/master/UnitMaster/organizationMaster/billing-bed-category-master-unit.html | billingBedCategoryMasterUnitController.js | 10 | 7 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
+| RMOAllocationMaster | /RMOAllocationMaster | views/master/UnitMaster/organizationMaster/RMO-allocation-master.html | rmoAllocationMasterController.js | 21 | 13 | no | no | bc:0/on:0/rs:2 |
+| aIButtonMaster | /aIButtonMaster | views/master/UnitMaster/organizationMaster/ai-button-master.html | aiButtonMasterController.js | 11 | 5 | no | no | bc:0/on:0/rs:1 |
+| addNewNabhReporting | /addNewNabhReporting | views/master/UnitMaster/organizationMaster/add-new-nabh-reporting.html | addNewNABHReportingController.js | 25 | 17 | no | no | bc:0/on:1/rs:3 [on:$locationChangeStart] |
+| addNewOrderSetMaster | /addNewOrderSetMaster | views/master/UnitMaster/organizationMaster/add-new-orderset-master.html | ordersetController.js | 26 | 16 | no | no | bc:0/on:0/rs:1 |
+| aiButtonConfiguration | /aiButtonConfiguration | views/master/UnitMaster/organizationMaster/aiButtonConfiguration.html | aiButtonConfugurationController.js | 23 | 8 | no | no | bc:0/on:0/rs:1 |
+| amenityMaster | /amenityMaster | views/master/UnitMaster/organizationMaster/amenity-master.html | amenityMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| bedCategoryMapper | /bedCategoryMapper | views/master/UnitMaster/organizationMaster/bed-category-mapper.html | shared×353 | 12 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| bedClassMappingMasterUnit | /bedClassMappingMasterUnit | views/master/UnitMaster/organizationMaster/bed-class-mapping-master-unit.html | shared×353 | 5 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| bedClassMasterUnit | /bedClassMasterUnit | views/master/UnitMaster/organizationMaster/bed-class-master-unit.html | shared×353 | 4 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| bedMaster | /bedMaster | views/master/UnitMaster/organizationMaster/bed-master.html | bedMasterController.js | 27 | 20 | no | no | bc:0/on:0/rs:1 |
+| boxMasters | /boxMasters | views/master/UnitMaster/organizationMaster/box-master.html | boxMastersController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
+| cabinMaster | /cabinMaster | views/master/UnitMaster/organizationMaster/cabin-master.html | cabinMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| counterMaster | /counterMaster | views/master/UnitMaster/organizationMaster/counter-master.html | counterMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| departmentMasterUnit | /departmentMasterUnit | views/master/UnitMaster/organizationMaster/department-master-unit.html | departmentMasterUnitController.js | 12 | 9 | no | no | bc:0/on:0/rs:1 |
+| dischargeFieldMapper | /dischargeFieldMapper | views/master/UnitMaster/organizationMaster/discharge-field-mapper.html | dischargeFieldMapperController.js | 9 | 11 | no | no | bc:0/on:0/rs:1 |
+| editReportedNabh | /editReportedNabh | views/master/UnitMaster/organizationMaster/edit-reported-nabh.html | editReportedNabhController.js | 19 | 11 | no | no | bc:0/on:0/rs:1 |
+| employeeSurvey | /employeeSurvey | views/master/UnitMaster/organizationMaster/employee-survey.html | EmployeeSurveyController.js | 5 | 3 | no | no | bc:0/on:0/rs:1 |
+| floorMapMaster | /floorMapMaster | views/master/UnitMaster/organizationMaster/floor-map-master.html | shared×353 | 6 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| floorMaster | /floorMaster | views/master/UnitMaster/organizationMaster/floor-master.html | floorMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| growthChartMaster | /growthChartMaster | views/master/UnitMaster/organizationMaster/growth-chart-master.html | growthChartMasterController.js | 12 | 9 | no | no | bc:0/on:0/rs:1 |
+| holidayCalendarMasterUnit | /holidayCalendarMasterUnit | views/master/UnitMaster/organizationMaster/holiday-calendar-master-unit.html | holidayCalendarMasterUnitController.js | 10 | 4 | no | no | bc:0/on:0/rs:1 |
+| icpcCodesConfiguration | /icpcCodesConfiguration | views/master/UnitMaster/organizationMaster/icpc-codes-configuration.html | icpcCodesConfigurationController.js | 5 | 6 | no | no | bc:0/on:0/rs:1 |
+| incidentReportingScreen | /incidentReportingScreen | views/master/UnitMaster/organizationMaster/incident-Reporting-screen.html | incidentReportingController.js | 39 | 0 | no | no | bc:0/on:0/rs:1 |
+| initialAssessmentForICU | /initialassessmentForICU | views/master/UnitMaster/organizationMaster/initial-assessment.html | InitialAssessmentController.js | 124 | 11 | no | no | bc:0/on:0/rs:1 |
+| mealPreferenceMaster | /mealPreferenceMaster | views/master/UnitMaster/organizationMaster/meal-preference-master.html | mealPreferenceMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+| nabhProcess | /nabhProcess | views/master/UnitMaster/organizationMaster/nabh-process.html | nabhProcessController.js | 9 | 10 | no | no | bc:0/on:0/rs:1 |
+| nabhReporting | /nabhReporting | views/master/UnitMaster/organizationMaster/nabh-reporting.html | nabhReportingController.js | 7 | 3 | no | no | bc:0/on:0/rs:1 |
+| orderSetMaster | /orderSetMaster | views/master/UnitMaster/organizationMaster/orderset-master.html | orderSetMasterController.js | 8 | 4 | no | no | bc:0/on:0/rs:1 |
+| qualityParameterMaster | /qualityParameterMaster | views/master/UnitMaster/organizationMaster/quality-parameter-master.html | qualityParameterMasterController.js | 11 | 5 | no | no | bc:0/on:0/rs:1 |
+| rackMasters | /rackMasters | views/master/UnitMaster/organizationMaster/rack-master.html | rackMastersController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
+| reportedNabh | /reportedNabh | views/master/UnitMaster/organizationMaster/reported-nabh.html | reportedNABHController.js | 6 | 5 | no | no | bc:0/on:0/rs:1 |
+| roomMaster | /roomMaster | views/master/UnitMaster/organizationMaster/room-master.html | roomMasterController.js | 21 | 10 | no | no | bc:0/on:0/rs:1 |
+| roomModulityMapper | /roomModulityMapper | views/master/UnitMaster/organizationMaster/room-modulity-mapper.html | shared×353 | 4 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| rowMasters | /rowMasters | views/master/UnitMaster/organizationMaster/row-master.html | rowMastersController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
+| subDepartmentMasterUnit | /subDepartmentMasterUnit | views/master/UnitMaster/organizationMaster/sub-department-master-unit.html | subDepartmentMasterUnitController.js | 5 | 10 | no | no | bc:0/on:0/rs:1 |
+| ticketSystemMaster | /ticketSystemMaster | views/master/UnitMaster/organizationMaster/ticket-system-master.html | ticketSystemMasterController.js | 12 | 8 | no | no | bc:0/on:0/rs:1 |
+| wardMaster | /wardMaster | views/master/UnitMaster/organizationMaster/ward-master.html | wardMasterController.js | 16 | 11 | no | no | bc:0/on:0/rs:1 |
+| weekendMaster | /weekendMaster | views/master/UnitMaster/organizationMaster/weekend-master.html | weekendMasterController.js | 11 | 8 | no | no | bc:0/on:0/rs:1 |
+| wingMaster | /wingMaster | views/master/UnitMaster/organizationMaster/wing-master.html | wingMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
 
-### Procurement (49 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| addItemPOCreation | /addItemPOCreation | views/procurement/quotation/add-item-PO-creation.html | shared×353 | 124 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| addItemquotationEnquiry.expectedPaymentTerms | /expectedPaymentTerms | views/procurement/quotation/expected-payment-terms.html | shared×353 | 1 | 0 | no | yes (keyword match: pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
-| addItemquotationEnquiry.expectedSupportTerms | /expectedSupportTerms | views/procurement/quotation/expected-support-terms.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| addItemquotationEnquiry.expectedTechnicalSpec | /expectedTechnicalSpec | views/procurement/quotation/expected-technical-specification.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| addItemquotationEnquiry.warrantyPeriod | /warrantyPeriod | views/procurement/quotation/warranty-period.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewVendorSpecificPOCreation | /addNewVendorSpecificPOCreation | views/procurement/quotation/add-new-vendor-specific-po-creation.html | shared×353 | 22 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewVendorSpecificPODefinition | /addNewVendorSpecificPODefinition | views/procurement/quotation/add-new-vendor-specific-po-definition.html | shared×353 | 12 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewWorkOrderCreation | /addNewWorkOrderCreation | views/procurement/workOrder/add-new-workorder-creation.html | addNewWorkorderLabourController.js | 61 | 18 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
-| addNewquotationFillIn.expectedPaymentTermsfillIn | /expectedPaymentTermsfillIn | views/procurement/quotation/expected-payment-terms-fillin.html | shared×353 | 2 | 0 | no | yes (keyword match: pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewquotationFillIn.expectedSupportTermsfillIn | /expectedSupportTermsfillIn | views/procurement/quotation/expected-support-terms-fillin.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewquotationFillIn.expectedTechnicalSfillIn | /expectedTechnicalSfillIn | views/procurement/quotation/expected-technical-specification-fillin.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewquotationFillIn.warrantyPeriodFillin | /warrantyPeriodFillin | views/procurement/quotation/warranty-period-fillin.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| additemwPhysicalInven | /additemwPhysicalInven | views/procurement/purchase/add-item-physical-inventory.html | shared×353 | 12 | 0 | no | yes (keyword match: purchase) | bc:0/on:1/rs:1 [on:customEvent] |
-| consignmentManagerDashboard | /consignmentManagerDashboard | views/procurement/consignment/consignment-manager-dashboard.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| deatilsWorkOrderSettlement | /deatilsWorkOrderSettlement | views/procurement/workOrder/details-work-order-settlement.html | addNewWorkorderApprovalDetailsSettlementController.js | 15 | 16 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
-| deatilsWorkorderApproval | /deatilsWorkorderApproval | views/procurement/workOrder/details-work-order-approval.html | addNewWorkorderApprovalDetailsController.js | 23 | 16 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
-| detailsConsignmentManagerDashboard | /detailsConsignmentManagerDashboard | views/procurement/consignment/details-consignment-manager-dashboard.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsGRNAssets | /detailsGRNAssets | views/procurement/quotation/details-GRN-assets.html | shared×353 | 0 | 0 | no | yes (keyword match: grn) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsGRNConsumable | /detailsGRNConsumable | views/procurement/quotation/details-GRN-consumable.html | shared×353 | 20 | 0 | no | yes (keyword match: grn) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsPOApprovalAssets | /detailsPOApprovalAssets | views/procurement/quotation/details-PO-creation-assets.html | shared×353 | 13 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsPOApprovalConsumable | /detailsPOApprovalConsumable | views/procurement/quotation/details-PO-creation-consumables.html | shared×353 | 13 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsReturnAcceptance | /detailsReturnAcceptance | views/procurement/consignment/details-return-acceptance.html | shared×353 | 3 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsVendorSpecificPOApproval | /detailsVendorSpecificPOApproval | views/procurement/quotation/details-vendor-specific-po-approval.html | shared×353 | 10 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsVendorSpecificPOCreation | /detailsVendorSpecificPOCreation | views/procurement/quotation/details-vendor-specific-po-creation.html | shared×353 | 10 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsWorkorderQuotationNegotiation | /detailsWorkorderQuotationNegotiation | views/procurement/workOrder/details-workorder-quotation-negotiation.html | shared×353 | 37 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsphysicalInspecAssets | /detailsphysicalInspecAssets | views/procurement/quotation/details-physical-inspection-assets.html | shared×353 | 13 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsphysicalInspecConsumables | /detailsphysicalInspecConsumables | views/procurement/quotation/details-physical-inspection-consumables.html | shared×353 | 16 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| holdOnFillInDetails | /holdOnFillInDetails | views/procurement/quotation/quotation-fillinHoldon-details.html | shared×353 | 11 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| physicalInventory | /physicalInventory | views/procurement/purchase/physical-inventory.html | shared×353 | 7 | 0 | no | yes (keyword match: purchase) | bc:0/on:1/rs:1 [on:customEvent] |
-| qfillInDetails.expectedPaymentTfillIn | /expectedPaymentTfillIn | views/procurement/quotation/expected-payment-terms-fillinDetails.html | shared×353 | 2 | 0 | no | yes (keyword match: pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
-| qfillInDetails.expectedSTermsfillIn | /expectedSTermsfillIn | views/procurement/quotation/expected-support-terms-fillinDetails.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| qfillInDetails.expectedTSpecificationfillIn | /expectedTSpecificationfillIn | views/procurement/quotation/expected-technical-specification-fillinDetails.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| qfillInDetails.warrantyPFillin | /warrantyPFillin | views/procurement/quotation/warranty-period-fillinDetails.html | shared×353 | 2 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| quotationEArrovalDetails | /quotationEArrovalDetails | views/procurement/quotation/quotation-enquiry-approval-details.html | shared×353 | 9 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| quotationEDetails.expectedPaymentTerms | /expectedPaymentTerms | views/procurement/quotation/expected-payment-terms.html | shared×353 | 1 | 0 | no | yes (keyword match: pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
-| quotationEDetails.expectedSupportTerms | /expectedSupportTerms | views/procurement/quotation/expected-support-terms.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| quotationEDetails.expectedTechnicalS | /expectedTechnicalS | views/procurement/quotation/expected-technical-specification.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| quotationEDetails.warrantyPeriod | /warrantyPeriod | views/procurement/quotation/warranty-period.html | shared×353 | 1 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| quotationEnquiryApproval | /quotationEnquiryApproval | views/procurement/quotation/quotation-enquiry-approval.html | shared×353 | 9 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| userItemBilling | /userItemBilling | views/procurement/consignment/user-item-billing.html | shared×353 | 6 | 0 | no | yes (keyword match: bill) | bc:0/on:1/rs:1 [on:customEvent] |
-| vendorSpecificPOApproval | /vendorSpecificPOApproval | views/procurement/quotation/vendor-specific-po-approval.html | shared×353 | 10 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| vendorSpecificPOCreation | /vendorSpecificPOCreation | views/procurement/quotation/vendor-specific-po-creation.html | shared×353 | 9 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| vendorSpecificPODefinition | /vendorSpecificPODefinition | views/procurement/quotation/vendor-specific-po-definition.html | shared×353 | 8 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-| workOrderApproval | /workOrderApproval | views/procurement/workOrder/work-order-approval.html | addNewWorkorderApprovalListController.js | 13 | 16 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
-| workOrderCompletion | /workOrderCompletion | views/procurement/workOrder/work-order-completion.html | workOrderCompletionController.js | 13 | 18 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
-| workOrderCompletionDetails | /workOrderCompletionDetails | views/procurement/workOrder/details-work-order-completion.html | workOrderCompletionDetailsController.js | 28 | 16 | no | yes (keyword match: invoice) | bc:0/on:0/rs:1 |
-| workOrderCreation | /workOrderCreation | views/procurement/workOrder/work-order-creation.html | addNewWorkorderLabourListController.js | 13 | 12 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
-| workOrderSettlement | /workOrderSettlement | views/procurement/workOrder/work-order-Settlement.html | workOrderSettlementController.js | 31 | 14 | no | yes (module default: Procurement) | bc:0/on:0/rs:1 |
-| workorderQuotationNegotiation | /workorderQuotationNegotiation | views/procurement/workOrder/workorder-quotation-negotiation.html | shared×353 | 10 | 0 | no | yes (module default: Procurement) | bc:0/on:1/rs:1 [on:customEvent] |
-
-### Admin - Global Master (general) (43 screens)
+### Linen & Laundry (50 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
-| consentMaster | /consentMaster | views/master/GlobalMaster/consent-master.html | consentMasterController.js | 21 | 11 | yes (keyword match: consent) | no | bc:0/on:0/rs:1 |
-| consentTypeMaster | /consentTypeMaster | views/master/GlobalMaster/consent-type-master.html | consentTypeMasterController.js | 11 | 7 | yes (keyword match: consent) | no | bc:0/on:0/rs:1 |
-| deliveryTypeMaster | /deliveryTypeMaster | views/master/GlobalMaster/delivery-type-master.html | deliveryTypeMasterController.js | 8 | 5 | yes (keyword match: delivery) | no | bc:0/on:0/rs:1 |
-| encounterTypeMaster | /encounterTypeMaster | views/master/GlobalMaster/encounter-type-master.html | encounterTypeMasterController.js | 10 | 8 | yes (keyword match: encounter) | no | bc:0/on:0/rs:1 |
-| formulationTypeToDosageMapper | /formulationTypeToDosageMapper | views/master/GlobalMaster/formulation-type-to-dosage-mapper.html | formulationTypeToDosageTypeMapperController.js | 13 | 7 | yes (keyword match: dosage) | no | bc:0/on:0/rs:2 |
-| unitMaster | /unitMaster | views/master/GlobalMaster/unit-master.html | shared×353 | 16 | 0 | yes (keyword match: clinical) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| identificationMaster | /identificationMaster | views/master/GlobalMaster/identificationMaster.html | identificationMasterController.js | 15 | 7 | no | yes (keyword match: card) | bc:0/on:0/rs:1 |
-| areaMaster | /areaMaster | views/master/GlobalMaster/area-master.html | areaMasterController.js | 15 | 12 | no | no | bc:0/on:0/rs:1 |
-| bankBranch | /bankBranch | views/master/GlobalMaster/bank-Branch.html | bankBranchController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| bankMaster | /bankMaster | views/master/GlobalMaster/bank-master.html | bankMasterController.js | 7 | 8 | no | no | bc:0/on:0/rs:1 |
-| cityMaster | /cityMaster | views/master/GlobalMaster/city-master.html | cityMasterController.js | 13 | 11 | no | no | bc:0/on:0/rs:1 |
-| clinicMaster | /clinicMaster | views/master/GlobalMaster/clinic-master.html | clinicMasterController.js | 9 | 7 | no | no | bc:0/on:0/rs:1 |
-| countryMaster | /countryMaster | views/master/GlobalMaster/country-master.html | countryMasterController.js | 13 | 7 | no | no | bc:0/on:0/rs:1 |
-| districtMaster | /districtMaster | views/master/GlobalMaster/district-master.html | districtMasterController.js | 12 | 9 | no | no | bc:0/on:0/rs:1 |
-| employeeCategory | /employeeCategory | views/master/GlobalMaster/emplyoee-category.html | employeeCategoryController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| genericScheduleMaster | /genericScheduleMaster | views/master/GlobalMaster/generic-schedule-master.html | genericScheduleMasterController.js | 8 | 10 | no | no | bc:0/on:0/rs:1 |
-| gradeCreationMaster | /gradeCreationMaster | views/master/GlobalMaster/grade-creation-master.html | gradeCreationMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| holidayCalenderMaster | /holidayCalenderMaster | views/master/GlobalMaster/holiday-calendar-master.html | holidayCalenderMasterController.js | 14 | 9 | no | no | bc:0/on:0/rs:1 |
-| hospitalMaster | /hospitalMaster | views/master/GlobalMaster/hospital-master.html | hospitalMasterController.js | 48 | 27 | no | no | bc:0/on:1/rs:2 [on:fileProgress] |
-| instructionMaster | /instructionMaster | views/master/GlobalMaster/instruction-master.html | inspectionMasterController.js | 11 | 14 | no | no | bc:0/on:0/rs:1 |
-| mailConfiguration | /mailConfiguration | views/master/GlobalMaster/mail-utility-configuration.html | mailUtilityConfigurationController.js | 32 | 7 | no | no | bc:0/on:0/rs:1 |
-| maritalstatusMaster | /maritalstatusMaster | views/master/GlobalMaster/marital-status-master.html | maritalstatusMasterController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
-| nationalityMaster | /nationalityMaster | views/master/GlobalMaster/nationality-master.html | nationalityMasterController.js | 11 | 8 | no | no | bc:0/on:0/rs:1 |
-| occupationMaster | /occupationMaster | views/master/GlobalMaster/occupation-master.html | occupationMasterController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
-| organizationMaster | /organizationMaster | views/master/GlobalMaster/organizationMaster.html | organizationController.js | 31 | 18 | no | no | bc:0/on:1/rs:3 [on:fileProgress] |
-| patientCategory | /patientCategory | views/master/GlobalMaster/patient-category-master.html | patientCategoryController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
-| prefixMaster | /prefixMaster | views/master/GlobalMaster/prefix-master.html | prefixMasterController.js | 12 | 9 | no | no | bc:0/on:0/rs:1 |
-| productstrengthMaster | /productstrengthMaster | views/master/GlobalMaster/product-strength-master.html | shared×353 | 6 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
-| raceMaster | /raceMaster | views/master/GlobalMaster/race-master.html | raceMasterController.js | 11 | 8 | no | no | bc:0/on:0/rs:1 |
-| reasonMaster | /reasonMaster | views/master/GlobalMaster/reason-master.html | reasonMasterController.js | 7 | 13 | no | no | bc:0/on:0/rs:1 |
-| reasonTypeMaster | /reasonTypeMaster | views/master/GlobalMaster/reason-type-master.html | reasonTypeMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| rejectionMaster | /rejectionMaster | views/master/GlobalMaster/rejection-master.html | rejectionMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| relationMaster | /relationMaster | views/master/GlobalMaster/relation-master.html | relationMasterController.js | 6 | 7 | no | no | bc:0/on:0/rs:1 |
-| serviceMaster | /serviceMaster | views/master/GlobalMaster/service-master.html | serviceMasterController.js | 17 | 18 | no | no | bc:0/on:0/rs:1 |
-| siteOfAdministration | /siteOfAdministration | views/master/GlobalMaster/site-of-administration.html | siteOfAdministartionController.js | 5 | 8 | no | no | bc:0/on:0/rs:1 |
-| smsConfiguration | /smsConfiguration | views/master/GlobalMaster/sms-utility-configuration.html | smsUtilityConfigurationController.js | 31 | 9 | no | no | bc:0/on:0/rs:1 |
-| specialityMaster | /specialityMaster | views/master/GlobalMaster/department-master-global.html | specialityMasterController.js | 20 | 11 | no | no | bc:0/on:0/rs:1 |
-| stateMaster | /stateMaster | views/master/GlobalMaster/state-master.html | stateMasterController.js | 11 | 9 | no | no | bc:0/on:0/rs:1 |
-| subSpecialityMaster | /subSpecialityMaster | views/master/GlobalMaster/sub-department-Master.html | subSpecialityMasterController.js | 17 | 10 | no | no | bc:0/on:0/rs:1 |
-| systemMaster | /systemMaster | views/master/GlobalMaster/system-master.html | systemMasterController.js | 8 | 7 | no | no | bc:0/on:0/rs:1 |
-| systemObservationMaster | /systemObservationMaster | views/master/GlobalMaster/system-observation-master.html | systemObservationMasterController.js | 14 | 8 | no | no | bc:0/on:0/rs:1 |
-| transactionTypeMaster | /transactionTypeMaster | views/master/GlobalMaster/transaction-type-master.html | transactionTypeMasterController.js | 6 | 4 | no | no | bc:0/on:0/rs:1 |
-| uhidMergeRequest | /uhidMergeRequest | views/master/GlobalMaster/uhid-merge.html | uhidMergeRequestController.js | 20 | 6 | no | no | bc:0/on:0/rs:3 |
-
-### Pharmacy (42 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| combinationMedicationMaster | /combinationMedicationMaster | views/PharmacyInventory/combination-medication-master.html | shared×353 | 9 | 0 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| dischargeMedicationHandover | /dischargeMedicationHandover | views/PharmacyInventory/InPatient/discharge-medication-hand-over.html | dischargeMedicationHandoverController.js | 15 | 8 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
-| erDischargeMedicationHandover | /erDischargeMedicationHandover | views/PharmacyInventory/InPatient/er-discharge-medication-hand-over.html | erDischargeMedicationHandoverController.js | 5 | 0 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:0/rs:0 |
-| homecareMedicationApproval | /homecareMedicationApproval | views/PharmacyInventory/InPatient/homecare-medication-approval.html | shared×353 | 12 | 0 | yes (keyword match: medication) | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| ETOitemConfig | /ETOitemConfig | views/PharmacyInventory/Store/ETO-item-config.html | shared×353 | 17 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| addItemRequestForAssestDisposalWorklist | /addItemRequestForAssestDisposalWorklist | views/PharmacyInventory/Store/add-item-request-for-assest-disposal-worklist.html | shared×353 | 19 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| addItemWasteAssestDisposalWorklist | /addItemWasteAssestDisposalWorklist | views/PharmacyInventory/Store/add-item-waste-disposal-worklist.html | shared×353 | 19 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewItem | /addNewItem | views/PharmacyInventory/Store/add-new-item.html | shared×353 | 31 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| addNewMaterialIssue | /addNewMaterialIssue | views/PharmacyInventory/InPatient/add-new-material-issue.html | shared×353 | 24 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| addstorewiseGenericMapper | /addstorewiseGenericMapper | views/master/UnitMaster/pharmacy/add-new-storewise-generic-mapper.html | shared×353 | 9 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| assetIssue | /assetIssue | views/PharmacyInventory/Consumable-Inventory/asset-issue.html | shared×353 | 7 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| assetIssueDetails | /assetIssueDetails | views/PharmacyInventory/Consumable-Inventory/asset-issue-details.html | shared×353 | 14 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| assetsSupportStatus | /assetsSupportStatus | views/PharmacyInventory/Store/assets-support-status.html | shared×353 | 3 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| consumbleAssetIndent | /consumbleAssetIndent | views/PharmacyInventory/Consumable-Inventory/consumble-asset-indent.html | shared×353 | 6 | 0 | no | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsPatientRejectedRejectionConsumable | /detailsPatientRejectedRejectionConsumable | views/PharmacyInventory/InPatient/details-patient-rejected-rejection-consumable.html ✗ | shared×353 | – | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsReturnableGatepassRequest | /detailsReturnableGatepassRequest | views/PharmacyInventory/InPatient/details-returnable-gatepass-pending-list.html | shared×353 | 6 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsReturnableGatepassRequestList | /detailsReturnableGatepassRequestList | views/PharmacyInventory/InPatient/details-returnable-gatepass-list.html | shared×353 | 3 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsReturnablegatepassReceiveIssueList | /detailsReturnablegatepassReceiveIssueList | views/PharmacyInventory/Store/details-returnable-gatepass-receive-issue-list.html | shared×353 | 0 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsReturnablegatepassReceivePendingList | /detailsReturnablegatepassReceivePendingList | views/PharmacyInventory/Store/details-returnable-gatepass-receive-pending-list.html | shared×353 | 0 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsStopTransaction | /detailsStopTransaction | views/PharmacyInventory/StockAdjustment/details-stop-transaction.html | shared×353 | 0 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| detailsWasteStore | /detailsWasteStore | views/PharmacyInventory/Store/details-waste-store.html | shared×353 | 1 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| dispensingMaster | /dispensingMaster | views/PharmacyInventory/dispensing-master.html | shared×353 | 5 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| expiredItemsReturns | /expiredItemsReturns | views/PharmacyInventory/InPatient/expired-items-returns.html | shared×353 | 11 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| expiredReturnAcceptance | /expiredReturnAcceptance | views/PharmacyInventory/InPatient/expired-return-acceptance.html | shared×353 | 12 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| externalSiteVisit | /externalSiteVisit | views/PharmacyInventory/Consumable-Inventory/external-site-visit.html | shared×353 | 8 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| internalSiteVisit | /internalSiteVisit | views/PharmacyInventory/Consumable-Inventory/internal-site-visit.html | shared×353 | 8 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| itemLocationAllocation | /itemLocationAllocation | views/PharmacyInventory/Store/item-location-allocation.html | shared×353 | 17 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| itemWiseMarkUp | /itemWiseMarkUp | views/PharmacyInventory/Store/item-wise-markup.html | shared×353 | 12 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| kitMaster | /kitMaster | views/PharmacyInventory/kit-master.html | shared×353 | 8 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| medicinesAddSub | /medicinesAddSub | views/PharmacyInventory/StockAdjustment/medicinesAddSub.html | medicinesAddSubController.js | 12 | 9 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
-| pendingReturnablegatepassReceive  | /pendingReturnablegatepassReceive | views/PharmacyInventory/Store/returnable-gatepass-receive.html | shared×353 | 12 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| pharmacyPaymentCollection | /pharmacyPaymentCollection | views/PharmacyInventory/pharmacy-payment-collection.html | shared×353 | 18 | 0 | no | yes (keyword match: collection, pay, payment) | bc:0/on:1/rs:1 [on:customEvent] |
-| procurementunitMaster | /procurementunitMaster | views/PharmacyInventory/procurement-unit-master.html | shared×353 | 5 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| rejectedUploaded | /rejectedUploaded | views/PharmacyInventory/StockAdjustment/rejected-uploaded.html | shared×353 | 5 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| returnableGatepassRequest | /returnableGatepassRequest | views/PharmacyInventory/InPatient/returnable-gatepass-request-pending-list.html | shared×353 | 0 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| returnableGatepassRequest.list | /list | views/PharmacyInventory/InPatient/returnable-gatepass-list.html | shared×353 | 7 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| returnableGatepassRequest.pendingList | /pendingList | views/PharmacyInventory/InPatient/returnable-gatepass-pending-list.html ✗ | shared×353 | – | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-| stockRegister | /stockRegister | views/PharmacyInventory/Store/stock-register.html | shared×353 | 5 | 0 | no | yes (keyword match: stock) | bc:0/on:1/rs:1 [on:customEvent] |
-| storageLocationMasterForSlideBlocks | /storageLocationMasterForSlideBlocks | views/PharmacyInventory/InPatient/storage-location-master-for-slide-blocks.html | storageLocationMstForSlideBlocksController.js | 10 | 5 | no | yes (module default: Pharmacy) | bc:0/on:0/rs:1 |
-| topOrderList | /topOrderList | views/PharmacyInventory/InPatient/top-order-up-list.html | – | 1 | – | no | yes (module default: Pharmacy) | – |
-| topUpIndent | /topUpIndent | views/PharmacyInventory/InPatient/top-up-indent.html | shared×353 | 8 | 0 | no | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
-| wasteStore | /wasteStore | views/PharmacyInventory/Store/waste-store.html | shared×353 | 14 | 0 | no | yes (module default: Pharmacy) | bc:0/on:1/rs:1 [on:customEvent] |
-
-### Linen & Laundry (40 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
+| codeBlueController | /codeBlue | views/Linen/code-blue.html | codeBlueController.js | 41 | 2 | yes (keyword match: code blue) | no | bc:0/on:0/rs:1 |
+| addNewLinenIndent | /addNewLinenIndent | views/Linen/add-new-linen-indent.html | addNewLinenController.js | 17 | 8 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
 | convertOfCondemnationStock | /convertOfCondemnationStock | views/Linen/convert-of-condemnation-stock.html | shared×353 | 7 | 0 | no | yes (keyword match: stock) | bc:0/on:1/rs:1 [on:customEvent] |
 | convertOfCondemnationStockDetails | /convertOfCondemnationStockDetails | views/Linen/convert-of-condemnation-stock-details.html | shared×353 | 10 | 0 | no | yes (keyword match: stock) | bc:0/on:1/rs:1 [on:customEvent] |
+| linenIndent | /linenIndent | views/Linen/linen-indent.html | linenIndentController.js | 13 | 4 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| linenIndentApproval | /linenIndentApproval | views/Linen/linen-indent-approval.html | linenIndentApprovalController.js | 7 | 2 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| linenIndentApprovalDetails | /linenIndentApprovalDetails | views/Linen/linen-indent-approval-details.html | linenIndentApprovalDetailsController.js | 10 | 2 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
+| linenIndentDetails | /linenIndentDetails | views/Linen/linen-indent-details.html | linenIndentDetailController.js | 2 | 1 | no | yes (keyword match: indent) | bc:0/on:0/rs:1 |
 | acceptanceIssueWashedLinen | /acceptanceIssueWashedLinen | views/Linen/acceptance-issue-washed-linen.html | shared×353 | 7 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | acceptanceOfCondemnation  | /acceptanceOfCondemnation | views/Linen/acceptance-of-condemnation.html | shared×353 | 7 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | acceptanceOfCondemnationDetails | /acceptanceOfCondemnationDetails | views/Linen/acceptance-of-condemnation-details.html | shared×353 | 3 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
@@ -993,8 +1494,12 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | issueDirtyLinen | /issueDirtyLinen | views/Linen/issue-dirty-linen.html | shared×353 | 13 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | issueToStaff | /issueToStaff | views/Linen/issue-to-staff.html | shared×353 | 5 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | issueWashedLinen | /issueWashedLinen | views/Linen/issue-washed-linen.html | shared×353 | 14 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| linenIssue | /linenIssue | views/Linen/linen-issue.html | linenIssueController.js | 17 | 3 | no | no | bc:0/on:0/rs:1 |
+| linenIssueAcceptanceDetails | /linenIssueAcceptanceDetails | views/Linen/linen-issue-acceptance-details.html | linenIssueAcceptanceDetailsController.js | 5 | 2 | no | no | bc:0/on:0/rs:1 |
 | linenIssueDirect | /linenIssueDirect | views/Linen/linen-issue-direct.html | shared×353 | 14 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | linenIssueListDetails | /linenIssueListDetails | views/Linen/linen-issue-list-details.html | shared×353 | 1 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+| linenIssuePendingDetails | /linenIssuePendingDetails | views/Linen/linen-issue-pending-details.html | linenIssuePendingDetailsController.js | 18 | 2 | no | no | bc:0/on:0/rs:1 |
+| linenIssueacceptance | /linenIssueacceptance | views/Linen/linen-issue-acceptance.html | linenIssueAcceptanceController.js | 7 | 2 | no | no | bc:0/on:0/rs:1 |
 | linenReturn | /linenReturn | views/Linen/linen-return.html | shared×353 | 7 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | linenReturnAcceptance | /linenReturnAcceptance | views/Linen/linen-return-acceptance.html | shared×353 | 5 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | linenReturnAcceptanceDetails | /linenReturnAcceptanceDetails | views/Linen/linen-return-acceptance-details.html | shared×353 | 6 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
@@ -1009,45 +1514,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | staffLinenAllocation | /staffLinenAllocation | views/Linen/staff-linen-allocation.html | shared×353 | 7 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | washingRequest | /washingRequest | views/Linen/washing-request.html | shared×353 | 9 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 
-### Admin - Org/Unit Master (33 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| ICUtypeMasterUnit | /ICUtypeMasterUnit | views/master/UnitMaster/organizationMaster/ICU-type-master-unit.html | shared×353 | 12 | 0 | yes (keyword match: icu) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| dischargeSummaryFieldMaster | /dischargeSummaryFieldMaster | views/master/UnitMaster/organizationMaster/discharge-summary-field-master.html | dischargeSummaryFieldMasterController.js | 12 | 13 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
-| dischargeSummaryTemplate | /dischargeSummaryTemplate | views/master/UnitMaster/organizationMaster/discharge-summary-template.html | dischargeSummaryTemplateMasterController.js | 13 | 13 | yes (keyword match: discharge summary) | no | bc:0/on:0/rs:1 |
-| icutypeMaster | /icutypeMaster | views/master/UnitMaster/organizationMaster/icu-type-master.html | icuTypeController.js | 13 | 7 | yes (keyword match: icu) | no | bc:0/on:0/rs:1 |
-| nursingStationMaster | /nursingStationMaster | views/master/UnitMaster/organizationMaster/nursing-station-master.html | nursingStationMasterController.js | 7 | 8 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| nursingStationWardMapping | /nursingStationWardMapping | views/master/UnitMaster/organizationMaster/nursing-station-ward-mapping.html | nursingStationWardMappingController.js | 5 | 10 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| referralMaster | /referralMaster | views/master/UnitMaster/organizationMaster/referral-master.html | referralMasterController.js | 20 | 13 | yes (keyword match: referral) | no | bc:0/on:0/rs:3 |
-| billingBedCategoryMapper | /billingBedCategoryMapper | views/master/UnitMaster/organizationMaster/bed-category-master-unit.html | bedCategoryMasterUnitController.js | 4 | 2 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
-| billingBedCategoryMaster | /billingBedCategoryMaster | views/master/UnitMaster/organizationMaster/billing-bed-category-master-unit.html | billingBedCategoryMasterUnitController.js | 10 | 7 | no | yes (keyword match: bill) | bc:0/on:0/rs:1 |
-| RMOAllocationMaster | /RMOAllocationMaster | views/master/UnitMaster/organizationMaster/RMO-allocation-master.html | rmoAllocationMasterController.js | 21 | 13 | no | no | bc:0/on:0/rs:2 |
-| addNewNabhReporting | /addNewNabhReporting | views/master/UnitMaster/organizationMaster/add-new-nabh-reporting.html | addNewNABHReportingController.js | 25 | 17 | no | no | bc:0/on:1/rs:3 [on:$locationChangeStart] |
-| amenityMaster | /amenityMaster | views/master/UnitMaster/organizationMaster/amenity-master.html | amenityMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| bedCategoryMapper | /bedCategoryMapper | views/master/UnitMaster/organizationMaster/bed-category-mapper.html | shared×353 | 12 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
-| bedClassMappingMasterUnit | /bedClassMappingMasterUnit | views/master/UnitMaster/organizationMaster/bed-class-mapping-master-unit.html | shared×353 | 5 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
-| bedClassMasterUnit | /bedClassMasterUnit | views/master/UnitMaster/organizationMaster/bed-class-master-unit.html | shared×353 | 4 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
-| bedMaster | /bedMaster | views/master/UnitMaster/organizationMaster/bed-master.html | bedMasterController.js | 27 | 20 | no | no | bc:0/on:0/rs:1 |
-| cabinMaster | /cabinMaster | views/master/UnitMaster/organizationMaster/cabin-master.html | cabinMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| counterMaster | /counterMaster | views/master/UnitMaster/organizationMaster/counter-master.html | counterMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| departmentMasterUnit | /departmentMasterUnit | views/master/UnitMaster/organizationMaster/department-master-unit.html | departmentMasterUnitController.js | 12 | 9 | no | no | bc:0/on:0/rs:1 |
-| dischargeFieldMapper | /dischargeFieldMapper | views/master/UnitMaster/organizationMaster/discharge-field-mapper.html | dischargeFieldMapperController.js | 9 | 11 | no | no | bc:0/on:0/rs:1 |
-| editReportedNabh | /editReportedNabh | views/master/UnitMaster/organizationMaster/edit-reported-nabh.html | editReportedNabhController.js | 19 | 11 | no | no | bc:0/on:0/rs:1 |
-| floorMapMaster | /floorMapMaster | views/master/UnitMaster/organizationMaster/floor-map-master.html | shared×353 | 6 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
-| floorMaster | /floorMaster | views/master/UnitMaster/organizationMaster/floor-master.html | floorMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| growthChartMaster | /growthChartMaster | views/master/UnitMaster/organizationMaster/growth-chart-master.html | growthChartMasterController.js | 12 | 9 | no | no | bc:0/on:0/rs:1 |
-| holidayCalendarMasterUnit | /holidayCalendarMasterUnit | views/master/UnitMaster/organizationMaster/holiday-calendar-master-unit.html | holidayCalendarMasterUnitController.js | 10 | 4 | no | no | bc:0/on:0/rs:1 |
-| icpcCodesConfiguration | /icpcCodesConfiguration | views/master/UnitMaster/organizationMaster/icpc-codes-configuration.html | icpcCodesConfigurationController.js | 5 | 6 | no | no | bc:0/on:0/rs:1 |
-| mealPreferenceMaster | /mealPreferenceMaster | views/master/UnitMaster/organizationMaster/meal-preference-master.html | mealPreferenceMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-| roomMaster | /roomMaster | views/master/UnitMaster/organizationMaster/room-master.html | roomMasterController.js | 21 | 10 | no | no | bc:0/on:0/rs:1 |
-| roomModulityMapper | /roomModulityMapper | views/master/UnitMaster/organizationMaster/room-modulity-mapper.html | shared×353 | 4 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
-| subDepartmentMasterUnit | /subDepartmentMasterUnit | views/master/UnitMaster/organizationMaster/sub-department-master-unit.html | subDepartmentMasterUnitController.js | 5 | 10 | no | no | bc:0/on:0/rs:1 |
-| wardMaster | /wardMaster | views/master/UnitMaster/organizationMaster/ward-master.html | wardMasterController.js | 16 | 11 | no | no | bc:0/on:0/rs:1 |
-| weekendMaster | /weekendMaster | views/master/UnitMaster/organizationMaster/weekend-master.html | weekendMasterController.js | 11 | 8 | no | no | bc:0/on:0/rs:1 |
-| wingMaster | /wingMaster | views/master/UnitMaster/organizationMaster/wing-master.html | wingMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-
-### OPD (30 screens)
+### OPD (31 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
@@ -1057,6 +1524,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | interconsultation | /interconsultation | views/OPD/inter-consultation.html | shared×353 | 2 | 0 | yes (keyword match: consult) | no | bc:0/on:1/rs:1 [on:customEvent] |
 | paymentInformation | /paymentInformation | views/OPD/payment-information.html | shared×11 | 36 | 66 | no | yes (keyword match: pay, payment) | bc:0/on:0/rs:8 |
 | OPDCoverSheet | /OPDCoverSheet | views/OPD/CoverSheet/opd-coversheet.html | OPDCoverSheetController.js | 1269 | 427 | no | no | bc:1/on:2/rs:25 [bc:coversheetSpeech:stop; on:$destroy,coversheetSpeech:stop] |
+| OPDcoversheetNew | /OPDcoversheetNew | views/OPD/CoverSheet/opd-coversheet-new.html | OPDcoversheetNewController.js | 620 | 357 | no | no | bc:0/on:0/rs:1 |
 | SpeechToText | /OPDCoverSheet | views/OPD/CoverSheet/opd-coversheet.html | ? | 1269 | – | no | no | – |
 | adviceTab | /adviceTab | views/OPD/CoverSheet/opd-coversheet-new.html | adviceTabController.js | 620 | 23 | no | no | bc:0/on:0/rs:1 |
 | advisedVisits | /advisedVisits | views/OPD/advised-visits.html | advisedVisitsController.js | 58 | 6 | no | no | bc:0/on:0/rs:1 |
@@ -1082,35 +1550,7 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | walkinAppointment | /walkinAppointment | views/OPD/walkin-appointment.html | shared×11 | 12 | 66 | no | no | bc:0/on:0/rs:8 |
 | walkinNew | /walkinNew | views/OPD/walk-new.html | shared×11 | 32 | 66 | no | no | bc:0/on:0/rs:8 |
 
-### Asset Management (23 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| checklistEquipmentMapper | /checklistEquipmentMapper | views/master/GlobalMaster/EquipmentMaster/checklist-equipment-mapper.html | checklistEquipmentMapperMasterController.js | 8 | 6 | yes (keyword match: checklist) | no | bc:0/on:0/rs:1 |
-| checklistEquipmentMaster | /checklistEquipmentMaster | views/master/GlobalMaster/EquipmentMaster/checklist-equipment-master.html | checklistEquipmentMasterController.js | 10 | 7 | yes (keyword match: checklist) | no | bc:0/on:0/rs:1 |
-| addNewIndentTemplateMaster | /addNewIndentTemplateMaster | views/master/UnitMaster/assetManagement/add-new-indent-template-master.html | shared×353 | 8 | 0 | no | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
-| indentTemplateMaster | /indentTemplateMaster | views/master/UnitMaster/assetManagement/indent-template-master.html | shared×353 | 6 | 0 | no | yes (keyword match: indent) | bc:0/on:1/rs:1 [on:customEvent] |
-| ETOItemConfiguration | /ETOItemConfiguration | views/master/UnitMaster/assetManagement/ETO-item-configuration.html | shared×353 | 5 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
-| PMRequest | /PMRequest | views/master/UnitMaster/assetManagement/PM-request.html | pmRequestController.js | 23 | 10 | no | no | bc:0/on:0/rs:1 |
-| PMSchedule | /PMSchedule | views/master/UnitMaster/assetManagement/PM-schedule.html | pmScheduleController.js | 16 | 11 | no | no | bc:0/on:0/rs:0 |
-| addNewCorrectiveMaintenance | /addNewCorrectiveMaintenance | views/master/UnitMaster/assetManagement/add-new-corrective-maintenance-worklist.html | addNewCorrectiveMaintenanceController.js | 37 | 6 | no | no | bc:0/on:0/rs:1 |
-| addNewETOItemConfiguration | /addNewETOItemConfiguration | views/master/UnitMaster/assetManagement/add-new-ETO-item-configuration.html | shared×353 | 7 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
-| assetPMSScheduler | /assetPMSScheduler | views/master/UnitMaster/assetManagement/asset-PMS-scheduler.html | preventiveMaintenanceController.js | 13 | 9 | no | no | bc:0/on:0/rs:1 |
-| assetScheduler | /assetScheduler | views/master/UnitMaster/assetManagement/create-asset-scheduler.html | createAssetSchedulerController.js | 22 | 10 | no | no | bc:0/on:0/rs:0 |
-| correctiveMaintenance | /correctiveMaintenance | views/master/UnitMaster/assetManagement/corrective-maintenance.html | correctiveMaintenanceController.js | 15 | 6 | no | no | bc:0/on:0/rs:1 |
-| correctiveMaintenanceScheduleWorklist | /correctiveMaintenanceScheduleWorklist | views/master/UnitMaster/assetManagement/corrective-maintenance-schedule-worklist.html | correctiveMaintenanceScheduleWorklistController.js | 11 | 3 | no | no | bc:0/on:0/rs:1 |
-| correctiveMaintenanceWorklist | /correctiveMaintenanceWorklist | views/master/UnitMaster/assetManagement/corrective-maintenance-worklist.html | correctiveMaintenanceWorklistController.js | 10 | 2 | no | no | bc:0/on:0/rs:1 |
-| departmentStoreMapper | /departmentStoreMapper | views/master/UnitMaster/assetManagement/department-store-mapper.html | departmentStoreMapperController.js | 5 | 12 | no | no | bc:0/on:0/rs:1 |
-| detailScheduleWorklist | /detailScheduleWorklist | views/master/UnitMaster/assetManagement/details-schedule-worklist.html | detailScheduleWorklistController.js | 37 | 10 | no | no | bc:0/on:0/rs:0 |
-| detailsCorrectiveMaintenance | /detailsCorrectiveMaintenance | views/master/UnitMaster/assetManagement/details-corrective-maintenance.html | detailsCorrectiveMaintenanceController.js | 22 | 3 | no | no | bc:0/on:0/rs:1 |
-| detailsCorrectiveMaintenanceScheduleWorklist | /detailsCorrectiveMaintenanceScheduleWorklist | views/master/UnitMaster/assetManagement/details-corrective-maintenance-schedule-worklist.html | detailsCorrectiveMaintenanceScheduleWorklistController.js | 45 | 11 | no | no | bc:0/on:0/rs:1 |
-| detailsCorrectiveMaintenanceWorklist | /detailsCorrectiveMaintenanceWorklist | views/master/UnitMaster/assetManagement/details-corrective-maintenance-worklist.html | detailsCorrectiveMaintenanceWorklistController.js | 21 | 2 | no | no | bc:0/on:0/rs:1 |
-| productCategoryMaster | /productCategoryMaster | views/master/GlobalMaster/AssetManagenent/Master/product-category-master.html | shared×353 | 6 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
-| scheduleWorklist | /scheduleWorklist | views/master/UnitMaster/assetManagement/schedule-worklist.html | preventiveScheduleWorklistController.js | 8 | 3 | no | no | bc:0/on:0/rs:0 |
-| viewAssetScheduler | /viewAssetScheduler | views/master/UnitMaster/assetManagement/view-asset-scheduler.html | viewAssetSchedulerController.js | 4 | 3 | no | no | bc:0/on:0/rs:0 |
-| wardStoreMapper | /wardStoreMapper | views/master/UnitMaster/assetManagement/ward-store-mapper.html | wardStoreMapperController.js | 5 | 10 | no | no | bc:0/on:0/rs:1 |
-
-### Appointment Scheduling (22 screens)
+### Appointment Scheduling (24 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
@@ -1128,9 +1568,11 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | bookView | /bookView | views/book-view.html | bookViewMasterController.js | 142 | 55 | no | no | bc:0/on:0/rs:0 |
 | doctorWise | /doctorWise | views/master/UnitMaster/scheduleBlockUnblock/doctor-wise.html | SlotBlockUnblockControllerDoctorWise.js | 26 | 12 | no | no | bc:0/on:0/rs:1 |
 | duplicate-tab | /duplicate-tab | views/AppointmentScheduling/duplicate-tab.html | duplicateTabController.js | 0 | 0 | no | no | bc:0/on:0/rs:1 |
+| inPatientFeedback | /api/inPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:admissionId | views/AppointmentScheduling/inPatient-feedback.html | inPatientFeedbackController.js | 101 | 2 | no | no | bc:0/on:0/rs:0 |
 | medicineInfo | /medicineInfo | views/AppointmentScheduling/medicineInfo.html | ? | 4 | – | no | no | – |
 | modalityMaster | /modalityMaster | views/master/UnitMaster/Scheduling/modality-master.html | modalityMasterController.js | 9 | 10 | no | no | bc:0/on:0/rs:1 |
 | modalityTypeMaster | /modalityTypeMaster | views/master/UnitMaster/Scheduling/modality-type-master.html | modalityTypeMasterController.js | 7 | 8 | no | no | bc:0/on:0/rs:1 |
+| outPatientFeedback | /api/outPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:encounterId | views/AppointmentScheduling/outPatient-feedback.html | outPatientFeedbackController.js | 62 | 2 | no | no | bc:0/on:0/rs:0 |
 | pharman | /pharman | views/AppointmentScheduling/medicineInfo.html | pharmanController.js | 4 | 3 | no | no | bc:0/on:0/rs:0 |
 | scheduleWise | /scheduleWise | views/master/UnitMaster/scheduleBlockUnblock/schedule-wise.html | SlotBlockUnblockControllerScheduleWise.js | 43 | 14 | no | no | bc:0/on:0/rs:1 |
 | webAppointment | /webAppointment | views/AppointmentScheduling/web-appointment.html | webAppointmentController.js | 81 | 20 | no | no | bc:0/on:0/rs:1 |
@@ -1181,6 +1623,24 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | rejectedDietList | /rejectedDietList | views/master/GlobalMaster/DietNutrition/rejected-diet-list.html | rejectedDietListController.js | 7 | 6 | yes (module default: Diet & Nutrition) | no | bc:0/on:0/rs:2 |
 | tubeFeedingProducts | /tubeFeedingProducts | views/master/GlobalMaster/DietNutrition/tube-feeding-products.html | tubeFeedingProductsController.js | 8 | 7 | yes (module default: Diet & Nutrition) | no | bc:0/on:0/rs:1 |
 
+### Clinical - Global Master (13 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| ICDdiagnosisMaster | /ICDdiagnosisMaster | views/master/GlobalMaster/ICD-diagnosis-master.html | diagnosisMapperController.js | 10 | 11 | yes (keyword match: diagnos) | no | bc:0/on:0/rs:1 |
+| allergyMaster | /allergyMaster | views/master/GlobalMaster/allergy-master.html | allergyMasterController.js | 8 | 8 | yes (keyword match: allerg) | no | bc:0/on:0/rs:1 |
+| allergyTypeMaster | /allergyTypeMaster | views/master/GlobalMaster/allergy-type-master.html | allergyTypeMasterController.js | 7 | 7 | yes (keyword match: allerg) | no | bc:0/on:0/rs:1 |
+| diagnosisMaster | /diagnosis | views/master/GlobalMaster/diagnosis.html | diagnosisMasterController.js | 5 | 5 | yes (keyword match: diagnos) | no | bc:0/on:0/rs:2 |
+| doseMaster | /doseMaster | views/master/GlobalMaster/dose-master.html | doseMasterController.js | 5 | 7 | yes (keyword match: dose) | no | bc:0/on:0/rs:1 |
+| emergencyDiagnosisMaster | /emergencyDiagnosisMaster | views/master/GlobalMaster/emergency-diagnosis-master.html | emergencyDiagnosisMasterController.js | 4 | 9 | yes (keyword match: diagnos, emergency) | no | bc:0/on:0/rs:1 |
+| examinationMaster | /examinationMaster | views/master/GlobalMaster/examination-master.html | examinationMasterController.js | 5 | 7 | yes (module default: Clinical - Global Master) | no | bc:0/on:0/rs:1 |
+| immunizationSchedule | /immunizationSchedule | views/master/GlobalMaster/immunization-schedule.html | shared×353 | 6 | 0 | yes (keyword match: immuniz) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| immuniztionHistory | /immuniztionHistory | views/master/GlobalMaster/immunization-history.html | shared×353 | 4 | 0 | yes (keyword match: immuniz) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| nursingOrderMaster | /nursingOrderMaster | views/master/GlobalMaster/nursing-order-master.html | nursingOrderMasterController.js | 8 | 12 | yes (keyword match: nursing, nursing order) | no | bc:0/on:0/rs:1 |
+| surgeryGradeMaster | /surgeryGradeMaster | views/master/GlobalMaster/surgery-grade-master.html | surgeryGradeMasterController.js | 4 | 5 | yes (keyword match: surger) | no | bc:0/on:0/rs:1 |
+| surgeryMaster | /surgeryMaster | views/master/GlobalMaster/surgery-master.html | surgeryMasterController.js | 8 | 7 | yes (keyword match: surger) | no | bc:0/on:0/rs:1 |
+| vaccinationMaster | /vaccinationMaster | views/master/GlobalMaster/vaccination-master.html | shared×353 | 10 | 0 | yes (keyword match: vaccin) | no | bc:0/on:1/rs:1 [on:customEvent] |
+
 ### Billing - Doctor Share (12 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
@@ -1198,21 +1658,21 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | drCreditNote | /drCreditNote | views/master/DoctorShare/dr-creditnote.html | drCreditNote.js | 27 | 8 | no | yes (keyword match: credit) | bc:0/on:0/rs:1 |
 | drCreditNoteApproval | /drCreditNoteApproval | views/master/DoctorShare/dr-creditnote-approval.html | drCreditNoteApprovalController.js | 16 | 5 | no | yes (keyword match: credit) | bc:0/on:0/rs:1 |
 
-### Clinical - Global Master (11 screens)
+### Admin - User Management (11 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
-| allergyMaster | /allergyMaster | views/master/GlobalMaster/allergy-master.html | allergyMasterController.js | 8 | 8 | yes (keyword match: allerg) | no | bc:0/on:0/rs:1 |
-| allergyTypeMaster | /allergyTypeMaster | views/master/GlobalMaster/allergy-type-master.html | allergyTypeMasterController.js | 7 | 7 | yes (keyword match: allerg) | no | bc:0/on:0/rs:1 |
-| diagnosisMaster | /diagnosis | views/master/GlobalMaster/diagnosis.html | diagnosisMasterController.js | 5 | 5 | yes (keyword match: diagnos) | no | bc:0/on:0/rs:2 |
-| doseMaster | /doseMaster | views/master/GlobalMaster/dose-master.html | doseMasterController.js | 5 | 7 | yes (keyword match: dose) | no | bc:0/on:0/rs:1 |
-| examinationMaster | /examinationMaster | views/master/GlobalMaster/examination-master.html | examinationMasterController.js | 5 | 7 | yes (module default: Clinical - Global Master) | no | bc:0/on:0/rs:1 |
-| immunizationSchedule | /immunizationSchedule | views/master/GlobalMaster/immunization-schedule.html | shared×353 | 6 | 0 | yes (keyword match: immuniz) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| immuniztionHistory | /immuniztionHistory | views/master/GlobalMaster/immunization-history.html | shared×353 | 4 | 0 | yes (keyword match: immuniz) | no | bc:0/on:1/rs:1 [on:customEvent] |
-| nursingOrderMaster | /nursingOrderMaster | views/master/GlobalMaster/nursing-order-master.html | nursingOrderMasterController.js | 8 | 12 | yes (keyword match: nursing, nursing order) | no | bc:0/on:0/rs:1 |
-| surgeryGradeMaster | /surgeryGradeMaster | views/master/GlobalMaster/surgery-grade-master.html | surgeryGradeMasterController.js | 4 | 5 | yes (keyword match: surger) | no | bc:0/on:0/rs:1 |
-| surgeryMaster | /surgeryMaster | views/master/GlobalMaster/surgery-master.html | surgeryMasterController.js | 8 | 7 | yes (keyword match: surger) | no | bc:0/on:0/rs:1 |
-| vaccinationMaster | /vaccinationMaster | views/master/GlobalMaster/vaccination-master.html | shared×353 | 10 | 0 | yes (keyword match: vaccin) | no | bc:0/on:1/rs:1 [on:customEvent] |
+| OTIMSroleCreation | /OTIMSroleCreation | views/master/UnitMaster/userManagement/OTIMS-role-creation.html | OTIMSroleCreationController.js | 2 | 4 | yes (keyword match: otims) | no | bc:0/on:0/rs:1 |
+| departmentNursingStationMapper | /departmentNursingStationMapper | views/master/UnitMaster/userManagement/department-nursing-station-mapper.html | departmentNursingStationMapperController.js | 6 | 10 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| employeeVaccination | /employeeVaccination | views/master/UnitMaster/userManagement/employee-vaccination.html | employeeVaccinationController.js | 4 | 4 | yes (keyword match: vaccin) | no | bc:0/on:0/rs:1 |
+| userNursingStationMapper | /userNursingStationMapper | views/master/UnitMaster/userManagement/user-nursing-station-mapper.html | userNursingStationMapperController.js | 8 | 10 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
+| doctorCabinMapper | /doctorCabinMapper | views/master/UnitMaster/userManagement/doctor-cabin-mapper.html | doctorCabinMapperController.js | 7 | 10 | no | no | bc:0/on:0/rs:1 |
+| roleCreation | /roleCreation | views/master/UnitMaster/userManagement/role-creation.html | roleCreationMasterController.js | 16 | 10 | no | no | bc:0/on:0/rs:1 |
+| roleManagement | /roleManagement | views/master/UnitMaster/userManagement/role-management.html | roleManagementMasterController.js | 3 | 4 | no | no | bc:0/on:0/rs:1 |
+| userAuthentication | /userAuthentication | views/master/UnitMaster/userManagement/user-authentication.html | userAuthenticationMasterController.js | 8 | 10 | no | no | bc:0/on:0/rs:3 |
+| userCounterMapper | /userCounterMapper | views/master/UnitMaster/userManagement/user-counter-mapper.html | userCounterMapperController.js | 7 | 10 | no | no | bc:0/on:0/rs:1 |
+| userRoleManagement | /userRoleManagement | views/master/UnitMaster/userManagement/user-role-management.html | userRoleManagementMasterController.js | 87 | 23 | no | no | bc:0/on:0/rs:1 |
+| userStoreMapper | /userStoreMapper | views/master/UnitMaster/userManagement/user-store-mapper.html | userStoreMapperController.js | 7 | 11 | no | no | bc:0/on:0/rs:1 |
 
 ### Billing - Global Master (10 screens)
 
@@ -1229,21 +1689,6 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | mpesaApplicationConfiguration | /mpesaApplicationConfiguration | views/master/GlobalMaster/mpesa-application-configuration.html | mpesaApplicationConfigurationController.js | 10 | 4 | no | yes (keyword match: mpesa) | bc:0/on:0/rs:1 |
 | tariffMaster | /tariffMaster | views/master/GlobalMaster/tariff-master.html | tariffMasterController.js | 12 | 20 | no | yes (keyword match: tariff) | bc:0/on:0/rs:2 |
 
-### Admin - User Management (10 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| OTIMSroleCreation | /OTIMSroleCreation | views/master/UnitMaster/userManagement/OTIMS-role-creation.html | OTIMSroleCreationController.js | 2 | 4 | yes (keyword match: otims) | no | bc:0/on:0/rs:1 |
-| departmentNursingStationMapper | /departmentNursingStationMapper | views/master/UnitMaster/userManagement/department-nursing-station-mapper.html | departmentNursingStationMapperController.js | 6 | 10 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| userNursingStationMapper | /userNursingStationMapper | views/master/UnitMaster/userManagement/user-nursing-station-mapper.html | userNursingStationMapperController.js | 8 | 10 | yes (keyword match: nursing) | no | bc:0/on:0/rs:1 |
-| doctorCabinMapper | /doctorCabinMapper | views/master/UnitMaster/userManagement/doctor-cabin-mapper.html | doctorCabinMapperController.js | 7 | 10 | no | no | bc:0/on:0/rs:1 |
-| roleCreation | /roleCreation | views/master/UnitMaster/userManagement/role-creation.html | roleCreationMasterController.js | 16 | 10 | no | no | bc:0/on:0/rs:1 |
-| roleManagement | /roleManagement | views/master/UnitMaster/userManagement/role-management.html | roleManagementMasterController.js | 3 | 4 | no | no | bc:0/on:0/rs:1 |
-| userAuthentication | /userAuthentication | views/master/UnitMaster/userManagement/user-authentication.html | userAuthenticationMasterController.js | 8 | 10 | no | no | bc:0/on:0/rs:3 |
-| userCounterMapper | /userCounterMapper | views/master/UnitMaster/userManagement/user-counter-mapper.html | userCounterMapperController.js | 7 | 10 | no | no | bc:0/on:0/rs:1 |
-| userRoleManagement | /userRoleManagement | views/master/UnitMaster/userManagement/user-role-management.html | userRoleManagementMasterController.js | 87 | 23 | no | no | bc:0/on:0/rs:1 |
-| userStoreMapper | /userStoreMapper | views/master/UnitMaster/userManagement/user-store-mapper.html | userStoreMapperController.js | 7 | 11 | no | no | bc:0/on:0/rs:1 |
-
 ### Clinical - Encounter Master (9 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
@@ -1257,6 +1702,34 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | encounterQueueEHC | /encounterQueueEHC | views/master/GlobalMaster/Encounter/encounter-queue-ehc.html | encounterQueueEHCController.js | 8 | 15 | yes (keyword match: encounter) | no | bc:0/on:0/rs:1 |
 | encounterQueueManagement | /encounterQueueManagement | views/master/GlobalMaster/Encounter/encounter-queue-management.html | encounterQueueManagementController.js | 32 | 39 | yes (keyword match: encounter, nursing) | no | bc:0/on:0/rs:1 |
 | nursingWorklist | /nursingWorklist | views/master/GlobalMaster/Encounter/nursing-worklist.html | shared×353 | 9 | 0 | yes (keyword match: encounter, nursing) | no | bc:0/on:1/rs:1 [on:customEvent] |
+
+### Common - Template (9 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| clinicalSectionSummary | /clinicalSectionSummary | views/template/data-object-list.html | dataObjectListController.js | 2 | 2 | yes (keyword match: clinical) | no | bc:0/on:0/rs:1 |
+| dataObject | /dataObject | views/template/data-object.html | dataObjectController.js | 82 | 2 | yes (keyword match: clinical) | no | bc:0/on:0/rs:1 |
+| icpcCodeTemplateMapping | /icpcCodeTemplateMapping | views/template/icpc-Code-Template-Mapping.html | icpcCodeTemplateMappingController.js | 6 | 15 | yes (keyword match: clinical) | no | bc:0/on:0/rs:1 |
+| templateICDCodeMapping | /templateICDCodeMapping | views/template/template-ICD-code-mapping.html | templateICDCodeMappingMasterController.js | 8 | 11 | yes (keyword match: clinical) | no | bc:0/on:0/rs:1 |
+| templateServiceMapping | /templateServiceMapping | views/template/template-service-mapping.html | templateServiceMappingController.js | 9 | 12 | yes (keyword match: clinical) | no | bc:0/on:0/rs:1 |
+| templateUtility | /templateUtility | views/template/template-utility.html | templateUtilityController.js | 86 | 13 | yes (keyword match: clinical) | no | bc:0/on:0/rs:3 |
+| templates | /templates | views/template/template-list.html | templateListController.js | 4 | 6 | yes (keyword match: clinical) | no | bc:0/on:0/rs:2 |
+| createTabularDataTemplates | /createTabularDataTemplates | views/template/create-tabular-data-templates.html | createTabularDataTemplatesController.js | 13 | 3 | no | no | bc:0/on:0/rs:1 |
+| createTabularTemplates | /createTabularTemplates | views/template/create-tabular-templates.html | createTabularTemplatesController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
+
+### Unclassified (views/Asset Management) (9 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| addNewNonReturnableGatePass | /addNewNonReturnableGatePass | views/Asset Management/add-new-non-returnable-gatepass.html | addNewNonReturnableGatePassController.js | 45 | 9 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+| auctionRequisitionApproval | /auctionRequisitionApproval | views/Asset Management/auction-requisition-approval.html | auctionRequisitionApprovalController.js | 10 | 3 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+| auctionVendorApproval | /auctionVendorApproval | views/Asset Management/auction-vendor-approval.html | auctionVendorApprovalController.js | 9 | 2 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+| detailsAuctionRequisitionApproval | /detailsAuctionRequisitionApproval | views/Asset Management/details-auction-requisition-approval.html | detailsAuctionRequisitionApprovalController.js | 20 | 2 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+| detailsAuctionVendorApproval | /detailsAuctionVendorApproval | views/Asset Management/details-auction-vendor-approval.html | detailsAuctionVendorApprovalController.js | 8 | 2 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+| detailsNewNonReturnableGatePass | /detailsNewNonReturnableGatePass | views/Asset Management/details-non-returnable-gatepass.html | detailsNewNonReturnableGatePassController.js | 2 | 1 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+| itemsAuctionDetails | /itemsAuctionDetails | views/Asset Management/items-for-auction-details.html | itemsAuctionDetailsController.js | 13 | 3 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+| itemsForAuction | /itemsForAuction | views/Asset Management/items-for-auction.html | itemsForAuctionController.js | 10 | 3 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+| nonReturnableGatePass | /nonReturnableGatePass | views/Asset Management/non-returnable-gatepass.html | nonReturnableGatePassController.js | 13 | 5 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
 
 ### ICU (8 screens)
 
@@ -1284,6 +1757,19 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | radiologyWorkbench | /radiologyWorkbench | views/master/RadiologyWorkbench/radiology-workbench.html | radiologyWorkbenchController.js | 28 | 30 | yes (keyword match: radiology) | no | bc:0/on:0/rs:1 |
 | radiologyWorklistForPrinting | /radiologyWorklistForPrinting | views/master/RadiologyWorkbench/radiology-printing-worklist.html | radiologyWorklistForPrintingController.js | 21 | 18 | yes (keyword match: radiology) | no | bc:0/on:0/rs:1 |
 
+### Billing - Fund Management (8 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| fundApproval | /fundApproval | views/master/UnitMaster/fundManagement/fund-approval.html | shared×353 | 13 | 0 | no | yes (keyword match: fund) | bc:0/on:1/rs:1 [on:customEvent] |
+| fundApprovedList | /fundApprovedList | views/master/UnitMaster/fundManagement/fund-approved-list.html | shared×353 | 11 | 0 | no | yes (keyword match: fund) | bc:0/on:1/rs:1 [on:customEvent] |
+| fundInflow | /fundInflow | views/master/UnitMaster/fundManagement/fund-inflow.html | fundInflowController.js | 12 | 25 | no | yes (keyword match: fund) | bc:0/on:0/rs:1 |
+| fundReconciliation | /fundReconciliation | views/master/UnitMaster/fundManagement/fund-reconciliation.html | fundInflowController.js | 1 | 25 | no | yes (keyword match: fund, reconcil) | bc:0/on:0/rs:1 |
+| fundRequisition | /fundRequisition | views/master/UnitMaster/fundManagement/fund-requisition.html | shared×353 | 11 | 0 | no | yes (keyword match: fund) | bc:0/on:1/rs:1 [on:customEvent] |
+| sanctionAllocation | /sanctionAllocation | views/master/UnitMaster/fundManagement/saction-allocation-request-form.html | fundSanctionController.js | 7 | 9 | no | yes (keyword match: fund) | bc:0/on:0/rs:1 |
+| sanctionAllocationApproval | /sanctionAllocationApproval | views/master/UnitMaster/fundManagement/saction-allocation-approval-form.html | fundSanctionAllocationController.js | 11 | 11 | no | yes (keyword match: fund) | bc:0/on:0/rs:1 |
+| trustMaster | /trustMaster | views/master/UnitMaster/fundManagement/trust-master.html | trustMasterController.js | 23 | 17 | no | yes (keyword match: fund) | bc:0/on:0/rs:1 |
+
 ### ADT - Ambulance (8 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
@@ -1308,18 +1794,6 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | doctorCategoryMaster | /doctorCategoryMaster | views/master/GlobalMaster/doctor-category-master.html | doctorCategoryMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
 | employeeCategoryMaster | /employeeCategoryMaster | views/master/GlobalMaster/employee-category-master.html | employeeCategoryMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
 | qualificationMaster | /qualificationMaster | views/master/GlobalMaster/qualification-master.html | qualificationMasterController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
-
-### Billing - Fund Management (7 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| fundApproval | /fundApproval | views/master/UnitMaster/fundManagement/fund-approval.html | shared×353 | 13 | 0 | no | yes (keyword match: fund) | bc:0/on:1/rs:1 [on:customEvent] |
-| fundApprovedList | /fundApprovedList | views/master/UnitMaster/fundManagement/fund-approved-list.html | shared×353 | 11 | 0 | no | yes (keyword match: fund) | bc:0/on:1/rs:1 [on:customEvent] |
-| fundInflow | /fundInflow | views/master/UnitMaster/fundManagement/fund-inflow.html | fundInflowController.js | 12 | 25 | no | yes (keyword match: fund) | bc:0/on:0/rs:1 |
-| fundReconciliation | /fundReconciliation | views/master/UnitMaster/fundManagement/fund-reconciliation.html | fundInflowController.js | 1 | 25 | no | yes (keyword match: fund, reconcil) | bc:0/on:0/rs:1 |
-| fundRequisition | /fundRequisition | views/master/UnitMaster/fundManagement/fund-requisition.html | shared×353 | 11 | 0 | no | yes (keyword match: fund) | bc:0/on:1/rs:1 [on:customEvent] |
-| sanctionAllocation | /sanctionAllocation | views/master/UnitMaster/fundManagement/saction-allocation-request-form.html | fundSanctionController.js | 7 | 9 | no | yes (keyword match: fund) | bc:0/on:0/rs:1 |
-| trustMaster | /trustMaster | views/master/UnitMaster/fundManagement/trust-master.html | trustMasterController.js | 23 | 17 | no | yes (keyword match: fund) | bc:0/on:0/rs:1 |
 
 ### Admin - Queue Management (7 screens)
 
@@ -1355,6 +1829,17 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | mortuaryBedManagement | /mortuaryBedManagement | views/master/UnitMaster/Mortuary/mortuary-bed-management.html | mortuaryBedManagementController.js | 0 | 1 | yes (module default: Morgue) | no | bc:0/on:0/rs:1 |
 | mortuaryBedMaster | /mortuaryBedMaster | views/master/UnitMaster/Mortuary/Mortuary-Bed-Master.html | mortuaryBedMasterController.js | 6 | 8 | yes (module default: Morgue) | no | bc:0/on:0/rs:1 |
 
+### Quality - Incident Reporting (6 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| EditReportedIncident | /EditReportedIncident | views/incidentReporting/edit-reported-incident.html | editReportedIncidentController.js | 19 | 11 | yes (module default: Quality - Incident Reporting) | no | bc:0/on:0/rs:1 |
+| ReportedIncident | /ReportedIncident | views/incidentReporting/reported-incident.html | reportedIncidentController.js | 6 | 5 | yes (module default: Quality - Incident Reporting) | no | bc:0/on:0/rs:1 |
+| addNewIncidentReporting | /addNewIncidentReporting | views/incidentReporting/add-new-incident-reporting.html | addNewIncidentReportingController.js | 23 | 17 | yes (module default: Quality - Incident Reporting) | no | bc:0/on:1/rs:3 [on:$locationChangeStart] |
+| incidentCategoryMaster | /incidentCategoryMaster | views/incidentReporting/incident-category-master.html | incidentCategoryMasterController.js | 5 | 7 | yes (module default: Quality - Incident Reporting) | no | bc:0/on:0/rs:1 |
+| incidentMaster | /incidentMaster | views/incidentReporting/incident-master.html | incidentMasterController.js | 8 | 11 | yes (module default: Quality - Incident Reporting) | no | bc:0/on:0/rs:1 |
+| incidentReporting | /incidentReporting | views/incidentReporting/incident-reporting.html | incidentReportingController.js | 7 | 3 | yes (module default: Quality - Incident Reporting) | no | bc:0/on:0/rs:1 |
+
 ### ADT - Admission (5 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
@@ -1364,16 +1849,6 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | newAdmissionRequest | /newAdmissionRequest | views/Admission/new-admission-request.html | shared×353 | 24 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
 | passIssued | /passIssued | views/Admission/pass-issued.html | passIssuedController.js | 14 | 9 | no | no | bc:0/on:0/rs:1 |
 | pendingAdmissionDischarge | /pendingAdmissionDischarge | views/Admission/pending-admission-discharge.html | pendingAdmissionDischargeController.js | 65 | 28 | no | no | bc:0/on:0/rs:1 |
-
-### Common - Template (5 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| icpcCodeTemplateMapping | /icpcCodeTemplateMapping | views/template/icpc-Code-Template-Mapping.html | icpcCodeTemplateMappingController.js | 6 | 15 | yes (keyword match: clinical) | no | bc:0/on:0/rs:1 |
-| templateICDCodeMapping | /templateICDCodeMapping | views/template/template-ICD-code-mapping.html | templateICDCodeMappingMasterController.js | 8 | 11 | yes (keyword match: clinical) | no | bc:0/on:0/rs:1 |
-| templateServiceMapping | /templateServiceMapping | views/template/template-service-mapping.html | templateServiceMappingController.js | 9 | 12 | yes (keyword match: clinical) | no | bc:0/on:0/rs:1 |
-| createTabularDataTemplates | /createTabularDataTemplates | views/template/create-tabular-data-templates.html | createTabularDataTemplatesController.js | 13 | 3 | no | no | bc:0/on:0/rs:1 |
-| createTabularTemplates | /createTabularTemplates | views/template/create-tabular-templates.html | createTabularTemplatesController.js | 5 | 7 | no | no | bc:0/on:0/rs:1 |
 
 ### Clinical - IVF (5 screens)
 
@@ -1422,6 +1897,30 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | appointments.services.self | /self | – | – | – | – | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | – |
 | biochemicalTestMaster | /biochemicalTestMaster | – | shared×353 | – | 0 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:1/rs:1 [on:customEvent] |
 
+### Clinical - Doctor Desk (3 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| doctorDesk | /doctorDesk | views/doctorDesk/doctor-desk.html | doctorDeskController.js | 46 | 58 | yes (module default: Clinical - Doctor Desk) | no | bc:0/on:0/rs:13 |
+| favouriteMedicationTemplate | /favouriteMedicationTemplate | views/doctorDesk/favourite-mediacation-template.html | favouriteMedicationTemplateController.js | 42 | 23 | yes (keyword match: medication) | no | bc:0/on:0/rs:1 |
+| patientSelfTriage | /patientSelfTriage | views/doctorDesk/patient-self-triage.html | patientSelfTriageMasterController.js | 6 | 5 | yes (keyword match: triage) | no | bc:0/on:0/rs:1 |
+
+### Admin - Configuration (3 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| applicationConfiguration | /applicationConfiguration | views/master/UnitMaster/configuration/application-master.html | applicationConfigurationController.js | 258 | 39 | no | no | bc:0/on:0/rs:1 |
+| autoServicePostingConfiguration | /autoServicePostingConfiguration | views/master/UnitMaster/configuration/auto-service-posting-configuration.html | autoServicePostingConfigurationController.js | 20 | 5 | no | no | bc:0/on:0/rs:1 |
+| prefixConfiguration | /prefixConfiguration | views/master/UnitMaster/configuration/prefix-master.html | prefixConfigurationMasterController.js | 18 | 5 | no | no | bc:0/on:0/rs:1 |
+
+### Unclassified (views/Abdm) (3 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| abdmConsentRequest | /abdmConsentRequest | views/Abdm/abdm-consent-requestNew.html | abdmConsentRequestController.js | 17 | 10 | yes (keyword match: consent) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:15 |
+| abdmConsentRequestData | /abdmConsentRequestData | views/Abdm/consent-data.html | abdmConsentRequestDataController.js | 1 | 1 | yes (keyword match: consent) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:2 |
+| abdmRegistration | /abdmRegistration | views/Abdm/abdm-registrationNew.html | abdmController.js | 77 | 71 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+
 ### Admin - Master (other) (2 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
@@ -1436,12 +1935,12 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | dayCareDueForDischarge | /dayCareDueForDischarge | views/Transfer/day-care-due-for-discharge.html | dueForDischargeController.js | 7 | 9 | yes (keyword match: due for discharge) | no | bc:0/on:0/rs:2 |
 | transferRequestDemo | /transferRequestDemo | views/Transfer/transfer-request-demo.html | shared×4 | 5 | 15 | no | no | bc:0/on:0/rs:4 |
 
-### Clinical - Doctor Desk (2 screens)
+### Procurement - Inventory (2 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
-| doctorDesk | /doctorDesk | views/doctorDesk/doctor-desk.html | doctorDeskController.js | 46 | 58 | yes (module default: Clinical - Doctor Desk) | no | bc:0/on:0/rs:13 |
-| patientSelfTriage | /patientSelfTriage | views/doctorDesk/patient-self-triage.html | patientSelfTriageMasterController.js | 6 | 5 | yes (keyword match: triage) | no | bc:0/on:0/rs:1 |
+| implantMaster | /implantMaster | views/master/UnitMaster/Inventory/implant-master.html | implantMasterController.js | 19 | 10 | yes (keyword match: implant) | yes (module default: Procurement - Inventory) | bc:0/on:0/rs:1 |
+| storeTypeMaster | /storeTypeMaster | views/master/UnitMaster/Inventory/store-type-master.html | storeTypeController.js | 5 | 7 | no | yes (module default: Procurement - Inventory) | bc:0/on:0/rs:1 |
 
 ### Clinical - Chemotherapy (2 screens)
 
@@ -1457,24 +1956,18 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | dialysisRecord | /dialysisRecord | views/master/hemodialysis/dialysis-record.html | hemodialysisRecordController.js | 60 | 19 | yes (keyword match: dialysis, hemodialysis) | no | bc:0/on:0/rs:2 |
 | hemodialysisWorkload | /hemodialysisWorkload | views/master/hemodialysis/hemodailysis-workload.html | hemodialysisWorkloadController.js | 13 | 8 | yes (keyword match: hemodialysis) | no | bc:0/on:0/rs:2 |
 
-### Quality - Incident Reporting (2 screens)
+### Unclassified (views/PatientPos) (2 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
-| EditReportedIncident | /EditReportedIncident | views/incidentReporting/edit-reported-incident.html | editReportedIncidentController.js | 19 | 11 | yes (module default: Quality - Incident Reporting) | no | bc:0/on:0/rs:1 |
-| addNewIncidentReporting | /addNewIncidentReporting | views/incidentReporting/add-new-incident-reporting.html | addNewIncidentReportingController.js | 23 | 17 | yes (module default: Quality - Incident Reporting) | no | bc:0/on:1/rs:3 [on:$locationChangeStart] |
+| PatientPosController | /visitorInformation | views/PatientPos/Patient-Pos.html | PatientPosController.js | 10 | 4 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
+| PatientSearchController | /visitorProcess | views/PatientPos/patientSearch.html | patientSearchController.js | 16 | 4 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:1 |
 
 ### Clinical - Physiotherapy (1 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
 | physiotherapyWorkbench | /physiotherapyWorkbench | views/master/PhysiotherapyWorkbench/physiotherapy-workbench.html | physiotherapyWorkbenchController.js | 11 | 11 | yes (keyword match: physiotherapy) | no | bc:0/on:0/rs:1 |
-
-### Procurement - Inventory (1 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| storeTypeMaster | /storeTypeMaster | views/master/UnitMaster/Inventory/store-type-master.html | storeTypeController.js | 5 | 7 | no | yes (module default: Procurement - Inventory) | bc:0/on:0/rs:1 |
 
 ### Billing - Promotions/Loyalty (1 screens)
 
@@ -1488,12 +1981,6 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 |---|---|---|---|---:|---:|---|---|---|
 | MISReports | /MISReports | views/OtherApps/MIS-reports.html | MISReportsController.js | 33 | 15 | no | no | bc:0/on:0/rs:21 |
 
-### Admin - Configuration (1 screens)
-
-| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
-|---|---|---|---|---:|---:|---|---|---|
-| autoServicePostingConfiguration | /autoServicePostingConfiguration | views/master/UnitMaster/configuration/auto-service-posting-configuration.html | autoServicePostingConfigurationController.js | 20 | 5 | no | no | bc:0/on:0/rs:1 |
-
 ### Admin - Unit Master (qms-call.html) (1 screens)
 
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
@@ -1505,3 +1992,15 @@ Column notes: **View** = template file relative to `webapp/` (✗ = not found on
 | State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
 |---|---|---|---|---:|---:|---|---|---|
 | procedureConfig | /procedureConfig | views/procedureConfiguration/procedure-config.html | shared×353 | 10 | 0 | no | no | bc:0/on:1/rs:1 [on:customEvent] |
+
+### Unclassified (views/MRD-file-management.html) (1 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| MRDfileManagement | /MRDfileManagement | views/MRD-file-management.html | MRDfileManagementController.js | 26 | 10 | unclear (module/state not statically classifiable) | unclear (module/state not statically classifiable) | bc:0/on:0/rs:2 |
+
+### Admin - Unit Master (tally-interfacing.html) (1 screens)
+
+| State | URL | View | Ctrl | Fields | API | Clinical | Billing | Coupling |
+|---|---|---|---|---:|---:|---|---|---|
+| tallyInterfacing | /tallyInterfacing | views/master/UnitMaster/tally-interfacing.html | tallyInterfacingController.js | 9 | 23 | no | no | bc:0/on:0/rs:1 |
