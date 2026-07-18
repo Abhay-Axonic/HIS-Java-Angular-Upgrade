@@ -1,0 +1,160 @@
+<section class="page mis-reports">
+  <div class="layout">
+    <aside class="sidebar">
+      <fieldset>
+        <legend>MIS Report</legend>
+        <div class="typeahead">
+          <input type="text" placeholder="Search" [ngModel]="searchTerm()" (ngModelChange)="onSearchChange($event)" />
+          @if (searchResults().length) {
+            <ul class="typeahead-list">
+              @for (r of searchResults(); track r.reportId) {
+                <li (mousedown)="selectSearchResult(r)">{{ r.reportName }}</li>
+              }
+            </ul>
+          }
+        </div>
+      </fieldset>
+
+      <ul class="group-tree">
+        @for (group of groupHeaders(); track group.reportGroupHeaderId; let gi = $index) {
+          <li [class.active]="activeGroupIndex() === gi">
+            <a (click)="selectGroup(gi)">{{ group.reportGroupHeaderName }}</a>
+            @if (activeGroupIndex() === gi) {
+              <ul class="report-list">
+                @for (report of reportsByGroup(); track report.reportId) {
+                  <li [class.active]="selectedReport()?.reportId === report.reportId">
+                    <a (click)="selectReport(report)">{{ report.reportName }}</a>
+                  </li>
+                }
+              </ul>
+            }
+          </li>
+        }
+      </ul>
+    </aside>
+
+    <main class="report-body">
+      @if (selectedReport(); as report) {
+        <fieldset>
+          <legend>{{ report.reportName }}</legend>
+
+          <div class="param-grid">
+            @for (param of parameters(); track param.parameterName; let i = $index) {
+              <div class="field">
+                @switch (param.controlName) {
+                  @case ('DatePickerFrom') {
+                    <label>{{ param.lable }}</label>
+                    <input type="date" [ngModel]="param.fromDate | date: 'yyyy-MM-dd'" (ngModelChange)="updateParameter(i, { fromDate: $event ? $any($event) : null })" />
+                  }
+                  @case ('DatePickerTo') {
+                    <label>{{ param.lable }}</label>
+                    <input type="date" [ngModel]="param.toDate | date: 'yyyy-MM-dd'" (ngModelChange)="updateParameter(i, { toDate: $event ? $any($event) : null })" />
+                  }
+                  @case ('DatePickerExpiry') {
+                    <label>{{ param.lable }}</label>
+                    <input type="date" [ngModel]="param.expiryDate | date: 'yyyy-MM-dd'" (ngModelChange)="updateParameter(i, { expiryDate: $event ? $any($event) : null })" />
+                  }
+                  @case ('TimePickerFrom') {
+                    <label>{{ param.lable }}</label>
+                    <input type="time" [ngModel]="param.fromTime" (ngModelChange)="updateParameter(i, { fromTime: $event })" />
+                  }
+                  @case ('TimePickerTo') {
+                    <label>{{ param.lable }}</label>
+                    <input type="time" [ngModel]="param.toTime" (ngModelChange)="updateParameter(i, { toTime: $event })" />
+                  }
+                  @case ('text') {
+                    <label>{{ param.lable }}</label>
+                    <div class="typeahead">
+                      <input type="text" placeholder="Search patient" [ngModel]="patientSearchTerm()" (ngModelChange)="onPatientSearchChange($event)" />
+                      @if (patientResults().length) {
+                        <ul class="typeahead-list">
+                          @for (p of patientResults(); track p.patientId) {
+                            <li (mousedown)="selectPatient(p)">{{ p.patientName }}</li>
+                          }
+                        </ul>
+                      }
+                    </div>
+                  }
+                  @case ('radio') {
+                    <label><input type="radio" [name]="'param' + i" [checked]="param.paramValue === 'Y'" (change)="updateParameter(i, { paramValue: 'Y' })" /> {{ param.lable }}</label>
+                  }
+                  @case ('checkbox') {
+                    <label><input type="checkbox" [checked]="param.paramValue === 'Y'" (change)="updateParameter(i, { paramValue: $any($event.target).checked ? 'Y' : 'N' })" /> {{ param.lable }}</label>
+                  }
+                  @case ('textBox') {
+                    <label>{{ param.lable }}</label>
+                    <input type="text" inputmode="numeric" [ngModel]="param.paramValue" (ngModelChange)="updateParameter(i, { paramValue: $event })" />
+                  }
+                  @case ('textBoxstring') {
+                    <label>{{ param.lable }}</label>
+                    <input type="text" inputmode="numeric" [ngModel]="param.paramValue" (ngModelChange)="updateParameter(i, { paramValue: $event })" />
+                  }
+                  @case ('inputBox') {
+                    <label>{{ param.lable }}</label>
+                    <input type="text" [ngModel]="param.paramValue" (ngModelChange)="updateParameter(i, { paramValue: $event })" />
+                  }
+                  @case ('multiSelectlist') {
+                    <label>{{ param.lable }}</label>
+                    <select multiple (change)="updateParameter(i, { multiSelectList: [] })">
+                      @for (opt of param.metaDataDetailsDtosList; track opt.id) { <option [value]="opt.id">{{ opt.name }}</option> }
+                    </select>
+                  }
+                  @case ('list') {
+                    <label>{{ param.lable }}</label>
+                    <select [ngModel]="param.paramValue" (ngModelChange)="updateParameter(i, { paramValue: $event })">
+                      <option [value]="0"></option>
+                      @for (opt of param.metaDataDetailsDtosList; track opt.id) { <option [value]="opt.id">{{ opt.name }}</option> }
+                    </select>
+                  }
+                  @case ('unit') {
+                    <!-- auto-populated from session, not user-editable -- see withDefaultValue() -->
+                    <label>{{ param.lable }}</label>
+                    <input type="text" [value]="param.paramValue" disabled />
+                  }
+                  @case ('user') {
+                    <label>{{ param.lable }}</label>
+                    <input type="text" [value]="param.paramValue" disabled />
+                  }
+                  @case ('org') {
+                    <label>{{ param.lable }}</label>
+                    <input type="text" [value]="param.paramValue" disabled />
+                  }
+                  @case ('ItemSearch') {
+                    <label>{{ param.lable }} (search not wired in this pilot, see doc comment)</label>
+                    <input type="text" disabled placeholder="Search medication" />
+                  }
+                  @case ('Servicesearch') {
+                    <label>{{ param.lable }} (search not wired in this pilot, see doc comment)</label>
+                    <input type="text" disabled placeholder="Search service" />
+                  }
+                  @case ('DiagnosiSearch') {
+                    <label>{{ param.lable }} (search not wired in this pilot, see doc comment)</label>
+                    <input type="text" disabled placeholder="Search diagnosis" />
+                  }
+                  @case ('VenderSearch') {
+                    <label>{{ param.lable }} (search not wired in this pilot, see doc comment)</label>
+                    <input type="text" disabled placeholder="Search vendor" />
+                  }
+                  @default {
+                    <label>{{ param.lable }}</label>
+                    <input type="text" [ngModel]="param.paramValue" (ngModelChange)="updateParameter(i, { paramValue: $event })" />
+                  }
+                }
+              </div>
+            }
+          </div>
+
+          <div class="report-actions">
+            <button type="button" class="btn-primary" (click)="view()">View</button>
+            <button type="button" class="btn-primary" (click)="export()">Export</button>
+            <select [ngModel]="selectedFormatId()" (ngModelChange)="selectedFormatId.set($event)">
+              @for (f of reportFormats(); track f.id) { <option [value]="f.id">{{ f.description }}</option> }
+            </select>
+          </div>
+        </fieldset>
+      } @else {
+        <p class="placeholder">Select a report from the left to configure and run it.</p>
+      }
+    </main>
+  </div>
+</section>
