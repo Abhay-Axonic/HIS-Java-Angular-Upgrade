@@ -786,3 +786,84 @@ In practice, finding 1 makes finding 2 doubly moot for the reject path (the popu
 **Owner decision, not resolved here:** not fixed, not rebuilt yet. Worth deciding whether this is a fast-track candidate alongside entry 43 (banner at top of this doc), since — like entry 43 — a user cannot actually complete the core task (processing a rejected-asset acceptance) on this screen today, and additionally the data shown while trying isn't even real.
 
 **My read:** SEVERITY 1, same tier as entry 43 — arguably worse, since entry 43's screen at least shows real search-result rows even though save is unreachable; this screen fabricates the record itself. Recommend reviewing alongside entry 43 when deciding on fast-track scope.
+
+---
+
+## 47. SEVERITY 1 — `correctiveMaintenanceReturnWorklist`'s reject-save crashes whenever a reason is selected but the note is left blank — found while rebuilding this screen, Phase 4 batch 3
+
+**Where:** `resources/assets/js/controller/asset/correctiveMaintenanceReturnWorklistController.js:286`, inside `saveAcceptReject` (ctrl:270-313).
+
+**What it is, plainly:** `saveAcceptReject`'s middle branch (a reject reason WAS selected, but the note field was left blank) does `$scope.corectiveMaintenanceReturnWorklist[index].isAcceptOrReject = 'N';`, where `index` is never declared anywhere in this function's own scope — only `$scope.currentInx` is set, by the separate function `showRejecPopup` (ctrl:262). This throws `ReferenceError: index is not defined` immediately. The other two branches (no reason selected; both reason and note filled in) don't hit this line and work correctly — confirmed by tracing all three branches directly, not assumed.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Faithfully reproduced in the Angular rebuild via a direct `throw new ReferenceError('index is not defined')` at the equivalent point (TypeScript can't literally express an undeclared-variable assignment the same way) — verified live: seeding a reject-modal-open state with a reason selected and a blank note and calling the rebuilt `saveAcceptReject()` throws the identical error.
+
+**My read:** SEVERITY 1 — a real, easily-triggered crash (any user who selects a reject reason and doesn't also type a note hits this) blocking the reject-save workflow entirely for that specific, common input combination.
+
+---
+
+## 48. SEVERITY 1 — `assetReturnAcceptanceDetails` crashes on row-deselect and on un-rejecting a row — found while rebuilding this screen, Phase 4 batch 3
+
+**Where:** `resources/assets/js/controller/asset/assetReturnAcceptanceDetailsController.js:87-100` (`SelectItem`), `:130-154` (`RejectionPopup`/`CancelRejection`).
+
+**What it is, plainly — two independent crash bugs on the same screen:**
+
+1. **Deselecting a row crashes.** `SelectItem`'s else-branch (fires when a previously-selected row is unchecked) does `var index = areturn.indexOf(areturn);` — calling `.indexOf` on the item object itself rather than on the selection array (`mreturns`/`SelectedItems`). Throws `TypeError: areturn.indexOf is not a function` before the row can actually be removed from the selection.
+2. **Toggling a row's reject switch back off crashes.** `RejectionPopup`'s else-branch (the un-reject path) reads `self.model.requestItems.areturn.find(...)` — `self.model.requestItems` is never assigned anywhere in the controller. Throws `TypeError: Cannot read properties of undefined (reading 'areturn')`. The switch-ON path (opening the reject modal) is unaffected and works correctly.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Both faithfully reproduced in the Angular rebuild via direct `throw`s at the equivalent points, and both verified live by seeding a row into the rebuilt component and calling `selectItem()`/`rejectionPopup()` directly — both threw the identical errors.
+
+**My read:** SEVERITY 1 — two separate, easily-triggered dead ends on ordinary interactions (unchecking a row you selected by mistake; deciding not to reject a row after all) on a screen that otherwise has a real, working accept/save flow.
+
+---
+
+## 49. `detailsAssetIssueAcceptance` — a crash risk in the footer Save path, and a silent wrong-reject-reason-ID bug — found while rebuilding this screen, Phase 4 batch 3
+
+**Where:** `resources/assets/js/controller/asset/detailsAssetIssueAcceptanceController.js:47-52` (`setStatus`), `:305-342` (`SaveApproval`), `:323` (the reject-reason bug).
+
+**What it is, plainly — two distinct issues:**
+
+1. **Crash risk on Save.** `SaveApproval` unconditionally calls `setStatus('Closed')` as its first step. `setStatus` does `self.model.statuses.find(o => o.status == x)` then reads `.id` off the result with no guard — if the statuses dropdown hasn't finished loading yet (populated async, ctrl:19-21, with nothing gating Save on that load completing) or contains no entry matching the literal string `'Closed'`, this throws `TypeError: Cannot read property 'id' of undefined`. Verified live: seeding an empty statuses list into the rebuilt component and calling `setStatus('Closed')` throws the identical error.
+2. **Silent wrong-ID bug (not a crash).** ctrl:323 reads `self.model.rejectReasons.id`, but `rejectReasons` is an array (set at ctrl:24), so `.id` is always `undefined` — legacy silently falls back to a hardcoded reject-reason ID of `1` regardless of which reason the user actually selected in the modal.
+
+**Owner decision, not resolved here:** neither fixed, per standing instruction. Both faithfully reproduced in the Angular rebuild — the crash risk via a direct, unguarded 1:1 port of `setStatus`, and the reject-reason bug via the same hardcoded-fallback behavior.
+
+**My read:** low-to-moderate severity for the crash risk (requires an unlucky timing window, not guaranteed on every Save), low severity for the silent ID bug (wrong data persisted, no visible symptom to the user) — worth a decision on which to prioritize if this screen ever gets a legacy-side fix pass, but neither blocks the screen's core functionality outright.
+
+---
+
+## 50. `fixedAssetType`'s status-toggle error handler crashes on any failed request — found while rebuilding this screen, Phase 4 batch 3
+
+**Where:** `resources/assets/js/controller/master/unit/fixedAssetTypeController.js`, `ToggleStatus`'s error callback (~line 109-113).
+
+**What it is, plainly:** the error callback for the status-toggle PATCH references an undefined variable, `othercharge` (`othercharge.status = !othercharge.status;`), instead of the function's own parameter — throwing `ReferenceError: othercharge is not defined` on any failed toggle request (network error, 500, session expiry mid-request), before the intended `growl.error(...)` call ever runs. The optimistic UI flip (the switch visually changing before the request resolves) is never reverted on failure, either, since the crash happens before any revert logic could run.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Faithfully reproduced in the Angular rebuild via a direct `throw new ReferenceError('othercharge is not defined')` in the equivalent error handler — verified live by forcing the toggle PATCH to fail and confirming the identical error fires in the browser console.
+
+**My read:** low-to-moderate severity — only triggers on a failed request (not the common path), but when it does, the user gets a silent crash with no error message and a switch that's now visually wrong, instead of the intended "Something went wrong" toast.
+
+---
+
+## 51. `correctiveMaintenance`'s row-detail/completion/reopen modals index the wrong list when paginated or filtered — found while rebuilding this screen, Phase 4 batch 3
+
+**Where:** `resources/assets/js/controller/asset/correctiveMaintenanceController.js:188-190,203-236` (`getCurrentIndex`, `getReopenReqIndex`), plus their `ng-click="...($index)"` call sites in the view.
+
+**What it is, plainly:** these handlers are called with `$index` from the `ng-repeat` over the paginated/filtered `pagination.data`, but they index into the full, unpaginated, unfiltered `corectiveMaintenanceList` to find the row to open a modal for. On page 1 with no search keyword active, the two lists' indices happen to line up and everything works correctly. On page 2+ (or with any search keyword narrowing the visible rows), `$index` no longer corresponds to the same row in the full list — the Completion Details or Reopen modal opens for the WRONG row, silently, with no indication to the user that they're now looking at/editing a different request than the one they clicked.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Faithfully reproduced in the Angular rebuild (indexes the same underlying full list using the paginated loop's index) — a true parity port of a real, pre-existing legacy bug, not a rebuild-introduced regression.
+
+**My read:** moderate severity — silent wrong-row modal is a genuinely confusing failure mode (a user could complete or reopen the wrong maintenance request without any error), but it only manifests once pagination or search narrows the visible set, which may be an uncommon path for smaller stores/date ranges.
+
+---
+
+## 52. `detailsCorrectiveMaintenance` — two "is operative" toggle bugs baked into legacy's date-handling logic — found while rebuilding this screen, Phase 4 batch 3
+
+**Where:** `resources/assets/js/controller/asset/detailsCorrectiveMaintenanceController.js:96-109` (`changedowndate`), `:115` (the down-date-time guard).
+
+**What it is, plainly — two related, silent logic bugs:**
+
+1. **The "clear down date/time when marked operative" branch never actually runs.** Legacy's `ng-true-value="true"`/`ng-false-value="false"` store the *string* `"true"`/`"false"` on `isDown`, not a real boolean. `changedowndate()`'s clear-fields branch checks `detailsObj.isDown == false` — a string-vs-boolean loose-equality comparison that's always `false` in JavaScript (a non-empty string never loose-equals the boolean `false`). So toggling "Is Operative" changes `isDown`'s own displayed value but never actually clears the down-date/down-time fields the way the code intends.
+2. **A guard that's always true, so the branch it gates always runs.** ctrl:115's condition (`downDateTime != undefined || downDateTime != null || downDateTime != ""`) is an OR-chain across three checks where at least one is always true for any value — so the date-format conversion inside it runs unconditionally in practice, regardless of what the guard was apparently meant to test for.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Both faithfully reproduced in the Angular rebuild as no-ops/always-true behavior matching legacy exactly, rather than "fixed" to what the code seems to have intended.
+
+**My read:** low severity — neither causes a crash or data loss; the practical effect is that the "Is Operative" toggle's clear-fields side effect silently never fires, which is a minor, easy-to-miss UX inconsistency rather than a functional blocker.
