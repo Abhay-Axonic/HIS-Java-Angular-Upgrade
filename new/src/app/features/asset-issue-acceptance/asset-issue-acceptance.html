@@ -1,0 +1,119 @@
+<div class="container-fluid his-style">
+  <div class="row padding-top10">
+    <div class="col-lg-2">
+      <label>Date (From)</label>
+      <input type="date" class="form-control" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+    </div>
+    <div class="col-lg-2">
+      <label>Date-Till</label>
+      <input type="date" class="form-control" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+    </div>
+    <div class="col-lg-2">
+      <label>From Store</label>
+      <select class="form-control" [(ngModel)]="fromStore">
+        @for (s of fromStoreList(); track s.id) {
+          <option [ngValue]="s">{{ s['store'] ?? 'All Stores' }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-lg-2">
+      <label>To Store</label>
+      <select class="form-control" [(ngModel)]="toStore">
+        @for (s of toStoreList(); track s.id) {
+          <option [ngValue]="s">{{ s['store'] ?? 'All Stores' }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-lg-2">
+      <label>Priority</label>
+      <select class="form-control" [(ngModel)]="priority">
+        @for (s of priorityList(); track s.id) {
+          <option [ngValue]="s">{{ s['priority'] ?? 'All Priorities' }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-lg-2">
+      <label>Status</label>
+      <select class="form-control" [(ngModel)]="status">
+        @for (s of statusList(); track s.id) {
+          <option [ngValue]="s">{{ s['status'] ?? 'All Statuses' }}</option>
+        }
+      </select>
+    </div>
+  </div>
+  <div class="row padding-top10">
+    <div class="col-lg-2">
+      <label>Issue No</label>
+      <input type="text" class="form-control" [(ngModel)]="issueNo" />
+    </div>
+    <div class="col-lg-2">
+      <label>Indent Type</label>
+      <select class="form-control" [(ngModel)]="indentType">
+        @for (s of indentTypeList(); track s.id) {
+          <option [ngValue]="s">{{ s['type'] ?? 'All Types' }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-lg-1">
+      <a class="btn btn-primary btn-save-box-shadow" id="searchBtn" (click)="search()">Search</a>
+    </div>
+  </div>
+
+  <div class="row padding-top10">
+    <div class="col-lg-9">
+      Show
+      <select [(ngModel)]="pagination().pageSize">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+      </select>
+      (records)
+    </div>
+    <div class="col-lg-3">
+      <input type="text" class="text-search-box" placeholder="Search" [(ngModel)]="searchKeyword" />
+    </div>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Issue Date</th>
+        <th>Issue No</th>
+        <th>To Store</th>
+        <th>From Store</th>
+        <th>Type</th>
+        <th>Priority</th>
+        <th>Remark</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of pagination().data; track item.id) {
+        <tr>
+          <td>{{ item.issueDate }}</td>
+          <td>{{ item.issueNo }}</td>
+          <td>{{ item.toStore }}</td>
+          <td>{{ item.fromStore }}</td>
+          <td>{{ item.type }}</td>
+          <td>{{ item.priority }}</td>
+          <td>{{ item.remark }}</td>
+          <td>{{ item.status }}</td>
+          <td><a href="javascript:void(0)" (click)="navigateToDetail(item)">Details</a></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (pagination().totalPages > 1) {
+    <ul class="pagination table-list">
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+      @for (p of pagesList(); track p) {
+        <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+    </ul>
+  }
+</div>

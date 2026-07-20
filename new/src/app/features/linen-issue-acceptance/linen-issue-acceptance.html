@@ -1,0 +1,81 @@
+<div class="container-fluid his-style">
+  <fieldset>
+    <div class="row padding-top10">
+      <div class="col-lg-2">
+        <label>Date (From)</label>
+        <input type="date" class="form-control" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+      </div>
+      <div class="col-lg-2">
+        <label>Date-Till</label>
+        <input type="date" class="form-control" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+      </div>
+      <div class="col-lg-2">
+        <label>Store (Requester)</label>
+        <select class="form-control" [(ngModel)]="fromStore">
+          @for (s of fromStores(); track s.id) {
+            <option [ngValue]="s">{{ s['store'] ?? 'All Stores' }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-lg-2">
+        <label>Issuing Store</label>
+        <select class="form-control" [(ngModel)]="toStore">
+          @for (s of toStores(); track s.id) {
+            <option [ngValue]="s">{{ s['store'] ?? 'All Stores' }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-lg-2">
+        <label>Issued Number</label>
+        <input type="text" class="form-control" [(ngModel)]="indentNo" />
+      </div>
+      <div class="col-lg-1">
+        <label>Status(n)</label>
+        <select class="form-control" [(ngModel)]="status">
+          @for (s of statuses(); track s.id) {
+            <option [ngValue]="s">{{ s['status'] ?? 'All' }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-lg-1">
+        <a class="btn btn-primary btn-save-box-shadow width30" id="searchBtn" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </fieldset>
+
+  <table class="table table-bordered margin-top10">
+    <thead>
+      <tr>
+        <th>Issued Number</th>
+        <th>Issued (Date)</th>
+        <th>Store (Requester)</th>
+        <th>Issuing Store</th>
+        <th>Priority</th>
+        <th>Remark</th>
+        <th>Status(n)</th>
+        <th>Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of results(); track item.id) {
+        <tr>
+          <td>{{ item.issueDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ item.issueNo }}</td>
+          <td>{{ item.fromStoreName }}</td>
+          <td>{{ item.toStoreName }}</td>
+          <td>{{ item.priorityName }}</td>
+          <td [title]="item.remark">{{ !item.remark ? '-' : item.remark }}</td>
+          <td>{{ item.status }}</td>
+          <td class="text-center">
+            <a title="Print"><i class="fa fa-print" aria-hidden="true"></i></a>
+            <a href="javascript:void(0)" class="padding-left10" (click)="openDetails(item)">Details</a>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="8" class="text-center">No records found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

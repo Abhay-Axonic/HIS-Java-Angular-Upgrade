@@ -1,0 +1,65 @@
+<div class="container-fluid his-style">
+  <fieldset>
+    <div class="row margin-top10">
+      <div class="col-lg-3"><b>Requesting Store :</b> {{ detail().fromStoreName }}</div>
+      <div class="col-lg-3"><b>To Store:</b> {{ detail().toStoreName }}</div>
+      <div class="col-lg-3"><b>Issue No.:</b> {{ detail().issueNo }}</div>
+      <div class="col-lg-3"><b>Issue Date:</b> {{ detail().issueDate | date: 'dd/MM/yyyy' }}</div>
+    </div>
+    <div class="row margin-top10">
+      <div class="col-lg-3"><b>Indent No.:</b> {{ detail().indentNo }}</div>
+    </div>
+
+    <div class="row padding-top10">
+      <div class="col-lg-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th><input type="checkbox" [ngModel]="selectAllRows()" (ngModelChange)="selectAllRows.set($event); selectAllItems(); valueOnChange(undefined, true)" /></th>
+              <th>Linen Code</th>
+              <th>Linen Name</th>
+              <th>Indent Quantity</th>
+              <th>Pending Quantity</th>
+              <th>Asset No</th>
+              <th>Accept Quantity</th>
+              <th>Reject Quantity</th>
+              <th>Action taken</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of detail().items; track item.id) {
+              <tr>
+                <td><input type="checkbox" [ngModel]="item.isSelected" (ngModelChange)="item.isSelected = $event; selectItem(item); valueOnChange(item, false)" /></td>
+                <td>{{ item.itemCode }}</td>
+                <td>{{ item.itemName }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.pendingQuantity }}</td>
+                <td>{{ item.batchNo }}</td>
+                <td>
+                  @if (!item.isDisabled) {
+                    <input type="text" class="w-100" [ngModel]="item.acceptedQuantity" (ngModelChange)="item.acceptedQuantity = $event" (blur)="approvedQuantity(item)" />
+                  } @else {
+                    {{ item.acceptedQuantity ? item.acceptedQuantity : 0 }}
+                  }
+                </td>
+                <td>{{ item.rejectQuantity ? item.rejectQuantity : 0 }}</td>
+                <td>
+                  <label class="switch switch-small">
+                    <input type="checkbox" class="switchInput" [disabled]="!!item.isDisabled" [ngModel]="item.isReject" (ngModelChange)="item.isReject = $event; rejectionPopup(item)" />
+                    <div class="slider round slider-small"></div>
+                  </label>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="row padding-top5 margin-top10">
+      <div class="col-lg-12 text-right">
+        <a routerLink="/linenIssueacceptance"><input type="button" value="Back" class="btn btn-primary btn-save-box-shadow" /></a>
+      </div>
+    </footer>
+  </fieldset>
+</div>

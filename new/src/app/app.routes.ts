@@ -229,5 +229,55 @@ export const routes: Routes = [
     path: 'inPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:admissionId',
     loadComponent: () => import('./features/in-patient-feedback/in-patient-feedback').then((m) => m.InPatientFeedback),
   },
+  // Phase 4 batch 2 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+  // follow-on). All 8 have a real cookieObject session guard in their
+  // legacy controller; 3 also have a real module-access resolve block
+  // (moduleId noted per route below), the rest have none (faithful match
+  // to legacy's own lack of a resolve block, same as several batch 1
+  // screens).
+  {
+    path: 'detailsFixedAssetMaster',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/details-fixed-asset-master/details-fixed-asset-master').then((m) => m.DetailsFixedAssetMaster),
+  },
+  {
+    path: 'correctiveMaintenanceWorklist',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/corrective-maintenance-worklist/corrective-maintenance-worklist').then((m) => m.CorrectiveMaintenanceWorklist),
+  },
+  {
+    path: 'assetIssueAcceptance',
+    canActivate: [moduleAccessGuard],
+    data: { moduleId: 215 },
+    loadComponent: () => import('./features/asset-issue-acceptance/asset-issue-acceptance').then((m) => m.AssetIssueAcceptance),
+  },
+  {
+    path: 'assetReturnAcceptance',
+    canActivate: [moduleAccessGuard],
+    data: { moduleId: 217 },
+    loadComponent: () => import('./features/asset-return-acceptance/asset-return-acceptance').then((m) => m.AssetReturnAcceptance),
+  },
+  {
+    path: 'correctiveMaintenanceScheduleWorklist',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () =>
+      import('./features/corrective-maintenance-schedule-worklist/corrective-maintenance-schedule-worklist').then((m) => m.CorrectiveMaintenanceScheduleWorklist),
+  },
+  {
+    path: 'linenIssueacceptance',
+    canActivate: [moduleAccessGuard],
+    data: { moduleId: 96 },
+    loadComponent: () => import('./features/linen-issue-acceptance/linen-issue-acceptance').then((m) => m.LinenIssueAcceptance),
+  },
+  {
+    path: 'linenIssueAcceptanceDetails',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/linen-issue-acceptance-details/linen-issue-acceptance-details').then((m) => m.LinenIssueAcceptanceDetails),
+  },
+  {
+    path: 'createTabularDataTemplates',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/create-tabular-data-templates/create-tabular-data-templates').then((m) => m.CreateTabularDataTemplates),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];
