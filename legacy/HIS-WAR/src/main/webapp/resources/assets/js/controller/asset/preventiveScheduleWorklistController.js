@@ -16,12 +16,13 @@ angular.module('myApp').controller(
 					return;
 				}
 				var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+				console.log("preventiveScheduleWorklistController ctrl");
 				if(cookieObjectStore==undefined){
 					$rootScope.storePopup();
 					angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
+				} else {
+					$scope.storeId = cookieObjectStore.storeId;
 				}
-				console.log("preventiveScheduleWorklistController ctrl");
-				$scope.storeId = cookieObjectStore.storeId;
 				$scope.showAdd = true;
 				$scope.showView = true;
 				

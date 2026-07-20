@@ -44,8 +44,9 @@ angular
 									if(cookieObjectStore==undefined){
 										$rootScope.storePopup();
 										angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
+									} else {
+										$scope.storeId = cookieObjectStore.storeId;
 									}
-									$scope.storeId = cookieObjectStore.storeId;
 									$scope.showAdd = true;
 									$scope.showView = true;
 									$scope.saveFFF = true;
