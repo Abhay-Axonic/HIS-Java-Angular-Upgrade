@@ -434,7 +434,9 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 
 ---
 
-## 28. SEVERITY 1 — `bookView` can silently display one patient's complete clinical record while the visible context is a different patient's, with nothing on screen to indicate a mismatch
+## 28. SEVERITY 1 — `bookView` can silently display one patient's complete clinical record while the visible context is a different patient's, with nothing on screen to indicate a mismatch — REFINED 2026-07-20, proposal at `docs/DECISION_NEEDED_BookViewStalePatientContext.md`
+
+**Update:** a full fix proposal traced the actual ui-router mechanics and found the severity is narrower than originally described here — not a *sustained* wrong-patient render, but a real, verifiable *transient flash* of wrong-patient data before an accidental (not intentional) redirect saves the page. Still a genuine patient-safety finding, still recommended as high-priority — see the linked document for the full corrected mechanics, proposed fix, and open UX decisions. Original writeup preserved below for the record.
 
 **Where:** `resources/assets/js/controller/opd/bookViewMasterController.js`, `checkAppointment()` (~line 133) and the whole controller's data model.
 
@@ -448,7 +450,9 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 
 ---
 
-## 29. SEVERITY 1 — `bookView`'s clinical history fields look editable but have no save path anywhere — a clinician could type real documentation into them and it silently vanishes
+## 29. SEVERITY 1 — `bookView`'s clinical history fields look editable but have no save path anywhere — a clinician could type real documentation into them and it silently vanishes — CORRECTED 2026-07-20, downgraded, proposal at `docs/DECISION_NEEDED_BookViewUnsavableHistoryFields.md`
+
+**Update — material correction, not just a refinement:** a follow-up investigation found the six `ng-repeat` blocks this entry describes as "editable" never actually render — their backing arrays (`historyPersonalList`, `historyFamilyList`, `historySurgicalList`, `historyMedicalList`, `historyTravelsList`, `dataListDiagnosis`) are never assigned anywhere in the controller, confirmed by grep and independently re-verified. AngularJS's `ngRepeat` over `undefined` produces zero DOM elements. **The specific scenario this entry describes — a clinician typing real documentation into a rendered field and it silently vanishing — cannot occur today, because the fields are not on the page.** The underlying capability gap (no save path exists anywhere in this controller) is still real and still worth fixing, but this is not currently an active, exploitable data-loss trap. Severity downgraded from "single most severe finding" accordingly — see the linked document for the full corrected analysis, why building a real save function is riskier than it looks (a role-gated doctor-review workflow is entangled in the sibling save logic), and the recommended interim cleanup fix. Original writeup preserved below for the record.
 
 **Where:** `resources/assets/js/controller/opd/bookViewMasterController.js` (whole file) and `views/book-view.html`'s History tab (Personal/Family/Surgical/Medical sub-tabs, ~lines 1109-1440, duplicated again in the "Past Visit" tab ~lines 3020-3350) and Diagnosis tab.
 
@@ -460,7 +464,9 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 
 ---
 
-## 30. `bookView`: 23 distinct dead interactive bindings across ~35 call sites, at least one traced to a specific stale-clone source screen
+## 30. `bookView`: 23 distinct dead interactive bindings across ~35 call sites, at least one traced to a specific stale-clone source screen — CORRECTED 2026-07-20
+
+**Update:** per entry 29's correction, ~18 of these 23 dead bindings sit inside the six `ng-repeat` blocks that never render at all — those bindings are invisible, not just broken (a user can't click a button that was never drawn to the DOM). The remaining ~5 (`getInvestigationDetails`, `getGroupServiceDetails`, `saveTemplateTransaction`, `setPackageOrderTabActive`, `printDischargeSumReport`) sit outside any dead array and ARE genuinely visible, clickable, and broken as originally described — including the `printDischargeSumReport` stale-clone evidence. See `docs/DECISION_NEEDED_BookViewUnsavableHistoryFields.md` section 3(iii) for the recommended resolution. Original writeup preserved below for the record.
 
 **Where:** `views/book-view.html`'s History, Diagnosis, and Diagnostics tabs, cross-checked against `resources/assets/js/controller/opd/bookViewMasterController.js`.
 
