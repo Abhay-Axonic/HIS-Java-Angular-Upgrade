@@ -128,13 +128,29 @@ angular
 							//for admission - DOA date picker & PDD date picker
 							
 							$scope.checkAppointment=function(){
-								
-						
+
+
 								$scope.encounterDetailsObj = JSON.parse(sessionStorage.getItem('cookieEncounterObject')) || {};
-								
+
 								console.log("Encounter Object",$scope.encounterDetailsObj);
-								
-								if($scope.encounterDetailsObj && Object.keys($scope.encounterDetailsObj).length > 0) {
+
+								// Only trust sessionStorage.cookieEncounterObject if it actually
+								// matches the patient/encounter this transition was navigated
+								// for (docs/DECISION_NEEDED_BookViewStalePatientContext.md,
+								// docs/ANGULAR_PENDING_FINDINGS.md entry 28) -- that key is
+								// written by 14 other, unrelated screens for their own
+								// purposes and can be stale. redirectBookViewUrl() already
+								// passes encounterId/patientId in $stateParams.bookViewObj;
+								// this is the first code that reads them for anything beyond
+								// an empty-object check.
+								var hasStateContext = !angular.equals({}, $stateParams.bookViewObj);
+								var contextMatches = hasStateContext
+									&& $scope.encounterDetailsObj
+									&& Object.keys($scope.encounterDetailsObj).length > 0
+									&& String($scope.encounterDetailsObj.encounterId) === String($stateParams.bookViewObj.encounterId)
+									&& String($scope.encounterDetailsObj.patientId) === String($stateParams.bookViewObj.patientId);
+
+								if(contextMatches) {
 										$scope.patientDetails.patientName = $scope.encounterDetailsObj.patientName;
 										$scope.patientDetails.uhIdNumber = $scope.encounterDetailsObj.uhIdNumber;
 										$scope.patientDetails.genderCode = $scope.encounterDetailsObj.genderCode;
@@ -154,21 +170,21 @@ angular
 										$scope.roleId = $scope.encounterDetailsObj.roleId;
 										$scope.patientDetails.patientCategoryId =$scope.encounterDetailsObj.patientCategoryId;
 										$scope.isCritical = $scope.encounterDetailsObj.isCritical;
-										
-										
+
+
 								}
 								else
 									{
-										$state.go('encounterQueueManagement');
+										$state.go(hasStateContext ? 'bedManagement' : 'encounterQueueManagement');
 										return false;
 									}
-								
+
 							}
-							
-						
+
+
 							$scope.checkAppointment();
-							
-							
+
+
 							/**Redirect Page Code*/
 							if(angular.equals({},$stateParams.bookViewObj))
  							{
