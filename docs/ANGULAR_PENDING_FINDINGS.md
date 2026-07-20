@@ -115,7 +115,9 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 
 ---
 
-## 8. implantMaster: a second missing-`$state`-injection crash bug, and a real speciality-ID data-loss bug on edit
+## 8. implantMaster: a second missing-`$state`-injection crash bug, and a real speciality-ID data-loss bug on edit — PARTIALLY RESOLVED 2026-07-20 (bug 1 of 2 fixed)
+
+**Update:** caught stale during the whole-project retroactive audit prompted by entries 16/17's staleness. Bug 1 (missing `$state` DI, crash on session expiry) is fixed — `implantMasterController.js`'s DI list now includes `$state` — via commit `93be69b` ("Fix assetCategoryMasterController's and implantMasterController's missing $state injection"), on `main` and merged into `rebuild/phase4-batch1a`. **Bug 2 (the `UpdateFixedAssetType` speciality-ID data-loss bug, lines 581-587) is still open** — re-verified live, `AddSpeciality` still pushes rows with no top-level `.id`. Do not treat this entry as fully resolved. Original writeup preserved below for the record.
 
 **Where:** `resources/assets/js/controller/master/unit/implantMasterController.js` (836 lines). Found during the second Phase 2 pilot batch's audit of `implantMaster` (`docs/PHASE2_PILOT_BATCH2_AUDIT.md` section 3).
 
@@ -129,7 +131,9 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 
 ---
 
-## 9. assigningPickerDispenser: a real crash bug, confirmed live by the golden-trace capture itself
+## 9. assigningPickerDispenser: a real crash bug, confirmed live by the golden-trace capture itself — RESOLVED 2026-07-20
+
+**Update:** caught stale during the whole-project retroactive audit prompted by entries 16/17's staleness. Fixed and merged to `main` (`38fda77`, "Fix assigningPickerDispenser's null-dereference crash on unset selectedTopStore") before this doc entry was updated. Re-confirmed live in current source: `initializeController()` now checks `cookieObjectStore==undefined` first and only dereferences `.storeName` inside the `else` branch (lines 50-56). Original writeup preserved below for the record.
 
 **Where:** `resources/assets/js/controller/pharmacy/assigningPickerDispenserController.js` lines 50-55. Found during the second Phase 2 pilot batch's audit (`docs/PHASE2_PILOT_BATCH2_AUDIT.md` section 4).
 
@@ -145,7 +149,9 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 
 ---
 
-## 10. assetCategoryMaster: a third missing-`$state`-injection crash bug, plus three smaller bugs
+## 10. assetCategoryMaster: a third missing-`$state`-injection crash bug, plus three smaller bugs — PARTIALLY RESOLVED 2026-07-20 (bug 1 of 4 fixed)
+
+**Update:** caught stale during the whole-project retroactive audit prompted by entries 16/17's staleness. Bug 1 (missing `$state` DI) is fixed — `assetCategoryMasterController.js`'s DI list now includes `$state` — via the same commit `93be69b` that fixed entry 8's identical bug. **Bugs 2-4 (search bypassing `PaginationService`, the 406-handler always reverting to `true`, and the copy-pasted "Enter Asset Category Code" validation message on the Description field) are all still open** — re-verified live, none fixed. Do not treat this entry as fully resolved. Original writeup preserved below for the record.
 
 **Where:** `resources/assets/js/controller/master/AssetManagenent/assetCategoryMasterController.js` (354 lines). Found during the second Phase 2 pilot batch's audit (`docs/PHASE2_PILOT_BATCH2_AUDIT.md` section 5).
 
@@ -177,7 +183,9 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 
 ---
 
-## 12. `billingGroupMaster`'s Status toggle looks disabled on the rebuild — two distinct, stacked bugs, found during owner's manual domain review
+## 12. `billingGroupMaster`'s Status toggle looks disabled on the rebuild — two distinct, stacked bugs, found during owner's manual domain review — RESOLVED 2026-07-20
+
+**Update:** caught stale during the whole-project retroactive audit prompted by entries 16/17's staleness. Both stacked bugs are fixed in the current tree: `billing-group-master.ts`'s `toggleStatus()` now updates via `this.list.update((rows) => rows.map(...))` instead of mutating `row` in place, and `styles.scss` now has a full `input:checked + .slider` rule with knob transform — both fix sites carry inline comments explicitly citing "entry 12". Landed via branches `fix/status-toggle-css-and-mutation`/`-batch2`, folded into `rebuild/phase4-batch1a` via commit `cfd6518` ("Base rebuild/phase4-batch1a on current main + Phase 3 scaffold"). Original writeup preserved below for the record.
 
 **Where:** `new/src/app/features/billing-group-master/billing-group-master.ts` (`toggleStatus()`, ~line 211) and `new/src/styles.scss` (`.switch`/`.slider` rules, ~lines 136–155). Found by the owner during manual side-by-side domain review (branch `rebuild/phase2-pilot-batch`, batch 1) — the first real interaction-level discrepancy this pilot has found, since all prior verification (golden-trace) only covered initial page load, never clicks/toggles/saves.
 
@@ -199,7 +207,9 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 
 ---
 
-## 13. None of the 10 rebuilt pilot screens enforce module/role-based access control — flagged immediately, not held for the final report
+## 13. None of the 10 rebuilt pilot screens enforce module/role-based access control — flagged immediately, not held for the final report — RESOLVED 2026-07-20
+
+**Update:** caught stale during the whole-project retroactive audit prompted by entries 16/17's staleness. A `moduleAccessGuard` now exists (`new/src/app/core/module-access.guard.ts`), whose header comment explicitly cites this entry, and every route in `new/src/app/app.routes.ts` now carries `canActivate: [moduleAccessGuard]` (or a documented, legacy-faithful reason it doesn't need one, matching legacy's own lack of a resolve block for that specific state). Landed via the same `cfd6518` merge as entry 12. Re-confirmed directly against the current `app.routes.ts` (all 10 original pilot screens plus every Phase 4 screen built since). Original writeup preserved below for the record.
 
 **Where:** `new/src/app/app.routes.ts` on both `rebuild/phase2-pilot-batch` (5 routes) and `rebuild/phase2-pilot-batch2-vm-pattern` (10 routes, the first 5 plus `GRN`/`assetCategoryMaster`/`periodicityService`/`assigningPickerDispenser`/`implantMaster`). Found while interaction-testing `organizationMaster` during this session's browser-automation sweep.
 
@@ -224,7 +234,9 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 
 ---
 
-## 14. MISReports' `unit`/`user`/`org` parameter controls are hard-disabled on the rebuild; legacy renders them as real (if often self-locked) dropdowns
+## 14. MISReports' `unit`/`user`/`org` parameter controls are hard-disabled on the rebuild; legacy renders them as real (if often self-locked) dropdowns — RESOLVED 2026-07-20
+
+**Update:** caught stale during the whole-project retroactive audit prompted by entries 16/17's staleness. `mis-reports.html`'s `@case ('unit')`/`('user')`/`('org')` blocks now render real, user-editable `<select>` dropdowns instead of disabled text inputs, with an inline comment citing this entry and stating the fields now match legacy's real `<select>` behavior. Landed via the same `cfd6518` merge as entries 12-13. Original writeup preserved below for the record.
 
 **Where:** `new/src/app/features/mis-reports/mis-reports.html`, `@case ('unit')`/`@case ('user')`/`@case ('org')` (~lines 109-119), vs. legacy's `views/OtherApps/MIS-reports.html` + `MISReportsController.js`. Found while interaction-testing MISReports after seeding one minimal test report group/report (`docs/ANGULAR_PENDING_FINDINGS.md`'s own audit trail didn't have real report data to test against before this — see session notes; a `general_ledger_id`/`block_report_print` DB-drift fix and this report seed were both done with explicit owner approval, additive-only, same class as the earlier BR-038/BR-039/login-drift fixes).
 
@@ -240,7 +252,9 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 
 ---
 
-## 15. `inputOutputCharts`' rebuilt patient search is functionally broken for virtually all real searches — flagged as an immediate callout, not held for the final report
+## 15. `inputOutputCharts`' rebuilt patient search is functionally broken for virtually all real searches — flagged as an immediate callout, not held for the final report — RESOLVED 2026-07-20
+
+**Update:** caught stale during the whole-project retroactive audit prompted by entries 16/17's staleness. `input-output-charts.ts`'s `searchPatients()` now conditionally spreads only whichever field is actually populated (`...(uhIdNumber ? {uhIdNumber} : {})`, same for `patientName`) instead of always sending the same term as both fields — a doc comment above it cites this entry directly and explains the fix matches legacy's conditional request-building. Landed via the same `cfd6518` merge as entries 12-14. Original writeup preserved below for the record.
 
 **Where:** `new/src/app/features/input-output-charts/input-output-charts.ts`, `searchPatients()` (~line 72-86), calling `new/src/app/features/input-output-charts/input-output-charts.service.ts`'s `searchPatients()`, which hits legacy's real, unchanged `POST /adt/searchListOfPatientsByWardId` (`UnknownPatientRegistrationDaoImpl.searchPatientsByWardId`, ~line 1194). Found while interaction-testing this screen after seeding one minimal test patient + admission + ward/bed assignment (real data seeded specifically to make this screen testable — see the DB-drift/seed-data BR entry for detail).
 
@@ -444,9 +458,11 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 
 ---
 
-## 28. SEVERITY 1 — `bookView` can silently display one patient's complete clinical record while the visible context is a different patient's, with nothing on screen to indicate a mismatch — REFINED 2026-07-20, proposal at `docs/DECISION_NEEDED_BookViewStalePatientContext.md`
+## 28. SEVERITY 1 — `bookView` can silently display one patient's complete clinical record while the visible context is a different patient's, with nothing on screen to indicate a mismatch — REFINED 2026-07-20, RESOLVED 2026-07-20, proposal at `docs/DECISION_NEEDED_BookViewStalePatientContext.md` (now stale)
 
 **Update:** a full fix proposal traced the actual ui-router mechanics and found the severity is narrower than originally described here — not a *sustained* wrong-patient render, but a real, verifiable *transient flash* of wrong-patient data before an accidental (not intentional) redirect saves the page. Still a genuine patient-safety finding, still recommended as high-priority — see the linked document for the full corrected mechanics, proposed fix, and open UX decisions. Original writeup preserved below for the record.
+
+**Update 2 (2026-07-20, whole-project retroactive audit):** the fix has since actually landed in legacy. `bookViewMasterController.js:130-179`'s `checkAppointment()` now cross-checks `$scope.encounterDetailsObj.encounterId`/`.patientId` against `$stateParams.bookViewObj.encounterId`/`.patientId` before trusting `sessionStorage.cookieEncounterObject`, redirecting to `bedManagement`/`encounterQueueManagement` if they don't match. The fix's own code comment explicitly cites this entry and `docs/DECISION_NEEDED_BookViewStalePatientContext.md` by name — a deliberate, completed fix, not a coincidental refactor. `docs/DECISION_NEEDED_BookViewStalePatientContext.md` is now stale and should not be treated as an open decision. `bookView` has not been rebuilt yet (Phase 4 batch 1c, on hold) — this was caught before the rebuild could faithfully replicate a bug that no longer exists in legacy.
 
 **Where:** `resources/assets/js/controller/opd/bookViewMasterController.js`, `checkAppointment()` (~line 133) and the whole controller's data model.
 
@@ -504,7 +520,7 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 
 ## 32. `outPatientFeedback`/`inPatientFeedback`: matching resolve-block copy-paste bug, harmless in practice
 
-**Where:** `resources/assets/js/controller/opd/transection/outPatientFeedbackController.js` (~lines 300-325) and `inPatientFeedbackController.js` (~lines 300-330), each screen's own `.config($stateProvider)` `resolve` block.
+**Where:** `resources/assets/js/controller/opd/transection/outPatientFeedbackController.js` (lines 300-323) and `inPatientFeedbackController.js` (lines 366-385, corrected 2026-07-20 whole-project retroactive audit — original ~300-330 citation had drifted ~66 lines; bug itself is unchanged, citation only), each screen's own `.config($stateProvider)` `resolve` block.
 
 **What it is, plainly:** in both screens, several of the route's `resolve` functions (`visitType`/`visitTypeId`/`encounterId` in outPatientFeedback; `patientId`/`visitType`/`visitTypeId` in inPatientFeedback) all incorrectly `return $stateParams.cabinId` — `cabinId` isn't a real param of either route. Both controllers ignore these injected resolve values entirely and instead re-derive every identifier by manually parsing `window.location.href` (verified correct against each route's real param order) — so this has zero observable impact today, but is a real trap if anyone ever wires the injected resolve params in instead.
 
@@ -538,9 +554,11 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 
 ---
 
-## 34. `applicationConfigurationController.js` — the designated fallback screen for a missing `cookieObjectAppConfig` itself crashes on a missing `cookieObjectAppConfig`, affecting ~53 screens app-wide — PROPOSAL WRITTEN 2026-07-20, see `docs/DECISION_NEEDED_ApplicationConfigurationFallbackCrash.md`
+## 34. `applicationConfigurationController.js` — the designated fallback screen for a missing `cookieObjectAppConfig` itself crashes on a missing `cookieObjectAppConfig`, affecting ~53 screens app-wide — PROPOSAL WRITTEN 2026-07-20, RESOLVED 2026-07-20, see `docs/DECISION_NEEDED_ApplicationConfigurationFallbackCrash.md` (now stale)
 
 **Update:** fast-tracked for its own review per explicit owner request, given its blast radius directly undermines the just-approved entry-17 fix. Full proposal (root cause, before/after, blast-radius confirmation, minimal fix) at `docs/DECISION_NEEDED_ApplicationConfigurationFallbackCrash.md`. Precise count re-confirmed: **52 files** currently redirect here (not merely "~53" as first estimated), all converging on one single controller registration — confirmed a single, contained fix, not 53 separate ones. Not yet implemented, proposal only. Original writeup preserved below for the record.
+
+**Update 2 (2026-07-20, whole-project retroactive audit):** the fix has since actually landed in legacy. `applicationConfigurationController.js:717` now reads `$scope.registeredPinPadDevice = cookieObjectAppConfig != undefined ? cookieObjectAppConfig.registeredPinPadDevice : null;` — exactly the guard-with-a-sensible-default shape this entry's own "My read" section proposed. Independently re-verified directly against current source (not just taking the audit's word for it). `docs/DECISION_NEEDED_ApplicationConfigurationFallbackCrash.md` is now stale and should not be treated as an open decision.
 
 **Where:** `resources/assets/js/controller/master/unit/applicationConfigurationController.js`, ~line 717. Found while implementing and real-browser-verifying the fix for entry 17.
 
