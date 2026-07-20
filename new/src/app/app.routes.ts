@@ -125,5 +125,16 @@ export const routes: Routes = [
         (m) => m.WebAppointmentBookingConfirmation,
       ),
   },
+  // pesapalProcessPage: no data.moduleId (no resolve block in legacy's
+  // state), but moduleAccessGuard's baseline "must be logged in" check
+  // still applies -- the controller has a real cookieObject session guard
+  // (pesapalSuccessPageController.js:22-27), same shape as
+  // billingGroupMaster/periodicityService.
+  {
+    path: 'pesapalProcessPage',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () =>
+      import('./features/pesapal-process-page/pesapal-process-page').then((m) => m.PesapalProcessPage),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];
