@@ -501,3 +501,34 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 **Owner decision, not resolved here:** not fixed, per standing instruction. Both screens otherwise passed Step 0 cleanly and are confirmed genuinely distinct from each other, not a stale clone of one another (field sets are domain-appropriate and non-overlapping).
 
 **My read:** trivial, no urgency — same severity class as entry 5 (GRN's dead Cancel-button reference).
+
+---
+
+## 34. `applicationConfigurationController.js` — the designated fallback screen for a missing `cookieObjectAppConfig` itself crashes on a missing `cookieObjectAppConfig`, affecting ~53 screens app-wide
+
+**Where:** `resources/assets/js/controller/master/unit/applicationConfigurationController.js`, ~line 717. Found while implementing and real-browser-verifying the fix for entry 17.
+
+**What it is, plainly:**
+```js
+var cookieObjectAppConfig = $cookies.getObject('cookieObjectAppConfig');
+$scope.registeredPinPadDevice = cookieObjectAppConfig.registeredPinPadDevice;
+```
+Zero guard. `applicationConfiguration` is the app's own designated redirect target for a missing `cookieObjectAppConfig` — it's what `$rootScope.checkCookies()` (`app.js` ~line 1889) sends a user to, and it's the target ~53 other controllers across the codebase redirect to for the exact same reason (confirmed by a full-codebase survey while scoping entry 17's fix). Every one of those 53+ redirects lands a user on a screen that itself crashes for the identical root cause it was supposed to be the safe landing page for. Confirmed live: after fixing entry 17's `scheduleWorklist`/`PMSchedule` crashes to correctly redirect here, real browser testing showed the redirect succeeds, then this screen throws `TypeError: Cannot read properties of undefined (reading 'registeredPinPadDevice')` immediately on arrival — visible in the console, though the page's own header/nav chrome still renders (the form body renders with mostly-empty fields, not a blank crash page, since Angular's uncaught-exception handling in this version doesn't halt the whole render).
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. This is a legacy-code, pre-existing bug — not caused by, or specific to, the entry-17 fix; it would reproduce identically via any of the other ~53 existing call sites already using this same established redirect pattern.
+
+**My read:** worth prioritizing over most other findings in this doc given its blast radius — it's not one screen's bug, it's the failure-handling path for ~53+ screens' worth of "missing app config" recovery, and it currently fails at the one place that's supposed to catch it. The fix is the same shape as every other entry in this "missing null-check" family: guard the dereference, likely with a sensible default (`registeredPinPadDevice: null` or similar) rather than a redirect, since this *is* the fallback screen — there's nowhere further to send the user.
+
+---
+
+## 35. `pmScheduleController.js`'s unconditional `getAssetDetailsByCriteria()` call crashes whenever `init()` exits early, for any reason — pre-existing, not specific to any one guard
+
+**Where:** `resources/assets/js/controller/asset/pmScheduleController.js`, ~line 168 (`$scope.AssetDetailsByScheduleCriteria.length = 0;`), called unconditionally at ~line 199 (`$scope.getAssetDetailsByCriteria();`) immediately after `$scope.init();`. Found while implementing and verifying entry 17's fix.
+
+**What it is, plainly:** `$scope.AssetDetailsByScheduleCriteria` is only ever initialized (`= []`) inside `init()`, well after the function's own early-return guards (missing `cookieObject` → `$state.go('login'); return;`, and, after entry 17's fix, missing `cookieObjectAppConfig` → `$state.go('applicationConfiguration'); return;`). But `getAssetDetailsByCriteria()` — defined and unconditionally invoked immediately after `$scope.init();`, regardless of whether `init()` completed or returned early — does `$scope.AssetDetailsByScheduleCriteria.length = 0`, an in-place mutation that throws `TypeError: Cannot set properties of undefined (setting 'length')` if the array was never created. **Confirmed pre-existing, not introduced by entry 17's fix:** reproduced the identical crash via the file's own already-existing, unrelated missing-`cookieObject` (login) guard, which has had this exact early-return shape since before this session touched the file. Confirmed in real browser testing that this crash fires but does *not* block the `$state.go()` redirect already in flight from completing — the user still lands on the (separately broken, see entry 34) `applicationConfiguration` screen, with one extra silent console error along the way that has no visible effect.
+
+**Contrast with the sibling `scheduleWorklist` screen, which does NOT have this bug:** `preventiveScheduleWorklistController.js`'s equivalent `getAssetDetailsByCriteria()` reassigns the array fresh (`$scope.AssetDetailsByScheduleCriteria = [];`) at the top of the function, which is always safe regardless of prior state — not an in-place mutation. `pmScheduleController.js`'s version is the odd one out.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+**My read:** low practical severity today (confirmed it doesn't block the redirect, just adds a silent extra console error), but worth a one-line fix (`.length = 0` → `= []`, matching the sibling's safe pattern) whenever this file is next touched for another reason.
