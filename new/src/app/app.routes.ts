@@ -195,6 +195,17 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/detail-schedule-worklist/detail-schedule-worklist').then((m) => m.DetailScheduleWorklist),
   },
+  // bookView: no data.moduleId (no resolve block), real cookieObject +
+  // cookieObjectAppConfig guards in the controller, same shape as
+  // pesapalProcessPage. SCOPED REBUILD -- see book-view.ts's class doc
+  // comment: covers the guards and the corrected patient-context safety
+  // check (entry 28) plus the header it gates, not the full 81-function
+  // tab surface of the 4,027-line legacy controller.
+  {
+    path: 'bookView',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/book-view/book-view').then((m) => m.BookView),
+  },
   // bookAppointment: no session guard in legacy (confirmed by full read) --
   // reached only via webAppointmentBooking's public flow. Receives
   // webAppDetailObj via BookAppointmentHandoffService (sending side
