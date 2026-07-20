@@ -1,0 +1,124 @@
+<div class="container-fluid his-style">
+  <div class="row margin-top10">
+    <div class="col-lg-3"><b>Return Date:</b> {{ detail().returnDate | date: 'dd/MM/yyyy' }}</div>
+    <div class="col-lg-3"><b>Return No:</b> {{ detail().returnNo }}</div>
+    <div class="col-lg-3"><b>Returning Store:</b> {{ detail().toStore }}</div>
+    <div class="col-lg-3"><b>Accepting Store:</b> {{ detail().fromStore }}</div>
+  </div>
+
+  <div class="row padding-top10">
+    <div class="col-lg-12">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              <input
+                type="checkbox"
+                [ngModel]="selectAllRows()"
+                (ngModelChange)="selectAllRows.set($event); selectAllItems()"
+                [disabled]="detail().approvalStatusId !== 10"
+              />
+            </th>
+            <th>Asset Code</th>
+            <th>Asset Name</th>
+            <th>Stock Available</th>
+            <th>Return Qty</th>
+            <th>Batch No</th>
+            <th>Accept Quantity</th>
+            <th>Reject Quantity</th>
+            <th>Reject</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of detail().item; track item.id) {
+            <tr>
+              <td>
+                <input
+                  type="checkbox"
+                  [ngModel]="item.isSelected"
+                  (ngModelChange)="item.isSelected = $event; selectItem(item)"
+                  [disabled]="detail().approvalStatusId !== 10"
+                />
+              </td>
+              <td>{{ item.itemCode }}</td>
+              <td>{{ item.itemName }}</td>
+              <td>{{ item.availableQuantity }}</td>
+              <td>{{ item.returnQuantity }}</td>
+              <td>{{ item.batchNo }}</td>
+              <td>
+                <div class="row approved-qty-remark">
+                  @if (!item.isDisabled) {
+                    <input type="text" autocomplete="off" class="w-100" [ngModel]="item.acceptedQuantity" (ngModelChange)="item.acceptedQuantity = $event" />
+                  } @else {
+                    <div>{{ item.acceptedQuantity ? item.acceptedQuantity : 0 }}</div>
+                  }
+                </div>
+              </td>
+              <td>{{ item.rejectedQuantity }}</td>
+              <td>
+                <div class="checkbox">
+                  <label class="switch switch-small">
+                    <input
+                      type="checkbox"
+                      class="switchInput"
+                      [disabled]="!!item.isDisabled"
+                      [ngModel]="item.isReject"
+                      (ngModelChange)="item.isReject = $event; rejectionPopup(item)"
+                    />
+                    <div class="slider round slider-small"></div>
+                  </label>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="row margin-top10">
+    <div class="col-lg-10"></div>
+    <div class="col-lg-1">
+      <a (click)="saveAssetReturnAcceptance()">
+        <input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" [disabled]="detail().status === 'Completed'" />
+      </a>
+    </div>
+    <div class="col-lg-1">
+      <a routerLink="/assetReturnAcceptance"><input type="button" value="Back" class="btn btn-primary btn-save-box-shadow" /></a>
+    </div>
+  </footer>
+</div>
+
+@if (showRejectModal()) {
+  <div class="modal-backdrop" (click)="closeRejectModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Rejection <button type="button" (click)="closeRejectModal()">&times;</button></header>
+      <div class="modal-body">
+        <div class="row input-container margin-top10">
+          <div class="col-lg-6">
+            <label for="rejectQty">Qty</label>
+            <input type="text" name="rejectQty" id="rejectQty" class="text-input" [(ngModel)]="rejectQty" />
+          </div>
+          <div class="col-lg-6">
+            <label for="rejectReason">Select Reason</label>
+            <select name="rejectReason" id="rejectReason" class="text-input" [(ngModel)]="rejectReason">
+              <option value="">Select Reason</option>
+              @for (datum of rejectReasons(); track datum.id) {
+                <option [value]="datum.id">{{ datum.reason }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="row input-container margin-top10">
+          <div class="col-lg-12">
+            <label for="rejectNote">Note</label>
+            <textarea name="rejectNote" id="rejectNote" rows="4" maxlength="100" class="text-input" [(ngModel)]="rejectNote"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="saveBtn" class="btn btn-primary" [disabled]="!rejectQty" (click)="saveAcceptReject()">Save</button>
+      </div>
+    </div>
+  </div>
+}

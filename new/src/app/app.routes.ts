@@ -279,5 +279,53 @@ export const routes: Routes = [
     canActivate: [moduleAccessGuard],
     loadComponent: () => import('./features/create-tabular-data-templates/create-tabular-data-templates').then((m) => m.CreateTabularDataTemplates),
   },
+  // Phase 4 batch 3 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+  // follow-on). All 8 are Asset Management screens; only rejectedAssetAcceptance
+  // has a real module-access resolve block in legacy (moduleId 218, confirmed
+  // in rejectedAssetAcceptanceController.js's own self-registered state) --
+  // the rest have none, faithfully matching legacy's own lack of a resolve
+  // block, same convention as several batch 1/2 screens.
+  {
+    path: 'correctiveMaintenance',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/corrective-maintenance/corrective-maintenance').then((m) => m.CorrectiveMaintenance),
+  },
+  {
+    path: 'detailsCorrectiveMaintenance',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/details-corrective-maintenance/details-corrective-maintenance').then((m) => m.DetailsCorrectiveMaintenance),
+  },
+  {
+    path: 'addNewCorrectiveMaintenance',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/add-new-corrective-maintenance/add-new-corrective-maintenance').then((m) => m.AddNewCorrectiveMaintenance),
+  },
+  {
+    path: 'correctiveMaintenanceReturnWorklist',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () =>
+      import('./features/corrective-maintenance-return-worklist/corrective-maintenance-return-worklist').then((m) => m.CorrectiveMaintenanceReturnWorklist),
+  },
+  {
+    path: 'rejectedAssetAcceptance',
+    canActivate: [moduleAccessGuard],
+    data: { moduleId: 218 },
+    loadComponent: () => import('./features/rejected-asset-acceptance/rejected-asset-acceptance').then((m) => m.RejectedAssetAcceptance),
+  },
+  {
+    path: 'assetReturnAcceptanceDetails',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/asset-return-acceptance-details/asset-return-acceptance-details').then((m) => m.AssetReturnAcceptanceDetails),
+  },
+  {
+    path: 'detailsAssetIssueAcceptance',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/details-asset-issue-acceptance/details-asset-issue-acceptance').then((m) => m.DetailsAssetIssueAcceptance),
+  },
+  {
+    path: 'fixedAssetType',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/fixed-asset-type/fixed-asset-type').then((m) => m.FixedAssetType),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];

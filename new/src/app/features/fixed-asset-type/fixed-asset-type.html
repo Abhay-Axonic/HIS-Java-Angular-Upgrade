@@ -1,0 +1,90 @@
+<section class="page">
+  <fieldset>
+    <legend>Fixed Asset Type</legend>
+    <div class="filter-row">
+      <div class="field">
+        <label for="fixedAssetCode">Fixed Asset Code<span class="required">*</span></label>
+        <input
+          id="fixedAssetCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="fixedAssetCode()"
+          (ngModelChange)="fixedAssetCode.set($event); isCodeInvalid.set(false)"
+          name="fixedAssetCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Fixed Asset Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="fixedAssetType">Fixed Asset Type<span class="required">*</span></label>
+        <input
+          id="fixedAssetType"
+          type="text"
+          autocomplete="off"
+          [ngModel]="fixedAssetType()"
+          (ngModelChange)="fixedAssetType.set($event); isTypeInvalid.set(false)"
+          name="fixedAssetType"
+        />
+        @if (isTypeInvalid()) {
+          <p class="help-block">Fixed Asset Type is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    <button type="button" class="btn-primary" title="Save" (click)="openConfirmModal()">Save</button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th class="sortable" (click)="sortBy('fixedAssetCode')">Fixed Asset Code</th>
+        <th class="sortable" (click)="sortBy('fixedAssetType')">Fixed Asset Type</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.id) {
+        <tr>
+          <td>{{ row.fixedAssetCode }}</td>
+          <td>{{ row.fixedAssetType }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row.id)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="save()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

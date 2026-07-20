@@ -1,0 +1,156 @@
+<div class="container-fluid his-style">
+  <div class="row margin-top10">
+    <div class="col-lg-4">
+      <b>Requesting Store :</b> {{ detail().fromStore }}
+      <b class="margin-left10">Issuing Store:</b> {{ detail().toStore }}
+    </div>
+    <div class="col-lg-3"><b>Issue Date:</b> {{ detail().issueDate | date: 'dd/MM/yyyy' }}</div>
+    <div class="col-lg-3"><b>Issue No:</b> {{ detail().issueNo }}</div>
+  </div>
+
+  <div class="row padding-top10">
+    <div class="col-lg-12">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" [ngModel]="selectAllRows()" (ngModelChange)="selectAllRows.set($event); selectAllItems()" />
+            </th>
+            <th>
+              Asset Code
+              <div class="float_right" (click)="sortType.set('assetCode'); sortReverse.set(!sortReverse())">
+                <i class="fa fa-caret-up" aria-hidden="true"></i><i class="fa fa-caret-down" aria-hidden="true"></i>
+              </div>
+            </th>
+            <th>
+              Asset Name
+              <div class="float_right" (click)="sortType.set('aseetName'); sortReverse.set(!sortReverse())">
+                <i class="fa fa-caret-up" aria-hidden="true"></i><i class="fa fa-caret-down" aria-hidden="true"></i>
+              </div>
+            </th>
+            <th>
+              Issue Qty
+              <div class="float_right" (click)="sortType.set('issueQuantity'); sortReverse.set(!sortReverse())">
+                <i class="fa fa-caret-up" aria-hidden="true"></i><i class="fa fa-caret-down" aria-hidden="true"></i>
+              </div>
+            </th>
+            <th>
+              Pending Qty
+              <div class="float_right" (click)="sortType.set('pendingQuantity'); sortReverse.set(!sortReverse())">
+                <i class="fa fa-caret-up" aria-hidden="true"></i><i class="fa fa-caret-down" aria-hidden="true"></i>
+              </div>
+            </th>
+            <th>
+              Max Order Qty
+              <div class="float_right" (click)="sortType.set('maxOrderQuantity'); sortReverse.set(!sortReverse())">
+                <i class="fa fa-caret-up" aria-hidden="true"></i><i class="fa fa-caret-down" aria-hidden="true"></i>
+              </div>
+            </th>
+            <th>
+              Specification
+              <div class="float_right" (click)="sortType.set('specification'); sortReverse.set(!sortReverse())">
+                <i class="fa fa-caret-up" aria-hidden="true"></i><i class="fa fa-caret-down" aria-hidden="true"></i>
+              </div>
+            </th>
+            <th>Approved Qty</th>
+            <th>Rejected Qty</th>
+            <th>Reject</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of sortedItems(); track item.id) {
+            <tr>
+              <td>
+                <input
+                  type="checkbox"
+                  [ngModel]="item.isSelected"
+                  (ngModelChange)="item.isSelected = $event; selectItem(item)"
+                  [disabled]="detail().status === 'Closed'"
+                />
+              </td>
+              <td title="{{ item.itemCode }}">{{ item.itemCode }}</td>
+              <td title="{{ item.itemName }}">{{ item.itemName }}</td>
+              <td title="{{ item.issueQuantity }}">{{ item.issueQuantity }}</td>
+              <td title="{{ item.pendingQuantity }}">{{ item.pendingQuantity }}</td>
+              <td title="{{ item.maxOrderQuantity }}">{{ item.maxOrderQuantity }}</td>
+              <td title="{{ item.specification }}">{{ item.specification }}</td>
+              <td>
+                <div class="row approved-qty-remark">
+                  <input
+                    type="text"
+                    autocomplete="off"
+                    class="w-100"
+                    [ngModel]="item.approvedQuantity"
+                    (ngModelChange)="item.approvedQuantity = $event; item.isQuantityValid = false"
+                    (blur)="approvedQuantity(item); validateQuantity(item)"
+                    [class.tableError]="item.isQuantityValid"
+                  />
+                </div>
+              </td>
+              <td>{{ item.rejectQuantity ? item.rejectQuantity : 0 }}</td>
+              <td>
+                <div class="checkbox">
+                  <label class="checkbox-inline switch switch-small">
+                    <input
+                      type="checkbox"
+                      class="switchInput"
+                      [disabled]="!!item.isDisabled"
+                      [ngModel]="item.isReject"
+                      (ngModelChange)="item.isReject = $event; rejectionPopup(item)"
+                    />
+                    <span class="slider round slider-small"></span>
+                  </label>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="row padding-top5 margin-top10">
+    <div class="col-lg-10"></div>
+    <div class="col-lg-1">
+      <a (click)="saveApproval()">
+        <input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" [disabled]="detail().status === 'Closed'" />
+      </a>
+    </div>
+    <div class="col-lg-1">
+      <a routerLink="/assetIssueAcceptance"><input type="button" value="Back" class="btn btn-primary btn-save-box-shadow" /></a>
+    </div>
+  </footer>
+</div>
+
+@if (showRejectModal()) {
+  <div class="modal-backdrop" (click)="modalDismiss()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Rejection <button type="button" (click)="modalDismiss()">&times;</button></header>
+      <div class="modal-body">
+        <div class="row input-container margin-top10">
+          <div class="col-lg-6">
+            <label for="qty">Qty</label>
+            <input type="text" autocomplete="off" name="qty" id="qty" class="text-input" [(ngModel)]="qty" />
+          </div>
+          <div class="col-lg-6">
+            <label for="rejectReasonId">Select Reasons</label>
+            <select name="rejectReasonId" id="rejectReasonId" class="text-input" [(ngModel)]="rejectReason">
+              @for (reason of rejectReasons(); track reason.id) {
+                <option [ngValue]="reason">{{ reason.reason }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="row input-container margin-top10">
+          <div class="col-lg-12">
+            <label for="noteReject">Note</label>
+            <textarea name="noteReject" id="noteReject" rows="4" class="text-input" [(ngModel)]="rejectNote"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="saveBtn" class="btn btn-primary" (click)="saveAcceptReject()">Save</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,332 @@
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style">
+    <fieldset>
+      <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Date (From)</label>
+          <input type="date" class="form-control" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Date-Till</label>
+          <input type="date" class="form-control" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <label>Department</label>
+          <select class="form-control" [(ngModel)]="storeId">
+            <option [ngValue]="0">All</option>
+            @for (info of storeList(); track info.storeId) {
+              <option [ngValue]="info.storeId">{{ info.storeName }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <label>Status(n)</label>
+          <select class="form-control" [(ngModel)]="statusId">
+            <option [ngValue]="0">All</option>
+            <option [ngValue]="3">Assigned</option>
+            <option [ngValue]="6">Cancelled</option>
+            <option [ngValue]="2">Completed</option>
+            <option [ngValue]="5">Pending</option>
+            <option [ngValue]="7">Reopen</option>
+            <option [ngValue]="1">Requested</option>
+            <option [ngValue]="4">Work In Progress</option>
+          </select>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10">
+          <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow" title="Search" (click)="search()">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10">
+          <a routerLink="/addNewCorrectiveMaintenance">
+            <input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow" />
+          </a>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="row margin-top4">
+      <div class="col-lg-8 col-md-8 col-sm-8">
+        <label class="show-entries"
+          >Show
+          <select [ngModel]="pagination().pageSize" (ngModelChange)="onPageSizeChange($event)" class="search-popUp-ddl">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          (records)
+        </label>
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto float_right">
+        <button type="button" class="btn btn-primary btn-save-box-shadow" title="Save" (click)="updateCorectiveMaintenance()" [disabled]="counter() === 0">
+          <i class="fa fa-floppy-o" style="font-size: 21px" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+        <input type="text" autocomplete="off" class="text-search-box" placeholder="Search" style="margin-top: 0px" [(ngModel)]="searchKeyword" />
+        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <div class="row padding-left-right-set4 margin-top10">
+      <div class="col-lg-12 col-md-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="width2"></th>
+              <th class="width6">Request No.</th>
+              <th class="width7">Request (Date)</th>
+              <th class="width6">Request (Type)</th>
+              <th class="width6">Asset Code</th>
+              <th class="width8">Asset Name</th>
+              <th class="width8">Request Criticality</th>
+              <th class="width8">Requestor</th>
+              <th class="width8">Reopen Request No</th>
+              <th class="width8">Completion Details</th>
+              <th class="width8">Reopen Details</th>
+              <th class="width5">Status(n)</th>
+              <th class="width3">Action taken</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (info of pagination().data; track $index) {
+              <tr>
+                <td [style.color]="setColor(info.referenceId)">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="info.check"
+                    [disabled]="info.maintenanceStatusId !== 5"
+                    (change)="getCountOfCheck(info.check ?? false)"
+                  />
+                </td>
+                <td [style.color]="setColor(info.referenceId)">{{ info.callLogNumber }}</td>
+                <td [style.color]="setColor(info.referenceId)">{{ info.requestDateTime }}</td>
+                <td [style.color]="setColor(info.referenceId)">
+                  @if (info.requestTypeId === 1) {
+                    <div>Breakdown</div>
+                  }
+                  @if (info.requestTypeId === 2) {
+                    <div>Installation</div>
+                  }
+                  @if (info.requestTypeId === 3) {
+                    <div>As And When</div>
+                  }
+                </td>
+                <td [style.color]="setColor(info.referenceId)">{{ info.assetCode }}</td>
+                <td [style.color]="setColor(info.referenceId)">{{ info.assetName }}</td>
+                <td [style.color]="setColor(info.referenceId)">
+                  @if (info.requestCriticalityId === 1) {
+                    <div>Normal</div>
+                  }
+                  @if (info.requestCriticalityId === 2) {
+                    <div>Urgent</div>
+                  }
+                </td>
+                <td [style.color]="setColor(info.referenceId)">{{ info.userName }}</td>
+                <td [style.color]="setColor(info.referenceId)">
+                  @if (info.referenceLogNumber != null) {
+                    <div>{{ info.referenceLogNumber }}</div>
+                  } @else {
+                    <div>-</div>
+                  }
+                </td>
+                <td class="padding-edit-button-table" [style.color]="setColor(info.referenceId)">
+                  <div class="text-center">
+                    @if (info.maintenanceStatusId === 2) {
+                      <a href="javascript:void(0)" (click)="getCurrentIndex($index)"><i class="fa fa-info-circle" aria-hidden="true" title="Completion Details"></i></a>
+                    } @else {
+                      -
+                    }
+                  </div>
+                </td>
+                <td class="padding-edit-button-table" [style.color]="setColor(info.referenceId)">
+                  <div class="text-center">
+                    @if (info.isComplete) {
+                      <a href="javascript:void(0)" (click)="getReopenReqIndex($index)"><i class="fa fa-info-circle" aria-hidden="true" title="Reopen"></i></a>
+                    } @else {
+                      -
+                    }
+                  </div>
+                </td>
+                <td [style.color]="setColor(info.referenceId)">
+                  @if (info.maintenanceStatusId === 3) {
+                    <div>Assigned</div>
+                  }
+                  @if (info.maintenanceStatusId === 2) {
+                    <div>Completed</div>
+                  }
+                  @if (info.maintenanceStatusId === 6) {
+                    <div>Cancelled</div>
+                  }
+                  @if (info.maintenanceStatusId === 5) {
+                    <div>Pending</div>
+                  }
+                  @if (info.maintenanceStatusId === 7) {
+                    <div>Reopen</div>
+                  }
+                  @if (info.maintenanceStatusId === 1) {
+                    <div>Requested</div>
+                  }
+                  @if (info.maintenanceStatusId === 4) {
+                    <div>Work In Progress</div>
+                  }
+                </td>
+                <td style="width: 8.35% !important" [style.color]="setColor(info.referenceId)">
+                  <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%" [style.display]="info.maintenanceStatusId === 5 ? '' : 'none'">
+                    <a href="javascript:void(0)" title="Edit" (click)="getDetails(info, 0)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                  </div>
+                  <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%" [style.display]="info.maintenanceStatusId !== 5 ? '' : 'none'">
+                    <a title="Edit"><i class="fa fa-pencil disabled" aria-hidden="true"></i></a>
+                  </div>
+
+                  <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%">
+                    <a title="Print"><i class="fa fa-print" aria-hidden="true"></i></a>
+                  </div>
+
+                  <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%" [style.display]="info.maintenanceStatusId !== 6 && info.maintenanceStatusId !== 2 ? '' : 'none'">
+                    <a href="javascript:void(0)" title="Cancel"><i class="fa fa-ban" aria-hidden="true" (click)="cancelRequest(info.correctiveMaintenanceId)"></i></a>
+                  </div>
+                  <div class="col-lg-2 col-md-4 padding-left-right-set4" style="width: 20%" [style.display]="info.maintenanceStatusId === 6 || info.maintenanceStatusId === 2 ? '' : 'none'">
+                    <a title="Cancel"><i class="fa fa-ban disabled" aria-hidden="true"></i></a>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 padding-left-right-set4" style="width: 20%">
+                    <a href="javascript:void(0)" (click)="getDetails(info, 1)"><i class="fa fa-eye"></i></a>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="row margin-bottom45 center-block">
+        @if (pagination().totalPages > 1) {
+          <ul class="pagination table-list" style="font-size: 14px; cursor: pointer">
+            <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+            <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+            @for (p of pagesList(); track p) {
+              <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+            }
+            <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+            <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+          </ul>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (showCompletionModal()) {
+  <div class="modal-backdrop" (click)="closeCompletionModal()">
+    <div class="modal common-medium-popup" (click)="$event.stopPropagation()">
+      <header>
+        Completion Details
+        <button type="button" class="close" (click)="closeCompletionModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr class="table-th-bg">
+              <th class="width8">Completion Date</th>
+              <th class="width8">Completion Time</th>
+              <th class="width70">Remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input
+                  type="date"
+                  class="form-control"
+                  [ngModel]="completionObj().completionDate"
+                  (ngModelChange)="updateCompletionField('completionDate', $event)"
+                  [disabled]="currentCompletionRow()?.isComplete ?? false"
+                />
+              </td>
+              <td>
+                <input
+                  type="time"
+                  class="form-control"
+                  [ngModel]="completionObj().completionTime"
+                  (ngModelChange)="updateCompletionField('completionTime', $event)"
+                  [disabled]="currentCompletionRow()?.isComplete ?? false"
+                />
+              </td>
+              <td>
+                <textarea rows="2" [ngModel]="completionObj().completionRemak" (ngModelChange)="updateCompletionField('completionRemak', $event)" [disabled]="currentCompletionRow()?.isComplete ?? false"></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer" style="border: none">
+        <div class="pull-left">
+          <input
+            type="checkbox"
+            id="completeChk"
+            [ngModel]="completionObj().isComplete"
+            (ngModelChange)="updateCompletionField('isComplete', $event)"
+            [disabled]="currentCompletionRow()?.isComplete ?? false"
+          />
+          <label for="completeChk" class="margin-left5">Complete</label>
+        </div>
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary" (click)="updateCompletionDetails()" [disabled]="currentCompletionRow()?.isComplete ?? false">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showReopenModal()) {
+  <div class="modal-backdrop" (click)="closeReopenModal()">
+    <div class="modal common-medium-popup" (click)="$event.stopPropagation()">
+      <header>
+        Reopen Details
+        <button type="button" class="close" (click)="closeReopenModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-4 col-md-3 col-sm-3 padding-left-right-10 padding-top10">
+            <label>Reopen Date</label>
+            <input type="text" class="form-control" [ngModel]="reopenDate()" (ngModelChange)="reopenDate.set($event)" [disabled]="reOpenstatus()" />
+          </div>
+        </div>
+        <div class="row margin-top4">
+          <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-10">
+            <b class="padding-right10">Remark:</b>
+          </div>
+          <div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set4">
+            <textarea rows="4" [ngModel]="reopenRemark()" (ngModelChange)="reopenRemark.set($event)" [disabled]="reOpenstatus()"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border: none">
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary" (click)="reopenRequest()" [disabled]="reOpenstatus()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCancelModal()) {
+  <div class="modal-backdrop" (click)="closeCancelModal()">
+    <div class="modal common-small-popup" (click)="$event.stopPropagation()">
+      <header>
+        Corrective Maintenance
+        <button type="button" class="close" (click)="closeCancelModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="row padding-left-right-set4 table-container padding-top4">
+          <label>Do you want to cancel Request ?</label>
+        </div>
+      </div>
+      <div class="modal-footer" style="border: none">
+        <button type="button" class="btn btn-primary" (click)="finalCancelReq()">Ok</button>
+        <button type="button" class="btn btn-primary" (click)="closeCancelModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
