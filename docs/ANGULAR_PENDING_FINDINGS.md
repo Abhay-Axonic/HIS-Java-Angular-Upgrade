@@ -674,3 +674,31 @@ var promise = $http(httpObject).then(
 **Owner decision, not resolved here:** not fixed, per standing instruction. Confirmed real via full controller read, not guessed — no code path anywhere defines `$scope.scheduleWorklistObj`.
 
 **My read:** SEVERITY 1 — this is a real, unconditional crash on a real, clickable, obviously-intended-to-work feature (recording spare parts consumed during preventive maintenance), not a rare edge case. Whether this has ever been noticed in production is unknown from code alone, but the button is front-and-center on the screen and would fail for every single user, every single time, with zero workaround. The fix is small (initialize `$scope.scheduleWorklistObj = { storeId: ... }` from the same session/store context every sibling screen in this batch already uses) but is not applied here, per standing instruction — this rebuild replicates the crash faithfully as this screen's parity target.
+
+---
+
+## 41. SEVERITY-ADJACENT — plain `GenericService.serviceAction()`'s error handler never stops the (global, full-page) loader and shows no error message on any non-401 failure — found while rebuilding `outPatientFeedback`
+
+**Where:** `resources/assets/js/service/GenericService.js:4-43` (`GenericService.serviceAction`), the app-wide `#preloader` overlay it drives (`$rootScope.startLoader`/`stopLoader`, `config/app.js:429-438`). Found during real browser testing of the Angular rebuild of `outPatientFeedback` (Phase 4 batch 1c), when a synthetic test request returned a real HTTP 500 and the rebuild's own loading spinner never cleared — traced back to the exact same gap in legacy's own service that the rebuild had faithfully (if inadvertently) reproduced.
+
+**What it is, plainly:** `GenericService.serviceAction()`'s promise rejection handler is:
+```js
+function (error) {
+    if (error.status === 401) {
+        $state.go('login');
+        growl.error("Token Expired !", {title: ERROR_MSG});
+    }
+    return Promise.reject(error);
+}
+```
+For a 401, this redirects and shows a message. **For every other failure** (500, network error, timeout, malformed response) **it does neither** — no `growl.error(...)`, and critically, no `$rootScope.stopLoader()`. Every call site in this codebase follows the same pattern: `GenericService.serviceAction(...).then(function(response){ ... $rootScope.stopLoader(); ... })` — `stopLoader()` lives *inside* the success callback, with no second (rejection) argument and no `.catch()` anywhere in the chain. Since `startLoader()`/`stopLoader()` toggle one single, app-wide `#preloader` overlay (`config/app.js:429-438`, the exact same global element this project's own rebuild already models via `LoaderService`) — any non-401 failure on any screen leaves the **entire application** stuck behind a full-page loading spinner, indefinitely, with zero explanation, recoverable only by a manual page refresh.
+
+**This is a distinct bug from entry 38, not a duplicate:** entry 38 is about `BillingGenericService.serviceAction()` *throwing* on failure (a crash). This is about the separate, even more widely-used plain `GenericService.serviceAction()` *silently hanging* on failure (no crash, no message, just a permanently frozen UI). Confirmed by direct comparison of both services' source in `GenericService.js`: `BillingGenericService`, `GenericServiceParamHeader`, and `GenericServiceForFormsEngine` all call `$rootScope.stopLoader()` in their own rejection handlers — plain `GenericService` (and `GenericServiceForWithoutLogin`) are the only two of the six services in this file that don't.
+
+**Blast radius, confirmed by grep:** **666 controller files** call plain `GenericService.serviceAction()` without also using `BillingGenericService` in the same file (1,024 files reference `GenericService.serviceAction` in some form, across all six service variants combined) — larger than entry 38's already-large 502/358.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction, and explicitly out of scope for piecemeal Phase 4 screen fixes per your own framing of entry 38 as a separate future initiative — this is the same class of app-wide service-layer issue, not a per-screen bug.
+
+**Rebuild status:** not specially reproduced, and not fixable in isolation — the Angular rebuild's own `.subscribe({ next: ... })` calls (with no `error` callback) exhibit the *same observable symptom* for the same structural reason (an unhandled RxJS error on a non-2xx response leaves `LoaderService.start()` unmatched by a `stop()`, freezing the same shared `#preloader`-equivalent overlay) — confirmed live during this same testing session (`outPatientFeedback`, synthetic 500, spinner stuck, `ERROR HttpErrorResponse` in console, matching legacy's own unhandled-rejection signature). This is accurate parity with legacy's real behavior, not a new regression introduced by the rebuild — flagging it here because it was newly *discovered* during rebuild testing, not because the rebuild differs from legacy.
+
+**My read:** SEVERITY-ADJACENT, larger blast radius than entry 38 and arguably worse in practice (a silent, total UI freeze with no error message at all, vs. entry 38's at-least-visible crash). Recommend folding into whatever "separate, larger initiative" already covers entry 38 — this is the same category of problem, just a different one of the six near-identical service wrappers in the same file.
