@@ -253,3 +253,245 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 **Not fixed, per standing instruction.** The fix is well-understood and small in principle (send only whichever field the user actually intends to search by, matching legacy's two-separate-fields model, or send only one of the two fields rather than both) but changes the search UI's field structure, which the review guide already flagged as an intentional simplification for this pilot — so the *right* fix (restore two separate fields vs. pick one field to search by) is a product decision, not purely a bug fix, and is left for the owner to decide rather than silently changed.
 
 **Severity: real functional break, flagged urgently** — not data loss, but a core interaction (patient search) that will fail for nearly all real searches once real patient data exists, on a screen intended for real clinical use (fluid intake/output charting).
+
+---
+
+# Phase 4, first batch — Step 0/1 audit findings (2026-07-20)
+
+*Entries 16+ below were found during the Step 0 (screen-is-real) / Step 1 (audit) passes on the 14-screen first Phase 4 batch (`docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md`), per the playbook (`docs/ANGULAR_REBUILD_PLAYBOOK.md`). Same standing rule as every entry above: found and logged, not fixed. No screen in this batch failed Step 0 — all 14 are real, singly-wired, live screens. Two systemic, previously-unknown SEVERITY 1 crash bugs were found and are listed first.*
+
+## 16. SEVERITY 1 — the `selectedTopStore` "guarded but not returned" crash recurs in 4 more screens beyond the already-known `assigningPickerDispenser` instance
+
+**Where:** `resources/assets/js/controller/asset/viewAssetSchedulerController.js` (~lines 17-22), `preventiveScheduleWorklistController.js` (`scheduleWorklist`, ~lines 18-24), `createAssetSchedulerController.js` (`assetScheduler`, ~lines 43-48), `detailScheduleWorklistController.js` (~lines 31-36). Found independently during the Phase 4 batch-1 Step 1 audits of these 4 screens.
+
+**What it is, plainly:** all four controllers have the same shape, and it's a different variant of finding #9's bug, not identical:
+
+```js
+var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+if(cookieObjectStore==undefined){
+  $rootScope.storePopup();
+  angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
+}
+$scope.storeId = cookieObjectStore.storeId;   // <-- unconditional, no return/else
+```
+
+Unlike `assigningPickerDispenser` (zero check at all), these four *do* check for null/undefined and correctly show the store-selection popup — but then fall straight through and dereference `.storeId` on the same null value one line later, throwing `TypeError` and aborting `init()` regardless. Net effect is identical to entry 9: a user who hasn't already selected a store this session gets a broken page instead of a working popup-then-continue flow, on all four screens. Confirmed not a necessary framework consequence by comparing against sibling files in the same directories that guard this correctly (`addNewCorrectiveMaintenanceController.js`, `correctiveMaintenanceReturnWorklistController.js`, `detailsCorrectiveMaintenanceScheduleWorklistController.js`, `OPassigningPickerDispenserController.js` all wrap the dereference in `if(cookieObjectStore!=undefined){...}`) — the same comparison technique this project has used before to confirm a bug is real and isolated to specific files.
+
+**Also affects, not independently audited yet:** a repo-wide grep for `selectedTopStore` turns up 88 files total; `preventiveMaintenanceController.js` (`assetPMSScheduler`, the screen upstream of this whole batch) and `pmRequestController.js` were spot-checked and carry the same unguarded pattern. Worth a dedicated codebase-wide grep before assuming only these 4+2 are affected.
+
+**Owner decision, not resolved here:** the fix is the exact shape Track A already implemented and verified for `assigningPickerDispenser` this session (`fix/assigningpickerdispenser-storename-null-check`, held for review) — move the dereference into an `else` branch. Same fix pattern would resolve all four (plus `preventiveMaintenanceController`/`pmRequestController` if confirmed), but none of these are fixed here, per standing instruction — Track B is audit-only.
+
+**My read:** given this is now confirmed in 5-7 files (assigningPickerDispenser + these 4 + 2 more spot-checked) sharing one exact bug shape, and a working fix pattern already exists and is verified, this is a strong candidate for a single, small, dedicated legacy-fix pass across all instances at once rather than one-off fixes — worth raising to the owner as its own unit of work, separate from any individual screen's rebuild.
+
+---
+
+## 17. SEVERITY 1 — `cookieObjectAppConfig` dereferenced with zero null-check in `scheduleWorklist` and `PMSchedule`
+
+**Where:** `resources/assets/js/controller/asset/preventiveScheduleWorklistController.js` (~lines 28-29), `pmScheduleController.js` (~lines 33-34). Found during the Phase 4 batch-1 Step 1 audits.
+
+**What it is, plainly:**
+```js
+var cookieObjectAppConfig = $cookies.getObject('cookieObjectAppConfig');
+$scope.assetMaintenanceSpecialityId = cookieObjectAppConfig.assetMaintenanceSpecialityId;
+```
+No guard at all. The app's own standard helper for this exact cookie, `$rootScope.checkCookies()` (`app.js` ~lines 1881-1892), explicitly checks `cookieObjectAppConfig == undefined` and redirects to `applicationConfiguration` before touching it — proving this is a known, real "can be missing" cookie elsewhere in the same codebase. Neither controller uses that helper or any equivalent guard. If the cookie isn't set, this throws before either controller's own `try/catch` block (both begin later, wrapping only the subsequent API calls) — same outcome as entry 16, a blank/broken page on `init()`.
+
+**Owner decision, not resolved here:** the existing `$rootScope.checkCookies()` helper looks like the natural fix (call it, or replicate its guard-and-redirect shape) — not applied here, per standing instruction.
+
+**My read:** same severity class as entry 16 — a real, live crash bug, worth bundling into the same dedicated legacy-fix pass rather than fixing ad hoc.
+
+---
+
+## 18. SEVERITY 1 — `pesapalProcessPage` can crash on an unguarded query-param `.split()`
+
+**Where:** `resources/assets/js/controller/pesapalSuccessPageController.js`, ~line 47.
+
+**What it is, plainly:**
+```js
+var param1 = getUrlVars()["pesapal_merchant_reference"];
+var res = param1.split("#");   // throws if param1 is undefined
+```
+`param1` comes straight from the URL query string with no null-check. If Pesapal's redirect ever omits `pesapal_merchant_reference` (malformed/partial callback, back/refresh, bookmarked/direct navigation) this throws synchronously during controller construction — before `getPesapayPaymentStatus` ever fires and before the redirect to `/paymentInformation` runs. The user is stuck on "Wait your payment is in process...." indefinitely, no error, no way to know if a real hospital billing payment went through. Not confirmed triggerable via the current normal Pesapal redirect path (both params appear to always be present in the happy path) — this is a defensive-coding gap on untrusted external input, not a confirmed-reproducing crash like entries 16/17.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+**My read:** lower confidence than entries 16/17 on how often this actually fires in practice (depends on Pesapal's real redirect behavior, not verified here), but the failure mode (silent indefinite hang on a payment-confirmation page, zero user feedback) is serious enough to flag as severity 1 rather than wait for confirmation.
+
+---
+
+## 19. `webAppointmentBookingConfirmation`'s "no real data, bounce back" safety check can never fire — a type-mismatched `angular.equals` comparison
+
+**Where:** `resources/assets/js/controller/opd/transection/webAppointmentBookingConfirmationController.js`, ~line 22.
+
+**What it is, plainly:** `var isEmpty = angular.equals('{}', $scope.webAppConfDetObj)` compares the **string** `'{}'` to an **object** — `angular.equals()` returns `false` immediately whenever the two arguments' `typeof` differ, it never does string-vs-object coercion. `isEmpty` is therefore always `false`, so the intended fallback (redirect back to the booking screen when this confirmation page is reached with no real data — bookmark, back/forward, stale link, refresh) never executes, under any condition. A user who reaches this URL with no real appointment object sees a fully-rendered "Appointment Confirmed" page with blank patient/doctor/fee fields, a `NaN`-derived duration, and — because none of the `patientVisit` label's `if/else if` branches match a `NaN` visit-type id — a materially misleading default label ("Follow Up (Video)") regardless of what was actually intended. No crash, no data loss (nothing is written back to the server from this page), but a wrong, misleading confirmation screen.
+
+**Two more issues stacked in the same dead branch, currently unreachable but worth recording:**
+- Even if `isEmpty` were fixed, the fallback's own `$state.go('/webAppointmentBooking/'+orgId+"/"+unitId)` passes a URL **path string** where ui-router requires a **state name** — this exact broken pattern (see entry 20) is duplicated verbatim in `bookAppointmentController.js`, where it IS reachable.
+- A second, fully dead `function isEmpty(obj) {...}` (~lines 55-61) is hoisted then immediately shadowed by the `var isEmpty = angular.equals(...)` assignment — never callable, and its own logic is inverted (behaves like "isNotEmpty") — reads like an earlier, abandoned implementation left in place, the same accretion-without-cleanup pattern already flagged for `insuranceMaster` (entry 1).
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+**My read:** moderate severity — misleading, not destructive. Worth fixing alongside entry 20 since they share the same broken `$state.go()` pattern.
+
+---
+
+## 20. `bookAppointment`'s fallback redirect is broken the same way as entry 19 — but here it's actually reachable
+
+**Where:** `resources/assets/js/controller/opd/transection/bookAppointmentController.js`, ~line 25.
+
+**What it is, plainly:** identical broken pattern to entry 19 — `$state.go('/webAppointmentBooking/'+parseInt(orgUnitObj.orgId)+"/"+parseInt(orgUnitObj.unitId))`, a path string passed where ui-router requires a state name (confirmed against the actual bundled `angular-ui-router.js` source, not assumed — `$state.go`'s first argument is documented and implemented as a state name, resolved via `transitionTo`). Fails silently (console warning only), no navigation happens.
+
+**Why this one is live, unlike entry 19's copy:** `$stateParams.webAppDetailObj` is an in-memory, non-URL ui-router param — it does not survive a browser refresh. Any user who refreshes `/bookAppointment` mid-flow lands in exactly this fallback branch (no `isEmpty`-style bug blocking it here). With the redirect broken, execution falls through with `webAppDetailObj = {}` — every subsequent on-load API call (prefix list, doctor details, speciality list, slots) fires with `undefined` organizationId/unitId/doctorId — a broken, blank-looking public booking page with no explanation.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+**My read:** real, live, user-facing break in a real patient-facing public flow (unauthenticated appointment booking) — a plausible everyday occurrence (refresh, back/forward) rather than a rare edge case. Worth prioritizing over entry 19's currently-unreachable copy of the same bug.
+
+---
+
+## 21. `scheduleWorklist` and `PMSchedule` both have a broken OR-instead-of-AND multi-criteria search filter
+
+**Where:** `resources/assets/js/controller/asset/preventiveScheduleWorklistController.js` ~line 159, `pmScheduleController.js` ~line 184 — independently duplicated, not shared code.
+
+**What it is, plainly:**
+```js
+if(fDate >= newDate || tDate <= newDate || store === storeId || pmstype === pmsType || proStatus === processStatus || empId==assignTo ){
+```
+Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected filter to appear, not all of them. Compounded by comparing `"DD-MM-YYYY"` date strings with `>=`/`<=` (lexicographic, not chronological). Net effect: selecting a specific store + PMS type + status + employee together returns most/all records regardless, not the intersection the UI implies — a real, live functional bug in each screen's primary search feature.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+**My read:** high real-world impact for a search-heavy worklist screen, though not a crash — worth prioritizing over the batch's lower-severity findings below.
+
+---
+
+## 22. `PMSchedule`'s accessory-details lookup always sends a missing `storeId` to the backend
+
+**Where:** `resources/assets/js/controller/asset/pmScheduleController.js`, `getAccessoryDetailsById()`, ~line 231.
+
+**What it is, plainly:** `"storeId": $scope.storeId` — but `$scope.storeId` is never assigned anywhere in this file (the only assignment is commented out). Every accessory-details lookup via the PMS-details icon silently POSTs with a permanently-missing `storeId` to a real backend endpoint (`/api/global/items/unit/{unitId}`) — same bug class as the already-logged `inputOutputCharts` search bug (entry 15): a field that's silently wrong on every real use, not erroring loudly.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+---
+
+## 23. `scheduleWorklist` and `PMSchedule` use different numeric codes for the same-looking `processStatus` field
+
+**Where:** `views/master/UnitMaster/assetManagement/schedule-worklist.html` vs. `PM-schedule.html`, `processStatus` `<select>` options.
+
+**What it is, plainly:** `scheduleWorklist`: 1=Requested, 2=Completed, 3=Assigned, 4=Work In Progress, 6=Cancelled, 7=Reopen. `PMSchedule`: 1=Requested, 2=Scheduled, 3=Assigned, 4=Work In Progress, 5=Cancelled, 6=Reopen. Codes 2, 6, and effectively 5/7 mean different things across the two screens, which otherwise look like they should share one status vocabulary for the same underlying PM-schedule records.
+
+**Owner decision, not resolved here:** not resolved — needs confirmation from whoever owns this workflow on whether this is two genuinely different status sets or copy-paste drift, before either mapping is treated as canonical for a rebuild.
+
+---
+
+## 24. Asset Management's checklist-add modal has two `<select>` elements sharing one `ng-model`, duplicated across screens
+
+**Where:** `views/master/UnitMaster/assetManagement/create-asset-scheduler.html` (~lines 242, 257) and `details-schedule-worklist.html`'s equivalent modal (copy-pasted from the former — confirmed by an orphaned `selectedAssetScheduleId` hidden field left over from the copy, real/load-bearing in `assetScheduler` but dead in `detailScheduleWorklist`). A `#addViewChecklistModal` with the same ID also appears in `PM-schedule.html` (not independently confirmed broken there — flagged for follow-up).
+
+**What it is, plainly:** both `<select>`s (meant to show a checklist's name vs. its code) bind `ng-model="checklistMapperObj.checklistEquipmentMasterId"` — selecting a value in either overwrites the same underlying model, so the two dropdowns visibly fight over the same selection. Cosmetic/confusing, not a crash.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+---
+
+## 25. `detailScheduleWorklist`'s "PMS Details" modal has 4 tabs that always render empty, plus one fully unreachable static modal
+
+**Where:** `resources/assets/js/controller/asset/detailScheduleWorklistController.js` + shared partials `views/common/PMS-details.html`, `views/common/accessories-details.html`.
+
+**What it is, plainly:** the PMS-details modal's 4 tabs (Manufacture/Accessory/Vendor/Insurance Details) `ng-repeat` over `manufactureDataList`/`itemDataList`/`vendorDataList`/`insuranceDataList` — none of these four are ever assigned anywhere in this controller. Tab-switching itself works (the shared, generic `$rootScope.setFirstTabLevel` mechanism, the same "not a bug" pattern already confirmed for `MISReports`' `checkLabConfig`), so the modal opens and tabs are clickable, but every table is permanently empty. Separately, `#accessoriesDetailsModal` is `ng-include`d but has zero trigger anywhere in this screen, and its body is 100% static hardcoded placeholder markup (`-` in every cell) even if it were somehow opened.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+---
+
+## 26. `pharman`: a copy-paste bug on the "Patient" button, a dead modal button, and a broken sibling state sharing its view
+
+**Where:** `views/AppointmentScheduling/medicineInfo.html` (~lines 209-214), `resources/assets/js/controller/opd/transection/pharmanController.js`; the sibling state is defined in `app.js`.
+
+**What it is, plainly, three distinct findings:**
+1. The button labeled "Patient" calls `ng-click="setType('Doctor')"` — identical to the neighboring "Doctor" button. Currently harmless: `$scope.type` is set but never read again anywhere, so this is a dead-end copy-paste bug with no live effect today, not a functional break.
+2. The modal's "Save changes" button has no `ng-click` and no `data-dismiss` — fully dead, does nothing on click.
+3. `app.js` also defines a second state, `medicineInfo`, pointing at this same view file but wired to controller `"masterController"` (lowercase) — which is never registered anywhere (only `"MasterController"`, capital M, exists). If this state were ever reached (no `ui-sref`/`$state.go`/href found anywhere pointing to it, but this app's sidebar is DB-driven, so a seeded menu entry can't be ruled out from source alone), it would throw `Argument 'masterController' is not a function, got undefined` immediately.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+---
+
+## 27. `bookAppointment`: a dead alternate save flow, a 3-layer-dead "EHC Package" sub-feature, a broken Enter-key shortcut, and a silent validation gap for public users
+
+**Where:** `resources/assets/js/controller/opd/transection/bookAppointmentController.js` and `views/AppointmentScheduling/book-appointment.html`.
+
+**What it is, plainly, four distinct findings:**
+1. **`$scope.confirmBooking` (~180 lines) is fully dead code.** The only live save path is `bookNormalAppointment()` (posts to `SCHEDULEAPPOINTMENT`); `confirmBooking()` is a separately-implemented alternate flow (posts to `/api/billing/kiosk/saveAndPay` instead) referenced only inside a commented-out legacy form block and leftover HTML comments. Not currently harmful, but two different "what does Save do" implementations exist in the same file, only one live.
+2. **A 3-layer-dead "EHC Package" sub-feature:** gated on `selectedSlotId=='3'`, but `selectedSlotId` is never assigned anywhere, so the field can never become visible; its typeahead calls two functions (`searchPackages`, `selectPackageService`) that don't exist in this controller; and the dead branch behind the same flag (inside `calculateAge()`) calls `BillingGenericService`, which isn't in this controller's DI list at all — would throw `ReferenceError` if ever reached. All three pieces are currently unreachable together.
+3. **Broken Enter-key search shortcut:** the UHID search input's `press-enter="searchPatient(patientSearchObj)"` references a function and variable that don't exist anywhere in this controller (the real, working search is `searchPatientByUhid()`, correctly wired to the search icon's click). Pressing Enter does nothing; clicking the icon works fine.
+4. **Silent, session-dependent validation gap:** the mobile-number field's `maxlength="{{registrationFieldObj.mobileDigit}}"` depends on `$rootScope.registrationFieldObj`, which is only ever populated by a function that itself requires an authenticated session — never called from this deliberately-unauthenticated public booking flow. For a genuine anonymous visitor, `maxlength` interpolates to empty — no mobile-number length limit is actually enforced, silently, despite the markup implying one is.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+**My read:** none of these four are crashes or data loss — (1)-(3) are currently-unreachable/dead-code findings worth knowing before treating this controller's behavior as fully understood; (4) is a real, live, quiet validation gap specific to the public/unauthenticated flow.
+
+---
+
+## 28. SEVERITY 1 — `bookView` can silently display one patient's complete clinical record while the visible context is a different patient's, with nothing on screen to indicate a mismatch
+
+**Where:** `resources/assets/js/controller/opd/bookViewMasterController.js`, `checkAppointment()` (~line 133) and the whole controller's data model.
+
+**What it is, plainly:** `bookView`'s route (`url: '/bookView'`) carries no patient identifier at all. The one state-transition input, `$stateParams.bookViewObj`, is used exactly once as an existence-gate (redirect to `bedManagement` if empty) and never read again. Every field on the screen — history, diagnoses, allergies, medications, bills, documents — is instead populated from `$scope.encounterDetailsObj = JSON.parse(sessionStorage.getItem('cookieEncounterObject'))`, re-read fresh on every controller instantiation. That `sessionStorage` key is not private to `bookView` — a targeted search found **15 places across the codebase write it**: the one real entry point into `bookView` (`redirectBookViewUrl()` in `app.js`), plus 14 independent call sites in `encounterQueueManagementController.js`, `doctorDeskController.js`, `counterWorklistController.js`, `casualtyWorklistController.js`, `encounterQueueEHCController.js`, and `progressNoteController.js`, all for their own unrelated navigations, each for a potentially different patient.
+
+**Concrete failure scenario:** a clinician opens `bookView` for Patient X. They then navigate (same tab/session) through any of the 14 other flows and select Patient Y — this silently overwrites `cookieEncounterObject` with Y's data. If they then return to `/bookView` (browser Back, a bookmark, or any in-app link back to it) without going through `redirectBookViewUrl()` again, `checkAppointment()` re-reads the now-stale key and the screen renders **Patient Y's full history, diagnoses, allergies, medications, and bills** — the URL is unchanged (`/bookView`) and the visible patient-demography header comes from the same stale object, so nothing on screen indicates a patient changed. Not click-verified live (read-only audit, no app execution performed), but the code trace is unambiguous and reproducible by inspection, and browser-back is ordinary clinical-workflow behavior, not a contrived edge case.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. This is a real patient-safety/data-integrity risk in a live system, not a cosmetic gap.
+
+**My read:** this is the single most severe finding of this entire project to date. `bookView` was tagged low-risk by Phase 0's automated keyword/module classifier (no clinical/billing keyword match) — this finding is a concrete, real instance of the inventory doc's own stated caveat ("treat every 'no' as provisional too... keyword/module matching can miss things a human reader would catch") mattering in practice. Recommend re-evaluating whether any other screen sharing this `sessionStorage.cookieEncounterObject` pattern (the 14 writer files, or any other screen reading it the same way) carries the same risk, and whether this risk tier assignment should be revisited before this screen is ever scheduled for rebuild in a low-risk batch again.
+
+---
+
+## 29. SEVERITY 1 — `bookView`'s clinical history fields look editable but have no save path anywhere — a clinician could type real documentation into them and it silently vanishes
+
+**Where:** `resources/assets/js/controller/opd/bookViewMasterController.js` (whole file) and `views/book-view.html`'s History tab (Personal/Family/Surgical/Medical sub-tabs, ~lines 1109-1440, duplicated again in the "Past Visit" tab ~lines 3020-3350) and Diagnosis tab.
+
+**What it is, plainly:** zero save/create/update functions exist anywhere in this 4,011-line controller — every one of its 77 top-level `$scope.*` functions is a `get*` fetcher, a print/report generator, or a UI helper; no PUT, no DELETE, no data-persisting POST. Yet the History and Diagnosis tabs render real, API-populated `ng-repeat` rows with plain, non-`disabled`/non-`readonly` `ng-model` text inputs. Nothing on screen marks these read-only. A clinician could reasonably believe they're editing or adding clinical history here; nothing is ever transmitted anywhere.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+**My read:** paired with entry 28, this makes `bookView` the highest-priority screen in this entire findings doc for a dedicated legacy-side decision — either disable/grey out the apparently-editable fields until a real save path exists, or document clearly that this screen is view-only, since the current UI actively invites data entry that is silently discarded.
+
+---
+
+## 30. `bookView`: 23 distinct dead interactive bindings across ~35 call sites, at least one traced to a specific stale-clone source screen
+
+**Where:** `views/book-view.html`'s History, Diagnosis, and Diagnostics tabs, cross-checked against `resources/assets/js/controller/opd/bookViewMasterController.js`.
+
+**What it is, plainly:** comment-stripping the full view and grepping every bound function name against the complete controller finds 23 live (non-commented) bindings calling functions that don't exist in this controller: `addHistoryPersonal`/`removeHistoryPersonal`, `addHistoryFamily`/`removeHistoryFamily`, `addHistorySurgical`/`removeHistorySurgical`, `addHistoryMedical`/`removeHistoryMedical`, `checkedRadioMedi`, `addDiagnosis`/`removeDiagnosis`, `getInvestigationDetails`, `getGroupServiceDetails`, `saveTemplateTransaction`, `setPackageOrderTabActive`, `printDischargeSumReport`, plus every ICD-10/Surgery/Surgeon-name typeahead's source/select functions (`searchGroupList`, `selectDignosisIdForFamily`, `selectSurgeryId`, `searchGroupSurgery`, `searchGroupSurgen`, `selectDignosisIdForMedical`, `selectDignosisIdForDiagnosis`). Most have matching, fully-implemented real functions in a family of sibling "cover-sheet" controllers (`medicalHistoryTabController.js`, `socialHistoryTabController.js`, `allergiesTabController.js`, `diagnosisTabController.js`, `OPDCoverSheetController.js`, `OPDcoversheetNewController.js`) — strong evidence this markup was copied from those editable screens and never adapted. **`printDischargeSumReport` was traced to a specific named source:** it exists only in `controller/adt/transaction/discharge/masterDischargeSummaryController.js` — the clearest single piece of evidence of a stale clone, the same bug class as this project's `SurgicalSiteInfection`/`OTBillingCompletion` findings (entries 6, 7), here confined to specific sections of an otherwise-real, functioning screen rather than the whole view. Practical effect: every affected button/typeahead throws a silent console `TypeError` and does nothing visible.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+---
+
+## 31. `bookView`: additional lower-severity findings — row-collision bug, shared-counter blank-screen bug, duplicate markup IDs, and copy-paste residue
+
+**Where:** `views/book-view.html` and `resources/assets/js/controller/opd/bookViewMasterController.js`.
+
+**What it is, plainly — six distinct findings:**
+1. **Real per-row data collision (Diagnosis tab, ~line 2259):** one `<input>` has a duplicate `ng-model` (`info.remark` then `genExamination.remark`) — AngularJS keeps only the last, so despite sitting inside `ng-repeat`, this remark box binds every diagnosis row to one shared global value, not a per-row field. Currently moot for data loss (nothing saves regardless, per entry 29), but would silently collapse every row's remark into one if a save path were ever added without fixing this.
+2. **Modals can blank the entire main screen.** The six tab-level functions (`setFirstTabLevel` etc.) are global `$rootScope` counters, not per-component state (confirmed safe cross-controller sharing in principle, the same pattern already validated for `MISReports`' `checkLabConfig`) — but the package-details modal and IPD-Notes modal each reuse the *same* counters with their own numeric values. Clicking a tab inside either modal sets the shared counter to a modal-specific value that matches none of the main screen's 19 tab checks — the entire main tab body goes blank behind the modal until the user manually re-clicks a main tab after closing it. A real, demonstrable UX defect in the current production app.
+3. **The date-range filter pair (`fromDatepicker`/`toDatepicker`) is copy-pasted 19 times, once per first-level tab, with identical `id`/`name` attributes every time** — since `ng-show` only toggles CSS display, all 19 copies coexist in the live DOM simultaneously (invalid HTML, ambiguous for any `getElementById` lookup — harmless today only because nothing does that).
+4. **`#outSourceServiceModal` wraps its body in a `<form>` with no upload control inside it at all** — a vestigial form shell, likely stripped from a real upload screen and left behind.
+5. **The "Past Visit" tab is a near-verbatim duplicate of the History tab's Personal/Family/Surgical markup**, carrying the same dead bindings from entry 30 along with it — copy-paste, not a shared partial.
+6. **`printCertificateReport` is defined twice, verbatim, back-to-back** (harmless — the second silently overwrites the first with identical logic); a `testFunction` with hardcoded debug IDs (`encounterId: 1726`, `UserID: 2`) exists but is unreachable from the view; `printDischargeCard`'s call site passes a differently-meant argument than its own signature expects, harmless only because the function body ignores that parameter and reads stashed `$scope` state instead.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction.
+
+---
+
+## 32. `outPatientFeedback`/`inPatientFeedback`: matching resolve-block copy-paste bug, harmless in practice
+
+**Where:** `resources/assets/js/controller/opd/transection/outPatientFeedbackController.js` (~lines 300-325) and `inPatientFeedbackController.js` (~lines 300-330), each screen's own `.config($stateProvider)` `resolve` block.
+
+**What it is, plainly:** in both screens, several of the route's `resolve` functions (`visitType`/`visitTypeId`/`encounterId` in outPatientFeedback; `patientId`/`visitType`/`visitTypeId` in inPatientFeedback) all incorrectly `return $stateParams.cabinId` — `cabinId` isn't a real param of either route. Both controllers ignore these injected resolve values entirely and instead re-derive every identifier by manually parsing `window.location.href` (verified correct against each route's real param order) — so this has zero observable impact today, but is a real trap if anyone ever wires the injected resolve params in instead.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Both screens otherwise passed Step 0 cleanly and are confirmed genuinely distinct from each other, not a stale clone of one another (field sets are domain-appropriate and non-overlapping).
+
+**My read:** trivial, no urgency — same severity class as entry 5 (GRN's dead Cancel-button reference).
