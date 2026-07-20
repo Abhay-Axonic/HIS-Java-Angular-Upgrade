@@ -1,0 +1,89 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-12 text-center">
+      <img src="resources/assets/images/logo/axonicIcon.png" style="width: 300px !important; margin-left: 96px" />
+    </div>
+  </div>
+  <h2 class="mb-4 text-center">In Patient Feedback Form</h2>
+  @if (isAlreadyFilledUp()) {
+    <h3 class="mb-4 text-center text-success">Thank you for taking the time to give us your valuable feedback 🙂</h3>
+  }
+
+  @if (!isAlreadyFilledUp()) {
+    <form>
+      <div class="form-group">
+        @for (
+          group of [
+            { title: 'Please rate your experience with the following aspects related to our front office', rows: frontOfficeRows },
+            { title: 'Please rate your experience with the following aspects related to our Nursing', rows: nursingRows },
+            { title: 'Please rate your experience with the following aspects related to our House Keeping', rows: houseKeepingRows },
+            { title: 'Please rate your experience with the following aspects related to Doctors', rows: doctorsRows },
+            { title: 'Please rate your experience with the following aspects related to Dietary', rows: dietaryRows },
+            { title: 'Please rate your experience with the following aspects related to Discharge and Billing', rows: dischargeBillingRows },
+          ];
+          track group.title
+        ) {
+          <div class="row">
+            <div class="col-md-12">
+              <label><b style="font-size: 15px; background: beige">{{ group.title }}</b></label>
+            </div>
+          </div>
+          <table class="rating-table" style="margin-top: 10px">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Very Good</th>
+                <th>Good</th>
+                <th>Fair</th>
+                <th>Poor</th>
+                <th>Very Poor</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of group.rows; track row.key) {
+                <tr class="trClass">
+                  <td class="tdAsc">{{ row.label }}</td>
+                  @for (v of scaleValues; track v) {
+                    <td><input type="radio" [name]="'row' + row.key" [checked]="ratingValues()[row.key] === v" (click)="rate(row.key, v)" /></td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+
+      <div class="form-group">
+        <label style="font-size: large">Please rate the overall cleanliness</label>
+        <div class="stars">
+          @for (v of [4, 3, 2, 1, 0]; track v) {
+            <input type="radio" name="overall-cleanliness" [checked]="cleanlinessRating() === (4 - v)" (click)="rate(18, 4 - v)" /><label></label>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="font-size: large">Please rate your overall experience</label>
+        <div class="stars">
+          @for (v of [4, 3, 2, 1, 0]; track v) {
+            <input type="radio" name="overall-experience" [checked]="experienceRating() === (4 - v)" (click)="rate(19, 4 - v)" /><label></label>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <textarea
+          class="form-control"
+          style="font-size: large"
+          rows="5"
+          placeholder="Any suggestions you would like to give"
+          [ngModel]="suggestions()"
+          (ngModelChange)="onSuggestionsChange($event)"
+          name="suggestions"
+        ></textarea>
+      </div>
+
+      <button type="submit" style="margin-top: 30px; margin-bottom: 20px" class="btn btn-primary" (click)="submitForm()" [disabled]="isAlreadyFilledUp()">Submit</button>
+    </form>
+  }
+</div>

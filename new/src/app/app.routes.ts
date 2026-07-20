@@ -195,5 +195,28 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/detail-schedule-worklist/detail-schedule-worklist').then((m) => m.DetailScheduleWorklist),
   },
+  // bookAppointment: no session guard in legacy (confirmed by full read) --
+  // reached only via webAppointmentBooking's public flow. Receives
+  // webAppDetailObj via BookAppointmentHandoffService (sending side
+  // already built in webAppointmentBooking, batch 1b).
+  {
+    path: 'bookAppointment',
+    loadComponent: () => import('./features/book-appointment/book-appointment').then((m) => m.BookAppointment),
+  },
+  // outPatientFeedback / inPatientFeedback: no session guard anywhere in
+  // either legacy controller (confirmed by full read) -- genuinely public,
+  // patient-facing feedback forms. Route path drops legacy's literal
+  // `/api` prefix -- see out-patient-feedback.ts's doc comment for why
+  // (this app's Router is path-based, not hash-based like ui-router, so
+  // keeping `/api` in a frontend route would collide with this dev
+  // server's own `/api/**` proxy rule on every direct navigation).
+  {
+    path: 'outPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:encounterId',
+    loadComponent: () => import('./features/out-patient-feedback/out-patient-feedback').then((m) => m.OutPatientFeedback),
+  },
+  {
+    path: 'inPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:admissionId',
+    loadComponent: () => import('./features/in-patient-feedback/in-patient-feedback').then((m) => m.InPatientFeedback),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];

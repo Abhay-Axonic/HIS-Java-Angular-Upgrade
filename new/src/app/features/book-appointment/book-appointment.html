@@ -1,0 +1,228 @@
+<div class="container-fluid his-style">
+  <div class="row padding-top10">
+    <div class="col-lg-2 col-md-3 col-sm-3">
+      @if (doctorImage) {
+        <img [src]="doctorImage" class="doctor-image" alt="Doctor" />
+      }
+    </div>
+    <div class="col-lg-10 col-md-9 col-sm-9">
+      <h4>{{ doctorName }}</h4>
+      <div>{{ specialityName }} — {{ webAppDetObj().doctorDegrees }}</div>
+      <div>Area of expertise: {{ areaOfExpertise() }}</div>
+      <div>{{ unitAddress() }}</div>
+    </div>
+  </div>
+
+  @if (webAppDetObj().unitDetList.length > 1) {
+    <div class="row padding-top10">
+      <div class="col-lg-4">
+        <label>Unit</label>
+        <select class="form-control" [(ngModel)]="selectedUnitId" (ngModelChange)="onUnitChange()">
+          @for (info of webAppDetObj().unitDetList; track info.unitId) {
+            <option [ngValue]="info.unitId">{{ info.unitName }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  }
+
+  @if (docSpecList().length > 1) {
+    <div class="row padding-top10">
+      <div class="col-lg-4">
+        <label>Speciality</label>
+        <select class="form-control" [(ngModel)]="selSpecId" (ngModelChange)="onSpecialityChange()">
+          @for (info of docSpecList(); track info.specialityId) {
+            <option [ngValue]="info.specialityId">{{ info.specialityName }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  }
+
+  <div class="row padding-top10">
+    <div class="col-lg-4">
+      <input type="radio" name="visit" [ngModel]="systemDefinedVisitType()" (ngModelChange)="systemDefinedVisitType.set($event)" [value]="1" /> New Appointment
+      <input
+        type="radio"
+        name="visit"
+        [ngModel]="systemDefinedVisitType()"
+        (ngModelChange)="systemDefinedVisitType.set($event); openPatientSearchModal()"
+        [value]="2"
+      />
+      Follow Up Appointment
+    </div>
+  </div>
+
+  <div class="row padding-top10">
+    <div class="col-lg-3">
+      <label>Appointment Date</label>
+      <input type="date" class="form-control" [ngModel]="slotDatePicker()" (ngModelChange)="onDatePickerDateChange($event)" [disabled]="disablePatForm()" />
+    </div>
+  </div>
+
+  <div class="row padding-top10">
+    <table id="weekDaysRow" class="table">
+      <tr>
+        <th class="thstyle"><a (click)="getPreviousWeek()"><i class="fa fa-caret-left" aria-hidden="true"></i></a></th>
+        @for (week of weekArray(); track week.date.getTime()) {
+          <th class="thstyle" (click)="getSlotByDate(week)">
+            <div class="group76 radio" [class.selected]="week.selected">
+              <div class="mon">{{ weekdays[week.date.getDay()] }}</div>
+              <div class="x17">{{ week.date.getDate() }}</div>
+            </div>
+          </th>
+        }
+        <th class="thstyle"><a (click)="getNextWeek()"><i class="fa fa-caret-right" aria-hidden="true"></i></a></th>
+      </tr>
+    </table>
+  </div>
+
+  <div class="row padding-top10" id="slotDiv">
+    @if (doctorSlotList().length === 0) {
+      <div class="col-lg-12">{{ loadingMsg() }}</div>
+    }
+    @for (info of doctorSlotList(); track info.slotId) {
+      <div class="col-lg-2 col-md-2 col-sm-2 margin-top2 slotBtn" [id]="info.slotId" [class]="slotClass(info)" (click)="selectSlotFun(info)">
+        {{ info.fromTimeString2 }}
+      </div>
+    }
+  </div>
+
+  <fieldset [disabled]="disablePatForm()">
+    <div class="row padding-top10">
+      <div class="col-lg-2">
+        <label>Prefix</label>
+        <select class="form-control" [(ngModel)]="patientDetailsPrefixId" required>
+          @for (info of prefixList(); track info.prefixId) {
+            <option [ngValue]="info.prefixId">{{ info.prefixDesc }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-lg-3">
+        <label>First Name</label>
+        <input type="text" class="form-control" [ngModel]="patientDetails().firstName" (ngModelChange)="updatePatientField('firstName', $event)" required />
+      </div>
+      <div class="col-lg-3">
+        <label>Middle Name</label>
+        <input type="text" class="form-control" [ngModel]="patientDetails().middleName" (ngModelChange)="updatePatientField('middleName', $event)" />
+      </div>
+      <div class="col-lg-3">
+        <label>Last Name</label>
+        <input type="text" class="form-control" [ngModel]="patientDetails().lastName" (ngModelChange)="updatePatientField('lastName', $event)" />
+      </div>
+    </div>
+    <div class="row padding-top10">
+      <div class="col-lg-3">
+        <label>Gender</label>
+        <select class="form-control" [ngModel]="patientDetails().genderId" (ngModelChange)="updatePatientField('genderId', $event)" required>
+          @for (gen of genderList(); track gen.id) {
+            <option [ngValue]="gen.id">{{ gen.desc }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-lg-3">
+        <label>Date of Birth</label>
+        <input type="date" class="form-control" [ngModel]="dob()" (ngModelChange)="dob.set($event)" (blur)="calculateAge()" required />
+      </div>
+      <div class="col-lg-2">
+        <label>Age</label>
+        <input type="text" class="form-control" [ngModel]="patientDetails().age" (ngModelChange)="updatePatientField('age', $event)" (blur)="showDOBByAge(patientDetails().age)" />
+      </div>
+      <div class="col-lg-3">
+        <label>Mobile Number</label>
+        <input type="text" class="form-control" [ngModel]="patientDetails().mobileNumber" (ngModelChange)="updatePatientField('mobileNumber', $event)" required />
+      </div>
+    </div>
+    <div class="row padding-top10">
+      <div class="col-lg-4">
+        <label>Email</label>
+        <input type="text" class="form-control" [ngModel]="patientDetails().email" (ngModelChange)="updatePatientField('email', $event)" />
+      </div>
+      <div class="col-lg-8">
+        <label>Remark</label>
+        <input type="text" class="form-control" [ngModel]="patientDetails().remark" (ngModelChange)="updatePatientField('remark', $event)" />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="row padding-top10">
+    <div class="col-lg-2">
+      <input type="button" class="btn btn-primary btn-save-box-shadow" value="Book Appointment" (click)="bookNormalAppointment()" />
+    </div>
+    <div class="col-lg-2">
+      <input type="button" class="btn btn-primary btn-save-box-shadow" value="Reset" (click)="resetDetails()" />
+    </div>
+    <div class="col-lg-2">
+      <input type="button" class="btn btn-primary btn-save-box-shadow" value="Book and Pay" (click)="openPaymentPage()" />
+    </div>
+  </div>
+</div>
+
+@if (showPatientSearchModal()) {
+  <div class="modal fade in common-medium-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">
+            Search Patient
+            <button type="button" class="close" (click)="showPatientSearchModal.set(false)">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-8">
+              <input type="text" class="form-control" [(ngModel)]="searchUhid" (keydown.enter)="searchPatientByUhid()" placeholder="UHID Number" />
+            </div>
+            <div class="col-lg-4">
+              <a class="btn btn-primary btn-save-box-shadow" (click)="searchPatientByUhid()">Search</a>
+            </div>
+          </div>
+          @if (searchLoadingMsg()) {
+            <div>{{ searchLoadingMsg() }}</div>
+          }
+          <table class="table table-bordered margin-top5">
+            <tbody>
+              @for (pat of searchPatList(); track pat.patientId) {
+                <tr>
+                  <td><input type="radio" (click)="fetchAndFillPatDetail(pat)" /></td>
+                  <td>{{ pat.firstName }} {{ pat.lastName }}</td>
+                  <td>{{ pat.mobileNumber }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
+
+@if (showPatientAlreadyExistModal()) {
+  <div class="modal fade in common-medium-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">
+            Patient Already Exists
+            <button type="button" class="close" (click)="showPatientAlreadyExistModal.set(false)">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered margin-top5">
+            <tbody>
+              @for (pat of patientAvailList(); track pat.patientId) {
+                <tr>
+                  <td><input type="radio" (click)="fetchAndFillPatDetail(pat)" /></td>
+                  <td>{{ pat.firstName }} {{ pat.lastName }}</td>
+                  <td>{{ pat.mobileNumber }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
