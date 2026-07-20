@@ -161,7 +161,9 @@ Email regex, fax regex, and the file-extension allowlist are enforced *only* in 
 
 ---
 
-## 11. `controllerAs:'vm'` in a state's config doesn't reliably mean the view uses `vm.*` bindings
+## 11. `controllerAs:'vm'` in a state's config doesn't reliably mean the view uses `vm.*` bindings — RESOLVED (quantified) 2026-07-20
+
+**Update:** the re-quantification this entry called for has since been run, across all 431 states that declare `controllerAs:'vm'` (not just the 3 spot-checked below), by resolving each state's actual view template and counting real `vm\.` bindings. Corrected figures, in place of the original 91%: **391 of the 469 externally-registered screens (83.4%) genuinely use `vm.*` bindings in their view; 78 (16.6%) are effectively `$scope`-pattern** — 38 that never declared `controllerAs:'vm'` at all, plus 40 that declared it but whose view has zero real usage (the same pattern this entry found by hand, now confirmed to recur in 40 of the 431, not just the 3 checked here). This is a real, modest correction (roughly 8.5 points), not the "wildly different" result that would force a rethink of the plan — both wiring patterns remain validated by real, rebuilt screens from the two pilot batches, so risk-tier-first sequencing (see `docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md`) still holds. `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md` and `docs/ANGULAR_REBUILD_PLAYBOOK.md` have been updated to cite 83.4% instead of 91% going forward. Original finding writeup, preserved below for the record.
 
 **Where:** discovered while searching for a replacement clinical-only screen for entry 6 above. Checked `resources/assets/js/controller/nursing/handHygieneSurveyController.js`, `patientFallReportingController.js`, and `resources/assets/js/controller/services/unit/pocWorklistController.js` — all three declare `controllerAs: 'vm'` in their self-registered state config, matching the "91% of the 468 newly-found screens use `controllerAs:'vm'`" figure in entry 3 above.
 

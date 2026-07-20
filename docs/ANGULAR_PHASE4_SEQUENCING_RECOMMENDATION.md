@@ -6,23 +6,30 @@
 
 ## Starting point
 
-`docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md` (corrected 2026-07-18) puts the real total at **1,567 screens**, not the original 1,098 — an additional 469 screens self-register their own `.state()` calls outside `app.js` and were missed by the first scan. Of those 469, the inventory's own entry states **91% (431 screens) declare `controllerAs:'vm'`** in their state config, versus 9% (38 screens) using a plain `$scope`-based controller with no `controllerAs` — the wiring pattern already tested directly by 4 of the first pilot batch's 5 screens.
+`docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md` (corrected 2026-07-18) puts the real total at **1,567 screens**, not the original 1,098 — an additional 469 screens self-register their own `.state()` calls outside `app.js` and were missed by the first scan.
 
-Both pilot batches are now complete: batch 1 tested the `$scope` pattern (4 of 5 screens), batch 2 was deliberately picked to test the `controllerAs:'vm'` pattern and did so successfully (5 real, functioning `vm.*`-pattern screens rebuilt and audited). On the surface, this suggests both wiring patterns are validated and Phase 4 sequencing can proceed purely by risk tier.
+Both pilot batches are now complete: batch 1 tested the `$scope` pattern (4 of 5 screens), batch 2 was deliberately picked to test the `controllerAs:'vm'` pattern and did so successfully (5 real, functioning `vm.*`-pattern screens rebuilt and audited).
 
-## The complication: the 91% figure is not as solid as it looks
+## The 91% figure — verified and corrected, 2026-07-20
 
-`docs/ANGULAR_PENDING_FINDINGS.md` entry 11 found, while looking for a replacement pilot slot, that **`controllerAs:'vm'` being declared in a state's config does not reliably mean the corresponding view uses `vm.*` bindings.** Three controllers checked (`handHygieneSurveyController.js`, `patientFallReportingController.js`, `pocWorklistController.js`) all declare `controllerAs:'vm'` but assign almost exclusively to `$scope.*` (one file: 1 `self.`/`this.` assignment vs. 166 `$scope.` assignments) and their views have **zero** `vm.*` bindings anywhere — they function entirely through classic `$scope` inheritance, the pattern already validated by the *first* pilot batch, not the second.
+`docs/ANGULAR_PENDING_FINDINGS.md` entry 11 found, while looking for a replacement pilot slot, that **`controllerAs:'vm'` being declared in a state's config does not reliably mean the corresponding view uses `vm.*` bindings** — a 3-screen spot-check found real counter-examples. That check has now been extended to all 431 screens that declare `controllerAs:'vm'`, by resolving each one's actual view template and counting real `vm\.` bindings (not just the declaration):
 
-This means the real population of the 469 that actually needs `controllerAs:'vm'`-specific rebuild handling (as opposed to already-validated `$scope`-pattern handling) is smaller than 431 — by an amount nobody has quantified yet. Re-checking this precisely for all 469 views is itself a scan on the same order as the Phase 0 re-scan that found the 469 in the first place — explicitly out of scope for Phase 2/3, flagged for whoever scopes Phase 4.
+| | Count | % of 469 external screens |
+|---|---:|---:|
+| Declares `controllerAs:'vm'` (original figure) | 431 | 91.9% |
+| **Genuinely uses `vm.*` in its view (corrected figure)** | **391** | **83.4%** |
+| Declares `vm` but view has zero real usage | 40 | 8.5% |
+| Never declared `vm` at all | 38 | 8.1% |
+
+**Corrected headline: 391 screens (83.4%) are genuinely vm-pattern; 78 screens (16.6%) are effectively `$scope`-pattern** once you count both the never-declared and the declared-but-unused ones — the population 4 of the first pilot's 5 screens already validated directly.
+
+**What this does and doesn't change:** an 8.5-point correction, not a wild swing — this is explicitly not the "wildly different from 91%" case that would force a rethink. Both wiring patterns remain validated by real, rebuilt, audited screens from the two pilot batches, so risk-tier-first sequencing (below) still holds. The only concrete effect: 78 screens that would have been assumed to need `vm`-pattern-specific handling can instead follow the already-more-thoroughly-tested `$scope`-pattern playbook path. `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md` and `docs/ANGULAR_REBUILD_PLAYBOOK.md` have been updated to cite 83.4% going forward; `docs/ANGULAR_PENDING_FINDINGS.md` entry 11 is marked resolved.
 
 ## Recommendation
 
-**1. Run one cheap, bounded quantification pass before finalizing Phase 4 sequencing or effort estimates — not a new full audit.**
+**1. ~~Run one cheap, bounded quantification pass~~ — done, see above.**
 
-Extend `tools/angular-audit/` (or a small standalone script in the same style) to, for each of the 469 newly-found states: count `vm\.` occurrences in the state's resolved view template, the same check entry 11 did by hand for 3 files. This produces a real number — how many of the 469 actually have live `vm.*` bindings — instead of relying on the "declares `controllerAs:'vm'`" proxy. This is a static grep-and-count pass, the same shape of tool that already produced the corrected 1,567 total; it does not require touching application code or reading each controller by hand.
-
-**2. Once that number exists, sequence Phase 4 primarily by risk tier, not by wiring pattern** — since both wiring patterns are now genuinely validated by real, rebuilt, audited screens (assuming the quantification in step 1 doesn't turn up a third, unvalidated wiring shape — check for that as part of the same pass). Current corrected risk-tier breakdown across all 1,567 screens:
+**2. Sequence Phase 4 primarily by risk tier, not by wiring pattern** — since both wiring patterns are now genuinely validated by real, rebuilt, audited screens, and the quantification above didn't turn up a third, unvalidated wiring shape. Current corrected risk-tier breakdown across all 1,567 screens:
 
 | Tier | Count | Share |
 |---|---:|---:|
@@ -38,8 +45,11 @@ Extend `tools/angular-audit/` (or a small standalone script in the same style) t
 
 **4. Sequence in small batches (5–10 screens, matching the two Phase 2 pilots), not one large wave**, so a systemic issue (like the toggle-CSS bug affecting 5 of 10 pilot screens at once, or the zero-access-control finding affecting all 10) gets caught and fixed once at the shared/template level before it's replicated across hundreds more screens rather than after.
 
+## First Phase 4 batch — owner-approved 2026-07-20
+
+14 low-risk, zero-cross-screen-coupling screens, proposed and approved as the first Phase 4 batch (`display`, `webAppointmentBookingConfirmation`, `pesapalProcessPage`, `viewAssetScheduler`, `pharman`, `webAppointmentBooking`, `scheduleWorklist`, `PMSchedule`, `assetScheduler`, `detailScheduleWorklist`, `bookAppointment`, `outPatientFeedback`, `inPatientFeedback`, `bookView`), selected from the 329-screen low-risk-with-resolved-controller pool by requiring zero `$broadcast`/`$on`/`$rootScope`-write coupling (only 16 of 329 qualify) and ranked cheapest-to-most-complex by form-field + API-call count. `accessControl`/`accessControl1` excluded despite qualifying on the same criteria, held for a later, more-scrutinized wave given the known duplicate-controller-registration gotcha already on record for that pair and the general sensitivity of access-control screens in this project. Step 0/1 audit results for this batch are tracked separately (not in this doc) once produced.
+
 ## What this recommendation deliberately does not do
 
-- Does not start Phase 4.
-- Does not pick which specific screens go in the first Phase 4 batch.
-- Does not resolve the open question of whether/when the `vm.*`-usage quantification pass (recommendation 1) gets run — that's the owner's call on priority and timing, same as everything else in this document.
+- Does not start rebuilding any of the first batch's 14 screens — Step 0/1 audit only, per the playbook, held for owner review before golden-trace/rebuild begins.
+- Does not pick which screens go in any *later* Phase 4 batch beyond the first.
