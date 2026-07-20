@@ -187,5 +187,13 @@ export const routes: Routes = [
     canActivate: [moduleAccessGuard],
     loadComponent: () => import('./features/asset-scheduler/asset-scheduler').then((m) => m.AssetScheduler),
   },
+  // detailScheduleWorklist: no data.moduleId (no resolve block), real
+  // cookieObject guard, active storePopup wiring (entry 37 recurs here).
+  {
+    path: 'detailScheduleWorklist',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () =>
+      import('./features/detail-schedule-worklist/detail-schedule-worklist').then((m) => m.DetailScheduleWorklist),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];
