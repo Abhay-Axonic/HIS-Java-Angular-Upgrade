@@ -170,5 +170,15 @@ export const routes: Routes = [
     canActivate: [moduleAccessGuard],
     loadComponent: () => import('./features/schedule-worklist/schedule-worklist').then((m) => m.ScheduleWorklist),
   },
+  // PMSchedule: no data.moduleId (no resolve block), real cookieObject +
+  // cookieObjectAppConfig guards, same shape as scheduleWorklist. NO
+  // store-selection modal wiring -- legacy's own selectedTopStore check
+  // is entirely commented out for this screen (see pm-schedule.ts doc
+  // comment).
+  {
+    path: 'PMSchedule',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/pm-schedule/pm-schedule').then((m) => m.PmSchedule),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];

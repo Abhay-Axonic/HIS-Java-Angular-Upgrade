@@ -1,0 +1,345 @@
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style">
+    <fieldset>
+      <div class="row margin-top10">
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Date (From)</label>
+          <input type="date" class="form-control" [ngModel]="criteria.fromDate | date: 'yyyy-MM-dd'" (ngModelChange)="criteria.fromDate = $event" />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Date-Till</label>
+          <input type="date" class="form-control" [ngModel]="criteria.toDate | date: 'yyyy-MM-dd'" (ngModelChange)="criteria.toDate = $event" />
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <label>Store</label>
+          <select class="form-control" [(ngModel)]="criteria.storeId">
+            @for (info of storeList(); track info.storeId) {
+              <option [ngValue]="info.storeId">{{ info.storeName }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <label>PMS Type</label>
+          <select class="form-control" [(ngModel)]="criteria.pmsType">
+            <option></option>
+            <option value="InHouse">In House</option>
+            <option value="OutSource">Out Source</option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <label>Status(n)</label>
+          <select class="form-control" [(ngModel)]="criteria.processStatus">
+            <option value="0">All</option>
+            <option value="3">Assigned</option>
+            <option value="5">Cancelled</option>
+            <option value="1">Requested</option>
+            <option value="6">Reopen</option>
+            <option value="2">Scheduled</option>
+            <option value="4">Work In Progress</option>
+          </select>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10">
+          <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow" title="Search" (click)="getAssetDetailsByCriteria()">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="row margin-top4">
+      <div class="col-lg-9 col-md-9 col-sm-9">
+        <label class="show-entries"
+          >Show
+          <select [ngModel]="pagination().pageSize" (ngModelChange)="onPageSizeChange($event)" class="search-popUp-ddl">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          (records)
+        </label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+        <input type="text" autocomplete="off" [(ngModel)]="searchKeyword" class="text-search-box" placeholder="Search" />
+        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <div class="row padding-left-right-set4 margin-top8">
+      <div class="col-lg-12 col-md-12">
+        <table class="table table-bordered">
+          <tr>
+            <th class="width6">Store</th>
+            <th class="width6">Asset Code</th>
+            <th class="width8">Asset Name</th>
+            <th class="width6">Serial No</th>
+            <th class="width8">Vendor</th>
+            <th class="width7">Schedule Date</th>
+            <th class="width7">Schedule Time</th>
+            <th class="width6">PMS Type</th>
+            <th class="width3 text-center">PMS</th>
+            <th class="width6">Assign (Person)</th>
+            <th class="width6">Assigned (Date)</th>
+            <th class="width3 text-center">Checklist</th>
+            <th class="width3">Status(n)</th>
+            <th class="width5">Schedule</th>
+          </tr>
+          @for (info of filteredPageData(); track info.assetScheduleId) {
+            <tr>
+              <td>{{ info.storeName }}</td>
+              <td>{{ info.itemCode }}</td>
+              <td>{{ info.itemName }}</td>
+              <td>{{ info.serialNo }}</td>
+              <td>{{ info.vendor }}</td>
+              <td>
+                @if (info.scheduledDate) {
+                  <label><b>{{ info.scheduledDate | date: 'dd/MM/yyyy' }}</b></label>
+                } @else {
+                  <label><b>{{ info.nextDate | date: 'dd/MM/yyyy' }}</b></label>
+                }
+              </td>
+              <td>
+                @if (info.scheduledDate) {
+                  <label><b>{{ info.scheduledTime | date: 'HH:mm' }}</b></label>
+                } @else {
+                  <label><b>{{ info.nextDate | date: 'HH:mm' }}</b></label>
+                }
+              </td>
+              <td>{{ info.pmsType }}</td>
+              <td class="padding-edit-button-table">
+                <div class="text-center">
+                  <a><i class="fa fa-info-circle" aria-hidden="true" title="PMS Details" (click)="openPmsDetails(info)"></i></a>
+                </div>
+              </td>
+              <td>{{ getAssignNameById(info.assignTo) }}</td>
+              <td>{{ info.assignOn | date: 'dd/MM/yyyy' }}</td>
+              <td class="text-center">
+                <a class="cursor-pointer" (click)="getCheckListByAssetScheduleId(info.assetScheduleId)"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
+              </td>
+              @if (info.processStatus === 1) {
+                <td>Requested</td>
+              }
+              @if (info.processStatus === 2) {
+                <td>Scheduled</td>
+              }
+              @if (info.processStatus === 3) {
+                <td>Assigned</td>
+              }
+              @if (info.processStatus === 4) {
+                <td>Work In Progress</td>
+              }
+              @if (info.processStatus === 5) {
+                <td>Cancelled</td>
+              }
+              @if (info.processStatus === 6) {
+                <td>Reopen</td>
+              }
+              <td class="padding-edit-button-table">
+                <div class="text-center">
+                  <a (click)="setId(info)">Schedule</a>
+                </div>
+              </td>
+            </tr>
+          }
+        </table>
+      </div>
+      <div class="row margin-bottom45 center-block">
+        @if (pagination().totalPages > 1) {
+          <ul class="pagination table-list" style="font-size: 14px; cursor: pointer">
+            <li [class.disabled]="pagination().currentPage === 1"><a (click)="goToFirstPage()">First</a></li>
+            <li [class.disabled]="pagination().currentPage === 1"><a (click)="goToPreviousPage()">Previous</a></li>
+            @for (page of pagesList(); track page) {
+              <li [class.active]="pagination().currentPage === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+            }
+            <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="goToNextPage()">Next</a></li>
+            <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="goToLastPage()">Last</a></li>
+          </ul>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (showPmsDetailsModal()) {
+  <div class="modal fade in common-large-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+            PMS Details
+            <button type="button" class="close" (click)="showPmsDetailsModal.set(false)">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body padding10">
+          <ul class="tabs nav nav-tabs">
+            <li [class.active]="pmsDetailsTab() === 1"><a href="javascript:void(0)" (click)="pmsDetailsTab.set(1)">Manufacture Details</a></li>
+            <li [class.active]="pmsDetailsTab() === 2"><a href="javascript:void(0)" (click)="pmsDetailsTab.set(2)">Accessory Details</a></li>
+            <li [class.active]="pmsDetailsTab() === 3"><a href="javascript:void(0)" (click)="pmsDetailsTab.set(3)">Vendor Details</a></li>
+            <!-- Insurance tab: confirmed always empty -- its fetch
+                 function is entirely commented out in the controller. -->
+            <li [class.active]="pmsDetailsTab() === 4"><a href="javascript:void(0)" (click)="pmsDetailsTab.set(4)">Insurance Details</a></li>
+          </ul>
+          @if (pmsDetailsTab() === 1) {
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (m of manufactureDataList(); track m.id) {
+                  <tr>
+                    <td>{{ m.name }}</td>
+                    <td>{{ m.address }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+          @if (pmsDetailsTab() === 2) {
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Item Code</th>
+                  <th>Item Name</th>
+                  <th>Quantity</th>
+                  <th>Serial No</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (i of itemDataList(); track i.itemId) {
+                  <tr>
+                    <td>{{ i.itemCode }}</td>
+                    <td>{{ i.itemName }}</td>
+                    <td>{{ i.quantity }}</td>
+                    <td>{{ i.serialNumber }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+          @if (pmsDetailsTab() === 3) {
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Mobile No.</th>
+                  <th>Email</th>
+                  <th>Contact Person</th>
+                  <th>Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (v of vendorDataList(); track v.id) {
+                  <tr>
+                    <td>{{ v.name }}</td>
+                    <td>{{ v.mobileNumber }}</td>
+                    <td>{{ v.emailId }}</td>
+                    <td>{{ v.contactPersonName }}</td>
+                    <td>{{ v.address }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+          @if (pmsDetailsTab() === 4) {
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Insurance Name</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
+
+@if (showChecklistModal()) {
+  <div class="modal fade in common-medium-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header padding-zero">
+          <div class="modal-title patient-details-row">
+            CheckList
+            <button type="button" class="close" (click)="showChecklistModal.set(false)">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th class="width10">Asset Code</th>
+                <th class="width10">Asset Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (c of addChecklist1(); track $index) {
+                <tr>
+                  <td class="width10">{{ c.checklistCode }}</td>
+                  <td class="width10">{{ c.checklistName }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <button type="button" class="btn btn-primary" (click)="showChecklistModal.set(false)">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
+
+@if (showScheduleModal()) {
+  <div class="modal fade in common-medium-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">
+            Schedule
+            <button type="button" class="close" (click)="showScheduleModal.set(false)">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
+              <label>Assign To</label>
+              <select class="form-control" [ngModel]="assignTo()" (ngModelChange)="assignTo.set($event)">
+                @for (info of usersList(); track info.userId) {
+                  <option [ngValue]="info.userId">{{ info.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+              <label>Assign Date</label>
+              <input type="date" class="form-control" [ngModel]="assignOn() | date: 'yyyy-MM-dd'" (ngModelChange)="assignOn.set($event)" />
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+              <label>Assign Time</label>
+              <input type="text" class="form-control" [ngModel]="assignTime()" (ngModelChange)="assignTime.set($event)" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+              <label>Remarks:</label>
+            </div>
+            <div class="col-lg-10 col-md-9 col-sm-9 padding-left-right-set4 padding-top10">
+              <textarea rows="3" class="form-control" [ngModel]="assignRemark()" (ngModelChange)="assignRemark.set($event)"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <button type="button" class="btn btn-primary" (click)="saveAssignDetails()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
