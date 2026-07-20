@@ -161,5 +161,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/web-appointment-booking/web-appointment-booking').then((m) => m.WebAppointmentBooking),
   },
+  // scheduleWorklist: no data.moduleId (no resolve block), real
+  // cookieObject + cookieObjectAppConfig guards in the controller --
+  // moduleAccessGuard covers the first, the second is checked in the
+  // component itself (see schedule-worklist.ts doc comment).
+  {
+    path: 'scheduleWorklist',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/schedule-worklist/schedule-worklist').then((m) => m.ScheduleWorklist),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];

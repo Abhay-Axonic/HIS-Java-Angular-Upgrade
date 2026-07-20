@@ -21,12 +21,30 @@ export interface CookieObject {
   [key: string]: unknown;
 }
 
+/**
+ * Separate cookie from `cookieObject`, written after unit-level app
+ * configuration is loaded -- see `$rootScope.checkCookies()`
+ * (app.js:1881-1892) and docs/ANGULAR_PENDING_FINDINGS.md entry 34.
+ * `assetMaintenanceSpecialityId` is the only field a rebuilt screen has
+ * needed to read so far (scheduleWorklist, screen 7/14).
+ */
+export interface CookieObjectAppConfig {
+  assetMaintenanceSpecialityId?: number;
+  [key: string]: unknown;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SessionService {
   private readonly cached: CookieObject | null;
+  private readonly cachedAppConfig: CookieObjectAppConfig | null;
 
   constructor() {
     this.cached = this.readCookieObject();
+    this.cachedAppConfig = this.readNamedCookie<CookieObjectAppConfig>('cookieObjectAppConfig');
+  }
+
+  get appConfig(): CookieObjectAppConfig | null {
+    return this.cachedAppConfig;
   }
 
   get current(): CookieObject | null {
@@ -85,15 +103,18 @@ export class SessionService {
   }
 
   private readCookieObject(): CookieObject | null {
-    const match = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('cookieObject='));
+    return this.readNamedCookie<CookieObject>('cookieObject');
+  }
+
+  private readNamedCookie<T>(name: string): T | null {
+    const prefix = `${name}=`;
+    const match = document.cookie.split('; ').find((row) => row.startsWith(prefix));
     if (!match) {
       return null;
     }
     try {
-      const raw = decodeURIComponent(match.substring('cookieObject='.length));
-      return JSON.parse(raw) as CookieObject;
+      const raw = decodeURIComponent(match.substring(prefix.length));
+      return JSON.parse(raw) as T;
     } catch {
       return null;
     }
