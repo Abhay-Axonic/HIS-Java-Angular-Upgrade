@@ -111,5 +111,19 @@ export const routes: Routes = [
     path: 'display/:orgId/:unitId/:cookieskioskId/:userId',
     loadComponent: () => import('./features/display/display').then((m) => m.Display),
   },
+  // webAppointmentBookingConfirmation: no moduleAccessGuard. Confirmed at
+  // app.js:21006-21013 -- no resolve block, and the controller (65 lines,
+  // read in full) makes zero backend calls at all, so there's no session
+  // requirement to even discover -- a public, patient-facing appointment
+  // confirmation screen. `webAppConfirmationObj` is an in-memory-only
+  // ui-router param, not part of the URL -- see
+  // WebAppointmentHandoffService for how this is replicated.
+  {
+    path: 'webAppointmentBookingConfirmation',
+    loadComponent: () =>
+      import('./features/web-appointment-booking-confirmation/web-appointment-booking-confirmation').then(
+        (m) => m.WebAppointmentBookingConfirmation,
+      ),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];
