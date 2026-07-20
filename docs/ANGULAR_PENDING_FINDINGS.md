@@ -4,6 +4,12 @@
 
 ---
 
+## ⚠ FLAGGED FOR FAST-TRACK CONSIDERATION — entry 43: `linenIssueAcceptanceDetails` has no working save path today, in legacy, at all
+
+Unlike most entries in this doc, this is not "a bug to fix eventually" — it's a live production screen where **the core task (completing a linen issue acceptance) cannot be finished by any user today**, crash or no crash. Called out here, separately from the general list, per explicit owner instruction, so it doesn't blend into the surrounding findings. Full technical detail is in entry 43 below — not duplicated here. Owner to decide whether this justifies fixing ahead of its normal place in the rebuild queue, rather than waiting for a future "parity" pass.
+
+---
+
 ## 1. insuranceMaster has two redundant, inconsistent validation paths for the same fields
 
 **Where:** `resources/assets/js/controller/master/unit/insuranceMasterController.js`, `save()` (~line 373) and `update()` (~line 730). Found during the Phase 2 pilot audit (`docs/PHASE2_PILOT_AUDIT.md`, section 2).
@@ -722,7 +728,7 @@ Despite this, two live, reachable functions in `OPDCoverSheetController.js` stil
 
 ---
 
-## 43. SEVERITY 1 — `linenIssueAcceptanceDetails` has no reachable save path at all, and its reject-toggle crashes on click — found while rebuilding this screen, Phase 4 batch 2
+## 43. SEVERITY 1, FLAGGED FOR FAST-TRACK CONSIDERATION (see banner at top of doc) — `linenIssueAcceptanceDetails` has no reachable save path at all, and its reject-toggle crashes on click — found while rebuilding this screen, Phase 4 batch 2
 
 **Where:** `resources/assets/js/controller/linenlaundry/linenIssueAcceptanceDetailsController.js:101` (the crash), the whole file's `SaveApproval` (never wired), `views/Linen/linen-issue-acceptance-details.html` (124 lines, full read — no Save button anywhere in the main view), `views/common/qty-accept-reject.html` and `views/common/note-save.html` (both `ng-include`d partials, full read).
 
