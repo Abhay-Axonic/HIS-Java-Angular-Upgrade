@@ -23,9 +23,9 @@ import {
  * confirmed always empty here, rendered as an inert shell), 37 (recurs
  * via shared StoreSelectionService -- this controller has an active
  * storePopup call, unlike PMSchedule), 40 (SEVERITY 1, the
- * addSpareConsumption crash -- faithfully replicated below via a
- * non-null assertion, same treatment as pesapalProcessPage's entry-18
- * crash).
+ * addSpareConsumption crash -- fixed 2026-07-20, matching legacy's own
+ * fix: the store dropdown is now bound to a real `selectedStoreId`
+ * signal instead of the undefined `scheduleWorklistObj.storeId`).
  *
  * No data.moduleId -- no resolve block, real cookieObject guard only.
  * `assetObject.assetScheduleId == null` redirects to `scheduleWorklist`
@@ -62,12 +62,7 @@ export class DetailScheduleWorklist {
   assetChecklist = signal<DswAssetChecklistItem[]>([]);
 
   spareConsumptionObj = { itemCode: '', itemName: '', qty: '', itemId: undefined as number | undefined };
-  // Entry 40, faithfully replicated: legacy binds this store dropdown to
-  // `scheduleWorklistObj.storeId`, a variable that's never defined
-  // anywhere in this controller (copy-paste residue from the sibling
-  // scheduleWorklist screen). Modeled as `undefined` on purpose so
-  // addSpareConsumption() crashes identically, not fixed here.
-  scheduleWorklistObj: { storeId: number } | undefined = undefined;
+  selectedStoreId = signal<number | undefined>(undefined);
 
   showAdd = signal(true);
   showSave = signal(true);
@@ -264,12 +259,11 @@ export class DetailScheduleWorklist {
     this.assetChecklist.update((list) => list.filter((_, i) => i !== index));
   }
 
-  /** Entry 40, faithfully replicated: crashes here, matching legacy
-   * exactly -- `scheduleWorklistObj` is deliberately typed as possibly
-   * `undefined` and asserted non-null, not guarded. */
+  /** Entry 40 fix (2026-07-20): now reads the real `selectedStoreId`
+   * signal instead of the undefined `scheduleWorklistObj.storeId`. */
   addSpareConsumption(): void {
-    if (this.scheduleWorklistObj!.storeId !== undefined) {
-      const storeId = this.scheduleWorklistObj!.storeId;
+    if (this.selectedStoreId() !== undefined) {
+      const storeId = this.selectedStoreId()!;
       if (this.itemResponseList().length === 0) {
         this.notify.error('Please input an Item...!!');
         return;

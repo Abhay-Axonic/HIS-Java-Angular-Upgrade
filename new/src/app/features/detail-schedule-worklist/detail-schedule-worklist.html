@@ -76,11 +76,14 @@
         <div class="row">
           <div class="col-lg-3">
             <label>Store</label>
-            <!-- Entry 40, faithfully replicated: bound to scheduleWorklistObj,
-                 which is deliberately never initialized -- see component's
-                 doc comment. This dropdown never has real options in legacy
-                 either, for the same reason. -->
-            <select class="form-control"></select>
+            <!-- Entry 40 fix (2026-07-20): bound to a real selectedStoreId
+                 signal, backed by storeList (already fetched in the
+                 constructor) -- see component's doc comment. -->
+            <select class="form-control" [ngModel]="selectedStoreId()" (ngModelChange)="selectedStoreId.set($event)">
+              @for (info of storeList(); track info.storeId) {
+                <option [ngValue]="info.storeId">{{ info.storeName }}</option>
+              }
+            </select>
           </div>
           <div class="col-lg-3">
             <label>Item Code</label>
