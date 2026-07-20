@@ -588,3 +588,31 @@ Zero guard. `applicationConfiguration` is the app's own designated redirect targ
 **My read:** moderate severity — not a crash, no data loss, and the underlying store selection genuinely works, but it's a real, confusing dead-end UI state for what's likely the *common* case (many users probably have exactly one assigned store, not several) on every first visit-this-session to any of the ~88 files using this pattern. Given the blast radius and that a working, already-verified fix pattern exists nearby (this project's Phase 2/4 track has fixed several "guarded but not handled correctly" bugs the same way), this seems like a good candidate for a dedicated fix pass similar to entry 16's, rather than a one-off.
 
 **Lower-confidence addendum, unresolved — a second, related exit path where the modal may also stay stuck open:** while Step 5 browser-testing the rebuild with a synthetic (fake-token) session, the store-selection modal appeared correctly (matching legacy's markup) but stayed visibly open on screen even after `authInterceptor` redirected to `/accessDenied` on the backend's 401 response to the now-in-flight `getStoreListById`/`fetchAssetSchedule` calls — a second way this shared modal can end up orphaned, distinct from the single-store case above. I could **not** conclusively confirm whether legacy exhibits the identical behavior: the synthetic `cookieObject` cookie used for testing appears to get cleared by the app shortly after being set (mechanism not identified — possibly a validation/cleanup path triggered by an unrecognized token), which meant repeat checks of legacy's modal state were confounded by the cookie already being gone by the time `viewAssetScheduler`'s controller ran, short-circuiting at the earlier `cookieObject == undefined` guard before ever reaching the modal-show code. Not fixed in the rebuild (deliberately, given the inconclusive parity read) — flagging as open rather than asserting a conclusion the testing didn't actually support. Worth a real login-based re-test (not a synthetic cookie) on both apps once dev-environment login is unblocked (see the DEMO-org unit-seeding gap noted elsewhere in this session's work).
+
+---
+
+## 38. SEVERITY-ADJACENT — `BillingGenericService.serviceAction()`'s error handler throws on every failed request, silently swallowing ALL error feedback app-wide (502 files) — found while auditing `pharman`
+
+**Where:** `resources/assets/js/service/GenericService.js:483-580`, specifically the rejection callback at `:554-576`.
+
+**What it is, plainly:**
+```js
+var promise = $http(httpObject).then(
+    function(response) { ... },
+    function(e) {                              // <-- parameter is named `e`
+        $rootScope.stopLoader();
+        if (error.status === 401) {             // <-- but the body references `error`, never declared anywhere
+            $state.go('login');
+            growl.error("Token Expired !", {title: ERROR_MSG});
+        } else {
+            growl.error(NETWORK_ERROR_MSG, {title: ERROR_MSG});
+        }
+    });
+```
+`error` is not the callback's parameter (`e` is), not declared locally, and not a global anywhere in the codebase (confirmed by grep across `app.js`, `GenericService.js`, and `index.html`) or via a `$httpProvider` interceptor (none registered anywhere). Referencing an undeclared identifier throws a `ReferenceError` in JavaScript regardless of strict mode. **This means every single failed request made through `BillingGenericService` — network error, 400, 401, 500, anything — throws inside its own error handler before either branch (401-redirect-to-login, or the generic error growl) can run.** No growl message is ever shown. No redirect on session expiry ever fires. The failure is completely silent from the user's perspective; the only trace is an unhandled-promise-rejection warning in the browser console, which no user will ever see. Confirmed no callers add their own `.catch()`/second `.then()` argument that would provide a fallback either — spot-checked `pharmanController.js`'s three `BillingGenericService` calls (`searchPharmanDrugList`, `getFormsByName`, `getPopUpData`), none do.
+
+**Blast radius:** `grep -rl "BillingGenericService" resources/assets/js/controller/` returns **502 files** — this is not scoped to `pharman`, it's the error-handling path for a very large fraction of the billing-adjacent controller surface. Compare to the sibling, correctly-implemented `GenericService.serviceAction()` (`:2-163` in the same file), which uses the right parameter name (`error`) and works as intended (already relied on and verified for `pesapalProcessPage`'s and `viewAssetScheduler`'s 401 handling elsewhere in this session).
+
+**Owner decision, not resolved here:** not fixed, per standing instruction (owner explicitly asked about this mid-session given its scale and chose to log-and-continue, same treatment as entries 16/34's pattern, deferring a dedicated fix pass rather than fast-tracking it the way entry 34 was).
+
+**My read:** not severity-1 in the strict sense used elsewhere in this doc (no crash, no data loss, no security exposure) but close to it in practical consequence — a silent, app-wide failure to surface session-expiry and error states across the majority of billing-related screens is a real risk for a system whose #1 stated priority (per this project's own CLAUDE.md) is billing accuracy and not silently swallowing errors. The fix is a one-line rename (`error` → `e`, or `e` → `error`, whichever matches intent) restoring behavior that's clearly already correctly implemented one function away in the same file — low-risk, high-value, and a strong candidate for prioritization once the owner is ready to triage this doc's backlog.
