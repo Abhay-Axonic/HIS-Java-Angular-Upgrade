@@ -180,5 +180,12 @@ export const routes: Routes = [
     canActivate: [moduleAccessGuard],
     loadComponent: () => import('./features/pm-schedule/pm-schedule').then((m) => m.PmSchedule),
   },
+  // assetScheduler: no data.moduleId (no resolve block), real cookieObject
+  // guard only (no cookieObjectAppConfig check, unlike scheduleWorklist/PMSchedule).
+  {
+    path: 'assetScheduler',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/asset-scheduler/asset-scheduler').then((m) => m.AssetScheduler),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];
