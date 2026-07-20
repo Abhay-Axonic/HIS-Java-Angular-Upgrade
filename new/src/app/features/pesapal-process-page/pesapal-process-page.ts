@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs';
 import { SessionService } from '../../core/session.service';
 import { LoaderService } from '../../core/loader.service';
 import { NotificationService } from '../../core/notification.service';
@@ -64,6 +65,19 @@ export class PesapalProcessPage {
 
     this.api
       .getPesapayPaymentStatus(merchantId, transactionTrackingId ?? '', unitId, organizationId, callbackUrl)
+      .pipe(
+        // Not a literal port of legacy's stopLoader() placement (legacy
+        // only calls it in its success .then(), never on error) --
+        // verified live that legacy's preloader still ends up hidden
+        // after a 401 redirect regardless (mechanism unclear, but
+        // reproducibly not stuck), while a literal same-shape port in
+        // this rebuild left the loader spinning forever after a 401 with
+        // no way to clear it. That's a defect in this rebuild's own new
+        // code, not a legacy behavior to replicate -- finalize() ensures
+        // the loader always clears when the request settles, matching
+        // the observed (not just written) legacy outcome.
+        finalize(() => this.loader.stop()),
+      )
       .subscribe({
         next: (response) => {
           const status = response.object?.transactionStatus;
@@ -106,7 +120,6 @@ export class PesapalProcessPage {
           // gap, not a bug in this rebuild.
           const redirectUrl = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}/#/paymentInformation`;
           window.open(redirectUrl, '_self');
-          this.loader.stop();
         },
       });
   }
