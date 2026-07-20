@@ -136,5 +136,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/pesapal-process-page/pesapal-process-page').then((m) => m.PesapalProcessPage),
   },
+  // viewAssetScheduler: no data.moduleId (no resolve block), but a real
+  // cookieObject session guard in the controller -- same shape as
+  // pesapalProcessPage.
+  {
+    path: 'viewAssetScheduler',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () =>
+      import('./features/view-asset-scheduler/view-asset-scheduler').then((m) => m.ViewAssetScheduler),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];

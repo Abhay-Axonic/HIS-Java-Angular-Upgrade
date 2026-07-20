@@ -73,6 +73,17 @@ export class SessionService {
     }
   }
 
+  /**
+   * Mirrors legacy's `cookieObject.storeId = ...; $cookies.putObject('cookieObject', cookieObject)`
+   * pattern used by `$rootScope.storePopup()`/`setStore()` (app.js:2607-2653)
+   * after a store is selected -- see StoreSelectionService.
+   */
+  updateStoreId(storeId: number): void {
+    if (!this.cached) return;
+    this.cached['storeId'] = storeId;
+    document.cookie = `cookieObject=${encodeURIComponent(JSON.stringify(this.cached))}; path=/`;
+  }
+
   private readCookieObject(): CookieObject | null {
     const match = document.cookie
       .split('; ')

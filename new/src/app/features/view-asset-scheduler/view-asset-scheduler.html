@@ -1,0 +1,128 @@
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style">
+    <fieldset>
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span>
+            <b class="padding-right10">Asset Category :</b> {{ assetInfo().assetCategory }}
+          </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10">Product Category :</b> {{ assetInfo().productCategory }}
+          </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10">Asset Code :</b>{{ assetInfo().itemCode }}
+          </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <span class="margin-left10">
+            <b class="padding-right10">Asset Name :</b>{{ assetInfo().itemName }}
+          </span>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="row margin-top10">
+      <div class="col-lg-12 col-md-12 col-sm-12 height500-table-with-scroll padding-left-right-set4">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="width6">Asset Code</th>
+              <th class="width8">Asset Name</th>
+              <th class="width6">Serial No.</th>
+              <th class="width8">Vendor</th>
+              <th class="width8">PMS Frequency</th>
+              <th class="width5">Month</th>
+              <th class="width6">PMS Type</th>
+              <th class="width6">Start Date</th>
+              <th class="width6 text-center">Checklist</th>
+              <th class="width10">Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (info of assetScheduleList(); track info.assetScheduleId) {
+              <tr>
+                <td>{{ info.itemCode }}</td>
+                <td>{{ info.itemName }}</td>
+                <td>{{ info.serialNo }}</td>
+                <td>{{ info.vendor }}</td>
+                <td>{{ info.pmsFrequency }}</td>
+                <td>{{ getMonth(info.nextDate) }}</td>
+                <td>{{ info.pmsType }}</td>
+                <td>{{ info.nextDate | date: 'dd/MM/y' }}</td>
+                <td class="width6 text-center">
+                  <a class="cursor-pointer" title="View" (click)="getCheckListByAssetScheduleId(info.assetScheduleId)">
+                    <i class="fa fa-info-circle"></i>
+                  </a>
+                </td>
+                <td>{{ info.remark }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+      <div class="row his-style margin-top10 padding-right20" style="width: 30px">
+        <div class="col-lg-10 col-md-10 col-sm-8 padding-left-right8"></div>
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px"></div>
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left0px-right6px">
+          <div>
+            <!-- Targets assetPMSScheduler, a screen outside this 14-screen
+                 batch and not yet rebuilt -- same expected, out-of-scope
+                 gap noted on pesapalProcessPage's paymentInformation
+                 redirect. Kept as a literal legacy hash href for markup
+                 parity; not a working link in this dev sandbox until
+                 either that screen is rebuilt or Phase 7's routing
+                 strategy is decided. -->
+            <a href="#/assetPMSScheduler">
+              <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+@if (showChecklistModal()) {
+  <div id="viewChecklistModal" class="modal fade in common-medium-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header padding-zero" style="padding: 0px">
+          <div class="modal-title patient-details-row">
+            CheckList
+            <button type="button" class="close" (click)="showChecklistModal.set(false)">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row margin-top5">
+            <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-10" style="padding-bottom: 25px">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th class="width10">Checklist Name</th>
+                    <th class="width10">Checklist Code</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (infoCl of assetScheduleCheckList(); track $index) {
+                    <tr>
+                      <td>{{ infoCl.checklistName }}</td>
+                      <td>{{ infoCl.checklistCode }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
