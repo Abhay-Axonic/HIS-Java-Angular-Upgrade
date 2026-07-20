@@ -2,6 +2,8 @@
 
 *Blueprint (docs only, no code applied). 2026-07-20. Follow-up on `docs/ANGULAR_PENDING_FINDINGS.md` entries 29-31, found during the Phase 4 first-batch Step 0/1 audit. This document includes a material correction to entries 29-31's own severity framing — read section 0 before anything else.*
 
+*IMPLEMENTED 2026-07-20 on `fix/bookview-unsavable-history-fields` (held for review, not merged/pushed) — Task B (interim cleanup) approved and applied, with one further correction found during implementation: of the "4 standalone checkboxes" described in section 3 below, only `noSignificantVaccination` is actually live. `noSignificantMedical`, `noSignificantFamiliy`, and `noSignificantSurgical` were found, on direct inspection of the raw source while implementing, to already sit inside pre-existing, unclosed HTML comment blocks — already fully dead before this session touched anything, not merely low-signal as this document originally assumed. Only `noSignificantVaccination` received the proposed `disabled` attribute; the other three were left untouched (a proposed edit to them was made, then reverted, once the pre-existing comment was discovered — applying it would have nested a new comment inside an already-open one, prematurely closing it and making previously-dead markup live, a real bug). The six dead `ng-repeat` blocks (section 3(i)) were confirmed genuinely live markup, outside any comment, and were fixed as proposed. See the commit on that branch for full detail and verification.*
+
 ---
 
 ## 0. Correction to entries 29-31 — read this first
