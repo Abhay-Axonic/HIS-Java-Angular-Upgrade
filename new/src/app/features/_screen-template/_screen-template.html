@@ -1,0 +1,48 @@
+<!--
+  TEMPLATE -- replace this whole markup with the real screen's audited
+  view, matching legacy's actual layout/labels/field order. This file only
+  demonstrates the wiring for the 3 baked-in patterns (status toggle,
+  optional-field search, pagination) -- it isn't meant to render anything
+  resembling a real finished screen.
+-->
+
+<div class="search-bar">
+  <!-- TEMPLATE: replace with the real screen's search fields. Two
+       separate inputs, only sent when filled in -- see search() in
+       _screen-template.ts and docs/ANGULAR_PENDING_FINDINGS.md entry 15. -->
+  <input type="text" placeholder="Code" [(ngModel)]="codeSearchTerm" name="codeSearchTerm" />
+  <input type="text" placeholder="Description" [(ngModel)]="descriptionSearchTerm" name="descriptionSearchTerm" />
+  <button type="button" (click)="search()">Search</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Description</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (row of list(); track row.id) {
+      <tr>
+        <td>{{ row.code }}</td>
+        <td>{{ row.description }}</td>
+        <td class="text-center">
+          <app-status-toggle [checked]="row.status === 'A'" (toggled)="onToggleStatus(row)" />
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="pagination">
+  <select [(ngModel)]="pageSize" name="pageSize" (ngModelChange)="onPageSizeChange()">
+    @for (size of pageSizeOptions; track size) {
+      <option [value]="size">{{ size }}</option>
+    }
+  </select>
+  @for (page of pageNumbers(); track page) {
+    <button type="button" [class.active]="page === currentPage()" (click)="goToPage(page)">{{ page }}</button>
+  }
+</div>
