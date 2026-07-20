@@ -1,0 +1,112 @@
+# Angular Rebuild Playbook (Phase 3)
+
+*Consolidated, repeatable process for rebuilding a legacy AngularJS 1.5 screen in modern Angular, refined from what both Phase 2 pilot batches (10 screens total) actually found — not a theoretical process, a corrected one. Written after both pilot batches were built, golden-trace audited, and manually domain-reviewed by the owner; every step below exists because something in that record either worked and is worth repeating, or failed silently and needs a specific counter-measure now baked in.*
+
+*This is Phase 3: process/tooling/template hardening only. No new screens are rebuilt as part of this document. Phase 4 (scaling to the remaining ~1,557 screens) is a separate, not-yet-approved phase — see `docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md`.*
+
+---
+
+## Why this document exists
+
+Phase 2 proved the rebuild *process* works — both pilot batches were audited, rebuilt, golden-trace verified, and are sitting on pushed feature branches. But the same two batches also surfaced two structural facts that must shape how the next ~1,557 screens get done:
+
+1. **Golden-trace capture (initial page load) cannot catch interaction bugs.** All 4 of the bugs found-and-fixed in Phase 2 (status-toggle CSS/mutation, zero backend access control, MISReports dropdowns, broken patient search — `docs/ANGULAR_PENDING_FINDINGS.md` entries 12–15) were invisible to golden-trace and were only found when the owner manually clicked through the rebuilt screens side-by-side with legacy. A process that stops at golden-trace re-audit will silently ship these same bug classes into every future screen.
+2. **A screen "looking real" is not the same as a screen being real.** Three separate screens across both pilots turned out, on close reading, to not be what they appeared: `addItemPOCreation` was a dead route shadowing a real one under a different name (entry 2), `SurgicalSiteInfection` was a copy-pasted non-functional mockup (entry 6), and `OTBillingCompletion`'s wired view was a stale clone of an unrelated screen's template (entry 7). All three were caught *before* rebuild effort was wasted on them, but only because of deliberate, close reading — not because any tooling flagged them automatically. Two of the five original batch-2 picks had to be swapped mid-project for this reason.
+
+Everything below is built to make both of those failure modes structural, not something each new screen's session has to rediscover from scratch.
+
+---
+
+## The process, end to end
+
+### Step 0 — Confirm the screen is real before committing a slot to it
+
+Before spending any audit time on a candidate screen, confirm it is actually what it appears to be:
+
+- Read the **view template in full** and check that its `ng-model`/`ng-click`/`vm.*` bindings resolve against functions that actually exist in the controller wired to that exact route (not a same-named function in a sibling file — `grep` across the directory, don't assume file proximity means correctness).
+- Confirm the controller **wired to the route** is the one that actually implements the screen's apparent behavior, not a generic/shared controller that happens to also be reachable under a different, unlisted state (the `addItemPOCreation`/`addItemPO` pattern, entry 2). If a state routes through a shared controller (e.g. `MasterController`, 353 known screens) with a view referencing `vm.*` bindings, that view **cannot** be getting real data from that controller — it's very likely either dead or, per entry 2, silently duplicated under a different, self-registered state elsewhere in the codebase. Grep the whole tree for a `.config($stateProvider)` self-registration before concluding a screen is simply broken.
+- If the view has **zero** live data bindings (no `ng-repeat`, no `ng-model` tied to anything the controller populates) and every interactive control calls a function absent from its own controller, treat it as a non-functional mockup (entry 6) and swap the pilot slot rather than rebuild a mockup for "parity."
+- **Confirm the module ID and superuser requirement by reading the live `.state(...)` resolve block in `app.js` directly** (or the file's own `.config($stateProvider)` block, for a self-registered state) — never guess or infer it from the screen's apparent sensitivity. This is the exact value that goes into the new screen's route `data.moduleId` / `data.requireSuperUser` (see Step 3).
+
+If any of the above turns up ambiguous or contradictory (the *addItemPOCreation*/*OTBillingCompletion* shape — a real, complete controller sitting disconnected from its wired view, or vice versa), stop and log it as a decision point rather than guessing which side is "real." Do not rebuild until it's resolved.
+
+### Step 1 — Audit
+
+Read the actual controller and view in full — not a skim, not an assumption based on filename or folder. Specifically check for:
+
+- **The recurring missing-`$state`-DI crash bug.** Found independently in three separate controllers across both pilots (`organizationController.js`, `assetCategoryMasterController.js`, `implantMasterController.js` — entries 8 and 10): a login-redirect guard calls `$state.go('login')` on a missing session cookie, but `$state` was never added to that controller's own dependency-injection list, so it throws `ReferenceError` instead of redirecting — a blank/broken page on session expiry with no visible explanation. Grep any new controller's DI list against every `$state.*` call it makes before assuming the guard works. This is a legacy bug, not a rebuild bug — it doesn't block the rebuild, but the rebuild should use the safe pattern (defensive session check, never a literal port of the crash) the same way `organizationMaster`'s fix and `assigningPickerDispenser`'s rebuild both already did.
+- **Whether `controllerAs:'vm'` in the state config is actually load-bearing.** Entry 11 found three controllers that declare `controllerAs:'vm'` in their self-registered state but assign almost exclusively to `$scope.*` (1 `self.`/`this.` assignment vs. 166 `$scope.` in one case) — their views have **zero** `vm.*` bindings anywhere. Declaring `controllerAs:'vm'` does not reliably mean the view uses it. Grep the view for `vm\.` usage before assuming which wiring pattern (classic `$scope` vs. `controllerAs:'vm'`) actually applies — this changes how the rebuilt component reads legacy's data flow, and guessing wrong wastes the whole audit.
+- **Validation/business-logic duplication** (the `insuranceMaster` pattern, entry 1) — the same field can be validated by more than one independent mechanism (HTML5 attributes vs. a manual JS block) with different strictness. Preserve *all* layers found for true parity; don't assume the more visible one is the only one.
+- **Race conditions and load-order assumptions**, not just final state. `insuranceMaster`'s ledger-name backfill (entry 4) only diverges from a byte-for-byte port in one specific, narrow case: which of two concurrent requests resolves first. A naive "does the final rendered state match" check misses this kind of thing entirely — read how legacy actually sequences its requests, not just what it eventually shows.
+- What real, live data the backend actually needs to exercise this screen meaningfully (dev-DB seed gaps blocked real interaction testing on `insuranceMaster`, `MISReports`, and `inputOutputCharts` in Phase 2 until additive, owner-approved DB fixes unblocked them — plan for this rather than discovering it mid-audit).
+
+### Step 2 — Golden-trace capture
+
+Capture the real network calls (`tools/golden-trace/capture.js`) legacy makes on initial load for this screen, with real seeded session/cookie state. This remains valuable and worth keeping: it independently reproduced a real crash bug (`assigningPickerDispenser`, entry 9) purely from an anomalous call-count signature (2 calls instead of the expected 5), without anyone reading a line of that controller first. But treat it for what it structurally is — **a load-time signature only.** It will not catch anything that requires a click, a toggle, or a save to trigger. Do not treat a clean golden-trace re-audit as evidence the screen works; it's evidence the *initial load* works.
+
+### Step 3 — Rebuild using the standard scaffold
+
+Start from `new/src/app/features/_screen-template/` (built this phase — see "The template scaffold" below), not a blank component. It bakes in, by default:
+
+- **`moduleAccessGuard`** (`new/src/app/core/module-access.guard.ts`) wired via the route's `canActivate` — parameterize `data: { moduleId, requireSuperUser }` from Step 0's confirmed values. A route with no module gate in legacy (e.g. `billingGroupMaster`, `periodicityService`) correctly omits `moduleId` entirely — don't invent a stricter check than legacy actually has.
+- **The global `authInterceptor`** (`new/src/app/core/auth.interceptor.ts`, wired once in `app.config.ts`) — already attaches the `Authorization`/`userId`/`unitId` headers every backend call needs. Nothing per-screen to do here; this is infrastructure, not boilerplate to re-copy.
+- **`<app-status-toggle>`** (`new/src/app/shared/status-toggle/`) for any status/active-inactive toggle UI. Wraps the corrected CSS (`input:checked + .slider` state, matching legacy's exact colors) and emits a `toggle` event the host component handles with a proper `signal.update()` call — never a direct in-place mutation of a row object nested in a signal's array (the fragile pattern entry 12 found: it doesn't corrupt data, but only visibly updates when *some other* signal write happens to trigger a re-render, which is not something to rely on).
+- **`buildOptionalParams()`** (`new/src/app/shared/search/optional-params.ts`) for any multi-field search where legacy AND-combines whichever fields are non-empty. Send only the fields the user actually filled in — mirroring legacy's own conditional request-building — rather than sending every field with the same value (the `inputOutputCharts` bug, entry 15: sending UHID and name as the same string returns zero results for virtually any real search, since a real patient's UHID and name never overlap).
+
+See the scaffold's own `README.md` for the full field-by-field checklist and placeholder tokens.
+
+### Step 4 — Re-audit against the golden trace
+
+Compare the rebuilt screen's actual network calls/responses against the captured trace. This catches load-time behavioral gaps a plain read-through misses — it's how `insuranceMaster`'s missing ledger-name backfill (entry 4) was found in Phase 2. Still only covers initial load; proceed to Step 5 regardless of a clean result here.
+
+### Step 5 — Browser-automation interaction testing
+
+Drive the rebuilt screen with real interactions — clicks, toggles, saves, searches with real seeded data — not just page load. This is not optional and not redundant with Step 4: **all four of Phase 2's fixed bugs were invisible to load-only verification and were only found this way.** Specifically exercise:
+
+- Every status-toggle control, watching for both the server round-trip *and* the visible on-screen state change (the toggle bug was a case where the data changed correctly but nothing on screen showed it).
+- Every search/filter control with realistic combined input (not just each field tested in isolation — the patient-search bug only appeared when both fields were populated at once, exactly what the UI's default behavior does).
+- Access control: attempt to reach the screen as a session that legacy itself would deny, and confirm the rebuild denies it identically (compare against legacy's real "Access Denied" response for the same role, not an assumption of what should happen).
+- Any parameter control that legacy renders as an interactive `<select>` — confirm the rebuild's equivalent is genuinely interactive, not silently hard-disabled (the MISReports bug, entry 14).
+
+### Step 6 — Domain-expert manual review
+
+A reviewer who knows the actual business/clinical/billing meaning of the screen reviews it side-by-side against legacy, live, with real data. This is what actually caught the toggle-CSS bug and the access-control gap in Phase 2 — not because the automated steps above were badly built, but because they structurally only look at load-time state and pre-specified interactions, and a domain reviewer notices "this looks wrong" in ways a script can't be written to check in advance. Keep this step even after Steps 2–5 are solid; it isn't redundant with them, it's a different failure mode entirely.
+
+### Step 7 — Merge to a pilot/feature branch, hold for owner review
+
+Every unit of work stays on its own branch. Merging into the batch/pilot branch (not `main`) is routine once verified; merging into `main` requires the owner's explicit go-ahead every time, no exceptions, regardless of how minor the change looks. Pushing a feature/pilot branch to GitHub for backup/review is lower-stakes and can be done routinely; pushing and merging are two separate decisions, and merging into `main` is the bigger one of the two.
+
+---
+
+## The template scaffold
+
+Built this phase, on branch `rebuild/phase3-template-scaffold` (application code — held for review, not merged anywhere, per Maker-Checker):
+
+- `new/src/app/shared/status-toggle/` — reusable toggle component, correct CSS baked in, emits an event rather than mutating anything itself.
+- `new/src/app/shared/search/optional-params.ts` — reusable optional-field search-param builder.
+- `new/src/app/features/_screen-template/` — a literal starter component (`.ts`/`.html`/`.scss`) with placeholder tokens and an inline `README.md` walking through every wiring point (route registration, guard data, interceptor — already global, nothing to add — toggle component usage, search helper usage).
+
+The guard, interceptor, and session service themselves (`new/src/app/core/`) were already generic/screen-agnostic from Phase 2 — they needed no duplication, only documentation of how a new screen wires into them. The genuinely new reusable artifacts this phase are the toggle component and the search-param helper, since those were previously being hand-rolled per screen (and getting the CSS/mutation pattern wrong every time).
+
+---
+
+## Known caveats carried forward — do not silently forget these
+
+These are open, undecided items from Phase 2 that Phase 3 does not resolve (no application/business-logic code changed this phase) and that should not get lost as the project moves toward Phase 4:
+
+1. **`billingGroupMaster` and `periodicityService` have no module-level access gate, in legacy or the rebuild — by design, matching legacy exactly, not a rebuild bug.** This is a known, pre-existing gap in legacy's own security model (module permission is enforced *only* in legacy's frontend router — confirmed zero backend-level `@PreAuthorize`/`@Secured`/`hasRole` usage anywhere, and `JwtTokenFilter` only validates the JWT itself). Worth a dedicated, separately-scoped security-hardening decision at some point — explicitly **not** something to fix piecemeal during parity rebuilds, since parity means matching legacy's actual behavior, gaps included, until the owner decides otherwise.
+2. **`implantMaster` and `organizationMaster`'s status-toggle fix (CSS + signal-update pattern) was applied but never independently click-verified** — no real hospital/implant master data exists in this dev environment, and fake data was deliberately not fabricated to force a test. `billingGroupMaster`, `insuranceMaster`, and `assetCategoryMaster` were live-click-verified and confirmed working. Re-verify the other two once real seed data exists in any environment.
+3. **`MISReports`' unit/user/org dropdowns render correctly and are genuinely interactive, but show 0 options in this dev environment** — a missing-seed-data gap (`metaDataDetailsDtosList` empty), not a code defect. Separately, whether any *real* configured report ever depends on selecting a unit/org/user other than the current session's own could not be verified (entry 14) — the synthetic test report seeded to unblock testing has no real `view_name` data source. This needs a real report configuration and the person who knows the real MIS report catalog before it can be called harmless-simplification vs. functional regression.
+4. **Three screens found to be dead/non-functional/stale during audit, not yet resolved:** `addItemPOCreation` (entry 2, a dead route shadowing a real one — `addItemPO` — under a different name), `SurgicalSiteInfection` (entry 6, a non-functional copy-pasted mockup — worth flagging to whoever owns Nursing/Infection-Control workflows, since staff may believe they can log SSI data through it today and cannot), and `OTBillingCompletion` (entry 7, a wired view that's a stale clone of a different, correctly-functioning screen's template, backed by a 7,000+-line controller nobody's screen actually calls). None were fixed — all three need an explicit decision on which behavior (if either) is the one to eventually rebuild.
+5. **The recurring missing-`$state`-DI crash bug** (found in `organizationMaster`, `assetCategoryMaster`, `implantMaster` — entries 8 and 10) is a real, live legacy crash (blank page, no error, on session expiry) worth a dedicated codebase-wide grep rather than fixing instances one at a time as they're stumbled into. `organizationMaster`'s fix is owner-approved and merged to `main`; the other two are proposed on `fix/state-injection-assetcategorymaster-implantmaster`, pending the same review. This is a legacy-code fix track, separate from the Angular rebuild itself.
+6. **`assigningPickerDispenser` has a real, confirmed-live crash bug in legacy** (entry 9: a null-dereference on `sessionStorage.getItem('selectedTopStore')` before checking it isn't null) — not fixed in legacy, not reproduced in the rebuild (which reads `sessionStorage` defensively). Recommend prioritizing a legacy fix for this one over the lower-severity findings in the same batch, since it leaves affected users on a silently broken page.
+7. **`insuranceMaster`'s ledger-name backfill in the rebuild is self-correcting where legacy has a narrow, real race condition** (entry 4) — not resolved as a "which is correct" question, deliberately, per the standing no-deviation-without-sign-off rule even though the rebuild's behavior is very likely the one anyone would want kept.
+8. **The 91%-`controllerAs:'vm'` figure for the newly-found 469 screens is a count of what each state's config *declares*, not confirmed proof of what each view actually *uses*** (entry 11) — see `docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md` for how this should shape Phase 4 planning before that number gets treated as precise.
+
+---
+
+## What this phase deliberately did not do
+
+- No new screens were rebuilt.
+- No application/business-logic code was changed (the scaffold branch adds new, previously-nonexistent reusable components — it does not modify any of the 10 already-built pilot screens or their behavior).
+- Phase 4 was not started — only a sequencing *recommendation* was written, for the owner's review.
