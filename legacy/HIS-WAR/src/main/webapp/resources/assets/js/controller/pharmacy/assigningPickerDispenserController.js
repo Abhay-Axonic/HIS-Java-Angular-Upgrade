@@ -48,10 +48,11 @@
             };
 
             var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-            $scope.storeName = cookieObjectStore.storeName;
             if(cookieObjectStore==undefined){
               $rootScope.storePopup();
               angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
+            } else {
+              $scope.storeName = cookieObjectStore.storeName;
             }
             //Methods
             CurrencyService.GetCurrency().then(function (currency) {
