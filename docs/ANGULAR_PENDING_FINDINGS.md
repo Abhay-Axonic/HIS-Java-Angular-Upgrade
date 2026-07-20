@@ -504,6 +504,22 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 
 ---
 
+## 33. `display` (QMS Token Display): kiosks with 4+ active departments silently render a blank department/token area — RECOVERED 2026-07-20, re-audited after a lost Step 0/1 write-up
+
+**Note on provenance:** this entry number was originally allocated during the Phase 4 first-batch Step 0/1 audit commit (`d9372fd`), which named `display` in its commit message as having real findings, but no write-up for it was ever actually committed — the entry was silently lost. Re-audited from scratch before starting this screen's rebuild rather than trusting the original commit message's claim; findings below are freshly verified, not reconstructed from memory.
+
+**Where:** `resources/assets/js/controller/qms/QMSTokenDisplayMasterController.js` (whole file, 269 lines) and `views/master/QMSMaster/display.html` (~lines 143-306), route `.state('display', ...)` at `resources/assets/js/config/app.js:20149`.
+
+**What it is, plainly:** the view's department-header and token-list markup is implemented as three entirely separate, hand-duplicated blocks, gated by `ng-if="activeQMSDeptList.length == 1"`, `== 2`, and `== 3respectively` (`display.html:143, 158, 172` for headers; `:188, 209, 248` for token lists). There is no fourth block and no default/else case. `activeQMSDeptList` is populated by `confirmQMS()` (`QMSTokenDisplayMasterController.js:75-96`) from a live backend call (`/api/pharmacy/getActiveDeptListByKioskId`) with no client-side cap — if a kiosk is configured (by `qmsKioskMasterId`) with 4 or more active departments, none of the three `ng-if` conditions match, and the **entire** department-header row and its corresponding token-list body silently render nothing — no console error, no crash, just a blank content area. The right-hand "please proceed to counter" call-out table (`display.html:308-336`) is independent of department count and continues to render normally, so the screen doesn't look obviously broken, just missing its main content.
+
+**Secondary, minor, worth noting for exact-parity rebuilding:** `getTokenList()` and `getTokenMsg()` are only ever invoked via `$interval(fn, 2000)` (`QMSTokenDisplayMasterController.js:257-267`) — never called once eagerly on load — and AngularJS's `$interval` does not fire on registration, only after the first full delay elapses. So there is a real, reproducible ~2 second blank gap after `activeQMSDeptList` first renders before any token data appears, every time this screen loads. Not a bug exactly, but a real timing behavior a byte-for-byte rebuild needs to replicate (don't eagerly fetch on init just because it looks like an oversight).
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Confirmed real via full controller/view read, not guessed. Whether 4+ department kiosks are an actual configuration in current production use is unknown from code alone — flagging for awareness, not asserting real-world frequency.
+
+**My read:** moderate severity, not severity-1 — no crash, no data loss, no security exposure; a real but easily-overlooked capacity ceiling that would only surface if someone configures a kiosk with an unusually large department count. Should be rebuilt as-is (parity target: replicate the 3-tier cap and the 2-second interval-start delay exactly), not silently fixed as part of this rebuild pass.
+
+---
+
 ## 34. `applicationConfigurationController.js` — the designated fallback screen for a missing `cookieObjectAppConfig` itself crashes on a missing `cookieObjectAppConfig`, affecting ~53 screens app-wide — PROPOSAL WRITTEN 2026-07-20, see `docs/DECISION_NEEDED_ApplicationConfigurationFallbackCrash.md`
 
 **Update:** fast-tracked for its own review per explicit owner request, given its blast radius directly undermines the just-approved entry-17 fix. Full proposal (root cause, before/after, blast-radius confirmation, minimal fix) at `docs/DECISION_NEEDED_ApplicationConfigurationFallbackCrash.md`. Precise count re-confirmed: **52 files** currently redirect here (not merely "~53" as first estimated), all converging on one single controller registration — confirmed a single, contained fix, not 53 separate ones. Not yet implemented, proposal only. Original writeup preserved below for the record.
