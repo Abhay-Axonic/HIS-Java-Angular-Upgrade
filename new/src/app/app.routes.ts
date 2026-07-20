@@ -100,5 +100,16 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/access-denied/access-denied').then((m) => m.AccessDenied),
   },
+  // Phase 4, first batch (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md).
+  // display: deliberately NO moduleAccessGuard. Confirmed at app.js:20149 --
+  // legacy's `display` state has no resolve block at all, and its
+  // controller uses GenericServiceForWithoutLogin, not the usual
+  // session-authenticated GenericService -- it's a public, unauthenticated
+  // kiosk display. Adding the guard here would invent a login requirement
+  // legacy never had (see docs/ANGULAR_PENDING_FINDINGS.md entry 33).
+  {
+    path: 'display/:orgId/:unitId/:cookieskioskId/:userId',
+    loadComponent: () => import('./features/display/display').then((m) => m.Display),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];
