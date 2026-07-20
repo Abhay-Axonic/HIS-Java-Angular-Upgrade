@@ -416,7 +416,9 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 2. The modal's "Save changes" button has no `ng-click` and no `data-dismiss` — fully dead, does nothing on click.
 3. `app.js` also defines a second state, `medicineInfo`, pointing at this same view file but wired to controller `"masterController"` (lowercase) — which is never registered anywhere (only `"MasterController"`, capital M, exists). If this state were ever reached (no `ui-sref`/`$state.go`/href found anywhere pointing to it, but this app's sidebar is DB-driven, so a seeded menu entry can't be ruled out from source alone), it would throw `Argument 'masterController' is not a function, got undefined` immediately.
 
-**Owner decision, not resolved here:** not fixed, per standing instruction.
+**Fourth finding, added during Phase 4 batch 1a's rebuild (screen 5/14) — two inconsistent modal-close paths, one silently accumulates stale data:** the `#DP` modal has two ways to close it: the header's `×` (`medicineInfo.html:237`, `ng-click="clear()"` — resets `$scope.list`/`medicine`/`formulation`/`type`) and the footer's "Close" button (`:277`, `data-dismiss="modal"` only, no `ng-click` at all). `getPopUpData()` (`pharmanController.js:94-129`) *appends* to `$scope.list` every call, never resetting it itself — only `clear()` does. So closing via the footer button leaves `list` populated; the next search's results get appended on top of the old ones rather than replacing them, and the modal (opened again via either "Doctor"/"Patient" button, both mapped to the same handler per finding 1 above) would show both the stale and fresh entries stacked together with no visual distinction between them.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction, for all four findings above.
 
 ---
 
