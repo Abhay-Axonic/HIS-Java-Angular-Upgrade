@@ -55,6 +55,14 @@ angular.module('myApp').controller(
 						qty : "",
 						itemId : ""
 				};
+				// Fix for ANGULAR_PENDING_FINDINGS.md entry 40: the spare-consumption
+				// store dropdown used to be bound to $scope.scheduleWorklistObj.storeId,
+				// a variable never defined anywhere in this controller (copy-paste
+				// residue from the sibling scheduleWorklist screen), crashing
+				// addSpareConsumption() unconditionally. $scope.storeList (populated
+				// below) already has the real data; this is just a real, own model
+				// for the dropdown's selection.
+				$scope.selectedStoreId = undefined;
 
 				$rootScope.startLoader();
 				var data = {
@@ -242,8 +250,8 @@ angular.module('myApp').controller(
 			
 			
 			$scope.addSpareConsumption = function(){
-				if($scope.scheduleWorklistObj.storeId != undefined ){
-					var storeId = $scope.scheduleWorklistObj.storeId;
+				if($scope.selectedStoreId != undefined ){
+					var storeId = $scope.selectedStoreId;
 					var itemObject = {};
 					if($scope.itemResponseList.length == 0) {
 						growl.error('Please input an Item...!!',	{title : 'Error!'});return false;
@@ -255,7 +263,7 @@ angular.module('myApp').controller(
 								itemObject.assetId = value.itemId;
 								itemObject.assetName = value.itemName;
 								itemObject.assetCode = value.itemCode;
-								itemObject.storeId = Number($scope.scheduleWorklistObj.storeId);
+								itemObject.storeId = Number($scope.selectedStoreId);
 								itemObject.serialNo = "";
 								itemObject.assetQty=1;
 								itemObject.remark="";
