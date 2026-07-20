@@ -714,7 +714,7 @@
 
 		//cookie app config
 		var cookieObjectAppConfig = $cookies.getObject('cookieObjectAppConfig');
-		$scope.registeredPinPadDevice = cookieObjectAppConfig.registeredPinPadDevice;
+		$scope.registeredPinPadDevice = cookieObjectAppConfig != undefined ? cookieObjectAppConfig.registeredPinPadDevice : null;
 	
 		
 		
