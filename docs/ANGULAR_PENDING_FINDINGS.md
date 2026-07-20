@@ -663,7 +663,9 @@ var promise = $http(httpObject).then(
 
 ---
 
-## 40. SEVERITY 1 — `detailScheduleWorklist`'s "Add" spare-consumption button crashes immediately, every time — references a scope variable that's never defined
+## 40. SEVERITY 1 — `detailScheduleWorklist`'s "Add" spare-consumption button crashes immediately, every time — references a scope variable that's never defined — FIX IMPLEMENTED, HELD FOR REVIEW 2026-07-20
+
+**Update:** fix implemented and verified (unit tests + real browser automation against the live rebuild) on branch `fix/detailscheduleworklist-sparecomsumption-crash` (`032e0b5`), covering both legacy and the Angular rebuild. Not yet merged to `main` or `rebuild/phase4-batch1a` — held for owner review per standing instruction. Do not mark RESOLVED until merged. Original writeup preserved below for the record.
 
 **Where:** `resources/assets/js/controller/asset/detailScheduleWorklistController.js:245-246,258` and `views/master/UnitMaster/assetManagement/details-schedule-worklist.html:488`. Found during Step 0/1 for this screen's Angular rebuild (Phase 4 batch 1b, screen 10/14) — flagged immediately per standing instruction, not held for a batch summary.
 
