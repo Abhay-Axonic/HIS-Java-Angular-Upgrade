@@ -145,5 +145,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/view-asset-scheduler/view-asset-scheduler').then((m) => m.ViewAssetScheduler),
   },
+  // pharman: no data.moduleId (no resolve block), real cookieObject
+  // session guard in the controller -- same shape as pesapalProcessPage.
+  {
+    path: 'pharman',
+    canActivate: [moduleAccessGuard],
+    loadComponent: () => import('./features/pharman/pharman').then((m) => m.Pharman),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];
