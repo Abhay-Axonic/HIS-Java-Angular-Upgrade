@@ -1,0 +1,62 @@
+#!/bin/sh
+# Findings-doc drift warning.
+#
+# Advisory only -- never blocks a commit, always exits 0. Warns when a
+# staged legacy/ source file matches a "Where:" line in an open findings
+# doc, but that findings doc itself isn't staged in the same commit -- a
+# signal (not proof) that a fix might be landing without the corresponding
+# finding's status getting updated.
+#
+# Proposed and approved 2026-07-20 after two real instances of findings-doc
+# drift in the same session: entry #16 (docs/ANGULAR_PENDING_FINDINGS.md)
+# was fixed and merged without its entry ever being marked resolved, and
+# entry #33 was referenced by a commit message but its write-up was never
+# actually committed. This hook catches the entry-#16 shape (a fix landing
+# silently); it cannot catch the entry-#33 shape (a finding that was never
+# written down in the first place has nothing to cross-reference against).
+#
+# Activate in a clone with:
+#   git config core.hooksPath .githooks
+
+FINDINGS_DOCS="docs/ANGULAR_PENDING_FINDINGS.md docs/TRIAGE_PendingFindings.md"
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$STAGED_FILES" ] && exit 0
+
+STAGED_SOURCE_FILES=$(printf '%s\n' "$STAGED_FILES" | grep -E '^legacy/.*\.(java|js)$')
+[ -z "$STAGED_SOURCE_FILES" ] && exit 0
+
+WARNED=0
+
+for doc in $FINDINGS_DOCS; do
+  [ -f "$doc" ] || continue
+
+  DOC_STAGED=0
+  if printf '%s\n' "$STAGED_FILES" | grep -qx "$doc"; then
+    DOC_STAGED=1
+  fi
+  [ "$DOC_STAGED" -eq 1 ] && continue
+
+  printf '%s\n' "$STAGED_SOURCE_FILES" | while IFS= read -r f; do
+    base=$(basename "$f")
+
+    # "Where:" lines mentioning this file's basename, tagged with the
+    # nearest preceding "## N. ..." entry heading.
+    matches=$(awk -v base="$base" '
+      /^## [0-9]+\./ { heading = $0 }
+      /\*\*Where:\*\*/ && index($0, base) { print heading }
+    ' "$doc" | sort -u)
+
+    if [ -n "$matches" ]; then
+      echo ""
+      echo "findings-doc-drift warning (advisory, commit proceeds regardless):"
+      echo "  $f matches open finding(s) in $doc, which is not staged in this commit:"
+      echo "$matches" | sed 's/^/    /'
+      echo ""
+      echo "  If this commit resolves one of the findings above, consider updating"
+      echo "  its status in the findings doc."
+    fi
+  done
+done
+
+exit 0
