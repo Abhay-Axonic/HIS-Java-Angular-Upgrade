@@ -504,7 +504,9 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 
 ---
 
-## 34. `applicationConfigurationController.js` — the designated fallback screen for a missing `cookieObjectAppConfig` itself crashes on a missing `cookieObjectAppConfig`, affecting ~53 screens app-wide
+## 34. `applicationConfigurationController.js` — the designated fallback screen for a missing `cookieObjectAppConfig` itself crashes on a missing `cookieObjectAppConfig`, affecting ~53 screens app-wide — PROPOSAL WRITTEN 2026-07-20, see `docs/DECISION_NEEDED_ApplicationConfigurationFallbackCrash.md`
+
+**Update:** fast-tracked for its own review per explicit owner request, given its blast radius directly undermines the just-approved entry-17 fix. Full proposal (root cause, before/after, blast-radius confirmation, minimal fix) at `docs/DECISION_NEEDED_ApplicationConfigurationFallbackCrash.md`. Precise count re-confirmed: **52 files** currently redirect here (not merely "~53" as first estimated), all converging on one single controller registration — confirmed a single, contained fix, not 53 separate ones. Not yet implemented, proposal only. Original writeup preserved below for the record.
 
 **Where:** `resources/assets/js/controller/master/unit/applicationConfigurationController.js`, ~line 717. Found while implementing and real-browser-verifying the fix for entry 17.
 
