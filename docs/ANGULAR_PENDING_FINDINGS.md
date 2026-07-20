@@ -558,3 +558,15 @@ Zero guard. `applicationConfiguration` is the app's own designated redirect targ
 **Owner decision, not resolved here:** not fixed, per standing instruction.
 
 **My read:** low practical severity today (confirmed it doesn't block the redirect, just adds a silent extra console error), but worth a one-line fix (`.length = 0` → `= []`, matching the sibling's safe pattern) whenever this file is next touched for another reason.
+
+---
+
+## 36. `pesapalProcessPage` rebuild (Phase 4 batch 1a): COMPLETED/PENDING/FAILED/CONSUMED branch coverage untested — known test-coverage gap, not a bug
+
+**This is not a bug finding — it's a documented test-coverage limitation**, logged per explicit owner request while the `pesapalProcessPage` screen was being rebuilt in Angular (`rebuild/phase4-batch1a`, Step 5). Same category as `display`'s missing-QMS-seed-data gap (entry 33's rebuild work) — flagged as its own entry here specifically because this one involves real payment/transaction status, not just kiosk display data.
+
+**What was and wasn't verified:** Step 5 interaction testing confirmed, live, on both legacy and the Angular rebuild, side by side: the session-required guard (both apps correctly block with no session), entry 18's severity-1 crash (reproduced identically on both apps with a synthetic session cookie and no query params), and the real backend's 401 handling (a fake `authToken` is correctly rejected by the live dev backend, and both apps react equivalently). **What was NOT verified:** `getPesapayPaymentStatus`'s response `transactionStatus` field driving the `COMPLETED`/`PENDING`/`FAILED`/`CONSUMED`/else branch in `pesapalSuccessPageController.js:72-89` (and its rebuild equivalent) — this requires a real, distinguishable Pesapal transaction reference to exercise each status, which does not exist in this dev environment (no real Pesapal gateway integration reachable, no seeded transaction records found). The `CONSUMED` branch specifically (`growl.warning('Already used ', ...)` in legacy, `notify.warning('Already used ')` in the rebuild) is entirely unverified against real data.
+
+**Owner decision, not resolved here:** nothing to fix — this is a coverage gap, not a defect. Re-verify this specific branch behavior (both apps, side by side) once real Pesapal transaction data becomes reachable in any environment, dev or staging.
+
+**My read:** low urgency today since the code path structure was read and matches 1:1 (both apps use the identical if/else-if chain against the same field), but worth closing before this screen's rebuild is treated as fully verified for a real cutover — payment-status handling is exactly the kind of logic where "the code looks right" and "verified against real data" are not the same claim.
