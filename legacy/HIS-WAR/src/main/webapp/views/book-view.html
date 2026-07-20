@@ -1106,7 +1106,7 @@
 											<!-- <div class="row">
 														
 											</div>  -->
-												<div ng-repeat="perHisData in historyPersonalList"  ng-if="noSignificantPersonal == 'N'">
+												<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/30: historyPersonalList is never assigned anywhere in bookViewMasterController.js -- this block never rendered any data or controls, only ever an empty ng-repeat. ng-if="false" makes that permanent and explicit instead of relying on the array staying undefined by accident. --><div ng-repeat="perHisData in historyPersonalList" ng-if="false">
 												
 													<div class="row">
 														
@@ -1250,7 +1250,7 @@
 										</div>
 										<div ng-show="isSetSecondTabLevel(2)" class="second-level-tab-display-div">
  
-										<div class="row" ng-repeat="famHisData in historyFamilyList" ng-init="initVal = $index" ng-if="noSignificantFamiliy == 'N'" >
+										<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/30: historyFamilyList is never assigned anywhere in bookViewMasterController.js -- see the Personal History block above for the same fix rationale. --><div class="row" ng-repeat="famHisData in historyFamilyList" ng-init="initVal = $index" ng-if="false">
 													
 													<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
 														<div class="row input-container">
@@ -1344,7 +1344,7 @@
 										</div>
 										<div ng-show="isSetSecondTabLevel(3)" class="second-level-tab-display-div">
 										
-											<div class="row" ng-repeat="sugHisData in historySurgicalList" ng-init="initValSur = $index" ng-if="noSignificantSurgical == 'N'">
+											<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/30: historySurgicalList is never assigned anywhere in bookViewMasterController.js -- see the Personal History block above for the same fix rationale. --><div class="row" ng-repeat="sugHisData in historySurgicalList" ng-init="initValSur = $index" ng-if="false">
 											
 													<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
 														<div class="row input-container">
@@ -1621,7 +1621,7 @@
 										 
 										 </div> 
 										 
-												<div class="row" ng-repeat="medHisData in historyMedicalList track by $index" ng-init="initValMed = $index" ng-if="noSignificantMedical == 'N'">
+												<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/30: historyMedicalList is never assigned anywhere in bookViewMasterController.js -- see the Personal History block above for the same fix rationale. --><div class="row" ng-repeat="medHisData in historyMedicalList track by $index" ng-init="initValMed = $index" ng-if="false">
 														
 													<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-width-auto">
 														<label class="switch"> 
@@ -1866,7 +1866,7 @@
 												</div>
 												</div>  -->
 												<div class="row">
-												<div ng-repeat="travHisData in historyTravelsList" >
+												<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/30: historyTravelsList is never assigned anywhere in bookViewMasterController.js -- see the Personal History block above for the same fix rationale. --><div ng-repeat="travHisData in historyTravelsList" ng-if="false">
 													<!-- <div class="row">
 														<div class="col-lg-2 col-md-2 col-sm-4 padding-left-right-set4 padding-top10">
 															<div class="row input-container">
@@ -1993,7 +1993,7 @@
 											<div class="row">
 											   <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-width-auto">
 													<label class="switch">
-														<input type="checkbox" ng-model="noSignificantVaccination" ng-true-value="'Y'" ng-false-value="'N'">
+														<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/31: same rationale as noSignificantMedical above -- disabled per docs/DECISION_NEEDED_BookViewUnsavableHistoryFields.md. --><input type="checkbox" ng-model="noSignificantVaccination" ng-true-value="'Y'" ng-false-value="'N'" disabled>
 														<div class="slider round"></div>
 													</label>
 												</div>
@@ -2223,7 +2223,7 @@
 	
 										</div>
 									</div> -->
-									<div class="row" ng-repeat="info in dataListDiagnosis" ng-init="initValDia = $index">
+									<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/30: dataListDiagnosis is never assigned anywhere in bookViewMasterController.js -- see the Personal History block above for the same fix rationale. Also closes the entry-31 duplicate-ng-model row-collision bug in this same block, since it never renders. --><div class="row" ng-repeat="info in dataListDiagnosis" ng-init="initValDia = $index" ng-if="false">
 										<div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-set4 padding-top10">
 											<div class="row input-container">
 												<div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
@@ -2996,7 +2996,7 @@
 										<div ng-show="isSetSecondTabLevel(1)" class="second-level-tab-display-div">
 								
 										<div class="row">
-												<div ng-repeat="perHisData in historyPersonalList"  ng-if="noSignificantPersonal == 'N'">
+												<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/30: historyPersonalList is never assigned anywhere in bookViewMasterController.js -- this block never rendered any data or controls, only ever an empty ng-repeat. ng-if="false" makes that permanent and explicit instead of relying on the array staying undefined by accident. --><div ng-repeat="perHisData in historyPersonalList" ng-if="false">
 													<div class="row">
 														<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
 															<label class="switch"> 
@@ -3097,7 +3097,7 @@
 										 <div class="row">
 											
 										</div> --> 
-										<div class="row" ng-repeat="famHisData in historyFamilyList" ng-init="initVal = $index" ng-if="noSignificantFamiliy == 'N'" >
+										<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/30: historyFamilyList is never assigned anywhere in bookViewMasterController.js -- see the Personal History block above for the same fix rationale. --><div class="row" ng-repeat="famHisData in historyFamilyList" ng-init="initVal = $index" ng-if="false">
 													<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
 														<label class="switch"> 
 															<input type="checkbox" ng-model="famHisData.isNoFamilyHistoryStatus" ng-true-value="'Y'"  ng-false-value="'N'" >
@@ -3248,7 +3248,7 @@
 										 <div class="row">
 										
 										</div> --> 
-											<div class="row" ng-repeat="sugHisData in historySurgicalList" ng-init="initValSur = $index" ng-if="noSignificantSurgical == 'N'">
+											<!-- docs/ANGULAR_PENDING_FINDINGS.md entry 29/30: historySurgicalList is never assigned anywhere in bookViewMasterController.js -- see the Personal History block above for the same fix rationale. --><div class="row" ng-repeat="sugHisData in historySurgicalList" ng-init="initValSur = $index" ng-if="false">
 											
 													<!-- <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-width-auto">
 														<label class="switch"> 
