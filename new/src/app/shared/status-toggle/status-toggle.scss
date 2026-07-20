@@ -1,0 +1,61 @@
+// Colors/transitions match legacy's own .slider exactly
+// (resources/assets/css/param.common.master.css:4945-4990). Copied here,
+// self-contained, from new/src/styles.scss where the same rules originally
+// shipped without an `input:checked` state at all (docs/
+// ANGULAR_PENDING_FINDINGS.md entry 12) -- keeping the fixed version scoped
+// to this component means a future screen gets it automatically just by
+// using <app-status-toggle>, with nothing to remember to import globally.
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background-color: #fff;
+  border: 1px solid #00003b;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.4s;
+
+  &::before {
+    position: absolute;
+    content: '';
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    top: 2px;
+    border-radius: 50%;
+    background-color: #dadada;
+    transition: 0.4s;
+  }
+}
+
+input:checked + .slider {
+  background-color: #e0f3f2;
+  border: 1px solid #03a096;
+
+  &::before {
+    background-color: #03a096;
+    transform: translateX(20px);
+  }
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:disabled + .slider {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

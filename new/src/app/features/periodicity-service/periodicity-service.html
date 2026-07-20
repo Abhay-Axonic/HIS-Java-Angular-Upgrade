@@ -1,0 +1,167 @@
+<section class="page">
+  <fieldset>
+    <legend>Patient Search</legend>
+    <div class="filter-row">
+      <div class="field">
+        <label for="uhid">UHID</label>
+        <input id="uhid" type="text" autocomplete="off" [ngModel]="uhidSearch()" (ngModelChange)="uhidSearch.set($event)" name="uhid" />
+      </div>
+      <div class="field">
+        <label for="patientName">Patient Name</label>
+        <input
+          id="patientName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="nameSearch()"
+          (ngModelChange)="nameSearch.set($event)"
+          name="patientName"
+        />
+      </div>
+      <button type="button" class="btn-primary" (click)="searchPatient()">Search</button>
+    </div>
+
+    @if (patientResults().length) {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>UHID</th>
+            <th>Patient Name</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of patientResults(); track p.patientId) {
+            <tr>
+              <td>{{ p.uhIdNumber }}</td>
+              <td>{{ p.patientName }}</td>
+              <td><button type="button" class="btn-primary" (click)="selectPatient(p)">Select</button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </fieldset>
+
+  <fieldset>
+    <legend>Periodicity Charges</legend>
+
+    <div class="filter-row">
+      <div class="field">
+        <label>Visit Type</label>
+        <select [ngModel]="visitTypeId()" (ngModelChange)="visitTypeId.set($event)" name="visitTypeId" disabled>
+          <option [ngValue]="null"></option>
+          <option [ngValue]="2">IP</option>
+          <option [ngValue]="3">Day Care</option>
+          <option [ngValue]="4">ER</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Patient Name</label>
+        <input type="text" [ngModel]="selectedPatientName()" name="selPatientName" disabled />
+      </div>
+      <div class="field">
+        <label>UHID</label>
+        <input type="text" [ngModel]="selectedUhid()" name="selUhid" disabled />
+      </div>
+      <div class="field">
+        <label>Ward</label>
+        <input type="text" [ngModel]="selectedWardName()" name="selWard" disabled />
+      </div>
+      <div class="field">
+        <label>Ward Bed</label>
+        <input type="text" [ngModel]="selectedBedNumber()" name="selBed" disabled />
+      </div>
+      <div class="field">
+        <label>Visit No</label>
+        <input type="text" [ngModel]="selectedAdmissionNumber()" name="selAdmissionNo" disabled />
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <div class="field typeahead">
+        <label>Hospital Service</label>
+        <input
+          type="text"
+          autocomplete="off"
+          [disabled]="editFlag()"
+          [ngModel]="serviceSearchTerm()"
+          (ngModelChange)="onServiceSearchChange($event)"
+          name="serviceName"
+        />
+        @if (serviceResults().length) {
+          <ul class="typeahead-list">
+            @for (s of serviceResults(); track s.serviceId) {
+              <li (mousedown)="selectService(s)">{{ s.displayName }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="field">
+        <label for="fromDate">Date (From)</label>
+        <input id="fromDate" type="date" (ngModelChange)="onFromDateChange($event)" name="fromDate" ngModel />
+      </div>
+      <div class="field">
+        <label for="fromTime">Time (From)</label>
+        <input
+          id="fromTime"
+          type="time"
+          [ngModel]="entry().fromTime"
+          (ngModelChange)="entry.update(e => ({...e, fromTime: $event}))"
+          name="fromTime"
+        />
+      </div>
+      <div class="field">
+        <label for="toDate">Date-Till</label>
+        <input id="toDate" type="date" (ngModelChange)="onToDateChange($event)" name="toDate" ngModel />
+      </div>
+      <div class="field">
+        <label for="toTime">Time-Till</label>
+        <input
+          id="toTime"
+          type="time"
+          [ngModel]="entry().toTime"
+          (ngModelChange)="entry.update(e => ({...e, toTime: $event}))"
+          name="toTime"
+        />
+      </div>
+
+      <button type="button" class="btn-primary" title="Save" (click)="save()">Save</button>
+      <button type="button" class="btn-primary" title="Add" (click)="addOrUpdateEntry()">Add</button>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Order No</th>
+          <th>Service</th>
+          <th>Equipment</th>
+          <th>Date (From) Time</th>
+          <th>Date-Till Time</th>
+          <th>UOM</th>
+          <th>Action taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pserv of visibleOrders(); track $index) {
+          <tr>
+            <td>{{ pserv.orderNo }}</td>
+            <td>{{ pserv.serviceName }}</td>
+            <td>{{ pserv.equipmentName }}</td>
+            <td>{{ pserv.fromDateString }} - {{ pserv.fromTime }}</td>
+            <td>{{ pserv.toDateString }} - {{ pserv.toTime ?? '' }}</td>
+            <td>{{ pserv.tatTimeName }}</td>
+            <td>
+              @if (pserv.serviceRendered === 0 && pserv.status === 'A') {
+                <i class="icon-edit" title="Edit" (click)="editOrder($index)"></i>
+                @if (pserv.periodicityServiceOrderId == null) {
+                  <i class="icon-remove" title="Remove" (click)="removeOrder($index)"></i>
+                }
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </fieldset>
+</section>

@@ -1,0 +1,12 @@
+{
+  "_comment": "Copy this file to proxy.conf.json (gitignored) and fill in your dev/staging backend host, then run: npx ng serve --proxy-config proxy.conf.json. This makes the rebuilt app's API calls same-origin with `ng serve`'s dev server, which is what lets it see a `cookieObject` cookie set by logging into the real legacy app on the same host -- see docs/PHASE2_DOMAIN_REVIEW_GUIDE.md for the full side-by-side review setup this supports. The path list below mirrors the URL prefixes actually used by the 5 rebuilt pilot screens' services (see each feature's *.service.ts) -- extend it if you rebuild more screens.",
+  "/adt/**": { "target": "https://YOUR-DEV-BACKEND-HOST", "secure": true, "changeOrigin": true },
+  "/api/**": { "target": "https://YOUR-DEV-BACKEND-HOST", "secure": true, "changeOrigin": true },
+  "/billing/**": { "target": "https://YOUR-DEV-BACKEND-HOST", "secure": true, "changeOrigin": true },
+  "/org/**": { "target": "https://YOUR-DEV-BACKEND-HOST", "secure": true, "changeOrigin": true },
+  "/organization/**": { "target": "https://YOUR-DEV-BACKEND-HOST", "secure": true, "changeOrigin": true },
+  "/allArganizationList/**": { "target": "https://YOUR-DEV-BACKEND-HOST", "secure": true, "changeOrigin": true },
+  "/module/**": { "target": "https://YOUR-DEV-BACKEND-HOST", "secure": true, "changeOrigin": true },
+  "/privilege/**": { "target": "https://YOUR-DEV-BACKEND-HOST", "secure": true, "changeOrigin": true },
+  "/timezones": { "target": "https://YOUR-DEV-BACKEND-HOST", "secure": true, "changeOrigin": true }
+}

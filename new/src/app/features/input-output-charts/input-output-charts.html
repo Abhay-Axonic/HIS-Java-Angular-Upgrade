@@ -1,0 +1,221 @@
+<section class="page">
+  <fieldset class="patient-search">
+    <legend>Patient Search</legend>
+    <div class="search-row">
+      <input type="text" placeholder="UHID" [ngModel]="uhidSearchTerm()" (ngModelChange)="uhidSearchTerm.set($event)" />
+      <input type="text" placeholder="Patient Name" [ngModel]="patientNameSearchTerm()" (ngModelChange)="patientNameSearchTerm.set($event)" />
+      <button type="button" class="btn-primary" (click)="searchPatients()">Search</button>
+    </div>
+    @if (patientResults().length) {
+      <ul class="patient-results">
+        @for (p of patientResults(); track p.patientId) {
+          <li (click)="selectPatient(p)">{{ p.patientName }} — {{ p.uhIdNumber }} — {{ p.wardName }}/{{ p.bedNumber }}</li>
+        }
+      </ul>
+    }
+    @if (selectedPatient(); as patient) {
+      <p class="selected-patient">Selected: <b>{{ patient.patientName }}</b> ({{ patient.uhIdNumber }}), {{ patient.wardName }} / {{ patient.bedNumber }}</p>
+    }
+  </fieldset>
+
+  @if (selectedPatient()) {
+    <div class="io-header">
+      @if (startIOFlag()) {
+        <button type="button" class="btn-primary" [disabled]="startIOFlag() === false">Start I/O</button>
+      } @else {
+        <button type="button" class="btn-primary" (click)="confirmStart()">Start I/O</button>
+      }
+
+      <div class="field">
+        <label>Date</label>
+        <input type="date" [ngModel]="intakeDate()" (ngModelChange)="intakeDate.set($event)" [disabled]="startFlag()" />
+      </div>
+      <div class="field">
+        <label>Time</label>
+        <input type="time" [ngModel]="intakeTime()" (ngModelChange)="intakeTime.set($event); validateIntakeTime()" [disabled]="startFlag()" />
+      </div>
+    </div>
+
+    <div class="chart-table">
+      <h4>Intake</h4>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Shift</th>
+            <th>Intake (Type)</th>
+            <th>Fluid (Type)</th>
+            <th>Quantity(ml)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of intakeRows(); track $index) {
+            <tr>
+              <td><input type="date" [ngModel]="row.intakeStartDate" (ngModelChange)="updateIntakeRow($index, 'intakeStartDate', $event)" [disabled]="startFlag()" /></td>
+              <td><input type="time" [ngModel]="row.intakeStartTime" (ngModelChange)="updateIntakeRow($index, 'intakeStartTime', $event); onIntakeTimeChange($index)" [disabled]="startFlag()" /></td>
+              <td>
+                <select [ngModel]="row.intakeShiftId" (ngModelChange)="updateIntakeRow($index, 'intakeShiftId', $event)" [disabled]="startFlag()">
+                  <option [value]="''"></option>
+                  @for (s of row.shiftOptions; track s.shiftId) { <option [value]="s.shiftId">{{ s.shiftName }}</option> }
+                </select>
+              </td>
+              <td>
+                <select [ngModel]="row.intakeFluidId" (ngModelChange)="onIntakeFluidChange($index, $event)" [disabled]="startFlag()">
+                  <option [value]="''"></option>
+                  @for (f of intakeFluidOptions(); track f.intakeFluidId) { <option [value]="f.intakeFluidId">{{ f.intakeFluiddesc }}</option> }
+                </select>
+              </td>
+              <td>
+                <select [ngModel]="row.intakeTypeFluidId" (ngModelChange)="updateIntakeRow($index, 'intakeTypeFluidId', $event)" [disabled]="startFlag()">
+                  <option [value]="''"></option>
+                  @for (t of row.fluidTypeOptions; track t.intakeTypeFluidId) { <option [value]="t.intakeTypeFluidId">{{ t.intakeTypeFluidDesc }}</option> }
+                </select>
+              </td>
+              <td><input type="number" [ngModel]="row.intakeQuantity" (ngModelChange)="onIntakeQuantityChange($index, row.intakeQuantity, $event)" [disabled]="startFlag()" /></td>
+              <td class="text-center">
+                <button type="button" (click)="addIntakeRow()">+</button>
+                @if ($index !== 0) { <button type="button" (click)="removeIntakeRow($index)">-</button> }
+              </td>
+            </tr>
+          }
+          <tr>
+            <td colspan="5">Shift Total</td>
+            <td>{{ totalIntakeQuantity() }} ml</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="io-header">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" [ngModel]="outputDate()" (ngModelChange)="outputDate.set($event)" [disabled]="stopIOFlag()" />
+      </div>
+      <div class="field">
+        <label>Time</label>
+        <input type="time" [ngModel]="outputTime()" (ngModelChange)="outputTime.set($event); validateOutputTime()" [disabled]="stopIOFlag()" />
+      </div>
+      <button type="button" class="btn-primary" [disabled]="stopIOFlag()" (click)="confirmStop()">Stop I/O</button>
+    </div>
+
+    <div class="chart-table">
+      <h4>Output</h4>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Shift</th>
+            <th>Fluid Output(ml)(Type)</th>
+            <th>Quantity(ml)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of outputRows(); track $index) {
+            <tr>
+              <td><input type="date" [ngModel]="row.outputStartDate" (ngModelChange)="updateOutputRow($index, 'outputStartDate', $event)" [disabled]="startFlag()" /></td>
+              <td><input type="time" [ngModel]="row.outputStartTime" (ngModelChange)="updateOutputRow($index, 'outputStartTime', $event); onOutputTimeChange($index)" [disabled]="startFlag()" /></td>
+              <td>
+                <select [ngModel]="row.outputShiftId" (ngModelChange)="updateOutputRow($index, 'outputShiftId', $event)" [disabled]="startFlag()">
+                  <option [value]="''"></option>
+                  @for (s of row.shiftOptions; track s.shiftId) { <option [value]="s.shiftId">{{ s.shiftName }}</option> }
+                </select>
+              </td>
+              <td>
+                <select [ngModel]="row.outputTypeId" (ngModelChange)="updateOutputRow($index, 'outputTypeId', $event)" [disabled]="startFlag()">
+                  <option [value]="''"></option>
+                  @for (f of outputFluidOptions(); track f.outputTypeId) { <option [value]="f.outputTypeId">{{ f.outputTypeDesc }}</option> }
+                </select>
+              </td>
+              <td><input type="number" [ngModel]="row.outputQuantity" (ngModelChange)="onOutputQuantityChange($index, row.outputQuantity, $event)" [disabled]="startFlag()" /></td>
+              <td class="text-center">
+                <button type="button" (click)="addOutputRow()">+</button>
+                @if ($index !== 0) { <button type="button" (click)="removeOutputRow($index)">-</button> }
+              </td>
+            </tr>
+          }
+          <tr>
+            <td colspan="3">Shift Total</td>
+            <td>{{ totalOutputQuantity() }} ml</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-table">
+      <h4>History</h4>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Shift</th>
+            <th>Time</th>
+            <th>Intake Fluid</th>
+            <th>Intake Qty</th>
+            <th>Total Intake</th>
+            <th>Output Fluid</th>
+            <th>Output Qty</th>
+            <th>Total Output</th>
+            <th>Cumulative Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of chartHistory(); track $index) {
+            <tr>
+              <td>{{ row.date }}</td>
+              <td>{{ row.shift }}</td>
+              <td>{{ row.time }}</td>
+              <td>{{ row.intakeTypeFluidDesc ?? row.itemName ?? '-' }}</td>
+              <td>{{ row.startIntakeQuantity ?? '-' }}</td>
+              <td><b>{{ row.totalIntake ?? '-' }}</b></td>
+              <td>{{ row.outputTypeDesc ?? '-' }}</td>
+              <td>{{ row.startOutputQuantity ?? '-' }}</td>
+              <td><b>{{ row.totalOutput ?? '-' }}</b></td>
+              <td><b>{{ row.sum }}</b></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-primary" [disabled]="stopAndSaveDisabled()" (click)="save()">Save</button>
+      <button type="button" class="btn-primary" [disabled]="stopAndSaveDisabled()" (click)="print()">Print</button>
+    </div>
+  }
+</section>
+
+@if (showStartConfirm()) {
+  <div class="modal-backdrop" (click)="showStartConfirm.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm <button type="button" (click)="showStartConfirm.set(false)">&times;</button></header>
+      <div class="modal-body">
+        <p>Do you want to start the I/O chart?</p>
+        <div class="modal-actions">
+          <button type="button" class="btn-primary" (click)="startChart()">Yes</button>
+          <button type="button" (click)="showStartConfirm.set(false)">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showStopConfirm()) {
+  <div class="modal-backdrop" (click)="showStopConfirm.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm <button type="button" (click)="showStopConfirm.set(false)">&times;</button></header>
+      <div class="modal-body">
+        <p>Do you want to stop the I/O chart?</p>
+        <div class="modal-actions">
+          <button type="button" class="btn-primary" (click)="stopChart()">Yes</button>
+          <button type="button" (click)="showStopConfirm.set(false)">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

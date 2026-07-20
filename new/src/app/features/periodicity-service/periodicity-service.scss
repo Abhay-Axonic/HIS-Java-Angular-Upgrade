@@ -1,0 +1,25 @@
+// Screen-specific layout only -- shared table/pagination/modal/toolbar
+// styles live in src/styles.scss (see that file's header comment).
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.icon-edit,
+.icon-remove {
+  cursor: pointer;
+  font-style: normal;
+  margin-right: 8px;
+
+  &::after {
+    content: '\270E';
+  }
+}
+
+.icon-remove::after {
+  content: '\2715';
+}

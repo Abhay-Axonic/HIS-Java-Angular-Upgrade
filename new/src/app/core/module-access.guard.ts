@@ -1,0 +1,44 @@
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { SessionService } from './session.service';
+
+/**
+ * Parity fix for docs/ANGULAR_PENDING_FINDINGS.md entry 13: legacy gates
+ * every module-specific state behind a resolve block that checks
+ * `localStorage.getItem('permissions').modules` (see app.js's many
+ * `.state(...)` resolve blocks, e.g. organizationMaster at app.js:8279),
+ * calling `$state.go("accessDenied")` on failure. There is no equivalent
+ * check anywhere on the backend (confirmed: no @PreAuthorize/@Secured/
+ * hasRole usage anywhere in legacy/, and JwtTokenFilter only validates
+ * the JWT itself, never module/role permission) -- this guard is the
+ * only enforcement layer, exactly mirroring where legacy's own enforcement
+ * lives, not adding a new layer legacy doesn't have.
+ *
+ * Route `data` shape: `{ moduleId?: number, requireSuperUser?: boolean }`.
+ * A route with no `moduleId` in its data (matching a legacy state with no
+ * resolve block at all, e.g. billingGroupMaster/periodicityService) still
+ * gets the baseline "must be logged in" check every legacy controller does
+ * individually (`cookieObject == undefined -> $state.go('login')`), but no
+ * module check -- legacy itself doesn't gate those two screens by module,
+ * so this guard doesn't invent a stricter rule than legacy actually has.
+ */
+export const moduleAccessGuard: CanActivateFn = (route) => {
+  const session = inject(SessionService);
+  const router = inject(Router);
+
+  if (!session.current) {
+    return router.parseUrl('/accessDenied?reason=notLoggedIn');
+  }
+
+  const moduleId = route.data['moduleId'] as number | undefined;
+  const requireSuperUser = route.data['requireSuperUser'] === true;
+
+  if (moduleId !== undefined && !session.hasModuleAccess(moduleId)) {
+    return router.parseUrl('/accessDenied');
+  }
+  if (requireSuperUser && !session.isSuperUser) {
+    return router.parseUrl('/accessDenied');
+  }
+
+  return true;
+};

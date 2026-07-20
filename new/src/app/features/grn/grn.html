@@ -1,0 +1,243 @@
+<section class="page">
+  <fieldset>
+    <legend>Good Receipt Note</legend>
+
+    <div class="filter-row">
+      <div class="field">
+        <label for="fromDate">Date (From)</label>
+        <input id="fromDate" type="date" [ngModel]="fromDateValue()" (ngModelChange)="onFromDateInputChange($event)" name="fromDate" />
+      </div>
+
+      <div class="field">
+        <label for="toDate">Date-Till</label>
+        <input id="toDate" type="date" [ngModel]="toDateValue()" (ngModelChange)="onToDateInputChange($event)" name="toDate" />
+      </div>
+
+      <div class="field">
+        <label for="fromstore">Store (Requester)</label>
+        <select id="fromstore" [ngModel]="selectedFromstore()" (ngModelChange)="selectedFromstore.set($event)" name="fromstore">
+          @for (s of fromstoreList(); track s.id) {
+            <option [ngValue]="s">{{ s.store }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="store">Store (Delivering)</label>
+        <select id="store" [ngModel]="selectedStore()" (ngModelChange)="selectedStore.set($event)" name="store">
+          @for (s of storeList(); track s.id) {
+            <option [ngValue]="s">{{ s.store }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="grnNumber">GRN No</label>
+        <input id="grnNumber" type="text" autocomplete="off" [ngModel]="grnNumber()" (ngModelChange)="grnNumber.set($event)" name="grnNumber" />
+      </div>
+
+      <div class="field">
+        <label for="grnType">GRN Type</label>
+        <select id="grnType" [ngModel]="selectedGrnType()" (ngModelChange)="selectedGrnType.set($event)" name="grnType">
+          @for (t of assetTypes(); track t.id) {
+            <option [ngValue]="t">{{ t.type }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field typeahead">
+        <label for="vendorName">Vendor</label>
+        <input
+          id="vendorName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="vendorSearchTerm()"
+          (ngModelChange)="onVendorSearchChange($event)"
+          name="vendorName"
+        />
+        @if (vendorResults().length) {
+          <ul class="typeahead-list">
+            @for (v of vendorResults(); track v.id) {
+              <li (mousedown)="selectVendor(v)">{{ v.detail }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="field typeahead">
+        <label for="itemName">Item Name</label>
+        <input
+          id="itemName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="itemSearchTerm()"
+          (ngModelChange)="onItemSearchChange($event)"
+          name="itemName"
+        />
+        @if (itemResults().length) {
+          <ul class="typeahead-list">
+            @for (i of itemResults(); track i.id) {
+              <li (mousedown)="selectItem(i)">{{ i.details }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="field">
+        <label for="status">Status(n)</label>
+        <select id="status" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)" name="status">
+          @for (s of statusFilterList(); track s.id) {
+            <option [ngValue]="s">{{ s.status }}</option>
+          }
+        </select>
+      </div>
+
+      <button type="button" class="btn-primary" title="Search" (click)="searchGrn()">Search</button>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      (records)
+    </label>
+
+    <button type="button" class="btn-primary" title="Save" [class.disabled]="selectedGrnIds().size === 0" (click)="openConfirmModal()">
+      Save
+    </button>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th><input type="checkbox" [ngModel]="selectAllRows()" (ngModelChange)="selectAllRows.set($event); toggleSelectAll()" name="selectAll" [disabled]="!grnList().length" /></th>
+        <th>GRN Date</th>
+        <th>GRN No.</th>
+        <th>Is Consignment</th>
+        <th>Store (Requester)</th>
+        <th>Delivery Store</th>
+        <th>Invoice No.</th>
+        <th>Invoice Date</th>
+        <th>DC No.</th>
+        <th>DC Date</th>
+        <th>Vendor</th>
+        <th>Person (Adder)</th>
+        <th>Status(n)</th>
+        <th>Approval Status</th>
+        <th>Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of pagedList(); track row.id) {
+        <tr>
+          <td>
+            <input
+              type="checkbox"
+              [ngModel]="row.isSelected ?? false"
+              (ngModelChange)="row.isSelected = $event; toggleSelect(row)"
+              [disabled]="isDisableButton(row)"
+              [name]="'select-' + row.id"
+            />
+          </td>
+          <td>{{ row.grnDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ row.grnNo }}</td>
+          <td>{{ row.isConsignment ? 'Yes' : 'No' }}</td>
+          <td>{{ row.requestingStoreName }}</td>
+          <td>{{ row.storeName }}</td>
+          <td>{{ row.invoiceNo }}</td>
+          <td>{{ row.invoiceDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ row.dcNo || '-' }}</td>
+          <td>{{ row.dcDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ row.vendorName }}</td>
+          <td>{{ row.addedBy }}</td>
+          <td>{{ row.status }}</td>
+          <td>{{ row.approvalStatus }}</td>
+          <td class="actions">
+            <i class="icon-edit" title="Edit" [class.disabled]="isDisable(row)"></i>
+            <i class="icon-print" title="Print" (click)="rePrintBillSlip(row)"></i>
+            <i class="icon-cancel" title="Cancel" [class.disabled]="isDisableButton(row)" (click)="openCancelModal(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!pagedList().length) {
+        <tr>
+          <td colspan="15" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" [class.disabled]="saveBtnDisabled()" (click)="confirmApprove()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCancelModal()) {
+  <div class="modal-backdrop" (click)="closeCancelModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Cancellation
+        <button type="button" (click)="closeCancelModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="field">
+          <label>Select Reasons</label>
+          <select [ngModel]="cancelReason()" (ngModelChange)="onCancelReasonChange($event)" name="cancelReason">
+            <option [ngValue]="undefined"></option>
+            @for (r of reasons(); track r.id) {
+              <option [ngValue]="r.id">{{ r.reason }}</option>
+            }
+          </select>
+          @if (isReasonValid()) {
+            <p class="help-block">Select Reason</p>
+          }
+        </div>
+        <div class="field">
+          <label>Note</label>
+          <textarea [ngModel]="rejectNote()" (ngModelChange)="rejectNote.set($event)" name="rejectNote" maxlength="100" rows="4"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmCancel()">Save</button>
+      </div>
+    </div>
+  </div>
+}

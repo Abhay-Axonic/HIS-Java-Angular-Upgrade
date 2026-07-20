@@ -1,0 +1,7 @@
+<div class="notification-tray">
+  @for (n of notifications.notices(); track n.id) {
+    <div class="notice notice--{{ n.kind }}">{{ n.message }}</div>
+  }
+</div>
+
+<router-outlet />
