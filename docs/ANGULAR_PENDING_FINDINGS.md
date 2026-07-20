@@ -418,7 +418,9 @@ Criteria are OR'd, not AND'd — a record only needs to satisfy *one* selected f
 
 **Fourth finding, added during Phase 4 batch 1a's rebuild (screen 5/14) — two inconsistent modal-close paths, one silently accumulates stale data:** the `#DP` modal has two ways to close it: the header's `×` (`medicineInfo.html:237`, `ng-click="clear()"` — resets `$scope.list`/`medicine`/`formulation`/`type`) and the footer's "Close" button (`:277`, `data-dismiss="modal"` only, no `ng-click` at all). `getPopUpData()` (`pharmanController.js:94-129`) *appends* to `$scope.list` every call, never resetting it itself — only `clear()` does. So closing via the footer button leaves `list` populated; the next search's results get appended on top of the old ones rather than replacing them, and the modal (opened again via either "Doctor"/"Patient" button, both mapped to the same handler per finding 1 above) would show both the stale and fresh entries stacked together with no visual distinction between them.
 
-**Owner decision, not resolved here:** not fixed, per standing instruction, for all four findings above.
+**Fifth finding, also added during the Phase 4 batch 1a rebuild — `getFormsByName()` crashes on any drug with zero forms:** `pharmanController.js:59-76`, `$scope.formulation=$scope.medFormsList[0].formulation` is completely unguarded — if `getPharmanDrugFormByName` returns `status: "success"` with an empty `listObject` (a real, plausible case: a valid drug name matched via the typeahead, but zero medicinal forms recorded for it), `medFormsList[0]` is `undefined` and `.formulation` throws `TypeError`. `getFormsByName()` is called directly from `selectDrug()` (the typeahead's on-select handler), so selecting any such drug crashes immediately, not on some rare secondary action.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction, for all five findings above.
 
 ---
 
