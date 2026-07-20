@@ -31,6 +31,10 @@ angular
 								}*/
 								
 								 var cookieObjectAppConfig = $cookies.getObject('cookieObjectAppConfig');
+									if(cookieObjectAppConfig == undefined){
+										$state.go('applicationConfiguration');
+										return;
+									}
 									$scope.assetMaintenanceSpecialityId = cookieObjectAppConfig.assetMaintenanceSpecialityId;
 								
 								/** Variables for pagination */
