@@ -8,6 +8,8 @@
 
 Unlike most entries in this doc, this is not "a bug to fix eventually" — it's a live production screen where **the core task (completing a linen issue acceptance) cannot be finished by any user today**, crash or no crash. Called out here, separately from the general list, per explicit owner instruction, so it doesn't blend into the surrounding findings. Full technical detail is in entry 43 below — not duplicated here. Owner to decide whether this justifies fixing ahead of its normal place in the rebuild queue, rather than waiting for a future "parity" pass.
 
+**Update 2026-07-20:** a second screen of the same shape was found during Phase 4 batch 3 pre-screening — see **entry 46**, `detailsRejectedAssetAcceptance`. Same "core task cannot be completed" pattern, arguably worse (it also shows fabricated data instead of the real record). Worth reviewing together with entry 43 rather than as two separate one-off decisions.
+
 ---
 
 ## 1. insuranceMaster has two redundant, inconsistent validation paths for the same fields
@@ -767,3 +769,20 @@ In practice, finding 1 makes finding 2 doubly moot for the reject path (the popu
 **Owner decision, not resolved here:** not fixed, per standing instruction. Faithfully reproduced in the Angular rebuild — both requests fire independently with no sequencing added, same real behavior as legacy, not a rebuild-introduced regression.
 
 **My read:** low-to-moderate severity — no crash, no data corruption on the backend, but a real, non-deterministic "sometimes half the results silently disappear" bug that would be confusing and hard to reproduce for anyone investigating a user's bug report, since it depends on network timing, not input.
+
+---
+
+## 46. SEVERITY 1 — `detailsRejectedAssetAcceptance` always displays hardcoded mock data instead of the real backend response, and its entire accept/reject/save path is unreachable from the UI — found during Phase 4 batch 3 pre-screening, screen excluded from the batch as a result
+
+**Where:** `resources/assets/js/controller/asset/detailsRejectedAssetAcceptance.js:45-71` (mock-data override), `:300-338` (`SaveApproval`, the real save function), `views/master/UnitMaster/assetManagement/details-rejected-asset-acceptance.html:148` (footer Save button), `:213-274` (both reject-modal paths).
+
+**What it is, plainly — two distinct, compounding problems, same shape as entry 43's `linenIssueAcceptanceDetails` but worse:**
+
+1. **The detail view never shows real data.** `GetRejectedAssetAcceptanceDetails()`'s success handler does make a real GET to `REJECTED_ASSET_ACCEPTANCE.DETAIL_API` (controller.js:45-50), but the response is discarded immediately and overwritten with a hardcoded literal object (controller.js:52-71 — fixed values like `"RAc-001"`, id `47`, one fabricated line item). Every load of this screen, for every real rejected-asset record, shows the same fake data regardless of what the backend actually returned.
+2. **There is no reachable way to act on a rejection from this screen.** The footer Save button has no `ng-click` at all (view:148) — `SaveApproval`, the only real save/PATCH function, is unreachable, and it's independently buggy anyway (uses the wrong endpoint constant, `ASEET_ISSUE_ACCEPTANCE.SAVE_API` instead of `REJECTED_ASSET_ACCEPTANCE.SAVE_API`, controller.js:300-338). Both reject-modal paths are HTML-commented-out (`qty-accept-reject.html` include at view:273, and a duplicate inline modal at view:213-272) — `RejectionPopup`/`SaveAcceptReject` can never fire. The one included live partial, `note-save.html` (view:274), calls bare `saveAcceptance()`/`closeNotePopUp()` which are not defined anywhere in this controller — same dead-`$scope`-binding class of bug as entry 43, though nothing on this screen even opens that modal to reach it. The header "select all" checkbox and row-level reject toggle also have no `ng-model`/`ng-click` at all.
+
+**Why this wasn't found during actual rebuild:** this screen was one of ten spot-checked as part of the real-bindings pre-screening pass for Phase 4 batch 3 (same standing sanity check that excluded `auctionQuationFillin`/`auctionVendorSelection` before batch 2). Its list-view counterpart, `rejectedAssetAcceptance`, checked out real and clean and is going into batch 3; this detail screen did not, so it was excluded rather than proposed. Logged now, evidence already gathered with file:line citations, rather than held until some future rebuild pass reaches it — per standing instruction that severity-1 findings get flagged immediately, not held for a batch summary.
+
+**Owner decision, not resolved here:** not fixed, not rebuilt yet. Worth deciding whether this is a fast-track candidate alongside entry 43 (banner at top of this doc), since — like entry 43 — a user cannot actually complete the core task (processing a rejected-asset acceptance) on this screen today, and additionally the data shown while trying isn't even real.
+
+**My read:** SEVERITY 1, same tier as entry 43 — arguably worse, since entry 43's screen at least shows real search-result rows even though save is unreachable; this screen fabricates the record itself. Recommend reviewing alongside entry 43 when deciding on fast-track scope.
