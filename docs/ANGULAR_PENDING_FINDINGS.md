@@ -719,3 +719,45 @@ Despite this, two live, reachable functions in `OPDCoverSheetController.js` stil
 **Owner decision, not resolved here:** not fixed, per standing instruction for newly-found issues outside the specific screen currently being rebuilt. Confirmed via direct source read (not guessed) — `OPDCoverSheet`'s own state declaration, both call sites, and all four sibling cover-sheet screens' matching param declarations were read directly.
 
 **My read:** SEVERITY 1, same tier as entry 28 — this is the same category of risk (clinical data silently saved against the wrong patient identity, with no on-screen indication), just on the save path rather than the display path, and triggered by a specific multi-screen navigation sequence within one session rather than a stale-sessionStorage/refresh sequence. This reads as copy-paste residue from the `IPDCoverSheet`/`erNursingCoversheet` lineage into `OPDCoverSheet`, with the identity-handling layer swapped to session-storage-based but the two old `$stateParams.patientDetailsObj` references never fully removed. `OPDCoverSheet` is not one of the current Phase 4 batch's 14 screens — flagging here for whenever it or a related encounter/procedure-order screen enters scope, and worth considering alongside entry 28 if a single fix pass ever addresses that entry's family of screens.
+
+---
+
+## 43. SEVERITY 1 — `linenIssueAcceptanceDetails` has no reachable save path at all, and its reject-toggle crashes on click — found while rebuilding this screen, Phase 4 batch 2
+
+**Where:** `resources/assets/js/controller/linenlaundry/linenIssueAcceptanceDetailsController.js:101` (the crash), the whole file's `SaveApproval` (never wired), `views/Linen/linen-issue-acceptance-details.html` (124 lines, full read — no Save button anywhere in the main view), `views/common/qty-accept-reject.html` and `views/common/note-save.html` (both `ng-include`d partials, full read).
+
+**What it is, plainly — two distinct, compounding problems:**
+
+1. **Crash on every reject-toggle click.** `RejectionPopup(item)` (line 101) does `itemId = item.id;` with no `var`/`let`/`const` anywhere in the file, under this file's own `"use strict"` (line 2). Assigning to an undeclared identifier in strict mode throws `ReferenceError: itemId is not defined` — immediately, before the popup even opens. Confirmed live in the Angular rebuild's browser test: a real click on the reject switch threw the identical error at the identical point.
+
+2. **Even without the crash, there is no way to actually save an acceptance on this screen.** `self.model.SaveApproval` — the real function, with real validation, that would PATCH the acceptance — is never wired to any element anywhere in the view. The two buttons that look like "Save" both call bare, lowercase `$scope` functions this `controllerAs:'vm'` controller never defines: `qty-accept-reject.html:57` calls `saveAcceptReject()` (not `vm.model.SaveAcceptReject()`), and `note-save.html:20,30` calls `saveAcceptance()` (not `vm.model.SaveApproval()`). Both partials' other form fields (`rejectReasonId`, `noteReject`, `reasonList`) are likewise bound to bare `$scope`, never populated by this controller's `self.model.rejectReasons`/`rejectNote`/`rejectReason`. This reads as copy-paste of shared partials from a different, classic-`$scope` screen, never adapted for this one's `controllerAs:'vm'` wiring.
+
+In practice, finding 1 makes finding 2 doubly moot for the reject path (the popup never opens to reveal its own broken bindings) — but the note-save modal's Save button is a *separate*, independently broken path with no crash gating it, and it's simply never triggered by anything visible on this screen either.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Confirmed via full read of the view and every included partial, not guessed.
+
+**My read:** SEVERITY 1 — a user can select rows and edit accept/reject quantities, but there is no working way to complete a linen issue acceptance on this screen at all. The crash (finding 1) is the more urgent of the two since it's a hard, visible failure; finding 2 is a silent dead-end that would remain even if finding 1 were fixed in isolation — both need addressing together, not just the crash. Faithfully reproduced in the Angular rebuild: the reject-toggle crash is replicated (a direct `throw`, since TypeScript can't express an undeclared-variable assignment the same way), and no working Save control is rendered, matching legacy's real gap rather than inventing one.
+
+---
+
+## 44. SEVERITY 1 — `createTabularDataTemplates`'s Save button crashes unconditionally, on both success and failure — found while rebuilding this screen, Phase 4 batch 2
+
+**Where:** `resources/assets/js/controller/template/createTabularDataTemplatesController.js:274,283` (inside `saveTabularDataOfTemplate()`'s success and error branches respectively), `views/template/create-tabular-data-templates.html:149` (the Save icon's live `ng-click` wiring, confirmed reachable).
+
+**What it is, plainly:** both branches of the save callback call `$scope.getBloodGroupList()` — a function never defined anywhere in this controller. The code comment immediately above it ("save blood group matching list") confirms this is copy-paste residue from an unrelated Blood Group Matching screen. Clicking Save throws `TypeError: $scope.getBloodGroupList is not a function`, every time, regardless of whether the underlying save request itself succeeded or failed.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Confirmed via full controller read (388 lines) and grep confirming zero definitions of `getBloodGroupList` anywhere in the file.
+
+**My read:** SEVERITY 1 — same shape as entry 40 (a real, everyday crash on a real, clickable, core action — here, the only way to persist a tabular data template). Faithfully reproduced in the Angular rebuild via a direct `throw` in the save subscription's `next`/`error` handlers (TypeScript can't express calling a genuinely undefined method the same way legacy's loose JS does) — confirmed live: a real save click on the rebuild threw the identical `TypeError` at the identical point.
+
+---
+
+## 45. `correctiveMaintenanceWorklist`'s two list-fetches race, and the loser silently wins — found while rebuilding this screen, Phase 4 batch 2
+
+**Where:** `resources/assets/js/controller/asset/correctiveMaintenanceWorklistController.js:94-173` (`getCorectiveMaintenance()` and `getCorectiveMaintenanceWorklist()`).
+
+**What it is, plainly:** both functions fire on every search click with no sequencing between them (`getCorectiveMaintenance();getCorectiveMaintenanceWorklist();`, `corrective-maintenance-worklist.html:87`). `getCorectiveMaintenance()`'s success handler resets `$scope.finalList = []` and rebuilds it fresh from its own response. `getCorectiveMaintenanceWorklist()`'s success handler does NOT reset `finalList` — it only appends, then paginates. If the worklist call's response arrives *after* the plain-maintenance call's, the merge works as intended. If it arrives *before*, the later-arriving maintenance response's `finalList = []` reset silently wipes out the worklist rows that were already merged in, and the paginated table ends up showing only the maintenance-list rows, with no error, no indication anything was lost, and no guarantee the same search will show the same result if repeated (a real client-observable race, not just a theoretical one). Confirmed by reading both handlers directly, not inferred.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Faithfully reproduced in the Angular rebuild — both requests fire independently with no sequencing added, same real behavior as legacy, not a rebuild-introduced regression.
+
+**My read:** low-to-moderate severity — no crash, no data corruption on the backend, but a real, non-deterministic "sometimes half the results silently disappear" bug that would be confusing and hard to reproduce for anyone investigating a user's bug report, since it depends on network timing, not input.
