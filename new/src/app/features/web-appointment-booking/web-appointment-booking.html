@@ -1,0 +1,95 @@
+<div class="row"></div>
+
+<div class="row rectangle65" style="width: -webkit-fill-available; border-bottom: groove">
+  <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="margin-top: 2%">
+    <!-- Dead in legacy too (entry 39 finding 1) -- never populated, kept
+         empty for parity. -->
+    <label class="addressLable labeltopadd" id="unitAddress"></label>
+  </div>
+  <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="padding-top: 7px">
+    <div class="poweredBy">Powered by</div>
+    <img src="resources/assets/images/icon/bed/temp/CHT_logo_2July.png" style="width: 212px !important; margin-left: 96px" />
+  </div>
+</div>
+
+<div class="row padding-left-right-set4" style="margin-top: 50px !important; margin-right: 5px">
+  <div class="col-md-6 col-sm-6 col-xs-6"></div>
+  <div class="col-md-4 col-sm-4 col-xs-4">
+    @if (!isHideUnitList()) {
+      <div class="col-md-2 col-sm-2 col-xs-2">
+        <span><b>Unit Name</b></span>
+      </div>
+      <div class="col-md-8 col-sm-8 col-xs-8">
+        <select
+          style="width: 100%"
+          [ngModel]="selectedUnitId()"
+          (ngModelChange)="selectedUnitId.set($event); getChangedUnitData()"
+        >
+          @for (info of unitList(); track info.unitId) {
+            <option [ngValue]="info.unitId">{{ info.unitName }}</option>
+          }
+        </select>
+      </div>
+    }
+  </div>
+</div>
+
+<div class="row padding-left-right-set4">
+  <div id="mediaType" class="row uk-input-group customRadioBtn1" style="margin-right: 100px !important">
+    <span>
+      <input
+        name="specialities"
+        type="radio"
+        id="allDoctors"
+        value="1"
+        [checked]="selectedSpecialityId() === null"
+        class="trigger"
+        (click)="onSpecialitySelected(null)"
+      />
+      <label for="allDoctors" style="margin-right: 5px">All</label>
+    </span>
+    @for (spec of specialityMasterList(); track spec.specialityId) {
+      @if (spec.isClinicalSpeciality === 'Y') {
+        <span>
+          <input
+            id="speciality{{ spec.specialityId }}"
+            name="specialities"
+            type="radio"
+            [value]="spec.specialityId"
+            [checked]="selectedSpecialityId() === spec.specialityId"
+            class="otherRegistrationType"
+            (click)="onSpecialitySelected(spec.specialityId)"
+          />
+          <label for="speciality{{ spec.specialityId }}" style="margin-right: 5px">{{ spec.specialityName }}</label>
+        </span>
+      }
+    }
+  </div>
+</div>
+
+<div class="row">
+  @for (doc of doctorList(); track doc.doctorId) {
+    <div class="col-md-4 col-sm-4 col-xs-4 doctorBox" (click)="gotoBookAppointmentPage(doc)">
+      <div class="col-md-3 col-sm-3 col-xs-3">
+        @if (doc.doctorImage) {
+          <img [src]="doc.doctorImage" style="height: 100px; width: 100px" class="img-circle" />
+        } @else {
+          <img class="img-circle" width="100" height="100" src="resources/assets/images/tempImages/Dr2 copy.png" />
+        }
+      </div>
+      <div class="col-md-9 col-sm-9 col-xs-9" style="padding-left: 20px !important; padding-top: 10px">
+        <span><b>Dr. {{ doc.firstName }} {{ doc.lastName }}</b></span
+        ><br />
+        <span align="center"><b align="center">{{ doc.specialityName }}</b></span>
+      </div>
+    </div>
+  }
+  @if (doctorList().length === 0) {
+    <div style="text-align: center; padding-top: 40px !important">
+      <b>{{ loadingMsg() }}</b>
+    </div>
+  }
+</div>
+
+<br />
+<br />

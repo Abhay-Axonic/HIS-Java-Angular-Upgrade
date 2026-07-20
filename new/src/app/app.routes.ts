@@ -152,5 +152,14 @@ export const routes: Routes = [
     canActivate: [moduleAccessGuard],
     loadComponent: () => import('./features/pharman/pharman').then((m) => m.Pharman),
   },
+  // webAppointmentBooking: no moduleAccessGuard. Confirmed at
+  // app.js:20989-20994 -- no resolve block, and the controller has zero
+  // session guard anywhere ($scope.userId hardcoded to 1) -- a genuinely
+  // public, patient-facing doctor-browsing landing page.
+  {
+    path: 'webAppointmentBooking/:orgId/:unitId',
+    loadComponent: () =>
+      import('./features/web-appointment-booking/web-appointment-booking').then((m) => m.WebAppointmentBooking),
+  },
   { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];
