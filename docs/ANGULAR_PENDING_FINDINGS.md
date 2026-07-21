@@ -885,3 +885,41 @@ One additional dead binding on the mockup itself: `ng-click="openDatePicker()"` 
 **Owner decision, not resolved here:** not fixed. Worth a decision on whether `bedBook` should eventually get a real controller (and if so, whether the intended `bedManagement` feature is a booking action or something else) — unlike entries 43/46, this doesn't look like "a working feature with a broken save path," it looks like the feature was never wired up at all.
 
 **My read:** low-to-moderate severity — no working feature exists today for whatever `bedBook` was meant to do, but there's no evidence anyone currently relies on it (unlike entries 43/46's screens, which have real search results and real data flowing partway through).
+
+---
+
+## 54. `ambulanceMaster` crashes on every Ambulance Type selection — a string sent where a numeric ID is expected — found while rebuilding this screen, Phase 4 batch 4
+
+**Where:** `resources/assets/js/controller/lis/global/ambulanceMasterController.js:106-124` (`getNameByAmbType`), wired from `views/master/UnitMaster/ambulanceService/ambulance-Master.html:15` (`ng-change="getNameByAmbType(ambulanceMaster.ambulanceType)"`).
+
+**What it is, plainly:** the view passes the ambulance-type *name string* (whatever the user picked in the dropdown) into a function that sends it as `resourceAllocationMasterId` — a field the backend (`ResourceAllocationDaoImpl.java:172-180`, confirmed by direct read) filters on as a numeric primary key. A string-for-numeric-ID mismatch means the backend always returns an empty result list, and `ctrl:117`'s `response.data.listObject[0].vehicalNo` throws `TypeError: Cannot read properties of undefined (reading 'vehicalNo')` immediately.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Faithfully reproduced in the Angular rebuild via a direct `throw` at the equivalent point (TypeScript can't literally express the wrong-type backend call the same way) — verified live: selecting any option in the rebuilt screen's Ambulance Type dropdown throws the identical error.
+
+**My read:** SEVERITY 1 — this fires on the very first, most basic interaction with the form (selecting an ambulance type), on every selection, with no workaround. A real, easily-triggered crash.
+
+---
+
+## 55. `doctorCategory`'s shared modal-close button crashes — cross-cutting, affects every screen using the same partial — found while rebuilding this screen, Phase 4 batch 4
+
+**Where:** `resources/assets/js/common/commonPopUpDirectives.js:10` (the shared `<modal>` directive's × close button, hardcoded `ng-click="cancel();stopLoader();"`).
+
+**What it is, plainly:** `doctorCategoryController.js` never defines `$scope.cancel` (confirmed absent from the whole file and from `$rootScope` anywhere in `app.js`) — clicking the modal's × close button throws `cancel is not a function`. This is not specific to `doctorCategory`: the directive is shared, so any screen using it without defining its own `$scope.cancel` has the same live bug. The modal's real footer Cancel/OK buttons are unaffected (they call different, real functions) — only the × close icon is broken.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction — flagged as cross-cutting rather than screen-specific, since a real fix belongs at the shared directive (or by auditing which screens actually define `$scope.cancel` and which don't), not inside `doctorCategory` alone. Faithfully reproduced in the rebuild for this screen via a direct `throw` on the × button specifically, leaving the real Cancel/OK buttons working normally.
+
+**My read:** low-to-moderate severity, cross-cutting — the × button is a redundant way to close a modal that already has working Cancel/OK buttons, so it's a real but minor annoyance on any one screen; worth a dedicated grep across all screens using this shared directive to know the true blast radius before deciding whether it's worth a coordinated fix.
+
+---
+
+## 56. `bedCategoryMaster` — two dead popup bindings, and an index-mismatch bug in its edit path when a search keyword is active — found while rebuilding this screen, Phase 4 batch 4
+
+**Where:** `resources/assets/js/controller/adt/global/bedCategoryMasterController.js`, view at `views/master/GlobalMaster/Adt/bed-category-master-global.html:215,345` (dead bindings), controller `showUpdateBtn`/`update` (~ctrl:353,535-548) for the index-mismatch.
+
+**What it is, plainly — two distinct issues:**
+1. **Dead popup bindings.** `ng-click="getHierarchyPopUp()"` (view:215) and `ng-click="closePopupsj()"` (view:345) both call functions that don't exist anywhere in the controller — clicking either would throw via Angular's exception handler in a strict sense, but Bootstrap's own `data-toggle="modal"`/`data-dismiss="modal"` attributes independently open/close the same modal regardless, masking the failure visually. The modal's real Set Hierarchy save action is a separate, genuinely working function.
+2. **Index-mismatch bug.** `showUpdateBtn` captures `activeIndex` from the *search-filtered* row position (`ng-repeat="...|filter:searchKeyword"`, using `$index`), but `update()` later mutates the raw, unfiltered list at that same numeric index — when a search keyword is active and narrows the visible rows, editing a row can silently update the wrong record in the underlying list.
+
+**Owner decision, not resolved here:** neither fixed, per standing instruction. The dead bindings' visible behavior (modal opens/closes despite the undefined functions) reproduced faithfully via the rebuild's own modal-open/close mechanism, without inventing working versions of `getHierarchyPopUp`/`closePopupsj`. The index-mismatch bug reproduced as-is (same class of bug as entry 51's `correctiveMaintenance` finding, recurring independently in a second, unrelated screen this same batch).
+
+**My read:** the dead bindings are cosmetic (no user-visible breakage since Bootstrap's own attributes carry the load). The index-mismatch bug is moderate severity — same reasoning as entry 51: silent wrong-record edits only manifest once a search keyword narrows the visible list, but when it happens there's no error or indication anything went wrong.
