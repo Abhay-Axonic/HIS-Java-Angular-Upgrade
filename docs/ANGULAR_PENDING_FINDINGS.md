@@ -867,3 +867,21 @@ In practice, finding 1 makes finding 2 doubly moot for the reject path (the popu
 **Owner decision, not resolved here:** not fixed, per standing instruction. Both faithfully reproduced in the Angular rebuild as no-ops/always-true behavior matching legacy exactly, rather than "fixed" to what the code seems to have intended.
 
 **My read:** low severity — neither causes a crash or data loss; the practical effect is that the "Is Operative" toggle's clear-fields side effect silently never fires, which is a minor, easy-to-miss UX inconsistency rather than a functional blocker.
+
+---
+
+## 53. `bedBook` is a static mockup grid wired to a completely mismatched controller — found during Phase 4 batch 4 pre-screening, screen excluded from the batch as a result
+
+**Where:** `resources/assets/js/controller/adt/transaction/bedManagement/bedBookController.js` (the attached controller), `views/.../bedBook.html` (the view — path per the `bedBook` state).
+
+**What it is, plainly:** the view is a static, non-functional card grid — its 3 form fields (`Bed Category`, `Bed Status` selects, a datepicker) have no `ng-model`/no live binding, and the six-per-row "Book Now" buttons have **no `ng-click` at all**, sitting next to hardcoded bed IDs (`BM1023456711480`, etc.) baked directly into the HTML. Nothing on this screen can actually book a bed.
+
+The attached controller, meanwhile, is real and fully wired — it's just for an entirely different feature. Every function in `bedBookController.js` (`saveAdmissionType`, `showUpdateBtn`, `updateStatus`, `updateAdmissionType`) is **Admission-Type master CRUD logic** with real `GenericService` HTTP calls, and none of it is referenced anywhere in `bedBook.html`. This reads as a state definition pointing at the wrong controller file, not a screen that was ever functional and later broke.
+
+One additional dead binding on the mockup itself: `ng-click="openDatePicker()"` (`bedBook.html:61`) calls a function that doesn't exist in the (mismatched) controller either way.
+
+**Why this wasn't found during actual rebuild:** found during the real-bindings pre-screening pass for Phase 4 batch 4 (the same standing sanity check that excluded `auctionQuationFillin`/`auctionVendorSelection` before batch 2 and `detailsRejectedAssetAcceptance`/`linenIssue` before batch 3). Excluded from the batch rather than proposed.
+
+**Owner decision, not resolved here:** not fixed. Worth a decision on whether `bedBook` should eventually get a real controller (and if so, whether the intended `bedManagement` feature is a booking action or something else) — unlike entries 43/46, this doesn't look like "a working feature with a broken save path," it looks like the feature was never wired up at all.
+
+**My read:** low-to-moderate severity — no working feature exists today for whatever `bedBook` was meant to do, but there's no evidence anyone currently relies on it (unlike entries 43/46's screens, which have real search results and real data flowing partway through).
