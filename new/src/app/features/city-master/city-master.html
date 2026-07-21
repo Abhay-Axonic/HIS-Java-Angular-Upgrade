@@ -1,0 +1,176 @@
+<section class="page">
+  <fieldset>
+    <div class="filter-row">
+      <div class="field">
+        <label for="countryId">Choose Country<span class="required">*</span></label>
+        <select
+          id="countryId"
+          [ngModel]="city().countryId"
+          (ngModelChange)="onCountryChange($event)"
+          name="countryId"
+          [class.invalid]="isRequiredMissing(city().countryId)"
+        >
+          <option value=""></option>
+          @for (c of countryList(); track c.countryId) {
+            <option [value]="c.countryId">{{ c.countryName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(city().countryId)) {
+          <p class="help-block">Country is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="stateId">Choose State<span class="required">*</span></label>
+        <select
+          id="stateId"
+          [ngModel]="city().stateId"
+          (ngModelChange)="onStateChange($event)"
+          name="stateId"
+          [class.invalid]="isRequiredMissing(city().stateId)"
+        >
+          <option value=""></option>
+          @for (s of stateList(); track s.stateId) {
+            <option [value]="s.stateId">{{ s.stateName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(city().stateId)) {
+          <p class="help-block">State is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="districtId">Choose District<span class="required">*</span></label>
+        <select
+          id="districtId"
+          [ngModel]="city().districtId"
+          (ngModelChange)="updateCityField('districtId', $event)"
+          name="districtId"
+          [class.invalid]="isRequiredMissing(city().districtId)"
+        >
+          <option value=""></option>
+          @for (d of districtList(); track d.districtId) {
+            <option [value]="d.districtId">{{ d.districtName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(city().districtId)) {
+          <p class="help-block">District is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="cityCode">City Code<span class="required">*</span></label>
+        <input
+          id="cityCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="city().cityCode"
+          (ngModelChange)="updateCityField('cityCode', $event)"
+          name="cityCode"
+          [class.invalid]="isRequiredMissing(city().cityCode)"
+        />
+        @if (isRequiredMissing(city().cityCode)) {
+          <p class="help-block">City Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="cityName">City<span class="required">*</span></label>
+        <input
+          id="cityName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="city().cityName"
+          (ngModelChange)="updateCityField('cityName', $event)"
+          name="cityName"
+          [class.invalid]="isRequiredMissing(city().cityName)"
+        />
+        @if (isRequiredMissing(city().cityName)) {
+          <p class="help-block">City is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="saveCity()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="updateCity()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>State</th>
+        <th>District</th>
+        <th>City Code</th>
+        <th>City</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.cityId) {
+        <tr>
+          <td>{{ row.countryName }}</td>
+          <td>{{ row.stateName }}</td>
+          <td>{{ row.districtName }}</td>
+          <td>{{ row.cityCode }}</td>
+          <td>{{ row.cityName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center"><i class="icon-edit" (click)="edit(row.cityId)"></i></td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="7" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

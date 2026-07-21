@@ -1,0 +1,297 @@
+/* Global styles shared across every rebuilt screen -- generic UI chrome
+   (tables, pagination, modals, form fields) common to every legacy master
+   screen audited in docs/PHASE2_PILOT_AUDIT.md. Kept global (not
+   per-component) deliberately: these are visual-system classes reused
+   verbatim across all 5 pilot screens, not screen-specific logic. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  color: #222;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+fieldset {
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+legend {
+  font-weight: 600;
+  padding: 0 6px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  input,
+  select {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+
+    &.invalid {
+      border-color: #c62828;
+    }
+  }
+}
+
+.field.wide {
+  grid-column: span 2;
+}
+
+.field.checkbox-field label {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.required {
+  color: #c62828;
+  margin-left: 2px;
+}
+
+.help-block {
+  color: #c62828;
+  font-size: 12px;
+  margin: 4px 0 0;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0 12px;
+
+  .search-box {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    flex: 1;
+    max-width: 260px;
+  }
+}
+
+.btn-primary {
+  background: #1565c0;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 3px;
+  cursor: pointer;
+
+  &:hover {
+    background: #0d47a1;
+  }
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 14px;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+}
+
+.icon-view,
+.icon-edit {
+  cursor: pointer;
+  font-style: normal;
+
+  &::after {
+    content: '⚙';
+  }
+}
+
+.icon-edit::after {
+  content: '✎';
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+// Colors/transitions match legacy's own .slider exactly
+// (resources/assets/css/param.common.master.css:4945-4990) -- this was
+// previously missing an `input:checked` state entirely, making the switch
+// look static/disabled regardless of its real status. See
+// docs/ANGULAR_PENDING_FINDINGS.md entry 12.
+.slider {
+  position: absolute;
+  inset: 0;
+  background-color: #fff;
+  border: 1px solid #00003b;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.4s;
+
+  &::before {
+    position: absolute;
+    content: '';
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    top: 2px;
+    border-radius: 50%;
+    background-color: #dadada;
+    transition: 0.4s;
+  }
+}
+
+input:checked + .slider {
+  background-color: #e0f3f2;
+  border: 1px solid #03a096;
+
+  &::before {
+    background-color: #03a096;
+    transform: translateX(20px);
+  }
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  gap: 6px;
+  padding: 0;
+
+  li a {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  li.active a {
+    background: #1565c0;
+    color: #fff;
+  }
+
+  li.disabled a {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+
+  // Scoped as a descendant selector (specificity 0,2,0), not a bare `.modal`
+  // (0,1,0) -- src/assets/legacy-css/bootstrap.min.css defines its own
+  // `.modal { display: none; position: fixed; z-index: 1050; ... }` (its
+  // real dialog component, unused here) with equal bare-class specificity,
+  // and it was winning the cascade regardless of stylesheet source order,
+  // silently rendering every confirm-modal in this codebase's `display:
+  // none` / zero-size -- discovered during Phase 4 batch 6 live
+  // verification (docs/ANGULAR_PENDING_FINDINGS.md). This nested form
+  // reliably wins without relying on load order or `!important`.
+  .modal {
+    background: #fff;
+    border-radius: 4px;
+    min-width: 320px;
+    max-width: 90vw;
+    display: block;
+    // Neutralize bootstrap.min.css's `.modal { position: fixed; inset: 0;
+    // z-index: 1050; }` (its own unused dialog component) -- without this,
+    // fixing `display` alone still leaves the box stretched full-viewport
+    // instead of centered by the `.modal-backdrop` flex container.
+    position: relative;
+    inset: auto;
+    z-index: auto;
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+      font-weight: 600;
+
+      button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+      }
+    }
+
+    .modal-body {
+      padding: 16px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+  }
+}
+
+.typeahead {
+  position: relative;
+}
+
+.typeahead-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 160px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 10;
+
+  li {
+    padding: 6px 8px;
+    cursor: pointer;
+
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+}

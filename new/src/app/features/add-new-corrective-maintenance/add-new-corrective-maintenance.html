@@ -1,0 +1,243 @@
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style">
+    <fieldset>
+      <div class="row padding-top10">
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Department <span class="star">*</span></label>
+          <select class="form-control" [(ngModel)]="corectiveMaintenanceObj.storeId">
+            @for (info of storeList(); track info.storeId) {
+              <option [ngValue]="info.storeId">{{ info.storeName }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+          <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow" [class.disabled]="corectiveMaintenanceObj.storeId === 0" (click)="openItemModal()">
+            Get Asset
+          </a>
+        </div>
+      </div>
+
+      <div class="row padding-top10">
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Request Type <span class="star">*</span></label>
+          <select class="form-control" [(ngModel)]="corectiveMaintenanceObj.requestTypeId">
+            <option [ngValue]="''">Select Request Type</option>
+            <option [ngValue]="3">As And When</option>
+            <option [ngValue]="1">Breakdown</option>
+            <option [ngValue]="2">Installation</option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Request Criticality <span class="star">*</span></label>
+          <select class="form-control" [ngModel]="corectiveMaintenanceObj.requestCriticalityId" (ngModelChange)="corectiveMaintenanceObj.requestCriticalityId = $event; getcriticality()">
+            <option [ngValue]="''">Select Request Criticality</option>
+            <option [ngValue]="1">Normal</option>
+            <option [ngValue]="2">Urgent</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row padding-top10">
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Asset Code</label>
+          <input type="text" class="form-control" [ngModel]="corectiveMaintenanceObj.assetCode" disabled />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Asset Category</label>
+          <input type="text" class="form-control" [ngModel]="corectiveMaintenanceObj.assetcategory" disabled />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Asset Name</label>
+          <input type="text" class="form-control" [ngModel]="corectiveMaintenanceObj.assetName" disabled />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Serial No. <span class="star">*</span></label>
+          <select class="form-control" [(ngModel)]="serialNoObj">
+            @for (x of serialNumberList(); track x.batchId) {
+              <option [ngValue]="x">{{ x.serialNumber }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="row padding-top10">
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Request Date Time</label>
+          <input type="text" class="form-control" [ngModel]="corectiveMaintenanceObj.requestDateTime" disabled />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+          <label class="switch">
+            <input
+              type="checkbox"
+              [ngModel]="corectiveMaintenanceObj.isDown"
+              (ngModelChange)="corectiveMaintenanceObj.isDown = $event; getIsDownStatus()"
+            />
+            <span class="slider"></span>
+          </label>
+          <label class="cursor-pointer">Is NonOperative</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Down Time Date</label>
+          <input type="date" class="form-control" [ngModel]="fromDate" (ngModelChange)="fromDate = $event" [disabled]="!corectiveMaintenanceObj.isDown" />
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Down Time</label>
+          <input type="text" class="form-control" [(ngModel)]="corectiveMaintenanceObj.downTime" [disabled]="!corectiveMaintenanceObj.isDown" />
+        </div>
+      </div>
+
+      <div class="row padding-top10">
+        <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+          <div class="row">
+            <div class="col-lg-1 col-md-3 col-sm-3 padding-left-right-set0">
+              <label class="padding-right10 padding-left10">Request Details: <span class="star">*</span></label>
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-11 padding-left-right-set1 padding-right10">
+              <textarea rows="8" class="form-control" [(ngModel)]="corectiveMaintenanceObj.requestDetails"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row padding-top10">
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Resolution Expected Date <span class="star">*</span></label>
+          <input type="date" class="form-control" [ngModel]="toDate" (ngModelChange)="toDate = $event" />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+          <label>Resolution Expected Time <span class="star">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="corectiveMaintenanceObj.resolutionExpectedTime" />
+        </div>
+      </div>
+    </fieldset>
+
+    <br />
+    <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right0">
+      <div class="row his-style padding-right0">
+        <div class="col-md-1 text-right">
+          <label>Remark:</label>
+        </div>
+        <div class="col-md-9 padding-left-right-set0">
+          <textarea rows="1" class="form-control" maxlength="100" [(ngModel)]="corectiveMaintenanceObj.remark"></textarea>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+          <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow" (click)="comformCorectiveMaintenance()">Save</a>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4">
+          <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow" [routerLink]="['/correctiveMaintenance']">Back</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (showItemModal()) {
+  <div class="modal-backdrop" (click)="closeItemModal()">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>
+        Add Item List
+        <button type="button" (click)="closeItemModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+            <label>Asset Category</label>
+            <select class="form-control" [ngModel]="assetCategoryObj" (ngModelChange)="assetCategoryObj = $event; getProductCategoryList()">
+              @for (category of assetCategoriesList(); track category.id) {
+                <option [ngValue]="category">{{ category.category }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+            <label>Product Category</label>
+            <select class="form-control" [(ngModel)]="productCategoryObj">
+              @for (category of productCategoriesList(); track category.id) {
+                <option [ngValue]="category">{{ category.category }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+            <label>Item Code</label>
+            <input type="text" class="form-control" [(ngModel)]="itemObj.itemCode" />
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+            <label>Item Name</label>
+            <input type="text" class="form-control" [(ngModel)]="itemObj.itemName" />
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+            <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow" (click)="searchNewItem()">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="row padding-top10">
+          <div class="col-lg-12 col-md-12">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="width1 text-center">
+                    <!-- Dead in legacy: references `vm.model.selectAllRows`/`vm.model.SelectAllItems()`,
+                         which don't exist anywhere in this controller (plain $scope, no controllerAs).
+                         Rendered for visual parity only -- not wired to any select-all logic. -->
+                    <input type="checkbox" [disabled]="!filteredSearchItemList().length" />
+                  </th>
+                  <th>
+                    Asset Category
+                    <a href="javascript:void(0)" (click)="sortBy('assetCategory')"><i class="fa fa-sort" aria-hidden="true"></i></a>
+                  </th>
+                  <th>
+                    Product Category
+                    <a href="javascript:void(0)" (click)="sortBy('productCategory')"><i class="fa fa-sort" aria-hidden="true"></i></a>
+                  </th>
+                  <th>
+                    Item Code
+                    <a href="javascript:void(0)" (click)="sortBy('itemCode')"><i class="fa fa-sort" aria-hidden="true"></i></a>
+                  </th>
+                  <th>
+                    Item Name
+                    <a href="javascript:void(0)" (click)="sortBy('itemName')"><i class="fa fa-sort" aria-hidden="true"></i></a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of filteredSearchItemList(); track item.itemId) {
+                  <tr>
+                    <td class="text-center">
+                      <input type="radio" name="isSelected" [checked]="selectedSearchItem() === item" (click)="selectSearchItem(item)" />
+                    </td>
+                    <td>{{ item.assetCategory }}</td>
+                    <td>{{ item.productCategory }}</td>
+                    <td>{{ item.itemCode }}</td>
+                    <td>{{ item.itemName }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-save-box-shadow" [disabled]="!selectedSearchItem()" (click)="addItems()">Add</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Corrective Maintenance
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <label>Do you want to Generate Request ?</label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

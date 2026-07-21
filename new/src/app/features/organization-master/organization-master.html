@@ -1,0 +1,198 @@
+<section class="page">
+  <fieldset>
+    <legend>Organization Master</legend>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Hospital Code<span class="required">*</span></label>
+        <input type="text" [ngModel]="record().organizationCode" (ngModelChange)="updateField('organizationCode', $event)" [class.invalid]="isRequiredMissing(record().organizationCode)" />
+      </div>
+      <div class="field">
+        <label>Hospital Name<span class="required">*</span></label>
+        <input type="text" [ngModel]="record().organizationName" (ngModelChange)="updateField('organizationName', $event)" [class.invalid]="isRequiredMissing(record().organizationName)" />
+      </div>
+      <div class="field">
+        <label>Registration Number<span class="required">*</span></label>
+        <input type="text" [ngModel]="record().registrationNumber" (ngModelChange)="updateField('registrationNumber', $event)" [class.invalid]="isRequiredMissing(record().registrationNumber)" />
+      </div>
+      <div class="field wide">
+        <label>Address<span class="required">*</span></label>
+        <input type="text" [ngModel]="record().organizationAddress" (ngModelChange)="updateField('organizationAddress', $event)" [class.invalid]="isRequiredMissing(record().organizationAddress)" />
+      </div>
+
+      <div class="field">
+        <label>Country<span class="required">*</span></label>
+        <select [ngModel]="record().countryId" (ngModelChange)="onCountryChange($event)">
+          <option [value]="''"></option>
+          @for (c of countryList(); track c.countryId) { <option [value]="c.countryId">{{ c.countryName }}</option> }
+        </select>
+      </div>
+      <div class="field">
+        <label>State<span class="required">*</span></label>
+        <select [ngModel]="record().stateId" (ngModelChange)="onStateChange($event)" [disabled]="!stateList().length">
+          <option [value]="''"></option>
+          @for (s of stateList(); track s.stateId) { <option [value]="s.stateId">{{ s.stateName }}</option> }
+        </select>
+      </div>
+      <div class="field">
+        <label>District<span class="required">*</span></label>
+        <select [ngModel]="record().districtId" (ngModelChange)="onDistrictChange($event)" [disabled]="!districtList().length">
+          <option [value]="''"></option>
+          @for (d of districtList(); track d.districtId) { <option [value]="d.districtId">{{ d.districtName }}</option> }
+        </select>
+      </div>
+      <div class="field">
+        <label>City<span class="required">*</span></label>
+        <select [ngModel]="record().cityId" (ngModelChange)="onCityChange($event)" [disabled]="!cityList().length">
+          <option [value]="''"></option>
+          @for (c of cityList(); track c.cityId) { <option [value]="c.cityId">{{ c.cityName }}</option> }
+        </select>
+      </div>
+      <div class="field">
+        <label>Area<span class="required">*</span></label>
+        <select [ngModel]="record().areaId" (ngModelChange)="onAreaChange($event)" [disabled]="!areaList().length">
+          <option [value]="''"></option>
+          @for (a of areaList(); track a.areaId) { <option [value]="a.areaId">{{ a.areaName }}</option> }
+        </select>
+      </div>
+      <div class="field">
+        <label>PinCode<span class="required">*</span></label>
+        <input type="text" [ngModel]="record().postCode" (ngModelChange)="updateField('postCode', $event)" />
+      </div>
+
+      <div class="field">
+        <label>Contact No.<span class="required">*</span></label>
+        <input type="text" [ngModel]="record().organizationContact" (ngModelChange)="updateField('organizationContact', $event)" [class.invalid]="isRequiredMissing(record().organizationContact)" />
+      </div>
+      <div class="field">
+        <label>Fax No.</label>
+        <input type="text" [ngModel]="record().faxNumber" (ngModelChange)="updateField('faxNumber', $event)" />
+      </div>
+      <div class="field">
+        <label>Email Id<span class="required">*</span></label>
+        <input type="text" [ngModel]="record().organizationEmailId" (ngModelChange)="updateField('organizationEmailId', $event)" [class.invalid]="isRequiredMissing(record().organizationEmailId)" />
+      </div>
+      <div class="field">
+        <label>Subdomain</label>
+        <input type="text" [ngModel]="record().appUrl" (ngModelChange)="updateField('appUrl', $event)" />
+      </div>
+
+      <div class="field">
+        <label>Choose Time Zone<span class="required">*</span></label>
+        <select [ngModel]="record().unitTimeZone" (ngModelChange)="updateField('unitTimeZone', $event)">
+          <option [value]="''"></option>
+          @for (tz of timezoneList(); track tz.value) { <option [value]="tz.value">{{ tz.code }} {{ tz.value }}</option> }
+        </select>
+      </div>
+
+      <div class="field checkbox-field">
+        <label>
+          <input type="checkbox" [checked]="record().isDuoAuthenticationRequired" (change)="updateField('isDuoAuthenticationRequired', $any($event.target).checked)" />
+          Is Duo Authentication Required
+        </label>
+      </div>
+
+      <div class="field checkbox-field">
+        <label>
+          <input type="checkbox" [checked]="record().isSyncScheduling" (change)="updateField('isSyncScheduling', $any($event.target).checked)" />
+          Is Sync Scheduling
+        </label>
+        @if (record().isSyncScheduling) {
+          <input type="text" placeholder="Enter your channelId" [ngModel]="record().channelId" (ngModelChange)="updateField('channelId', $event)" />
+        }
+      </div>
+
+      <div class="field">
+        <label>Logo</label>
+        <input type="file" (change)="onLogoSelected($event)" />
+        @if (uploadProgress.progress(); as progress) {
+          <div class="progress-bar"><div class="progress-fill" [style.width.%]="progress * 100"></div></div>
+        }
+      </div>
+
+      <div class="field">
+        <button type="button" class="btn-primary" (click)="openModuleModal()">Module Access</button>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()">
+        @for (size of pageSizeOptions; track size) { <option [value]="size">{{ size }}</option> }
+      </select>
+      entries
+    </label>
+    <button type="button" class="btn-primary" (click)="save()">{{ saveMode() ? 'Save' : 'Update' }}</button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Hospital Code</th>
+        <th>Hospital Name</th>
+        <th>Registration Number</th>
+        <th>Address</th>
+        <th>Country</th>
+        <th>State</th>
+        <th>City</th>
+        <th>Pincode</th>
+        <th>Contact No.</th>
+        <th>Email Id</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.organizationId) {
+        <tr>
+          <td>{{ row.organizationCode }}</td>
+          <td>{{ row.organizationName }}</td>
+          <td>{{ row.registrationNumber }}</td>
+          <td>{{ row.organizationAddress }}</td>
+          <td>{{ row.countryId }}</td>
+          <td>{{ row.stateId }}</td>
+          <td>{{ row.cityId }}</td>
+          <td>{{ row.postCode }}</td>
+          <td>{{ row.organizationContact }}</td>
+          <td>{{ row.organizationEmailId }}</td>
+          <td class="text-center">
+            <label class="switch">
+              <input type="checkbox" [checked]="row.status === 'A'" (change)="toggleStatus(row)" />
+              <span class="slider"></span>
+            </label>
+          </td>
+          <td class="text-center"><i class="icon-edit" (click)="edit($any(row.organizationId))"></i></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showModuleModal()) {
+  <div class="modal-backdrop" (click)="closeModuleModal()">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>Module Access <button type="button" (click)="closeModuleModal()">&times;</button></header>
+      <div class="modal-body">
+        @for (node of moduleTree(); track node.moduleId) {
+          <app-module-tree-node [node]="node" />
+        }
+        <div class="modal-actions">
+          <button type="button" (click)="closeModuleModal()">Cancel</button>
+          <button type="button" class="btn-primary" (click)="saveModulePermissions()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

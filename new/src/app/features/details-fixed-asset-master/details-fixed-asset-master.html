@@ -1,0 +1,171 @@
+<div class="container-fluid his-style">
+  <div class="row margin-top10">
+    <div class="col-lg-3">
+      <b>OPB No. :</b> <label>{{ detail().opbNo }}</label> &nbsp;
+      <b>OPB Date:</b> <label>{{ detail().opbDate | date: 'dd/MM/yyyy' : 'UTC' }}</label>
+    </div>
+    <div class="col-lg-3"><b>Store:</b> <label>{{ detail().store }}</label></div>
+    <div class="col-lg-3"><b>Requested By:</b> <label>{{ detail().requestedBy }}</label></div>
+    <div class="col-lg-3"><b>Status:</b> <label>{{ detail().status }}</label></div>
+  </div>
+
+  <div class="row margin-top4">
+    <div class="col-lg-12">
+      <table class="table table-bordered">
+        <tr>
+          <th>Asset Code</th>
+          <th>Asset Name</th>
+          <th>Serial No</th>
+          <th>Year of Manufacture</th>
+          <th>Vendor</th>
+          <th>Service Provider</th>
+          <th>Warranty From</th>
+          <th>Warranty To</th>
+          <th>PMS Frequency</th>
+          <th>Quantity</th>
+          <th>Cop</th>
+          <th>Mrp</th>
+          <th>Accessory</th>
+          <th>Spares</th>
+          <th>Insurance Details</th>
+          <th>Specifications</th>
+        </tr>
+        @for (item of detail().items; track $index) {
+          <tr>
+            <td>{{ item.itemCode }}</td>
+            <td>{{ item.itemName }}</td>
+            <td>{{ item.serialNo }}</td>
+            <td>{{ item.yearOfManufacture }}</td>
+            <td>{{ item.vendor }}</td>
+            <td>{{ item.serviceProvider }}</td>
+            <td>{{ item.warrantyFrom | date: 'MMM-yyyy' }}</td>
+            <td>{{ item.warrantyTo | date: 'MMM-yyyy' }}</td>
+            <td>{{ item.pmsfrequency }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.cop }}</td>
+            <td>{{ item.mrp }}</td>
+            <td><input type="button" value="View" class="btn btn-primary btn-save-box-shadow" (click)="viewAccessoryDetails(item)" /></td>
+            <td><input type="button" value="View" class="btn btn-primary btn-save-box-shadow" (click)="viewSparesDetails(item)" /></td>
+            <td><input type="button" value="View" class="btn btn-primary btn-save-box-shadow" (click)="viewInsuranceDetails(item)" /></td>
+            <td>{{ item.specification }}</td>
+          </tr>
+        }
+      </table>
+    </div>
+  </div>
+
+  <footer class="row his-style margin-top10">
+    <div class="col-lg-12 text-right">
+      <a routerLink="/addfixedAssetMaster"><input type="button" value="Back" class="btn btn-primary btn-save-box-shadow" /></a>
+    </div>
+  </footer>
+</div>
+
+@if (showAccessoryModal()) {
+  <div class="modal fade in common-large-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">Accessory Details <button type="button" class="close" (click)="showAccessoryModal.set(false)">&times;</button></div>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Accessory Code</th>
+                <th>Accessory Description</th>
+                <th>Serial No</th>
+                <th>Warranty From</th>
+                <th>Warranty To</th>
+                <th>Quantity</th>
+                <th>Specification</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (a of itemForAccessoryDetail(); track $index) {
+                <tr>
+                  <td>{{ a.itemCode }}</td>
+                  <td>{{ a.itemName }}</td>
+                  <td>{{ a.serialNumber }}</td>
+                  <td>{{ a.warrantyFrom | date: 'MM/yyyy' }}</td>
+                  <td>{{ a.warrantyTo | date: 'MM/yyyy' }}</td>
+                  <td>{{ a.quantity }}</td>
+                  <td>{{ a.specification }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
+
+@if (showSparesModal()) {
+  <div class="modal fade in common-large-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">Spares Details <button type="button" class="close" (click)="showSparesModal.set(false)">&times;</button></div>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Spares Code</th>
+                <th>Spares Description</th>
+                <th>Serial No</th>
+                <th>Warranty From</th>
+                <th>Warranty To</th>
+                <th>Quantity</th>
+                <th>Specification</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (a of itemForSpareDetail(); track $index) {
+                <tr>
+                  <td>{{ a.itemCode }}</td>
+                  <td>{{ a.itemName }}</td>
+                  <td>{{ a.serialNumber }}</td>
+                  <td>{{ a.warrantyFrom | date: 'MM/yyyy' }}</td>
+                  <td>{{ a.warrantyTo | date: 'MM/yyyy' }}</td>
+                  <td>{{ a.quantity }}</td>
+                  <td>{{ a.specification }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
+
+@if (showInsuranceModal()) {
+  <div class="modal fade in common-medium-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">Insurance Details <button type="button" class="close" (click)="showInsuranceModal.set(false)">&times;</button></div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-6"><b>Insurance Company :</b> {{ insuranceDetail()?.insuranceCompany }}</div>
+            <div class="col-lg-6"><b>Policy Number :</b> {{ insuranceDetail()?.policyNumber }}</div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6"><b>Policy From Date :</b> {{ insuranceDetail()?.policyFromDate | date: 'MMM/yyyy' }}</div>
+            <div class="col-lg-6"><b>Policy To Date :</b> {{ insuranceDetail()?.policyToDate | date: 'MMM/yyyy' }}</div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4"><b>Amount Insured :</b> {{ insuranceDetail()?.amountInsured }}</div>
+            <div class="col-lg-8"><b>Remarks:</b> <textarea rows="2" readonly>{{ insuranceDetail()?.remark }}</textarea></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}

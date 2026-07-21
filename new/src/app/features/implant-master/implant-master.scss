@@ -1,0 +1,42 @@
+// Screen-specific layout only -- shared table/pagination/modal/toolbar
+// styles live in src/styles.scss (see that file's header comment).
+
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 24px;
+}
+
+.icon-edit,
+.icon-view {
+  cursor: pointer;
+  font-style: normal;
+
+  &::after {
+    content: '✎';
+  }
+
+  &.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+}
+
+.icon-view::after {
+  content: 'ℹ';
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+}

@@ -1,0 +1,435 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="serviceProviderName">Service Provider Name<span class="required">*</span></label>
+        <input
+          id="serviceProviderName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderName"
+          (ngModelChange)="updateField('serviceProviderName', $event)"
+          name="serviceProviderName"
+          [class.invalid]="isRequiredMissing(form().serviceProviderName)"
+        />
+        @if (isRequiredMissing(form().serviceProviderName)) {
+          <p class="help-block">Service Provider Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderAddress">Address<span class="required">*</span></label>
+        <input
+          id="serviceProviderAddress"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderAddress"
+          (ngModelChange)="updateField('serviceProviderAddress', $event)"
+          name="serviceProviderAddress"
+          [class.invalid]="isRequiredMissing(form().serviceProviderAddress)"
+        />
+        @if (isRequiredMissing(form().serviceProviderAddress)) {
+          <p class="help-block">Address is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderCountry">Country<span class="required">*</span></label>
+        <select
+          id="serviceProviderCountry"
+          [ngModel]="form().serviceProviderCountry"
+          (ngModelChange)="onCountryChange($event)"
+          name="serviceProviderCountry"
+          [class.invalid]="isRequiredMissing(form().serviceProviderCountry)"
+        >
+          <option value="">-</option>
+          @for (c of countryOptions(); track c.countryId) {
+            <option [value]="c.countryId">{{ c.countryName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(form().serviceProviderCountry)) {
+          <p class="help-block">Country is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderState">State<span class="required">*</span></label>
+        <select
+          id="serviceProviderState"
+          [ngModel]="form().serviceProviderState"
+          (ngModelChange)="onStateChange($event)"
+          name="serviceProviderState"
+          [class.invalid]="isRequiredMissing(form().serviceProviderState)"
+        >
+          <option value="">-</option>
+          @for (s of stateOptions(); track s.stateId) {
+            <option [value]="s.stateId">{{ s.stateName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(form().serviceProviderState)) {
+          <p class="help-block">State is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderDistrict">District<span class="required">*</span></label>
+        <select
+          id="serviceProviderDistrict"
+          [ngModel]="form().serviceProviderDistrict"
+          (ngModelChange)="onDistrictChange($event)"
+          name="serviceProviderDistrict"
+          [class.invalid]="isRequiredMissing(form().serviceProviderDistrict)"
+        >
+          <option value="">-</option>
+          @for (d of districtOptions(); track d.districtId) {
+            <option [value]="d.districtId">{{ d.districtName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(form().serviceProviderDistrict)) {
+          <p class="help-block">District is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderCity">City<span class="required">*</span></label>
+        <select
+          id="serviceProviderCity"
+          [ngModel]="form().serviceProviderCity"
+          (ngModelChange)="onCityChange($event)"
+          name="serviceProviderCity"
+          [class.invalid]="isRequiredMissing(form().serviceProviderCity)"
+        >
+          <option value="">-</option>
+          @for (c of cityOptions(); track c.cityId) {
+            <option [value]="c.cityId">{{ c.cityName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(form().serviceProviderCity)) {
+          <p class="help-block">City is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderArea">Area<span class="required">*</span></label>
+        <select
+          id="serviceProviderArea"
+          [ngModel]="form().serviceProviderArea"
+          (ngModelChange)="onAreaChange($event)"
+          name="serviceProviderArea"
+          [class.invalid]="isRequiredMissing(form().serviceProviderArea)"
+        >
+          <option value="">-</option>
+          @for (a of areaOptions(); track a.areaId) {
+            <option [value]="a.areaId">{{ a.areaName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(form().serviceProviderArea)) {
+          <p class="help-block">Area is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderZipCode">Zip Code<span class="required">*</span></label>
+        <input
+          id="serviceProviderZipCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderZipCode"
+          (ngModelChange)="updateField('serviceProviderZipCode', $event)"
+          name="serviceProviderZipCode"
+          [class.invalid]="isRequiredMissing(form().serviceProviderZipCode)"
+        />
+        @if (isRequiredMissing(form().serviceProviderZipCode)) {
+          <p class="help-block">Zip Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderAmbulanceType">Ambulance Tariff Name<span class="required">*</span></label>
+        <select
+          id="serviceProviderAmbulanceType"
+          [ngModel]="form().serviceProviderAmbulanceType"
+          (ngModelChange)="onAmbulanceTariffChange($event)"
+          name="serviceProviderAmbulanceType"
+          [class.invalid]="isRequiredMissing(form().serviceProviderAmbulanceType)"
+        >
+          <option value="">-</option>
+          @for (t of tariffOptions(); track t.ambulanceTarrifMasterId) {
+            <option [value]="t.ambulanceTarrifMasterId">{{ t.ambulanceType }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(form().serviceProviderAmbulanceType)) {
+          <p class="help-block">Ambulance Tariff Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderPersonName">Person Name<span class="required">*</span></label>
+        <input
+          id="serviceProviderPersonName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderPersonName"
+          (ngModelChange)="updateField('serviceProviderPersonName', $event)"
+          name="serviceProviderPersonName"
+          [class.invalid]="isRequiredMissing(form().serviceProviderPersonName)"
+        />
+        @if (isRequiredMissing(form().serviceProviderPersonName)) {
+          <p class="help-block">Person Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderPhoneNo">Phone Number<span class="required">*</span></label>
+        <input
+          id="serviceProviderPhoneNo"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderPhoneNo"
+          (ngModelChange)="updateField('serviceProviderPhoneNo', $event)"
+          name="serviceProviderPhoneNo"
+          [class.invalid]="isRequiredMissing(form().serviceProviderPhoneNo)"
+        />
+        @if (isRequiredMissing(form().serviceProviderPhoneNo)) {
+          <p class="help-block">Phone Number is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderCellNo">Cell Number<span class="required">*</span></label>
+        <input
+          id="serviceProviderCellNo"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderCellNo"
+          (ngModelChange)="updateField('serviceProviderCellNo', $event)"
+          name="serviceProviderCellNo"
+          [class.invalid]="isRequiredMissing(form().serviceProviderCellNo)"
+        />
+        @if (isRequiredMissing(form().serviceProviderCellNo)) {
+          <p class="help-block">Cell Number is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderEmailAddress">Email Address<span class="required">*</span></label>
+        <input
+          id="serviceProviderEmailAddress"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderEmailAddress"
+          (ngModelChange)="updateField('serviceProviderEmailAddress', $event)"
+          name="serviceProviderEmailAddress"
+          [class.invalid]="isRequiredMissing(form().serviceProviderEmailAddress)"
+        />
+        @if (isRequiredMissing(form().serviceProviderEmailAddress)) {
+          <p class="help-block">Email Address is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderContractFromDate">Contract Valid Date (From)<span class="required">*</span></label>
+        <input
+          id="serviceProviderContractFromDate"
+          type="date"
+          [ngModel]="form().serviceProviderContractFromDate"
+          (ngModelChange)="updateField('serviceProviderContractFromDate', $event)"
+          name="serviceProviderContractFromDate"
+          [class.invalid]="isRequiredMissing(form().serviceProviderContractFromDate)"
+        />
+        @if (isRequiredMissing(form().serviceProviderContractFromDate)) {
+          <p class="help-block">Contract Valid From Date is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderContractToDate">Contract Valid Date-Till<span class="required">*</span></label>
+        <input
+          id="serviceProviderContractToDate"
+          type="date"
+          [ngModel]="form().serviceProviderContractToDate"
+          (ngModelChange)="updateField('serviceProviderContractToDate', $event)"
+          name="serviceProviderContractToDate"
+          [class.invalid]="isRequiredMissing(form().serviceProviderContractToDate)"
+        />
+        @if (isRequiredMissing(form().serviceProviderContractToDate)) {
+          <p class="help-block">Contract Valid To Date is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderFirstDistance">First Distance<span class="required">*</span></label>
+        <input
+          id="serviceProviderFirstDistance"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderFirstDistance"
+          (ngModelChange)="updateField('serviceProviderFirstDistance', $event)"
+          name="serviceProviderFirstDistance"
+          [class.invalid]="isRequiredMissing(form().serviceProviderFirstDistance)"
+        />
+        @if (isRequiredMissing(form().serviceProviderFirstDistance)) {
+          <p class="help-block">First Distance is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderFirstDistanceRate">Rate<span class="required">*</span></label>
+        <input
+          id="serviceProviderFirstDistanceRate"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderFirstDistanceRate"
+          (ngModelChange)="updateField('serviceProviderFirstDistanceRate', $event)"
+          name="serviceProviderFirstDistanceRate"
+          [class.invalid]="isRequiredMissing(form().serviceProviderFirstDistanceRate)"
+        />
+        @if (isRequiredMissing(form().serviceProviderFirstDistanceRate)) {
+          <p class="help-block">Rate is required</p>
+        }
+      </div>
+
+      <!--
+        Faithfully reproduced copy-paste label bug -- see the class doc
+        comment / docs/ANGULAR_PENDING_FINDINGS.md. Legacy labels BOTH this
+        field (the disabled, tariff-auto-computed
+        serviceProviderAdditionalMileage) AND the next one
+        (serviceProviderAdditionalMileageRate) "Additional Mileage Rate Per
+        Km" (view:278/294), even though the table's own column headers
+        correctly distinguish them. Not silently corrected here.
+      -->
+      <div class="field">
+        <label for="serviceProviderAdditionalMileage">Additional Mileage Rate Per Km<span class="required">*</span></label>
+        <input
+          id="serviceProviderAdditionalMileage"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderAdditionalMileage"
+          (ngModelChange)="updateField('serviceProviderAdditionalMileage', $event)"
+          name="serviceProviderAdditionalMileage"
+          disabled
+          [class.invalid]="isRequiredMissing(form().serviceProviderAdditionalMileage)"
+        />
+        @if (isRequiredMissing(form().serviceProviderAdditionalMileage)) {
+          <p class="help-block">Additional Mileage is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProviderAdditionalMileageRate">Additional Mileage Rate Per Km<span class="required">*</span></label>
+        <input
+          id="serviceProviderAdditionalMileageRate"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().serviceProviderAdditionalMileageRate"
+          (ngModelChange)="updateField('serviceProviderAdditionalMileageRate', $event)"
+          name="serviceProviderAdditionalMileageRate"
+          [class.invalid]="isRequiredMissing(form().serviceProviderAdditionalMileageRate)"
+        />
+        @if (isRequiredMissing(form().serviceProviderAdditionalMileageRate)) {
+          <p class="help-block">Additional Mileage Rate Per Km is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!-- Real, working search (unlike modality-type-master's dead one) --
+         see class doc comment: a bare, generic filter over every field of
+         the already-fetched page, matching legacy's `filter:searchKeyword`. -->
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <!--
+    No pagination footer here at all -- see class doc comment: legacy's own
+    `initServiceProviderMasterList` never fetches a count and never calls
+    `setPage(...)`, so its pager never renders either. Reproduced by simply
+    omitting the pagination UI, matching this codebase's ambulance-master
+    precedent for the identical bug.
+  -->
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Service Provider Name</th>
+        <th>Address</th>
+        <th>Ambulance Type</th>
+        <th>Person name</th>
+        <th>Phone/Cell No.</th>
+        <th>Email Address</th>
+        <th>Contract Valid Date (From)</th>
+        <th>Contract Valid Date-Till</th>
+        <th>First Distance</th>
+        <th>Rate</th>
+        <th>Additional Mileage</th>
+        <th>Additional Mileage Rate Per Km</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.serviceProviderMasterId) {
+        <tr>
+          <td>{{ row.serviceProviderName }}</td>
+          <td>{{ row.serviceProviderAddress }}</td>
+          <td>{{ row.serviceProviderAmbulanceType }}</td>
+          <td>{{ row.serviceProviderPersonName }}</td>
+          <td>{{ row.serviceProviderPhoneNo }},{{ row.serviceProviderCellNo }}</td>
+          <td>{{ row.serviceProviderEmailAddress }}</td>
+          <td>{{ row.serviceProviderContractFromDate }}</td>
+          <td>{{ row.serviceProviderContractToDate }}</td>
+          <td>{{ row.serviceProviderFirstDistance }}</td>
+          <td>{{ row.serviceProviderFirstDistanceRate }}</td>
+          <td>{{ row.serviceProviderAdditionalMileage }}</td>
+          <td>{{ row.serviceProviderAdditionalMileageRate }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="14" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,113 @@
+<div id="page-content-wrapper">
+  <div class="container-fluid row" id="">
+    <div class="row rectangle65" style="width: -webkit-fill-available; border-bottom: groove">
+      <div class="col-md-4 col-sm-4 col-xs-4" style="padding-left: 6% !important"></div>
+      <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="margin-top: 2%">
+        <label class="addressLable labeltopadd">{{ detail().unitAddress }}</label>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="padding-top: 7px">
+        <div class="poweredBy">Powered by</div>
+        <img src="resources/assets/images/icon/bed/temp/CHT_logo_2July.png" style="width: 212px !important; margin-left: 96px" />
+      </div>
+    </div>
+
+    <div class="row" style="margin-left: 5% !important; margin-right: 5% !important">
+      <div class="col-md-5 col-sm-5 col-xs-12 padding-left-right-set0">
+        <div class="row">
+          @if (!detail().doctorImage) {
+            <img id="doctorProfileImagePath" src="resources/assets/images/tempImages/Dr2 copy.png" class="rectangle59" style="width: 100%; height: 387px" />
+          } @else {
+            <img id="doctorProfileImagePath" [src]="detail().doctorImage" class="rectangle59" style="width: 100%; height: 387px" />
+          }
+        </div>
+
+        <div class="row">
+          <img src="resources/assets/images/icon/bed/temp/rectangle43.png" class="rectangle60" style="width: 100%; height: 300px" />
+        </div>
+
+        <div class="row">
+          <div class="rectangle61">
+            <div class="row" style="text-align: center !important; padding-top: 5px !important">
+              <label class="drName">Dr.{{ detail().doctorName }}</label>
+              <br />
+            </div>
+            <div class="row" style="margin-left: 5% !important; margin-right: 5% !important">
+              <div class="selectTypeOfAppointment">Area Of Expertise</div>
+              <div class="row">
+                <ul class="a" id="expertise">{{ detail().areaOfExperty }}</ul>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                  <div class="selectTypeOfAppointment">Qualification</div>
+                  <div class="areapractice">{{ detail().doctorDegrees }}</div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                  <div class="selectTypeOfAppointment">Visit Fee</div>
+                  <div class="areapractice">{{ detail().visitFee }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-7 col-sm-7 col-xs-12 padding-left-right-set0">
+        <div class="row" style="margin-top: 9%; margin-left: 5% !important">
+          <div class="row text-center">
+            <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: -48px !important">
+              <img src="resources/assets/images/icon/bed/temp/confirm.png" class="androidApp" />
+            </div>
+            <div class="col-md-8 col-sm-12 col-xs-12">
+              <div style="color: rgba(249, 198, 34, 1) !important; font-size: 37px; font-weight: 700; font-style: normal; font-family: Raleway, Arial">
+                Appointment Confirmed
+              </div>
+              <div class="availableDates" style="color: rgba(112, 112, 112, 1) !important; font-family: Lato, Arial !important; text-align: center !important">
+                An email regarding the same has been sent to you
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="rectangle45" style="height: auto !important">
+            <div class="row" style="margin-left: 5% !important; margin-right: 5% !important; margin-bottom: 3% !important">
+              <div class="selectTypeOfAppointment" style="margin-top: 3%; margin-left: 5% !important; font-size: 20px !important">Appointment Location</div>
+              <div class="visitTypelabel" style="margin-left: 5% !important">{{ detail().unitAddress }}</div>
+
+              <div class="selectTypeOfAppointment" style="margin-top: 3%; margin-left: 5% !important; font-size: 20px !important">Appointment Details</div>
+              <div class="visitTypelabel" style="margin-left: 5% !important">
+                {{ detail().patientVisit }} on {{ detail().scheduledDate }},{{ detail().fromTime }}
+              </div>
+
+              <div class="row" style="margin-top: 2% !important">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                  <div class="selectTypeOfAppointment" style="margin-top: 3%; margin-left: 5% !important; font-size: 20px !important">Visit Fee:</div>
+                  <div class="visitTypelabel" style="margin-left: 5% !important">{{ detail().visitFee }} for a {{ detail().visitDuration }} min session</div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                  <div class="selectTypeOfAppointment" style="margin-top: 3%; margin-left: 5% !important; font-size: 20px !important">Consulting for:</div>
+                  <div class="visitTypelabel" style="margin-left: 5% !important">{{ detail().consultingSpeciality }}</div>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top: 2% !important">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                  <div class="selectTypeOfAppointment" style="margin-top: 3%; margin-left: 5% !important; font-size: 20px !important">Patient Details</div>
+                  <div class="visitTypelabel" style="margin-left: 5% !important">
+                    {{ detail().patientName }}<br />
+                    {{ detail().mobileNumber }} <br />
+                    {{ detail().emailId }}
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                  <div class="selectTypeOfAppointment" style="margin-top: 3%; margin-left: 5% !important; font-size: 20px !important">Purpose of Appointment</div>
+                  <div class="visitTypelabel" style="margin-left: 5% !important">{{ detail().appointmentReason }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

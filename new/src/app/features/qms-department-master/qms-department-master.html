@@ -1,0 +1,176 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="qmsDeptName">Name<span class="required">*</span></label>
+        <input
+          id="qmsDeptName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="common().qmsDeptName"
+          (ngModelChange)="updateField('qmsDeptName', $event)"
+          [class.invalid]="isRequiredMissing(common().qmsDeptName)"
+          name="qmsDeptName"
+        />
+        @if (isRequiredMissing(common().qmsDeptName)) {
+          <p class="help-block">Dept name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="startLetter">Starting Letter<span class="required">*</span></label>
+        <input
+          id="startLetter"
+          type="text"
+          autocomplete="off"
+          [ngModel]="common().startLetter"
+          (ngModelChange)="updateField('startLetter', $event)"
+          [class.invalid]="isRequiredMissing(common().startLetter)"
+          name="startLetter"
+        />
+        @if (isRequiredMissing(common().startLetter)) {
+          <p class="help-block">Starting Letter is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="startNumber">Number<span class="required">*</span></label>
+        <input
+          id="startNumber"
+          type="text"
+          autocomplete="off"
+          [ngModel]="common().startNumber"
+          (ngModelChange)="updateField('startNumber', $event)"
+          [class.invalid]="isRequiredMissing(common().startNumber)"
+          name="startNumber"
+        />
+        @if (isRequiredMissing(common().startNumber)) {
+          <p class="help-block">Starting Number is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="qmsKioskMasterId">Kiosk<span class="required">*</span></label>
+        <select
+          id="qmsKioskMasterId"
+          [ngModel]="common().qmsKioskMasterId"
+          (ngModelChange)="onKioskChange($event)"
+          [class.invalid]="isRequiredMissing(common().qmsKioskMasterId)"
+          name="qmsKioskMasterId"
+        >
+          <option value="">-</option>
+          @for (k of kioskOptions(); track k.qmsKioskMasterId) {
+            <option [ngValue]="k.qmsKioskMasterId">{{ k.qmsDesc }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(common().qmsKioskMasterId)) {
+          <p class="help-block">Kiosk is required</p>
+        }
+      </div>
+
+      <label class="field checkbox-field">
+        <input
+          type="checkbox"
+          [class.disabled]="receptionLocked()"
+          [checked]="common().isReception === 'A'"
+          (change)="onReceptionToggle($any($event.target).checked)"
+        />
+        Reception
+      </label>
+
+      <label class="field checkbox-field">
+        <input type="checkbox" [checked]="common().isVoice === 'A'" (change)="onVoiceToggle($any($event.target).checked)" />
+        Voice
+      </label>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveBtnFlag()) {
+      <button type="button" class="btn-primary" title="Save" (click)="openConfirmModal()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+    @if (updateBtnFlag()) {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" name="search" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Starting letter</th>
+        <th>Number</th>
+        <th>Kiosk</th>
+        <th>Reception</th>
+        <th>Voice</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.qmsDeptMasterId) {
+        <tr>
+          <td>{{ row.qmsDeptName }}</td>
+          <td>{{ row.startLetter }}</td>
+          <td>{{ row.startNumber }}</td>
+          <td>{{ row.qmsDesc }}</td>
+          <td>{{ row.isReception }}</td>
+          <td>{{ row.isVoice }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="8" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body"><span>Are you sure you want to Save?</span></div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="save()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

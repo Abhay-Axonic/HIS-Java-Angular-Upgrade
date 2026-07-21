@@ -1,0 +1,149 @@
+<section class="page">
+  <fieldset>
+    <legend>Ambulance Master</legend>
+
+    <div class="filter-row">
+      <div class="field">
+        <label for="ambulanceType">Ambulance Type<span class="required">*</span></label>
+        <select
+          id="ambulanceType"
+          [ngModel]="ambulanceType()"
+          (ngModelChange)="onAmbulanceTypeChange($event)"
+          name="ambulanceType"
+        >
+          <option value="" disabled></option>
+          @for (t of ambulanceTypeOptions(); track t.ambulanceType) {
+            <option [value]="t.ambulanceType">{{ t.ambulanceType }}</option>
+          }
+        </select>
+        @if (isAmbulanceTypeInvalid()) {
+          <p class="help-block">Ambulance Type is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceProvider">Service Provider<span class="required">*</span></label>
+        <select
+          id="serviceProvider"
+          [ngModel]="serviceProvider()"
+          (ngModelChange)="serviceProvider.set($event)"
+          name="serviceProvider"
+        >
+          <option value="" disabled></option>
+          @for (s of serviceProviderOptions(); track s.serviceProviderName) {
+            <option [value]="s.serviceProviderName">{{ s.serviceProviderName }}</option>
+          }
+        </select>
+        @if (isServiceProviderInvalid()) {
+          <p class="help-block">Service Provider is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="vehicalNo">Ambulance Vehicle No.</label>
+        <input
+          id="vehicalNo"
+          type="text"
+          autocomplete="off"
+          [ngModel]="vehicalNo()"
+          (ngModelChange)="vehicalNo.set($event)"
+          name="vehicalNo"
+        />
+      </div>
+
+      <div class="field checkbox-field">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="inhouseVehicle() === 'Y'"
+            (change)="inhouseVehicle.set($any($event.target).checked ? 'Y' : 'N')"
+          />
+          Inhouse Vehicle
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="availableFacilities">Available Facilities<span class="required">*</span></label>
+        <select
+          id="availableFacilities"
+          [ngModel]="availableFacilities()"
+          (ngModelChange)="availableFacilities.set($event)"
+          name="availableFacilities"
+        >
+          <option value="" disabled></option>
+          @for (f of facilityOptions(); track f.ambFacilities) {
+            <option [value]="f.ambFacilities">{{ f.ambFacilities }}</option>
+          }
+        </select>
+        @if (isAvailableFacilitiesInvalid()) {
+          <p class="help-block">Available Facilities is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="openSaveConfirm()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">Update</button>
+    }
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Ambulance Type</th>
+        <th>Service Provider</th>
+        <th>Ambulance Vehicle No.</th>
+        <th class="text-center">Available Facilities</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.ambulanceMasterId) {
+        <tr>
+          <td>{{ row.ambulanceType }}</td>
+          <td>{{ row.serviceProvider }}</td>
+          <td>{{ row.ambulanceVehicalNo }}</td>
+          <td class="text-center">{{ row.availableFacilities }}</td>
+          <td class="text-center">
+            <app-status-toggle
+              [checked]="row.status === 'A'"
+              (toggled)="toggleStatus(row, row.status === 'A' ? 'I' : 'A')"
+            />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row.ambulanceMasterId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="6" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

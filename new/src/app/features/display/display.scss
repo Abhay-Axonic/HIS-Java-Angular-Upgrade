@@ -1,0 +1,117 @@
+/* Ported as-is from the legacy <style> block in
+   views/master/QMSMaster/display.html -- this is a kiosk display, so
+   pixel-level layout matters as much as behavior; no visual changes
+   bundled into this rebuild. */
+
+.blink_mee {
+  animation: blinkMe 2s linear infinite;
+}
+@keyframes blinkMe {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+:host ::ng-deep #wrapper {
+  padding-left: 201px !important;
+}
+.heading-padding {
+  padding-top: 20px;
+}
+.heading-padding label {
+  font-size: 26px !important;
+}
+:host {
+  display: block;
+  overflow: hidden !important;
+}
+.btn1 {
+  padding: 20px 0px !important;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  color: white;
+  font-size: 26px !important;
+  border-radius: 4px;
+  touch-action: manipulation;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  display: inline-block;
+  height: auto;
+}
+.dropdown-menu {
+  min-width: 140px !important;
+  font-size: 18px !important;
+  padding: 5px 0px 5px 0px !important;
+  margin: 2px 0 0 -152px !important;
+  text-align: right !important;
+}
+.card {
+  border: 2px solid #ccc;
+  height: auto;
+}
+.card label {
+  font-size: 25px !important;
+  color: #2e6ea2;
+}
+.card span {
+  font-size: 23px;
+  color: #2f2482 !important;
+}
+.border-bottom {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+.kiosk_bg {
+  background: url(/resources/assets/images/logo/kiosk_bg.png) no-repeat center center;
+  position: absolute;
+  top: 60px;
+  opacity: 0.3;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.bg-tabel-qms {
+  background-color: #2e6ea2 !important;
+  color: #fff !important;
+  height: 35px;
+  padding: 4px;
+  font-weight: bold;
+}
+.bg-tabel-qms span {
+  color: #fff !important;
+}
+.p-t-0 {
+  padding: 0px;
+}
+.background-set {
+  background: url(/resources/assets/images/logo/kiosk_bg.png) no-repeat center center fixed;
+  background-size: initial;
+}
+.box-border-bottom {
+  box-shadow: 0px 0.5px 0.5px 0px #ddd;
+}
+.blink {
+  animation: blinker 1.5s linear infinite;
+  color: red;
+  font-family: sans-serif;
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+.label-size {
+  font-size: 30px;
+}
+.fix-height-scroll651 {
+  height: 1510px !important;
+  overflow: auto;
+}

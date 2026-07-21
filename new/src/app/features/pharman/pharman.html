@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="col-lg-6 col-lg-offset-2">
+    <div class="login-wrap">
+      <div class="login-html">
+        <p class="tab">Medicine Information</p>
+        <div class="login-form">
+          <div class="sign-in-htm">
+            <form>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="margin" style="position: relative">
+                    <div class="form-group">
+                      <label for="inputdefault">Medicine Name</label>
+                      <input
+                        class="form-control text-input floating-label"
+                        type="text"
+                        autocomplete="off"
+                        [ngModel]="medicine()"
+                        (ngModelChange)="onMedicineInput($event)"
+                        placeholder="Search"
+                        name="groupName"
+                      />
+                      @if (showSuggestions() && suggestions().length > 0) {
+                        <ul
+                          class="dropdown-menu"
+                          style="display: block; position: absolute; width: 100%; max-height: 200px; overflow-y: auto"
+                        >
+                          @for (s of suggestions(); track s.medicine) {
+                            <li>
+                              <a href="javascript:void(0)" (click)="selectDrug(s)">{{ s.medicine }}</a>
+                            </li>
+                          }
+                        </ul>
+                      }
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="margin">
+                    <div class="form-group">
+                      <label for="Mediform">Medicine Form</label>
+                      <select
+                        class="form-control text-input floating-label dirty"
+                        name="Mediform"
+                        id="Mediform"
+                        [ngModel]="formulation()"
+                        (ngModelChange)="getMedForm($event)"
+                      >
+                        @for (info of medFormsList(); track $index) {
+                          <option [value]="info.formulation">{{ info.formulation }}</option>
+                        }
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row m-t">
+                <div class="col-lg-6 text-center">
+                  <button type="button" class="btn btn-outline-primary" (click)="setType('Doctor')">Doctor</button>
+                </div>
+                <div class="col-lg-6 text-center">
+                  <!-- Entry 26 finding 1, faithfully replicated: also calls
+                       setType('Doctor'), matching legacy's copy-paste bug. -->
+                  <button type="button" class="btn btn-outline-primary" (click)="setType('Doctor')">Patient</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (showModal()) {
+  <div class="modal fade in" id="DP" tabindex="-1" role="dialog" style="display: block">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="justify-content: space-between; border-bottom: 1px solid #e9ecef">
+          <h5 class="modal-title" style="font-weight: bold; float: left">{{ medicine() }}:{{ formulation() }}</h5>
+          <button type="button" class="close" aria-label="Close" style="padding: 4px 0px 0px 0px !important">
+            <span aria-hidden="true" style="margin: 0px 0px 24px -18px !important; color: black" (click)="clear()">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            @for (info of list(); track $index) {
+              <div class="heading-title">
+                <h4>Medicine</h4>
+                <p>{{ info.medicine }}</p>
+                <h4>Allergy and crosssensitivity</h4>
+                <p>{{ info.allergyandcrosssensitivity }}</p>
+                <h4>Cautions:</h4>
+                <p>{{ info.cautions }}</p>
+                <h4>Hepatic impairment:</h4>
+                <p>{{ info.hepaticimpairment }}</p>
+                <h4>Renal impairment:</h4>
+                <p>{{ info.renalimpairment }}</p>
+                <h4>Indications and doses:</h4>
+                <p>{{ info.indicationsanddoses }}</p>
+                <h4>Monitoring requirements:</h4>
+                <p>{{ info.monitoringrequirements }}</p>
+                <h4>Patient and care advice:</h4>
+                <p>{{ info.patientandcareradvice }}</p>
+                <h4>Prescribing and dispensing informations</h4>
+                <p>{{ info.prescribinganddispensinginformations }}</p>
+                <h4>Pretreatment Screening Information:</h4>
+                <p>{{ info.pretreatmentscreeninginformation }}</p>
+                <h4>Side Effects:</h4>
+                <p>{{ info.sideeffects }}</p>
+                <h4>Interactions</h4>
+                <p>{{ info.interactions }}</p>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- Entry 26 finding 4, faithfully replicated: this button does
+               NOT call clear(), only dismisses -- matching legacy's
+               data-dismiss="modal" with no ng-click. -->
+          <button type="button" class="btn danger" (click)="dismissModal()">Close</button>
+          <!-- Entry 26 finding 2, faithfully replicated: no handler at all. -->
+          <button type="button" class="btn btn-primary-save">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}

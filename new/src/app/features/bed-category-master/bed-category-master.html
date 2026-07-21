@@ -1,0 +1,264 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="bedCategoryCode">Code<span class="required">*</span></label>
+        <input
+          id="bedCategoryCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().bedCategoryCode"
+          (ngModelChange)="updateField('bedCategoryCode', $event)"
+          [class.invalid]="isRequiredMissing(form().bedCategoryCode)"
+          name="bedCategoryCode"
+        />
+        @if (isRequiredMissing(form().bedCategoryCode)) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="bedCategoryName">Description<span class="required">*</span></label>
+        <input
+          id="bedCategoryName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().bedCategoryName"
+          (ngModelChange)="updateField('bedCategoryName', $event)"
+          [class.invalid]="isRequiredMissing(form().bedCategoryName)"
+          name="bedCategoryName"
+        />
+        @if (isRequiredMissing(form().bedCategoryName)) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="billingBedId">Billing Ward Bed Category<span class="required">*</span></label>
+        <select
+          id="billingBedId"
+          [ngModel]="form().billingBedCategoryId"
+          (ngModelChange)="updateField('billingBedCategoryId', $event)"
+          [class.invalid]="isRequiredMissing(form().billingBedCategoryId)"
+          name="billingBedId"
+        >
+          <option [value]="''">Select Billing Bed Category</option>
+          @for (info of billingBedList(); track info.billingBedCategoryId) {
+            <option [value]="info.billingBedCategoryId">{{ info.billingBedDesc }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(form().billingBedCategoryId)) {
+          <p class="help-block">Billing Ward Bed Category is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="hierarchyId">Hierarchy<span class="required">*</span></label>
+        <select
+          id="hierarchyId"
+          [ngModel]="form().hierarchyId"
+          (ngModelChange)="updateField('hierarchyId', $event)"
+          [class.invalid]="!form().isIcu && isRequiredMissing(form().hierarchyId)"
+          name="hierarchyId"
+        >
+          <option [value]="''">Select Hierarchy</option>
+          @for (info of hierarchyList(); track info.hierarchyId) {
+            <option [value]="info.hierarchyId">{{ info.hierarchyDesc }}</option>
+          }
+        </select>
+        @if (!form().isIcu && isRequiredMissing(form().hierarchyId)) {
+          <p class="help-block">Hierarchy is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="occupancyUnitId">Occupancy Unit<span class="required">*</span></label>
+        <select
+          id="occupancyUnitId"
+          [ngModel]="form().occupancyUnitId"
+          (ngModelChange)="updateField('occupancyUnitId', $event)"
+          [class.invalid]="isRequiredMissing(form().occupancyUnitId)"
+          name="occupancyUnitId"
+        >
+          <option [value]="''">Select Occupancy Unit</option>
+          @for (info of activeOccupancyUnits(); track info.occupancyUnitId) {
+            <option [value]="info.occupancyUnitId">{{ info.occupancyUnitDesc }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(form().occupancyUnitId)) {
+          <p class="help-block">Occupancy unit is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serviceId">Services</label>
+        <select
+          id="serviceId"
+          [ngModel]="form().serviceId"
+          (ngModelChange)="updateField('serviceId', $event)"
+          name="serviceId"
+        >
+          <option [ngValue]="null"></option>
+          @for (info of consultationServiceList(); track info.serviceMasterId) {
+            <option [ngValue]="info.serviceMasterId">{{ info.serviceStandardName }}</option>
+          }
+        </select>
+      </div>
+
+      <label class="field checkbox-field">
+        <input
+          type="checkbox"
+          [ngModel]="form().isBedRetention === 'Y'"
+          (ngModelChange)="updateField('isBedRetention', $event ? 'Y' : 'N')"
+          name="isBedRetention"
+        />
+        Bed Retention
+      </label>
+
+      <label class="field checkbox-field">
+        <input type="checkbox" [ngModel]="form().isIcu" (ngModelChange)="updateField('isIcu', $event)" name="isIcu" />
+        ICU
+      </label>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" name="search" />
+
+    @if (!saveBtnFlag()) {
+      <button type="button" class="btn-primary" title="Save" (click)="openConfirmModal()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+    @if (!updateBtnFlag()) {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <button type="button" class="btn-primary" title="Set Hierarchy" (click)="openHierarchyModal()">Set Hierarchy</button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th>Billing Bed Category</th>
+        <th>Hierarchy</th>
+        <th>Occupancy Unit</th>
+        <th>Service Name</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (info of displayedRows(); track info.bedCategoryId; let idx = $index) {
+        <tr>
+          <td>{{ info.bedCategoryCode }}</td>
+          <td>{{ info.bedCategoryDesc }}</td>
+          <td>{{ info.billingBedDesc }}</td>
+          <td>{{ info.hierarchyDesc }}</td>
+          <td>{{ info.occupancyUnitDesc }}</td>
+          <td>{{ info.serviceStandardName != null ? info.serviceStandardName : '-' }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="info.status === 'A'" (toggled)="toggleStatus(info)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(info.bedCategoryId, idx)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="8" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body"><span>Are you sure you want to Save?</span></div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="save()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showHierarchyModal()) {
+  <div class="modal-backdrop">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>Set Hierarchy</header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Description</th>
+              <th>Billing Bed Category</th>
+              <th>Hierarchy</th>
+              <th>Occupancy Unit</th>
+              <th>Service Name</th>
+              <th class="text-center">Status(n)</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (info of displayedRows(); track info.bedCategoryId; let idx = $index) {
+              <tr>
+                <td>{{ info.bedCategoryCode }}</td>
+                <td>{{ info.bedCategoryDesc }}</td>
+                <td>{{ info.billingBedDesc }}</td>
+                <td>
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    [ngModel]="info.hierarchyId"
+                    (ngModelChange)="onHierarchyIdInput(idx, $event)"
+                    (blur)="checkValidHierarchy(info)"
+                    [name]="'hierarchy-' + idx"
+                  />
+                </td>
+                <td>{{ info.occupancyUnitDesc }}</td>
+                <td>{{ info.serviceStandardName != null ? info.serviceStandardName : '-' }}</td>
+                <td class="text-center">{{ info.status }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" [disabled]="!hierarchySaveFlag()" (click)="setHierarchy()">OK</button>
+        <button type="button" class="btn-primary" (click)="closeHierarchyModal()">Close</button>
+      </div>
+    </div>
+  </div>
+}

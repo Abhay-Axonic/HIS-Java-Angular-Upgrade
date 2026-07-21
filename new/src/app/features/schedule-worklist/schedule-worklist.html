@@ -1,0 +1,158 @@
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style">
+    <fieldset>
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+            <label>Date (From)</label>
+            <input type="date" class="form-control" [ngModel]="criteria.fromDate | date: 'yyyy-MM-dd'" (ngModelChange)="criteria.fromDate = $event" name="datepickerF" />
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4">
+            <label>Date-Till</label>
+            <input type="date" class="form-control" [ngModel]="criteria.toDate | date: 'yyyy-MM-dd'" (ngModelChange)="criteria.toDate = $event" name="datepickerT" />
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <label>Store</label>
+          <select class="form-control" [(ngModel)]="criteria.storeId" name="storeId">
+            @for (info of storeList(); track info.storeId) {
+              <option [ngValue]="info.storeId">{{ info.storeName }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <label>PMS Type</label>
+          <select class="form-control" [(ngModel)]="criteria.pmsType" name="pmsType">
+            <option></option>
+            <option value="InHouse">In House</option>
+            <option value="OutSource">Out Source</option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <label>Status(n)</label>
+          <select class="form-control" [(ngModel)]="criteria.processStatus" name="processStatus">
+            <option value="0">All</option>
+            <option value="3">Assigned</option>
+            <option value="6">Cancelled</option>
+            <option value="2">Completed</option>
+            <option value="7">Reopen</option>
+            <option value="1">Requested</option>
+            <option value="4">Work In Progress</option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+          <label>Employee Name</label>
+          <select class="form-control" [(ngModel)]="criteria.assignTo" name="assignTo">
+            @for (info of usersList(); track info.userId) {
+              <option [ngValue]="info.userId">{{ info.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 text-width-auto padding-top10">
+          <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow" title="Search" (click)="getAssetDetailsByCriteria()">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="row padding-top5">
+      <div class="col-lg-9 col-md-9 col-sm-9">
+        <label class="show-entries"
+          >Show
+          <select [ngModel]="pagination().pageSize" (ngModelChange)="onPageSizeChange($event)" class="search-popUp-ddl">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          (records)
+        </label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 float_right">
+        <input
+          type="text"
+          autocomplete="off"
+          [ngModel]="pagination().search"
+          (ngModelChange)="onSearchChange($event)"
+          class="text-search-box"
+          placeholder="Search"
+        />
+        <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <div class="row padding-left-right-set4 margin-top5">
+      <div class="col-lg-12 col-md-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="width8">Schedule Date</th>
+              <th class="width8">Schedule Time</th>
+              <th class="width6">Store</th>
+              <th class="width6">Asset Code</th>
+              <th class="width7">Asset Name</th>
+              <th class="width6">Serial No</th>
+              <th class="width6">Vendor</th>
+              <th class="width6">PMS Type</th>
+              <th class="width8">Assigned To</th>
+              <th class="width8">Completion Date</th>
+              <th class="width3">Status(n)</th>
+              <th class="width3">Action taken</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (asset of pagination().data; track asset.assetScheduleId) {
+              <tr>
+                <td>{{ asset.scheduledDate | date: 'dd/MM/y' }}</td>
+                <td>{{ asset.scheduledTime }}</td>
+                <td>{{ asset.storeName }}</td>
+                <td>{{ asset.itemCode }}</td>
+                <td>{{ asset.itemName }}</td>
+                <td>{{ asset.serialNo }}</td>
+                <td>{{ asset.vendor }}</td>
+                <td>{{ asset.pmsType }}</td>
+                <td>{{ getAssignNameById(asset.assignTo) }}</td>
+                <td>{{ asset.completionDate | date: 'dd/MM/y' }}</td>
+                <td>
+                  @if (asset.processStatus === 1) {
+                    <label>Requested</label>
+                  }
+                  @if (asset.processStatus === 2) {
+                    <label>Completed</label>
+                  }
+                  @if (asset.processStatus === 3) {
+                    <label>Assigned</label>
+                  }
+                  @if (asset.processStatus === 4) {
+                    <label>In Progress</label>
+                  }
+                  @if (asset.processStatus === 5) {
+                    <label>Cancelled</label>
+                  }
+                  @if (asset.processStatus === 6) {
+                    <label>ReOpen</label>
+                  }
+                </td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" title="PMS Details" (click)="redirectToDetailScheduleWorklist(asset)"></i></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="row margin-bottom45 center-block">
+        @if (pagination().totalPages > 1) {
+          <ul class="pagination table-list" style="font-size: 14px; cursor: pointer">
+            <li [class.disabled]="pagination().currentPage === 1"><a (click)="goToFirstPage()">First</a></li>
+            <li [class.disabled]="pagination().currentPage === 1"><a (click)="goToPreviousPage()">Previous</a></li>
+            @for (page of pagesList(); track page) {
+              <li [class.active]="pagination().currentPage === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+            }
+            <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="goToNextPage()">Next</a></li>
+            <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="goToLastPage()">Last</a></li>
+          </ul>
+        }
+      </div>
+    </div>
+  </div>
+</div>

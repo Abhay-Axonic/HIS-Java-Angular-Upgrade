@@ -1,0 +1,202 @@
+<section class="page">
+  <fieldset>
+    <div class="store-row">
+      <span class="store-name" (click)="openStorePopup()">{{ storeName() }}</span>
+    </div>
+
+    <div class="filter-row">
+      <div class="field">
+        <label for="fromDate">Date (From)</label>
+        <input
+          id="fromDate"
+          type="date"
+          [ngModel]="fromDate() | date: 'yyyy-MM-dd'"
+          (ngModelChange)="fromDate.set($any($event) ? $any($event) : fromDate())"
+          name="fromDate"
+        />
+      </div>
+      <div class="field">
+        <label for="toDate">Date-Till</label>
+        <input id="toDate" type="date" [ngModel]="toDate() | date: 'yyyy-MM-dd'" (ngModelChange)="toDate.set($any($event))" name="toDate" />
+      </div>
+
+      <div class="field">
+        <label for="visitType">Visit Type</label>
+        <select id="visitType" [ngModel]="selectedVisitType()" (ngModelChange)="onVisitTypeChange($event)" name="visitType">
+          @for (v of visitTypeDataList(); track v.id) {
+            <option [ngValue]="v">{{ v.type }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field typeahead">
+        <label for="patientName">Patient Name</label>
+        <input
+          id="patientName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="patientName()"
+          (ngModelChange)="onPatientNameChange($event)"
+          name="patientName"
+        />
+        @if (patientResults().length) {
+          <ul class="typeahead-list">
+            @for (p of patientResults(); track p.details) {
+              <li (mousedown)="selectPatientByName(p)">{{ p.details }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="field typeahead">
+        <label for="uhid">UHID</label>
+        <input id="uhid" type="text" autocomplete="off" [ngModel]="uhid()" (ngModelChange)="onUhidChange($event)" name="uhid" />
+        @if (uhidResults().length) {
+          <ul class="typeahead-list">
+            @for (u of uhidResults(); track u.details) {
+              <li (mousedown)="selectPatientByUhid(u)">{{ u.details }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="field typeahead">
+        <label for="doctorName">Doctor Name</label>
+        <input
+          id="doctorName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="doctorName()"
+          (ngModelChange)="onDoctorNameChange($event)"
+          name="doctorName"
+        />
+        @if (doctorResults().length) {
+          <ul class="typeahead-list">
+            @for (d of doctorResults(); track d.details) {
+              <li (mousedown)="selectDoctor(d)">{{ d.details }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="field">
+        <label for="status">Status(n)</label>
+        <select id="status" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)" name="status">
+          @for (s of statusDataList(); track s.id) {
+            <option [ngValue]="s">{{ s.status }}</option>
+          }
+        </select>
+      </div>
+
+      <button type="button" class="btn-primary" title="Search" (click)="search()">Search</button>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Patient</th>
+        <th>Visit Type</th>
+        <th>Visit Date</th>
+        <th>Prescription Date</th>
+        <th>Doctor Details</th>
+        <th>Ward Name</th>
+        <th>Ward Bed No.</th>
+        <th>Priority</th>
+        <th>Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of pagedRows(); track row.id) {
+        <tr>
+          <td>
+            <div class="patient-cell">
+              <div class="patient-name">{{ row.patientName }}</div>
+              <div class="patient-details">{{ row.ageString }} / {{ row.genderCode }}</div>
+              <div class="patient-details">{{ row.uhid }}</div>
+            </div>
+          </td>
+          <td>{{ row.visitType }}</td>
+          <td>{{ row.visitDate | date: 'dd/MM/yyyy' }}<br />{{ row.visitDate | date: 'hh:mm a' }}</td>
+          <td>{{ row.prescriptionDate | date: 'dd/MM/yyyy' }}<br />{{ row.prescriptionDate | date: 'hh:mm a' }}</td>
+          <td>{{ row.doctorDetail }}</td>
+          <td>{{ row.wardName }}</td>
+          <td>{{ row.bedNo }}</td>
+          <td>{{ row.priority }}</td>
+          <td>{{ row.status }}</td>
+          <td class="actions text-center">
+            <i class="icon-print" title="Print" (click)="printReport(row)"></i>
+            <i class="icon-cancel" title="Cancel" [class.disabled]="isRowDisabled(row)" (click)="openCancelModal(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!pagedRows().length) {
+        <tr>
+          <td colspan="10" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showCancelModal()) {
+  <div class="modal-backdrop" (click)="closeCancelModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Cancellation
+        <button type="button" (click)="closeCancelModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="field">
+          <label>Select Reasons</label>
+          <select [ngModel]="cancelReason()" (ngModelChange)="onCancelReasonChange($event)" name="cancelReason">
+            <option [ngValue]="undefined"></option>
+            @for (r of reasons(); track r.id) {
+              <option [ngValue]="r.id">{{ r.reason }}</option>
+            }
+          </select>
+          @if (isReasonValid()) {
+            <p class="help-block">Select Reason</p>
+          }
+        </div>
+        <div class="field">
+          <label>Note</label>
+          <textarea [ngModel]="rejectNote()" (ngModelChange)="rejectNote.set($event)" name="rejectNote"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmCancel()">Save</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,288 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label>Asset Category</label>
+        <select [ngModel]="assetCategory()" (ngModelChange)="onAssetCategoryChange($event)" name="assetCategory">
+          @for (c of assetCategoryList(); track c.id) {
+            <option [ngValue]="c">{{ c.category }}</option>
+          }
+        </select>
+        @if (isValidCode()) {
+          <p class="help-block">Enter Asset Category Code</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Product Category</label>
+        <select [ngModel]="productCategory()" (ngModelChange)="productCategory.set($event); isValidProductCat.set(false)" name="productCategory">
+          @for (c of productCategoryList(); track c.id) {
+            <option [ngValue]="c">{{ c.category }}</option>
+          }
+        </select>
+        @if (isValidProductCat()) {
+          <p class="help-block">Enter Product Category</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Item Code</label>
+        <input type="text" autocomplete="off" maxlength="10" [ngModel]="itemCode()" (ngModelChange)="itemCode.set($event); isValidItemCode.set(false)" name="itemCode" />
+        @if (isValidItemCode()) {
+          <p class="help-block">Enter Item Code</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Product Code</label>
+        <input type="text" autocomplete="off" maxlength="10" [ngModel]="productCode()" (ngModelChange)="productCode.set($event); isValidProductCode.set(false)" name="productCode" />
+        @if (isValidProductCode()) {
+          <p class="help-block">Enter Product Code</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Asset Name</label>
+        <input type="text" autocomplete="off" [ngModel]="assetName()" (ngModelChange)="assetName.set($event); isValidAssetName.set(false)" name="assetName" />
+        @if (isValidAssetName()) {
+          <p class="help-block">Enter Asset Name</p>
+        }
+      </div>
+
+      <div class="field typeahead">
+        <label>Manufacturer</label>
+        <input type="text" autocomplete="off" [ngModel]="manufacturer()" (ngModelChange)="onManufacturerChange($event)" name="manufacturer" />
+        @if (manufacturerResults().length) {
+          <ul class="typeahead-list">
+            @for (m of manufacturerResults(); track m.id) {
+              <li (mousedown)="selectManufacturer(m)">{{ m.detail }}</li>
+            }
+          </ul>
+        }
+        @if (isValidManufacturer()) {
+          <p class="help-block">Enter Manufacturer</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Purchase Tax</label>
+        <select [ngModel]="purchaseTax()" (ngModelChange)="purchaseTax.set($event); isPurchaseTaxValid.set(false)" name="purchaseTax">
+          @for (t of purchaseTaxes(); track t.id) {
+            <option [ngValue]="t">{{ t.type }}</option>
+          }
+        </select>
+        @if (isPurchaseTaxValid()) {
+          <p class="help-block">Purchase Tax is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Sale Tax</label>
+        <select [ngModel]="saleTax()" (ngModelChange)="saleTax.set($event); isSaleTaxValid.set(false)" name="saleTax">
+          @for (t of saleTaxes(); track t.id) {
+            <option [ngValue]="t">{{ t.type }}</option>
+          }
+        </select>
+        @if (isSaleTaxValid()) {
+          <p class="help-block">Sale Tax is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Storage Unit</label>
+        <select [ngModel]="unit()" (ngModelChange)="unit.set($event); isStorageUnitValid.set(false)" name="unit">
+          @for (u of storageUnits(); track u.id) {
+            <option [ngValue]="u">{{ u.unit }}</option>
+          }
+        </select>
+        @if (isStorageUnitValid()) {
+          <p class="help-block">Storage Unit is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Speciality Count</label>
+        <input type="text" [ngModel]="specialityCount()" name="specialityCount" disabled />
+      </div>
+
+      <button type="button" class="btn-primary" (click)="openSpecialityPicker()">Add</button>
+    </div>
+
+    <div class="checkbox-row">
+      <label class="field checkbox-field"><input type="checkbox" [ngModel]="isConsignment()" (ngModelChange)="isConsignment.set($event)" name="isConsignment" /> Is Consignment</label>
+      <label class="field checkbox-field"><input type="checkbox" [ngModel]="isSterilized()" (ngModelChange)="isSterilized.set($event)" name="isSterilized" /> Is Sterilized</label>
+      <label class="field checkbox-field"><input type="checkbox" [ngModel]="isBatchRequired()" (ngModelChange)="isBatchRequired.set($event)" name="isBatchRequired" /> Is Batch Required</label>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      records
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" name="searchKeyword" />
+
+    <button
+      type="button"
+      class="btn-primary"
+      title="Save"
+      [class.disabled]="!assetCategory().id || !productCategory().id || !itemCode() || !productCode() || !assetName() || !manufacturer()"
+      (click)="openConfirmModal()"
+    >
+      Save
+    </button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Asset Category</th>
+        <th>Product Category</th>
+        <th>Item Code</th>
+        <th>Product Code</th>
+        <th>Asset Name</th>
+        <th>Manufacturer</th>
+        <th>Purchase Tax</th>
+        <th>Sales Tax</th>
+        <th>Storage Unit</th>
+        <th class="text-center">Is Consignment</th>
+        <th class="text-center">Is Batch Required</th>
+        <th class="text-center">Is Sterilized</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+        <th class="text-center"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of pagedRows(); track row.id) {
+        <tr>
+          <td>{{ row.assetCategory }}</td>
+          <td>{{ row.productCategory }}</td>
+          <td>{{ row.itemCode }}</td>
+          <td>{{ row.productCode }}</td>
+          <td>{{ row.name }}</td>
+          <td>{{ row.manufactureName }}</td>
+          <td>{{ row.pTaxName }}</td>
+          <td>{{ row.sTaxName }}</td>
+          <td>{{ row.storageUnit }}</td>
+          <td class="text-center">{{ row.isConsignment ? 'Yes' : 'No' }}</td>
+          <td class="text-center">{{ row.isBatchRequired ? 'Yes' : 'No' }}</td>
+          <td class="text-center">{{ row.isSterilized ? 'Yes' : 'No' }}</td>
+          <td class="text-center">
+            <label class="switch">
+              <input type="checkbox" [checked]="row.status" (change)="toggleStatus(row, $any($event.target).checked)" />
+              <span class="slider"></span>
+            </label>
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" [class.disabled]="!row.status" (click)="row.status && edit(row.id)"></i>
+          </td>
+          <td class="text-center">
+            <i class="icon-view" (click)="viewSpecialities(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!pagedRows().length) {
+        <tr>
+          <td colspan="15" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body"><span>Are you sure you want to Save?</span></div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="save()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showSpecialityPicker()) {
+  <div class="modal-backdrop" (click)="closeSpecialityPicker()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Speciality Details
+        <button type="button" (click)="closeSpecialityPicker()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Speciality</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of specialityDetailList(); track $index) {
+              <tr>
+                <td>
+                  <select [ngModel]="row.specialityName" (ngModelChange)="onSpecialityRowChange($index, $event)" [name]="'spec-' + $index">
+                    <option [ngValue]="null"></option>
+                    @for (s of specialityList(); track s.specialityId) {
+                      <option [ngValue]="s">{{ s.specialityName }}</option>
+                    }
+                  </select>
+                </td>
+                <td>
+                  <button type="button" [disabled]="$index !== specialityDetailList().length - 1" (click)="addSpecialityRow($index)">+</button>
+                  @if ($index !== 0) {
+                    <button type="button" (click)="removeSpecialityRow($index)">-</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="saveSpecialityDetails()">Ok</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showSpecialityViewer()) {
+  <div class="modal-backdrop" (click)="closeSpecialityViewer()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Specialities
+        <button type="button" (click)="closeSpecialityViewer()">&times;</button>
+      </header>
+      <div class="modal-body">
+        @if (specialityViewerList().length) {
+          @for (s of specialityViewerList(); track s.specialityName) {
+            <h5>{{ s.specialityName }}</h5>
+          }
+        } @else {
+          <h5>No records found</h5>
+        }
+      </div>
+    </div>
+  </div>
+}

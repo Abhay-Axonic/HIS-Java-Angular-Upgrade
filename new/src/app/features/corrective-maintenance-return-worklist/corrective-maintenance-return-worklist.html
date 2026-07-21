@@ -1,0 +1,299 @@
+<div class="container-fluid his-style">
+  <fieldset>
+    <div class="row padding-top10">
+      <div class="col-lg-2">
+        <label>Date (From)</label>
+        <input type="date" class="form-control" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" [min]="fromDateMin" [max]="fromDateMax" />
+      </div>
+      <div class="col-lg-2">
+        <label>Date-Till</label>
+        <input type="date" class="form-control" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" [min]="toDateMin" />
+      </div>
+      <div class="col-lg-2">
+        <label>Department</label>
+        <select class="form-control" [(ngModel)]="storeId">
+          <option [ngValue]="0">All</option>
+          @for (s of storeList(); track s.storeId) { <option [ngValue]="s.storeId">{{ s.storeName }}</option> }
+        </select>
+      </div>
+      <div class="col-lg-2">
+        <label>Status(n)</label>
+        <select class="form-control" [(ngModel)]="statusId">
+          <option [ngValue]="0">All</option>
+          <option [ngValue]="2">Completed</option>
+          <option [ngValue]="1">Pending</option>
+          <option [ngValue]="3">Rejected</option>
+        </select>
+      </div>
+      <div class="col-lg-1">
+        <a class="btn btn-primary btn-save-box-shadow" title="Search" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="row padding-top10">
+    <div class="col-lg-9">
+      Show
+      <select [(ngModel)]="pagination().pageSize" (ngModelChange)="setPageSize()">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      (records)
+    </div>
+    <div class="col-lg-3">
+      <input type="text" class="text-search-box" placeholder="Search" [(ngModel)]="searchKeyword" />
+    </div>
+  </div>
+
+  <div class="row padding-top10">
+    <div class="col-lg-12">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Request No</th>
+            <th>Request (Date)</th>
+            <th>Asset Code</th>
+            <th>Asset Name</th>
+            <th>Serial No</th>
+            <th>Return Serial No</th>
+            <th>Completion Date</th>
+            <th>Complaint Details</th>
+            <th>Status(n)</th>
+            <th>Action taken</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (info of filteredRows(); track $index) {
+            <tr>
+              <td>{{ info.callLogNumber }}</td>
+              <td>{{ info.requestDateTime }}</td>
+              <td>{{ info.itemCode }}</td>
+              <td>{{ info.itemName }}</td>
+              <td>{{ info.newSerialNo }}</td>
+              <td>{{ info.requestedSerialNo }}</td>
+              <td>{{ info.completionDate }}</td>
+              <td class="text-center">
+                <a (click)="getDetailsOfCM(info)"><i class="fa fa-info-circle" aria-hidden="true" title="Completion Details"></i></a>
+              </td>
+              <td>
+                @if (info.replaceStatusId === 1) { Pending }
+                @if (info.replaceStatusId === 2) { Completed }
+                @if (info.replaceStatusId === 3) { Rejected }
+              </td>
+              <td>
+                <div [class.disabled]="info.replaceStatusId === 2 || info.replaceStatusId === 3">
+                  <button
+                    type="button"
+                    class="accept-reject-toggle"
+                    [class.state-accept]="info.isAcceptOrReject === 'A'"
+                    [class.state-reject]="info.isAcceptOrReject === 'R'"
+                    (click)="toggleAcceptReject(info, $index)"
+                  >
+                    @if (info.isAcceptOrReject === 'A') {
+                      Accept
+                    } @else if (info.isAcceptOrReject === 'R') {
+                      Reject
+                    } @else {
+                      --
+                    }
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (pagination().totalPages > 1) {
+      <div class="row center-block">
+        <ul class="pagination table-list">
+          <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+          <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+          @for (p of pagesList(); track p) {
+            <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+          }
+          <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+          <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+        </ul>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showCompletionModal()) {
+  <div class="modal-backdrop" (click)="closeCompletionModal()">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>Complaint Information Details <button type="button" class="close" (click)="closeCompletionModal()">&times;</button></header>
+      <div class="modal-body">
+        <fieldset class="normalRegistration">
+          <legend class="heading-div">Asset Details</legend>
+          <div class="row padding-top5">
+            <div class="col-lg-3">
+              <b>Request Type:</b>
+              @if (detailsOfCMObj().requestTypeId === 1) { Breakdown }
+              @if (detailsOfCMObj().requestTypeId === 2) { Installation }
+              @if (detailsOfCMObj().requestTypeId === 3) { As And When }
+            </div>
+            <div class="col-lg-3">
+              <b>Request Criticality:</b>
+              @if (detailsOfCMObj().requestCriticalityId === 1) { Normal }
+              @if (detailsOfCMObj().requestCriticalityId === 2) { Urgent }
+            </div>
+          </div>
+          <div class="row padding-top5">
+            <div class="col-lg-3"><b>Asset Category:</b> {{ detailsOfCMObj().assetcategory }}</div>
+            <div class="col-lg-3"><b>Asset Code:</b> {{ detailsOfCMObj().assetCode }}</div>
+            <div class="col-lg-3"><b>Asset Name:</b> {{ detailsOfCMObj().assetName }}</div>
+            <div class="col-lg-3"><b>Serial No.:</b> {{ detailsOfCMObj().serialNumber }}</div>
+          </div>
+        </fieldset>
+
+        <fieldset class="normalRegistration margin-top10">
+          <legend class="heading-div">Request Details</legend>
+          <div class="row">
+            <div class="col-lg-3"><b>Request DateTime:</b> {{ detailsOfCMObj().requestDateTime }}</div>
+            <div class="col-lg-3">
+              <input type="checkbox" [checked]="detailsOfCMObj().isDown" disabled />
+              <label>Is NonOperative</label>
+            </div>
+            <div class="col-lg-3"><b>Down Time Date:</b> {{ detailsOfCMObj().downDateTime }}</div>
+            <div class="col-lg-3"><b>Down Time:</b> {{ detailsOfCMObj().downTime }}</div>
+          </div>
+          <div class="row padding-top10">
+            <div class="col-lg-2"><b>Request Details:</b></div>
+            <div class="col-lg-10"><textarea rows="4" disabled>{{ detailsOfCMObj().requestDetails }}</textarea></div>
+          </div>
+          <div class="row padding-top5">
+            <div class="col-lg-2"><b>Remarks:</b></div>
+            <div class="col-lg-10"><textarea rows="2" disabled>{{ detailsOfCMObj().remark }}</textarea></div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4"><b>Resolution Expected By:</b> {{ detailsOfCMObj().resolutionExpectedDateTime }}</div>
+          </div>
+        </fieldset>
+
+        <fieldset class="normalRegistration margin-top10">
+          <legend class="heading-div">Allocation Details</legend>
+          <div class="row">
+            <div class="col-lg-3"><b>Assigned To:</b> {{ detailsOfCMObj().userName }}</div>
+            <div class="col-lg-3"><b>Schedule Date:</b> {{ detailsOfCMObj().scheduleDate }}</div>
+            <div class="col-lg-3"><b>Schedule Time:</b> {{ detailsOfCMObj().scheduleTime }}</div>
+          </div>
+          <div class="row padding-top10">
+            <div class="col-lg-2"><b>Allocation Remarks:</b></div>
+            <div class="col-lg-10"><textarea rows="2" disabled>{{ detailsOfCMObj().allocationRemark }}</textarea></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="normalRegistration margin-top10">
+          <legend class="heading-div">Is Start</legend>
+          <div class="row">
+            <div class="col-lg-2">
+              <label>Is Start:</label>
+              <input type="checkbox" [checked]="detailsOfCMObj().isStart" disabled />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="normalRegistration margin-top10">
+          <legend class="heading-div">Resolution Details</legend>
+          <div class="row">
+            <div class="col-lg-4">
+              <label>Request Allocation Type</label>
+              <input type="radio" [checked]="detailsOfCMObj().requestAllocationTypeId === 1" disabled /> In house
+              <input type="radio" [checked]="detailsOfCMObj().requestAllocationTypeId === 0" disabled /> OEM
+              <input type="radio" [checked]="detailsOfCMObj().requestAllocationTypeId === 2" disabled /> Out Source
+            </div>
+            @if (detailsOfCMObj().requestAllocationTypeId === 0 || detailsOfCMObj().requestAllocationTypeId === 2) {
+              <div class="col-lg-2"><label>Ticket No.</label><input type="text" class="form-control" [value]="detailsOfCMObj().ticketNo" disabled /></div>
+              <div class="col-lg-2"><label>Vendor</label><input type="text" class="form-control" [value]="detailsOfCMObj().vendorName" disabled /></div>
+            }
+          </div>
+          <div class="row padding-top10">
+            <div class="col-lg-2"><b>Resolution Details:</b></div>
+            <div class="col-lg-10"><textarea rows="2" disabled>{{ detailsOfCMObj().resolutionDetails }}</textarea></div>
+          </div>
+          <div class="row">
+            <div class="col-lg-2">
+              <label>Is Completed:</label>
+              <input type="checkbox" [checked]="detailsOfCMObj().isCompleted" disabled />
+            </div>
+            <div class="col-lg-2"><label>Asset Up Date</label><input type="text" class="form-control" [value]="detailsOfCMObj().assetUpDate" disabled /></div>
+            <div class="col-lg-1"><label>Asset Up Time</label><input type="text" class="form-control" [value]="detailsOfCMObj().assetUpTime" disabled /></div>
+            <div class="col-lg-2">
+              <label>Under Observation</label>
+              <input type="checkbox" [checked]="detailsOfCMObj().underObservation" disabled />
+            </div>
+            <div class="col-lg-2"><label>From Date</label><input type="text" class="form-control" [value]="detailsOfCMObj().fromDate" disabled /></div>
+            <div class="col-lg-2"><label>To Date</label><input type="text" class="form-control" [value]="detailsOfCMObj().toDate" disabled /></div>
+          </div>
+          <div class="row padding-top10">
+            <div class="col-lg-2"><b>Remarks:</b></div>
+            <div class="col-lg-10"><textarea rows="2" disabled>{{ detailsOfCMObj().remark }}</textarea></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="normalRegistration margin-top10">
+          <legend class="heading-div">Replacement Details</legend>
+          <div class="row padding-top5">
+            <div class="col-lg-3"><b>Asset Category:</b> {{ detailsOfCMObj().assetcategory }}</div>
+            <div class="col-lg-3"><b>Asset Code:</b> {{ detailsOfCMObj().assetCode }}</div>
+            <div class="col-lg-3"><b>Asset Name:</b> {{ detailsOfCMObj().assetName }}</div>
+            <div class="col-lg-3"><b>Serial No:</b> {{ detailsOfCMObj().requestedSerialNo }}</div>
+            <div class="col-lg-3"><b>Return Serial No:</b> {{ detailsOfCMObj().newSerialNo }}</div>
+          </div>
+        </fieldset>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="closeCompletionModal()">Back</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showAcceptModal()) {
+  <div class="modal-backdrop" (click)="closeAcceptModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Asset Accept Details <button type="button" class="close" (click)="closeAcceptModal()">&times;</button></header>
+      <div class="modal-body">
+        <div class="row padding-top10">
+          <div class="col-lg-4"><label>Asset Category</label><input type="text" class="form-control" [value]="acceptReturnObj.assetName" disabled /></div>
+          <div class="col-lg-4"><label>Asset Code</label><input type="text" class="form-control" [value]="acceptReturnObj.itemCode" disabled /></div>
+          <div class="col-lg-4"><label>Asset Name</label><input type="text" class="form-control" [value]="acceptReturnObj.itemName" disabled /></div>
+          <div class="col-lg-6"><label>Serial No.</label><input type="text" class="form-control" [value]="acceptReturnObj.newSerialNo" disabled /></div>
+          <div class="col-lg-6"><label>Return Serial No.</label><input type="text" class="form-control" [value]="acceptReturnObj.requestedSerialNo" disabled /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="saveAcceptance()">Save</button>
+        <button type="button" class="btn btn-primary" (click)="closeAcceptModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showRejectModal()) {
+  <div class="modal-backdrop" (click)="closeRejectModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Rejection <button type="button" class="close" (click)="closeRejectModal()">&times;</button></header>
+      <div class="modal-body">
+        <div class="row input-container margin-top10">
+          <label for="rejectReasonIdDrpDN">Select Reasons</label>
+          <select class="form-control" id="rejectReasonIdDrpDN" [(ngModel)]="rejectReasonId">
+            <option [ngValue]="''">Select Reason</option>
+            @for (r of reasonList(); track r.reasonMasterId) { <option [ngValue]="r.reasonMasterId">{{ r.reasonDesc }}</option> }
+          </select>
+        </div>
+        <div class="row input-container margin-top10">
+          <label for="noteRejectDrpDN">Note</label>
+          <textarea id="noteRejectDrpDN" rows="4" class="form-control" [(ngModel)]="noteReject"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="saveAcceptReject()">Save</button>
+      </div>
+    </div>
+  </div>
+}

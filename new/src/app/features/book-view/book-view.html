@@ -1,0 +1,40 @@
+@if (contextVerified()) {
+  <div class="container-fluid his-style">
+    <div class="row padding-top10 patient-header">
+      <div class="col-lg-3">
+        <label>Patient Name</label>
+        <div class="value">{{ patientDetails().patientName }}</div>
+      </div>
+      <div class="col-lg-2">
+        <label>UHID</label>
+        <div class="value">{{ patientDetails().uhIdNumber }}</div>
+      </div>
+      <div class="col-lg-1">
+        <label>Gender</label>
+        <div class="value">{{ patientDetails().genderCode }}</div>
+      </div>
+      <div class="col-lg-1">
+        <label>Age</label>
+        <div class="value">{{ patientDetails().age }}</div>
+      </div>
+      <div class="col-lg-2">
+        <label>Encounter ID</label>
+        <div class="value">{{ patientDetails().encounterId }}</div>
+      </div>
+    </div>
+
+    <!-- SCOPED REBUILD: see book-view.ts's class doc comment -- the full
+         tab surface (history, diagnosis, investigations, group services,
+         template transactions, package order, discharge summary,
+         checklist -- 81 functions across this 4,027-line legacy
+         controller) is not rebuilt in this pass. This header renders only
+         once the corrected patient-context check (entry 28) has actually
+         verified encounterId/patientId agreement, same gate legacy
+         enforces before showing anything on this screen. -->
+    <div class="row padding-top10">
+      <div class="col-lg-12 not-yet-built-notice">
+        Full clinical record view (history, diagnosis, investigations, billing tabs) is not yet part of this rebuild.
+      </div>
+    </div>
+  </div>
+}

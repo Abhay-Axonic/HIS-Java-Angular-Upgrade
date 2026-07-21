@@ -1,0 +1,48 @@
+<div class="notification-tray">
+  @for (n of notifications.notices(); track n.id) {
+    <div class="notice notice--{{ n.kind }}">{{ n.message }}</div>
+  }
+</div>
+
+@if (loader.visible()) {
+  <div id="preloader" class="app-preloader">
+    <div class="app-preloader-spinner"></div>
+  </div>
+}
+
+@if (storeSelection.visible()) {
+  <div id="pharmacyPopupBeforLeftexpand" class="modal fade in common-small-popup" role="dialog" style="display: block; padding-left: 17px">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">Pharmacy</div>
+        </div>
+        <div class="modal-body">
+          <div class="margin-left10 padding-top10">
+            <div class="col-md-3 col-lg-3 col-sm-3">
+              <span>Store</span>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6">
+              <select
+                style="width: 100%; border-radius: 10px; height: 40px"
+                name="store"
+                [ngModel]="storeSelection.selected()"
+                (ngModelChange)="storeSelection.selected.set($event)"
+              >
+                @for (store of storeSelection.storeList(); track store.storeId) {
+                  <option [ngValue]="store">{{ store.storeName }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <button type="button" class="btn btn-primary" id="otpOk" style="width: 50px" (click)="storeSelection.confirmSelection()">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
+
+<router-outlet />

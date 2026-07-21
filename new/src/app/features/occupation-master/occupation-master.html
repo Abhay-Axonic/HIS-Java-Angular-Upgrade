@@ -1,0 +1,91 @@
+<section class="page">
+  <fieldset>
+    <!--
+      Faithful copy-paste-residue reproduction: legacy's occupation-master.html:5
+      literally reads "Religion Master", not "Occupation Master" -- confirmed
+      via direct read, not a typo introduced here. See class doc comment.
+    -->
+    <legend class="heading-div">Religion Master</legend>
+    <div class="form-row">
+      <div class="field">
+        <label for="occupationCode">Code<span class="required">*</span></label>
+        <input
+          id="occupationCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().occupationCode"
+          (ngModelChange)="updateField('occupationCode', $event)"
+          name="occupationCode"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="occupationName">Occupation Name<span class="required">*</span></label>
+        <input
+          id="occupationName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().occupationName"
+          (ngModelChange)="updateField('occupationName', $event)"
+          name="occupationName"
+          required
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <!--
+    Faithful bug reproduction, NOT a working Save/Update flow -- see the
+    class doc comment / docs/ANGULAR_PENDING_FINDINGS.md. Legacy's
+    occupation-master.html:48-49 wire these exact buttons to
+    `saveOccupation()`/`updateOccupation()`, neither of which is defined
+    anywhere in occupationMasterController.js -- every real click throws in
+    legacy today, silently, with nothing visible happening on screen.
+  -->
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!--
+        Faithful bug reproduction -- see class doc comment. Legacy's
+        `ng-repeat="info in occupationList"` (view:79) iterates a variable
+        the controller never assigns; `renderList` here mirrors that -- it
+        is deliberately never populated, even though the real, working
+        getOccupationMasterList call fires on load and fetches real data
+        (see the private, unrendered `fetchedList` signal in the component).
+      -->
+      @for (row of renderList(); track row.occupationId) {
+        <tr>
+          <td>{{ row.occupationCode }}</td>
+          <td>{{ row.occupationName }}</td>
+          <td class="text-center">{{ row.status }}</td>
+          <td class="text-center"></td>
+        </tr>
+      }
+      @if (!renderList().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

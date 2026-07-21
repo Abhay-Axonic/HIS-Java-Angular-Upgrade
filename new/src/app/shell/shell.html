@@ -1,0 +1,43 @@
+<nav class="topbar">
+  <div class="topbar-left">
+    <img src="/assets/logo/axonicIcon.png" alt="" class="brand-logo" />
+    <button type="button" class="collapse-btn" (click)="toggleCollapsed()" title="Collapse sidebar">
+      <i class="fa fa-bars" aria-hidden="true"></i>
+    </button>
+    <span class="page-title">
+      <img src="/assets/logo/HIS_LOGO.png" alt="HIS" class="his-logo" width="96" height="24" />
+      {{ pageTitle() }}
+    </span>
+  </div>
+  <div class="topbar-right">
+    <span class="user-name-top">
+      {{ unitName }}
+      <span class="hide-on-tablet"> / {{ userName }}</span>
+    </span>
+    <button type="button" class="logout-btn" (click)="logout()" title="Logout">
+      <i class="fa fa-sign-out" aria-hidden="true"></i>
+    </button>
+  </div>
+</nav>
+
+<div class="shell-body">
+  <aside class="sidebar" [class.collapsed]="collapsed()">
+    <ul class="sidebar-nav">
+      @for (section of sections(); track section.heading) {
+        <li class="nav-heading">{{ section.heading }}</li>
+        @for (item of section.items; track item.path) {
+          <li>
+            <a [routerLink]="item.path" routerLinkActive="active">
+              <i class="fa fa-circle-o" aria-hidden="true"></i>
+              <span>{{ item.title }}</span>
+            </a>
+          </li>
+        }
+      }
+    </ul>
+  </aside>
+
+  <main class="content" [class.expanded]="collapsed()">
+    <router-outlet />
+  </main>
+</div>

@@ -1,0 +1,120 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="cabinCode">Cabin Code<span class="required">*</span></label>
+        <input
+          id="cabinCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().cabinCode"
+          (ngModelChange)="updateField('cabinCode', $event)"
+          name="cabinCode"
+          [class.invalid]="isFieldInvalid(form().cabinCode)"
+        />
+        @if (isFieldInvalid(form().cabinCode)) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="cabinDesc">Cabin Description<span class="required">*</span></label>
+        <input
+          id="cabinDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().cabinDesc"
+          (ngModelChange)="updateField('cabinDesc', $event)"
+          name="cabinDesc"
+          [class.invalid]="isFieldInvalid(form().cabinDesc)"
+        />
+        @if (isFieldInvalid(form().cabinDesc)) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <!-- Legacy quirk preserved: filters only the current page's already
+         fetched rows -- see class doc comment. -->
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="onSaveClick()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="onUpdateClick()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Cabin Code</th>
+        <th>Cabin Description</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.cabinId) {
+        <tr>
+          <td>{{ row.cabinCode }}</td>
+          <td>{{ row.cabinDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center"><i class="icon-edit" (click)="edit(row)"></i></td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <!-- Legacy's shared <modal> x button crashes here ($scope.cancel is
+             never defined -- see ANGULAR_PENDING_FINDINGS.md entry 55). Per
+             the standing policy (ANGULAR_REBUILD_PLAYBOOK.md Step 3), wired
+             to a normal working closeConfirmModal() instead of reproducing
+             the crash. -->
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

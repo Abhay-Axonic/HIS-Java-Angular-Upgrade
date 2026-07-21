@@ -1,0 +1,226 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="specialityId">Department<span class="required">*</span></label>
+        <select
+          id="specialityId"
+          [ngModel]="form().specialityId"
+          (ngModelChange)="updateField('specialityId', $event)"
+          [class.invalid]="isDeptInvalid()"
+          name="specialityId"
+        >
+          <option value="">Select Department</option>
+          @for (dept of departmentOptions(); track dept.specialityId) {
+            <option [value]="dept.specialityId">{{ dept.specialityName }}</option>
+          }
+        </select>
+        @if (isDeptInvalid()) {
+          <p class="help-block">Department is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="subSpecialityCode">Code<span class="required">*</span></label>
+        <input
+          id="subSpecialityCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().subSpecialityCode"
+          (ngModelChange)="updateField('subSpecialityCode', $event)"
+          [class.invalid]="isCodeInvalid()"
+          name="subSpecialityCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="subSpecialityName">Sub Department<span class="required">*</span></label>
+        <input
+          id="subSpecialityName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().subSpecialityName"
+          (ngModelChange)="updateField('subSpecialityName', $event)"
+          [class.invalid]="isNameInvalid()"
+          name="subSpecialityName"
+        />
+        @if (isNameInvalid()) {
+          <p class="help-block">Sub Department is required</p>
+        }
+      </div>
+
+      <div class="field typeahead-field">
+        <label for="generalLedgerName">General Ledger Code<span class="required">*</span></label>
+        <input
+          id="generalLedgerName"
+          type="text"
+          autocomplete="off"
+          placeholder="search"
+          [ngModel]="form().generalLedgerName"
+          (ngModelChange)="onLedgerInput($event)"
+          (blur)="onLedgerBlur()"
+          [class.invalid]="isLedgerInvalid()"
+          name="generalLedgerName"
+        />
+        @if (ledgerSuggestions().length) {
+          <ul class="suggestions">
+            @for (opt of ledgerSuggestions(); track opt.generalLedgerId) {
+              <li (click)="selectLedger(opt)">{{ opt.generalLedgerName }}</li>
+            }
+          </ul>
+        }
+        @if (isLedgerInvalid()) {
+          <p class="help-block">General Ledger Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="subHeaderName">Department header Name</label>
+        <input
+          id="subHeaderName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().subHeaderName"
+          (ngModelChange)="updateField('subHeaderName', $event)"
+          name="subHeaderName"
+        />
+      </div>
+
+      <label class="field checkbox-field">
+        <input
+          type="checkbox"
+          [checked]="form().isModality === 'Y'"
+          (change)="updateField('isModality', $any($event.target).checked ? 'Y' : 'N')"
+        />
+        Is Modality
+      </label>
+
+      <label class="field checkbox-field">
+        <input
+          type="checkbox"
+          [checked]="form().isMriModality === 'Y'"
+          (change)="updateField('isMriModality', $any($event.target).checked ? 'Y' : 'N')"
+        />
+        Is MRI Modality
+      </label>
+
+      <label class="field checkbox-field">
+        <input
+          type="checkbox"
+          [checked]="form().isCTModality === 'Y'"
+          (change)="updateField('isCTModality', $any($event.target).checked ? 'Y' : 'N')"
+        />
+        Is CT Modality
+      </label>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      name="searchKeyword"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="onSearchKeyup($event)"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Department</th>
+        <th>Sub Department Code</th>
+        <th>Sub Department</th>
+        <th>General Ledger Code</th>
+        <th>Is Modality</th>
+        <th>Is MRI Modality</th>
+        <th>Is CT Modality</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.subSpecialityMasterId) {
+        <tr>
+          <td>{{ row.specialityName }}</td>
+          <td>{{ row.subSpecialityMasterCode }}</td>
+          <td>{{ row.subSpecialityMasterName }}</td>
+          <td>{{ row.generalLedgerName }}</td>
+          <td>{{ row.isModality }}</td>
+          <td>{{ row.isMriModality }}</td>
+          <td>{{ row.isCTModality }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i
+              class="icon-edit"
+              [class.disabled]="row.status === 'I'"
+              (click)="row.status === 'A' && edit(row)"
+            ></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <!-- Blank by default, only text-bearing during a live search --
+               see class doc comment on `loadingMessage`. -->
+          <td colspan="9" class="text-center">{{ loadingMessage() }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

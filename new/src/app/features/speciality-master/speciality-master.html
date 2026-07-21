@@ -1,0 +1,174 @@
+<section class="page">
+  <fieldset>
+    <legend>Department Master</legend>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="specialityCode">Code<span class="required">*</span></label>
+        <input
+          id="specialityCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="speciality().specialityCode"
+          (ngModelChange)="updateField('specialityCode', $event)"
+          name="specialityCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="specialityName">Description<span class="required">*</span></label>
+        <input
+          id="specialityName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="speciality().specialityName"
+          (ngModelChange)="updateField('specialityName', $event)"
+          name="specialityName"
+          [class.invalid]="isDescriptionInvalid()"
+        />
+        @if (isDescriptionInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field typeahead">
+        <label for="generalLedgerName">General Ledger Code<span class="required">*</span></label>
+        <input
+          id="generalLedgerName"
+          type="text"
+          autocomplete="off"
+          placeholder="search"
+          [ngModel]="speciality().generalLedgerName"
+          (ngModelChange)="onLedgerNameInput($event)"
+          (blur)="clearLedgerIfUnselected()"
+          name="generalLedgerName"
+          [class.invalid]="isGeneralLedgerInvalid()"
+        />
+        @if (ledgerResults().length) {
+          <ul class="typeahead-list">
+            @for (option of ledgerResults(); track option.generalLedgerId) {
+              <li (mousedown)="selectLedger(option)">{{ option.generalLedgerName }}</li>
+            }
+          </ul>
+        }
+        <!-- No help-block here: legacy's own message for this field can
+             never display (name-mismatch bug, see class comment) -- not
+             reproducing a "working" version of a message legacy never shows. -->
+      </div>
+
+      <div class="field">
+        <label for="specialitySAC">SAC Code<span class="required">*</span></label>
+        <input
+          id="specialitySAC"
+          type="text"
+          autocomplete="off"
+          maxlength="15"
+          [ngModel]="speciality().specialitySAC"
+          (ngModelChange)="updateField('specialitySAC', $event)"
+          name="specialitySAC"
+          [class.invalid]="isSacInvalid()"
+        />
+        @if (isSacMessageShown()) {
+          <p class="help-block">SAC Code is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="onSearchInput($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th>General Ledger Code</th>
+        <th>SAC Code</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of specialityList(); track row.specialityId) {
+        <tr>
+          <td>{{ row.specialityCode }}</td>
+          <td>{{ row.specialityName }}</td>
+          <td>{{ row.generalLedgerName }}</td>
+          <td>{{ row.specialitySAC }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(row.specialityId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!specialityList().length) {
+        <tr>
+          <td colspan="6" class="text-center">{{ loadingMsg() }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

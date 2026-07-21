@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>New</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!--
+    Font Awesome 4.7.0 -- legacy's own index.html loads this exact version
+    (resources/assets/css/font-awesome-4.7.0/css/font-awesome.min.css).
+    Several already-rebuilt screens across multiple batches use `fa fa-*`
+    icon classes (e.g. Save/Update button icons) but this stylesheet was
+    never bundled here, so those icons have been rendering blank/invisible
+    since whichever batch first introduced them -- discovered during batch
+    6 live verification (docs/ANGULAR_PENDING_FINDINGS.md). Served as a
+    static file via a plain <link>, not through angular.json's `styles`
+    array, so its relative `url(../fonts/...)` references resolve exactly
+    as legacy's own copy does, with no bundler rewriting.
+  -->
+  <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
