@@ -1,0 +1,39 @@
+<section class="page">
+  <div class="kiosk-heading">
+    <span>Kiosk : {{ kioskName() }}</span>
+    <span class="dropdown-anchor">
+      <button type="button" class="icon-btn" title="" [attr.aria-haspopup]="true">
+        <i class="fa fa-link" aria-hidden="true"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#QMS">Issue Token URL</a></li>
+      </ul>
+    </span>
+  </div>
+</section>
+
+@if (showKioskModal()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <header>Kiosk Details</header>
+      <div class="modal-body">
+        <div class="kiosk-select-row">
+          <span>Select Kiosk</span>
+          <select
+            [ngModel]="selectedKioskId()"
+            (ngModelChange)="onKioskSelected($event)"
+            name="qmsKioskMasterId"
+          >
+            <option value="">Select Kiosk</option>
+            @for (qms of activeQmsList(); track qms.qmsKioskMasterId) {
+              <option [value]="qms.qmsKioskMasterId">{{ qms.qmsDesc }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmQms()">Ok</button>
+      </div>
+    </div>
+  </div>
+}

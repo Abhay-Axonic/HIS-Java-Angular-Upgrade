@@ -1,0 +1,328 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="assetType">Asset Type<span class="required">*</span></label>
+        <select
+          id="assetType"
+          [ngModel]="form().assetTypeId"
+          (ngModelChange)="onAssetTypeChange($event)"
+          name="assetType"
+          [class.invalid]="assetTypeInvalid()"
+        >
+          @for (opt of assetTypes(); track opt.id) {
+            <option [value]="opt.id">{{ opt.type }}</option>
+          }
+        </select>
+        @if (assetTypeInvalid()) {
+          <p class="help-block">Enter Asset Type</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="assetCategory">Asset Category<span class="required">*</span></label>
+        <select
+          id="assetCategory"
+          [ngModel]="form().assetCategoryId"
+          (ngModelChange)="onAssetCategoryChange($event)"
+          name="assetCategory"
+          [class.invalid]="assetCategoryInvalid()"
+        >
+          @for (opt of assetCategories(); track opt.id) {
+            <option [value]="opt.id">{{ opt.category }}</option>
+          }
+        </select>
+        @if (assetCategoryInvalid()) {
+          <p class="help-block">Enter Asset Category Code</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="productCategory">Product Category<span class="required">*</span></label>
+        <select
+          id="productCategory"
+          [ngModel]="form().productCategoryId"
+          (ngModelChange)="onProductCategoryChange($event)"
+          name="productCategory"
+          [class.invalid]="productCategoryInvalid()"
+        >
+          @for (opt of productCategories(); track opt.id) {
+            <option [value]="opt.id">{{ opt.category }}</option>
+          }
+        </select>
+        @if (productCategoryInvalid()) {
+          <p class="help-block">Enter Product Category</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="genericCode">Generic Code<span class="required">*</span></label>
+        <input
+          id="genericCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().code"
+          (ngModelChange)="onCodeChange($event)"
+          name="genericCode"
+          [disabled]="codeDisabled()"
+          [class.invalid]="codeInvalid()"
+        />
+        @if (codeInvalid()) {
+          <p class="help-block">Enter Generic Code</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="genericName">Generic Name<span class="required">*</span></label>
+        <input
+          id="genericName"
+          type="text"
+          autocomplete="off"
+          maxlength="250"
+          [ngModel]="form().name"
+          (ngModelChange)="onNameChange($event)"
+          name="genericName"
+          [class.invalid]="nameInvalid()"
+        />
+        @if (nameInvalid()) {
+          <p class="help-block">Enter Generic Name</p>
+        }
+      </div>
+
+      <div class="field is-combination-field">
+        <label>Is Combination</label>
+        <app-status-toggle [checked]="form().isCombination" (toggled)="onIsCombinationChange(!form().isCombination)" />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      (records)
+    </label>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="onSearchInput($event)"
+      name="searchTerm"
+    />
+
+    <button type="button" class="btn-secondary" (click)="clearFields(); clearSearch()">Clear</button>
+
+    <!-- legacy's Save icon has no real disabled state -- see class doc.
+         One action serves both create and update. -->
+    <button type="button" class="btn-primary icon-btn" title="Save" (click)="openSaveConfirm()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Asset Type</th>
+        <th>Asset Category</th>
+        <th>Product Category</th>
+        <th>Generic Code</th>
+        <th>Generic Name</th>
+        <th class="text-center">Is Combination</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of pagedList(); track row.id) {
+        <tr>
+          <td>{{ row.assetType }}</td>
+          <td>{{ row.assetCategory }}</td>
+          <td>{{ row.productCategory }}</td>
+          <td>{{ row.code }}</td>
+          <td>{{ row.name }}</td>
+          <td class="text-center">
+            <i class="fa fa-info-circle" title="View Combination Details" (click)="viewCombinationDetails(row)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status" (toggled)="onToggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="fa fa-pencil" aria-hidden="true" title="Edit" (click)="editGeneric(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!pagedList().length) {
+        <tr>
+          <td colspan="8" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+<!-- confirmSave modal (raw markup in legacy, not the shared <modal> directive) -->
+@if (showSaveConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeSaveConfirm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeSaveConfirm()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeSaveConfirm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Generic Is Combination modal -->
+@if (showCombinationModal()) {
+  <div class="modal-backdrop">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>
+        Generic Combination
+        <button type="button" (click)="openCombinationCloseConfirm()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table combo-table">
+          <thead>
+            <tr>
+              <th>Generic Name</th>
+              <th>Strength</th>
+              <th>Strength Unit</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of comboRows(); track $index) {
+              <tr>
+                <td>
+                  <select
+                    [ngModel]="row.name?.id"
+                    (ngModelChange)="onComboGenericChange($index, activeGenericOptionById($event))"
+                    [class.invalid]="comboGenericInvalid()[$index]"
+                  >
+                    @for (opt of activeGenericOptions(); track opt.id) {
+                      <option [value]="opt.id">{{ opt.name }}</option>
+                    }
+                  </select>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Strength Unit"
+                    [ngModel]="row.strengthUnit"
+                    (ngModelChange)="onComboStrengthInput($index, $event)"
+                    (blur)="onComboStrengthBlur($index)"
+                    [class.invalid]="comboStrengthInvalid()[$index]"
+                  />
+                </td>
+                <td>
+                  <select
+                    [ngModel]="row.strengthUnitName?.id"
+                    (ngModelChange)="onComboStrengthUnitChange($index, strengthUnitById($event))"
+                    [class.invalid]="comboStrengthInvalid()[$index]"
+                  >
+                    @for (unit of strengthUnits(); track unit.id) {
+                      <option [value]="unit.id">{{ unit.unit }}</option>
+                    }
+                  </select>
+                </td>
+                <td class="combo-row-actions">
+                  <button
+                    type="button"
+                    class="btn-secondary"
+                    (click)="addComboRow()"
+                    [disabled]="$index !== comboRows().length - 1"
+                  >
+                    +
+                  </button>
+                  @if ($index !== 0) {
+                    <button type="button" class="btn-secondary" (click)="removeComboRow($index)">-</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="saveComboDetails()">Ok</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- confirmClose modal for the combination sub-form -->
+@if (showCombinationCloseConfirm()) {
+  <div class="modal-backdrop" (click)="cancelCombinationClose()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm</header>
+      <div class="modal-body">
+        <span>Are you sure you want to close?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmCloseCombination()">Ok</button>
+        <button type="button" class="btn-primary" (click)="cancelCombinationClose()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Generic Is Combination Details modal (read-only) -->
+@if (showCombinationDetailsModal()) {
+  <div class="modal-backdrop" (click)="showCombinationDetailsModal.set(false)">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>
+        Generic Combination
+        <button type="button" (click)="showCombinationDetailsModal.set(false)">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Generic Name</th>
+              <th>Strength</th>
+              <th>Strength Unit</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of combinationDetailsList(); track $index) {
+              <tr>
+                <td>{{ row.name }}</td>
+                <td>{{ row.strengthUnit }}</td>
+                <td>{{ row.strength }}</td>
+              </tr>
+            }
+            @if (!combinationDetailsList().length) {
+              <tr>
+                <td colspan="3" class="text-center">No Record Found</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,167 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="modalityCode">Modality Code<span class="required">*</span></label>
+        <input
+          id="modalityCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="modality().modalityCode"
+          (ngModelChange)="updateField('modalityCode', $event)"
+          name="modalityCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="modalityDesc">Modality Description<span class="required">*</span></label>
+        <input
+          id="modalityDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="modality().modalityDesc"
+          (ngModelChange)="updateField('modalityDesc', $event)"
+          name="modalityDesc"
+          [class.invalid]="isDescInvalid()"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="specialityId">Speciality<span class="required">*</span></label>
+        <select
+          id="specialityId"
+          [ngModel]="modality().specialityId"
+          (ngModelChange)="onSpecialityChange($event)"
+          name="specialityId"
+          [class.invalid]="isSpecialityInvalid()"
+        >
+          <option value=""></option>
+          @for (info of specialityList(); track info.specialityId) {
+            <option [value]="info.specialityId">{{ info.specialityName }}</option>
+          }
+        </select>
+        @if (isSpecialityInvalid()) {
+          <p class="help-block">Speciality is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="subSpecialityId">Sub Speciality<span class="required">*</span></label>
+        <select
+          id="subSpecialityId"
+          [ngModel]="modality().subSpecialityId"
+          (ngModelChange)="updateField('subSpecialityId', $event)"
+          name="subSpecialityId"
+          [class.invalid]="isSubSpecialityInvalid()"
+        >
+          <option value=""></option>
+          @for (info of visibleSubSpecialityList(); track info.subSpecialityId) {
+            <option [value]="info.subSpecialityId">{{ info.subSpecialityName }}</option>
+          }
+        </select>
+        @if (isSubSpecialityInvalid()) {
+          <p class="help-block">Sub Speciality is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="equipmentId">Equipment<span class="required">*</span></label>
+        <select
+          id="equipmentId"
+          [ngModel]="modality().equipmentId"
+          (ngModelChange)="updateField('equipmentId', $event)"
+          name="equipmentId"
+          [class.invalid]="isEquipmentInvalid()"
+        >
+          <option value=""></option>
+          @for (info of equipmentList(); track info.id) {
+            <option [value]="info.id">{{ info.name }}</option>
+          }
+        </select>
+        @if (isEquipmentInvalid()) {
+          <p class="help-block">Equipment is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Modality Code</th>
+        <th>Modality Description</th>
+        <th>Speciality</th>
+        <th>Sub Speciality</th>
+        <th>Equipment</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredList(); track row.modalityId) {
+        <tr>
+          <td>{{ row.modalityCode }}</td>
+          <td>{{ row.modalityDesc }}</td>
+          <td>{{ row.specialityName }}</td>
+          <td>{{ row.subSpecialityName }}</td>
+          <td>{{ row.equipmentDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <!-- Legacy dims this icon via CSS when status=='I' but the
+                 click handler stays live regardless (view:209) -- reproduced
+                 as a visual-only class, not a real disabled state. -->
+            <i class="icon-edit" [class.disabled-look]="row.status === 'I'" (click)="edit(row.modalityId)"></i>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

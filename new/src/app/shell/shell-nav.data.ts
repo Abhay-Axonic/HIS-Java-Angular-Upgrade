@@ -66,7 +66,9 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/cabinMaster', title: 'Cabin Master' },
       { path: '/rowMasters', title: 'MRD Row Master' },
       { path: '/boxMasters', title: 'MRD Box Master' },
+      { path: '/rackMasters', title: 'MRD Rack Master' },
       { path: '/mealPreferenceMaster', title: 'Meal Preference Master' },
+      { path: '/weekendMaster', title: 'Weekend Master' },
     ],
   },
   {
@@ -92,6 +94,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     heading: 'HR/Staff Master',
     items: [
       { path: '/doctorCategory', title: 'Doctor Category' },
+      { path: '/doctorCategoryMaster', title: 'Doctor Category Master' },
       { path: '/qualificationMaster', title: 'Qualification Master' },
       { path: '/degreeMaster', title: 'Degree Master' },
       { path: '/employeeCategoryMaster', title: 'Employee Category Master' },
@@ -105,6 +108,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/QMSkioskMaster', title: 'QMS Kiosk Master' },
       { path: '/QMSdepartmentMaster', title: 'QMS Department Master' },
       { path: '/QMScounterMaster', title: 'QMS Counter Master' },
+      { path: '/displayCall', title: 'QMS Token Display' },
     ],
   },
   {
@@ -114,6 +118,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/doctorCabinMapper', title: 'Doctor Cabin Mapper' },
       { path: '/userCounterMapper', title: 'User Counter Mapper' },
       { path: '/departmentStoreMapper', title: 'Department Store Mapper' },
+      { path: '/roleManagement', title: 'Role Management' },
     ],
   },
   {
@@ -136,6 +141,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/assigningPickerDispenser', title: 'Pending List for Assigning Picker' },
       { path: '/manufacturerMaster', title: 'Manufacturer Master' },
+      { path: '/genericMaster', title: 'Generic Master' },
     ],
   },
   {
@@ -143,6 +149,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/pharman', title: 'Pharman Page' },
       { path: '/modalityTypeMaster', title: 'Modality Type Master' },
+      { path: '/modalityMaster', title: 'Modality Master' },
     ],
   },
   {
@@ -166,10 +173,20 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   },
   {
     heading: 'Linen & Laundry',
-    items: [{ path: '/linenIssueacceptance', title: 'Linen Issuance Acceptance' }],
+    items: [
+      { path: '/linenIssueacceptance', title: 'Linen Issuance Acceptance' },
+      { path: '/linenIssue', title: 'Linen Issue' },
+    ],
   },
   {
     heading: 'Templates',
-    items: [{ path: '/createTabularDataTemplates', title: 'Tabular Data Template' }],
+    items: [
+      { path: '/createTabularDataTemplates', title: 'Tabular Data Template' },
+      { path: '/createTabularTemplates', title: 'Tabular Template' },
+    ],
+  },
+  {
+    heading: 'OPD',
+    items: [{ path: '/advisedVisits', title: 'Advised Visits' }],
   },
 ];

@@ -1,0 +1,103 @@
+<div class="container-fluid his-style">
+  <fieldset>
+    <div class="row">
+      <div class="col-lg-2">
+        <label>Date (From)</label>
+        <input type="date" class="form-control" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+      </div>
+      <div class="col-lg-2">
+        <label>Date-Till</label>
+        <input type="date" class="form-control" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+      </div>
+      <div class="col-lg-3 typeahead-wrap">
+        <label>Select Doctor</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search"
+          [ngModel]="doctorSearchTerm()"
+          (ngModelChange)="onDoctorSearchChange($event)"
+        />
+        @if (doctorOptions().length) {
+          <ul class="typeahead-list">
+            @for (opt of doctorOptions(); track opt.doctorId) {
+              <li (click)="selectDoctor(opt)">Dr. {{ opt.firstName }} {{ opt.middleName }} {{ opt.lastName }}</li>
+            }
+          </ul>
+        }
+      </div>
+      <div class="col-lg-1">
+        <a href="javascript:void(0)" id="searchBtn" class="btn btn-primary btn-save-box-shadow" (click)="search()">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- NOTE: legacy's Print/Export buttons (printAdvisedDateAppointment()/
+       getExcel()) are deliberately not rebuilt here -- see class-doc in
+       advised-visits.ts for the disclosed scope decision. The shared
+       `<modal visible="showModal">` (always-unreachable in legacy) and
+       the entire bed-reservation/deposit-matrix/payment/bed-status/
+       rejection modal block (legacy lines 157-1261, confirmed dead) are
+       also not rebuilt -- see the same doc comment / findings entry. -->
+
+  <div class="row margin-top8">
+    <div class="col-lg-3 float_right">
+      <input type="text" class="text-search-box" placeholder="Search" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" />
+      <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+    </div>
+    <div class="col-lg-2">
+      <label class="show-entries">
+        Show
+        <select class="search-popUp-ddl" [ngModel]="noOfRecordsPerPage()" (ngModelChange)="noOfRecordsPerPage.set($event); onNoOfRecordsPerPageChange()">
+          @for (n of pageSizeOptions; track n) {
+            <option [ngValue]="n">{{ n }}</option>
+          }
+        </select>
+        entries
+      </label>
+    </div>
+  </div>
+
+  <table class="table table-bordered margin-top8">
+    <thead>
+      <tr>
+        <th>Patient Name</th>
+        <th>Phone</th>
+        <th>Last visit date</th>
+        <th>Next visit date</th>
+        <th>Doctor name</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (info of filteredList(); track info.advisedDateAppoId) {
+        <tr>
+          <td>{{ info.patientName }}</td>
+          <td>{{ info.mobileNumber }}</td>
+          <td>{{ info.encounterDate }}</td>
+          <td>{{ info.advisedDate }}</td>
+          <td>{{ info.doctorName }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="row margin-bottom45">
+    @if (totalPages() > 1) {
+      <ul class="pagination table-list">
+        <li [class.disabled]="currentPage() === 1"><a href="javascript:void(0)" (click)="goToPage(1)">First</a></li>
+        <li [class.disabled]="currentPage() === 1"><a href="javascript:void(0)" (click)="goToPage(currentPage() - 1)">Previous</a></li>
+        @for (page of pageNumbers(); track page) {
+          <li [class.active]="currentPage() === page"><a href="javascript:void(0)" (click)="goToPage(page)">{{ page }}</a></li>
+        }
+        <li [class.disabled]="currentPage() === totalPages()"><a href="javascript:void(0)" (click)="goToPage(currentPage() + 1)">Next</a></li>
+        <li [class.disabled]="currentPage() === totalPages()"><a href="javascript:void(0)" (click)="goToPage(totalPages())">Last</a></li>
+      </ul>
+    }
+  </div>
+</div>
