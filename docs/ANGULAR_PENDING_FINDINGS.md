@@ -1331,3 +1331,15 @@ Findings:
 **Action:** the 6 new axis-1 candidates and the 2 non-`vm` axis-3 candidates should be excluded from future batch selection until manually/live-verified, the same treatment as entry #80's original list before its own resolution. Not investigated further live this session — reporting the static result only, per the scope of what was asked.
 
 **My read:** this closes out the open question from entry #80's own recommendation — the wider population is now fully censused, the false-positive risk in the new check was caught and disclosed rather than shipped as fact, and critically, nothing already built beyond the already-known 3 is affected. This should not block a merge/push decision on that basis; whatever merge/push timing is chosen, it doesn't need to wait on this specific risk any further.
+
+---
+
+## 86. `t_unit_application_registration_configuration`'s 14-column DDL gap (BR-043) has resurfaced on the local dev DB — a reseed, not a regression
+
+**Where:** the same table/columns BR-043 (`docs/BUSINESS_RULE_MANIFEST.md`, 2026-07-09) already found and fixed once (`source_id`, `kinprefix`, `kin_name`, `relation_id`, `phone_no`, `identification_id`, `identificationno_id`, `country_id`, `state_id`, `district_id`, `city_id`, `area`, `post_id`, `kin_mobile`, `kin_address`).
+
+**Found:** during the post-merge sanity check for the first main-merge (bf303d1), loading the rebuilt `insuranceMaster` screen fired `RegistrationConfigService`'s background call to `GET /api/unit/applicationConfiguration/getUnitApplicationRegistrationFieldConfig/1/1`, which 500'd. Confirmed live against the local Postgres dev DB (`\d public.t_unit_application_registration_configuration`) that all 14 columns BR-043 added are absent again — the `ALTER TABLE ... ADD COLUMN` fix was never a tracked migration (by design, per BR-043's own local-dev-only scope), so a DB reset/reseed since 2026-07-09 silently reverted it.
+
+**Parity confirmed, not a rebuild regression:** legacy's `insuranceMasterController.js:47` (`$rootScope.getDefaultRegistrationValidationDetails()`) calls the identical endpoint/query and would 500 the same way today — both legacy and the rebuild are affected equally.
+
+**Why this entry exists:** so a future Angular batch that trips this same 500 (it will fire on any screen that injects `RegistrationConfigService`, i.e. any screen reading `fieldConfig()`) recognizes it immediately as "BR-043's gap, reseed wiped it" rather than re-investigating from scratch. Not fixed here — re-applying BR-043's `ALTER TABLE` statements to the local dev DB is a routine dev-environment task, not a code change, and doesn't need a new BR entry unless the columns' presence needs to be made durable (e.g. a real tracked migration), which remains BR-043's own standing recommendation, unchanged.
