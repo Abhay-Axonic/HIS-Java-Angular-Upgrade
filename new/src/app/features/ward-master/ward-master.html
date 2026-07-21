@@ -1,0 +1,283 @@
+<section class="page">
+  <fieldset>
+    <div class="filter-row">
+      <div class="field">
+        <label for="floorId">Floor<span class="required">*</span></label>
+        <select
+          id="floorId"
+          [ngModel]="form().floorId"
+          (ngModelChange)="updateFormField('floorId', $event)"
+          name="floorId"
+          [class.invalid]="isRequiredMissing(form().floorId)"
+        >
+          <option value="">Select Floor</option>
+          @for (f of floorList(); track f.floorId) {
+            <option [value]="f.floorId">{{ f.floorName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(form().floorId)) {
+          <p class="help-block">Floor is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="wardCode">Ward Code<span class="required">*</span></label>
+        <input
+          id="wardCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().wardCode"
+          (ngModelChange)="updateFormField('wardCode', $event)"
+          name="wardCode"
+          [class.invalid]="isRequiredMissing(form().wardCode)"
+        />
+        @if (isRequiredMissing(form().wardCode)) {
+          <p class="help-block">Ward Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="wardName">Ward Name<span class="required">*</span></label>
+        <input
+          id="wardName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().wardName"
+          (ngModelChange)="updateFormField('wardName', $event)"
+          name="wardName"
+          [class.invalid]="isRequiredMissing(form().wardName)"
+        />
+        @if (isRequiredMissing(form().wardName)) {
+          <p class="help-block">Ward Name is required</p>
+        }
+      </div>
+
+      <!-- Legacy quirk preserved: no required-asterisk on this label even
+           though Gender IS functionally required (growl-only validation --
+           see class comment). -->
+      <div class="field gender-field">
+        <label>Gender</label>
+        <div class="gender-dropdown">
+          <button type="button" class="gender-toggle" (click)="toggleGenderDropdown()">
+            {{ genderSummary() }}
+          </button>
+          @if (genderDropdownOpen()) {
+            <div class="gender-panel">
+              @for (option of genderOptions(); track option.id) {
+                <label class="checkbox-row">
+                  <input type="checkbox" [checked]="isGenderSelected(option.id)" (change)="toggleGenderOption(option)" />
+                  {{ option.label }}
+                </label>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="checkbox-row-group">
+      <label class="checkbox-inline">
+        <input
+          type="checkbox"
+          [checked]="form().isIpWard === 'Y'"
+          (change)="updateFormField('isIpWard', $any($event.target).checked ? 'Y' : 'N')"
+        />
+        IP Ward
+      </label>
+      <label class="checkbox-inline">
+        <input
+          type="checkbox"
+          [checked]="form().isEr === 'Y'"
+          (change)="updateFormField('isEr', $any($event.target).checked ? 'Y' : 'N')"
+        />
+        ER Ward
+      </label>
+      <label class="checkbox-inline">
+        <input
+          type="checkbox"
+          [checked]="form().isDayCare === 'Y'"
+          (change)="updateFormField('isDayCare', $any($event.target).checked ? 'Y' : 'N')"
+        />
+        Day Care Ward
+      </label>
+      <label class="checkbox-inline">
+        <input
+          type="checkbox"
+          [checked]="form().islaborWard === 'Y'"
+          (change)="updateFormField('islaborWard', $any($event.target).checked ? 'Y' : 'N')"
+        />
+        Labor Ward
+      </label>
+      <label class="checkbox-inline">
+        <input
+          type="checkbox"
+          [checked]="form().ishemodialysisward === 'Y'"
+          (change)="updateFormField('ishemodialysisward', $any($event.target).checked ? 'Y' : 'N')"
+        />
+        Haemodialysis Ward
+      </label>
+      <label class="checkbox-inline">
+        <input
+          type="checkbox"
+          [checked]="form().isIcu === 'Y'"
+          (change)="updateFormField('isIcu', $any($event.target).checked ? 'Y' : 'N')"
+        />
+        ICU Ward
+      </label>
+    </div>
+
+    @if (form().isIcu === 'Y') {
+      <div class="filter-row">
+        <div class="field">
+          <label for="icuTypeId">ICU Type<span class="required">*</span></label>
+          <select
+            id="icuTypeId"
+            [ngModel]="form().icuTypeId"
+            (ngModelChange)="updateFormField('icuTypeId', $event)"
+            name="icuTypeId"
+            [class.invalid]="isRequiredMissing(form().icuTypeId)"
+          >
+            <option value="">Select ICU Type</option>
+            @for (t of icuTypeList(); track t.icutypeMasterId) {
+              <option [value]="t.icutypeMasterId">{{ t.icutype }}</option>
+            }
+          </select>
+          @if (isRequiredMissing(form().icuTypeId)) {
+            <p class="help-block">ICU Type is required</p>
+          }
+        </div>
+      </div>
+    }
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="save()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">Update</button>
+    }
+  </div>
+
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Floor</th>
+          <th>Ward Code</th>
+          <th>Ward Name</th>
+          <th>IP Type</th>
+          <th>ER Type</th>
+          <th>Day Care Type</th>
+          <th>Labor Ward</th>
+          <th>Hemodialysis Ward</th>
+          <th>Is ICU Type</th>
+          <th>ICU Type</th>
+          <th class="text-center">Gender</th>
+          <th class="text-center">Status(n)</th>
+          <th class="text-center">Action taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of displayedRows(); track row.wardId) {
+          <tr>
+            <td>{{ row.floorName }}</td>
+            <td>{{ row.wardCode }}</td>
+            <td>{{ row.wardName }}</td>
+            <td>{{ row.isIpWard }}</td>
+            <td>{{ row.isEr }}</td>
+            <td>{{ row.isDayCare }}</td>
+            <td>{{ row.islaborWard }}</td>
+            <td>{{ row.ishemodialysisward }}</td>
+            <td>{{ row.isIcu }}</td>
+            <td>{{ row.icuTypeName }}</td>
+            <td class="text-center"><i class="icon-view" (click)="openGenderDetails(row)"></i></td>
+            <td class="text-center">
+              <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+            </td>
+            <td class="text-center"><i class="icon-edit" (click)="edit(row.wardId)"></i></td>
+          </tr>
+        }
+        @if (!displayedRows().length) {
+          <tr>
+            <td colspan="13" class="text-center">No Record Found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showGenderDetailsModal()) {
+  <div class="modal-backdrop" (click)="closeGenderDetailsModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Details
+        <button type="button" (click)="closeGenderDetailsModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Gender</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (g of genderPopupList(); track g.id) {
+              <tr>
+                <td>{{ g.lable }}</td>
+              </tr>
+            }
+            @if (!genderPopupList().length) {
+              <tr>
+                <td class="text-center">No Record Found</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closeGenderDetailsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,8 +1,10 @@
 import { ShellNavSection } from './shell.models';
 
 /**
- * Sidebar content for the 26 "primary" (staff-navigated, non-parameterized,
- * non-detail) screens rebuilt so far, grouped by the same module taxonomy
+ * Sidebar content for the 35 "primary" (staff-navigated, non-parameterized,
+ * non-detail) screens rebuilt so far (26 through Phase 4 batch 3, +9 in
+ * batch 4 -- Admin/Global Master, Ward/Unit Master, ADT-Registration,
+ * ADT-Ambulance, HR/Staff Master), grouped by the same module taxonomy
  * `tools/angular-audit/`'s `states_enriched.json` already assigns each
  * screen (not an invented grouping). Deliberately excludes: `accessDenied`
  * (system route), `display`/`webAppointmentBooking`/
@@ -33,7 +35,32 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   },
   {
     heading: 'Admin',
-    items: [{ path: '/organizationMaster', title: 'Organization Master' }],
+    items: [
+      { path: '/organizationMaster', title: 'Organization Master' },
+      { path: '/specialityMaster', title: 'Department Master' },
+      { path: '/nationalityMaster', title: 'Nationality Master' },
+      { path: '/countryMaster', title: 'Country Master' },
+      { path: '/cityMaster', title: 'City Master' },
+    ],
+  },
+  {
+    heading: 'Ward/Unit Master',
+    items: [{ path: '/wardMaster', title: 'Ward Master' }],
+  },
+  {
+    heading: 'ADT - Registration',
+    items: [{ path: '/bedCategoryMaster', title: 'Bed Category Master' }],
+  },
+  {
+    heading: 'ADT - Ambulance',
+    items: [
+      { path: '/ambulanceTypeMaster', title: 'Ambulance Type Master' },
+      { path: '/ambulanceMaster', title: 'Ambulance Master' },
+    ],
+  },
+  {
+    heading: 'HR/Staff Master',
+    items: [{ path: '/doctorCategory', title: 'Doctor Category' }],
   },
   {
     heading: 'Reports',

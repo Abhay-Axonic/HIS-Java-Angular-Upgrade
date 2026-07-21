@@ -382,6 +382,66 @@ export const routes: Routes = [
         data: { title: 'Fixed Asset Type' },
         loadComponent: () => import('./features/fixed-asset-type/fixed-asset-type').then((m) => m.FixedAssetType),
       },
+      // Phase 4 batch 4 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+      // follow-on). Diversified across 6 modules (per owner instruction),
+      // all simple master-data CRUD screens. bedBook was pre-screened out
+      // as a mockup (entry 53) and is not built. Shell integration (this
+      // nesting + `data.title`) is now standard practice from this batch
+      // onward -- applied at Step 3, not retrofitted afterward.
+      {
+        path: 'specialityMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 372, title: 'Department Master' },
+        loadComponent: () => import('./features/speciality-master/speciality-master').then((m) => m.SpecialityMaster),
+      },
+      {
+        path: 'nationalityMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 381, title: 'Nationality Master' },
+        loadComponent: () => import('./features/nationality-master/nationality-master').then((m) => m.NationalityMaster),
+      },
+      {
+        path: 'countryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 383, title: 'Country Master' },
+        loadComponent: () => import('./features/country-master/country-master').then((m) => m.CountryMaster),
+      },
+      {
+        path: 'cityMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 386, title: 'City Master' },
+        loadComponent: () => import('./features/city-master/city-master').then((m) => m.CityMaster),
+      },
+      {
+        path: 'wardMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 545, title: 'Ward Master' },
+        loadComponent: () => import('./features/ward-master/ward-master').then((m) => m.WardMaster),
+      },
+      {
+        path: 'bedCategoryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 543, title: 'Bed Category Master' },
+        loadComponent: () => import('./features/bed-category-master/bed-category-master').then((m) => m.BedCategoryMaster),
+      },
+      {
+        path: 'ambulanceTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 813, title: 'Ambulance Type Master' },
+        loadComponent: () => import('./features/ambulance-type-master/ambulance-type-master').then((m) => m.AmbulanceTypeMaster),
+      },
+      {
+        path: 'ambulanceMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 814, title: 'Ambulance Master' },
+        loadComponent: () => import('./features/ambulance-master/ambulance-master').then((m) => m.AmbulanceMaster),
+      },
+      {
+        path: 'doctorCategory',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 453, title: 'Doctor Category' },
+        loadComponent: () => import('./features/doctor-category/doctor-category').then((m) => m.DoctorCategory),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
