@@ -1,0 +1,179 @@
+<section class="page">
+  <fieldset>
+    <legend>Resource Allocation Master</legend>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="ambulanceType">Ambulance Type<span class="required">*</span></label>
+        <select
+          id="ambulanceType"
+          [ngModel]="form().ambulanceType"
+          (ngModelChange)="updateField('ambulanceType', $event)"
+          name="ambulanceType"
+          [class.invalid]="isFieldInvalid(form().ambulanceType)"
+        >
+          <option value="" disabled></option>
+          @for (t of ambulanceTypeOptions(); track t.ambulanceType) {
+            <option [value]="t.ambulanceType">{{ t.ambulanceType }}</option>
+          }
+        </select>
+        @if (isFieldInvalid(form().ambulanceType)) {
+          <p class="help-block">Ambulance Type is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="ambulanceProvider">Ambulance Provider<span class="required">*</span></label>
+        <select
+          id="ambulanceProvider"
+          [ngModel]="form().ambulanceProvider"
+          (ngModelChange)="updateField('ambulanceProvider', $event)"
+          name="ambulanceProvider"
+          [class.invalid]="isFieldInvalid(form().ambulanceProvider)"
+        >
+          <option value="" disabled></option>
+          @for (p of ambulanceProviderOptions; track p) {
+            <option [value]="p">{{ p }}</option>
+          }
+        </select>
+        @if (isFieldInvalid(form().ambulanceProvider)) {
+          <p class="help-block">Ambulance Provider is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="vehicalNo">Vehicle No.<span class="required">*</span></label>
+        <input
+          id="vehicalNo"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().vehicalNo"
+          (ngModelChange)="updateField('vehicalNo', $event)"
+          name="vehicalNo"
+          [class.invalid]="isFieldInvalid(form().vehicalNo)"
+        />
+        @if (isFieldInvalid(form().vehicalNo)) {
+          <p class="help-block">Vehicle Number is required</p>
+        }
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="resourceName">Resource Name<span class="required">*</span></label>
+        <input
+          id="resourceName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().resourceName"
+          (ngModelChange)="updateField('resourceName', $event)"
+          name="resourceName"
+          [class.invalid]="isFieldInvalid(form().resourceName)"
+        />
+        @if (isFieldInvalid(form().resourceName)) {
+          <p class="help-block">Resource Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="mobileNo">Mobile No.<span class="required">*</span></label>
+        <input
+          id="mobileNo"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().mobileNo"
+          (ngModelChange)="updateField('mobileNo', $event)"
+          name="mobileNo"
+          [class.invalid]="isFieldInvalid(form().mobileNo)"
+        />
+        @if (isFieldInvalid(form().mobileNo)) {
+          <p class="help-block">Mobile Number is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <!-- Legacy quirk preserved: filters only the current page's already
+         fetched rows -- see class doc comment. -->
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="onSaveClick()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="onUpdateClick()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Ambulance Type</th>
+        <th>Ambulance Provider</th>
+        <th>Vehicle No.</th>
+        <th>Resource Name</th>
+        <th>Mobile No.</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.resourceAllocationMasterId) {
+        <tr>
+          <td>{{ row.ambulanceType }}</td>
+          <td>{{ row.ambulanceProvider }}</td>
+          <td>{{ row.vehicalNo }}</td>
+          <td>{{ row.resourceName }}</td>
+          <td>{{ row.mobileNo }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center"><i class="icon-edit" title="Edit" (click)="edit(row)"></i></td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="7" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

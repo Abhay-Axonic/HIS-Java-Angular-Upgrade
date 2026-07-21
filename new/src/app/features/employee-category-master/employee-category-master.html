@@ -1,0 +1,119 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="employeeCategoryCode">Employee Category Code<span class="required">*</span></label>
+        <input
+          id="employeeCategoryCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().employeeCategoryCode"
+          (ngModelChange)="updateField('employeeCategoryCode', $event)"
+          name="employeeCategoryCode"
+          [class.invalid]="isFieldInvalid(form().employeeCategoryCode)"
+        />
+        @if (isFieldInvalid(form().employeeCategoryCode)) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="employeeCategoryDescription">Employee Category Description<span class="required">*</span></label>
+        <input
+          id="employeeCategoryDescription"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().employeeCategoryDescription"
+          (ngModelChange)="updateField('employeeCategoryDescription', $event)"
+          name="employeeCategoryDescription"
+          [class.invalid]="isFieldInvalid(form().employeeCategoryDescription)"
+        />
+        @if (isFieldInvalid(form().employeeCategoryDescription)) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <!-- Legacy quirk preserved: filters only the current page's already
+         fetched rows -- see class doc comment. -->
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="onSaveClick()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="onUpdateClick()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Employee Category Code</th>
+        <th>Employee Category Description</th>
+        <th class="text-center width8">Status(n)</th>
+        <th class="text-center width8">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.employeeCategoryId) {
+        <tr>
+          <td>{{ row.employeeCategoryCode }}</td>
+          <td>{{ row.employeeCategoryDescription }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center"><i class="fa fa-pencil" aria-hidden="true" (click)="edit(row)"></i></td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <!-- Legacy's shared <modal> directive's x button crashes here
+             (docs/ANGULAR_PENDING_FINDINGS.md entry 55) -- per standing
+             policy this is wired to a normal working closeConfirmModal(),
+             not reproduced. See class comment. -->
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

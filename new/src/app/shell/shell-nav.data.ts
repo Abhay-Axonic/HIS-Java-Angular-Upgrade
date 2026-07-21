@@ -46,7 +46,15 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   },
   {
     heading: 'Ward/Unit Master',
-    items: [{ path: '/wardMaster', title: 'Ward Master' }],
+    items: [
+      { path: '/wardMaster', title: 'Ward Master' },
+      { path: '/floorMaster', title: 'Floor Master' },
+      { path: '/amenityMaster', title: 'Amenity Master' },
+      { path: '/wingMaster', title: 'Wing Master' },
+      { path: '/counterMaster', title: 'Counter Master' },
+      { path: '/cabinMaster', title: 'Cabin Master' },
+      { path: '/rowMasters', title: 'MRD Row Master' },
+    ],
   },
   {
     heading: 'ADT - Registration',
@@ -62,6 +70,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/ambulanceTypeMaster', title: 'Ambulance Type Master' },
       { path: '/ambulanceMaster', title: 'Ambulance Master' },
       { path: '/ambulanceFacilitiesMaster', title: 'Ambulance Facilities Master' },
+      { path: '/resourceAllocationMaster', title: 'Resource Allocation Master' },
     ],
   },
   {
@@ -70,6 +79,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/doctorCategory', title: 'Doctor Category' },
       { path: '/qualificationMaster', title: 'Qualification Master' },
       { path: '/degreeMaster', title: 'Degree Master' },
+      { path: '/employeeCategoryMaster', title: 'Employee Category Master' },
+      { path: '/designationMaster', title: 'Designation Master' },
     ],
   },
   {
@@ -84,6 +95,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/userStoreMapper', title: 'User Store Mapper' },
       { path: '/doctorCabinMapper', title: 'Doctor Cabin Mapper' },
+      { path: '/userCounterMapper', title: 'User Counter Mapper' },
     ],
   },
   {

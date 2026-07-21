@@ -1,0 +1,127 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="wingCode">Wing Code<span class="required">*</span></label>
+        <input
+          id="wingCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().wingCode"
+          (ngModelChange)="updateField('wingCode', $event)"
+          name="wingCode"
+          [class.invalid]="isFieldInvalid(form().wingCode)"
+        />
+        @if (isFieldInvalid(form().wingCode)) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="wingDesc">Wing Name<span class="required">*</span></label>
+        <input
+          id="wingDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().wingDesc"
+          (ngModelChange)="updateField('wingDesc', $event)"
+          name="wingDesc"
+          [class.invalid]="isFieldInvalid(form().wingDesc)"
+        />
+        @if (isFieldInvalid(form().wingDesc)) {
+          <p class="help-block">Wing Name is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!--
+      Faithful crash replication, NOT a working search box -- see the class
+      doc comment / docs/ANGULAR_PENDING_FINDINGS.md. Legacy's
+      wing-master.html:74 wires this exact input's ng-keyup to a function
+      that is never defined anywhere in wingMasterController.js; every
+      keystroke throws in legacy today. Deliberately not bound to any model
+      here -- onSearchKeyup() reproduces the throw.
+    -->
+    <input type="text" class="search-box" placeholder="Search" name="searchKeyword" autocomplete="off" (keyup)="onSearchKeyup()" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Wing Code</th>
+        <th>Wing Name</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.wingId) {
+        <tr>
+          <td>{{ row.wingCode }}</td>
+          <td>{{ row.wingDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" [class.disabled]="row.status === 'I'" (click)="row.status === 'A' && edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

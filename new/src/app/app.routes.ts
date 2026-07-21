@@ -508,6 +508,75 @@ export const routes: Routes = [
         data: { moduleId: 699, title: 'Prefix Configuration' },
         loadComponent: () => import('./features/prefix-configuration/prefix-configuration').then((m) => m.PrefixConfiguration),
       },
+      // Phase 4 batch 6 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+      // follow-on). Diversified across Ward/Unit Master, HR/Staff Master,
+      // User Management, and ADT-Ambulance. Entry 55's standing policy
+      // (working closeConfirmModal() instead of legacy's crashing shared
+      // <modal> cancel()) applies to 8 of these 10 screens -- confirmed via
+      // full pre-build audit, a wider blast radius than the 5 originally
+      // assumed going into this batch (see docs/ANGULAR_PENDING_FINDINGS.md
+      // entry 55). userCounterMapper faithfully reproduces entry 59's
+      // dual-list-picker indexOf/splice bug (3rd on-branch instance).
+      {
+        path: 'floorMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 537, title: 'Floor Master' },
+        loadComponent: () => import('./features/floor-master/floor-master').then((m) => m.FloorMaster),
+      },
+      {
+        path: 'amenityMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 539, title: 'Amenity Master' },
+        loadComponent: () => import('./features/amenity-master/amenity-master').then((m) => m.AmenityMaster),
+      },
+      {
+        path: 'wingMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 540, title: 'Wing Master' },
+        loadComponent: () => import('./features/wing-master/wing-master').then((m) => m.WingMaster),
+      },
+      {
+        path: 'counterMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 704, title: 'Counter Master' },
+        loadComponent: () => import('./features/counter-master/counter-master').then((m) => m.CounterMaster),
+      },
+      {
+        path: 'cabinMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 705, title: 'Cabin Master' },
+        loadComponent: () => import('./features/cabin-master/cabin-master').then((m) => m.CabinMaster),
+      },
+      {
+        path: 'employeeCategoryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 498, title: 'Employee Category Master' },
+        loadComponent: () => import('./features/employee-category-master/employee-category-master').then((m) => m.EmployeeCategoryMaster),
+      },
+      {
+        path: 'designationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 500, title: 'Designation Master' },
+        loadComponent: () => import('./features/designation-master/designation-master').then((m) => m.DesignationMaster),
+      },
+      {
+        path: 'userCounterMapper',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 715, title: 'User Counter Mapper' },
+        loadComponent: () => import('./features/user-counter-mapper/user-counter-mapper').then((m) => m.UserCounterMapper),
+      },
+      {
+        path: 'resourceAllocationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 817, title: 'Resource Allocation Master' },
+        loadComponent: () => import('./features/resource-allocation-master/resource-allocation-master').then((m) => m.ResourceAllocationMaster),
+      },
+      {
+        path: 'rowMasters',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 1070, title: 'MRD Row Master' },
+        loadComponent: () => import('./features/row-masters/row-masters').then((m) => m.RowMasters),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
