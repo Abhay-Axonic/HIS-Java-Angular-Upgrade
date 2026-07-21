@@ -964,12 +964,24 @@ One additional dead binding on the mockup itself: `ng-click="openDatePicker()"` 
 
 ---
 
-## 59. `userStoreMapper` / `doctorCabinMapper` — a shared silent logic bug: editing a dual-list picker removes the wrong entry — found while rebuilding these two sibling screens, Phase 4 batch 5
+## 59. CORRECTED 2026-07-21, BLAST RADIUS EXPANDED — the dual-list-picker "wrong entry removed on edit" bug is a single copy-pasted template used in at least 24 controller files app-wide, not an independent mistake made twice
 
-**Where:** `resources/assets/js/controller/master/global/userStoreMapperController.js:315-319` (`showUpdateBtn`), `resources/assets/js/controller/master/global/doctorCabinMapperController.js:364-368` (`showUpdateBtn`) — the identical bug pattern in both.
+**Where:** originally logged against `resources/assets/js/controller/master/global/userStoreMapperController.js:315-319` and `doctorCabinMapperController.js:364-368` only. **Correction:** a third instance was found independently in `userCounterMapperController.js:365-368` during Phase 4 batch 6 pre-screening, and the owner asked whether all three trace to a shared source before batch 6 started. They do — and the real scope is much larger than three screens.
 
-**What it is, plainly:** both screens' Edit path does `<list>.indexOf(value)` where `value` is a boolean (from the source checklist array), never an object that could actually appear in the target "selected items" array — `indexOf` always returns `-1`, so the resulting `splice(-1, 1)` silently removes the *last* entry in the selected list rather than the one actually being reset/cleared. Confirmed as the same bug independently in two unrelated sibling screens sharing no code, not a copy-paste of one into the other — both controllers separately made the same category of mistake.
+**What it is, plainly:** every instance follows the exact same shape, down to variable-naming convention, just with different scope-variable names substituted in:
+```js
+angular.forEach($scope.<sourceChecklist>, function(value, index){
+    $scope.<sourceChecklist>[index] = false;
+    var i = $scope.<targetSelectedList>.indexOf(value);
+    $scope.<targetSelectedList>.splice(i, 1);
+})
+```
+`value` is always a boolean (an entry in the source checklist array), never an object that could actually appear in `<targetSelectedList>` (the array of selected-item objects) — so `indexOf` always returns `-1`, and `splice(-1, 1)` always silently removes the *last* real entry in the selected list, regardless of which item the user is actually trying to reset.
 
-**Owner decision, not resolved here:** not fixed in either screen, per standing instruction. Faithfully reproduced in both rebuilds.
+**Corrected finding — this is a copy-paste-descended template, not independent invention:** a codebase-wide search for this exact shape (`.indexOf(value)` immediately following a boolean-resetting `angular.forEach`) found the identical pattern in **24 controller files**, spanning modules that share no other code: Billing (`corporateMasterController.js`, `TPAMasterController.js`, `bedCategoryMasterUnitController.js`, `corporateStatementChecklistController.js`, `billingBedCategoryMasterUnitController.js`), LIS (`antibioticAdditionController.js`, `antibioticGroupAddAntibioticMapperController.js`, `antibioticOrganismMpprController.js`, `organismGroupOrganismMapperController.js`, `mediaColnoyAdditionController.js`, `sampleTypeMediaMapperAdditionController.js`, `templateServiceMappingController.js`), Nursing (`nursingStationWardMappingController.js`, `departmentNursingStationMapperController.js`, `handHygieneSurveyController.js`), Blood Bank (`bloodBankTypeComponentMasterController.js`), Master/Unit (`nabhProcessController.js`, `templateICDCodeMappingMasterController.js`), Master/Global (`userStoreMapperController.js`, `doctorCabinMapperController.js`, `userCounterMapperController.js`, `userNursingStationMapperController.js`, `departmentNursingStationMapperController.js`), and `incidentMasterController.js`/`userRoleManagementMasterController.js`. The prior write-up's claim that the first two instances were "confirmed independently, not a copy-paste" was wrong — it wasn't verified by actually comparing the raw source across files, only by confirming the two controllers don't share a runtime dependency. Comparing the literal code shows they're clearly descended from the same original template, whether copy-pasted directly or via a shared internal snippet/example that's no longer in the codebase.
 
-**My read:** low-to-moderate severity — a real, silent data-corruption risk in the dual-list picker's reset-on-edit path (the wrong store/cabin can get dropped from the selection without any indication), but only triggers when editing an existing mapping, not on every use of the screen.
+**Rebuild status:** 3 of the 24 affected files are rebuilt so far (`userStoreMapper`, `doctorCabinMapper`, and `userCounterMapper` as of this batch) — all three faithfully reproduce the bug, per standing instruction. The other 21 have not been touched by this rebuild yet.
+
+**Owner decision, not resolved here:** not fixed anywhere, per standing instruction — this is a legacy bug baked into a widely-reused template, not a rebuild-introduced issue. Flagging the true scope now (per the standing rule to surface cross-cutting findings immediately) rather than letting it resurface as a "surprising new discovery" 21 more times as the rebuild eventually reaches each of these screens.
+
+**My read:** still low-to-moderate severity per screen (silent, edit-path-only, no crash) — but the aggregate scope (24 screens across 6+ unrelated modules) makes this worth a decision at some point about whether to fix the template once wherever it's still copy-pasted, rather than accepting 24 separate "faithfully reproduce this" decisions one rebuild-batch at a time. Not blocking any current work; flagged for awareness and eventual prioritization.
