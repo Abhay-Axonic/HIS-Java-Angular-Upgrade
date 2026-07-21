@@ -935,3 +935,41 @@ One additional dead binding on the mockup itself: `ng-click="openDatePicker()"` 
 **Owner decision, not resolved here:** neither fixed, per standing instruction. The dead bindings' visible behavior (modal opens/closes despite the undefined functions) reproduced faithfully via the rebuild's own modal-open/close mechanism, without inventing working versions of `getHierarchyPopUp`/`closePopupsj`. The index-mismatch bug reproduced as-is (same class of bug as entry 51's `correctiveMaintenance` finding, recurring independently in a second, unrelated screen this same batch).
 
 **My read:** the dead bindings are cosmetic (no user-visible breakage since Bootstrap's own attributes carry the load). The index-mismatch bug is moderate severity — same reasoning as entry 51: silent wrong-record edits only manifest once a search keyword narrows the visible list, but when it happens there's no error or indication anything went wrong.
+
+---
+
+## 57. `QMSkioskMaster` — undefined audit fields on save, and a copy-paste validation-message bug — found while rebuilding this screen, Phase 4 batch 5
+
+**Where:** `resources/assets/js/controller/qms/QMSkioskMasterController.js:52-53,279` (audit fields), `views/master/QMSMaster/QMS-kiosk-Master.html:11-14` vs `:25-28` (copy-paste message).
+
+**What it is, plainly — two distinct issues:**
+1. **Undefined audit fields.** `$scope.common` sets `createdBy: $scope.createdBy, updatedBy: $scope.updatedBy` on every save/update, but neither `$scope.createdBy` nor `$scope.updatedBy` is ever assigned anywhere in this controller — both are always `undefined` in the payload sent to the backend. (Confirmed via a genuine sibling divergence: `QMSdepartmentMaster`'s create/update path correctly uses the real `$scope.userId` for the same fields — the fix was never back-ported to this screen, and `QMSdepartmentMaster`'s own status-toggle path has the identical gap, so the fix is itself incomplete even where it exists.)
+2. **Copy-paste validation-message bug.** The Code field's `<p class="help-block">` (view:11-14) checks `qmsForm.qmsDesc.$error.required` — the *Description* field's validity, not its own — so leaving Description filled but Code empty shows no visible error at all (the real `$valid` gate still blocks the form, just silently, with no visible hint pointing at the actual problem).
+
+**Owner decision, not resolved here:** neither fixed, per standing instruction. Both faithfully reproduced in the Angular rebuild.
+
+**My read:** low severity for both — the audit-field gap has no user-visible symptom (just wrong data in an audit column nobody displays back), and the validation-message bug is a UX rough edge, not a blocker (the form still correctly refuses to submit, it just doesn't tell the user why in this one specific case).
+
+---
+
+## 58. `doctorCabinMapper` — a mapped-cabin label reads the wrong DTO field, always blank on edit — found while rebuilding this screen, Phase 4 batch 5
+
+**Where:** `resources/assets/js/controller/master/global/doctorCabinMapperController.js:371` (`showUpdateBtn`), cross-checked against `legacy/Entity/.../model/DoctorCabinMapper.java:39` and the `GET_DOCTOR_CABIN_MAPPER_BY_ID` query's actual DTO shape.
+
+**What it is, plainly:** when repopulating the "Mapped Cabin" list on Edit, the code reads `value.diagnosisDesc` — but the real DTO field (confirmed against both the entity and the named query backing this endpoint) is `cabinDesc`; `diagnosisDesc` doesn't exist on this response at all. Every "Mapped Cabin" label is silently blank immediately after clicking Edit, even though the underlying mapping data is otherwise correct.
+
+**Owner decision, not resolved here:** not fixed, per standing instruction. Faithfully reproduced (the rebuild reads the same, real, always-blank field).
+
+**My read:** low-to-moderate severity — no crash, but a confusing UX gap: a user editing an existing doctor-cabin mapping sees an empty "Mapped Cabin" list even though real mappings exist, which could easily read as "nothing is mapped" rather than "the label just isn't rendering."
+
+---
+
+## 59. `userStoreMapper` / `doctorCabinMapper` — a shared silent logic bug: editing a dual-list picker removes the wrong entry — found while rebuilding these two sibling screens, Phase 4 batch 5
+
+**Where:** `resources/assets/js/controller/master/global/userStoreMapperController.js:315-319` (`showUpdateBtn`), `resources/assets/js/controller/master/global/doctorCabinMapperController.js:364-368` (`showUpdateBtn`) — the identical bug pattern in both.
+
+**What it is, plainly:** both screens' Edit path does `<list>.indexOf(value)` where `value` is a boolean (from the source checklist array), never an object that could actually appear in the target "selected items" array — `indexOf` always returns `-1`, so the resulting `splice(-1, 1)` silently removes the *last* entry in the selected list rather than the one actually being reset/cleared. Confirmed as the same bug independently in two unrelated sibling screens sharing no code, not a copy-paste of one into the other — both controllers separately made the same category of mistake.
+
+**Owner decision, not resolved here:** not fixed in either screen, per standing instruction. Faithfully reproduced in both rebuilds.
+
+**My read:** low-to-moderate severity — a real, silent data-corruption risk in the dual-list picker's reset-on-edit path (the wrong store/cabin can get dropped from the selection without any indication), but only triggers when editing an existing mapping, not on every use of the screen.
