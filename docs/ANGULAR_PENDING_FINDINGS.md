@@ -13,6 +13,7 @@ These are not "bugs to fix eventually" in the normal sense — each is a live pr
 - **Entry 46** — `detailsRejectedAssetAcceptance`, same shape as entry 43, arguably worse (also shows fabricated data instead of the real record).
 - **Entry 54** *(added 2026-07-21)* — `ambulanceMaster` crashes on every single Ambulance Type dropdown selection — the most basic possible interaction with the form, with no workaround. Verified live via a real thrown exception, not just read from source.
 - **Entry 65** *(added 2026-07-21)* — the rebuild has no mechanism to populate its own module/permission list. Every route with a `data.moduleId` (the large majority of screens built so far) will show "Access Denied" for any real user in any real deployment today, silently, with no error message explaining why — masked in this project's own verification so far only because whoever tests it manually seeds `localStorage` via devtools first.
+- **Entry 84 (`employeeCategoryController.js`'s `organizationId` typo)** *(added 2026-07-21)* — not a crash, but a real, live data-integrity concern: `init()` sets `$scope.orgnisationId` (typo), but every other call site (save/update/edit/pagination/reload-after-save) reads the never-assigned `$scope.organizationId`, silently sending `organizationId: undefined` to the backend on every save/update after the first page load. Flagged here per explicit owner instruction — worth keeping visible alongside the crash-class entries above even though it isn't urgent enough to fix immediately.
 
 ---
 
@@ -1059,3 +1060,274 @@ angular.forEach($scope.<sourceChecklist>, function(value, index){
 3. **Build a real login screen for the rebuild** that calls `/adt/userLogin` directly and populates `permissions` itself, independent of legacy's own login page entirely — the most self-contained option, but the largest scope, and duplicates legacy's login UI/flow (arguably premature before Phase 7).
 
 **My read:** this is genuinely high-priority — it's not a cosmetic bug, it silently blocks the large majority of already-built screens for any real user in any real deployment, and it was invisible specifically because every verification pass so far has been manually working around it rather than hitting it as a genuine end user would. Recommend deciding this before this branch goes much further, since options 1 and 2 both interact directly with the still-open CORS and session-continuity decisions already sitting in `docs/DECISION_NEEDED_CorsWildcardOriginCredentials.md` and the hybrid deployment proposal.
+
+---
+
+## 66. PHASE 0 CLASSIFICATION DATA-QUALITY ISSUE, LOGGED 2026-07-21 — `doorToNeedle` is mistagged "low-risk" in the Phase 0 inventory; it is actually clinical-safety relevant and has a live, unconditional load-time crash
+
+**Where:** `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md` line 1048 (inventory row, tagged `bc:0/on:0` — neither clinical-safety nor billing) and `resources/assets/js/controller/master/global/doorToNeedleController.js` (the actual code).
+
+**This is a different class of issue from a normal batch-exclusion note.** Every other Phase 0 tag correction found so far (e.g. `bookView`, entries 28-29) was caught by the sharpened Step 1 checklist *during that screen's own audit*. This one was caught by inspecting a screen that hasn't been picked for any batch yet, purely because its name looked administrative — meaning Phase 0's keyword/module heuristic can silently miscategorize a screen well before it ever reaches a Step 1 audit. It's logged separately from the findings above for that reason: this is evidence about the *reliability of the classification pass itself*, not just one more mistagged screen.
+
+**Why it's mistagged, plainly:**
+1. **It is clinical, not administrative, despite living under `views/master/GlobalMaster/`.** "Door-to-needle time" is a real, named clinical-safety metric (time from patient arrival/diagnosis to thrombolysis/medication administration in acute stroke care) — not a naming coincidence. The screen itself confirms this: it searches real patients (`searchGroupListPatient` → `GETPATIENTBYKEYWORD`), searches real ICD-10 diagnoses (`searchGroupList` → `/api/opd/getActiveEmergencyDiagnosis`), fetches a real per-patient medication/administration timeline (`searchPatientDetailsOfDiagnosisFromAdmission` → `/api/opd/doorToNiddle`), and computes elapsed administration-vs-order time per medication (`value2.difference`, in minutes) — this is patient clinical data end to end. Phase 0's per-module default (everything under `GlobalMaster` defaults to administrative) missed this because the classifier keys off folder/module, not screen content, and this screen doesn't contain any of the curated clinical keywords in its own name/URL.
+2. **It has a real, unconditional load-time crash**, confirmed by reading the controller directly: `doorToNeedleController.js:91`, `$scope.patientDetails.visitTypeId = 1`, runs at the top level of the controller body (not inside any function or guard) — but `$scope.patientDetails` is never initialized anywhere before this line (only `$scope.patientList = []` exists, one line above, and is a different variable). This throws `TypeError: Cannot set properties of undefined` on every single controller instantiation, unconditionally — the screen cannot load at all today, in legacy, for anyone. Not yet confirmed whether this is a live-reachable route in the current nav (not checked here — checking that is part of whichever batch eventually picks this screen up for real audit/rebuild), but the crash itself is real and present in the source regardless of reachability.
+
+**Not fixed, not rebuilt — logged only, per standing instruction.** This entry does two things: (a) corrects the Phase 0 tag for `doorToNeedle` itself from low-risk to clinical-safety-relevant, so it is pulled out of the low-risk/Phase-4 population and re-queued for a clinical-tier phase with a proper full audit (which would also formally confirm/characterize the crash); (b) flags the classification pass's blind spot (module-default heuristic can be defeated by a screen whose real subject matter doesn't match its folder or its own name) as something worth weighing when deciding whether the remaining low-risk pool needs a re-verification pass — see the batch report for that recommendation.
+
+**My read:** the mistag itself is low-consequence in isolation (one screen moved from one bucket to another, nothing shipped against it), but it's a useful, concrete data point on how much to trust the rest of the 345-screen low-risk pool without a second look — treat it as input to that decision, not as proof either way on its own.
+
+---
+
+## 67. SEVERITY 1, DISCOVERED 2026-07-21 — `modalityTypeMaster`'s backend has never been implemented; every one of its 6 endpoints 404s in legacy itself, not just the rebuild
+
+**Where:** `resources/assets/js/config/opd.url.config.js:44-50` (all 6 endpoint constants, e.g. `GETMODALITYTYPEMASTERLIST = API + OPD + "/getModalityTypeMasterList"`) and `resources/assets/js/controller/opd/unit/modalityTypeMasterController.js`. On the Java side: no controller, service, or DAO exists anywhere in the codebase implementing any of these 6 operations — `grep -rli modalitytype` across every `legacy/*/src/main/java` module returns only an unrelated `Entity` model class (`ModalityType.java`) and passing references inside unrelated DTOs (`DoctorMasterDto`, `SlotMasterDto`, `ModalityMasterDto` — a *different* "Modality Master" screen that does have a real backend).
+
+**Found during this batch's Step 5 live verification, not assumed.** The rebuild's service initially used a bare `/opd/...` path (missing the `API="/api"` prefix concatenated in `opd.url.config.js:6,14`) and 404'd against the local dev proxy. Fixing the path to the correct `/api/opd/...` (matching the real legacy constant) still 404'd — but this time from Tomcat itself, not the dev proxy (`curl` confirmed a real `HTTP Status 404 – Not Found` page from Tomcat 9.0.120 directly on port 8080, bypassing the rebuild entirely). **Confirmed conclusively against the real legacy app** (`http://localhost:8080/#/modalityTypeMaster`, a real, live, menu-reachable screen): its own list/count calls to `/api/opd/getModalityTypeMasterList`/`getModalityTypeCount` return the identical 404, from the identical nonexistent endpoint. This is not a rebuild bug, a proxy gap, or a missing-DB-table environment issue (there is no DAO to even reach a database) — the screen has, as far as this repo's history shows, never had a working backend, in any environment.
+
+**Why this wasn't caught at Step 0:** Step 0's "is it real" check (state not commented out, template/controller exist on disk, controller has real-looking `GenericService` calls to real-looking endpoint constants) is a *frontend-only* check — it has no way to detect that the endpoints those calls target were never implemented server-side. This is a new failure mode for Step 0, distinct from the already-catalogued dead-route/mockup/stale-clone categories (entries 2, 6, 7, 53): the frontend here is completely real and correctly wired, the backend simply doesn't exist.
+
+**What this means for the rebuild:** the Angular version, once the endpoint-path bug above was fixed, now fails in exactly the same way as legacy — same URL, same 404, same total non-functionality. This is the most faithful parity achievable given the underlying reality. The screen renders, the form and cascading Specialty dropdown display correctly, but no data can ever be listed, saved, or loaded, in either app.
+
+**Not fixed beyond the path-prefix correction** (which only makes the rebuild fail identically to legacy, not differently — see class doc comment in `modality-type-master.service.ts`). Implementing a real Java backend for this screen is far outside this Angular-only session's scope and would need its own Maker-Checker cycle.
+
+**My read:** genuinely severity-1 and worth a decision before this screen ships to any real reviewer — either it needs a real backend built (a substantial, separate piece of work), or the owner may want to reconsider whether a screen with **zero working backend in legacy itself** belongs in the "low-risk, quick win" Phase 4 population at all. Also worth flagging to whoever scopes Phase 0 improvements: this is a class of screen Step 0's current checklist cannot detect, and it's plausible other screens in the remaining ~274-screen pool share this exact defect — worth a cheap batch check (grep each remaining screen's called endpoints against the actual Java controller mappings) before assuming "frontend looks wired" is sufficient evidence a screen is real.
+
+---
+
+## 68. `bankMaster`'s pagination is a silent no-op — Next/Previous/page-number clicks fetch into a variable the view never reads
+
+**Where:** `resources/assets/js/controller/billing/global/bankMasterController.js`, `PriorityMasterList` (ctrl:124-142). Found while rebuilding this screen (not part of the original Step 1 audit).
+
+**What it is:** `PriorityMasterList` (the pager's page-change handler) fetches the next/previous page into `$scope.commonList`, but the view's table renders `bankList` (populated only by the initial load and by save/update success). Clicking any pager control silently fetches real data from the backend and then discards it — the visible table never changes. A bank with more rows than one page's worth is unreachable beyond page 1 via the pager (search still works, since it operates client-side on the loaded page).
+
+**Reproduced faithfully in the rebuild** (`bank-master.ts`'s `loadPageForPager()` fires the real call, result intentionally not applied to the displayed `list` signal) — not fixed, matching legacy exactly.
+
+**My read:** low-to-moderate severity — a real, if narrow, functional gap (same shape as entry 75's ambulanceServiceProviderMaster pagination bug and entry 62's rowMasters precedent), affects any organization with more banks than fit on one page. Not urgent enough to fast-track on its own.
+
+---
+
+## 69. `departmentStoreMapper` — 3 findings from rebuilding this screen: a DI/param-order bug confirmed inert, a client-side-only pagination divergence from its Mapper siblings, and a live call whose result never reaches the table
+
+**Where:** `resources/assets/js/controller/pharmacy/departmentStoreMapperController.js`.
+
+1. **DI/param-order swap, confirmed dead-code-only.** The DI array declares `'PagerService'`/`'promiseFactory'` (ctrl:16-17) but the function signature receives them in the opposite order (ctrl:26-29, also missing a 17th `$modalInstance` DI entirely). The only place either identifier is dereferenced (`PagerService.GetPager(...)`, ctrl:183) sits inside a JS block comment spanning ctrl:107-198 (`/* START FORFOR SEROLOGY MASTER ... */`), superseded by the live `PaginationService`-based pagination (ctrl:337-367). Confirmed via grep: zero other references to either identifier, live or dead. **Not reproduced in the rebuild** — Angular's DI is type-token-based, not positional-array-based, so this specific bug class has no equivalent to port. Documented in the component's class doc comment with full line citations instead, per instruction (note it, don't fix it, don't drop it).
+2. **Client-side-only pagination/search, a real divergence from this screen's own Mapper-family siblings.** Unlike `userStoreMapper`/`doctorCabinMapper`/`userCounterMapper` (all server-paginated), `departmentStoreMapper` fetches its entire mapped-list once and paginates/searches client-side. Confirmed intentional in legacy (no offset/page-size params sent to `getDeptStoremappedList`), reproduced as-is — not a rebuild bug, but worth knowing before assuming all "Mapper" screens share one pagination pattern.
+3. **`onSelectionChanged`-triggered call whose result never reaches the table.** A real backend call fires on store/department selection change, but its response is never applied to any displayed signal/list — confirmed live (real 200 response, table unchanged). Reproduced faithfully (the call still fires, matching legacy's own no-op-looking side effect).
+4. Two orphaned legacy functions (`saveDeptStroreMapper`/`updateDeptStroreMapper`) are never wired to any UI in legacy — not ported, since there's nothing live to carry over.
+5. **No module-access gate** — legacy's state genuinely has no `resolve` block (confirmed reading `app.js:20435` directly), same class as `billingGroupMaster`/`periodicityService`. By design, not a bug; the rebuild's route correctly omits `data.moduleId`.
+
+**My read:** all characterization, nothing fixed. Items 1 and 5 are inert/by-design and need no action. Items 2-3 are worth a quick owner glance since they affect how "typical" this screen's behavior is relative to its siblings, but neither is a crash or data-loss risk.
+
+---
+
+## 70. `manufacturerMaster` — 2 real bugs reproduced faithfully, 1 legacy-DI-crash class correctly not reproduced
+
+**Where:** `resources/assets/js/controller/master/pharmacy/manufacturerMasterController.js`.
+
+- **Cross-row form-wipe on deactivate** (ctrl:147-149): toggling ANY row's status to inactive clears the add/edit form's fields globally, regardless of which row (if any) is currently loaded into the form. Confirmed live: filled the form with an unsaved draft, deactivated an unrelated saved row, watched the draft get wiped. Reproduced faithfully in the rebuild.
+- **Asymmetric status-revert-on-error**: a failed status-toggle call always forces the row back to `true`/active, regardless of which direction the toggle was attempting. Reproduced faithfully.
+- **Missing-`$state`-DI crash** (legacy calls `$state.go('login')` with no `$state` injected, ctrl:6) — the same recurring bug class as entries 8/10. Per the scaffold's own README guidance, this is a legacy-AngularJS-DI-only artifact with no Angular equivalent (the rebuild's `moduleAccessGuard` + normal router redirect already handles the same "not logged in" case safely) — **not reproduced**, noted in the component's doc comment instead.
+
+**My read:** both reproduced bugs are real but narrow (edge-case interactions), consistent with this batch's other findings — no new severity-1 class here.
+
+---
+
+## 71. `mealPreferenceMaster`'s search box is completely dead — confirmed live, not even a typo'd crash
+
+**Where:** `views/master/UnitMaster/organizationMaster/meal-preference-master.html:76-78` — a plain `<input placeholder="Search">` with no `ng-model`, no `ng-change`, no binding of any kind. `$scope.searchKeyword` is declared but never read or written anywhere else in the 375-line controller.
+
+**Confirmed live in the rebuild via real browser interaction**: typed into the search box after saving a real row — the input didn't even retain the typed characters, and the row remained visible unfiltered. Reproduced faithfully (rendered completely unbound, per instruction — no working filter added).
+
+---
+
+## 72. `subSpecialityMaster`'s Sub-Department-Name validation shows the Code field's error message (copy-paste bug, faithfully reproduced)
+
+**Where:** `resources/assets/js/controller/master/subSpecialityMasterController.js:266-273`. The manual validation check for the Sub Department Name field fires the identical `growl.error('Please Enter Code', ...)` used by the Code field's own check, instead of a name-specific message. Reproduced verbatim in the rebuild (confirmed via a real save round-trip against the live backend, which also surfaced legacy's exact duplicate-record message, "Sub department already exits...!!", unmodified).
+
+---
+
+## 73. `boxMasters` — rebuilt clean per instruction; 1 environment gap and 1 batch-level convention inconsistency found during Step 5
+
+- **`m_mrd_box_master` does not exist in this dev database** — confirmed via live `catalina.out` trace (`relation "m_mrd_box_master" does not exist`), same class as entry #62's `rowMasters` gap. Not a rebuild bug; the dev proxy was initially missing `/mrdbox/**` entirely (a separate, now-fixed dev-tooling gap, see below) — once proxied correctly, the request reaches the real backend and gets a real 500 from the missing table, matching what `rowMasters` already does.
+- **No `error:` handler on any of this screen's HTTP calls** — a genuine HTTP-level failure (like the 500 above) is now totally silent in this screen, unlike several other rebuilt master screens (e.g. `qms-department-master`, `qms-counter-master`) which surface a generic "Something Went Wrong" notice on the same class of failure. This is arguably *more* faithful to legacy's own real silence on a genuine `.then()`-never-fires HTTP failure, but it's inconsistent with the convention most of this batch's other screens adopted. Worth a decision on whether to standardize one way or the other across the whole rebuild, not urgent on its own.
+- **Dev-tooling fix (not a finding requiring sign-off, per `CLAUDE.md`'s governance-file carve-out):** `new/proxy.conf.json`/`proxy.conf.example.json` were missing `/mrdbox/**` and `/opd/**` entirely — every prior batch's screens happened to use `/adt`, `/api`, `/org`, or `/mrdrow`, all already proxied, so this gap was invisible until this batch. Added both prefixes to both files.
+
+---
+
+## 74. `QMScounterMaster` — 2 real bugs reproduced faithfully; 1 environment gap confirmed
+
+- **Dead `initQMSDeptMasterList` reference on page-size change** (a copy-paste/typo residue, same bug class as entry #40): confirmed live via a real UI interaction (selecting a page-size option threw `TypeError: initQMSDeptMasterList is not a function` in the browser console, reproduced exactly). Next/Previous/page-number pagination is unaffected (uses a separate, correctly-wired method).
+- **`updatedBy: undefined` sent on every status-toggle call** (a scope variable never assigned in legacy, `$scope.updatedBy`) — reproduced faithfully; save/update correctly use the real session user id, status-toggle alone does not.
+- **`pharmacy.m_qms_counter` does not exist in this dev database** — confirmed via live `catalina.out` trace (`relation "pharmacy.m_qms_counter" does not exist`), same class as entries #62/#73. Not a rebuild bug — both `getQMSCounterMasterList`/`Count` correctly reach the real backend (confirmed via network trace) and get a real 500 from the missing table.
+
+---
+
+## 75. `ambulanceServiceProviderMaster` — 2 real bugs reproduced faithfully
+
+- **Dead pagination**: `initServiceProviderMasterList` (legacy) never calls a count endpoint or ever advances past the first page's worth of rows — confirmed by omitting pager UI entirely in the rebuild, matching what legacy itself actually shows (no partial/broken pager, just none at all).
+- **Duplicate form label**: both the disabled, auto-computed `serviceProviderAdditionalMileage` field and the real editable `serviceProviderAdditionalMileageRate` field are labeled "Additional Mileage Rate Per Km" — confirmed live via a zoomed screenshot, both labels render identically despite the table's own column headers correctly distinguishing them.
+- Country→State cascade confirmed live and correctly wired (`/adt/getActiveStateListByCountryId` returns 200), though no state data is seeded for India in this dev environment — an environment gap, not a code defect.
+
+---
+
+## 76. `passTypeMaster` — confirmed clean, no findings
+
+Full CRUD (save/update/status-toggle) verified live against the real backend with real round-trip data. Confirm modal correctly re-arms on every save (not the once-per-session regression seen elsewhere, entry #64) — verified across two consecutive saves in the same session.
+
+---
+
+## 77. SEVERITY 1, SAME CLASS AS ENTRY 67, CONFIRMED 2026-07-21 — `careplanMaster`, `interventionsMaster`, `activitiesMaster`, `scoreMaster` (a coherent "homecare" nursing-care-plan cluster) have no working backend, and their frontends never even attempt to call one
+
+**Where:** `resources/assets/js/controller/master/global/homecare/{carePlanMaster,scoreMaster,activityMaster,interventionMaster}Controller.js`, endpoint constants in `resources/assets/js/config/homecare.url.config.js:5-9` (`CAREPLAN="/careplan"`, `SCORE="/score"`, `ACTIVITIES="/activities"`, `INTERVENTIONS="/interventions"`).
+
+**Found via the new Step 0 backend-existence sweep (`tools/angular-audit/check_backend_endpoints.py`), manually verified before logging, per instruction — not taken on the tool's output alone.**
+
+**Two independent, stacked defects, both confirmed:**
+1. **The backend genuinely doesn't exist.** `grep -rli` across every `legacy/*/src/main/java` module for `carePlan|scoreMaster|activityMaster|interventionMaster` returns nothing relevant (only an unrelated `NutritionalAssessmentScore*` feature under ADT, a different "score" entirely). Confirmed live: `curl` with a real, valid session token directly against the real backend (`GET http://localhost:8080/careplan`, `/interventions`, `/activities`, `/score`) — all 4 return a genuine Tomcat 404, the same signal that confirmed entry #67.
+2. **Independently, all 4 screens' frontends never even attempt to reach that (nonexistent) backend.** Each controller defines `$scope.init()` with the real data-loading logic inside it, but **none of the 4 controllers ever call `$scope.init()`**, and **none of the 4 views wire it via `ng-init`** either — confirmed by grep returning zero matches in all 8 files. Live-verified on `careplanMaster` in the real legacy app: the screen renders (title, empty form, empty table) but triggers **zero** network requests at all, not even a failed one. This is a different, and in some ways more fundamental, defect than entry #67 (whose frontend at least tries and gets a real 404) — here the frontend is a fully inert shell.
+
+**Not fixed — characterization only, per standing instruction.** Both defects are legacy-native (present in the real app today, not introduced by anything in this rebuild), and fixing either (implementing a real Java backend, or wiring a dead `init()`) is out of scope for this Angular-only rebuild track.
+
+**Action taken on the rebuild's own planning docs:** these 4 screens are pulled out of the low-risk/Phase-4 rebuild population entirely — see the corresponding note added to `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md`'s known-gaps section. Do not select any of them into a future batch until an owner decides how (or whether) to proceed; there is no viable screen here to rebuild against today regardless of that decision, since there is nothing real to achieve parity with beyond "renders an empty, non-functional shell."
+
+**My read:** same severity tier as entry #67 for the same reason — not a cosmetic gap, a whole confirmed-real menu-reachable feature cluster with no working implementation on either side of the stack. The fact that it's 4 thematically-coherent screens sharing the identical dead-`init()` pattern (not 4 independent coincidences) suggests this was a deliberately shelved or abandoned feature rollout, not 4 unrelated bugs — worth asking whoever owns the homecare/nursing-care-plan roadmap whether this was known and intentionally shelved, since Phase 0's classifier had no way to know that and tagged all 4 as ordinary low-risk master-data screens.
+
+---
+
+## 78. PHASE 0 CLASSIFICATION DATA-QUALITY ISSUE, CONFIRMED 2026-07-21 — 15 more screens mistagged low-risk, same confidence tier as `doorToNeedle` (entry 66): the entire OPD "cover sheet tab" family, plus the ADT admission/bed-management cluster
+
+**Where:** module `OPD` (7 screens) and module `ADT - Admission`/`ADT - Bed Management`/`ADT - Registration` (8 screens), all currently tagged `clinical_risk: no` in `states_enriched.json` / the low-risk column of `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md`.
+
+**Confirmed screens, pulled from the low-risk/Phase-4 population effective immediately:**
+- OPD cover-sheet tab family (7): `OPDCoverSheet`, `OPDcoversheetNew`, `medicalHistoryTab`, `ordersTab`, `complaintsTab`, `socialHistoryTab`, `letterTab`
+- ADT admission/bed cluster (8): `admission`, `admittedPatientList`, `admissionRequest`, `pendingAdmissionDischarge`, `bedManagement`, `bedReservationList`, `mapOfBedForER`, `passBedCategoryMapper`
+
+**Basis for confirmation (same content-based sweep that caught `doorToNeedle`, `tools/angular-audit/check_backend_endpoints.py`'s clinical-keyword pass, run against each screen's own real, live API-call surface — not name/URL/module heuristics):** every one of these 15 screens' actual backend calls carry direct, unambiguous clinical-data keywords — `admission`, `diagnos[is]`, `medicat[ion]`, `dosage`, `encounter`, `allerg[y]`, `vital[s]`, `surger[y]`, `treatment`, `vaccin[ation]`, `bed`, `ward`, `patient` — not incidental substring matches (unlike the shared-CSS-boilerplate false positives this same check initially had to be fixed to exclude, see entries 78-adjacent tooling notes). The OPD tab names alone (`medicalHistoryTab`, `complaintsTab`, `socialHistoryTab`, `letterTab` under a screen literally named `OPDCoverSheet`) are self-evidently a clinical patient-encounter workflow; the ADT cluster (`admission`, `admittedPatientList`, `bedManagement`, `bedReservationList`) is self-evidently core admission/bed-management clinical workflow. This is not a borderline call the way the `*Dashboard*` family (entry 79) turned out to be.
+
+**Not fixed, not rebuilt — logged and reclassified only.** All 15 are pulled from the low-risk/Phase-4 population and belong in Phase 5/6 planning instead (see the updated candidate list). `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md`'s known-gaps section updated accordingly, with the corrected low-risk count.
+
+**My read:** this confirms the pattern entry 66/67/77 each hinted at individually is now a *systematic* Phase 0 classification blind spot, not a handful of one-off misses — see entry 79 below (the Dashboard-family check) and the inventory doc's updated known-gaps warning for the generalized takeaway: Phase 0's classifier keys off module/folder naming, and folders named after a generic clinical department abbreviation (`OPD`, `ADT`) or a non-obviously-clinical shared area (`Common/Shared`) can both hide real clinical content the keyword-on-name/url pass never sees.
+
+---
+
+## 79. `*Dashboard*` family (7 screens) — manually reviewed per explicit instruction, confirmed FINE as low-risk; also exposed and fixed 2 more precision bugs in the new backend-existence check
+
+**Screens reviewed:** `dashboard` (CEO dashboard), `dashboardInfo`, `nurseDashboard`, `nurseDashboardInfo`, `doctorDashboard`, `doctorDashboardInfo`, `home` — all flagged by the clinical-keyword sweep (`nursing`/`bed`/`admission` hits) and, initially, by the backend-existence check too.
+
+**Verdict: confirmed fine as low-risk, all 7 — the keyword hits are administrative/operational, not per-patient clinical data.** Traced every hit to its real source:
+- **"nursing"** in every one of the 7 refers to **nursing STATION** selection (`getDetailedNursingStationList`, `getDeptListByNursingStationId`) — an organizational/departmental unit picker (which physical nursing station a user belongs to), not a clinical nursing action or patient record.
+- **"bed"** in `dashboard`/`nurseDashboard`/`home` refers to **aggregate bed-occupancy counts** (`$scope.bedOccupancyList`, fields like `bedVacantCount`/`bedCategory` — a KPI tile showing "N beds vacant by category") and, in `nurseDashboard`/`home`, a **bed-ID roster list** (`getbedlistbyNurseId`, storing only `bedId` values for shift assignment) — neither exposes or displays any per-patient identifiable clinical data.
+- **"admission"** in `dashboard` (CEO dashboard) is `getAdmissionDischargeDeathCount` — an aggregate count metric, alongside `getFinanceDetailsCount`/`getOperationCountList`/`getOPVisitsCount` — a business-intelligence/executive KPI dashboard, not a clinical workflow screen.
+- The recurring `"patient-details-row"` CSS class spotted in these views' markup (which looked like a signal before this check was refined) is confirmed to be generic, reused shared-modal boilerplate carrying no actual per-patient bindings — the same false-positive source already identified and excluded from the keyword scan's design (see `check_backend_endpoints.py`'s own doc comment).
+
+**2 more precision bugs in `check_backend_endpoints.py`, found and fixed while investigating this family, before re-trusting its output:**
+1. The path-variable-suffix probe only tried up to 2 dummy segments; `getDetailedNursingStationList`/`getDeptListByNursingStationId` need **3** chained path variables (`{userId}/{orgId}/{unitId}`), so the bare+2-segment probe never found the real, working route and false-flagged all 7 screens as "ALL endpoints missing." Fixed: probe now tries up to 3 segments.
+2. The check only ever tried `POST`; the real call for these two endpoints is `GenericService.serviceAction("GET", ...)` — confirmed a real, working GET-mapped route once the correct verb and segment count were both tried. Fixed: the check now tries both `POST` and `GET` per suffix variant.
+
+Re-ran the full sweep after both fixes — confirmed 0/7 of this family now flag as backend-missing, matching this entry's manual finding exactly.
+
+**My read:** a useful negative result — proves the sweep can produce false positives on its own (twice now, both caught and fixed before being reported as confirmed), which is exactly why entries 67/77/78 were each independently manually verified against real legacy before being logged, and why this family specifically was called out for manual review rather than auto-included with the other 15 in entry 78.
+
+---
+
+## 80. CROSS-CUTTING, FULLY RESOLVED 2026-07-21 — disconnected view/controller wiring cluster: 6 screens confirmed completely non-functional (definitive count and scope below), 1 more unrelated screen found with a similar-shaped but distinct bug
+
+**Where:** `relationMasterController.js`/`relation-master.html`, `occupationMasterController.js`/`occupation-master.html`, `maritalstatusMasterController.js`/`marital-status-master.html`, `religionMasterController.js` (all under `resources/assets/js/controller/adt/global/`). `referralTypeMasterController.js` and `patientSourceMasterController.js` grep-matched the identical shape but were not independently verified live.
+
+**The bug, identical across all confirmed screens, on (at least) 3 independent axes:**
+1. **Wrong function names.** The view's Save/Update buttons call `save<Name>()`/`update<Name>()` (e.g. `saveRelation()`, `saveOccupation()`, `saveMarital()`) — none of these exist anywhere in their respective controllers, which instead define plain `$scope.save`/`$scope.update`.
+2. **Wrong model binding.** Form inputs bind to a screen-specific object (`relation.*`, `marital.*`, `occupation.*`) that the real (orphaned, unreachable) `save()`/`update()` functions never read — those read `$scope.common.*` instead, an object the view never writes to.
+3. **Wrong list variable.** The table iterates `relationList`/`maritalList`/`occupationList` — never assigned anywhere. Only `$scope.commonList` is assigned, by a real, successful, live network call that fires on every page load — so the list endpoint genuinely works, the table just never shows it.
+
+**Confirmed live against the real legacy app for `relationMaster`, `occupationMaster`, and `maritalstatusMaster` (2026-07-21):** filled the form, clicked Save/Update — **zero network requests, zero console output** in all three. This is a genuine AngularJS silent no-op (its expression compiler guards a function-call expression against an undefined target rather than throwing), not a crash — confirmed by directly testing the real app, not inferred. `religionMasterController.js` independently grep-confirmed to share the identical `common`/`commonList`/`commonform`/inverted-save-flag-default pattern by the agent auditing `relationMaster`, though not re-verified live by a second session.
+
+**Also confirmed:** each screen's Save/Update button visibility is inverted from every other rebuilt master screen's convention (`saveBtnFlag`/`updateBtnFlag` default such that **Update** shows on load, not **Save**) — consistent across all 3 confirmed screens, further evidence this is one shared copy-paste ancestor, not independent bugs.
+
+**Session note — a real rebuild-fidelity bug introduced and then corrected, not a legacy behavior:** the two agents that rebuilt `occupationMaster` and `maritalstatusMaster` initially reproduced this as a **thrown `TypeError`** (reasoning, incorrectly, that AngularJS would throw calling an undefined `ng-click` target) — the sibling agent that rebuilt `relationMaster` implemented a true no-op instead, having tested live and observed genuine silence. Live-testing both `occupationMaster` and `maritalstatusMaster` against real legacy directly (not just reasoning about AngularJS internals) confirmed the true-no-op version is correct and the thrown-TypeError version was a rebuild-introduced fidelity bug, not a parity choice — fixed in `occupation-master.ts`/`marital-status-master.ts` before this batch shipped, re-verified live afterward (both now silent, matching legacy exactly).
+
+**Not fixed in legacy, not fixed in the rebuild beyond the correction above — characterization only, per standing instruction.** All 3 confirmed screens were rebuilt faithfully non-functional (real list-load network call fires and is genuinely discarded; Save/Update are true no-ops), matching legacy exactly.
+
+**RESOLUTION 2026-07-21 (later) — full sweep completed, per explicit owner instruction, before batch 9:**
+
+**Method:** (1) a static census of every screen backed by a controller in `resources/assets/js/controller/adt/global/` (20 controller files, 19 live states — confirmed via `states_enriched.json`; the 20th, `hierarchyMasterController.js`, is script-commented-out in `index.html` and dead, and `dischargeTypeMasterController.js` is script-loaded but its only `.state()` registration is inside a commented-out block in `app.js` — both genuinely dead, not part of the live population), checking each view's Save/Update `ng-click` target function names against the controller's actually-defined `$scope` methods (the axis-1 signature, the most decisive of the 3); (2) live verification of the 3 screens named for follow-up (`religionMaster`, `referralTypeMaster`, `patientSourceMaster`) against the real legacy app, same method as entries 77/78 (fill form, click Save/Update, check real network + console output).
+
+**Static census result (19 live `adt/global` screens):** 5 confirmed via the axis-1 mismatch — `relationMaster`, `occupationMaster`, `religionMaster`, `patientSourceMaster`, `referralTypeMaster`. The other 13 (`icutypeMaster`, `holidayCalenderMaster`, `identificationMaster`, `referralMaster`, `deliveryTypeMaster`, `consentTypeMaster`, `consentMaster`, `bedCategoryMaster`, `bedTypeMaster`, `occupancyUnitMaster`, `shortLeaveReasonMaster`, `bedsideInvestigationsMaster`, `nursingScale.FallRiskHistory`) are clean of this specific pattern.
+
+**Live verification confirmed all 3 named screens broken, identically:** `religionMaster`, `referralTypeMaster` (whose fieldset legend literally reads "Patient Source Master" — yet another copy-paste tell, same class as `occupationMaster`'s "Religion Master" legend, entry #84's sibling), and `patientSourceMaster` all produced **zero network requests, zero console output** on a real Save/Update click against the real legacy app — matching `relationMaster`/`occupationMaster`/`maritalstatusMaster` exactly.
+
+**Definitive count: 6 screens confirmed completely non-functional** — `relationMaster`, `occupationMaster`, `maritalstatusMaster`, `religionMaster`, `referralTypeMaster`, `patientSourceMaster`. All 6 share the identical 3-axis break (wrong function names, wrong model binding, wrong list variable) and the identical inverted Save/Update button default.
+
+**Important scope correction:** the cluster is **not confined to the `adt/global/` controller folder** — `maritalstatusMaster`'s controller lives at `resources/assets/js/controller/master/maritalstatusMasterController.js`, a different directory entirely. The true common thread across all 6 confirmed screens is their **view template location**: every one is `views/master/GlobalMaster/<name>.html`. That folder holds 180 screens total (excluding the `Adt/` subfolder), far more than the 19 checked here — this session's static census only covered the 19 screens whose *controller* happens to live in `adt/global/`, which happened to catch 5 of the 6 real instances by coincidence, not because that folder is the true boundary. **The full 180-screen `views/master/GlobalMaster/` population has NOT been swept** — this remains a real, only partially-answered question. Recommend a follow-up static census (the same axis-1 check, but keyed off `templateUrl` starting with `views/master/GlobalMaster/` rather than `ctrl_files` containing `adt/global/`) before assuming no further instances exist. Not run this session, to avoid open-ended scope creep beyond what was asked.
+
+**One more finding surfaced by the static census, distinct from this cluster — not the same bug, flagged separately:** `nursingScale` (a large, complex clinical scoring screen — Bishop/Aldrete/APGAR/Mallampati assessment scales, clearly clinical-tier, not part of the low-risk pool) has 4 of its ~18 save handlers (`saveBishopScoreClick`, `saveAldreteScoreClick`, `saveAPGARScoreClick`, `saveMallampattiClassClick`) calling functions not defined in its controller, while the other ~14 handlers are correctly wired. This is a partial, narrower defect in one large multi-feature screen, not the same shelved-template pattern — noted here only because the same static pass surfaced it, not investigated further (out of scope, not a low-risk-pool screen).
+
+**Action taken:** all 6 confirmed-broken screens should be excluded from any future batch selection the same way the batch-7/8 findings already are — none are currently selected or built. No fix applied to legacy or to any rebuild beyond the 2 already corrected in batch 8 (`occupation-master.ts`/`marital-status-master.ts`'s no-op fix, see session note above).
+
+**My read:** scope is now definitive for the specific question asked (6 confirmed, 0 remaining unverified among the originally-suspected screens), but the *folder-boundary* assumption underlying the original finding was wrong — this is likely a `views/master/GlobalMaster/`-wide risk, not an `adt/global/`-controller-wide one, and the true blast radius could be larger than 6. Recommend the wider 180-screen sweep as a distinct, explicitly-scoped follow-up task, not bundled into this resolution.
+
+---
+
+## 81. `raceMaster`/`stateMaster` — sibling divergences, faithfully reproduced
+
+Both confirmed real and live, backends confirmed working via the new Step 0 check (all 13 endpoints 200/405-mapped, no `modalityTypeMaster`-class gap). Findings:
+- Both reload list+count **unconditionally** after save/update (`raceMasterController.js:252-257`, `stateMasterController.js:259-263`), unlike `amenityMaster`'s success-only reload.
+- Both permanently disable the confirm modal for the rest of the session after a **failed create** — `init()`'s `popUpFlag`/`showModal` reset only runs on success.
+- Both use a blocking native `alert("Error!!")` on edit-fetch failure, not `growl.error`.
+- **Sibling divergence:** `raceMaster.updateStatus` never reloads and growls a hardcoded string; `stateMaster.updateStatus` reloads on both branches and growls the server's real message as a warning.
+- `raceMaster`'s "Is Default" checkbox has a dead enable/disable guard — the only logic that would drive it is commented out.
+- `stateMaster` has a real jQuery keypress filter on State Name (letters/accented vowels/space only) — reproduced.
+- Both use the shared `<modal>` directive (entry #55 standing exception applied — working close button). No missing-`$state`-DI crash in either.
+
+---
+
+## 82. `districtMaster` — clean, one real sibling divergence; `relationMaster` — see entry #80
+
+`districtMaster` confirmed real, live, backend working (real Country→State cascade, working search, confirm-modal-on-create-only). One divergence: `updateStatus` unconditionally reloads the full list+count in both success **and failure** branches, making a failed status-toggle self-correct visually — unlike sibling screens that leave a failed toggle's optimistic UI update stuck. `relationMaster`'s findings are consolidated into entry #80 (the disconnected-CRUD cluster), not repeated here.
+
+---
+
+## 83. `prefixMaster`/`gradeCreationMaster` — confirmed distinct from existing `prefixConfiguration`; sibling divergences and one new stuck-loader bug
+
+Both confirmed real, live, and backend-verified (real seeded data returned for `prefixMaster`; both confirmed against real Java controllers, `legacy/ADT/...` and `legacy/Billing/.../ContractGradeMasterController.java`). **`prefixMaster` confirmed genuinely distinct from the already-rebuilt `prefixConfiguration`** (batch-6ish screen) — unrelated controllers, no shared endpoints/DTOs; `prefixMaster` is a name-prefix (Mr./Mrs./Dr.) + gender master, `prefixConfiguration` is a document-numbering/sequence generator.
+
+Findings:
+- `prefixMasterController.js:245-252,370-377` — hardcoded `growl.error('Prefix already exits...!!')` on any save/update failure regardless of real cause (same copy-paste class as entries 57/72).
+- `prefixMasterController.js:286-288` — edit-fetch failure uses a blocking native `alert("Error!!")`, unlike every other error path in the same file.
+- **Sibling divergence:** `prefix-master.html`'s edit pencil has no disabled-when-Inactive guard; `grade-creation-master.html`'s does.
+- **New finding:** `gradeCreationMasterController.js:253-254` calls `$rootScope.startLoader()` unconditionally *before* the `$valid` check in `update()` — an invalid submit leaves the global loading overlay stuck forever (the only `stopLoader()` call is inside the network-response handler, an unreachable code path for an invalid submit).
+- Both screens' search boxes are genuinely live, working client-side filters — not the dead "serach..." pattern seen elsewhere.
+- Both use `<modal>` (entry #55 standing exception, working close button). No missing-`$state`-DI crash in either.
+
+---
+
+## 84. `employeeCategory`/`bankBranch` — confirmed distinct from existing screens; one real data-corruption-adjacent bug found
+
+Both confirmed real, live, backend-verified (12/12 endpoints live). **`employeeCategory` confirmed genuinely distinct from the already-rebuilt `employeeCategoryMaster`** (batch 6) — different DI shapes, field names, no loader/try-catch — but flagged as worth an owner's attention: save/update/status-toggle/get-by-id on both screens resolve to **byte-identical backend URLs** (only the plain list-fetch differs, `getEmployeeCategoryMasterList` vs. `getAllEmployeeCategoryMasterList`), meaning both screens read/write the same underlying rows under two independently-permissioned frontends — not the literal duplicate-screen case the playbook flags to stop for, but worth knowing. **`bankBranch` confirmed to feed `bankMaster`'s (batch 7) Branch dropdown** via an "active-only" sibling endpoint (`GETACTIVEBANKBRANCHMASTERLIST`) — the batch-7 finding that bankMaster's Branch dropdown was empty in this dev environment is very likely just a seed-data gap this screen's own data would unblock, not a rebuild bug.
+
+Findings:
+- **Real, higher-severity bug:** `employeeCategoryController.js`'s `init()` sets `$scope.orgnisationId` (a typo) — but every other call site (save/update/edit/pagination/reload-after-save) reads `$scope.organizationId`, which is never assigned. Only the very first page-load call uses the real value; every subsequent save/update sends `organizationId: undefined` to the backend. Confirmed via a clean sibling-divergence comparison: `bankBranchController.js` uses `orgnisationId` consistently everywhere with no such bug.
+- Both controllers: `updateStatus`'s success handler calls `$scope.init()`, silently discarding any in-progress create/update form on any row's status toggle, with no list reload either.
+- `employeeCategory`'s search box has zero wiring at all (not even a copy-paste reference); `bankBranch`'s is a real working client-side filter.
+- `saveBankBranch()` double-reloads the list on success; `saveEmployee()`/`updateEmployee()` reload unconditionally regardless of success/error.
+- Both use `<modal>` (entry #55 standing exception). Neither edit-icon disables for Inactive rows (matches `bankMaster`'s own convention).
+
+**My read on the `employeeCategory` `organizationId` typo:** worth flagging above the others in this entry — silently sending `organizationId: undefined` on every non-initial save/update is a real, live data-integrity risk (rows could be persisted under a null/default org depending on backend defaulting behavior), not just a cosmetic gap. Characterized, not fixed, per standing instruction, but worth a closer look sooner rather than later given the potential blast radius on real data.
+
+---
+
+## 85. FULL 180-SCREEN SWEEP COMPLETE 2026-07-21 — entry #80's true population (`views/master/GlobalMaster/*.html`, not just `adt/global/`) fully censused; no already-built screen affected beyond the 3 already known
+
+**Built:** `tools/angular-audit/check_disconnected_wiring.py` — the same axis-1 (wrong Save/Update function name) and a new axis-3 (list-render variable never assigned) static check, run against the full 180-screen `views/master/GlobalMaster/*.html` population (excluding the already-separately-audited `Adt/` subfolder), not just the 19-screen `adt/global/` controller-folder subset entry #80 originally covered. **Validated before trusting the output**: re-ran against the 6 already-confirmed-broken screens and 4 already-confirmed-clean siblings from entries #80-84 — 100% agreement (all 6 flagged, all 4 clean), confirming the check is trustworthy before applying it to the unverified remainder.
+
+**Axis-1 (strong signal, entry #80's exact bug shape): 12 screens flagged total.**
+- **6 already known** (from entry #80): `relationMaster`, `maritalstatusMaster`, `occupationMaster` — all 3 **already built** in batch 8, correctly rebuilt as faithfully non-functional (no new action needed); `religionMaster`, `patientSourceMaster`, `referralTypeMaster` — confirmed live-broken, not built, correctly excluded from selection already.
+- **6 NEW candidates, not previously flagged, NONE already built:** `diagnosisMaster` (Clinical - Global Master, mismatch: `updateCarePlan`), `InsuranceTPAMapping` (Billing - Global Master, mismatch: `update`), `surgicalCalendar` (OT/Theatre, mismatch: `update`), `loyaltyCardConfiguration` (Billing - Global Master, mismatch: `update`), `cyclicAppointmentScheduling` (Clinical - Encounter Master, mismatches: `saveCyclicAppointments`, `saveCyclicServiceAppointments`), `globalServiceMaster` (Admin - Global Master (general), mismatches: `saveGlobalList`, `saveUnitServiceTariffMaster` — this one also independently appeared in the earlier clinical-keyword dual-flagged-36 list, entry #78/#79's sweep, a useful cross-validation). **Confirmed via static analysis only, not yet live-tested against real legacy** — same confidence tier as entry #80's original `adt/global/` static pass before its own live-verification step; recommend the same live-verification treatment before any of these 6 are ever selected into a future batch. None of the 6 are in the low-risk pool already excluded by entries 78/79, except `globalServiceMaster` which already was.
+
+**Axis-3 (list-render variable never assigned): 30 screens flagged, but 28 of the 30 are CONFIRMED FALSE POSITIVES from a design flaw in the check itself, found and disclosed rather than silently reported as real.** The check only looks for `$scope.<var> = ` assignments; 28 of the 30 flags have `list_var` literally equal to `vm` — meaning the real ng-repeat expression was something like `vm.model.pagination.data`, and the check incorrectly split on `.` and checked whether `$scope.vm` is ever assigned, which is meaningless for a `controllerAs:'vm'` screen (the real assignment happens via `this.`/`self.`, never `$scope.`, for any of the ~391 screens in this codebase using that pattern). **Verified this is a false-positive, not a real bug**, by checking one of the 2 already-built screens this flagged, `manufacturerMaster` (`ng-repeat="manufacture in vm.model.pagination.data"`, `manufacturer-master.html:137`) — already tested working live in batch 7 this session (real save/status-toggle round-trip confirmed). The other already-built axis-3 hit, `assetCategoryMaster`, shares the identical `vm.*` shape and is dismissed on the same basis, not independently re-tested. **The 2 non-`vm` axis-3 flags** (`uhidMergeRequest`/`dietPatientRequest`, both `list_var=sexMasterList`; `addNewAuctionQuotationFillin`, `list_var=item`) are lower-confidence and not independently verified — noted for awareness, not confirmed findings.
+
+**Definitive answer to "does this affect anything already shipped": NO.** Of the 89 screens built across batches 1a-8, only the 3 already known and already correctly handled (`relationMaster`, `maritalstatusMaster`, `occupationMaster` — rebuilt faithfully non-functional, matching confirmed legacy behavior, entry #80) are affected. The 2 axis-3 hits among built screens (`manufacturerMaster`, `assetCategoryMaster`) are confirmed false positives of the check's own `vm`-pattern blind spot, not real defects — both remain considered working as previously verified.
+
+**Action:** the 6 new axis-1 candidates and the 2 non-`vm` axis-3 candidates should be excluded from future batch selection until manually/live-verified, the same treatment as entry #80's original list before its own resolution. Not investigated further live this session — reporting the static result only, per the scope of what was asked.
+
+**My read:** this closes out the open question from entry #80's own recommendation — the wider population is now fully censused, the false-positive risk in the new check was caught and disclosed rather than shipped as fact, and critically, nothing already built beyond the already-known 3 is affected. This should not block a merge/push decision on that basis; whatever merge/push timing is chosen, it doesn't need to wait on this specific risk any further.
