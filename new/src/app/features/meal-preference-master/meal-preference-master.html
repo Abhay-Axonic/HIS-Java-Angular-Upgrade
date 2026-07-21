@@ -1,0 +1,128 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="mealPreferenceCode">Meal Preference Code<span class="required">*</span></label>
+        <input
+          id="mealPreferenceCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().mealPreferenceCode"
+          (ngModelChange)="updateField('mealPreferenceCode', $event)"
+          name="mealPreferenceCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="mealPreferenceDesc">Meal Preference Description<span class="required">*</span></label>
+        <input
+          id="mealPreferenceDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().mealPreferenceDesc"
+          (ngModelChange)="updateField('mealPreferenceDesc', $event)"
+          name="mealPreferenceDesc"
+          [class.invalid]="isDescInvalid()"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveBtnFlag()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="openConfirmModal()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+    @if (updateBtnFlag()) {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!--
+      Faithful dead-markup reproduction -- see the class doc comment.
+      Legacy's meal-preference-master.html:76-78 search input carries no
+      ng-model, no ng-change, and no handler at all; $scope.searchKeyword is
+      declared but never read anywhere in the controller. Deliberately left
+      completely unbound here -- no [(ngModel)], no filter, no (input)/
+      (keyup) handler of any kind.
+    -->
+    <input type="text" class="search-box" placeholder="Search" autocomplete="off" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Meal Preference Code</th>
+        <th>Meal Preference Description</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.mealPreferenceId) {
+        <tr>
+          <td>{{ row.mealPreferenceCode }}</td>
+          <td>{{ row.mealPreferenceDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

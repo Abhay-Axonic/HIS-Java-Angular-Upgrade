@@ -1,0 +1,186 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="qmsCounterCode">Code<span class="required">*</span></label>
+        <input
+          id="qmsCounterCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="common().qmsCounterCode"
+          (ngModelChange)="updateField('qmsCounterCode', $event)"
+          [class.invalid]="isRequiredMissing(common().qmsCounterCode)"
+          name="qmsCounterCode"
+        />
+        @if (isRequiredMissing(common().qmsCounterCode)) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="qmsCounterDesc">Description<span class="required">*</span></label>
+        <input
+          id="qmsCounterDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="common().qmsCounterDesc"
+          (ngModelChange)="updateField('qmsCounterDesc', $event)"
+          [class.invalid]="isRequiredMissing(common().qmsCounterDesc)"
+          name="qmsCounterDesc"
+        />
+        @if (isRequiredMissing(common().qmsCounterDesc)) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="qmsKioskMasterId">Kiosk<span class="required">*</span></label>
+        <select
+          id="qmsKioskMasterId"
+          [ngModel]="common().qmsKioskMasterId"
+          (ngModelChange)="onKioskChange($event)"
+          [class.invalid]="isRequiredMissing(common().qmsKioskMasterId)"
+          name="qmsKioskMasterId"
+        >
+          <option value="">-</option>
+          @for (k of kioskOptions(); track k.qmsKioskMasterId) {
+            <option [ngValue]="k.qmsKioskMasterId">{{ k.qmsDesc }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(common().qmsKioskMasterId)) {
+          <p class="help-block">Kiosk is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="departments">Department<span class="required">*</span></label>
+        <select id="departments" class="dept-select" multiple size="5" name="departments" (change)="onDepartmentSelectionChange($any($event.target))">
+          @for (d of departmentOptions(); track d.id) {
+            <option [value]="d.id" [selected]="selectedDepartmentIds().includes(d.id)">{{ d.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveBtnFlag()) {
+      <button type="button" class="btn-primary" title="Save" (click)="openConfirmModal()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+    @if (updateBtnFlag()) {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="search"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th class="text-center">Department Details</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.qmsCounterId) {
+        <tr>
+          <td>{{ row.qmsCounterCode }}</td>
+          <td>{{ row.qmsCounterDesc }}</td>
+          <td class="text-center">
+            <i class="icon-info" title="Department Details" (click)="viewDepartmentDetails(row)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body"><span>Are you sure you want to Save?</span></div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showDeptDetailsModal()) {
+  <div class="modal-backdrop" (click)="closeDeptDetailsModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Details
+        <button type="button" (click)="closeDeptDetailsModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>QMS Name</th>
+              <th>QMS Department Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (d of viewDepartmentList(); track d.qmsDeptMasterId) {
+              <tr>
+                <td>{{ d.qmsDesc }}</td>
+                <td>{{ d.qmsDeptName }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

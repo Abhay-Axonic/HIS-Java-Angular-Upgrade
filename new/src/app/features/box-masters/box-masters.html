@@ -1,0 +1,118 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="boxCode">Code<span class="required">*</span></label>
+        <input
+          id="boxCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().boxCode"
+          (ngModelChange)="updateField('boxCode', $event)"
+          name="boxCode"
+          required
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="boxDescription">Description<span class="required">*</span></label>
+        <input
+          id="boxDescription"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().boxDescription"
+          (ngModelChange)="updateField('boxDescription', $event)"
+          name="boxDescription"
+          required
+          [class.invalid]="isDescInvalid()"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!--
+      Real, working client-side filter -- unlike legacy's dead
+      `serachDepartmentMaster` handler (dropped entirely, see class doc
+      comment), this reproduces the WORKING half of legacy's search box: the
+      `filter:searchKeyword` already applied to the table's ng-repeat
+      (box-master.html:98).
+    -->
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      name="searchKeyword"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Box Code</th>
+        <th>Description</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.boxId) {
+        <tr>
+          <td>{{ row.boxCode }}</td>
+          <td>{{ row.boxDescription }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>

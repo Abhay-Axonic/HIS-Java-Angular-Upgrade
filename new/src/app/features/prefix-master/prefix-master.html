@@ -1,0 +1,163 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="prefixCode">Prefix Master Code<span class="required">*</span></label>
+        <input
+          id="prefixCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().prefixCode"
+          (ngModelChange)="updateField('prefixCode', $event)"
+          name="prefixCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="prefixName">Prefix Master Description<span class="required">*</span></label>
+        <input
+          id="prefixName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().prefixName"
+          (ngModelChange)="updateField('prefixName', $event)"
+          name="prefixName"
+          [class.invalid]="isNameInvalid()"
+        />
+        @if (isNameInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="genderId">Gender<span class="required">*</span></label>
+        <select
+          id="genderId"
+          [ngModel]="form().genderId"
+          (ngModelChange)="updateField('genderId', $event)"
+          name="genderId"
+          [class.invalid]="isGenderInvalid()"
+        >
+          <option value="">Select Gender</option>
+          @for (g of genderList(); track g.id) {
+            <option [value]="g.id">{{ g.desc }}</option>
+          }
+        </select>
+        @if (isGenderInvalid()) {
+          <p class="help-block">Gender is required</p>
+        }
+      </div>
+
+      <div class="field checkbox-field">
+        <label class="checkbox-inline">
+          <input
+            type="checkbox"
+            id="isShowPatientRegistration"
+            [ngModel]="form().isShowPatientRegistration"
+            (ngModelChange)="updateField('isShowPatientRegistration', $event)"
+            name="isShowPatientRegistration"
+          />
+          Is Show Patient Registration
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!-- ctrl:179 -- live client-side filter, see class doc comment. -->
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      name="searchKeyword"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Prefix Master Code</th>
+        <th>Prefix Master Description</th>
+        <th>Gender</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredList(); track row.prefixId) {
+        <tr>
+          <td>{{ row.prefixCode }}</td>
+          <td>{{ row.prefixDesc }}</td>
+          <td>{{ row.genderName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <!-- No status guard here, unlike gradeCreationMaster -- see class doc comment. -->
+            <i class="icon-edit" (click)="edit(row.prefixId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!filteredList().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

@@ -25,6 +25,9 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/billingGroupMaster', title: 'Billing Group Master' },
       { path: '/insuranceMaster', title: 'Insurance Master' },
+      { path: '/bankMaster', title: 'Bank Master' },
+      { path: '/bankBranch', title: 'Bank Branch' },
+      { path: '/gradeCreationMaster', title: 'Grade Creation Master' },
     ],
   },
   {
@@ -39,6 +42,14 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/organizationMaster', title: 'Organization Master' },
       { path: '/specialityMaster', title: 'Department Master' },
+      { path: '/subSpecialityMaster', title: 'Sub Department Master' },
+      { path: '/raceMaster', title: 'Race Master' },
+      { path: '/stateMaster', title: 'State Master' },
+      { path: '/districtMaster', title: 'District Master' },
+      { path: '/relationMaster', title: 'Relation Master' },
+      { path: '/maritalstatusMaster', title: 'Marital Status Master' },
+      { path: '/occupationMaster', title: 'Occupation Master' },
+      { path: '/prefixMaster', title: 'Prefix Master' },
       { path: '/nationalityMaster', title: 'Nationality Master' },
       { path: '/countryMaster', title: 'Country Master' },
       { path: '/cityMaster', title: 'City Master' },
@@ -54,6 +65,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/counterMaster', title: 'Counter Master' },
       { path: '/cabinMaster', title: 'Cabin Master' },
       { path: '/rowMasters', title: 'MRD Row Master' },
+      { path: '/boxMasters', title: 'MRD Box Master' },
+      { path: '/mealPreferenceMaster', title: 'Meal Preference Master' },
     ],
   },
   {
@@ -62,6 +75,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/bedCategoryMaster', title: 'Bed Category Master' },
       { path: '/bedTypeMaster', title: 'Ward Bed Type Master' },
       { path: '/shortLeaveReasonMaster', title: 'Short Leave Reason Master' },
+      { path: '/passTypeMaster', title: 'Pass Type Master' },
     ],
   },
   {
@@ -71,6 +85,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/ambulanceMaster', title: 'Ambulance Master' },
       { path: '/ambulanceFacilitiesMaster', title: 'Ambulance Facilities Master' },
       { path: '/resourceAllocationMaster', title: 'Resource Allocation Master' },
+      { path: '/ambulanceServiceProviderMaster', title: 'Ambulance Service Provider Master' },
     ],
   },
   {
@@ -80,6 +95,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/qualificationMaster', title: 'Qualification Master' },
       { path: '/degreeMaster', title: 'Degree Master' },
       { path: '/employeeCategoryMaster', title: 'Employee Category Master' },
+      { path: '/employeeCategory', title: 'Employee Category' },
       { path: '/designationMaster', title: 'Designation Master' },
     ],
   },
@@ -88,6 +104,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/QMSkioskMaster', title: 'QMS Kiosk Master' },
       { path: '/QMSdepartmentMaster', title: 'QMS Department Master' },
+      { path: '/QMScounterMaster', title: 'QMS Counter Master' },
     ],
   },
   {
@@ -96,6 +113,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/userStoreMapper', title: 'User Store Mapper' },
       { path: '/doctorCabinMapper', title: 'Doctor Cabin Mapper' },
       { path: '/userCounterMapper', title: 'User Counter Mapper' },
+      { path: '/departmentStoreMapper', title: 'Department Store Mapper' },
     ],
   },
   {
@@ -115,11 +133,17 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   },
   {
     heading: 'Pharmacy',
-    items: [{ path: '/assigningPickerDispenser', title: 'Pending List for Assigning Picker' }],
+    items: [
+      { path: '/assigningPickerDispenser', title: 'Pending List for Assigning Picker' },
+      { path: '/manufacturerMaster', title: 'Manufacturer Master' },
+    ],
   },
   {
     heading: 'Appointment Scheduling',
-    items: [{ path: '/pharman', title: 'Pharman Page' }],
+    items: [
+      { path: '/pharman', title: 'Pharman Page' },
+      { path: '/modalityTypeMaster', title: 'Modality Type Master' },
+    ],
   },
   {
     heading: 'Asset Management',

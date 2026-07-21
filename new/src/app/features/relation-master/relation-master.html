@@ -1,0 +1,127 @@
+<!--
+  See relation-master.ts's class doc comment for the full severity-1
+  writeup. This template faithfully reproduces legacy's own broken wiring:
+  - The Save/Update buttons below call true no-ops (onSaveClick/onUpdateClick)
+    -- confirmed live, clicking either does nothing in legacy today.
+  - Update is the ONLY button visible by default (saveMode() starts false)
+    -- the confirmed-live inverted default, not this codebase's usual
+    Save-by-default convention.
+  - The table below never renders any row -- `rows()` is never populated,
+    matching legacy's own `relationList`-is-never-assigned bug -- even
+    though the real list/count backend calls succeed on load.
+-->
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="relationCode">Code</label>
+        <input
+          id="relationCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().relationCode"
+          (ngModelChange)="updateField('relationCode', $event)"
+          name="relationCode"
+        />
+      </div>
+
+      <div class="field">
+        <label for="relationName">Relation Name</label>
+        <input
+          id="relationName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().relationName"
+          (ngModelChange)="updateField('relationName', $event)"
+          name="relationName"
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <!--
+      Faithful reproduction of the confirmed-live dead click -- see class
+      doc comment. Neither button calls a working save/update path; both
+      are true no-ops here, matching legacy's silent no-op click exactly
+      (no HTTP call, no console output, no visible change).
+    -->
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <!--
+    No search box and no pagination footer here at all -- confirmed by
+    reading the legacy view in full: unlike this codebase's district-master
+    sibling, relation-master.html has neither, even though the controller
+    computes a PagerService pager that is simply never rendered.
+  -->
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!--
+        This never renders -- `rows()` is never populated by anything (see
+        class doc comment: the real list fetch assigns to an internal-only
+        field, not to `rows`, matching legacy's own commonList-vs-
+        relationList mismatch). Kept structurally faithful to legacy's
+        markup rather than deleted.
+      -->
+      @for (row of rows(); track row.relationId) {
+        <tr>
+          <td>{{ row.relationCode }}</td>
+          <td>{{ row.relationName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!rows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+<!--
+  Never shown -- showConfirmModal() stays permanently false, matching
+  legacy's own dead-in-the-DOM `<modal visible="showModal">` (nothing ever
+  sets `showModal` true in legacy, since the only function that would --
+  the orphaned $scope.save() -- is never invoked by anything). Kept for
+  structural parity only.
+-->
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

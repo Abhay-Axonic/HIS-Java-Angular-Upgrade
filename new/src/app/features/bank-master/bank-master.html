@@ -1,0 +1,171 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="branchId">Branch<span class="required">*</span></label>
+        <select
+          id="branchId"
+          [ngModel]="form().branchId"
+          (ngModelChange)="updateField('branchId', $event)"
+          [class.invalid]="isBranchInvalid()"
+          name="branchId"
+        >
+          <option value="">Select Branch</option>
+          @for (branch of branchOptions(); track branch.branchId) {
+            <option [value]="branch.branchId">{{ branch.branchDesc }}</option>
+          }
+        </select>
+        @if (isBranchInvalid()) {
+          <p class="help-block">Branch is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="bankCode">Bank Code<span class="required">*</span></label>
+        <input
+          id="bankCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().bankCode"
+          (ngModelChange)="updateField('bankCode', $event)"
+          [class.invalid]="isCodeInvalid()"
+          name="bankCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Bank Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="bankName">Bank Description<span class="required">*</span></label>
+        <input
+          id="bankName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().bankName"
+          (ngModelChange)="updateField('bankName', $event)"
+          [class.invalid]="isDescInvalid()"
+          name="bankName"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Bank Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <!-- No `*` marker here -- this field is silently mandatory in
+             legacy (HTML5 `required` with no visual star). Faithfully
+             reproduced, not "fixed" -- see class doc comment. -->
+        <label for="bankAddress">Bank Address</label>
+        <input
+          id="bankAddress"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().bankAddress"
+          (ngModelChange)="updateField('bankAddress', $event)"
+          [class.invalid]="isAddressInvalid()"
+          name="bankAddress"
+        />
+        @if (isAddressInvalid()) {
+          <p class="help-block">Bank Address is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!-- Plain client-side filter only -- no server search call in legacy
+         for this screen. See class doc comment. -->
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      name="searchKeyword"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Branch</th>
+        <th>Bank Code</th>
+        <th>Bank Description</th>
+        <th>Bank Address</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.bankId) {
+        <tr>
+          <td>{{ row.branchDesc }}</td>
+          <td>{{ row.bankCode }}</td>
+          <td>{{ row.bankName }}</td>
+          <td>{{ row.bankAddress }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="6" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

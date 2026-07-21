@@ -1,0 +1,30 @@
+// Screen-specific layout only -- shared table/pagination/modal/toolbar
+// styles live in src/styles.scss (see that file's header comment).
+// Status-toggle CSS is NOT here on purpose: <app-status-toggle> ships its
+// own (new/src/app/shared/status-toggle/status-toggle.scss).
+
+.form-row {
+  display: flex;
+  gap: 24px;
+}
+
+.sortable {
+  cursor: pointer;
+}
+
+// Deliberately opacity-only, NOT pointer-events:none -- see the component's
+// class doc comment: legacy's edit icon disablement is purely cosmetic and
+// does not block the click (ng-click lives on the parent `<a>`, not the
+// icon). A pointer-events:none rule here would make the rebuild MORE
+// correct than legacy, which is not the parity goal for this specific quirk.
+.icon-edit.disabled {
+  opacity: 0.35;
+}
+
+.width15 {
+  width: 15%;
+}
+
+.width18 {
+  width: 18%;
+}

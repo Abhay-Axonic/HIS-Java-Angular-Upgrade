@@ -1,0 +1,41 @@
+// Screen-specific layout only -- shared table/pagination/toolbar/field
+// styles live in src/styles.scss (see that file's header comment).
+// No modal styles here -- this screen uses no `<modal>`/confirm-dialog at
+// all (see class doc comment).
+
+.dual-list {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.dual-list-panel {
+  flex: 1;
+  min-width: 220px;
+}
+
+.panel-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+// Legacy: the ng-dropdown-multiselect widget's own scrollable option box
+// (`extra-settings.scrollableHeight`/`scrollable`, ctrl:507-511).
+.scroll-box {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  height: 150px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.checkbox-row {
+  display: block;
+  padding: 2px 0;
+}
+
+.dual-list-action {
+  padding-top: 24px;
+}

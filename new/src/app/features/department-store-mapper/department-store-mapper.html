@@ -1,0 +1,113 @@
+<section class="page">
+  <fieldset>
+    <legend>Department Store Mapper</legend>
+
+    <div class="dual-list">
+      <div class="dual-list-panel">
+        <label class="panel-label">Store<span class="required">*</span></label>
+        <div class="scroll-box">
+          @for (store of storeOptions(); track store.id) {
+            <label class="checkbox-row">
+              <input
+                type="checkbox"
+                [checked]="isStoreSelected(store.id)"
+                (change)="toggleStoreSelection(store, $any($event.target).checked)"
+              />
+              {{ store.label }}
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="dual-list-panel">
+        <label class="panel-label">Department<span class="required">*</span></label>
+        <div class="scroll-box">
+          @for (dept of deptOptions(); track dept.id) {
+            <label class="checkbox-row">
+              <input
+                type="checkbox"
+                [checked]="isDeptSelected(dept.id)"
+                (change)="toggleDeptSelection(dept, $any($event.target).checked)"
+              />
+              {{ dept.label }}
+            </label>
+          }
+        </div>
+      </div>
+
+      @if (updateMode()) {
+        <div class="dual-list-action">
+          <button type="button" class="btn-primary" (click)="cancelUpdate()">Cancel Update</button>
+        </div>
+      }
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      records
+    </label>
+
+    <button type="button" class="btn-primary icon-btn" [title]="updateMode() ? 'Update' : 'Save'" (click)="save()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Store</th>
+        <th>Department</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.deptStoreMapperId) {
+        <tr>
+          <td>{{ row.storeName }}</td>
+          <td>{{ row.deptName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(row.deptStoreMapperId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (page of pageNumbers(); track page) {
+        <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>

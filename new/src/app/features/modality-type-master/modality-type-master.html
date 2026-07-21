@@ -1,0 +1,149 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="modalityTypeCode">Modality Type Code<span class="required">*</span></label>
+        <input
+          id="modalityTypeCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().modalityTypeCode"
+          (ngModelChange)="updateField('modalityTypeCode', $event)"
+          name="modalityTypeCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="modalityTypeDesc">Modality Type Description<span class="required">*</span></label>
+        <input
+          id="modalityTypeDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().modalityTypeDesc"
+          (ngModelChange)="updateField('modalityTypeDesc', $event)"
+          name="modalityTypeDesc"
+          [class.invalid]="isDescInvalid()"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="specialityId">Specialty<span class="required">*</span></label>
+        <select
+          id="specialityId"
+          [ngModel]="form().specialityId"
+          (ngModelChange)="updateField('specialityId', $event)"
+          name="specialityId"
+          [class.invalid]="isSpecialityInvalid()"
+        >
+          <option value="">Select Specialty</option>
+          @for (s of specialityOptions(); track s.specialityId) {
+            <option [value]="s.specialityId">{{ s.specialityName }}</option>
+          }
+        </select>
+        @if (isSpecialityInvalid()) {
+          <p class="help-block">Speciality is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!--
+      Faithful reproduction, NOT a working search box -- see the class doc
+      comment / docs/ANGULAR_PENDING_FINDINGS.md. Legacy's
+      modality-type-master.html:91 renders this exact input with no
+      ng-model, no ng-keyup, and no filter applied to the table's
+      ng-repeat -- it does nothing at all in legacy today, worse than a
+      typo'd handler (which at least throws). Deliberately left completely
+      unbound here too: no [(ngModel)], no (keyup), no filter on `list()`.
+    -->
+    <input type="text" class="search-box" placeholder="Search" autocomplete="off" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Modality Type Code</th>
+        <th>Modality Type Description</th>
+        <th>Specialty</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.modalityTypeId) {
+        <tr>
+          <td>{{ row.modalityTypeCode }}</td>
+          <td>{{ row.modalityTypeDesc }}</td>
+          <td>{{ row.specialityName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row.modalityTypeId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

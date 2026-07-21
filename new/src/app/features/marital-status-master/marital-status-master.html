@@ -1,0 +1,86 @@
+<section class="page">
+  <fieldset>
+    <legend class="heading-div">Marital Status Master</legend>
+    <div class="form-row">
+      <div class="field">
+        <label for="maritalCode">Code<span class="required">*</span></label>
+        <input
+          id="maritalCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().maritalCode"
+          (ngModelChange)="updateField('maritalCode', $event)"
+          name="maritalCode"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="maritalName">Marital Name<span class="required">*</span></label>
+        <input
+          id="maritalName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().maritalName"
+          (ngModelChange)="updateField('maritalName', $event)"
+          name="maritalName"
+          required
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <!--
+    Faithful bug reproduction, NOT a working Save/Update flow -- see the
+    class doc comment / docs/ANGULAR_PENDING_FINDINGS.md. Legacy's
+    marital-status-master.html:48-49 wire these exact buttons to
+    `saveMarital()`/`updateMarital()`, neither of which is defined anywhere
+    in maritalstatusMasterController.js -- every real click throws in
+    legacy today, silently, with nothing visible happening on screen.
+  -->
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!--
+        Faithful bug reproduction -- see class doc comment. Legacy's
+        `ng-repeat="info in maritalList"` (view:79) iterates a variable the
+        controller never assigns; `renderList` here mirrors that -- it is
+        deliberately never populated, even though the real, working
+        getMaritalStatusMasterList call fires on load and fetches real data
+        (see the private, unrendered `fetchedList` signal in the component).
+      -->
+      @for (row of renderList(); track row.maritalStatusId) {
+        <tr>
+          <td>{{ row.maritalStatusCode }}</td>
+          <td>{{ row.maritalStatusName }}</td>
+          <td class="text-center">{{ row.status }}</td>
+          <td class="text-center"></td>
+        </tr>
+      }
+      @if (!renderList().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
