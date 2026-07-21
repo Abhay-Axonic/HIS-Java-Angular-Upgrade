@@ -4,11 +4,14 @@
 
 ---
 
-## ⚠ FLAGGED FOR FAST-TRACK CONSIDERATION — entry 43: `linenIssueAcceptanceDetails` has no working save path today, in legacy, at all
+## ⚠ FAST-TRACK CANDIDATES — flagged separately, per explicit owner instruction, so these don't blend into the general findings list below
 
-Unlike most entries in this doc, this is not "a bug to fix eventually" — it's a live production screen where **the core task (completing a linen issue acceptance) cannot be finished by any user today**, crash or no crash. Called out here, separately from the general list, per explicit owner instruction, so it doesn't blend into the surrounding findings. Full technical detail is in entry 43 below — not duplicated here. Owner to decide whether this justifies fixing ahead of its normal place in the rebuild queue, rather than waiting for a future "parity" pass.
+These are not "bugs to fix eventually" in the normal sense — each is a live production screen with a real, easily-triggered crash or a completed-task-impossible gap that a user hits immediately, not an edge case. Full technical detail lives in each entry below (not duplicated here); this section exists purely so the owner can review and prioritize them as a group rather than rediscovering them scattered through the doc.
 
-**Update 2026-07-20:** a second screen of the same shape was found during Phase 4 batch 3 pre-screening — see **entry 46**, `detailsRejectedAssetAcceptance`. Same "core task cannot be completed" pattern, arguably worse (it also shows fabricated data instead of the real record). Worth reviewing together with entry 43 rather than as two separate one-off decisions.
+- **Entry 40** — `detailScheduleWorklist`'s "Add" spare-consumption button crashes immediately, every time (an undefined scope variable). Fix already drafted, held for review.
+- **Entry 43** — `linenIssueAcceptanceDetails` has no working save path at all, in legacy, today — the core task (completing a linen issue acceptance) cannot be finished by any user, crash or no crash.
+- **Entry 46** — `detailsRejectedAssetAcceptance`, same shape as entry 43, arguably worse (also shows fabricated data instead of the real record).
+- **Entry 54** *(added 2026-07-21)* — `ambulanceMaster` crashes on every single Ambulance Type dropdown selection — the most basic possible interaction with the form, with no workaround. Verified live via a real thrown exception, not just read from source.
 
 ---
 
@@ -888,7 +891,7 @@ One additional dead binding on the mockup itself: `ng-click="openDatePicker()"` 
 
 ---
 
-## 54. `ambulanceMaster` crashes on every Ambulance Type selection — a string sent where a numeric ID is expected — found while rebuilding this screen, Phase 4 batch 4
+## 54. FLAGGED FOR FAST-TRACK CONSIDERATION (see banner at top of doc) — `ambulanceMaster` crashes on every Ambulance Type selection — a string sent where a numeric ID is expected — found while rebuilding this screen, Phase 4 batch 4
 
 **Where:** `resources/assets/js/controller/lis/global/ambulanceMasterController.js:106-124` (`getNameByAmbType`), wired from `views/master/UnitMaster/ambulanceService/ambulance-Master.html:15` (`ng-change="getNameByAmbType(ambulanceMaster.ambulanceType)"`).
 
@@ -900,15 +903,23 @@ One additional dead binding on the mockup itself: `ng-click="openDatePicker()"` 
 
 ---
 
-## 55. `doctorCategory`'s shared modal-close button crashes — cross-cutting, affects every screen using the same partial — found while rebuilding this screen, Phase 4 batch 4
+## 55. `doctorCategory`'s shared modal-close button crashes — BLAST RADIUS CONFIRMED 2026-07-21: 12 of 49 already-built screens affected, 11 of those 12 have an undisclosed rebuild parity gap
 
 **Where:** `resources/assets/js/common/commonPopUpDirectives.js:10` (the shared `<modal>` directive's × close button, hardcoded `ng-click="cancel();stopLoader();"`).
 
-**What it is, plainly:** `doctorCategoryController.js` never defines `$scope.cancel` (confirmed absent from the whole file and from `$rootScope` anywhere in `app.js`) — clicking the modal's × close button throws `cancel is not a function`. This is not specific to `doctorCategory`: the directive is shared, so any screen using it without defining its own `$scope.cancel` has the same live bug. The modal's real footer Cancel/OK buttons are unaffected (they call different, real functions) — only the × close icon is broken.
+**What it is, plainly:** any screen using the shared `<modal visible="...">` element directive gets the exact same × close button, which calls `cancel()` — a function the directive itself never defines. If the screen's own controller doesn't define `$scope.cancel` (or an equivalent on `self`/`vm`/`$rootScope`) either, clicking × throws `cancel is not a function`. The modal's real footer Cancel/OK buttons call different, always-real functions (`stopLoader()`/`PopupOkBtn()`-via-`one-click-only`) and are unaffected — only the × icon is broken.
 
-**Owner decision, not resolved here:** not fixed, per standing instruction — flagged as cross-cutting rather than screen-specific, since a real fix belongs at the shared directive (or by auditing which screens actually define `$scope.cancel` and which don't), not inside `doctorCategory` alone. Faithfully reproduced in the rebuild for this screen via a direct `throw` on the × button specifically, leaving the real Cancel/OK buttons working normally.
+**Blast-radius investigation (owner-requested, 2026-07-21) — methodology and result:** checked all 49 already-built screens' legacy source (not just the ones that looked like candidates): for each, whether its legacy view actually renders `<modal ...>` (regex-matched, not a loose text search), and whether its legacy controller defines `cancel` under ANY binding style (`$scope.cancel =`, `self.cancel =`, `vm.cancel =`, `function cancel(...)`, or a `$rootScope`-level fallback — none exists anywhere in `app.js`).
 
-**My read:** low-to-moderate severity, cross-cutting — the × button is a redundant way to close a modal that already has working Cancel/OK buttons, so it's a real but minor annoyance on any one screen; worth a dedicated grep across all screens using this shared directive to know the true blast radius before deciding whether it's worth a coordinated fix.
+- **12 of 49 screens use the shared `<modal>` directive**: `insuranceMaster`, `inputOutputCharts`, `pesapalProcessPage` (pilot/batch 1), `specialityMaster`, `nationalityMaster`, `countryMaster`, `cityMaster`, `wardMaster`, `bedCategoryMaster`, `ambulanceTypeMaster`, `ambulanceMaster`, `doctorCategory` (batch 4).
+- **All 12 of their legacy controllers lack any `cancel` definition** — confirmed via exhaustive regex across every binding pattern, not just `$scope.cancel`. All 12 crash in **legacy, today**, on this exact click, with no rescue mechanism anywhere in the codebase.
+- **Checked whether each screen's REBUILD reproduces this crash or silently diverges from it — 11 of the 12 silently diverge.** `doctorCategory`'s rebuild is the only one where this was caught and faithfully reproduced (found during its own Step 1 audit, since the bug was fresh knowledge at that point). The other 11 — including 3 already-shipped pilot/batch-1 screens (`insuranceMaster`, `inputOutputCharts`, `pesapalProcessPage`) built long before this bug was ever discovered — each built an ordinary, **working** × close button (e.g. `specialityMaster.closeConfirmModal()` just does `showConfirmModal.set(false)`, wired to both the × and the Cancel button identically). This means 11 already-shipped rebuild screens are **not** faithful to legacy's actual current behavior on this specific interaction — a real, previously-undisclosed behavior change, not a deliberate decision anyone signed off on.
+
+**Owner decision, not resolved here:** not fixed in legacy, and the 11 rebuild screens' divergence has not been corrected — flagging the full scope rather than silently leaving it split (1 faithful, 11 not) or silently "fixing" the other 11 to match without a decision. Two separate things need a call:
+1. **Should the shared directive (or each affected legacy controller) get a real fix in legacy** — this is the SEVERITY-1-adjacent cross-cutting bug itself.
+2. **Should the 11 already-shipped rebuild screens be retrofitted to faithfully reproduce the crash (true parity), or is a working × close button an acceptable, now-disclosed improvement to keep going forward** — i.e., should future screens using this same shared modal continue to get a *working* close button (a deliberate, disclosed deviation from legacy) rather than each one needing its own case-by-case discovery of this same bug.
+
+**My read:** the crash itself is low-to-moderate severity per screen (redundant close button, working alternatives exist) — the real significance here is process: this is the first time a "silently fixed instead of faithfully reproduced" gap has been found spanning multiple already-shipped screens across three different batches, discovered only because one later screen's build happened to catch it. Worth deciding the parity-vs-improvement question once, as a standing rule for this shared directive, rather than re-litigating it screen by screen.
 
 ---
 
