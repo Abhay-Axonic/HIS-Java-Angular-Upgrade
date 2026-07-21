@@ -1,0 +1,167 @@
+<section class="page">
+  <fieldset>
+    <div class="filter-row">
+      <div class="field">
+        <label for="userSelect">User<span class="required">*</span></label>
+        <select
+          id="userSelect"
+          [ngModel]="selectedUserId()"
+          (ngModelChange)="onUserSelect($event)"
+          name="userSelect"
+        >
+          <option [ngValue]="null">Please Select User</option>
+          @for (u of sortedUsers(); track u.userId) {
+            <option [ngValue]="u.userId">{{ u.employeeName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="empCode">Employee Code<span class="required">*</span></label>
+        <input id="empCode" type="text" autocomplete="off" [ngModel]="empCode()" (ngModelChange)="empCode.set($event)" name="empCode" />
+      </div>
+
+      <div class="field">
+        <label for="employeeName">Employee Name<span class="required">*</span></label>
+        <input
+          id="employeeName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="employeeName()"
+          (ngModelChange)="employeeName.set($event)"
+          name="employeeName"
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="picker-row">
+    <div class="picker-column">
+      <label class="picker-label">Store</label>
+      <div class="store-list-box">
+        @for (store of availableStores(); track store.storeId) {
+          <div class="checkbox-field field">
+            <label>
+              <input
+                type="checkbox"
+                [checked]="storeChecked()[store.storeId] ?? false"
+                (change)="onStoreCheckboxChange(store, $any($event.target).checked)"
+              />
+              {{ store.storeName }}
+            </label>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="picker-controls">
+      <button type="button" class="btn-primary" (click)="selectStore()">&lt;&lt; &gt;&gt;</button>
+    </div>
+
+    <div class="picker-column">
+      <label class="picker-label">Mapped Store</label>
+      <div class="store-list-box">
+        @for (store of selectedStoreList(); track store.storeId) {
+          <div class="checkbox-field field">
+            <label>{{ store.storeName }}</label>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" name="searchKeyword" />
+
+    @if (saveBtnFlag()) {
+      <button type="button" class="btn-primary" title="Save" (click)="save()">Save</button>
+    }
+    @if (updateBtnFlag()) {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>User Name</th>
+        <th class="text-center">Mapped Store</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.userId) {
+        <tr>
+          <td>{{ row.employeeName }}</td>
+          <td class="text-center">
+            <i class="icon-view" (click)="openDetailModal(row.userId)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.isActive" (toggled)="toggleStatus(row, !row.isActive)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(row.userId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showDetailModal()) {
+  <div class="modal-backdrop" (click)="closeDetailModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Details
+        <button type="button" (click)="closeDetailModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="text-center">Sr No.</th>
+              <th>Store</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (store of detailStoreList(); track store.storeId; let i = $index) {
+              <tr>
+                <td class="text-center">{{ i + 1 }}</td>
+                <td>{{ store.storeName }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closeDetailModal()">Ok</button>
+      </div>
+    </div>
+  </div>
+}

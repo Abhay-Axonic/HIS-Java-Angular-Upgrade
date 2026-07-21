@@ -1,0 +1,141 @@
+<section class="page">
+  <fieldset>
+    <legend>Doctor Cabin Mapper</legend>
+
+    <div class="field">
+      <label for="doctorId">User<span class="required">*</span></label>
+      <!-- No (ngModelChange)/auto-load side effect -- legacy's doctor
+           <select> (view:13) has no ng-change at all. See class doc. -->
+      <select id="doctorId" [ngModel]="doctorId()" (ngModelChange)="doctorId.set($event)" name="doctorId">
+        <option value="">Please Select Doctor</option>
+        @for (d of doctorList(); track d.doctorId) {
+          <option [value]="d.doctorId">{{ d.doctorName }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="dual-list">
+      <div class="dual-list-panel">
+        <label class="panel-label">Cabin</label>
+        <div class="scroll-box">
+          @for (c of cabinList(); track c.cabinId) {
+            <label class="checkbox-row">
+              <input type="checkbox" [checked]="isCabinChecked(c.cabinId)" (change)="addCabin(c.cabinId, c.cabinDesc)" />
+              {{ c.cabinDesc }}
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="dual-list-action">
+        <button type="button" class="btn-primary" title="Select" (click)="selectCabin()">&lt;&lt; &gt;&gt;</button>
+      </div>
+
+      <div class="dual-list-panel">
+        <label class="panel-label">Mapped Cabin</label>
+        <div class="scroll-box">
+          @for (c of selectedCabins(); track $index) {
+            <div class="checkbox-row">{{ c.cabinDesc }}</div>
+          }
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="save()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">Update</button>
+    }
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>User Name</th>
+        <th class="text-center">Mapped Cabin</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.doctorId) {
+        <tr>
+          <td>{{ row.doctorName }}</td>
+          <td class="text-center">
+            <i class="icon-view" (click)="openDetails(row.doctorId)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle
+              [checked]="row.status === 'A'"
+              (toggled)="toggleStatus(row, row.status === 'A' ? 'I' : 'A')"
+            />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(row.doctorId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showDetailsModal()) {
+  <div class="modal-backdrop" (click)="closeDetailsModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Details
+        <button type="button" (click)="closeDetailsModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Sr No.</th>
+              <th>Cabin</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of detailCabins(); track $index) {
+              <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ c.cabinDesc }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closeDetailsModal()">Ok</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,10 +1,11 @@
 import { ShellNavSection } from './shell.models';
 
 /**
- * Sidebar content for the 35 "primary" (staff-navigated, non-parameterized,
+ * Sidebar content for the 45 "primary" (staff-navigated, non-parameterized,
  * non-detail) screens rebuilt so far (26 through Phase 4 batch 3, +9 in
- * batch 4 -- Admin/Global Master, Ward/Unit Master, ADT-Registration,
- * ADT-Ambulance, HR/Staff Master), grouped by the same module taxonomy
+ * batch 4, +10 in batch 5 -- Queue Management, User Management,
+ * Configuration newly added; Admin/HR-Staff Master, ADT-Registration,
+ * ADT-Ambulance expanded), grouped by the same module taxonomy
  * `tools/angular-audit/`'s `states_enriched.json` already assigns each
  * screen (not an invented grouping). Deliberately excludes: `accessDenied`
  * (system route), `display`/`webAppointmentBooking`/
@@ -49,18 +50,45 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   },
   {
     heading: 'ADT - Registration',
-    items: [{ path: '/bedCategoryMaster', title: 'Bed Category Master' }],
+    items: [
+      { path: '/bedCategoryMaster', title: 'Bed Category Master' },
+      { path: '/bedTypeMaster', title: 'Ward Bed Type Master' },
+      { path: '/shortLeaveReasonMaster', title: 'Short Leave Reason Master' },
+    ],
   },
   {
     heading: 'ADT - Ambulance',
     items: [
       { path: '/ambulanceTypeMaster', title: 'Ambulance Type Master' },
       { path: '/ambulanceMaster', title: 'Ambulance Master' },
+      { path: '/ambulanceFacilitiesMaster', title: 'Ambulance Facilities Master' },
     ],
   },
   {
     heading: 'HR/Staff Master',
-    items: [{ path: '/doctorCategory', title: 'Doctor Category' }],
+    items: [
+      { path: '/doctorCategory', title: 'Doctor Category' },
+      { path: '/qualificationMaster', title: 'Qualification Master' },
+      { path: '/degreeMaster', title: 'Degree Master' },
+    ],
+  },
+  {
+    heading: 'Queue Management',
+    items: [
+      { path: '/QMSkioskMaster', title: 'QMS Kiosk Master' },
+      { path: '/QMSdepartmentMaster', title: 'QMS Department Master' },
+    ],
+  },
+  {
+    heading: 'User Management',
+    items: [
+      { path: '/userStoreMapper', title: 'User Store Mapper' },
+      { path: '/doctorCabinMapper', title: 'Doctor Cabin Mapper' },
+    ],
+  },
+  {
+    heading: 'Configuration',
+    items: [{ path: '/prefixConfiguration', title: 'Prefix Configuration' }],
   },
   {
     heading: 'Reports',

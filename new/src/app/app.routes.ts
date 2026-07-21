@@ -442,6 +442,72 @@ export const routes: Routes = [
         data: { moduleId: 453, title: 'Doctor Category' },
         loadComponent: () => import('./features/doctor-category/doctor-category').then((m) => m.DoctorCategory),
       },
+      // Phase 4 batch 5 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+      // follow-on). Diversified across 6 modules, 3 new to the rebuild
+      // (Admin - Queue Management, Admin - User Management,
+      // Admin - Configuration). All 10 pre-screened real; entry 55's
+      // standing policy applies to any of these using the shared <modal>
+      // directive (see docs/ANGULAR_PENDING_FINDINGS.md).
+      {
+        path: 'QMSkioskMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 795, title: 'QMS Kiosk Master' },
+        loadComponent: () => import('./features/qms-kiosk-master/qms-kiosk-master').then((m) => m.QmsKioskMaster),
+      },
+      {
+        path: 'QMSdepartmentMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 796, title: 'QMS Department Master' },
+        loadComponent: () => import('./features/qms-department-master/qms-department-master').then((m) => m.QmsDepartmentMaster),
+      },
+      {
+        path: 'bedTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 402, title: 'Ward Bed Type Master' },
+        loadComponent: () => import('./features/bed-type-master/bed-type-master').then((m) => m.BedTypeMaster),
+      },
+      {
+        path: 'shortLeaveReasonMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 406, title: 'Short Leave Reason Master' },
+        loadComponent: () => import('./features/short-leave-reason-master/short-leave-reason-master').then((m) => m.ShortLeaveReasonMaster),
+      },
+      {
+        path: 'ambulanceFacilitiesMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 818, title: 'Ambulance Facilities Master' },
+        loadComponent: () => import('./features/ambulance-facilities-master/ambulance-facilities-master').then((m) => m.AmbulanceFacilitiesMaster),
+      },
+      {
+        path: 'qualificationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 496, title: 'Qualification Master' },
+        loadComponent: () => import('./features/qualification-master/qualification-master').then((m) => m.QualificationMaster),
+      },
+      {
+        path: 'degreeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 497, title: 'Degree Master' },
+        loadComponent: () => import('./features/degree-master/degree-master').then((m) => m.DegreeMaster),
+      },
+      {
+        path: 'userStoreMapper',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 690, title: 'User Store Mapper' },
+        loadComponent: () => import('./features/user-store-mapper/user-store-mapper').then((m) => m.UserStoreMapper),
+      },
+      {
+        path: 'doctorCabinMapper',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 714, title: 'Doctor Cabin Mapper' },
+        loadComponent: () => import('./features/doctor-cabin-mapper/doctor-cabin-mapper').then((m) => m.DoctorCabinMapper),
+      },
+      {
+        path: 'prefixConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 699, title: 'Prefix Configuration' },
+        loadComponent: () => import('./features/prefix-configuration/prefix-configuration').then((m) => m.PrefixConfiguration),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
