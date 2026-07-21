@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { moduleAccessGuard } from './core/module-access.guard';
+import { Shell } from './shell/shell';
 
 /**
  * One route per Phase 2 pilot screen, path matching the legacy ui-router
@@ -20,312 +21,368 @@ import { moduleAccessGuard } from './core/module-access.guard';
  * (billingGroupMaster, periodicityService) match legacy states that
  * likewise have no resolve block at all -- not a gap this fix introduces,
  * a faithful match to legacy's actual (lack of) restriction.
+ *
+ * `data.title` added on every route below (per
+ * docs/ANGULAR_HYBRID_DEPLOYMENT_PROPOSAL.md Part 3's retrofit plan) --
+ * sourced from each state's own `title` in
+ * `tools/angular-audit/data/states_enriched.json`, not invented, matching
+ * exactly what legacy's own `$state.current.title` binding would have
+ * shown in its top bar. A handful of self-registered detail screens
+ * never set a legacy `title` at all (`fixedAssetType`,
+ * `linenIssueAcceptanceDetails`) -- those get a plain, sensible label
+ * instead, noted inline. `Shell` (./shell/shell.ts) reads this field to
+ * drive its top-bar page title; nothing else about any screen's own
+ * files changed to add this.
  */
 export const routes: Routes = [
-  {
-    path: 'billingGroupMaster',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () =>
-      import('./features/billing-group-master/billing-group-master').then(
-        (m) => m.BillingGroupMaster,
-      ),
-  },
-  {
-    path: 'insuranceMaster',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 571 },
-    loadComponent: () =>
-      import('./features/insurance-master/insurance-master').then((m) => m.InsuranceMaster),
-  },
-  {
-    path: 'inputOutputCharts',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 99 },
-    loadComponent: () =>
-      import('./features/input-output-charts/input-output-charts').then(
-        (m) => m.InputOutputCharts,
-      ),
-  },
-  {
-    path: 'organizationMaster',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 377, requireSuperUser: true },
-    loadComponent: () =>
-      import('./features/organization-master/organization-master').then(
-        (m) => m.OrganizationMaster,
-      ),
-  },
-  {
-    path: 'MISReports',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 768 },
-    loadComponent: () => import('./features/mis-reports/mis-reports').then((m) => m.MisReports),
-  },
-  {
-    path: 'GRN',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 181 },
-    loadComponent: () => import('./features/grn/grn').then((m) => m.Grn),
-  },
-  {
-    path: 'assetCategoryMaster',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 642 },
-    loadComponent: () =>
-      import('./features/asset-category-master/asset-category-master').then((m) => m.AssetCategoryMaster),
-  },
-  {
-    path: 'periodicityService',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () =>
-      import('./features/periodicity-service/periodicity-service').then((m) => m.PeriodicityService),
-  },
-  {
-    path: 'assigningPickerDispenser',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 104 },
-    loadComponent: () =>
-      import('./features/assigning-picker-dispenser/assigning-picker-dispenser').then(
-        (m) => m.AssigningPickerDispenser,
-      ),
-  },
-  {
-    path: 'implantMaster',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 806 },
-    loadComponent: () => import('./features/implant-master/implant-master').then((m) => m.ImplantMaster),
-  },
+  // Deliberately OUTSIDE the shell -- an access-denied page showing a full
+  // nav shell around it would be confusing (a user without access
+  // shouldn't see a sidebar promising screens they can't reach), matching
+  // legacy's own `ng-if="loginpage"` chrome-gating precedent
+  // (legacy/HIS-WAR/.../index.html:187, top-bar/sidebar only render when
+  // `loginpage` is true -- the login screen itself has none either).
   {
     path: 'accessDenied',
     loadComponent: () =>
       import('./features/access-denied/access-denied').then((m) => m.AccessDenied),
   },
-  // Phase 4, first batch (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md).
-  // display: deliberately NO moduleAccessGuard. Confirmed at app.js:20149 --
-  // legacy's `display` state has no resolve block at all, and its
-  // controller uses GenericServiceForWithoutLogin, not the usual
-  // session-authenticated GenericService -- it's a public, unauthenticated
-  // kiosk display. Adding the guard here would invent a login requirement
-  // legacy never had (see docs/ANGULAR_PENDING_FINDINGS.md entry 33).
   {
-    path: 'display/:orgId/:unitId/:cookieskioskId/:userId',
-    loadComponent: () => import('./features/display/display').then((m) => m.Display),
+    path: '',
+    component: Shell,
+    children: [
+      {
+        path: 'billingGroupMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Billing Group Master' },
+        loadComponent: () =>
+          import('./features/billing-group-master/billing-group-master').then(
+            (m) => m.BillingGroupMaster,
+          ),
+      },
+      {
+        path: 'insuranceMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 571, title: 'Insurance Master' },
+        loadComponent: () =>
+          import('./features/insurance-master/insurance-master').then((m) => m.InsuranceMaster),
+      },
+      {
+        path: 'inputOutputCharts',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 99, title: 'Intake Fluid Output(ml) Charts' },
+        loadComponent: () =>
+          import('./features/input-output-charts/input-output-charts').then(
+            (m) => m.InputOutputCharts,
+          ),
+      },
+      {
+        path: 'organizationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 377, requireSuperUser: true, title: 'Organization Master' },
+        loadComponent: () =>
+          import('./features/organization-master/organization-master').then(
+            (m) => m.OrganizationMaster,
+          ),
+      },
+      {
+        path: 'MISReports',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 768, title: 'MIS Report' },
+        loadComponent: () => import('./features/mis-reports/mis-reports').then((m) => m.MisReports),
+      },
+      {
+        path: 'GRN',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 181, title: 'Good Receipt Note' },
+        loadComponent: () => import('./features/grn/grn').then((m) => m.Grn),
+      },
+      {
+        path: 'assetCategoryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 642, title: 'Asset Category Master' },
+        loadComponent: () =>
+          import('./features/asset-category-master/asset-category-master').then((m) => m.AssetCategoryMaster),
+      },
+      {
+        path: 'periodicityService',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Periodicity Service' },
+        loadComponent: () =>
+          import('./features/periodicity-service/periodicity-service').then((m) => m.PeriodicityService),
+      },
+      {
+        path: 'assigningPickerDispenser',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 104, title: 'Pending List for Assigning Picker' },
+        loadComponent: () =>
+          import('./features/assigning-picker-dispenser/assigning-picker-dispenser').then(
+            (m) => m.AssigningPickerDispenser,
+          ),
+      },
+      {
+        path: 'implantMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 806, title: 'Implant Master' },
+        loadComponent: () => import('./features/implant-master/implant-master').then((m) => m.ImplantMaster),
+      },
+      // Phase 4, first batch (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md).
+      // display: deliberately NO moduleAccessGuard. Confirmed at app.js:20149 --
+      // legacy's `display` state has no resolve block at all, and its
+      // controller uses GenericServiceForWithoutLogin, not the usual
+      // session-authenticated GenericService -- it's a public, unauthenticated
+      // kiosk display. Adding the guard here would invent a login requirement
+      // legacy never had (see docs/ANGULAR_PENDING_FINDINGS.md entry 33).
+      {
+        path: 'display/:orgId/:unitId/:cookieskioskId/:userId',
+        data: { title: 'QMS Token Display' },
+        loadComponent: () => import('./features/display/display').then((m) => m.Display),
+      },
+      // webAppointmentBookingConfirmation: no moduleAccessGuard. Confirmed at
+      // app.js:21006-21013 -- no resolve block, and the controller (65 lines,
+      // read in full) makes zero backend calls at all, so there's no session
+      // requirement to even discover -- a public, patient-facing appointment
+      // confirmation screen. `webAppConfirmationObj` is an in-memory-only
+      // ui-router param, not part of the URL -- see
+      // WebAppointmentHandoffService for how this is replicated.
+      {
+        path: 'webAppointmentBookingConfirmation',
+        data: { title: 'Web Appointment Confirmation' },
+        loadComponent: () =>
+          import('./features/web-appointment-booking-confirmation/web-appointment-booking-confirmation').then(
+            (m) => m.WebAppointmentBookingConfirmation,
+          ),
+      },
+      // pesapalProcessPage: no data.moduleId (no resolve block in legacy's
+      // state), but moduleAccessGuard's baseline "must be logged in" check
+      // still applies -- the controller has a real cookieObject session guard
+      // (pesapalSuccessPageController.js:22-27), same shape as
+      // billingGroupMaster/periodicityService.
+      {
+        path: 'pesapalProcessPage',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Pesapal' },
+        loadComponent: () =>
+          import('./features/pesapal-process-page/pesapal-process-page').then((m) => m.PesapalProcessPage),
+      },
+      // viewAssetScheduler: no data.moduleId (no resolve block), but a real
+      // cookieObject session guard in the controller -- same shape as
+      // pesapalProcessPage.
+      {
+        path: 'viewAssetScheduler',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Asset PMS Scheduler' },
+        loadComponent: () =>
+          import('./features/view-asset-scheduler/view-asset-scheduler').then((m) => m.ViewAssetScheduler),
+      },
+      // pharman: no data.moduleId (no resolve block), real cookieObject
+      // session guard in the controller -- same shape as pesapalProcessPage.
+      {
+        path: 'pharman',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Pharman Page' },
+        loadComponent: () => import('./features/pharman/pharman').then((m) => m.Pharman),
+      },
+      // webAppointmentBooking: no moduleAccessGuard. Confirmed at
+      // app.js:20989-20994 -- no resolve block, and the controller has zero
+      // session guard anywhere ($scope.userId hardcoded to 1) -- a genuinely
+      // public, patient-facing doctor-browsing landing page.
+      {
+        path: 'webAppointmentBooking/:orgId/:unitId',
+        data: { title: 'Web Appointment' },
+        loadComponent: () =>
+          import('./features/web-appointment-booking/web-appointment-booking').then((m) => m.WebAppointmentBooking),
+      },
+      // scheduleWorklist: no data.moduleId (no resolve block), real
+      // cookieObject + cookieObjectAppConfig guards in the controller --
+      // moduleAccessGuard covers the first, the second is checked in the
+      // component itself (see schedule-worklist.ts doc comment).
+      {
+        path: 'scheduleWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Schedule Worklist' },
+        loadComponent: () => import('./features/schedule-worklist/schedule-worklist').then((m) => m.ScheduleWorklist),
+      },
+      // PMSchedule: no data.moduleId (no resolve block), real cookieObject +
+      // cookieObjectAppConfig guards, same shape as scheduleWorklist. NO
+      // store-selection modal wiring -- legacy's own selectedTopStore check
+      // is entirely commented out for this screen (see pm-schedule.ts doc
+      // comment).
+      {
+        path: 'PMSchedule',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'PM Schedule' },
+        loadComponent: () => import('./features/pm-schedule/pm-schedule').then((m) => m.PmSchedule),
+      },
+      // assetScheduler: no data.moduleId (no resolve block), real cookieObject
+      // guard only (no cookieObjectAppConfig check, unlike scheduleWorklist/PMSchedule).
+      {
+        path: 'assetScheduler',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Asset PMS Scheduler' },
+        loadComponent: () => import('./features/asset-scheduler/asset-scheduler').then((m) => m.AssetScheduler),
+      },
+      // detailScheduleWorklist: no data.moduleId (no resolve block), real
+      // cookieObject guard, active storePopup wiring (entry 37 recurs here).
+      {
+        path: 'detailScheduleWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Schedule Worklist' },
+        loadComponent: () =>
+          import('./features/detail-schedule-worklist/detail-schedule-worklist').then((m) => m.DetailScheduleWorklist),
+      },
+      // bookView: no data.moduleId (no resolve block), real cookieObject +
+      // cookieObjectAppConfig guards in the controller, same shape as
+      // pesapalProcessPage. SCOPED REBUILD -- see book-view.ts's class doc
+      // comment: covers the guards and the corrected patient-context safety
+      // check (entry 28) plus the header it gates, not the full 81-function
+      // tab surface of the 4,027-line legacy controller.
+      {
+        path: 'bookView',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Book View' },
+        loadComponent: () => import('./features/book-view/book-view').then((m) => m.BookView),
+      },
+      // bookAppointment: no session guard in legacy (confirmed by full read) --
+      // reached only via webAppointmentBooking's public flow. Receives
+      // webAppDetailObj via BookAppointmentHandoffService (sending side
+      // already built in webAppointmentBooking, batch 1b).
+      {
+        path: 'bookAppointment',
+        data: { title: 'Book Appointment' },
+        loadComponent: () => import('./features/book-appointment/book-appointment').then((m) => m.BookAppointment),
+      },
+      // outPatientFeedback / inPatientFeedback: no session guard anywhere in
+      // either legacy controller (confirmed by full read) -- genuinely public,
+      // patient-facing feedback forms. Route path drops legacy's literal
+      // `/api` prefix -- see out-patient-feedback.ts's doc comment for why
+      // (this app's Router is path-based, not hash-based like ui-router, so
+      // keeping `/api` in a frontend route would collide with this dev
+      // server's own `/api/**` proxy rule on every direct navigation).
+      {
+        path: 'outPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:encounterId',
+        data: { title: 'OutPatient Feedback' },
+        loadComponent: () => import('./features/out-patient-feedback/out-patient-feedback').then((m) => m.OutPatientFeedback),
+      },
+      {
+        path: 'inPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:admissionId',
+        data: { title: 'InPatient Feedback' },
+        loadComponent: () => import('./features/in-patient-feedback/in-patient-feedback').then((m) => m.InPatientFeedback),
+      },
+      // Phase 4 batch 2 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+      // follow-on). All 8 have a real cookieObject session guard in their
+      // legacy controller; 3 also have a real module-access resolve block
+      // (moduleId noted per route below), the rest have none (faithful match
+      // to legacy's own lack of a resolve block, same as several batch 1
+      // screens).
+      {
+        path: 'detailsFixedAssetMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Add Fixed Asset Opening Balance' },
+        loadComponent: () => import('./features/details-fixed-asset-master/details-fixed-asset-master').then((m) => m.DetailsFixedAssetMaster),
+      },
+      {
+        path: 'correctiveMaintenanceWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Corrective Maintenance Worklist' },
+        loadComponent: () => import('./features/corrective-maintenance-worklist/corrective-maintenance-worklist').then((m) => m.CorrectiveMaintenanceWorklist),
+      },
+      {
+        path: 'assetIssueAcceptance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 215, title: 'Asset Issuance Acceptance' },
+        loadComponent: () => import('./features/asset-issue-acceptance/asset-issue-acceptance').then((m) => m.AssetIssueAcceptance),
+      },
+      {
+        path: 'assetReturnAcceptance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 217, title: 'Asset Return Acceptance' },
+        loadComponent: () => import('./features/asset-return-acceptance/asset-return-acceptance').then((m) => m.AssetReturnAcceptance),
+      },
+      {
+        path: 'correctiveMaintenanceScheduleWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Corrective Maintenance Schedule Worklist' },
+        loadComponent: () =>
+          import('./features/corrective-maintenance-schedule-worklist/corrective-maintenance-schedule-worklist').then((m) => m.CorrectiveMaintenanceScheduleWorklist),
+      },
+      {
+        path: 'linenIssueacceptance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 96, title: 'Linen Issuance Acceptance' },
+        loadComponent: () => import('./features/linen-issue-acceptance/linen-issue-acceptance').then((m) => m.LinenIssueAcceptance),
+      },
+      {
+        path: 'linenIssueAcceptanceDetails',
+        canActivate: [moduleAccessGuard],
+        // No legacy title (self-registered state, never set one) -- plain,
+        // sensible label instead of leaving the top bar blank.
+        data: { title: 'Linen Issuance Acceptance Details' },
+        loadComponent: () => import('./features/linen-issue-acceptance-details/linen-issue-acceptance-details').then((m) => m.LinenIssueAcceptanceDetails),
+      },
+      {
+        path: 'createTabularDataTemplates',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Tabular Data Template' },
+        loadComponent: () => import('./features/create-tabular-data-templates/create-tabular-data-templates').then((m) => m.CreateTabularDataTemplates),
+      },
+      // Phase 4 batch 3 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+      // follow-on). All 8 are Asset Management screens; only rejectedAssetAcceptance
+      // has a real module-access resolve block in legacy (moduleId 218, confirmed
+      // in rejectedAssetAcceptanceController.js's own self-registered state) --
+      // the rest have none, faithfully matching legacy's own lack of a resolve
+      // block, same convention as several batch 1/2 screens.
+      {
+        path: 'correctiveMaintenance',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Corrective Maintenance Request' },
+        loadComponent: () => import('./features/corrective-maintenance/corrective-maintenance').then((m) => m.CorrectiveMaintenance),
+      },
+      {
+        path: 'detailsCorrectiveMaintenance',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Corrective Maintenance Request' },
+        loadComponent: () => import('./features/details-corrective-maintenance/details-corrective-maintenance').then((m) => m.DetailsCorrectiveMaintenance),
+      },
+      {
+        path: 'addNewCorrectiveMaintenance',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Corrective Maintenance Request' },
+        loadComponent: () => import('./features/add-new-corrective-maintenance/add-new-corrective-maintenance').then((m) => m.AddNewCorrectiveMaintenance),
+      },
+      {
+        path: 'correctiveMaintenanceReturnWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Corrective Maintenance Return Worklist' },
+        loadComponent: () =>
+          import('./features/corrective-maintenance-return-worklist/corrective-maintenance-return-worklist').then((m) => m.CorrectiveMaintenanceReturnWorklist),
+      },
+      {
+        path: 'rejectedAssetAcceptance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 218, title: 'Rejected Asset Acceptance' },
+        loadComponent: () => import('./features/rejected-asset-acceptance/rejected-asset-acceptance').then((m) => m.RejectedAssetAcceptance),
+      },
+      {
+        path: 'assetReturnAcceptanceDetails',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Asset Return Acceptance' },
+        loadComponent: () => import('./features/asset-return-acceptance-details/asset-return-acceptance-details').then((m) => m.AssetReturnAcceptanceDetails),
+      },
+      {
+        path: 'detailsAssetIssueAcceptance',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Asset Issue Acceptance' },
+        loadComponent: () => import('./features/details-asset-issue-acceptance/details-asset-issue-acceptance').then((m) => m.DetailsAssetIssueAcceptance),
+      },
+      {
+        path: 'fixedAssetType',
+        canActivate: [moduleAccessGuard],
+        // No legacy title either (same reason as linenIssueAcceptanceDetails
+        // above) -- matches the screen's own H1 heading instead.
+        data: { title: 'Fixed Asset Type' },
+        loadComponent: () => import('./features/fixed-asset-type/fixed-asset-type').then((m) => m.FixedAssetType),
+      },
+      { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
+    ],
   },
-  // webAppointmentBookingConfirmation: no moduleAccessGuard. Confirmed at
-  // app.js:21006-21013 -- no resolve block, and the controller (65 lines,
-  // read in full) makes zero backend calls at all, so there's no session
-  // requirement to even discover -- a public, patient-facing appointment
-  // confirmation screen. `webAppConfirmationObj` is an in-memory-only
-  // ui-router param, not part of the URL -- see
-  // WebAppointmentHandoffService for how this is replicated.
-  {
-    path: 'webAppointmentBookingConfirmation',
-    loadComponent: () =>
-      import('./features/web-appointment-booking-confirmation/web-appointment-booking-confirmation').then(
-        (m) => m.WebAppointmentBookingConfirmation,
-      ),
-  },
-  // pesapalProcessPage: no data.moduleId (no resolve block in legacy's
-  // state), but moduleAccessGuard's baseline "must be logged in" check
-  // still applies -- the controller has a real cookieObject session guard
-  // (pesapalSuccessPageController.js:22-27), same shape as
-  // billingGroupMaster/periodicityService.
-  {
-    path: 'pesapalProcessPage',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () =>
-      import('./features/pesapal-process-page/pesapal-process-page').then((m) => m.PesapalProcessPage),
-  },
-  // viewAssetScheduler: no data.moduleId (no resolve block), but a real
-  // cookieObject session guard in the controller -- same shape as
-  // pesapalProcessPage.
-  {
-    path: 'viewAssetScheduler',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () =>
-      import('./features/view-asset-scheduler/view-asset-scheduler').then((m) => m.ViewAssetScheduler),
-  },
-  // pharman: no data.moduleId (no resolve block), real cookieObject
-  // session guard in the controller -- same shape as pesapalProcessPage.
-  {
-    path: 'pharman',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/pharman/pharman').then((m) => m.Pharman),
-  },
-  // webAppointmentBooking: no moduleAccessGuard. Confirmed at
-  // app.js:20989-20994 -- no resolve block, and the controller has zero
-  // session guard anywhere ($scope.userId hardcoded to 1) -- a genuinely
-  // public, patient-facing doctor-browsing landing page.
-  {
-    path: 'webAppointmentBooking/:orgId/:unitId',
-    loadComponent: () =>
-      import('./features/web-appointment-booking/web-appointment-booking').then((m) => m.WebAppointmentBooking),
-  },
-  // scheduleWorklist: no data.moduleId (no resolve block), real
-  // cookieObject + cookieObjectAppConfig guards in the controller --
-  // moduleAccessGuard covers the first, the second is checked in the
-  // component itself (see schedule-worklist.ts doc comment).
-  {
-    path: 'scheduleWorklist',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/schedule-worklist/schedule-worklist').then((m) => m.ScheduleWorklist),
-  },
-  // PMSchedule: no data.moduleId (no resolve block), real cookieObject +
-  // cookieObjectAppConfig guards, same shape as scheduleWorklist. NO
-  // store-selection modal wiring -- legacy's own selectedTopStore check
-  // is entirely commented out for this screen (see pm-schedule.ts doc
-  // comment).
-  {
-    path: 'PMSchedule',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/pm-schedule/pm-schedule').then((m) => m.PmSchedule),
-  },
-  // assetScheduler: no data.moduleId (no resolve block), real cookieObject
-  // guard only (no cookieObjectAppConfig check, unlike scheduleWorklist/PMSchedule).
-  {
-    path: 'assetScheduler',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/asset-scheduler/asset-scheduler').then((m) => m.AssetScheduler),
-  },
-  // detailScheduleWorklist: no data.moduleId (no resolve block), real
-  // cookieObject guard, active storePopup wiring (entry 37 recurs here).
-  {
-    path: 'detailScheduleWorklist',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () =>
-      import('./features/detail-schedule-worklist/detail-schedule-worklist').then((m) => m.DetailScheduleWorklist),
-  },
-  // bookView: no data.moduleId (no resolve block), real cookieObject +
-  // cookieObjectAppConfig guards in the controller, same shape as
-  // pesapalProcessPage. SCOPED REBUILD -- see book-view.ts's class doc
-  // comment: covers the guards and the corrected patient-context safety
-  // check (entry 28) plus the header it gates, not the full 81-function
-  // tab surface of the 4,027-line legacy controller.
-  {
-    path: 'bookView',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/book-view/book-view').then((m) => m.BookView),
-  },
-  // bookAppointment: no session guard in legacy (confirmed by full read) --
-  // reached only via webAppointmentBooking's public flow. Receives
-  // webAppDetailObj via BookAppointmentHandoffService (sending side
-  // already built in webAppointmentBooking, batch 1b).
-  {
-    path: 'bookAppointment',
-    loadComponent: () => import('./features/book-appointment/book-appointment').then((m) => m.BookAppointment),
-  },
-  // outPatientFeedback / inPatientFeedback: no session guard anywhere in
-  // either legacy controller (confirmed by full read) -- genuinely public,
-  // patient-facing feedback forms. Route path drops legacy's literal
-  // `/api` prefix -- see out-patient-feedback.ts's doc comment for why
-  // (this app's Router is path-based, not hash-based like ui-router, so
-  // keeping `/api` in a frontend route would collide with this dev
-  // server's own `/api/**` proxy rule on every direct navigation).
-  {
-    path: 'outPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:encounterId',
-    loadComponent: () => import('./features/out-patient-feedback/out-patient-feedback').then((m) => m.OutPatientFeedback),
-  },
-  {
-    path: 'inPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:admissionId',
-    loadComponent: () => import('./features/in-patient-feedback/in-patient-feedback').then((m) => m.InPatientFeedback),
-  },
-  // Phase 4 batch 2 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
-  // follow-on). All 8 have a real cookieObject session guard in their
-  // legacy controller; 3 also have a real module-access resolve block
-  // (moduleId noted per route below), the rest have none (faithful match
-  // to legacy's own lack of a resolve block, same as several batch 1
-  // screens).
-  {
-    path: 'detailsFixedAssetMaster',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/details-fixed-asset-master/details-fixed-asset-master').then((m) => m.DetailsFixedAssetMaster),
-  },
-  {
-    path: 'correctiveMaintenanceWorklist',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/corrective-maintenance-worklist/corrective-maintenance-worklist').then((m) => m.CorrectiveMaintenanceWorklist),
-  },
-  {
-    path: 'assetIssueAcceptance',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 215 },
-    loadComponent: () => import('./features/asset-issue-acceptance/asset-issue-acceptance').then((m) => m.AssetIssueAcceptance),
-  },
-  {
-    path: 'assetReturnAcceptance',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 217 },
-    loadComponent: () => import('./features/asset-return-acceptance/asset-return-acceptance').then((m) => m.AssetReturnAcceptance),
-  },
-  {
-    path: 'correctiveMaintenanceScheduleWorklist',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () =>
-      import('./features/corrective-maintenance-schedule-worklist/corrective-maintenance-schedule-worklist').then((m) => m.CorrectiveMaintenanceScheduleWorklist),
-  },
-  {
-    path: 'linenIssueacceptance',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 96 },
-    loadComponent: () => import('./features/linen-issue-acceptance/linen-issue-acceptance').then((m) => m.LinenIssueAcceptance),
-  },
-  {
-    path: 'linenIssueAcceptanceDetails',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/linen-issue-acceptance-details/linen-issue-acceptance-details').then((m) => m.LinenIssueAcceptanceDetails),
-  },
-  {
-    path: 'createTabularDataTemplates',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/create-tabular-data-templates/create-tabular-data-templates').then((m) => m.CreateTabularDataTemplates),
-  },
-  // Phase 4 batch 3 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
-  // follow-on). All 8 are Asset Management screens; only rejectedAssetAcceptance
-  // has a real module-access resolve block in legacy (moduleId 218, confirmed
-  // in rejectedAssetAcceptanceController.js's own self-registered state) --
-  // the rest have none, faithfully matching legacy's own lack of a resolve
-  // block, same convention as several batch 1/2 screens.
-  {
-    path: 'correctiveMaintenance',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/corrective-maintenance/corrective-maintenance').then((m) => m.CorrectiveMaintenance),
-  },
-  {
-    path: 'detailsCorrectiveMaintenance',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/details-corrective-maintenance/details-corrective-maintenance').then((m) => m.DetailsCorrectiveMaintenance),
-  },
-  {
-    path: 'addNewCorrectiveMaintenance',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/add-new-corrective-maintenance/add-new-corrective-maintenance').then((m) => m.AddNewCorrectiveMaintenance),
-  },
-  {
-    path: 'correctiveMaintenanceReturnWorklist',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () =>
-      import('./features/corrective-maintenance-return-worklist/corrective-maintenance-return-worklist').then((m) => m.CorrectiveMaintenanceReturnWorklist),
-  },
-  {
-    path: 'rejectedAssetAcceptance',
-    canActivate: [moduleAccessGuard],
-    data: { moduleId: 218 },
-    loadComponent: () => import('./features/rejected-asset-acceptance/rejected-asset-acceptance').then((m) => m.RejectedAssetAcceptance),
-  },
-  {
-    path: 'assetReturnAcceptanceDetails',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/asset-return-acceptance-details/asset-return-acceptance-details').then((m) => m.AssetReturnAcceptanceDetails),
-  },
-  {
-    path: 'detailsAssetIssueAcceptance',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/details-asset-issue-acceptance/details-asset-issue-acceptance').then((m) => m.DetailsAssetIssueAcceptance),
-  },
-  {
-    path: 'fixedAssetType',
-    canActivate: [moduleAccessGuard],
-    loadComponent: () => import('./features/fixed-asset-type/fixed-asset-type').then((m) => m.FixedAssetType),
-  },
-  { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
 ];
