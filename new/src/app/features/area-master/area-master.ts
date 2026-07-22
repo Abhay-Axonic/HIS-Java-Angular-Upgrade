@@ -35,18 +35,22 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * rebuild's working close button is a disclosed, pre-approved shared-
  * component improvement, not re-litigated here).
  *
+ * **CORRECTION (2026-07-22, live Step 5 testing):** an earlier draft of
+ * this file's own doc comment claimed `updateArea` (ctrl:430-487) never
+ * includes `cityId`, framing the omission as a legacy bug to faithfully
+ * reproduce. That claim was a misread of legacy source, caught during
+ * live testing (the update payload really did omit `cityId`, confirmed via
+ * network capture -- but re-reading `areaMasterController.js` directly,
+ * independently, three separate ways, showed line 445's `updateArea`
+ * payload DOES include `cityId : $scope.area.cityId` and line 362's
+ * `showUpdateBtn` DOES set `$scope.area.cityId` on edit-populate -- legacy
+ * has no such bug at all, in either `saveArea` (ctrl:296) or `updateArea`).
+ * This was a genuine rebuild-introduced defect, not a parity target --
+ * fixed below (`updateArea()` now includes `cityId`), not held for owner
+ * approval, since correct parity with legacy's real (bug-free) behavior
+ * here is the task itself, not a deviation from it. See
+ * `docs/ANGULAR_PENDING_FINDINGS.md` entry 120 for the retraction.
  * **Deliberate bugs/quirks preserved, not fixed by this rebuild:**
- * - **Real data-integrity bug, draft finding (see report): `updateArea`
- *   (ctrl:430-487) never includes `cityId` in its payload.**
- *   `AreaMasterDaoImpl.updateAreaMaster` (dao:200-226) unconditionally
- *   calls `areaMaster.setCityId(areaMasterDto.getCityId())` -- and
- *   `AreaMasterDto.cityId` is a primitive `int` (dto:23), so a missing
- *   JSON field deserializes to `0`, not null. **Every Update on this
- *   screen silently zeroes out the area's `cityId` foreign key**,
- *   regardless of what the user selected, even if they only changed the
- *   area name. Reproduced verbatim -- `updateArea()` below omits `cityId`
- *   from the update payload the same way, matching legacy exactly, not
- *   silently fixed.
  * - **Status toggle never reverts and never reloads, in either branch**
  *   (ctrl:389-427) -- unlike sibling `city-master`'s `updateStatus`, which
  *   reloads the whole list on both success AND failure. Because legacy's
@@ -287,8 +291,7 @@ export class AreaMaster {
       });
   }
 
-  // ---- update (mirrors updateArea, ctrl:430-487) -- no confirm step, and
-  // deliberately omits `cityId` -- see class comment above. ----
+  // ---- update (mirrors updateArea, ctrl:430-487) -- no confirm step ----
   updateArea(): void {
     this.formSubmitted.set(true);
     if (!this.requiredFieldsValid()) return;
@@ -300,6 +303,7 @@ export class AreaMaster {
         districtId: a.districtId,
         stateId: a.stateId,
         countryId: a.countryId,
+        cityId: a.cityId,
         areaId: a.areaId as number,
         postCode: a.postCode,
         status: 'A',

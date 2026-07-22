@@ -85,15 +85,16 @@ export class AreaMasterService {
     return this.http.post<ApiResponse>(`${this.base}/adt/saveAreaMaster`, payload);
   }
 
-  // ctrl:430-487 -- POST, real update. Deliberately does NOT send `cityId`
-  // -- see class-level comment in area-master.ts. Faithful to legacy, not a
-  // rebuild omission.
+  // ctrl:430-487 -- POST, real update. Includes `cityId` (ctrl:445) -- see
+  // the correction in area-master.ts's class-level comment; an earlier
+  // draft wrongly omitted this field based on a misread of legacy source.
   updateArea(payload: {
     areaCode: string;
     areaName: string;
     districtId: number | '';
     stateId: number | '';
     countryId: number | '';
+    cityId: number | '';
     areaId: number;
     postCode: string;
     status: 'A';

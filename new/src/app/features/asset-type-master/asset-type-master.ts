@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../../core/notification.service';
+import { SessionService } from '../../core/session.service';
 import { StatusToggle } from '../../shared/status-toggle/status-toggle';
 import { AssetTypeMasterService } from './asset-type-master.service';
 import { AssetTypeRow } from './asset-type-master.models';
@@ -62,9 +63,26 @@ import { AssetTypeRow } from './asset-type-master.models';
  *   reloaded, even though the record is actually active server-side.
  *   Reproduced by leaving `status` unset on the locally-pushed row.
  * - The missing-`$state`-DI crash bug (same class as entries 8/10/104/106)
- *   isn't reproducible in this rebuild's architecture -- there is no
- *   `SessionService` call here at all, since this screen needs no cookie
- *   values beyond what create/update send; noted for the record only.
+ *   isn't reproducible in this rebuild's architecture; noted for the record
+ *   only.
+ *
+ * **CORRECTION (2026-07-22, live Step 5 testing):** an earlier draft sent
+ * `unitId`/`organizationId`/`userId` as literal `0` on create, reasoning
+ * (wrongly, the same class of misread as entry 120's `areaMaster` finding)
+ * that "this screen needs no cookie values" because legacy's own
+ * `CreateAssetType` (ctrl:92-102) sends no such fields at all. Re-reading
+ * `AssetTypeService.create` (java:78-80) directly showed why that's
+ * incomplete: it null-coalesces each field to `sessionService.get*()` (the
+ * backend's own session) ONLY when the request omits it (`!= null`) --
+ * since the rebuild sent literal `0`s (not omitted/null), the backend used
+ * those zeros verbatim, which don't reference any real organization/unit/
+ * user row. Confirmed live: a real create attempt failed (masked first by
+ * an unrelated `m_asset_type_id_seq` drift, see the BR entry for that), and
+ * would have hit an FK violation on organization_id/unit_id/added_by=0
+ * once that's fixed too. Now sends the real, correctly-resolved session
+ * values, matching every sibling screen's established convention in this
+ * batch -- not held for owner approval, since this is a rebuild defect,
+ * not a legacy parity target.
  */
 @Component({
   selector: 'app-asset-type-master',
@@ -75,6 +93,7 @@ import { AssetTypeRow } from './asset-type-master.models';
 export class AssetTypeMaster {
   private readonly notify = inject(NotificationService);
   private readonly api = inject(AssetTypeMasterService);
+  private readonly session = inject(SessionService);
 
   // ---- form state (mirrors self.model.*) ----
   assetTypeId = signal<number | undefined>(undefined);
@@ -178,9 +197,9 @@ export class AssetTypeMaster {
         code: this.assetTypeCode(),
         type: this.assetTypeName(),
         status: true,
-        unitId: 0,
-        organizationId: 0,
-        userId: 0,
+        unitId: this.session.unitId ?? 0,
+        organizationId: this.session.organizationId ?? 0,
+        userId: this.session.userId ?? 0,
       })
       .subscribe({
         next: (res) => {
