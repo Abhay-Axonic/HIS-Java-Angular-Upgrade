@@ -1815,3 +1815,34 @@ No `<modal>`/`<dietCssdPopUp>`/`<shortcut>` usage.
 ## Consolidated note: 4 local dev-DB gaps found during batch 10's Step 5 live testing (entries 113, 115, 116, 117) — all held for a single owner decision
 
 Between the pre-existing entry 113 (`ticketSystemMaster`/`aIButtonMaster`) and the three new ones found during this session's live-testing pass (115, 116, 117), **4 of batch 10's 10 screens are currently blocked from a full live save round-trip purely by local dev-DB gaps**, none of them code defects in either the Java backend or the Angular rebuild. All follow the identical established pattern (BR-038/039/043/046/100/101) and all are held pending explicit owner approval before any DDL/DML is applied, per this session's own standing discipline. Recommend batching the approval decision the same way entries 100/101 were resolved together, rather than one at a time.
+
+---
+
+## 118. Six more confirmed instances of the "administrative-sounding module, actually billing/clinical content" mistagging pattern — same class as `doorToNeedle`/entry 66 and `serviceMaster`/entry 103 — all removed from the low-risk pool, flagged as Phase 5/6 candidates
+
+**Where:** caught during batch 11 pre-screening due diligence (both the proposing agent's source-level checks and this session's own independent verification — every claim below was re-confirmed directly via file-path and endpoint-string reads, not just trusted from the research pass).
+
+**All 6 confirmed via source, independently, not just Phase 0's automated keyword sweep:**
+
+1. **`transactionTypeMaster`** — tagged Admin/no billing. Real endpoint: `transactionTypeMasterController.js:87`, `BASE_URL + ROOT_URL + "/api/billing/getTransactionTypeMasterList"`. Billing-tier.
+2. **`departmentMasterUnit`** — tagged Admin - Org/Unit Master/no billing. Controller file itself lives at `resources/assets/js/controller/billing/unit/departmentMasterUnitController.js` — the folder path alone gives it away. Billing-tier.
+3. **`subDepartmentMasterUnit`** — tagged Admin - Org/Unit Master/no billing. Same as above: `controller/billing/unit/subDepartmentMasterUnitController.js`. Billing-tier.
+4. **`RMOAllocationMaster`** — tagged Admin - Org/Unit Master/no clinical. Controller lives at `controller/clinical/rmoAllocationMasterController.js`. Clinical-tier.
+5. **`siteOfAdministration`** — tagged Admin - Global Master/no clinical. Controller: `controller/master/global/siteOfAdministartionController.js` (note the legacy typo, "Administartion"). Its real endpoint constants are unambiguous: `SITEOFADMINISTRATION = "/api/global/clinical/saveSiteMaster"`, plus `updateSiteMaster`/`updateSiteMasterStatus`/`getSiteMasterById`/`getSiteMasterCount`/`getSiteMasterListSearch`, all under `/api/global/clinical/` — the word "clinical" is literally in the URL path. Clinical-tier.
+6. **`itemMasterGlobal`** — tagged Asset Management/no clinical,no billing. Controller lives at `controller/master/pharmacy/itemMasterController.js` — a drug/pharmacy item master, not a generic asset catalog. Pharmacy-tier (closer to clinical/billing-adjacent than generic admin).
+
+**Action taken:** all 6 removed from the buildable low-risk pool (see `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md` update), same treatment as `doorToNeedle`/`serviceMaster` — re-queued as candidates for whichever future phase handles clinical/billing-tier screens (Phase 5/6, not yet scoped), not for casual low-risk batch selection. None built, none selected into any batch.
+
+**My read:** this is now the 8th+ confirmed instance across this project of the same underlying lesson — the Phase 0 automated keyword/module-heuristic sweep is a useful first pass but has a real, recurring false-negative rate on this exact "administrative name, sensitive content" pattern. Every instance found so far has been caught by content-based/source-level verification during actual batch pre-screening, never by the original sweep itself. Worth considering whether a systematic content-based re-sweep of the entire remaining pool (not just individual batches' candidates) would be worth the effort at some point, rather than continuing to catch these one batch at a time.
+
+---
+
+## 119. `mailConfiguration` — suspected copy-paste bug, same category as `supplyDaysMaster`/entry 102 — flagged for a future owner decision, not resolved here
+
+**Where:** `resources/assets/js/controller/master/global/mailUtilityConfigurationController.js` (state `mailConfiguration`, tagged Admin - Global Master/no/no).
+
+**What it is, plainly:** caught during batch 11 pre-screening — this controller's endpoint calls (`/trigger-master`, `/category-master`, `/sms-utility-config`) are **identical** to the endpoints `SmsUtilityConfigController.java`/`smsConfiguration`'s own controller uses. No mail-specific endpoint or backend implementation was found anywhere in the Java tree for this screen. This is the same suspected-copy-paste shape as `supplyDaysMaster` (entry 102) — a screen whose UI claims one purpose ("Mail Configuration") while its actual wiring reads/writes an entirely different domain's data (SMS configuration).
+
+**Not independently re-verified to the same depth as entry 102 yet** — entry 102's finding was confirmed via full controller read (save/update payload shapes, field-by-field), while this one is currently based on endpoint-string matching alone during batch 11's proposal research. Flagged here so it's tracked rather than lost, not elevated to a fully-confirmed finding until someone reads the full controller.
+
+**Not built, not selected into batch 11 or any batch.** Flagged for a future owner decision on the same two paths entry 102 raises: faithfully replicate if ever built, or treat as a genuine defect needing its own fix proposal. Excluded from low-risk batch selection until that decision is made (same treatment as `supplyDaysMaster`).
