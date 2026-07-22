@@ -47,6 +47,14 @@ public class DifferentTypesScreenImageDaoImpl extends GenericDao<DifferentTypesS
                     .setParameter("unitId", differentTypesScreenImageDTO.getUnitId()) // Set parameter for unitId
                     .setParameter("organizationId", differentTypesScreenImageDTO.getOrganizationId()) // Set parameter for organizationId
                     .uniqueResult();
+            // Bug fix, docs/ANGULAR_PENDING_FINDINGS.md entry 139 -- bucket_flag can be NULL
+            // (confirmed live: t_unit_application_billing_configuration's row for org=1/unit=1
+            // has no bucket_flag set), and `bucketType == 1` auto-unboxes a null Integer into an
+            // NPE. Every other call site of this exact pattern in DocUploadUtility.java already
+            // guards this; this DAO was the sole exception.
+            if (bucketType == null) {
+                bucketType = 1;
+            }
             if (differentTypesScreenImageDTO.getOrganizationId() > 0 && !inputFile.isEmpty() && bucketType ==1) {
 
                 String screenImageURL = uploadScreenImageAndGetURL(differentTypesScreenImageDTO, inputFile , bucketType);
