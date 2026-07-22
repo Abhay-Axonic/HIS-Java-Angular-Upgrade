@@ -2163,3 +2163,50 @@ Even with the fix above, a real save attempt on `assetTypeMaster` still 500s. Ro
 - No module-level route gate exists in legacy for this screen (module 224 is nav-visibility-only, confirmed via `checkAccess()`'s UI-only effect) — recommend wiring `data.moduleId: 224` in the rebuild's route guard anyway, consistent with the already-established `billingGroupMaster` precedent (a disclosed improvement, not a parity violation, no separate sign-off needed per Step 3's existing convention).
 
 **Action taken:** all of the above are either logged for the owner's general awareness (legacy bugs unrelated to this rebuild's own correctness, or decision points for other, not-yet-built screens) or fall within Step 3's normal rebuild discretion (dead/inert UI ported as dead/inert, shared-directive gaps covered by the existing entry-55 policy, validation-message field-binding corrected as part of the already-approved visibility standing policy). None require a new owner decision beyond the two DECISION_NEEDED docs and two DB fixes already handled separately this session.
+
+## 139. Phase 4 batch 12 — Step 4/5 (golden-trace re-audit + live interaction testing) results across all 7 screens
+
+**Context:** live testing against the real backend with a real authenticated session, per `docs/ANGULAR_REBUILD_PLAYBOOK.md` Steps 4/5. One credential-disclosure finding surfaced incidentally during this pass was fast-tracked separately: `docs/DECISION_NEEDED_UnitApplicationConfigCredentialDisclosure.md`. Two new local-environment gaps were found and are proposed for owner approval below (not yet applied).
+
+**`qualityParameterMaster` — PASS, all 5 interaction checks clean** (create, 8-field sequential validation, status toggle, edit flow, edit-guard). One new environment finding: `lab.m_unit_master` has zero seed rows for `org_id=1`, leaving the UOM dropdown genuinely empty — blocks a fully real-data create/edit test for that one field, same class as the existing `insuranceMaster`/`MISReports`/`inputOutputCharts` seed-gap caveats. Separately noted: the backend accepts a non-existent `uomId` on save with no referential-integrity check — low severity in this dev environment, flagged for awareness given the billing-accuracy priority in `CLAUDE.md`, not acted on.
+
+**`roomModality` — 2 real findings, 1 new rebuild-introduced bug:**
+- Golden-trace mismatch: the rebuild's `radiologySpecialityId === ''` guard (added to avoid a crash on the null-cookie case) also suppresses `getSubSpecialityBySpecialityId`/`getModalityBySubSpecialityId` entirely when the org's `radiologySpecialityId` config is legitimately `null` (not just undefined) — legacy calls these endpoints unconditionally. In this dev DB both approaches return the same empty result, but the guard is broader than its "don't crash" intent and fully blocks the cascading Room→Sub-Speciality→Modality dropdown chain whenever this org config is null. Medium severity — a real, disclosed behavioral divergence from legacy, not yet resolved.
+- `getRoomModalityList` returns 0 rows while `updateRoomModalityMasterCount` reports 1 — a backend/dev-DB data-integrity mismatch, blocking full create-flow live verification (could not be resolved with real data).
+- **New bug found in the rebuild itself:** on a *failed* status-toggle attempt (tested via a synthetic invalid-id row, since no real rows were available), the native checkbox visually flips before the failure response arrives and is never reasserted to the correct state — narrower than entry 12's original bug (that was about a *successful* toggle not updating the UI; this is the mirror case, a *failed* toggle incorrectly updating the UI). Low-medium severity, only manifests on the error path. Not fixed — held for owner awareness, same treatment as other UI-polish findings this batch.
+- **Operational note:** a testing agent deleted the shared `cookieObjectAppConfig` browser cookie while verifying the defensive-guard fix (confirming no crash, which passed). It was restored from the same live config endpoint's non-sensitive fields before the remaining screens were tested; no lasting effect confirmed.
+
+**`userAuthentication` — PASS, all 6 checks clean** (after a stale `localStorage.permissions` cache — missing module 676 — was refreshed from the real `/privilege/role` backend endpoint; this was a client-side cache-staleness issue, not a DB or code gap, and required no owner approval to resolve). Zero password exposure confirmed both visually and structurally. Pagination check is data-limited (only 1 seed row exists) rather than failed.
+
+**`QMS`/`QMSMasterCall` — PASS on `QMS` (clean golden-trace match, `getQMSPrnFormat`'s earlier DB fix confirmed live, tautology-guard bug and unguarded-`list[0]`-access crash both confirmed faithfully reproduced, matching legacy exactly). `QMSMasterCall` blocked: module **794** is genuinely absent from `role_id=1`'s real privilege data in `privilege.privilege` (not a cache-staleness issue this time — confirmed directly against the DB-stored JSON blob) — proposed fix below, held for approval.**
+
+**`Qmslogo` — PASS on load/golden-trace and 7 of 8 interaction checks** (independent per-field saves, shared single-`fileError` bug faithfully reproduced, text-field saves both clean). **Real backend bug found, blocks all 6 image-field save round trips:** `DifferentTypesScreenImageDaoImpl.saveScreenImage` (`legacy/Global/src/main/java/com/param/global/dao/DifferentTypesScreenImageDaoImpl.java:45-50`) does `Integer bucketType = ...; if (... && bucketType == 1)` with no null-guard — a live NPE on auto-unboxing when `bucket_flag` is `NULL` (confirmed: `t_unit_application_billing_configuration`'s row for org=1/unit=1 has `bucket_flag` genuinely `NULL` in this DB). Every other call site of this exact pattern in the codebase (`DocUploadUtility.java`, ~25 instances) has `if (bucketType == null) bucketType = 1;` — this DAO is the sole exception, confirmed via full-file grep. A real, isolated legacy Java bug, not a rebuild defect or a dev-seed-data-only issue (a production unit with an unset `bucket_flag` would hit the identical crash). Proposed fix below, held for approval.
+
+**`PMRequest` — PASS on load, golden-trace, and the store-session defensive guard** (confirmed live: legacy's real, unconditional `cookieObjectStore.storeId` deref crashes in a golden-trace capture exactly as predicted; the rebuild's defensive guard lets all 4 initial-load calls complete with zero console errors). **Full interaction testing (search/filter, all 4 modals) blocked**: this dev environment has zero store rows for unitId=1/organizationId=1, so the mandatory store-selection popup can never be dismissed. Same class as the playbook's existing caveat #2 (`implantMaster`/`organizationMaster` real-data gaps) — not a rebuild defect, no data fabricated to force a pass.
+
+---
+
+### Two new fixes proposed for owner approval (neither applied yet)
+
+**1. Grant module 794 to role_id=1's privilege data**, unblocking `QMSMasterCall` live testing:
+```sql
+UPDATE privilege.privilege
+SET modules = (modules::jsonb || '[{"id":794,"name":"QMS Token Display","parentId":791,"moduleType":1}]'::jsonb)::text
+WHERE role_id = 1;
+```
+Module 794 ("QMS Token Display") is already confirmed (Step 0/1 audit) to be the real, live moduleId gating `QMSMasterCall`'s legacy resolve block and is already used correctly by the already-shipped `displayCall` screen — this just adds the missing grant to this dev environment's sole seed role, matching its siblings 795/796/797 (QMS Kiosk/Department/Counter Master, same `parentId: 791` group) which are already present. Additive, reversible (the appended array element can be removed), local-dev-DB only.
+
+**2. Add the missing `bucketType == null` guard to `DifferentTypesScreenImageDaoImpl.saveScreenImage`**, matching the established convention used ~25 times elsewhere in the codebase:
+```java
+// legacy/Global/src/main/java/com/param/global/dao/DifferentTypesScreenImageDaoImpl.java:45-46, before:
+Integer bucketType = (Integer) sessionFactory.getCurrentSession()
+        .createSQLQuery("select bucket_flag from t_unit_application_billing_configuration where unit_id = :unitId and organization_id = :organizationId")
+        ... // (existing query setup)
+// after, insert immediately following the query execution:
+if (bucketType == null) {
+    bucketType = 1;
+}
+```
+This is application code (`legacy/`), not local-dev-DB-only — per `CLAUDE.md`, requires its own dedicated branch (Maker-Checker), separate from the Angular rebuild branch, same treatment as the `loginController.js` race-condition fix (entry 135) and the `organizationController`/`assetCategoryMaster`/`implantMaster` DI-crash fixes.
+
+**Action taken:** neither fix applied. Both proposed here for owner approval before any action.
