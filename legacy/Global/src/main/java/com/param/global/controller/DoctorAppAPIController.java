@@ -545,7 +545,15 @@ public class DoctorAppAPIController implements ICommonConstants {
 	public @ResponseBody Response getApplicationConfigForDocApp(@RequestBody UnitApplicationConfigurationDto unitApplicationConfigurationDto) {
 		try
 		{
-			return iUnitApplicationBillingConfigurationService.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
+			// Security fix, docs/DECISION_NEEDED_UnitApplicationConfigCredentialDisclosure.md --
+			// this mobile-app endpoint is a client-facing response; the shared service already
+			// strips secret-shaped fields, this explicit call is defense-in-depth in case that
+			// changes in the future without this call site being noticed.
+			Response res = iUnitApplicationBillingConfigurationService.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
+			if (res.getObject() instanceof UnitApplicationConfigurationDto) {
+				((UnitApplicationConfigurationDto) res.getObject()).stripClientFacingSecrets();
+			}
+			return res;
 		}catch(Exception e)
 		{
 			logger.error("Error while fetching the application config for doctor app", e);

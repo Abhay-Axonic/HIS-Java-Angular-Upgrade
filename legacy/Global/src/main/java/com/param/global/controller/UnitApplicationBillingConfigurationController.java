@@ -38,7 +38,14 @@ public class UnitApplicationBillingConfigurationController implements ICommonCon
 			UnitApplicationConfigurationDto unitApplicationConfigurationDto = new UnitApplicationConfigurationDto();
 			unitApplicationConfigurationDto.setUnitId(unitId);
 			unitApplicationConfigurationDto.setOrganizationId(orgId);
-			return unitApplicationBillingConfigurationService.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
+			Response res = unitApplicationBillingConfigurationService.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
+			// Security fix, docs/DECISION_NEEDED_UnitApplicationConfigCredentialDisclosure.md --
+			// this is the client-facing boundary; strip secret-shaped fields here, not inside the
+			// shared service (which RazorPaymentController also calls for real payment processing).
+			if (res.getObject() instanceof UnitApplicationConfigurationDto) {
+				((UnitApplicationConfigurationDto) res.getObject()).stripClientFacingSecrets();
+			}
+			return res;
 		}catch (Exception e) {
 			logger.error("getUnitApplicationBillingConfigByOrgUnit failed", e);
 			throw new ServiceException(e.getMessage());
