@@ -61,4 +61,63 @@ Any authenticated user of any role — the same "isSuperUser='N'" tier already c
 3. **Which fix direction(s) to authorize** for the code/DDL-level exposure itself — my recommendation remains (1) and (2) from §4 (scope the endpoint's auth, stop returning secret-shaped fields), with the DDL-level hardcoded default (never addressed by either prior secrets-remediation batch) also worth resolving as part of the same pass, given it's now confirmed to be the actual effective runtime value.
 4. Given this was found via the same `cookieObjectAppConfig`-sourcing code path several already-built and in-progress rebuild screens rely on (any screen reading unit application config), **worth flagging**: none of the already-shipped Angular screens currently call this specific `/billing/orgId/.../unitId/...` endpoint directly (they read the value already cached in `cookieObjectAppConfig` from legacy's own login flow) — so this is a pre-existing legacy backend exposure, not something the rebuild has newly introduced or needs to route around today. Confirming this for the record, not proposing any rebuild-side action.
 
-No code has been touched to produce this document. Awaiting your direction.
+## 6. UPDATE — owner rotated the affected mailbox password(s); proposed fix diffs below, held for approval, nothing applied yet
+
+Owner confirmed the `info@axonichealth.co.in` (and `info@clinivantage.co.in`, if still active) mailbox password(s) have been rotated at the provider — the specific value seen during testing is now invalidated. This section proposes the code/DDL-level fix for the underlying access-control and hardcoded-default issues. **No file below has been edited — this is the exact proposed diff, for review only.**
+
+### 6a. A second, related exposure surface found while researching this fix — same secret, different path
+
+Tracing how the browser ever gets this password in the first place (needed to confirm the fix below doesn't silently break real mail-sending) surfaced that **this endpoint is not the only place the SMTP password reaches the browser.** The login flow (`loginController.js:629-788`, a different endpoint than the one this document is about) also sends the same `UnitApplicationConfigurationDto` — password field included — to populate the browser's `cookieObjectAppConfig` cookie. That cookie is then **echoed back to the server on every subsequent request**, where `SessionHandlerInterceptor.java:43-44` deserializes it straight from the raw cookie value into a server-side bean, and `MailingServiceImpl.java:102` reads the password back out of it to actually send mail — meaning the backend trusts a security-sensitive value supplied by the client on every request, rather than looking it up server-side. This is a deeper architectural pattern (the server's own outgoing-mail credential lives in a client-held cookie) that the fix below does **not** resolve — it only closes the specific `GET .../billing/orgId/.../unitId/...` endpoint's response, which is what this document originally investigated. Flagging this now rather than silently scoping around it; recommend treating it as a follow-on decision, not bundled into the fix below (proposal 6b closes the leak that's actually easy to verify and low-risk to fix immediately; a real fix for the cookie-echo pattern would mean moving this value to a genuine server-side session store, a larger design change).
+
+### 6b. Proposed fix — strip secret fields from this endpoint's response (low-risk, does not affect mail-sending)
+
+Confirmed this endpoint's response is *not* what populates the browser's `cookieObjectAppConfig` cookie (that happens at login, a separate code path per §6a) — stripping these fields here has no effect on the SMTP-sending feature.
+
+**File:** `legacy/Global/src/main/java/com/param/global/service/UnitApplicationBillingConfigurationServiceImpl.java`
+
+```diff
+ 			if(registrationFieldConfiguration != null){
+ 				unitApplicationConfigurationDtos.setMobileDigit(registrationFieldConfiguration.getMobileDigit() != null ? registrationFieldConfiguration.getMobileDigit() : 10);
+ 			}
++			// Security fix, docs/DECISION_NEEDED_UnitApplicationConfigCredentialDisclosure.md --
++			// this response reaches the browser via a general-purpose UI-config lookup; strip
++			// secret-shaped fields the frontend never displays. Does not affect mail-sending,
++			// which reads this value from cookieObjectAppConfig (populated at login, a separate
++			// code path -- see doc section 6a).
++			unitApplicationConfigurationDtos.setPassword(null);
++			unitApplicationConfigurationDtos.setRazorPayKeyId(null);
++			unitApplicationConfigurationDtos.setRazorPaySecretKey(null);
+ 			return new Response<>(SUCCESS, SUCCESS_CODE, null, null, unitApplicationConfigurationDtos);
+```
+
+**Before:** `GET /api/unit/applicationConfiguration/billing/orgId/{orgId}/unitId/{unitId}` returns `password`/`razorPayKeyId`/`razorPaySecretKey` verbatim to any authenticated caller.
+**After:** the same endpoint returns every other config field unchanged (confirmed none of the ~80 other fields are used by these three), with those three fields always `null` in the response — verifiable live via the same authenticated-fetch method used to find this issue originally (checking the response shape, not re-triggering the leak).
+
+### 6c. Real per-role authorization — not proposed as part of this fix, flagged as a separate, larger decision
+
+Checked for an existing server-side "is this caller a superuser" helper to reuse for a real role check on this endpoint — **none exists** (confirmed via grep across `legacy/Global/`). This matches the already-documented, systemic finding (playbook Known Caveat #1, and the `userAuthentication`/`Qmslogo` findings this session): legacy has **no backend RBAC enforcement anywhere** — `isSuperUser`/role checks exist only client-side. Building real server-side role enforcement from scratch is a materially larger change than a scoped bug-fix diff, and would need to happen consistently across every endpoint with this gap, not as a one-off for this endpoint. Recommend treating 6b (stop returning secrets) as the immediate mitigation, and real backend RBAC as a separate, project-wide architectural decision — not bundled into this fix.
+
+### 6d. Proposed DDL fix — remove the hardcoded default, so future environments don't inherit a known-bad credential
+
+**File:** `legacy/Database/HIS-SME-DDL_20210430_150255584.sql:21666-21667`
+
+```diff
+-    smtp_user_id character varying(100) DEFAULT 'info@clinivantage.co.in'::character varying,
+-    smtp_user_pwd character varying(100) DEFAULT 'Cht@12345'::character varying,
++    smtp_user_id character varying(100),
++    smtp_user_pwd character varying(100),
+```
+
+**Before:** any fresh database provisioned from this DDL file has this exact (now-rotated, but still checked into git history) email/password pair as the default SMTP config for every unit, until someone explicitly overrides it.
+**After:** the column has no default; a fresh deployment starts with `NULL` (matching how `GlobalCommonDateUtils`/`MailingServiceImpl` already fall back to `System.getenv("GLOBAL_SMTP_PASSWORD")` when the DB value is null — the intended, safer path per `docs/SECRETS_REMEDIATION_BATCH2.md`'s own fix).
+
+**Practical follow-up this surfaces, not something I can do:** this local dev DB's own `t_unit_application_billing_configuration` row (org=1/unit=1) still has the **old, now-rotated** password value stored in it (confirmed via direct query, unrelated to the DDL default). If this environment's mail-sending is ever actually exercised, it will now fail against the real mailbox until that row (or the `GLOBAL_SMTP_PASSWORD` env var) is updated with the new real password — something only you/ops can do, since I don't have and shouldn't have that value.
+
+### What we need from you on this section specifically
+
+1. Approve/reject 6b (strip secret fields from this one endpoint) — my recommendation is approve, low-risk, verified not to affect mail-sending.
+2. Approve/reject 6d (remove the DDL hardcoded default) — my recommendation is approve, purely additive-safe (removes a default, doesn't touch existing data).
+3. Whether 6a (the cookie-echo architectural pattern) and 6c (no backend RBAC exists) should become their own separate DECISION_NEEDED documents, or stay noted here for now.
+4. Confirm you'll handle updating this dev DB's stored SMTP password (or the `GLOBAL_SMTP_PASSWORD` env var) separately, outside this session, since I don't have the new value.
+
+No code has been touched to produce this document — 6b/6d above are proposed diffs only, not applied.
