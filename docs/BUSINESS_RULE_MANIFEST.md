@@ -1349,3 +1349,61 @@ Column type/length derived from the entity's plain `String` field (no explicit `
 Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Yes, approve both DB fixes — go ahead and apply them").
 
 **Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 136 has full detail.
+
+## BR-local-dev-db-drift-qualityparametermaster-missingtable — Local dev DB (`his_local`) was missing `t_quality_parameter_master` entirely, blocking `qualityParameterMaster`'s main list load — found during Phase 4 batch 12's Step 0/1 audit (2026-07-22)
+
+**Not a business rule — a local-dev-environment gap, same class as every other `BR-local-dev-db-drift-*` entry, but a broader instance than most: the table isn't just missing from this local DB, it isn't in the tracked DDL baseline (`legacy/Database/HIS-SME-DDL_20210430_150255584.sql`) at all.** Confirmed via `catalina.out`: a real authenticated call to `GET /api/unit/getQualityParamList/{unitId}/{organizationId}` (the screen's primary list-load endpoint) threw `org.postgresql.util.PSQLException: ERROR: relation "public.t_quality_parameter_master" does not exist`. The Java backend chain (`QualityParameterMasterController` → `QualityParameterMasterServiceImpl` → `QualityParameterMasterDaoImpl` → the `QualityParameterMaster` `@Entity`/`@NamedNativeQuery` mapping) is fully implemented and correct — this is not a `modalityTypeMaster`-style dead-backend case, just a table that has apparently never existed in any tracked schema snapshot.
+
+**Fixed via a single, additive, reversible `CREATE TABLE` + `CREATE SEQUENCE`, owner-approved before applying, schema inferred directly from the JPA entity mapping (column names, types, the `t_quality_parameter_master_seq` sequence name) plus one directly comparable sibling table (`t_company_master`) for `"char"`-typed `status` and the `pg_dump`-style separate `ALTER TABLE ... ADD CONSTRAINT` primary-key convention:**
+```sql
+CREATE SEQUENCE public.t_quality_parameter_master_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE TABLE public.t_quality_parameter_master (
+    quality_parameter_master_id integer DEFAULT nextval('public.t_quality_parameter_master_seq'::regclass) NOT NULL,
+    module_id integer,
+    module_name character varying(100),
+    activity_id integer,
+    activity_name character varying(255),
+    parameter_id integer,
+    standard character varying(255),
+    uom_id integer,
+    uom_desc character varying(100),
+    threshold_percentage integer,
+    target_percentage integer,
+    unit_id integer,
+    organization_id integer,
+    status "char",
+    created_date timestamp without time zone DEFAULT now(),
+    created_by integer,
+    updated_by integer,
+    updated_date timestamp without time zone
+);
+
+ALTER TABLE ONLY public.t_quality_parameter_master
+    ADD CONSTRAINT pk_t_quality_parameter_master_id PRIMARY KEY (quality_parameter_master_id);
+```
+**Caveat carried forward:** the `character varying` lengths on `module_name`/`activity_name`/`standard`/`uom_desc` are inferred reasonable defaults (100–255), not matched against any tracked precedent — since this table has no DDL history anywhere in the repo, there is no authoritative length to copy. Re-check if any real seed data or a stricter length requirement surfaces later. Verified live: `GET /api/unit/getQualityParamList/{unitId}/{organizationId}` returns `200` after the fix (previously a reproducible `500`).
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Approved — apply both fixes and verify live.").
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` (batch 12 Step 0/1 entry) has full detail.
+
+## BR-local-dev-db-drift-qms-prnprintformat — Local dev DB (`his_local`)'s `t_unit_application_billing_configuration` was missing its `qms_prn_print_format` column, silently breaking `QMS`'s PRN-thermal-print-format lookup — found during Phase 4 batch 12's Step 0/1 audit (2026-07-22)
+
+**Not a business rule — a local-dev-environment gap, same class as every other `BR-local-dev-db-drift-*` entry.** Confirmed via `catalina.out`: `GET/POST .../getQMSPrnFormat` threw `ERROR: column appn.qms_prn_print_format does not exist` from a raw SQL query in `UnitApplicationBillingConfigurationDaoImpl.getQMSPrnFormat`. The DTO field (`UnitApplicationConfigurationDto.qmsPrnPrintFormat`, a plain `String`) is real and correctly referenced — the column simply never existed on this environment's table. **Non-blocking in practice** — `GenericService.serviceAction`'s missing `.catch()` at this call site silently swallowed the failure, so `QMSMasterController.js`'s PRN-vs-popup-print branch always fell back to popup printing with no visible error; this gap was only found via direct log inspection, not a user-visible symptom.
+
+**Fixed via a single, additive `ALTER TABLE`, owner-approved before applying:**
+```sql
+ALTER TABLE public.t_unit_application_billing_configuration
+    ADD COLUMN qms_prn_print_format character varying;
+```
+Type matches this exact table's own sibling `_format` columns (`dob_format`, `start_date_format`) — both unlimited `character varying`, no explicit length — for consistency with the existing convention already present in that table (unlike the entry above, this table already exists and has directly comparable sibling columns to copy from). Verified live: `POST /api/unit/applicationConfiguration/getQMSPrnFormat` returns `200` after the fix (previously a reproducible `500`).
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Approved — apply both fixes and verify live.").
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` (batch 12 Step 0/1 entry) has full detail.
