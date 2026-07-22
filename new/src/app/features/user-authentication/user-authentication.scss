@@ -1,0 +1,23 @@
+// Screen-specific layout only -- shared table/pagination/toolbar/typeahead
+// styles live in src/styles.scss (see that file's header comment). No
+// status-toggle CSS here on purpose: this screen has no live status toggle
+// (the Status column is commented out in the live legacy view).
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.show-entries {
+  font-size: 13px;
+}
+
+.icon-search {
+  font-style: normal;
+
+  &::after {
+    content: '🔍';
+  }
+}

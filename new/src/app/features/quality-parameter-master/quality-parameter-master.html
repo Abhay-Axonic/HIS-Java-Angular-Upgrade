@@ -1,0 +1,170 @@
+<!--
+  Parity rebuild of
+  views/master/UnitMaster/organizationMaster/quality-parameter-master.html.
+  Field order matches the legacy form exactly: Unit of Measurement,
+  Department (module), Activity ID, Activity, Parameter ID, Standard,
+  Target %, Threshold %. Legacy shows no inline "field is required" text at
+  all for this screen (all validation is growl-toast only, ctrl:164-226) --
+  there is no `.help-block` pattern here to make visible per the standing
+  validation-message-visibility policy, so none is added.
+-->
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="uomId">Unit of Measurement</label>
+        <select
+          id="uomId"
+          class="form-control"
+          [ngModel]="record().uomId"
+          (ngModelChange)="updateField('uomId', $event)"
+          name="uomId"
+        >
+          <option value="">Select Unit of Measurement</option>
+          @for (uom of uomList(); track uom.id) {
+            <option [ngValue]="uom.id">{{ uom.desc }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="moduleId">Department</label>
+        <select
+          id="moduleId"
+          class="form-control"
+          [ngModel]="record().moduleId"
+          (ngModelChange)="updateField('moduleId', $event)"
+          name="moduleId"
+        >
+          <option value="">Select Department</option>
+          @for (mod of moduleList(); track mod.moduleId) {
+            <option [ngValue]="mod.moduleId">{{ mod.moduleName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="activityId">Activity ID</label>
+        <input
+          id="activityId"
+          type="number"
+          class="form-control"
+          [ngModel]="record().activityId"
+          (ngModelChange)="updateField('activityId', $event)"
+          name="activityId"
+        />
+      </div>
+
+      <div class="field">
+        <label for="activityName">Activity</label>
+        <input
+          id="activityName"
+          type="text"
+          class="form-control"
+          [ngModel]="record().activityName"
+          (ngModelChange)="updateField('activityName', $event)"
+          name="activityName"
+        />
+      </div>
+
+      <div class="field">
+        <label for="parameterId">Parameter ID</label>
+        <input
+          id="parameterId"
+          type="number"
+          class="form-control"
+          [ngModel]="record().parameterId"
+          (ngModelChange)="updateField('parameterId', $event)"
+          name="parameterId"
+        />
+      </div>
+
+      <div class="field">
+        <label for="standard">Standard</label>
+        <input
+          id="standard"
+          type="text"
+          class="form-control"
+          [ngModel]="record().standard"
+          (ngModelChange)="updateField('standard', $event)"
+          name="standard"
+        />
+      </div>
+
+      <div class="field">
+        <label for="targetPercentage">Target %</label>
+        <input
+          id="targetPercentage"
+          type="number"
+          class="form-control"
+          [ngModel]="record().targetPercentage"
+          (ngModelChange)="onTargetPercentageChange($event)"
+          name="targetPercentage"
+        />
+      </div>
+
+      <div class="field">
+        <label for="thresholdPercentage">Threshold %</label>
+        <input
+          id="thresholdPercentage"
+          type="number"
+          class="form-control"
+          [ngModel]="record().thresholdPercentage"
+          (ngModelChange)="onThresholdPercentageChange($event)"
+          name="thresholdPercentage"
+        />
+      </div>
+
+      <div class="field save-field">
+        <button type="button" class="btn-primary" title="Save" (click)="save()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="text-center">Department</th>
+            <th class="text-center">Activity Id</th>
+            <th class="text-center">Activity</th>
+            <th class="text-center">Unit of Measurement</th>
+            <th class="text-center">Parameter ID</th>
+            <th class="text-center">Standard</th>
+            <th class="text-center">Threshold %</th>
+            <th class="text-center">Target%</th>
+            <th class="text-center">Status(n)</th>
+            <th class="text-center">Action taken</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of list(); track row.qualityParameterMasterId) {
+            <tr>
+              <td class="text-center">{{ row.moduleName }}</td>
+              <td class="text-center">{{ row.activityId }}</td>
+              <td class="text-center">{{ row.activityName }}</td>
+              <td class="text-center">{{ row.uomDesc }}</td>
+              <td class="text-center">{{ row.parameterId }}</td>
+              <td class="text-center">{{ row.standard }}</td>
+              <td class="text-center">{{ row.thresholdPercentage }}</td>
+              <td class="text-center">{{ row.targetPercentage }}</td>
+              <td class="text-center">
+                <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+              </td>
+              <td class="text-center">
+                <i
+                  class="fa fa-pencil"
+                  aria-hidden="true"
+                  [class.disabled]="!dropdownsReady()"
+                  [attr.title]="dropdownsReady() ? 'Edit' : 'Loading options…'"
+                  (click)="dropdownsReady() && edit(row)"
+                ></i>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+</section>

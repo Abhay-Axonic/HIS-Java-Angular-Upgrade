@@ -1,0 +1,75 @@
+<!--
+  Rebuild of views/master/QMSMaster/QMS.html. Kiosk fullscreen token-issue
+  screen -- see qms.ts's class doc comment for the known Shell-chrome
+  divergence (this codebase has no per-route fullscreen mechanism; ported
+  unchanged from the `display` screen's own precedent) and the faithfully
+  preserved bugs/dead-markup this view deliberately omits.
+-->
+<div id="page-content-wrapper" class="bg-wrapper">
+  @if (firstImg()) {
+    <img [src]="firstImg()" alt="" />
+  }
+
+  <div class="row heading-padding">
+    <div class="dept-row">
+      @if (activeQmsDeptList().length > 1) {
+        @for (dept of activeQmsDeptList(); track dept.qmsDeptMasterId) {
+          @if (dept.isReception === 'A') {
+            <div class="dept-cell">
+              <button type="button" class="btn-primary1" [title]="dept.qmsDeptName" (click)="getDeptDetails(dept)">
+                {{ dept.qmsDeptName }}
+              </button>
+              <p class="dept-desc">{{ dept.discripton }}</p>
+            </div>
+          }
+        }
+      }
+      @if (activeQmsDeptList().length === 1) {
+        @for (dept of activeQmsDeptList(); track dept.qmsDeptMasterId) {
+          @if (dept.isReception === 'A') {
+            <div class="dept-cell dept-cell-single">
+              <button type="button" class="btn-primary1" [title]="dept.qmsDeptName" (click)="getDeptDetails(dept)">
+                {{ dept.qmsDeptName }}
+              </button>
+            </div>
+          }
+        }
+      }
+    </div>
+  </div>
+</div>
+
+<!-- QMS kiosk DetailsModal -->
+@if (showKioskModal()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <header>Kiosk Details</header>
+      <div class="modal-body">
+        <div class="kiosk-select-row">
+          <span>Select Kiosk</span>
+          <select [ngModel]="selectedKioskId()" (ngModelChange)="onKioskSelected($event)" name="qmsKioskMasterId">
+            <option value="">Select Kiosk</option>
+            @for (qms of activeQmsList(); track qms.qmsKioskMasterId) {
+              <option [value]="qms.qmsKioskMasterId">{{ qms.qmsDesc }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="otpOk" class="btn-primary" (click)="confirmQms(); showKioskModal.set(false)">Ok</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Token Print (PRN branch) -->
+@if (showTokenPrnModal()) {
+  <div class="modal-backdrop">
+    <div class="modal modal-small">
+      <header>Token Print</header>
+      <div class="modal-body text-center">
+        <p class="token-no">{{ tokenNumber() }}</p>
+      </div>
+    </div>
+  </div>
+}

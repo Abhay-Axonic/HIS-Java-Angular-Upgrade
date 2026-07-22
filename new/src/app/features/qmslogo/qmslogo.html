@@ -1,0 +1,71 @@
+<!--
+  QMS Logo -- 8 independent settings/upload fields, each with its own Save
+  action. No list, no search, no pagination (this screen has none in
+  legacy). See qmslogo.ts's class doc comment for the two audit-confirmed
+  quirks faithfully ported here: (1) no auto-load/preview of existing
+  images on init -- legacy's own qmslogo.js never does this either; (2) a
+  single shared file-error message shown next to every file field, not a
+  per-field one.
+-->
+
+<div class="qmslogo-page">
+  @for (field of fileFields; track field.key) {
+    <div class="field-row">
+      <label class="field-label">{{ field.label }} ({{ field.dimensionHint }})</label>
+
+      <div class="field-input">
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected(field.key, $event)"
+        />
+        <p class="field-hint">Allowed: {{ acceptedExtensionsHint }} -- max 5MB</p>
+        @if (fileError()) {
+          <p class="file-error">{{ fileError() }}</p>
+        }
+        @if (previews()[field.key]) {
+          <img class="preview" [src]="previews()[field.key]" alt="{{ field.label }} preview" />
+        }
+      </div>
+
+      <button
+        type="button"
+        class="btn-save"
+        title="Save"
+        [disabled]="isSaving(field.key)"
+        (click)="saveFileField(field)"
+      >
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    </div>
+  }
+
+  @for (field of textFields; track field.key) {
+    <div class="field-row">
+      <label class="field-label">{{ field.label }}</label>
+
+      <div class="field-input">
+        <input
+          type="text"
+          autocomplete="off"
+          class="text-input"
+          [placeholder]="field.placeholder"
+          [ngModel]="textFieldValue(field.key)"
+          (ngModelChange)="setTextFieldValue(field.key, $event)"
+          name="{{ field.key }}"
+          required
+        />
+      </div>
+
+      <button
+        type="button"
+        class="btn-save"
+        title="Save"
+        [disabled]="isSaving(field.key)"
+        (click)="saveTextField(field)"
+      >
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    </div>
+  }
+</div>

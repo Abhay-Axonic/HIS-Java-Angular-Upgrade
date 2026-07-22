@@ -1,0 +1,46 @@
+// Screen-specific layout only -- shared table/toolbar styles live in
+// src/styles.scss. Status-toggle CSS is NOT here on purpose:
+// <app-status-toggle> ships its own (shared/status-toggle/status-toggle.scss).
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+
+  label {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+}
+
+.save-field {
+  min-width: auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+// Matches legacy's `fix-height-scroll430` fixed-height scrolling table.
+.table-scroll {
+  max-height: 430px;
+  overflow-y: auto;
+}
+
+.fa-pencil {
+  cursor: pointer;
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}

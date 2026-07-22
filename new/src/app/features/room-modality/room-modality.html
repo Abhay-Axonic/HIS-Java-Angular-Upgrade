@@ -1,0 +1,149 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="roomModalityId">Room Modality<span class="required">*</span></label>
+        <select
+          id="roomModalityId"
+          [ngModel]="record().roomModalityId"
+          (ngModelChange)="updateField('roomModalityId', $event)"
+          name="roomModalityId"
+          [class.invalid]="isRoomMissing()"
+        >
+          <option [ngValue]="''"></option>
+          @for (r of roomList(); track r.roomId) {
+            <option [ngValue]="r.roomId">{{ r.roomDesc }}</option>
+          }
+        </select>
+        @if (isRoomMissing()) {
+          <p class="help-block">Room modality is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="subSpecialityId">Sub Speciality<span class="required">*</span></label>
+        <select
+          id="subSpecialityId"
+          [ngModel]="record().subSpecialityId"
+          (ngModelChange)="onSubSpecialityChange($event)"
+          name="subSpecialityId"
+          [class.invalid]="isSubSpecialityMissing()"
+        >
+          <option [ngValue]="''"></option>
+          @for (s of subSpecialityList(); track s.subSpecialityId) {
+            <option [ngValue]="s.subSpecialityId">{{ s.subSpecialityName }}</option>
+          }
+        </select>
+        @if (isSubSpecialityMissing()) {
+          <p class="help-block">Select Sub Speciality</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="modalityId">Modality Machine<span class="required">*</span></label>
+        <select
+          id="modalityId"
+          [ngModel]="record().modalityId"
+          (ngModelChange)="updateField('modalityId', $event)"
+          name="modalityId"
+          [class.invalid]="isModalityMissing()"
+        >
+          <option [ngValue]="''">-</option>
+          @for (m of modalityList(); track m.modalityId) {
+            <option [ngValue]="m.modalityId">{{ m.modalityDesc }}</option>
+          }
+        </select>
+        @if (isModalityMissing()) {
+          <p class="help-block">Modality machine is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <!-- Legacy's search box (view:91-94) has no ng-model/ng-change at all --
+         a decorative, non-functional control. Reproduced verbatim: not
+         wired to any signal or filter. -->
+    <input type="text" autocomplete="off" class="search-box" placeholder="Search" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Room Modality</th>
+        <th>Sub Speciality</th>
+        <th>Modality Machine</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.roomModalityMasterId) {
+        <tr>
+          <td>{{ row.roomName }}</td>
+          <td>{{ row.subSpecialityName }}</td>
+          <td>{{ row.modalityDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
