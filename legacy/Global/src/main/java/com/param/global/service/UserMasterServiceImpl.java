@@ -382,14 +382,20 @@ public class UserMasterServiceImpl implements IUserMasterService, ICommonConstan
 										.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
 								masterDto.setUnitApplicationConfigurationDto(
 										(UnitApplicationConfigurationDto) unitApplicationConfigurationRes.getObject());
-								
+
 								unitApplicationConfigurationDto  = (UnitApplicationConfigurationDto) sessionFactory.getCurrentSession().createSQLQuery(
 										"select duplicate_tab as \"duplicateTab\"  from t_unit_application_billing_configuration where unit_id  = :unitId and status = 'A' ")
 										.setParameter("unitId", masterDto.getUnitId())
 										.setResultTransformer(Transformers.aliasToBean(UnitApplicationConfigurationDto.class))
 										.uniqueResult();
-								
+
 								masterDto.getUnitApplicationConfigurationDto().setDuplicateTab(unitApplicationConfigurationDto.getDuplicateTab());
+								// Security fix, docs/DECISION_NEEDED_CookieAppConfigCredentialEcho.md --
+								// this DTO is serialized into the login response and copied into the
+								// browser's cookieObjectAppConfig cookie by loginController.js; strip
+								// secret-shaped fields before it ever reaches the client. Explicit here
+								// as defense-in-depth (the shared service above already strips them too).
+								masterDto.getUnitApplicationConfigurationDto().stripClientFacingSecrets();
 								
 								// get user counter mapper data
 								Response userCounterRes = iUserCounterMapperService.getUserCounterMapperViewById(
@@ -1092,7 +1098,12 @@ public class UserMasterServiceImpl implements IUserMasterService, ICommonConstan
 						Response unitApplicationConfigurationRes = iUnitApplicationBillingConfigurationService
 								.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
 						masterDto.setUnitApplicationConfigurationDto((UnitApplicationConfigurationDto) unitApplicationConfigurationRes.getObject());
-						
+						// Security fix, docs/DECISION_NEEDED_CookieAppConfigCredentialEcho.md --
+						// same client-facing login response path as above, explicit defense-in-depth.
+						if (masterDto.getUnitApplicationConfigurationDto() != null) {
+							masterDto.getUnitApplicationConfigurationDto().stripClientFacingSecrets();
+						}
+
 						DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 						Date currentDater = TimeZoneComponent.getDateByzone(userMasterDto.getUnitId());
 						Date expDate = dateFormat.parse(masterDto.getPwdExpiry());
@@ -1275,6 +1286,11 @@ public class UserMasterServiceImpl implements IUserMasterService, ICommonConstan
 										.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
 								masterDto.setUnitApplicationConfigurationDto(
 										(UnitApplicationConfigurationDto) unitApplicationConfigurationRes.getObject());
+								// Security fix, docs/DECISION_NEEDED_CookieAppConfigCredentialEcho.md --
+								// same client-facing login response path, explicit defense-in-depth.
+								if (masterDto.getUnitApplicationConfigurationDto() != null) {
+									masterDto.getUnitApplicationConfigurationDto().stripClientFacingSecrets();
+								}
 								// get user counter mapper data
 								Response userCounterRes = iUserCounterMapperService.getUserCounterMapperViewById(
 										userMasterDto.getOrganizationId(), userMasterDto.getUnitId(),
@@ -1426,6 +1442,11 @@ public class UserMasterServiceImpl implements IUserMasterService, ICommonConstan
 										.getUnitApplicationBillingConfigByOrgUnit(unitApplicationConfigurationDto);
 								masterDto.setUnitApplicationConfigurationDto(
 										(UnitApplicationConfigurationDto) unitApplicationConfigurationRes.getObject());
+								// Security fix, docs/DECISION_NEEDED_CookieAppConfigCredentialEcho.md --
+								// same client-facing login response path, explicit defense-in-depth.
+								if (masterDto.getUnitApplicationConfigurationDto() != null) {
+									masterDto.getUnitApplicationConfigurationDto().stripClientFacingSecrets();
+								}
 								// get user counter mapper data
 								Response userCounterRes = iUserCounterMapperService.getUserCounterMapperViewById(
 										userMasterDto.getOrganizationId(), userMasterDto.getUnitId(),

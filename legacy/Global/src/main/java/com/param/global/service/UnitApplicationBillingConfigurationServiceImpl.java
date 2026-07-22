@@ -94,6 +94,10 @@ public class UnitApplicationBillingConfigurationServiceImpl implements IUnitAppl
 			if(registrationFieldConfiguration != null){
 				unitApplicationConfigurationDtos.setMobileDigit(registrationFieldConfiguration.getMobileDigit() != null ? registrationFieldConfiguration.getMobileDigit() : 10);
 			}
+			// Security fix, docs/DECISION_NEEDED_UnitApplicationConfigCredentialDisclosure.md --
+			// this response reaches the browser via a general-purpose UI-config lookup; strip
+			// secret-shaped fields the frontend never displays.
+			unitApplicationConfigurationDtos.stripClientFacingSecrets();
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, null, unitApplicationConfigurationDtos);
 
 		}catch (Exception e) {

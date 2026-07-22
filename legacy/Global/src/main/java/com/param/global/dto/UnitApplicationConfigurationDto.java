@@ -1423,6 +1423,21 @@ public class UnitApplicationConfigurationDto extends MailDto {
 		this.razorPaySecretKey = razorPaySecretKey;
 	}
 
+	/**
+	 * Nulls out fields that must never leave the server in a client-facing
+	 * response, regardless of caller. See docs/DECISION_NEEDED_UnitApplicationConfigCredentialDisclosure.md
+	 * and docs/DECISION_NEEDED_CookieAppConfigCredentialEcho.md. Call this at
+	 * every point this DTO is serialized directly to an HTTP response or a
+	 * client-bound cookie -- never inside internal business logic (e.g.
+	 * RazorPaymentController's real payment-order creation still needs the
+	 * unstripped values, fetched directly, not through a client response).
+	 */
+	public void stripClientFacingSecrets() {
+		this.password = null;
+		this.razorPayKeyId = null;
+		this.razorPaySecretKey = null;
+	}
+
 	public Character getIsReportAddIntoDischargeSummary() {
 		return isReportAddIntoDischargeSummary;
 	}
