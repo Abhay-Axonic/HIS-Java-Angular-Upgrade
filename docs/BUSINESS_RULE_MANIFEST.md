@@ -1303,3 +1303,49 @@ Created via the identical additive approach as `BR-local-dev-db-drift-mrdrack-ta
 Classification: Neither (pre-existing local-dev-DB gap / environment drift, not a behavioral change — no `legacy/` or `new/` application code touched, purely additive `CREATE TABLE`/`CREATE SEQUENCE` on the local dev DB only, matching RULES.md item 1's Expand-only convention and the exact precedent of BR-038/039/043/046/BR-local-dev-db-drift-mrdrack-tabulartemplate). Owner Decision: Approved explicitly ("resolve the rowMasters/boxMasters side-finding... this needs closing now, same as rackMasters/createTabularTemplates just was") — no further sign-off required per this manifest's own local-dev-only scope.
 
 **Notes:** No `legacy/` or `new/` file changed. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (same local-dev-only scope as every prior entry in this class). This is now the 4th confirmed instance of this exact gap class in one project — worth a standing recommendation that any screen touched around this DB's apparent 2026-07-15-ish reseed/drift event be treated as suspect for a missing-table gap until actually live-tested, not just code-reviewed or golden-traced, regardless of how long ago it was merged. `docs/ANGULAR_PENDING_FINDINGS.md` entry 101 has full detail.
+
+## BR-local-dev-db-drift-unitstatus-loginblocked — Local dev DB (`his_local`)'s only unit (`m_unit_master.unit_id=1`, "DEMO") was marked `status='I'` (inactive), blocking every login in this environment — found while unblocking the owner's own login for Phase 4 batch 11's Step 5 live testing (2026-07-22)
+
+**Not a business rule — a local-dev-environment data gap, same class as `BR-local-dev-db-drift-legacy-login-blocked` (an earlier, unrelated login-blocking DB-drift instance from a prior session).** Surfaced only after fixing a genuine, separate frontend code bug first (`loginController.js:124`'s unguarded `found.organizationLogo` dereference, see `docs/ANGULAR_PENDING_FINDINGS.md` entry 135 and the `fix/logincontroller-getunitbyusercredentials-found-guard` branch) — once that crash was fixed and the app's real backend call could actually fire, the backend returned a legitimate, correctly-formed error: `"No unit(s) mapped to the user with selected organization...!!"`.
+
+**Root cause confirmed via direct, read-only DB queries before touching anything:** `m_user_master` (Admin, user_id 1, org 1) is correctly `status='A'`; `t_user_unit_mapper` has a correct, active mapping row (`user_id=1, organisation_id=1, unit_id=1, status='A'`) — the mapping itself was never the problem. `m_unit_master.unit_id=1` (org 1's only unit, "DEMO") was `status='I'`. Both backend queries behind `/adt/getUnitByCredentials` (the plain path and its duo-login variant — see the note below on why every login actually goes through the duo variant) explicitly filter `unit.status='A'`, so with the one real unit in this environment marked inactive, both correctly returned zero rows.
+
+**Fixed via a single, additive, reversible row update, owner-approved before applying:**
+```sql
+UPDATE m_unit_master SET status = 'A' WHERE unit_id = 1;
+```
+No schema/structure change, no other rows touched. Verified two ways before reporting success: (1) re-ran the exact join both backend code paths use directly against Postgres (read-only `SELECT`, no browser/credentials involved) — confirmed it now returns the "DEMO" unit for the Admin user, where it previously returned zero rows; (2) asked the owner to attempt a real login themselves afterward (not performed by this agent, consistent with this project's standing no-credentials-entered discipline).
+
+**Separate, non-blocking code oddity noticed while investigating, logged for awareness, not fixed:** `loginController.js:127-129` sets `data.isDuoUserLogin = true` unconditionally whenever the selected organization is found in the org list (i.e., on essentially every login attempt) — not conditioned on the organization's own `isDuoAuthenticationRequired` flag (confirmed `false` for org 1/DEMO via direct backend query). This routes every login through `UserMasterServiceImpl.getUnitByCredentialsForDuoLogin` instead of the plain `getUnitByCredentials`, even for organizations with duo/2FA not configured. In this instance it happened not to matter (the duo path is actually the more lenient of the two — a `LEFT JOIN` to subscription details vs. the plain path's `INNER JOIN`, and duo's `t_user_unit_mapper`-only requirement is what let this specific gap be diagnosed at all) — but it's a real, disclosed divergence from the apparent intent of the `isDuoUserLogin` flag, worth a future owner decision on whether it should actually be conditioned on `isDuoAuthenticationRequired`. Not logged as its own `ANGULAR_PENDING_FINDINGS.md` entry since it's legacy-login-flow, not an Angular-rebuild-pilot finding — flagged here instead.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, not a behavioral change — no `legacy/` or `new/` application code touched by the DB fix itself; the separate frontend crash fix is tracked independently on its own branch/finding, not part of this BR entry). Owner Decision: Approved explicitly ("Yes, go ahead and apply it").
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope, same as every prior entry in this class). `docs/ANGULAR_PENDING_FINDINGS.md` entry 135 has the related frontend-crash-fix detail.
+
+## BR-local-dev-db-drift-assettype-seq — Local dev DB (`his_local`)'s `m_asset_type_id_seq` was out of sync with `m_asset_type`'s real data, blocking `assetTypeMaster` saves — found during Phase 4 batch 11's Step 5 live testing (2026-07-22)
+
+**Not a business rule — a local-dev-environment gap, same class as `BR-local-dev-db-drift-legacy-login-blocked`'s sibling entry and entry 116 (`m_action_master`/`action_master_seq`, batch 10).** Confirmed via `catalina.out`: a real save attempt on `assetTypeMaster` (after entry 133's severity-1 crash fix let the screen reach its real backend for the first time) threw `org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique constraint "m_asset_type_pkey" — Key (id)=(1) already exists`. Direct query confirmed the sequence's `last_value` was `1` while the table already had 2 real seed rows (`id` 1 and 2, dated 2018-05-29) — `nextval()` was returning an already-taken id.
+
+**Fixed via a single, additive, reversible `setval` call, owner-approved before applying:**
+```sql
+SELECT setval('m_asset_type_id_seq', (SELECT MAX(id) FROM m_asset_type));
+```
+No schema/structure change. Verified live: a real save (`AT2`/`Test Asset Type Two`) after the fix returned `201` / `{"id":3,"message":"Asset Type Inserted Successfully"}` — the code fix from `docs/ANGULAR_PENDING_FINDINGS.md` entry 136 (real session-derived `unitId`/`organizationId`/`userId` instead of hardcoded `0`) was verified together with this DB fix in the same round trip.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched by this fix). Owner Decision: Approved explicitly ("Yes, approve both DB fixes — go ahead and apply them").
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 136 has full detail.
+
+## BR-local-dev-db-drift-systemobservation-specialityids — Local dev DB (`his_local`)'s `emr.m_system_observation_master` was missing its `speciality_ids` column entirely, blocking `systemObservationMaster` saves — found during Phase 4 batch 11's Step 5 live testing (2026-07-22)
+
+**Not a business rule — a local-dev-environment gap, same class as every other `BR-local-dev-db-drift-*` entry this session.** Confirmed via `catalina.out`: a real save attempt on `systemObservationMaster` threw `org.hibernate.exception.SQLGrammarException` / `PSQLException: ERROR: column "speciality_ids" of relation "m_system_observation_master" does not exist`. `SystemObervationMaster.java:65-66` (`@Column(name="speciality_ids") private String specialityIds;`) is real and correctly mapped in Java — the column simply never existed on the live table in this environment (confirmed via `\d emr.m_system_observation_master`).
+
+**Fixed via a single, additive `ALTER TABLE`, owner-approved before applying:**
+```sql
+ALTER TABLE emr.m_system_observation_master ADD COLUMN speciality_ids character varying(255);
+```
+Column type/length derived from the entity's plain `String` field (no explicit `@Column(length=...)`, so JPA's default `varchar(255)` applies), matching the exact methodology of every prior entry in this class. Verified live: a real save (`OBS2`/`Test Observation Two`, System "Duplicate Attempt System", Speciality "General Medicine") after the fix returned `status: success`.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Yes, approve both DB fixes — go ahead and apply them").
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 136 has full detail.

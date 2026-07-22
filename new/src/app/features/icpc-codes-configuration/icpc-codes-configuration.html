@@ -1,0 +1,148 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="icpcSystem">System<span class="required">*</span></label>
+        <select
+          id="icpcSystem"
+          [ngModel]="selectedIcpcSystemId()"
+          (ngModelChange)="selectedIcpcSystemId.set($event)"
+          name="icpcSystem"
+          [class.invalid]="isFieldInvalid()"
+        >
+          <option value="">Select System</option>
+          @for (sys of icpcSystemList(); track sys.icpcSystemId) {
+            <option [value]="sys.icpcSystemId">{{ sys.icpcSystemDesc }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field multiselect-field">
+        <label>Specialty<span class="required">*</span></label>
+        <div class="multiselect-dropdown">
+          <button type="button" class="multiselect-toggle" (click)="toggleSpecialityDropdown()">
+            @if (selectedSpecialityLabels().length) {
+              {{ selectedSpecialityLabels().join(', ') }}
+            } @else {
+              Select Specialty
+            }
+          </button>
+          @if (showSpecialityDropdown()) {
+            <div class="multiselect-panel">
+              @for (speciality of specialityMasterList(); track speciality.id) {
+                <label class="checkbox-row">
+                  <input
+                    type="checkbox"
+                    [checked]="isSpecialityChecked(speciality.id)"
+                    (change)="toggleSpeciality(speciality.id)"
+                  />
+                  {{ speciality.label }}
+                </label>
+              }
+            </div>
+          }
+        </div>
+        @if (isSpecialitySelectionInvalid()) {
+          <p class="help-block">Please Select Speciality</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      records
+    </label>
+
+    <button type="button" class="btn-primary" title="Save" (click)="save()">Save</button>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>System</th>
+        <th class="text-center">Specialty</th>
+        <th class="text-center width8">Status(n)</th>
+        <th class="text-center width8">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.icpcCodeConfigurationId) {
+        <tr>
+          <td>{{ row.systemName }}</td>
+          <td class="text-center">
+            <i class="fa fa-info-circle" aria-hidden="true" (click)="viewSpecialityDetails(row)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="fa fa-pencil" aria-hidden="true" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (page of pageNumbers(); track page) {
+        <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showSpecialityDetailsModal()) {
+  <div class="modal-backdrop" (click)="closeSpecialityDetailsModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Specialty Details
+        <button type="button" (click)="closeSpecialityDetailsModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Specialty</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of specialityDetailsForModal(); track s.icpcCodeConfigurationMpprId) {
+              <tr>
+                <td>{{ s.specialityName }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closeSpecialityDetailsModal()">Ok</button>
+      </div>
+    </div>
+  </div>
+}

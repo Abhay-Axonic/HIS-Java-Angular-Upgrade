@@ -1,0 +1,93 @@
+// Screen-specific layout only -- shared table/pagination/modal/toolbar
+// styles live in src/styles.scss (see that file's header comment).
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.checkbox-field {
+  align-self: center;
+}
+
+.multiselect-field {
+  position: relative;
+}
+
+.multiselect-dropdown {
+  position: relative;
+}
+
+.multiselect-toggle {
+  min-width: 220px;
+  text-align: left;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.multiselect-panel {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 6px 0;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.modal-large {
+  min-width: 600px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+}
+
+.disabled {
+  opacity: 0.4;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 12px;
+
+  .active {
+    font-weight: bold;
+  }
+}

@@ -1,0 +1,147 @@
+<!--
+  Rebuild of views/Linen/linen-issue-pending-details.html. The legacy
+  "Get Indent" modal (view:291-638) and the "Smart Issue" icon (view:49-51)
+  are dropped -- confirmed dead, zero live bindings, see
+  linen-issue-pending-details.ts's class doc comment, finding 1.
+-->
+<div class="container-fluid his-style">
+  <fieldset class="main-fieldset">
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-top10">
+        <b>Indent No. :</b> {{ detail().indentNo }}
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-top10">
+        <b>Indent Date:</b> {{ detail().indentDate | date: 'dd/MM/yyyy' }}
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-top10">
+        <b>Requesting Store :</b> {{ detail().fromStoreName }}
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-top10">
+        <b>Issuing Store:</b> {{ detail().toStoreName }}
+      </div>
+    </div>
+    <div class="row margin-top10">
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-top10">
+        <b>Priority :</b> {{ detail().priorityName }}
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="row padding-top10">
+    <div class="table-container padding-top5">
+      <table class="table table-striped table-hover table-condensed table-bordered">
+        <thead>
+          <tr class="table-th-bg">
+            <th class="width1 text-center"></th>
+            <th class="width6">Linen Code</th>
+            <th class="width8">Linen Name</th>
+            <th class="width8">Indent Qty</th>
+            <th class="width8">Pending Indent Qty</th>
+            <th class="width8">Stock Available</th>
+            <th class="width6">Issue Qty</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of detail().items; track item.id) {
+            <tr class="table-th-bg cursor-pointer">
+              <td class="width1 text-center">
+                <a class="cursor-pointer" [class.disabled]="item.pendingQuantity === 0" (click)="toggleItem(item)">
+                  <i class="fa" [class.fa-minus-circle]="activeItemId() === item.itemId" [class.fa-plus-circle]="activeItemId() !== item.itemId"></i>
+                </a>
+              </td>
+              <td class="width6">{{ item.itemCode }}</td>
+              <td class="width8">{{ item.itemName }}</td>
+              <td class="width8">{{ item.quantity }}</td>
+              <td class="width8">{{ item.pendingQuantity }}</td>
+              <td class="width8">{{ item.stockAvailable }}</td>
+              <td>{{ itemIssueTotal(item) }}</td>
+            </tr>
+            @if (activeItemId() === item.itemId) {
+              <tr>
+                <td colspan="7">
+                  <div class="selectedServicesList">
+                    <table class="table table-striped table-hover table-condensed table-bordered">
+                      <thead>
+                        <tr>
+                          <th class="width8">Batch No.</th>
+                          <th class="width8">Expiry Date</th>
+                          <th class="width8">Available Stock Qty</th>
+                          <th class="width4">Issue Qty</th>
+                          <th class="width3">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (batches of item.batch; track $index) {
+                          <tr>
+                            <td class="width8">
+                              <select [(ngModel)]="batches.batchId" (ngModelChange)="batchOnChange(batches, item)">
+                                <option value="">Select Batch</option>
+                                @for (batch of item.batch; track $index) {
+                                  <option [value]="batch.batchId">{{ batch.batchNo }}</option>
+                                }
+                              </select>
+                            </td>
+                            <td class="width8">{{ batches.expiry | date: 'MMM-yyyy' }}</td>
+                            <td class="width8">{{ batches.availableStockQuantity }}</td>
+                            <td class="width4">
+                              <input type="text" autocomplete="off" class="w-100" [(ngModel)]="batches.issueQuantity" />
+                            </td>
+                            <td>
+                              <input type="button" value="+" (click)="addDuplicateRow(item)" class="btn btn-info add-dynamic-row addbtn" />
+                              @if (item.batch.length > 1) {
+                                <input type="button" value="-" (click)="removeRowData(item)" class="btn btn-info addbtn" />
+                              }
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="row his-style padding-top10">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <div class="row input-container">
+        <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon">
+          <i class="fa fa-caret-square-o-right" aria-hidden="true"></i>
+        </div>
+        <div class="col-lg-11 col-sm-11 col-md-11">
+          <select class="text-input floating-label" [ngModel]="selectedCarrierId()" (ngModelChange)="selectedCarrierId.set($event)">
+            <option [ngValue]="null">Select Carrier</option>
+            @for (carrier of detail().carrier; track carrier.id) {
+              <option [ngValue]="carrier.id">{{ carrier.carrierName }}</option>
+            }
+          </select>
+          <label>Carrier</label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1 text-right">
+      <b><label>Remark:</label></b>
+    </div>
+    <div class="col-md-7 padding-left-right8">
+      <textarea rows="1" class="form-control" [ngModel]="remark()" (ngModelChange)="remark.set($event)"></textarea>
+    </div>
+    <div class="col-md-1">
+      <input
+        type="button"
+        value="Save"
+        [disabled]="!selectedCarrierId()"
+        (click)="approvePending()"
+        class="btn btn-primary btn-save-box-shadow"
+      />
+    </div>
+    <div class="col-md-1">
+      <a routerLink="/linenIssue">
+        <input type="button" value="Back" class="btn btn-primary btn-save-box-shadow" />
+      </a>
+    </div>
+  </footer>
+</div>

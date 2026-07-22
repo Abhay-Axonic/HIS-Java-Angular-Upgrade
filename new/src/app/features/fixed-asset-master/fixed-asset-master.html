@@ -1,0 +1,241 @@
+<section class="page">
+  <fieldset>
+    <div class="filter-row">
+      <div class="field">
+        <label for="assetType">Asset Type<span class="required">*</span></label>
+        <select
+          id="assetType"
+          [ngModel]="assetType()"
+          (ngModelChange)="onAssetTypeChange($event)"
+          name="assetType"
+        >
+          @for (t of assetTypeDropdown(); track t.id) {
+            <option [ngValue]="t">{{ t.type }}</option>
+          }
+        </select>
+        @if (isAssetTypeIdValid()) {
+          <p class="help-block">Enter Asset Type</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="assetCategory">Asset Category<span class="required">*</span></label>
+        <select
+          id="assetCategory"
+          [ngModel]="assetCategory()"
+          (ngModelChange)="onAssetCategoryChange($event)"
+          name="assetCategory"
+        >
+          @for (c of assetCategoryDropdown(); track c.id) {
+            <option [ngValue]="c">{{ c.category }}</option>
+          }
+        </select>
+        @if (isValidCode()) {
+          <p class="help-block">Enter Asset Category Code</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="productCategory">Product Category<span class="required">*</span></label>
+        <select
+          id="productCategory"
+          [ngModel]="productCategory()"
+          (ngModelChange)="productCategory.set($event); onProductCategoryChange()"
+          name="productCategory"
+        >
+          @for (p of productCategoryDropdown(); track p.id) {
+            <option [ngValue]="p">{{ p.category }}</option>
+          }
+        </select>
+        @if (isValidProductCat()) {
+          <p class="help-block">Enter Product Category</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="itemCode">Item Code<span class="required">*</span></label>
+        <input
+          id="itemCode"
+          type="text"
+          autocomplete="off"
+          maxlength="10"
+          [ngModel]="itemCode()"
+          (ngModelChange)="itemCode.set($event); isValidItemCode.set(false)"
+          name="itemCode"
+        />
+        @if (isValidItemCode()) {
+          <p class="help-block">Enter Item Code</p>
+        }
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <div class="field">
+        <label for="productCode">Product Code<span class="required">*</span></label>
+        <input
+          id="productCode"
+          type="text"
+          autocomplete="off"
+          maxlength="10"
+          [ngModel]="productCode()"
+          (ngModelChange)="productCode.set($event); isValidProductCode.set(false)"
+          name="productCode"
+        />
+        @if (isValidProductCode()) {
+          <p class="help-block">Enter Product Code</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="assetName">Asset Name<span class="required">*</span></label>
+        <input
+          id="assetName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="assetName()"
+          (ngModelChange)="assetName.set($event); isValidAssetName.set(false)"
+          name="assetName"
+        />
+        @if (isValidAssetName()) {
+          <p class="help-block">Enter Asset Name</p>
+        }
+      </div>
+
+      <div class="field typeahead">
+        <label for="manufacturer">Manufacturer<span class="required">*</span></label>
+        <input
+          id="manufacturer"
+          type="text"
+          autocomplete="off"
+          placeholder="Search"
+          [ngModel]="manufacturer()"
+          (ngModelChange)="onManufacturerInput($event)"
+          name="manufacturer"
+        />
+        @if (manufacturerResults().length) {
+          <ul class="typeahead-list">
+            @for (m of manufacturerResults(); track m.id) {
+              <li (mousedown)="selectManufacturer(m)">{{ m.detail }}</li>
+            }
+          </ul>
+        }
+        @if (isValidManufacturer()) {
+          <p class="help-block">Enter Manufacturer</p>
+        }
+      </div>
+
+      <div class="field checkbox-field">
+        <label><input type="checkbox" [ngModel]="isCritical()" (ngModelChange)="isCritical.set($event)" name="isCritical" /> Is critical</label>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <div class="field checkbox-field">
+        <label><input type="checkbox" [ngModel]="isCSSD()" (ngModelChange)="isCSSD.set($event)" name="isCSSD" /> Is CSSD</label>
+      </div>
+      <div class="field checkbox-field">
+        <label><input type="checkbox" [ngModel]="isModality()" (ngModelChange)="isModality.set($event)" name="isModality" /> Is Modality</label>
+      </div>
+      <div class="field checkbox-field">
+        <label><input type="checkbox" [ngModel]="isChargeableEquipment()" (ngModelChange)="isChargeableEquipment.set($event)" name="isChargeableEquipment" /> Is Chargeable Equipment</label>
+      </div>
+      <div class="field checkbox-field">
+        <label><input type="checkbox" [ngModel]="isAccessories()" (ngModelChange)="isAccessories.set($event)" name="isAccessories" /> Is Accessories</label>
+      </div>
+      <div class="field checkbox-field">
+        <label><input type="checkbox" [ngModel]="isSpares()" (ngModelChange)="isSpares.set($event)" name="isSpares" /> Is Spares</label>
+      </div>
+      <div class="field checkbox-field">
+        <label><input type="checkbox" [ngModel]="isDialyser()" (ngModelChange)="isDialyser.set($event)" name="isDialyser" /> Is Dialyser</label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      records
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    <button type="button" class="btn-primary" (click)="clearSearchAndFields()">Clear</button>
+
+    <button type="button" class="btn-primary" title="Save" [class.disabled]="isSaveDisabledLook()" (click)="openConfirmModal()">
+      Save
+    </button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th class="sortable" (click)="sortBy('assetCategory')">Asset Category</th>
+        <th class="sortable" (click)="sortBy('productCategory')">Product Category</th>
+        <th class="sortable" (click)="sortBy('assetType')">Type</th>
+        <th class="sortable" (click)="sortBy('itemCode')">Item Code</th>
+        <th class="sortable" (click)="sortBy('productCode')">Product Code</th>
+        <th class="sortable" (click)="sortBy('name')">Asset Name</th>
+        <th class="sortable" (click)="sortBy('manufactureName')">Manufacturer</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.id) {
+        <tr>
+          <td>{{ row.assetCategory }}</td>
+          <td>{{ row.productCategory }}</td>
+          <td>{{ row.assetType }}</td>
+          <td>{{ row.itemCode }}</td>
+          <td>{{ row.productCode }}</td>
+          <td>{{ row.name }}</td>
+          <td>{{ row.manufactureName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status ?? false" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" [class.disabled]="!row.status" title="Edit" (click)="edit(row.id)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="9" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="save()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

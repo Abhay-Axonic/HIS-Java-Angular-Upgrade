@@ -1,0 +1,148 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="reasonTypeId">Reason Type<span class="required">*</span></label>
+        <select
+          id="reasonTypeId"
+          [ngModel]="form().reasonTypeId"
+          (ngModelChange)="updateField('reasonTypeId', $event)"
+          [class.invalid]="isReasonTypeInvalid()"
+          name="reasonTypeId"
+        >
+          <option value=""></option>
+          @for (rt of reasonTypeOptions(); track rt.reasonTypeId) {
+            <option [value]="rt.reasonTypeId">{{ rt.reasonTypeDesc }}</option>
+          }
+        </select>
+        @if (isReasonTypeInvalid()) {
+          <p class="help-block">Reason Type is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="reasonCode">Reason Code<span class="required">*</span></label>
+        <input
+          id="reasonCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().reasonCode"
+          (ngModelChange)="updateField('reasonCode', $event)"
+          [class.invalid]="isCodeInvalid()"
+          name="reasonCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Reason Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="reasonDescription">Reason Description<span class="required">*</span></label>
+        <input
+          id="reasonDescription"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().reasonDescription"
+          (ngModelChange)="updateField('reasonDescription', $event)"
+          [class.invalid]="isDescInvalid()"
+          name="reasonDescription"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Reason Description is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      name="searchKeyword"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Reason Type</th>
+        <th>Reason Code</th>
+        <th>Reason Description</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.reasonMasterId) {
+        <tr>
+          <td>{{ row.reasonTypeDesc }}</td>
+          <td>{{ row.reasonCode }}</td>
+          <td>{{ row.reasonDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="5" class="text-center"></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

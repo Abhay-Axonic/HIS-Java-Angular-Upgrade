@@ -1,0 +1,545 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="organizationId">Organization<span class="required">*</span></label>
+        <select
+          id="organizationId"
+          [ngModel]="record().organizationId"
+          (ngModelChange)="onOrganizationChange($event)"
+          name="organizationId"
+          [class.invalid]="formSubmitted() && record().organizationId === ''"
+        >
+          <option [ngValue]="''">Select</option>
+          @for (o of organizationList(); track o.organizationId) {
+            <option [ngValue]="o.organizationId">{{ o.organizationName }}</option>
+          }
+        </select>
+        @if (formSubmitted() && record().organizationId === '') {
+          <p class="help-block">Organization is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="unitCode">Hospital Code<span class="required">*</span></label>
+        <input
+          id="unitCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().unitCode"
+          (ngModelChange)="updateField('unitCode', $event)"
+          name="unitCode"
+          [class.invalid]="formSubmitted() && !record().unitCode.trim()"
+        />
+      </div>
+
+      <div class="field">
+        <label for="unitName">Hospital Name<span class="required">*</span></label>
+        <input
+          id="unitName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().unitName"
+          (ngModelChange)="updateField('unitName', $event)"
+          name="unitName"
+          [class.invalid]="formSubmitted() && !record().unitName.trim()"
+        />
+      </div>
+
+      <div class="field">
+        <label for="registrationNumber">Registration Number<span class="required">*</span></label>
+        <input
+          id="registrationNumber"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().registrationNumber"
+          (ngModelChange)="updateField('registrationNumber', $event)"
+          name="registrationNumber"
+          [class.invalid]="formSubmitted() && !record().registrationNumber.trim()"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field wide">
+        <label for="unitAddress">Address<span class="required">*</span></label>
+        <textarea
+          id="unitAddress"
+          [ngModel]="record().unitAddress"
+          (ngModelChange)="updateField('unitAddress', $event)"
+          name="unitAddress"
+          [class.invalid]="formSubmitted() && !record().unitAddress.trim()"
+        ></textarea>
+      </div>
+
+      <div class="field">
+        <label for="unitCountryId">Choose Country<span class="required">*</span></label>
+        <select
+          id="unitCountryId"
+          [ngModel]="record().unitCountryId"
+          (ngModelChange)="onCountryChange($event)"
+          name="unitCountryId"
+        >
+          <option [ngValue]="''">Select</option>
+          @for (c of countryList(); track c.countryId) {
+            <option [ngValue]="c.countryId">{{ c.countryName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="unitStateId">Choose State<span class="required">*</span></label>
+        <select id="unitStateId" [ngModel]="record().unitStateId" (ngModelChange)="onStateChange($event)" name="unitStateId">
+          <option [ngValue]="''">Select</option>
+          @for (s of stateList(); track s.stateId) {
+            <option [ngValue]="s.stateId">{{ s.stateName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="unitDistrictId">Choose District<span class="required">*</span></label>
+        <select
+          id="unitDistrictId"
+          [ngModel]="record().unitDistrictId"
+          (ngModelChange)="onDistrictChange($event)"
+          name="unitDistrictId"
+        >
+          <option [ngValue]="''">Select</option>
+          @for (d of districtList(); track d.districtId) {
+            <option [ngValue]="d.districtId">{{ d.districtName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="unitCityId">Choose City<span class="required">*</span></label>
+        <select id="unitCityId" [ngModel]="record().unitCityId" (ngModelChange)="onCityChange($event)" name="unitCityId">
+          <option [ngValue]="''">Select</option>
+          @for (c of cityList(); track c.cityId) {
+            <option [ngValue]="c.cityId">{{ c.cityName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field typeahead">
+        <label for="areaName">Choose Area<span class="required">*</span></label>
+        <input
+          id="areaName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().areaName"
+          (ngModelChange)="onAreaSearchChange($event)"
+          name="areaName"
+        />
+        @if (areaResults().length) {
+          <ul class="typeahead-list">
+            @for (a of areaResults(); track a.areaId) {
+              <li (mousedown)="selectArea(a)">{{ a.areaName }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="field">
+        <label for="postCode">PinCode<span class="required">*</span></label>
+        <input
+          id="postCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().postCode"
+          (ngModelChange)="updateField('postCode', $event)"
+          name="postCode"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="unitContact">Contact No.<span class="required">*</span></label>
+        <input
+          id="unitContact"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().unitContact"
+          (ngModelChange)="updateField('unitContact', $event)"
+          name="unitContact"
+        />
+      </div>
+
+      <div class="field">
+        <label for="unitEmailId">Email Id<span class="required">*</span></label>
+        <input
+          id="unitEmailId"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().unitEmailId"
+          (ngModelChange)="updateField('unitEmailId', $event)"
+          name="unitEmailId"
+        />
+      </div>
+
+      <div class="field">
+        <label for="unitTimeZone">Choose Time Zone<span class="required">*</span></label>
+        <select
+          id="unitTimeZone"
+          [ngModel]="record().unitTimeZone"
+          (ngModelChange)="updateField('unitTimeZone', $event)"
+          name="unitTimeZone"
+        >
+          <option value="">Select</option>
+          @for (tz of timezoneList(); track tz.value) {
+            <option [value]="tz.value">{{ tz.code }} {{ tz.value }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Hospital Logo</label>
+        <input type="file" (change)="onLogoSelected($event)" />
+        @if (uploadProgress.progress(); as progress) {
+          <span>{{ progress * 100 | number: '1.0-0' }}%</span>
+        }
+        @if (imageSrc()) {
+          <img [src]="imageSrc()" alt="Hospital logo" style="width: 78px; height: 52px" />
+        }
+      </div>
+
+      @if (editMode() && isSuperAdmin() === 'Y') {
+        <div class="field">
+          <button type="button" class="btn-primary" (click)="openSubscriptionPopup()">Subscription</button>
+        </div>
+      }
+    </div>
+
+    <div class="form-row">
+      <div class="field checkbox-field">
+        <label class="checkbox-inline">
+          <input
+            type="checkbox"
+            [ngModel]="record().processingUnit"
+            (ngModelChange)="updateField('processingUnit', $event)"
+            name="processingUnit"
+          />
+          Is Lab Processing Unit
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      name="searchKeyword"
+      autocomplete="off"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Organization</th>
+        <th>Hospital Code</th>
+        <th>Hospital Name</th>
+        <th>Registration Number</th>
+        <th>Address</th>
+        <th>Country</th>
+        <th>State</th>
+        <th>City</th>
+        <th>Pincode</th>
+        <th>Contact No.</th>
+        <th>Email Id</th>
+        <th>Processing Unit</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.unitId) {
+        <tr>
+          <td>{{ row.organizationName }}</td>
+          <td>{{ row.unitCode }}</td>
+          <td>{{ row.unitName }}</td>
+          <td>{{ row.registrationNumber }}</td>
+          <td>{{ row.unitAddress }}</td>
+          <td>{{ row.countryName }}</td>
+          <td>{{ row.stateName }}</td>
+          <td>{{ row.cityName }}</td>
+          <td>{{ row.postCode }}</td>
+          <td>{{ row.unitContact }}</td>
+          <td>{{ row.unitEmailId }}</td>
+          <td>{{ row.processingUnit }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(row.unitId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="14" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+<!-- Subscription Details modal (mirrors #subscriptionDetails, view:647-804) -->
+@if (showSubscriptionModal()) {
+  <div class="modal-backdrop" (click)="closeSubscriptionPopup()">
+    <div class="modal modal-wide" (click)="$event.stopPropagation()">
+      <header>
+        Subscription Details
+        <button type="button" (click)="closeSubscriptionPopup()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="field">
+            <label for="subscriptionType">Subscription Type<span class="required">*</span></label>
+            <select
+              id="subscriptionType"
+              [ngModel]="subscriptionConfig().subscriptionType"
+              (ngModelChange)="updateSubscriptionConfigField('subscriptionType', $event)"
+              name="subscriptionType"
+            >
+              <option value="">Select</option>
+              @for (t of subscriptionTypeList(); track t.code) {
+                <option [value]="t.code">{{ t.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label for="subscriptionAmount">Subscription amount<span class="required">*</span></label>
+            <input
+              id="subscriptionAmount"
+              type="number"
+              [ngModel]="subscriptionConfig().subscriptionAmount"
+              (ngModelChange)="updateSubscriptionConfigField('subscriptionAmount', $event)"
+              name="subscriptionAmount"
+            />
+          </div>
+          <div class="field">
+            <label for="subscriptionDiscount">Discount amount<span class="required">*</span></label>
+            <input
+              id="subscriptionDiscount"
+              type="number"
+              [ngModel]="subscriptionConfig().subscriptionDiscount"
+              (ngModelChange)="updateSubscriptionConfigField('subscriptionDiscount', $event)"
+              name="subscriptionDiscount"
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="subscriptionTax">Tax amount<span class="required">*</span></label>
+            <input
+              id="subscriptionTax"
+              type="number"
+              [ngModel]="subscriptionConfig().subscriptionTax"
+              (ngModelChange)="updateSubscriptionConfigField('subscriptionTax', $event)"
+              name="subscriptionTax"
+            />
+          </div>
+          <div class="field">
+            <label for="subscriptionNetAmount">Net amount<span class="required">*</span></label>
+            <input
+              id="subscriptionNetAmount"
+              type="number"
+              [ngModel]="subscriptionConfig().subscriptionNetAmount"
+              (ngModelChange)="updateSubscriptionConfigField('subscriptionNetAmount', $event)"
+              name="subscriptionNetAmount"
+            />
+          </div>
+        </div>
+
+        <label class="section-label">Subscription History:</label>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Amount</th>
+              <th>Discount</th>
+              <th>Tax</th>
+              <th>Net Amount</th>
+              <th>Paid Amount</th>
+              <th>Amount Status</th>
+              <th>Created Date</th>
+              <th>Remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (h of subscriptionHistory(); track $index) {
+              <tr>
+                <td>{{ h.subscriptionStartDateString }}</td>
+                <td>{{ h.subscriptionEndDateString }}</td>
+                <td>{{ h.subscriptionType }}</td>
+                <td>{{ h.subscriptionStatus }}</td>
+                <td>{{ h.subscriptionAmount }}</td>
+                <td>{{ h.subscriptionDiscount }}</td>
+                <td>{{ h.subscriptionTax }}</td>
+                <td>{{ h.subscriptionNetAmount }}</td>
+                <td>{{ h.paidAmount }}</td>
+                <td>{{ h.amountPaidStatus }}</td>
+                <td>{{ h.createdDate }}</td>
+                <td>{{ h.remark }}</td>
+              </tr>
+            }
+            @if (!subscriptionHistory().length) {
+              <tr>
+                <td colspan="12" class="text-center">No Records Found</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn-primary"
+          title="Create Subscription"
+          [disabled]="!canCreateSubscription()"
+          (click)="openManualSubscriptionPopup()"
+        >
+          Create Subscription
+        </button>
+        <button type="button" class="btn-primary" title="Create Configuration" (click)="createSubscriptionConfig()">
+          Create Configuration
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Create Subscription (manual) modal (mirrors #manualSubscription, view:805-991) -->
+@if (showManualSubscriptionModal() && manualSubscription(); as m) {
+  <div class="modal-backdrop" (click)="closeManualSubscriptionPopup()">
+    <div class="modal modal-wide" (click)="$event.stopPropagation()">
+      <header>
+        Create Subscription
+        <button type="button" (click)="closeManualSubscriptionPopup()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="field">
+            <label>Subscription type</label>
+            <input type="text" [value]="m.subscriptionType" disabled />
+          </div>
+          <div class="field">
+            <label>Subscription amount</label>
+            <input type="text" [value]="m.subscriptionAmount" disabled />
+          </div>
+          <div class="field">
+            <label>Discount amount</label>
+            <input type="text" [value]="m.subscriptionDiscount" disabled />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Tax amount</label>
+            <input type="text" [value]="m.subscriptionTax" disabled />
+          </div>
+          <div class="field">
+            <label>Net amount</label>
+            <input type="text" [value]="m.subscriptionNetAmount" disabled />
+          </div>
+          <div class="field">
+            <label>Payment Type</label>
+            <input type="text" [value]="m.paymentType" disabled />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="subscriptionStartDate">Start date<span class="required">*</span></label>
+            <input
+              id="subscriptionStartDate"
+              type="date"
+              (change)="onSubscriptionStartDateChange($any($event.target).value)"
+            />
+          </div>
+          <div class="field">
+            <label>End Date<span class="required">*</span></label>
+            <input type="text" [value]="m.subscriptionEndDate ? (m.subscriptionEndDate | date: 'dd/MM/yyyy') : ''" disabled />
+          </div>
+          <div class="field">
+            <label for="paidAmount">Paid Amount<span class="required">*</span></label>
+            <input
+              id="paidAmount"
+              type="number"
+              [ngModel]="m.paidAmount"
+              (ngModelChange)="updateManualField('paidAmount', $event)"
+              name="paidAmount"
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field checkbox-field">
+            <label class="checkbox-inline">
+              <input
+                type="checkbox"
+                [ngModel]="m.amountPaidStatus === 'PAID'"
+                (ngModelChange)="updateManualField('amountPaidStatus', $event ? 'PAID' : 'UNPAID')"
+                name="amountPaidStatus"
+                disabled
+              />
+              Amount Paid
+            </label>
+          </div>
+          <div class="field wide">
+            <label for="remark">Remark</label>
+            <textarea
+              id="remark"
+              [ngModel]="m.remark"
+              (ngModelChange)="updateManualField('remark', $event)"
+              name="remark"
+              [disabled]="m.amountPaidStatus === 'UNPAID'"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="createSubscription()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+}

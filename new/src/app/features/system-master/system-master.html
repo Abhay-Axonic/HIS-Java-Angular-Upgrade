@@ -1,0 +1,170 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="systemCode">System Code<span class="required">*</span></label>
+        <input
+          id="systemCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="system().systemCode"
+          (ngModelChange)="updateField('systemCode', $event)"
+          name="systemCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">System code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="systemName">System Name<span class="required">*</span></label>
+        <input
+          id="systemName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="system().systemName"
+          (ngModelChange)="updateField('systemName', $event)"
+          name="systemName"
+          [class.invalid]="isNameInvalid()"
+        />
+      </div>
+
+      <div class="field">
+        <!-- Gender's "required" marker is decorative in legacy -- see class comment, not enforced here either. -->
+        <label for="genders">Gender<span class="required">*</span></label>
+        <select id="genders" class="gender-select" multiple size="4" name="genders" (change)="onGenderSelectionChange($any($event.target))">
+          @for (g of genderOptions(); track g.id) {
+            <option [value]="g.id" [selected]="selectedGenderIds().includes(g.id)">{{ g.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="examination">Type<span class="required">*</span></label>
+        <select
+          id="examination"
+          [ngModel]="system().typeId"
+          (ngModelChange)="updateField('typeId', $event)"
+          name="examination"
+          [class.invalid]="isTypeInvalid()"
+        >
+          <option [ngValue]="null"></option>
+          @for (t of examinationTypes; track t.typeId) {
+            <option [ngValue]="t.typeId">{{ t.typeName }}</option>
+          }
+        </select>
+        @if (isTypeInvalid()) {
+          <p class="help-block">Type is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>System Code</th>
+        <th>System Name</th>
+        <th>Type</th>
+        <th>Gender</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredList(); track row.systemId) {
+        <tr>
+          <td>{{ row.systemCode }}</td>
+          <td>{{ row.systemName }}</td>
+          <td>
+            @if (row.typeId === 1) {
+              General Examination
+            } @else if (row.typeId === 2) {
+              Systemic Examination
+            } @else if (row.typeId === 3) {
+              Both
+            }
+          </td>
+          <td class="text-center">
+            <i class="fa fa-info-circle" aria-hidden="true" (click)="showFieldList(row.systemId)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="fa fa-pencil" aria-hidden="true" (click)="edit(row.systemId)"></i>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showGenderDetailsModal()) {
+  <div class="modal-backdrop" (click)="closeGenderDetailsModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Gender Details
+        <button type="button" (click)="closeGenderDetailsModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Sr No.</th>
+              <th>Gender</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (g of genderDetailRows(); track $index) {
+              <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ g.genderDesc }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

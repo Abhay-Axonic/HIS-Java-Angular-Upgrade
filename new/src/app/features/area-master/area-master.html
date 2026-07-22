@@ -1,0 +1,215 @@
+<section class="page">
+  <fieldset>
+    <div class="filter-row">
+      <div class="field">
+        <label for="countryId">Country<span class="required">*</span></label>
+        <select
+          id="countryId"
+          [ngModel]="area().countryId"
+          (ngModelChange)="onCountryChange($event)"
+          name="countryId"
+          [class.invalid]="isRequiredMissing(area().countryId)"
+        >
+          <option value=""></option>
+          @for (c of countryList(); track c.countryId) {
+            <option [value]="c.countryId">{{ c.countryName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(area().countryId)) {
+          <p class="help-block">Country is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="stateId">State<span class="required">*</span></label>
+        <select
+          id="stateId"
+          [ngModel]="area().stateId"
+          (ngModelChange)="onStateChange($event)"
+          name="stateId"
+          [class.invalid]="isRequiredMissing(area().stateId)"
+        >
+          <option value=""></option>
+          @for (s of stateList(); track s.stateId) {
+            <option [value]="s.stateId">{{ s.stateName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(area().stateId)) {
+          <p class="help-block">State is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="districtId">District<span class="required">*</span></label>
+        <select
+          id="districtId"
+          [ngModel]="area().districtId"
+          (ngModelChange)="onDistrictChange($event)"
+          name="districtId"
+          [class.invalid]="isRequiredMissing(area().districtId)"
+        >
+          <option value=""></option>
+          @for (d of districtList(); track d.districtId) {
+            <option [value]="d.districtId">{{ d.districtName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(area().districtId)) {
+          <p class="help-block">District is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="cityId">City<span class="required">*</span></label>
+        <select
+          id="cityId"
+          [ngModel]="area().cityId"
+          (ngModelChange)="updateAreaField('cityId', $event)"
+          name="cityId"
+          [class.invalid]="isRequiredMissing(area().cityId)"
+        >
+          <option value=""></option>
+          @for (c of cityList(); track c.cityId) {
+            <option [value]="c.cityId">{{ c.cityName }}</option>
+          }
+        </select>
+        @if (isRequiredMissing(area().cityId)) {
+          <p class="help-block">City is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="areaCode">Code<span class="required">*</span></label>
+        <input
+          id="areaCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="area().areaCode"
+          (ngModelChange)="updateAreaField('areaCode', $event)"
+          name="areaCode"
+          [class.invalid]="isRequiredMissing(area().areaCode)"
+        />
+        @if (isRequiredMissing(area().areaCode)) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="areaName">Area<span class="required">*</span></label>
+        <input
+          id="areaName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="area().areaName"
+          (ngModelChange)="updateAreaField('areaName', $event)"
+          name="areaName"
+          [class.invalid]="isRequiredMissing(area().areaName)"
+        />
+        @if (isRequiredMissing(area().areaName)) {
+          <p class="help-block">Area Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="postCode">Post Code<span class="required">*</span></label>
+        <input
+          id="postCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="area().postCode"
+          (ngModelChange)="updateAreaField('postCode', $event)"
+          name="postCode"
+          [class.invalid]="isRequiredMissing(area().postCode)"
+        />
+        @if (isRequiredMissing(area().postCode)) {
+          <p class="help-block">Post Code is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="saveArea()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="updateArea()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>State</th>
+        <th>District</th>
+        <th>City</th>
+        <th>Code</th>
+        <th>Area</th>
+        <th>Post Code</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.areaId) {
+        <tr>
+          <td>{{ row.countryName }}</td>
+          <td>{{ row.stateName }}</td>
+          <td>{{ row.districtName }}</td>
+          <td>{{ row.cityName }}</td>
+          <td>{{ row.areaCode }}</td>
+          <td>{{ row.areaName }}</td>
+          <td>{{ row.postCode }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center"><i class="icon-edit" (click)="edit(row.areaId)"></i></td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="9" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

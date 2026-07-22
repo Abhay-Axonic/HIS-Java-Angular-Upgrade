@@ -1,0 +1,283 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="typeId">Type<span class="required">*</span></label>
+        <select
+          id="typeId"
+          [ngModel]="typeId()"
+          (ngModelChange)="onTypeChange($event)"
+          name="typeId"
+          [class.invalid]="submitted() && !typeId()"
+        >
+          <option value="">Select</option>
+          @for (t of examinationTypes; track t.typeId) {
+            <option [value]="t.typeId">{{ t.typeName }}</option>
+          }
+        </select>
+        @if (submitted() && !typeId()) {
+          <p class="help-block">Type is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="systemId">System<span class="required">*</span></label>
+        <select
+          id="systemId"
+          [ngModel]="systemId()"
+          (ngModelChange)="systemId.set($event)"
+          name="systemId"
+          [class.invalid]="submitted() && !systemId()"
+        >
+          <option value="">Select</option>
+          @for (s of systemList(); track s.systemId) {
+            <option [value]="s.systemId">{{ s.systemName }}</option>
+          }
+        </select>
+        @if (submitted() && !systemId()) {
+          <p class="help-block">System is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="observationCode">Observation Code<span class="required">*</span></label>
+        <input
+          type="text"
+          id="observationCode"
+          autocomplete="off"
+          [ngModel]="observationCode()"
+          (ngModelChange)="observationCode.set($event)"
+          name="observationCode"
+          [class.invalid]="submitted() && !observationCode().trim()"
+        />
+        @if (submitted() && !observationCode().trim()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="observationName">Observation Name<span class="required">*</span></label>
+        <input
+          type="text"
+          id="observationName"
+          autocomplete="off"
+          [ngModel]="observationName()"
+          (ngModelChange)="observationName.set($event)"
+          name="observationName"
+          [class.invalid]="submitted() && !observationName().trim()"
+        />
+        @if (submitted() && !observationName().trim()) {
+          <p class="help-block">Name is required</p>
+        }
+      </div>
+
+      <div class="field multiselect-field">
+        <label>Speciality<span class="required">*</span></label>
+        <div class="multiselect-dropdown">
+          <button type="button" class="multiselect-toggle" (click)="toggleSpecialityDropdown()">
+            @if (selectedSpecialityLabels().length) {
+              {{ selectedSpecialityLabels().join(', ') }}
+            } @else {
+              Select Speciality
+            }
+          </button>
+          @if (showSpecialityDropdown()) {
+            <div class="multiselect-panel">
+              @for (speciality of specialityDropdownOptions(); track speciality.id) {
+                <label class="checkbox-row">
+                  <input
+                    type="checkbox"
+                    [checked]="isSpecialityChecked(speciality.id)"
+                    (change)="toggleSpeciality(speciality.id)"
+                  />
+                  {{ speciality.label }}
+                </label>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label class="checkbox-inline">
+        <input
+          type="checkbox"
+          [checked]="isPropertyRequired() === 'Y'"
+          (change)="isPropertyRequired.set(isPropertyRequired() === 'Y' ? 'N' : 'Y')"
+        />
+        Property Required
+      </label>
+    </div>
+
+    @if (isPropertyRequired() === 'Y') {
+      <div class="form-row property-drafts">
+        @for (draft of propertyDrafts(); track $index) {
+          <div class="property-draft-row">
+            <input
+              type="text"
+              autocomplete="off"
+              placeholder="Property Name"
+              [ngModel]="draft.propertyName"
+              (ngModelChange)="updatePropertyDraft($index, $event)"
+              [name]="'propertyDraft' + $index"
+            />
+            <button type="button" class="btn-icon" (click)="addPropertyDraft()">+</button>
+            <button type="button" class="btn-icon" (click)="removePropertyDraft($index)">-</button>
+          </div>
+        }
+      </div>
+    }
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      records
+    </label>
+
+    <button type="button" class="btn-primary" title="Save" (click)="requestSave()">Save</button>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>System</th>
+        <th>Observations Code</th>
+        <th>Observations Name</th>
+        <th>Property Required</th>
+        <th class="text-center">Property Details</th>
+        <th class="text-center">Specialities</th>
+        <th class="text-center width8">Status(n)</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.observationId) {
+        <tr>
+          <td>{{ row.systemName }}</td>
+          <td>{{ row.observationCode }}</td>
+          <td>{{ row.observationName }}</td>
+          <td>{{ row.isPropertyRequired }}</td>
+          <td class="text-center">
+            <i class="fa fa-info-circle" aria-hidden="true" (click)="viewPropertyDetails(row)"></i>
+          </td>
+          <td class="text-center">
+            <i class="fa fa-info-circle" aria-hidden="true" (click)="viewSpecialityDetails(row)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleObservationStatus(row)" />
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="7" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (page of pageNumbers(); track page) {
+        <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showPropertyModal()) {
+  <div class="modal-backdrop" (click)="closePropertyModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Property Details
+        <button type="button" (click)="closePropertyModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Property Name</th>
+              <th class="text-center">Status(n)</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of propertyDetailsForModal(); track p.propertyId) {
+              <tr>
+                <td>{{ p.propertyName }}</td>
+                <td class="text-center">
+                  <app-status-toggle [checked]="p.status === 'A'" (toggled)="togglePropertyStatus(p)" />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showSpecialityModal()) {
+  <div class="modal-backdrop" (click)="closeSpecialityModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Specialities
+        <button type="button" (click)="closeSpecialityModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="text-center">Id</th>
+              <th>Speciality Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of specialityDetailsForModal(); track s.id) {
+              <tr>
+                <td class="text-center">{{ s.id }}</td>
+                <td>{{ s.specialityName }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="cancelConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="cancelConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <p>Are you sure you want to save this observation?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="cancelConfirmModal()">Cancel</button>
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+      </div>
+    </div>
+  </div>
+}

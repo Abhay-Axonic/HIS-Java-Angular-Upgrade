@@ -1,0 +1,27 @@
+// Screen-specific layout only -- shared table/pagination/modal/toolbar/
+// status-toggle styles live in src/styles.scss (see that file's header
+// comment) and shared/status-toggle/status-toggle.scss.
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+}
+
+// Purely decorative -- legacy's own sort-caret icons have no ng-click
+// anywhere either (see rejection-master.ts class comment).
+.sort-carets {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 4px;
+  font-size: 10px;
+  opacity: 0.5;
+}

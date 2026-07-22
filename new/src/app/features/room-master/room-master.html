@@ -1,0 +1,234 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="wardId">Ward<span class="required">*</span></label>
+        <select
+          id="wardId"
+          [ngModel]="form().wardId"
+          (ngModelChange)="onWardChange($event)"
+          name="wardId"
+          [class.invalid]="formSubmitted() && !form().wardId"
+        >
+          <option [ngValue]="null">Select Ward</option>
+          @for (w of wardList(); track w.wardId) {
+            <option [ngValue]="w.wardId">{{ w.wardName }}</option>
+          }
+        </select>
+        @if (formSubmitted() && !form().wardId) {
+          <p class="help-block">Ward is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="roomCode">Room Code<span class="required">*</span></label>
+        <input
+          id="roomCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().roomCode"
+          (ngModelChange)="updateFormField('roomCode', $event)"
+          name="roomCode"
+          [class.invalid]="formSubmitted() && !form().roomCode.trim()"
+        />
+        @if (formSubmitted() && !form().roomCode.trim()) {
+          <p class="help-block">Room Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="roomDesc">Room Description<span class="required">*</span></label>
+        <input
+          id="roomDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().roomDesc"
+          (ngModelChange)="updateFormField('roomDesc', $event)"
+          name="roomDesc"
+          [class.invalid]="formSubmitted() && !form().roomDesc.trim()"
+        />
+        @if (formSubmitted() && !form().roomDesc.trim()) {
+          <p class="help-block">Room Description is required</p>
+        }
+      </div>
+
+      @if (hideBed() === 'N') {
+        <div class="field">
+          <label for="bedCategoryId">Ward Bed Category<span class="required">*</span></label>
+          <select
+            id="bedCategoryId"
+            [ngModel]="form().bedCategoryId"
+            (ngModelChange)="onBedCategoryChange($event)"
+            name="bedCategoryId"
+            [class.invalid]="formSubmitted() && !form().bedCategoryId"
+          >
+            <option [ngValue]="null">Select Ward Bed Category</option>
+            @for (b of bedCategoryList(); track b.bedCategoryId) {
+              <option [ngValue]="b.bedCategoryId">{{ b.bedCategoryDesc }}</option>
+            }
+          </select>
+          @if (formSubmitted() && !form().bedCategoryId) {
+            <p class="help-block">Ward Bed Category is required</p>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-row">
+      @if (hideBed() === 'N') {
+        <div class="field">
+          <label for="billingBedDesc">Billing Ward Bed Category</label>
+          <!-- Auto-populated from the bed-category lookup, but not marked
+               readonly in legacy either -- faithfully editable here too. -->
+          <input
+            id="billingBedDesc"
+            type="text"
+            autocomplete="off"
+            [ngModel]="form().billingBedDesc"
+            (ngModelChange)="updateFormField('billingBedDesc', $event)"
+            name="billingBedDesc"
+          />
+        </div>
+      }
+
+      <div class="field checkbox-field-group">
+        @if (hideBed() === 'N') {
+          <label class="checkbox-inline">
+            <input
+              type="checkbox"
+              [ngModel]="form().isIsolation === 'Y'"
+              (ngModelChange)="updateFormField('isIsolation', $event ? 'Y' : 'N')"
+              name="isIsolation"
+            />
+            Is Isolation
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" [checked]="isErChecked(1)" (change)="setEr(1, $any($event.target).checked)" name="erRed" />
+            Red
+          </label>
+        }
+        <label class="checkbox-inline">
+          <input type="checkbox" [checked]="isErChecked(2)" (change)="setEr(2, $any($event.target).checked)" name="erYellow" />
+          Yellow
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" [checked]="isErChecked(3)" (change)="setEr(3, $any($event.target).checked)" name="erGreen" />
+          Green
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" [checked]="isErChecked(4)" (change)="setEr(4, $any($event.target).checked)" name="erBlack" />
+          Black
+        </label>
+        <label class="checkbox-inline">
+          <input
+            type="checkbox"
+            [ngModel]="form().isModality === 'Y'"
+            (ngModelChange)="updateFormField('isModality', $event ? 'Y' : 'N')"
+            name="isModality"
+          />
+          Is Modality
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      name="searchKeyword"
+      autocomplete="off"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Ward</th>
+        <th>Room Code</th>
+        <th>Room Description</th>
+        <th>Billing Ward Bed Category</th>
+        <th>Ward Bed Category</th>
+        <th>Isolation</th>
+        <th>Is Modality</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.roomId) {
+        <tr>
+          <td>{{ row.wardName }}</td>
+          <td>{{ row.roomCode }}</td>
+          <td>{{ row.roomDesc }}</td>
+          <td>{{ row.billingBedDesc }}</td>
+          <td>{{ row.bedCategoryDesc }}</td>
+          <td>{{ row.isIsolation }}</td>
+          <td>{{ row.isModality }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="9" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
