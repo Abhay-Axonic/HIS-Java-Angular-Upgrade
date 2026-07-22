@@ -1407,3 +1407,19 @@ Type matches this exact table's own sibling `_format` columns (`dob_format`, `st
 Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Approved — apply both fixes and verify live.").
 
 **Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` (batch 12 Step 0/1 entry) has full detail.
+
+## BR-local-dev-db-drift-role1-module794 — Local dev DB (`his_local`)'s sole seed role (`role_id=1`, "Admin") was missing module 794's privilege grant, blocking `QMSMasterCall` live testing — found during Phase 4 batch 12's Step 5 live testing (2026-07-22)
+
+**Not a business rule — a local-dev-environment gap, same class as every other `BR-local-dev-db-drift-*` entry.** Confirmed via direct query against `privilege.privilege`'s stored `modules` JSON blob for `role_id=1`: module 794 ("QMS Token Display" — already confirmed the real, live moduleId gating `QMSMasterCall`'s legacy resolve block, and already used correctly by the already-shipped `displayCall` screen) was genuinely absent from the 3022-entry array, unlike modules 676/224 which turned out to be a stale-`localStorage`-cache issue only (no DB fix needed for those). Sibling modules 795/796/797 (QMS Kiosk/Department/Counter Master, same `parentId: 791` group) were present; 794 was the sole gap in that family.
+
+**Fixed via a single, additive, reversible JSON-array append, owner-approved before applying:**
+```sql
+UPDATE privilege.privilege
+SET modules = (modules::jsonb || '[{"id":794,"name":"QMS Token Display","parentId":791,"moduleType":1}]'::jsonb)::text
+WHERE role_id = 1;
+```
+No schema/structure change — `modules` remains a `character varying` column; the update uses a `::jsonb` cast purely to append safely, then casts back to text to match the column's real type. Verified live: after refreshing the browser session's cached `permissions` from the real `/privilege/role` backend endpoint, `QMSMasterCall` now loads normally (no access-denied redirect), and its Step 5 interaction checks (tautology-guard bug, unguarded-`list[0]`-access crash) reproduce correctly, matching sibling `QMS` exactly.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Module 794 grant (QMS fix) — approved, apply it now, verify QMSMasterCall becomes testable.").
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 139 (updated) has full detail.
