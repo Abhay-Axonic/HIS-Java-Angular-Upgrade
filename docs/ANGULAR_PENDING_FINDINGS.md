@@ -1763,3 +1763,55 @@ No `<modal>`/`<dietCssdPopUp>`/`<shortcut>` usage.
 **Not fixed here, per established precedent.** Following the same discipline as entry 100's original framing, this is flagged and held for the owner's explicit go-ahead before either table/column is created, even though the DDL would be a straightforward additive match to sibling table conventions (same methodology as `BR-local-dev-db-drift-mrdrack-tabulartemplate`/`BR-local-dev-db-drift-mrdrowbox`).
 
 **Impact on this batch's Step 5 verification:** both screens' rebuilt components are confirmed correctly wired via golden-trace re-audit (real requests fire with the right shape, matching source) — the DB gap is the only thing preventing a full live round-trip test in this environment. Both are held as functionally complete pending this environment fix.
+
+---
+
+## 114. `frequencyMaster` (Phase 4 batch 10) — a real, reproducible background parsing failure on `LIS/global/listLanguageMaster/1/1` — confirmed live during Step 5 testing, not visible-breaking
+
+**Where:** `GET LIS/global/listLanguageMaster/1/1`, called by both legacy's `frequencyMasterController.js` and the rebuild's `FrequencyMasterService` on load (fires before `initializeController()`'s own frequency-list call, confirmed via source execution order).
+
+**What it is, plainly:** confirmed live via a patched `console.error`/XHR capture during Step 5 testing: the call returns HTTP `200 OK`, but Angular's modern `HttpClient` throws `HttpErrorResponse: "Http failure during parsing for http://localhost:4200/LIS/global/listLanguageMaster/1/1"` — the response body cannot be parsed as JSON despite the success status code. This is very likely a `Content-Type` mismatch (legacy's AngularJS `$http` is more lenient about response parsing than modern Angular's `HttpClient`, which could silently tolerate this same server behavior without ever surfacing an error) rather than a genuinely empty/malformed body — not conclusively diagnosed to the byte level (raw response capture was attempted but the specific XHR/fetch instance couldn't be intercepted reliably across page navigations; the error object itself, captured via a patched `console.error`, is the primary evidence).
+
+**Cross-checked for blast radius:** 8 legacy controller files call `listLanguageMaster` in some form; of those, only `frequencyMaster` (this batch) is built or in-progress — the other 7 are either not-yet-built or belong to the excluded OPD/ADT clinical cluster (entry 78). **Confirmed this does NOT affect any already-merged screen on `main`.**
+
+**Impact:** background-only — `frequencyMaster`'s own screen (list load, save, status toggle) all worked correctly and were live-verified with real round-trips during this same testing session; this error doesn't visibly break anything a user would notice, it only pollutes the console.
+
+**Not fixed here.** Flagged for whoever next investigates Angular's `HttpClient` strictness vs. AngularJS's `$http` leniency as a systemic class of risk — this may not be the only endpoint where the rebuild's stricter parsing surfaces a previously-invisible legacy response-shape issue. Worth a dedicated sweep at some point, not blocking this batch.
+
+---
+
+## 115. `roleCreation` (Phase 4 batch 10) — a real local dev-DB gap: `m_role_master` is missing its `prophylactic_vaccination_application` column — confirmed live during Step 5 testing, held for owner approval
+
+**Where:** `public.m_role_master` — confirmed missing this one column via `\d public.m_role_master` (13 columns present, this one absent) and live `catalina.out` trace: `PSQLException: column "prophylactic_vaccination_application" of relation "m_role_master" does not exist`, triggered by attempting a real save during Step 5 testing (matching the "Prophylactic Vaccination Application" checkbox visible on the form).
+
+**What it is, plainly:** `UserRoleMaster.java`'s `@Column(name = "prophylactic_vaccination_application")` (type `Character`) is real and correctly mapped in Java — the column simply doesn't exist on the live table. Same gap class as BR-038/039/043/046/100/101/113, this time a single missing column rather than a whole missing table, and on `m_role_master` — a table already shared with the already-merged `roleManagement` (batch 9), though that screen's own read-only list/toggle flows don't touch this specific column (confirmed via source), so this gap does not currently affect anything already on `main`.
+
+**Not fixed here, per established precedent.** Flagged for owner approval before an additive `ALTER TABLE ... ADD COLUMN` — same discipline as every prior entry in this class.
+
+**Live-testing impact:** this is also the finding that empirically confirmed entry 107's "ungated confirm-save" bug in action — clicking Save fired a real POST that failed with this DB error, "Something went wrong!!" toasted, the confirm modal STILL opened afterward (confirming the modal doesn't gate the save), and clicking the modal's Ok fired a SECOND real POST (confirming the duplicate-submit risk is real, not theoretical) — both POSTs failed identically due to this same column gap, so no actual duplicate row was created in this instance, but the mechanism is now empirically confirmed, not just inferred from source.
+
+---
+
+## 116. `newAccessControl` (Phase 4 batch 10) — a real local dev-DB gap: `m_action_master`'s ID sequence is drastically out of sync with its actual data — confirmed live during Step 5 testing, held for owner approval
+
+**Where:** `public.m_action_master` / `public.action_master_seq` — confirmed via direct query: `SELECT MAX(action_id) FROM m_action_master` returns `1070`, but `SELECT last_value FROM action_master_seq` returns `1`. Live `catalina.out` trace confirms the resulting collision: `ERROR: duplicate key value violates unique constraint "pk_action_master" — Key (action_id)=(1) already exists`, triggered by a real Step 5 save attempt.
+
+**What it is, plainly:** a different flavor of local-dev-environment drift than the missing-table/column instances elsewhere in this doc — here the table and all its data are present and correct (1070 real rows), but the auto-increment sequence backing new inserts was reset to `1` (or never advanced past it) at some point, likely because the 1070 rows were bulk-loaded via direct `INSERT` statements that bypassed `nextval()`. This means **every** attempt to create a new action-master row in this environment fails identically today — not specific to the rebuild, legacy would hit the exact same constraint violation.
+
+**Not fixed here, per established precedent.** The fix itself is trivial and well-understood (`SELECT setval('action_master_seq', (SELECT MAX(action_id) FROM m_action_master))`), but per this session's own standing discipline, held for explicit owner approval before touching the local dev DB, consistent with every prior entry in this class — flagged here rather than applied silently.
+
+---
+
+## 117. `employeeSurvey` (Phase 4 batch 10) — a real local dev-DB gap: `t_employee_survey` table missing entirely — confirmed live during Step 5 testing, held for owner approval
+
+**Where:** `public.t_employee_survey` — confirmed absent via `pg_tables` query (zero matches) and live `catalina.out` trace: `PSQLException: relation "public.t_employee_survey" does not exist`, triggered by a real Step 5 save attempt (one survey question answered, Save clicked).
+
+**What it is, plainly:** `EmployeeSurveyController.java`'s full chain (`EmployeeSurveyServiceImpl` → `EmployeeSurveyDaoImpl`) is real and correctly implemented, confirmed independently both by the rebuilding agent's source audit and this live 500 trace — the table itself was never created in this local dev DB. Same gap class as BR-038/039/043/046/100/101/113/115, a 6th distinct instance of this exact recurring pattern within this project.
+
+**Not fixed here, per established precedent.** Flagged for owner approval before an additive `CREATE TABLE`/`CREATE SEQUENCE`, matching the exact methodology already used for entries 100/101 (columns/types would be derived from `EmployeeSurvey.java`'s own entity annotations).
+
+---
+
+## Consolidated note: 4 local dev-DB gaps found during batch 10's Step 5 live testing (entries 113, 115, 116, 117) — all held for a single owner decision
+
+Between the pre-existing entry 113 (`ticketSystemMaster`/`aIButtonMaster`) and the three new ones found during this session's live-testing pass (115, 116, 117), **4 of batch 10's 10 screens are currently blocked from a full live save round-trip purely by local dev-DB gaps**, none of them code defects in either the Java backend or the Angular rebuild. All follow the identical established pattern (BR-038/039/043/046/100/101) and all are held pending explicit owner approval before any DDL/DML is applied, per this session's own standing discipline. Recommend batching the approval decision the same way entries 100/101 were resolved together, rather than one at a time.
