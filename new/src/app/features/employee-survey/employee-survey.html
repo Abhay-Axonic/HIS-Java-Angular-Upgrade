@@ -1,0 +1,90 @@
+<!--
+  Parity rebuild of
+  views/master/UnitMaster/organizationMaster/employee-survey.html.
+  Deliberately no <form> element wrapping this markup -- legacy has none
+  either, see employee-survey.ts's class doc comment (the rating input's
+  min/max/required are decorative only, matching legacy exactly).
+-->
+<section class="page">
+  <fieldset>
+    <div class="fixed-thead-tfoot-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="text-center">Sr. No.</th>
+            <th class="text-center">Point</th>
+            <th class="text-center">Strongly Disagree</th>
+            <th class="text-center">Disagree</th>
+            <th class="text-center">Agree</th>
+            <th class="text-center">Strongly Agree</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of points(); track row.id; let last = $last; let i = $index) {
+            <tr>
+              <td>{{ row.id }}</td>
+              <td>{{ row.name }}</td>
+              @if (!last) {
+                <td class="text-center">
+                  <input
+                    type="radio"
+                    [name]="'option1_' + i"
+                    [checked]="row.selectedOption === 'stronglyDisagree'"
+                    (change)="updateSelectedOption(row, 'stronglyDisagree')"
+                  />
+                </td>
+                <td class="text-center">
+                  <input
+                    type="radio"
+                    [name]="'option1_' + i"
+                    [checked]="row.selectedOption === 'disagree'"
+                    (change)="updateSelectedOption(row, 'disagree')"
+                  />
+                </td>
+                <td class="text-center">
+                  <input
+                    type="radio"
+                    [name]="'option1_' + i"
+                    [checked]="row.selectedOption === 'agree'"
+                    (change)="updateSelectedOption(row, 'agree')"
+                  />
+                </td>
+                <td class="text-center">
+                  <input
+                    type="radio"
+                    [name]="'option1_' + i"
+                    [checked]="row.selectedOption === 'stronglyAgree'"
+                    (change)="updateSelectedOption(row, 'stronglyAgree')"
+                  />
+                </td>
+              } @else {
+                <td colspan="4" class="text-center">
+                  <label for="ratingInput">Rating:</label>
+                  <!-- min/max/required are decorative only -- no enclosing
+                       <form>, no JS clamp, matching legacy exactly. -->
+                  <input
+                    id="ratingInput"
+                    type="number"
+                    min="1"
+                    max="10"
+                    placeholder="Rate 1-10"
+                    [ngModel]="rating()"
+                    (ngModelChange)="rating.set($event)"
+                    name="rating"
+                    class="rating-input"
+                  />
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <button type="button" class="btn-primary icon-btn" title="Save" (click)="saveSurvey()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+  </div>
+</section>

@@ -1,0 +1,45 @@
+// Screen-specific layout only -- shared table/pagination/toolbar styles
+// live in src/styles.scss (see that file's header comment).
+// Status-toggle CSS is NOT here on purpose: <app-status-toggle> ships its
+// own (new/src/app/shared/status-toggle/status-toggle.scss). No modal on
+// this screen -- see the class doc comment's disclosed-omission note on
+// the orphaned, unreachable "Add Holiday" modal.
+
+.picker-row {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.picker-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.picker-label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.picker-box {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 8px;
+  height: 220px;
+  overflow-y: auto;
+}
+
+.checkbox-row {
+  padding: 2px 0;
+}
+
+.picker-move {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.move-btn {
+  white-space: nowrap;
+}

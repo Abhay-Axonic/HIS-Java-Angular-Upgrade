@@ -1,0 +1,290 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="roleName">Role Name<span class="required">*</span></label>
+        <input
+          id="roleName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().roleName"
+          (ngModelChange)="updateFormField('roleName', $event)"
+          name="roleName"
+          required
+        />
+        @if (formSubmitted() && !form().roleName) {
+          <p class="help-block">Role Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="roleTypeId">Role Type</label>
+        <select
+          id="roleTypeId"
+          [ngModel]="form().roleTypeId"
+          (ngModelChange)="updateFormField('roleTypeId', $event)"
+          name="roleTypeId"
+          required
+        >
+          @for (rt of roleTypes; track rt.roleTypeId) {
+            <option [ngValue]="rt.roleTypeId">{{ rt.roleType }}</option>
+          }
+        </select>
+        @if (formSubmitted() && !form().roleTypeId) {
+          <p class="help-block">Role Type is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="dashboardId">Dashboard</label>
+        <select
+          id="dashboardId"
+          [ngModel]="form().dashboardId"
+          (ngModelChange)="updateFormField('dashboardId', $event)"
+          name="dashboardId"
+        >
+          <option [ngValue]="''">Select</option>
+          @for (d of dashboardList(); track d.dashboardId) {
+            <option [ngValue]="d.dashboardId">{{ d.dashboardDesc }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field checkbox-field">
+        <label class="checkbox-inline">
+          <input
+            type="checkbox"
+            [ngModel]="form().isCounterApplicable === 'Y'"
+            (ngModelChange)="updateFormField('isCounterApplicable', $event ? 'Y' : 'N')"
+            name="isCounterApplicable"
+          />
+          Is Counter Applicable
+        </label>
+      </div>
+
+      <div class="field checkbox-field">
+        <label class="checkbox-inline">
+          <input
+            type="checkbox"
+            [ngModel]="form().prophylacticVaccinationApplication === 'Y'"
+            (ngModelChange)="onVaccinationFlagChange($event ? 'Y' : 'N')"
+            name="prophylacticVaccinationApplication"
+          />
+          Prophylactic Vaccination Application
+        </label>
+      </div>
+    </div>
+
+    @if (vaccinationListVisible()) {
+      <div class="form-row">
+        <div class="field wide">
+          <label for="vaccinationSelect">Vaccination</label>
+          <select
+            id="vaccinationSelect"
+            multiple
+            [ngModel]="selectedVaccinationIds()"
+            (ngModelChange)="selectedVaccinationIds.set($event)"
+            name="vaccinationSelect"
+          >
+            @for (v of vaccinationOptions(); track v.vaccinationId) {
+              <option [ngValue]="v.vaccinationId">{{ v.vaccinationName }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    }
+
+    <div class="toolbar">
+      @if (saveMode()) {
+        <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        </button>
+      } @else {
+        <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        </button>
+      }
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Role Name</th>
+        <th>Role Type</th>
+        <th>Dashboard</th>
+        <th class="text-center">Is Counter Applicable</th>
+        <th class="text-center">Is Vaccination Application</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Info</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.roleId) {
+        <tr>
+          <td>{{ row.roleName }}</td>
+          <td>{{ row.roleType }}</td>
+          <td>{{ row.dashboardDesc }}</td>
+          <td class="text-center">{{ row.isCounterApplicable }}</td>
+          <td class="text-center">{{ row.prophylacticVaccinationApplication }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center"><a title="View Role" (click)="openView(row.roleId)"><i class="fa fa-info-circle" aria-hidden="true"></i></a></td>
+          <td class="text-center"><a title="Edit"><i class="fa fa-pencil" aria-hidden="true" (click)="edit(row.roleId)"></i></a></td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="8" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (page of pageNumbers(); track page) {
+        <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+<!-- "View Role" modal (#vaccination in legacy) -- real copy-paste residue,
+     reproduced as an equally broken placeholder, see class doc comment. -->
+@if (showViewModal()) {
+  <div class="modal-backdrop" (click)="closeViewModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Role Creation Details
+        <button type="button" (click)="closeViewModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="field">
+            <label>Role Name<span class="required">*</span></label>
+            <input type="text" [value]="form().roleName" disabled />
+          </div>
+          <div class="field">
+            <label>Role Type</label>
+            <select disabled>
+              @for (rt of roleTypes; track rt.roleTypeId) {
+                <option [selected]="rt.roleTypeId === form().roleTypeId" disabled>{{ rt.roleType }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label>Dashboard</label>
+            <select [ngModel]="form().dashboardId" (ngModelChange)="updateFormField('dashboardId', $event)" name="viewDashboardId">
+              <option [ngValue]="''">Select</option>
+              @for (d of dashboardList(); track d.dashboardId) {
+                <option [ngValue]="d.dashboardId">{{ d.dashboardDesc }}</option>
+              }
+            </select>
+          </div>
+          <!-- Copy-paste residue faithfully reproduced: this field is
+               labeled "Is Counter Applicable" but its real binding is still
+               `roleName` -- see class doc comment. -->
+          <div class="field">
+            <label>Is Counter Applicable<span class="required">*</span></label>
+            <input
+              type="text"
+              [ngModel]="form().roleName"
+              (ngModelChange)="updateFormField('roleName', $event)"
+              name="viewRoleNameDup"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Duplicate checkbox pair faithfully reproduced -- both bound
+               to the same field, see class doc comment. -->
+          <div class="field checkbox-field">
+            <label class="checkbox-inline">
+              <input
+                type="checkbox"
+                [ngModel]="form().isCounterApplicable === 'Y'"
+                (ngModelChange)="updateFormField('isCounterApplicable', $event ? 'Y' : 'N')"
+                name="viewIsCounter1"
+              />
+              Is Counter Applicable
+            </label>
+          </div>
+          <div class="field checkbox-field">
+            <label class="checkbox-inline">
+              <input
+                type="checkbox"
+                [ngModel]="form().isCounterApplicable === 'Y'"
+                (ngModelChange)="updateFormField('isCounterApplicable', $event ? 'Y' : 'N')"
+                name="viewIsCounter2"
+              />
+              Is Counter Applicable
+            </label>
+          </div>
+        </div>
+
+        <!-- Fully static dead markup in legacy (no binding at all) --
+             reproduced as-is. -->
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Live, working call to the SAME create-path save() as the main
+             screen -- see class doc comment: can create a duplicate role. -->
+        <div class="toolbar">
+          <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Shared confirm modal -- does NOT gate the save; see class doc comment. -->
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSaveAgain()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

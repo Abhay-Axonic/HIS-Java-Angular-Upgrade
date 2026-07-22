@@ -764,6 +764,74 @@ export const routes: Routes = [
         loadComponent: () => import('./features/advised-visits/advised-visits').then((m) => m.AdvisedVisits),
         data: { title: 'Advised Visits' },
       },
+      // Phase 4 batch 10
+      {
+        path: 'hospitalMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 371, requireSuperUser: true, title: 'Hospital Master' },
+        loadComponent: () => import('./features/hospital-master/hospital-master').then((m) => m.HospitalMaster),
+      },
+      {
+        path: 'roomMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 550, title: 'Room Master' },
+        loadComponent: () => import('./features/room-master/room-master').then((m) => m.RoomMaster),
+      },
+      {
+        path: 'frequencyMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 478, title: 'Frequency Master' },
+        loadComponent: () => import('./features/frequency-master/frequency-master').then((m) => m.FrequencyMaster),
+      },
+      {
+        path: 'roleCreation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 672, title: 'Role Creation' },
+        loadComponent: () => import('./features/role-creation/role-creation').then((m) => m.RoleCreation),
+      },
+      {
+        path: 'linenIssuePendingDetails',
+        loadComponent: () =>
+          import('./features/linen-issue-pending-details/linen-issue-pending-details').then(
+            (m) => m.LinenIssuePendingDetails,
+          ),
+        data: { title: 'Linen Issue Pending Details' },
+      },
+      {
+        path: 'newAccessControl',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 677, title: 'Access Control' },
+        loadComponent: () =>
+          import('./features/new-access-control/new-access-control').then((m) => m.NewAccessControl),
+      },
+      {
+        path: 'ticketSystemMaster',
+        loadComponent: () =>
+          import('./features/ticket-system-master/ticket-system-master').then((m) => m.TicketSystemMaster),
+        data: { title: 'Ticket System Master' },
+      },
+      {
+        // Legacy's real state/URL is `aIButtonMaster` (capital "I") -- confirmed
+        // from the live .state() self-registration and the sidebar's own href,
+        // not `aiButtonMaster`. Kept for parity even though it looks like a typo.
+        path: 'aIButtonMaster',
+        loadComponent: () => import('./features/ai-button-master/ai-button-master').then((m) => m.AiButtonMaster),
+        data: { title: 'AI Button Master' },
+      },
+      {
+        path: 'employeeSurvey',
+        loadComponent: () => import('./features/employee-survey/employee-survey').then((m) => m.EmployeeSurvey),
+        data: { title: 'Employee Satisfaction Survey' },
+      },
+      {
+        path: 'holidayCalendarMasterUnit',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 536, title: 'Holiday Calendar Master' },
+        loadComponent: () =>
+          import('./features/holiday-calendar-master-unit/holiday-calendar-master-unit').then(
+            (m) => m.HolidayCalendarMasterUnit,
+          ),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

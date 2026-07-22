@@ -1,0 +1,187 @@
+<!--
+  Rebuild of views/master/UnitMaster/organizationMaster/ai-button-master.html.
+  See ai-button-master.ts's class doc comment and
+  docs/ANGULAR_PENDING_FINDINGS.md entry N (this batch) for the audited
+  quirks preserved here (no pagination, tabId 42/43 toggle gap, shared
+  config-modal state between edit and the info icon, etc.).
+-->
+
+<div class="form-row">
+  <div class="field">
+    <label for="buttonLabel">Button Label</label>
+    <input id="buttonLabel" type="text" [(ngModel)]="buttonLabel" name="buttonLabel" />
+  </div>
+  <div class="field">
+    <label for="systemPrompt">System Prompt</label>
+    <textarea id="systemPrompt" [(ngModel)]="systemPrompt" name="systemPrompt"></textarea>
+  </div>
+  <div class="field">
+    <label for="userPrompt">User Prompt</label>
+    <textarea id="userPrompt" [(ngModel)]="userPrompt" name="userPrompt"></textarea>
+  </div>
+</div>
+
+<div class="action-row">
+  <button type="button" class="icon-btn" title="AI Configuration" (click)="openConfig()">
+    <i class="fa fa-gear" aria-hidden="true"></i>
+  </button>
+  <button type="button" class="btn-primary" [disabled]="!editFlag()" (click)="updateButtonMaster()">Update</button>
+  <button type="button" class="btn-primary" [disabled]="editFlag()" (click)="saveButtonMaster()">Save</button>
+  <button type="button" class="btn-primary" (click)="clearFields()">Clear</button>
+</div>
+
+<div class="search-bar">
+  <input type="text" placeholder="Search" [(ngModel)]="searchFilter" name="searchFilter" />
+  <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>System Prompt</th>
+      <th>User Prompt</th>
+      <th>Status</th>
+      <th>AI Configuration</th>
+      <th>User Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (row of filteredList(); track row.buttonId) {
+      <tr>
+        <td>{{ row.label }}</td>
+        <td class="text-center">
+          <button type="button" class="icon-link" title="System Prompt" (click)="showSystemPromptInfo(row)">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+          </button>
+        </td>
+        <td class="text-center">
+          <button type="button" class="icon-link" title="User Prompt" (click)="showUserPromptInfo(row)">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+          </button>
+        </td>
+        <td class="text-center">
+          <!-- Faithful to legacy: rows with tabId exactly 42 or 43 render no toggle at all. -->
+          @if (row.tabId < 42) {
+            <app-status-toggle [checked]="row.isStatus" [disabled]="true" (toggled)="onToggleStatus(row)" />
+          } @else if (row.tabId > 43) {
+            <app-status-toggle [checked]="row.isStatus" (toggled)="onToggleStatus(row)" />
+          }
+        </td>
+        <td class="text-center">
+          <button type="button" class="icon-link" title="AI Configuration" (click)="showAiInfo(row)">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+          </button>
+        </td>
+        <td class="text-center">
+          <button type="button" class="icon-link" (click)="editButtonMaster(row)">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<!-- AI Configuration edit modal (key/value editor for the config gear icon) -->
+@if (configModalOpen()) {
+  <div class="modal-backdrop" (click)="closeConfigModal()">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>
+        AI Configuration
+        <button type="button" (click)="closeConfigModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="config-url-row">
+          <input type="text" [(ngModel)]="configUrl" name="configUrl" />
+          <button type="button" class="btn-primary" (click)="closeConfigModal()">Add</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Sr No.</th>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of (configModel() | keyvalue); track entry.key; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ entry.key }}</td>
+                <td>
+                  <input
+                    type="text"
+                    [disabled]="entry.key === 'System_prompt' || entry.key === 'User_Prompt' || entry.key === 'Input_from_application'"
+                    [ngModel]="entry.value"
+                    (ngModelChange)="updateConfigValue(entry.key, $event)"
+                    name="configValue-{{ entry.key }}"
+                  />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- AI Configuration read-only info modal -->
+@if (aiInfoModalOpen()) {
+  <div class="modal-backdrop" (click)="aiInfoModalOpen.set(false)">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>
+        AI Configuration
+        <button type="button" (click)="aiInfoModalOpen.set(false)">&times;</button>
+      </header>
+      <div class="modal-body">
+        <input type="text" [ngModel]="configUrl()" name="aiInfoUrl" readonly />
+        <table>
+          <thead>
+            <tr>
+              <th>Sr No.</th>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of (configModel() | keyvalue); track entry.key; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ entry.key }}</td>
+                <td>{{ entry.value }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- System Prompt read-only info modal -->
+@if (systemPromptInfoModalOpen()) {
+  <div class="modal-backdrop" (click)="systemPromptInfoModalOpen.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        System Prompt
+        <button type="button" (click)="systemPromptInfoModalOpen.set(false)">&times;</button>
+      </header>
+      <div class="modal-body">{{ systemPromptInfo() }}</div>
+    </div>
+  </div>
+}
+
+<!-- User Prompt read-only info modal -->
+@if (userPromptInfoModalOpen()) {
+  <div class="modal-backdrop" (click)="userPromptInfoModalOpen.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        User Prompt
+        <button type="button" (click)="userPromptInfoModalOpen.set(false)">&times;</button>
+      </header>
+      <div class="modal-body">{{ userPromptInfo() }}</div>
+    </div>
+  </div>
+}

@@ -1,0 +1,104 @@
+<section class="page">
+  <fieldset>
+    <legend>Holiday Calendar Master</legend>
+
+    <div class="picker-row">
+      <div class="picker-col">
+        <label class="picker-label">Global Master<span class="required">*</span></label>
+        <div class="picker-box">
+          @for (entry of globalList(); track entry.holidayCalenderId) {
+            <div class="checkbox-row">
+              <label>
+                <input type="checkbox" [checked]="isChecked(entry.holidayCalenderId)" (change)="toggleCheck(entry)" />
+                {{ entry.holidayCalenderDesc }}
+              </label>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="picker-move">
+        <button type="button" class="btn-primary move-btn" (click)="moveSelected()">&lt;&lt;&gt;&gt;</button>
+      </div>
+
+      <div class="picker-col">
+        <label class="picker-label">Unit Master<span class="required">*</span></label>
+        <div class="picker-box">
+          @for (item of selectedListItem(); track item.holidayId) {
+            <div class="checkbox-row">
+              <label>{{ item.holidayCalenderDesc }}</label>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      name="searchKeyword"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <!-- Sort carets are static decoration only, no click wiring exists
+             in legacy either -- see class doc comment. -->
+        <th>Holiday Code</th>
+        <th>Holiday</th>
+        <th>Date</th>
+        <th>Day</th>
+        <th class="text-center">Status(n)</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.unitHolidayCalenderId) {
+        <tr>
+          <td>{{ row.holidayCalenderCode }}</td>
+          <td>{{ row.holidayCalenderDesc }}</td>
+          <td>{{ row.holidayDate }}</td>
+          <td>{{ row.day }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>

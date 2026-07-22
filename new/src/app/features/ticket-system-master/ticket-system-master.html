@@ -1,0 +1,186 @@
+<!--
+  Rebuild of views/master/UnitMaster/organizationMaster/ticket-system-master.html.
+  See ticket-system-master.ts's class doc comment and
+  docs/ANGULAR_PENDING_FINDINGS.md entry N (this batch) for the audited
+  quirks preserved here (10-row initial load, keyword-only-2-field search,
+  Remove-All list desync, etc.).
+-->
+
+<form class="ticket-form">
+  <div class="form-row">
+    <div class="field">
+      <label for="reportedBy">Reported By</label>
+      <input id="reportedBy" type="text" [ngModel]="form().reportedBy" name="reportedBy" disabled />
+    </div>
+    <div class="field">
+      <label for="priorityType">Priority</label>
+      <select id="priorityType" [ngModel]="form().priorityType" (ngModelChange)="form.update((f) => ({ ...f, priorityType: $event }))" name="priorityType">
+        <option value="">Select Priority</option>
+        @for (opt of priorityOptions; track opt.id) {
+          <option [value]="opt.type">{{ opt.type }}</option>
+        }
+      </select>
+    </div>
+    <div class="field">
+      <label for="contactNumber">Contact Number</label>
+      <input id="contactNumber" type="text" maxlength="10" [ngModel]="form().contactNumber" (ngModelChange)="form.update((f) => ({ ...f, contactNumber: $event }))" name="contactNumber" />
+    </div>
+    <div class="field">
+      <label for="email">Email Id</label>
+      <input id="email" type="text" placeholder="abc35@gmail.com" [ngModel]="form().email" (ngModelChange)="form.update((f) => ({ ...f, email: $event }))" name="email" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="field wide">
+      <label for="issueDescription">Issuance Description<span class="star">*</span></label>
+      <input id="issueDescription" type="text" required [ngModel]="form().issueDescription" (ngModelChange)="form.update((f) => ({ ...f, issueDescription: $event }))" name="issueDescription" />
+    </div>
+    <div class="field">
+      <label for="issueType">Issue Type</label>
+      <select id="issueType" [ngModel]="form().issueType" (ngModelChange)="form.update((f) => ({ ...f, issueType: $event }))" name="issueType">
+        <option value="">Select Issue Type</option>
+        @for (opt of issueTypeOptions; track opt.id) {
+          <option [value]="opt.type">{{ opt.type }}</option>
+        }
+      </select>
+    </div>
+    <div class="field">
+      <label for="fileInput">Import File</label>
+      <input id="fileInput" type="file" multiple (change)="onFilesSelected($any($event.target).files)" />
+    </div>
+  </div>
+</form>
+
+<div class="action-row">
+  <label class="show-entries">
+    Show
+    <select [(ngModel)]="pageSize" name="pageSize" (ngModelChange)="onPageSizeChange()">
+      @for (size of pageSizeOptions; track size) {
+        <option [value]="size">{{ size }}</option>
+      }
+    </select>
+    entries
+  </label>
+
+  <button type="button" class="btn-primary" [hidden]="editing()" (click)="addTicketDetails()" title="Save">
+    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+  </button>
+  <button type="button" class="btn-primary" [hidden]="!editing()" (click)="updateTicketSystem()" title="Update">
+    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+  </button>
+
+  <input
+    type="text"
+    class="search-box"
+    placeholder="Search"
+    [ngModel]="searchKeyword()"
+    (ngModelChange)="onSearchKeyup($event)"
+    name="searchKeyword"
+  />
+  <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Reported By</th>
+      <th>Contact Number</th>
+      <th>Issuance Description</th>
+      <th>Ticket Number</th>
+      <th>Status</th>
+      <th>Action taken</th>
+      <th>Attachment</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (info of list(); track info.ticketMasterId; let i = $index) {
+      <tr>
+        <td>{{ info.ticketReportedBy }}</td>
+        <td>{{ info.ticketContactNumber }}</td>
+        <td>{{ info.ticketIssueDescription }}</td>
+        <td>{{ info.ticketNumber }}</td>
+        <td class="text-center">
+          <app-status-toggle [checked]="info.ticketStatus === 'A'" (toggled)="onToggleStatus(info)" />
+        </td>
+        <td class="text-center" [class.disabled]="info.ticketStatus === 'I'">
+          <button type="button" class="icon-link" (click)="showUpdateBtn(info, i)">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+        </td>
+        <td class="text-center" [class.disabled]="info.ticketStatus === 'I'">
+          <button type="button" class="icon-link" (click)="showAllAttachments(info.ticketMasterId)">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="pagination">
+  @for (page of pageNumbers(); track page) {
+    <button type="button" [class.active]="page === currentPage()" (click)="goToPage(page)">{{ page }}</button>
+  }
+</div>
+
+<!-- Attachments modal -->
+@if (attachmentModalOpen()) {
+  <div class="modal-backdrop" (click)="closeAttachmentModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Uploaded Attachment
+        <button type="button" (click)="closeAttachmentModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table>
+          <tbody>
+            @if (attachments().length > 0) {
+              <tr>
+                <td>File Name</td>
+                <td>View</td>
+                <td>Action</td>
+              </tr>
+            }
+            @for (attachment of attachments(); track attachment.fileId; let i = $index) {
+              <tr>
+                <td>{{ attachment.fileName }}</td>
+                <td><a target="_blank" [href]="attachment.fileUrl">View</a></td>
+                <td>
+                  <button type="button" class="icon-link" title="Remove" (click)="confirmRemove(attachment, i)">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closeAttachmentModal()">Ok</button>
+        <button type="button" class="btn-primary" id="cancelBtn" (click)="confirmRemoveAll()">Remove All</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Shared "Alert" confirm popup -->
+@if (confirmModalOpen()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Alert !!</header>
+      <div class="modal-body">
+        <span>Are you sure you want to Continue?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+        @if (!confirmIsRemoveAll()) {
+          <button type="button" class="btn-primary" (click)="removeAttachment()">Remove</button>
+        }
+        @if (confirmIsRemoveAll()) {
+          <button type="button" class="btn-primary" (click)="removeAllAttachment()">Remove All</button>
+        }
+      </div>
+    </div>
+  </div>
+}

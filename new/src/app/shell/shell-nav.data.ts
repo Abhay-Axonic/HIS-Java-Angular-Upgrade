@@ -53,6 +53,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/nationalityMaster', title: 'Nationality Master' },
       { path: '/countryMaster', title: 'Country Master' },
       { path: '/cityMaster', title: 'City Master' },
+      { path: '/hospitalMaster', title: 'Hospital Master' },
     ],
   },
   {
@@ -69,6 +70,11 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/rackMasters', title: 'MRD Rack Master' },
       { path: '/mealPreferenceMaster', title: 'Meal Preference Master' },
       { path: '/weekendMaster', title: 'Weekend Master' },
+      { path: '/roomMaster', title: 'Room Master' },
+      { path: '/ticketSystemMaster', title: 'Ticket Master' },
+      { path: '/aIButtonMaster', title: 'AI Button Master' },
+      { path: '/employeeSurvey', title: 'Employee Satisfaction Survey' },
+      { path: '/holidayCalendarMasterUnit', title: 'Holiday Calendar Master' },
     ],
   },
   {
@@ -119,6 +125,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/userCounterMapper', title: 'User Counter Mapper' },
       { path: '/departmentStoreMapper', title: 'Department Store Mapper' },
       { path: '/roleManagement', title: 'Role Management' },
+      { path: '/roleCreation', title: 'Role Creation' },
+      { path: '/newAccessControl', title: 'Access Control' },
     ],
   },
   {
@@ -142,6 +150,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/assigningPickerDispenser', title: 'Pending List for Assigning Picker' },
       { path: '/manufacturerMaster', title: 'Manufacturer Master' },
       { path: '/genericMaster', title: 'Generic Master' },
+      { path: '/frequencyMaster', title: 'Frequency Master' },
     ],
   },
   {

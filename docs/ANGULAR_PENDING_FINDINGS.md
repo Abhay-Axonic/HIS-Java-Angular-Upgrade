@@ -16,6 +16,7 @@ These are not "bugs to fix eventually" in the normal sense — each is a live pr
 - **Entry 84 (`employeeCategoryController.js`'s `organizationId` typo)** *(added 2026-07-21)* — not a crash, but a real, live data-integrity concern: `init()` sets `$scope.orgnisationId` (typo), but every other call site (save/update/edit/pagination/reload-after-save) reads the never-assigned `$scope.organizationId`, silently sending `organizationId: undefined` to the backend on every save/update after the first page load. Flagged here per explicit owner instruction — worth keeping visible alongside the crash-class entries above even though it isn't urgent enough to fix immediately.
 - **Entry 94 (`createTabularTemplatesController.js`'s shared-object status-toggle race)** *(added 2026-07-21)* — not a crash, but a real, narrow data-integrity risk: `updateStatus()` mutates the same `$scope.common` object the create/edit form uses to build its save payload, synchronously, before the HTTP call fires — toggling any row's status while a different row's edit form is open can corrupt that in-progress edit. The rebuild deliberately avoids this (disclosed deviation, not silently reproduced); legacy itself still has it.
 - **Entry 102 (`supplyDaysMasterController.js` writes to the Manufacturer master under a mislabeled UI)** *(added 2026-07-22)* — not a crash, but a real cross-table data-integrity risk: every save/update/toggle on this screen actually creates/edits rows in the Manufacturer master table (wholesale copy-paste from `manufacturerMasterController.js`, endpoint constants never changed), while the screen's own real fields (Formulation Type, Supply Days) are silently discarded, never read or sent anywhere. Not built, not selected into any batch — flagged here per explicit owner instruction so it's tracked as a real finding, not left as a footnote in a batch proposal, pending an owner decision on whether to faithfully replicate or treat as a genuine defect.
+- **Entry 107 (`roleCreationMasterController.js`'s ungated confirm-save and shared-object status-toggle risks)** *(added 2026-07-22)* — not a crash, but two real risks on the same screen: the confirm-save modal doesn't gate the actual save call, so its own Ok button can duplicate-submit a role creation; and `updateStatus` reuses the same shared scope object the create/edit form is bound to, so toggling one row's status while another row's edit form is open can silently patch the wrong role's identity. Legacy has both; the rebuild reproduces both faithfully.
 
 ---
 
@@ -1594,3 +1595,171 @@ Findings:
 **Action taken:** removed from the buildable low-risk pool (see `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md` update, same treatment as `doorToNeedle`/the 15-screen OPD/ADT cluster) — re-queued as a candidate for whichever future phase handles billing-tier screens (Phase 5/6, not yet scoped), not for casual low-risk batch selection. Not built, not selected into batch 10 or any batch.
 
 **My read:** worth a note for future Step 0 pre-screening — like `doorToNeedle`, the giveaway wasn't in the screen's name or module classification, only in its actual API calls and field names. The sharpened checklist's real-bindings/content-based check is exactly what caught this (confirmed during batch 10's due-diligence pass, not the original Phase 0 sweep), reinforcing that content-based verification remains necessary even for screens that look purely administrative on paper.
+
+---
+
+## 104. `hospitalMaster` (Phase 4 batch 10) — new missing-`$state`-DI crash instance, a sticky `editMode` flag, a Save-vs-Update validation asymmetry matching sibling `organizationMaster`, and a load-time asset that actually seeds new-hospital module privileges server-side
+
+**Where:** `resources/assets/js/controller/master/hospitalMasterController.js`, `views/master/GlobalMaster/hospital-master.html`.
+
+**Findings:**
+1. **New instance of the missing-`$state`-DI crash class (entries 8/10).** DI list never includes `$state`, yet the missing-cookie guard calls `$state.go('login')` — a live `ReferenceError` on session expiry today.
+2. **`$scope.editMode` is set `true` once by `editUnit()` and never reset**, including after a successful save/update reverts the form to "create new". The Subscription button (gated `ng-if="editMode && isSuperAdmin==='Y'"`) stays visible for the rest of the session, and clicking it after a reset fetches subscription data for a blank unit id.
+3. **`saveUnit()` has no mobile-length/email-format validation; `updateUnit()` does** — the same asymmetry already disclosed for sibling `organizationMaster`.
+4. **A dead `$scope.init()` call inside `saveUnit()`'s logo-upload success callback** (never defined anywhere) is silently swallowed as a rejected promise, not a page-breaking crash — the outer success handler already completed synchronously. Disclosed simplification, not reproduced (same treatment as `weekend-master`'s dropped `initTime()`).
+5. **`resources/assets/adminPriviledges.json` (94KB) is fetched unconditionally on load and stringified into `unit.previlageString` on every blank record — not cosmetic:** `GlobalUnitMasterServiceImpl.java` actually consumes it server-side to seed a newly-created hospital's default module privileges. Reproduced: asset copied verbatim, fetched on load, included only in the Save payload (discarded on Update, matching legacy exactly).
+6. **License-details sub-feature is entirely dead** — both the add/edit form and its trigger icon are HTML-commented out in legacy. Not rebuilt, matching this codebase's `organization-master` precedent for the identical dead sub-table.
+
+Does not use `<modal>`/`<dietCssdPopUp>`/`<shortcut>` (confirmed via grep) — entry 55 doesn't apply.
+
+**Owner decision, not resolved here.** All reproduced faithfully for parity.
+
+---
+
+## 105. `roomMaster` (Phase 4 batch 10) — a fresh confirmed `<modal>`-crash instance, Save-vs-Update confirm-modal asymmetry, and a fake-radio-group ER-category quirk
+
+**Where:** `resources/assets/js/controller/master/unit/roomMasterController.js`, `views/master/UnitMaster/organizationMaster/room-master.html`.
+
+**Findings:**
+1. **A fresh instance of entry 55's shared `<modal>` close-button crash**, not among the originally-counted 12 or the 13th (`designationMaster`, entry 63) — `roomMasterController.js` never defines `cancel` under any binding style. Standing policy applies (working close built in the rebuild, not the crash).
+2. **Save opens the confirm modal (only the modal's Ok actually POSTs); Update POSTs immediately with no confirm step** — reproduced verbatim.
+3. **`checkIsLaborward`**: selecting a labor/hemodialysis ward hides the Bed Category select, Billing Bed Category display, Isolation checkbox, and the "Red" ER checkbox (Yellow/Green/Black/Is Modality stay visible) — reproduced.
+4. **The 4 ER-category checkboxes share one legacy `ng-model` (`erCategoryId`, values 1-4, no `ng-false-value`)** — functionally a fake radio group via AngularJS's per-digest re-evaluation. Reproduced with equivalent mutual-exclusion logic.
+5. Server-side duplicate-name check confirmed (`getRoomMasterByName`/`getRoomMasterByNameNotById`, case-insensitive) — no independent frontend check exists.
+6. Both save/update only reset the form on success; the list reload fires either way — reproduced verbatim, not simplified.
+
+**Owner decision, not resolved here.** All reproduced faithfully for parity.
+
+---
+
+## 106. `frequencyMaster` (Phase 4 batch 10) — 3rd missing-`$state`-DI crash instance, two real validation-bypass bugs in the "Add Administration Time" flow, and an asymmetric Create-vs-Update validation
+
+**Where:** `resources/assets/js/controller/master/pharmacy/frequencyMasterController.js` (self-registered state).
+
+**Findings:**
+1. **3rd confirmed instance of the missing-`$state`-DI crash class** (entries 8/10) — `$state` used but never in the DI list.
+2. **Two real, previously-undocumented validation-bypass bugs in the "Add Administration Time" flow:** `GetTime()` sets `isOk=true`/`timeList` unconditionally, before validation even runs — a failed time check only keeps the modal open, it doesn't undo the already-set "confirmed" state. `ValidateTime()`'s per-row format check writes to a single shared flag, so only the *last* row's format-validity survives the final gate check.
+3. **Editing an existing row does not reset `isOk`**, silently forcing a re-confirmation of admin times before Update will work.
+4. **Asymmetric Create-vs-Update validation** — Create runs a code-format regex, Update doesn't, plus different error text.
+5. Status is a real boolean (not `'A'/'I'`); search filters only the current page.
+
+Uses no shared `<modal>` directive (all 4 popups are plain, already-working Bootstrap-native modals) — entry 55's policy does not apply.
+
+**Owner decision, not resolved here.** All reproduced faithfully for parity.
+
+---
+
+## 107. `roleCreation` (Phase 4 batch 10) — 14th+ `<modal>`-crash instance, an ungated confirm-save that can duplicate-submit, and a shared-object status-toggle identity-overwrite risk
+
+**Where:** `resources/assets/js/controller/master/unit/userManagement/roleCreationMasterController.js`, `views/master/UnitMaster/userManagement/role-creation.html`.
+
+**Confirmed genuinely distinct in purpose from sibling `roleManagement` (batch 9):** `roleManagement` only lists/toggles existing roles and views user mappings (no create form); `roleCreation` is the actual role-type creation screen. Both share the same Java controller class (`UserRoleMasterController.java`) but call different methods — no scope overlap.
+
+**Findings:**
+1. **14th+ confirmed instance of entry 55's shared `<modal>` `cancel()` crash** — standing policy applies, not re-litigated.
+2. **The confirm-save modal does not gate the save, and its own Ok button can duplicate-submit.** Unlike this codebase's other confirm-modal screens (e.g. `weekend-master`), `save()` validates and fires the real save POST unconditionally in the same call that opens the modal — there is no `popUpFlag` gate. The modal's Ok button calls `save()` again, with no gate either, creating a real (race-dependent) duplicate-role-creation risk.
+3. **`updateStatus` reuses the same shared `$scope.common` object the create/edit form is bound to.** Toggling any row's status silently overwrites the in-progress form's `roleId` while leaving the visible name/type fields alone — a subsequent Update click could patch the *wrong* role's identity with the *original* role's still-displayed data.
+4. **The "View Role" info-circle modal is real copy-paste residue**: a mislabeled field still bound to `roleName`, duplicate identical checkboxes, a fully static dead 2-column table — and opening it silently flips the main top-of-page form into Update mode, with its own nested Save button live and able to create a duplicate role from view-only data.
+5. Search/sort machinery referenced in the view is completely dead — no UI element sets any of it.
+
+**Owner decision, not resolved here.** All reproduced faithfully for parity. **Flagging #2/#3 for visibility** given the data-integrity angle (added to the fast-track banner below).
+
+---
+
+## 108. `linenIssuePendingDetails` (Phase 4 batch 10) — dead copy-pasted modal dropped, a phantom-scope disable guard, a param-passing "wrong row removed" bug, a no-op batch-refresh handler, and an unguarded crash risk
+
+**Where:** `resources/assets/js/controller/linenlaundry/linenIssuePendingDetailsController.js` (self-registered state, reached via `linenIssue`'s "Details" row action — genuinely distinct from `linenIssue`'s own dead "Issuance List" tab, entry 97).
+
+**Findings, all reproduced faithfully except #1 (dropped as confirmed-dead, same treatment as `advisedVisits`):**
+1. **Dead copy-pasted "Get Indent" modal (~350 lines) + "Smart Issue" icon dropped from the rebuild** — confirmed zero live bindings, copy-paste residue shared with several unrelated "material pending" screens elsewhere in the app.
+2. **`vm.model.statusId == 17` disable-guards (Carrier select, Issue Qty input) are always false** — the real field lives at `vm.model.materialIssuePendingDetail.statusId`. Both controls are therefore always enabled in legacy today, regardless of record status.
+3. **`RemoveRowData` always deletes the LAST batch row, not the clicked one** — the "-" button passes the parent `item` instead of the specific row; `item.batch.indexOf(item)` is always -1, so `splice(-1,1)` always removes the last entry.
+4. **`batchOnChange` is a confirmed no-op** — switching a row's Batch No. dropdown never refreshes that row's Expiry/Available Stock columns (self-assignment bug, stray `debugger` statement left in legacy).
+5. **`setStatus(x)` is an unguarded `.find()` + `.id` access** — `statuses` loads asynchronously, nothing gates Save on it finishing.
+6. Save's response handling reads `response.data.message` unconditionally on any 2xx — reproduced, not gated on a `status` field that doesn't exist server-side for this endpoint.
+
+**No `data.moduleId`** — the self-registered state has zero resolve block. No nav entry (reached only via `linenIssue`'s row action, same convention as `linenIssueAcceptanceDetails`).
+
+**Owner decision, not resolved here.** Reproduced faithfully for parity.
+
+---
+
+## 109. `newAccessControl` (Phase 4 batch 10) — 15th+ `<modal>`-crash instance, no validation before save, `createdBy` hardcoded to user 1, and an asymmetric status-toggle/delete reload
+
+**Where:** `resources/assets/js/controller/common/newAccessControlController.js`, `views/common/new-access-control.html`. Confirmed genuinely distinct from the OLD `accessControl` screen — different URL/view/controller, zero endpoint overlap (see entry 112 for a related side-finding about `accessControl` itself, discovered incidentally while confirming this).
+
+**Findings:**
+1. **No validation at all before the Save confirm modal opens** — the starred "required" Menu Name field has no HTML5 `required`, no `<form>` wrapper, no manual check; backend doesn't validate it either.
+2. **`createdBy` is hardcoded to the literal `1`**, not the real logged-in user — every row created via this screen is misattributed.
+3. **`actionLink`/`actionIcon` are always sent as `undefined`** — read from bare scope variables never assigned anywhere.
+4. **The real search endpoint is commented out** — only a client-side, current-page-only filter remains (same quirk class as entries 87/94).
+5. **Status toggle never reverts (success or failure) and never reloads the list; delete ("x") DOES reload the list on success** despite calling the identical status-update endpoint — confirmed asymmetry.
+6. **15th+ confirmed instance of entry 55's shared `<modal>` crash** — standing policy applies, not re-litigated.
+
+`moduleId: 677`, no `requireSuperUser`.
+
+**Owner decision, not resolved here.** All reproduced faithfully for parity.
+
+---
+
+## 110. `employeeSurvey` (Phase 4 batch 10) — no `<form>` makes HTML5 validation decorative, a dead inline script, and a rating value that survives a successful save while answers reset
+
+**Where:** `views/master/UnitMaster/organizationMaster/employee-survey.html`, `resources/assets/js/controller/master/unit/EmployeeSurveyController.js` (self-registered state, no resolve block).
+
+**Findings:**
+1. **No `<form>` element wraps any of this screen's markup** — the rating input's `min="1" max="10" required` attributes are consequently fully decorative.
+2. **The view's own inline `<script>` block defines `$scope.validateRating` but no element ever calls it** — dead, and would likely throw if ever reached (`$scope` isn't a global in that context).
+3. **`controllerAs:'vm'` is declared but not load-bearing** — every assignment is `$scope.*`; the view has zero `vm.*` bindings.
+4. **On a successful save, the question list reloads blank but the numeric rating value is never reset** — a second save right after a successful one silently resubmits the last-typed rating.
+5. **Every saved row carries the identical `rating` value** — not a per-question rating; the backend DAO writes the same top-level `rating` field onto all 20 persisted rows in the loop.
+6. **Validation only requires ONE of 20 items (including an always-blank 20th pseudo-item) to have a non-empty answer** — not "all answered".
+
+No `<modal>`/`<dietCssdPopUp>`/`<shortcut>` usage.
+
+**Owner decision, not resolved here.** All reproduced faithfully for parity.
+
+---
+
+## 111. `holidayCalendarMasterUnit` (Phase 4 batch 10) — a different workflow category than sibling `weekendMaster` (entry 90), a dead "Update" path, an orphaned unreachable modal, and dead sort carets
+
+**Where:** `resources/assets/js/controller/adt/unit/holidayCalendarMasterUnitController.js`, `views/master/UnitMaster/organizationMaster/holiday-calendar-master-unit.html`.
+
+**Sibling comparison against `weekendMaster` (entry 90):** this screen is NOT a create/edit CRUD master — it's a dual-list mapping/assignment screen (pick from a global calendar, move to a per-unit selection, Save persists the selection), a genuine "wrong-workflow-category"-shaped divergence from a module-mate, not a bug. Shares none of `weekendMaster`'s 3 specific bugs.
+
+**Entity-duplicate caveat resolved, not ambiguous:** the write-path entity is unambiguously `com.param.global.model.UnitHolidayCalenderMapper` — the lookalike class in a different package (`com.param.entity.model.master.UnitHolidayCalenderMapper`) has zero references anywhere in the codebase, confirmed via exhaustive grep. Not the genuinely-ambiguous BR-040 shape.
+
+**Findings:**
+1. **All toast/growl behavior comes from the shared `BillingGenericService.serviceAction`'s own built-in auto-notification logic**, not the controller (zero `growl.` references in the controller). Reproduced via an explicit helper mirroring that shared service's exact behavior, including its `code==="409"`-as-warning branch (modeled for parity/completeness, not because it currently fires for this screen).
+2. **The "Update" button/path is permanently dead and permanently hidden together** — inert, not reproduced (nothing observable).
+3. **Status toggle never reverts on a failed response.**
+4. **Page navigation only re-fetches the list, never the count** — only initial load, page-size change, and post-save/post-toggle reloads re-fetch the count.
+5. **Sort carets (all 5 columns) are pure static decoration with zero click wiring in legacy itself** — not even broken wiring was ever attempted.
+6. **The left-hand checkbox list's `ng-checked` binding is dead/always-false** — harmless, the real checked state is driven by a co-existing working `ng-model`.
+
+**Disclosed omission, not a silent fix:** the "Add Holiday" modal is fully orphaned — its only possible trigger is inside an entirely commented-out block, and its own Save button has no click handler. No live path to ever open it in legacy today. Omitted from the rebuild rather than ported as inert unreachable markup (same reasoning as `weekend-master`'s dropped `initTime()`).
+
+`moduleId: 536`, no `requireSuperUser`. Uses a plain Bootstrap modal, not the shared `<modal>` directive — entry 55 doesn't apply.
+
+**Owner decision, not resolved here.** All reproduced faithfully for parity except the disclosed modal omission.
+
+---
+
+## 112. `accessControl` (not built, not in this batch) — a dead-code-shadow side-finding: two controllers registered for the same state, last-load wins, and the WORKING one loses
+
+**Where:** `index.html`'s script-tag load order. Discovered incidentally while confirming batch 10's `newAccessControl` is genuinely distinct from the older `accessControl` screen — not investigated further or built, purely a characterization note for whoever next touches `accessControl`.
+
+**What it is, plainly:** the `accessControlController` name is registered TWICE by two different files, loaded in sequence: `resources/assets/accessControl/controller/accessControlController.js` (the real, working `savePermissions`/role-tree controller) loads first, then `resources/assets/js/controller/access-control/access-control.js` (a much simpler UI-tree demo controller with `remove`/`toggle`/`moveLastToTheBeginning`, no real save logic) loads second. AngularJS's last-registration-wins means the **second, demo-shaped controller is what actually backs the live `accessControl` state today** — an `addItemPOCreation`-shaped dead-code shadow (entry 2's pattern), just discovered from the opposite direction (a real controller shadowed by a fake one, rather than a real state hiding under an unlisted name).
+
+**Not investigated further.** `accessControl` is not currently built and not part of this batch. Flagged so that whenever `accessControl` is eventually selected into a future batch, Step 0 doesn't have to rediscover this from scratch — confirm which of the two controllers is actually live (very likely the demo one, given load order) before assuming the "obvious" full-featured controller is the one governing real behavior.
+
+---
+
+## 113. `ticketSystemMaster`/`aiButtonMaster` (Phase 4 batch 10) — two more local dev-DB gaps, same class as entries 100/101/BR-038/039/043/046 — CROSS-CUTTING, held for owner approval, not resolved here
+
+**Where:** `public.button_master` (backing `aIButtonMaster`'s `getButtonMaster`/`saveButtonMaster`/`updateButtonMaster`/`updateButtonMasterStatus`), `public.m_unit_master.combined_ai_json` (a missing column, backing `aIButtonMaster`'s `getAiButtonConfigMaster`), and `public.m_ticket_system_master` + its sequence `ticket_system_master_seq` (backing `ticketSystemMaster`'s full CRUD) — all confirmed absent independently, both via direct `psql`/`information_schema` queries and via live `catalina.out` stack traces (`PSQLException: relation "..." does not exist` for the tables, a missing-column error for `combined_ai_json`).
+
+**What it is, plainly:** for both screens, the full Java Controller→Service→DAO chain is genuinely real and correctly implemented (confirmed via source read for every endpoint) — `UserRoleMasterController.java` (`aIButtonMaster`'s backend, the same class already used by `roleManagement`/`roleCreation`) and `TicketSystemMasterController.java`/`TicketSystemMasterServiceImpl`/`TicketSystemMasterDaoImpl` (`ticketSystemMaster`'s own dedicated chain) are all real, not stubs. The tables/column simply don't exist in this local dev DB. Identical gap class to BR-038/039/043/046 and entries 100/101 (the MRD table family) — a real, pre-existing local-environment gap, not a code defect in either the Java backend or the Angular rebuild.
+
+**Not fixed here, per established precedent.** Following the same discipline as entry 100's original framing, this is flagged and held for the owner's explicit go-ahead before either table/column is created, even though the DDL would be a straightforward additive match to sibling table conventions (same methodology as `BR-local-dev-db-drift-mrdrack-tabulartemplate`/`BR-local-dev-db-drift-mrdrowbox`).
+
+**Impact on this batch's Step 5 verification:** both screens' rebuilt components are confirmed correctly wired via golden-trace re-audit (real requests fire with the right shape, matching source) — the DB gap is the only thing preventing a full live round-trip test in this environment. Both are held as functionally complete pending this environment fix.
