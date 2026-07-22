@@ -1,0 +1,16 @@
+<!--
+  Rebuild of views/master/QMSMaster/QMS-master-call.html -- a plain inline
+  kiosk picker, no modal (unlike `QMS`/`displayCall`'s own kiosk pickers --
+  see qms-master-call.ts's class doc comment).
+-->
+<div id="page-content-wrapper">
+  <div class="kiosk-select-row">
+    <span>Select Kiosk</span>
+    <select [ngModel]="selectedKioskId()" (ngModelChange)="onKioskSelected($event)" name="qmsKioskMasterId">
+      <option value="">Select Kiosk</option>
+      @for (qms of activeQmsList(); track qms.qmsKioskMasterId) {
+        <option [value]="qms.qmsKioskMasterId">{{ qms.qmsDesc }}</option>
+      }
+    </select>
+  </div>
+</div>

@@ -213,6 +213,16 @@ export const routes: Routes = [
         data: { title: 'PM Schedule' },
         loadComponent: () => import('./features/pm-schedule/pm-schedule').then((m) => m.PmSchedule),
       },
+      // PMRequest: module 224 ("PM Request") exists in adminPriviledges.json for
+      // sidebar-visibility only in legacy -- no real resolve-block gate. Wiring
+      // data.moduleId here is a disclosed improvement, same precedent as
+      // billingGroupMaster's route (see docs/ANGULAR_PENDING_FINDINGS.md entry 138).
+      {
+        path: 'PMRequest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 224, title: 'PM Request' },
+        loadComponent: () => import('./features/pm-request/pm-request').then((m) => m.PmRequest),
+      },
       // assetScheduler: no data.moduleId (no resolve block), real cookieObject
       // guard only (no cookieObjectAppConfig check, unlike scheduleWorklist/PMSchedule).
       {
@@ -688,6 +698,26 @@ export const routes: Routes = [
         data: { moduleId: 575, title: 'Grade Creation Master' },
         loadComponent: () => import('./features/grade-creation-master/grade-creation-master').then((m) => m.GradeCreationMaster),
       },
+      // qmslogo: no data.moduleId (no resolve block), same shape as
+      // billingGroupMaster/periodicityService. Anonymous-write backend gap
+      // tracked separately, see docs/DECISION_NEEDED_QmslogoAnonymousWriteAccess.md.
+      {
+        path: 'qmslogo',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'QMS Logo' },
+        loadComponent: () => import('./features/qmslogo/qmslogo').then((m) => m.Qmslogo),
+      },
+      // qualityParameterMaster: no data.moduleId (no resolve block), same
+      // shape as billingGroupMaster/periodicityService.
+      {
+        path: 'qualityParameterMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Quality Parameter Master' },
+        loadComponent: () =>
+          import('./features/quality-parameter-master/quality-parameter-master').then(
+            (m) => m.QualityParameterMaster,
+          ),
+      },
       {
         path: 'employeeCategory',
         canActivate: [moduleAccessGuard],
@@ -713,6 +743,17 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { moduleId: 675, title: 'Role Management' },
         loadComponent: () => import('./features/role-management/role-management').then((m) => m.RoleManagement),
+      },
+      // userAuthentication: moduleId 676, confirmed from the live resolve block.
+      // Password-viewing feature (getUserAuthenticationList/sendPasswordToUser/
+      // resendUserNameAndPassword) deliberately omitted pending owner decision --
+      // see docs/DECISION_NEEDED_UserAuthenticationPlaintextPasswordDisclosure.md.
+      {
+        path: 'userAuthentication',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 676, title: 'User Authentication' },
+        loadComponent: () =>
+          import('./features/user-authentication/user-authentication').then((m) => m.UserAuthentication),
       },
       {
         path: 'rackMasters',
@@ -753,6 +794,22 @@ export const routes: Routes = [
         data: { moduleId: 794, title: 'QMS Token Display' },
         loadComponent: () => import('./features/display-call/display-call').then((m) => m.DisplayCall),
       },
+      // QMSMasterCall: moduleId 794, confirmed from the live resolve block --
+      // reached from the nav; launches QMS (below) in a new tab on confirm.
+      {
+        path: 'QMSMasterCall',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 794, title: 'QMS Token' },
+        loadComponent: () => import('./features/qms-master-call/qms-master-call').then((m) => m.QmsMasterCall),
+      },
+      // QMS: no resolve block, no moduleId -- reached only via QMSMasterCall's
+      // window.open('/QMS') launch action, same treatment as `display` (kiosk,
+      // no nav entry, see docs/ANGULAR_PENDING_FINDINGS.md entry 138).
+      {
+        path: 'QMS',
+        data: { title: 'QMS Token' },
+        loadComponent: () => import('./features/qms/qms').then((m) => m.Qms),
+      },
       {
         path: 'linenIssue',
         canActivate: [moduleAccessGuard],
@@ -776,6 +833,14 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { moduleId: 550, title: 'Room Master' },
         loadComponent: () => import('./features/room-master/room-master').then((m) => m.RoomMaster),
+      },
+      // roomModality: no data.moduleId (no resolve block), same shape as
+      // billingGroupMaster/periodicityService.
+      {
+        path: 'roomModality',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Room Modality' },
+        loadComponent: () => import('./features/room-modality/room-modality').then((m) => m.RoomModality),
       },
       {
         path: 'frequencyMaster',

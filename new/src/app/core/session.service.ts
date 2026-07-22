@@ -25,11 +25,16 @@ export interface CookieObject {
  * Separate cookie from `cookieObject`, written after unit-level app
  * configuration is loaded -- see `$rootScope.checkCookies()`
  * (app.js:1881-1892) and docs/ANGULAR_PENDING_FINDINGS.md entry 34.
- * `assetMaintenanceSpecialityId` is the only field a rebuilt screen has
- * needed to read so far (scheduleWorklist, screen 7/14).
+ * `assetMaintenanceSpecialityId` was the first field a rebuilt screen
+ * needed (scheduleWorklist, screen 7/14). `radiologySpecialityId` is read
+ * by roomModality (`resources/assets/js/controller/adt/unit/
+ * roomModalityController.js` ctrl:46, `$scope.radiologySpecialityId =
+ * cookieObjectAppConfig.radiologySpecialityId`, no null-check in legacy --
+ * read defensively via this optional field instead of porting that crash).
  */
 export interface CookieObjectAppConfig {
   assetMaintenanceSpecialityId?: number;
+  radiologySpecialityId?: number;
   [key: string]: unknown;
 }
 
