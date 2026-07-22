@@ -94,10 +94,12 @@ public class UnitApplicationBillingConfigurationServiceImpl implements IUnitAppl
 			if(registrationFieldConfiguration != null){
 				unitApplicationConfigurationDtos.setMobileDigit(registrationFieldConfiguration.getMobileDigit() != null ? registrationFieldConfiguration.getMobileDigit() : 10);
 			}
-			// Security fix, docs/DECISION_NEEDED_UnitApplicationConfigCredentialDisclosure.md --
-			// this response reaches the browser via a general-purpose UI-config lookup; strip
-			// secret-shaped fields the frontend never displays.
-			unitApplicationConfigurationDtos.stripClientFacingSecrets();
+			// NOTE: do NOT strip secret fields here -- this shared service method is also called
+			// internally by RazorPaymentController.getOrderIdForRazorPayPayment (and RazorPayServiceImpl)
+			// to get the REAL razorPayKeyId/razorPaySecretKey for actual payment processing. Stripping
+			// here would break real Razorpay order creation. The client-facing strip happens at the
+			// controller boundary instead -- see UnitApplicationBillingConfigurationController.
+			// docs/DECISION_NEEDED_UnitApplicationConfigCredentialDisclosure.md
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, null, unitApplicationConfigurationDtos);
 
 		}catch (Exception e) {
