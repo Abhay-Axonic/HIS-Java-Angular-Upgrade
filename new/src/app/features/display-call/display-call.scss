@@ -1,0 +1,43 @@
+// Screen-specific layout only -- shared modal styles live in src/styles.scss.
+
+.kiosk-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  color: grey;
+  font-size: 18px;
+}
+
+.dropdown-anchor {
+  position: relative;
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    min-width: 160px;
+  }
+
+  &:hover .dropdown-menu,
+  &:focus-within .dropdown-menu {
+    display: block;
+  }
+}
+
+.kiosk-select-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  select {
+    flex: 1;
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+}

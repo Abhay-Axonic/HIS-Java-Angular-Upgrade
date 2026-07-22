@@ -14,6 +14,7 @@ These are not "bugs to fix eventually" in the normal sense — each is a live pr
 - **Entry 54** *(added 2026-07-21)* — `ambulanceMaster` crashes on every single Ambulance Type dropdown selection — the most basic possible interaction with the form, with no workaround. Verified live via a real thrown exception, not just read from source.
 - **Entry 65** *(added 2026-07-21)* — the rebuild has no mechanism to populate its own module/permission list. Every route with a `data.moduleId` (the large majority of screens built so far) will show "Access Denied" for any real user in any real deployment today, silently, with no error message explaining why — masked in this project's own verification so far only because whoever tests it manually seeds `localStorage` via devtools first.
 - **Entry 84 (`employeeCategoryController.js`'s `organizationId` typo)** *(added 2026-07-21)* — not a crash, but a real, live data-integrity concern: `init()` sets `$scope.orgnisationId` (typo), but every other call site (save/update/edit/pagination/reload-after-save) reads the never-assigned `$scope.organizationId`, silently sending `organizationId: undefined` to the backend on every save/update after the first page load. Flagged here per explicit owner instruction — worth keeping visible alongside the crash-class entries above even though it isn't urgent enough to fix immediately.
+- **Entry 94 (`createTabularTemplatesController.js`'s shared-object status-toggle race)** *(added 2026-07-21)* — not a crash, but a real, narrow data-integrity risk: `updateStatus()` mutates the same `$scope.common` object the create/edit form uses to build its save payload, synchronously, before the HTTP call fires — toggling any row's status while a different row's edit form is open can corrupt that in-progress edit. The rebuild deliberately avoids this (disclosed deviation, not silently reproduced); legacy itself still has it.
 
 ---
 
@@ -1343,3 +1344,222 @@ Findings:
 **Parity confirmed, not a rebuild regression:** legacy's `insuranceMasterController.js:47` (`$rootScope.getDefaultRegistrationValidationDetails()`) calls the identical endpoint/query and would 500 the same way today — both legacy and the rebuild are affected equally.
 
 **Why this entry exists:** so a future Angular batch that trips this same 500 (it will fire on any screen that injects `RegistrationConfigService`, i.e. any screen reading `fieldConfig()`) recognizes it immediately as "BR-043's gap, reseed wiped it" rather than re-investigating from scratch. Not fixed here — re-applying BR-043's `ALTER TABLE` statements to the local dev DB is a routine dev-environment task, not a code change, and doesn't need a new BR entry unless the columns' presence needs to be made durable (e.g. a real tracked migration), which remains BR-043's own standing recommendation, unchanged.
+
+---
+
+## 87. `doctorCategoryMaster`/`roleManagement` (Phase 4 batch 9) — asymmetric confirm modal, dead sort icons, a non-functional "View Role" mockup, and a genuinely different flavor of the "current-page-only search" quirk
+
+**Where:** `doctorCategoryMasterController.js` (Save has a confirm modal, Update does not — an asymmetry, faithfully reproduced) and its dead decorative sort-arrow icons (no `ng-click`, `orderBy` on undefined vars, a no-op). Both screens use the shared `<modal>` directive — entry 55's standing policy applies to both, not re-litigated here.
+
+**`roleManagement`'s search box** (`resources/accessControl/controller/roleManagementMasterController.js:36-50` vs. `role-management.html:72`) genuinely sets up `PaginationService.searchData` (real full-dataset search plumbing exists) but `searchKeyword` is never connected to it and nothing calls `searchData()` — the box only ever filters the current page's ~10 rows. A different flavor from the usual "bare `filter` over an already-paginated array" quirk seen elsewhere (e.g. `doctorCategoryMaster`'s own search): here the "real" search machinery was apparently intended but never wired up.
+
+**`roleManagement`'s "View Role" action** (`role-management.html:85-87`, info-circle icon; `views/common/add-view-role.html:54-104`) is a confirmed non-functional mockup — a raw Bootstrap modal (no `ng-click`, bypasses Angular) showing a hardcoded Kendo checkbox tree with static placeholder items, identical regardless of which role's icon was clicked, reflecting no real permission data. Reproduced as an equally inert placeholder, disclosed as such.
+
+**Owner decision, not resolved here:** all reproduced faithfully for parity. Worth flagging to whoever owns Admin/User-Management in case anyone believes the "View Role" icon shows real privileges.
+
+---
+
+## 88. Investigated and ruled out: `UserRoleMasterController.java`'s trailing-space `@RequestMapping` does not break routing in practice
+
+**Where:** `legacy/Global/src/main/java/com/param/global/unit/controller/UserRoleMasterController.java:27`, `@RequestMapping("api/global/ ")` — confirmed via `od -c` a literal trailing space, unlike the clean sibling `UserRoleMapperContrtoller.java:22`.
+
+**What it looked like:** static analysis of Spring's `AntPathMatcher.combine()` suggested this could produce a registered path with an extra literal-space segment that wouldn't match the space-free path the frontend actually requests — a plausible severity-1 candidate, since every endpoint on this controller (including `roleManagement`'s own list-load/status-toggle calls) shares this class-level mapping.
+
+**Ruled out:** the live local Tomcat instance's access log (`catalina.out`/`localhost_access_log`) shows genuine prior `200` responses for both `getActiveUserRoleMasterList` and `updateUserRoleMasterStatus`, at real timestamps predating this investigation — conclusive evidence Spring resolves the route correctly in practice. Not a bug. Logged only so a future session doesn't re-investigate this same annotation from scratch.
+
+---
+
+## 89. `rackMasters` (Phase 4 batch 9) — duplicate initial-load fetch, same bug shape as `row-masters`, collapsed in the rebuild
+
+**Where:** `resources/assets/js/controller/billing/unit/rackMastersController.js` (self-registered controller `RackMasters.Controller`, state `rackMasters`, moduleId 1068).
+
+**What it is:** `getRack()` and `initRackGroupMasterList()` both fire at controller construction, hitting `POST /mrdrack/getMrdRackList` twice, back-to-back, with identical params — independently confirmed via golden trace (`tools/golden-trace/golden-traces/rackMasters.json`: exactly 2 identical calls, no more, no less). Same bug shape as `row-masters`' already-known duplicate-call issue (same "MRD `<X>` Master" copy-paste family).
+
+**Owner decision, not resolved in legacy.** The rebuild collapses both into a single `loadList()`, matching the exact precedent already established for `row-masters` — not a behavior change (both legacy calls return identical data), purely dropping a wasted duplicate network call.
+
+**My read:** low severity, pure inefficiency.
+
+---
+
+## 90. `weekendMaster` (Phase 4 batch 9) — edit-mode day-name display bug, success-only reset asymmetry, and a further confirmed `<modal>`-crash instance
+
+**Where:** `resources/assets/js/controller/master/unit/weekendMasterController.js`, `views/master/UnitMaster/organizationMaster/weekend-master.html`.
+
+**Three distinct findings:**
+1. **Editing an existing row does not refresh the visible "Select Day" readonly display.** `showUpdateBtn` sets `$scope.common` (with the correct `day`/`dayId`) but never assigns the separate `$scope.dayName` the view's readonly box actually renders — only a live datepicker change (`test()`) writes to it. Editing a row without touching its date shows a stale/blank day name, even though the correct value exists in `common.day`. Reproduced verbatim.
+2. **`save()`/`update()` only reset the form and reload the list on a `'success'` response** — an `'error'` response only growls. `updateStatus` never reloads/resets on either branch at all, and its `show-errors-reset` broadcast is commented out — deliberately stripped down further than its save/update neighbors. Reproduced verbatim.
+3. **One more confirmed instance of entry 55's shared `<modal>`-crash pattern** (`weekend-master.html:183`) — the close button calls `cancel()`, never defined in this controller. Standing policy applies, not re-litigated.
+
+**Also faithfully reproduced (not a bug, a genuine backend quirk):** the table's "Year" and "Date" columns are bound to the exact same field (`weekendDate`) — there is no separate year-only value in the response. Confirmed live during Step 5 testing: a saved row shows `2026-25-07` in both columns.
+
+**Owner decision, not resolved here.** Findings 1-2 reproduced verbatim for parity; finding 3 covered by entry 55's existing standing policy.
+
+---
+
+## 91. `tools/golden-trace/capture.js`'s synthetic permission seed only covered module IDs 1-999 — produced a false "dead screen" signal for `rackMasters`, its siblings were never captured at all — FIXED 2026-07-21
+
+**Where:** `tools/golden-trace/capture.js`, `PERMISSIONS_SEED_SCRIPT` (~line 95-101).
+
+**What it was:** the harness seeds `localStorage.permissions.modules` as `Array.from({length: 999}, ...)`. `rackMasters` (moduleId 1068) exceeds this range — its first capture attempt bounced through `accessDenied` and showed zero real network calls, purely because of this range gap, not anything wrong with the screen. Siblings `boxMasters` (1069) and `rowMasters` (1070) share the identical gap — neither had ever been successfully captured.
+
+**Fixed:** raised the seed to 1-2000 (test-harness-only change, nothing under `legacy/` touched). Re-ran the capture: `rackMasters` then correctly showed its real signature.
+
+**My read:** worth a note for whoever runs future captures on any screen with a 4-digit moduleId — this was silently wrong before, in a way that could easily have been misread as evidence of a dead/broken screen.
+
+---
+
+## 92. Pre-existing build-breaking comment bugs in `role-management.ts`/`.service.ts` blocked `ng build` for the entire app — FIXED 2026-07-21 (found as a prerequisite to verifying an unrelated batch)
+
+**Where:** `new/src/app/features/role-management/role-management.ts:43` and `role-management.service.ts:34`.
+
+**What it was:** both files' doc comments contained the literal text `UserRoleMaster*/UserRoleMapper*` — the embedded `*/` prematurely closed the outer JSDoc block, so TypeScript parsed the remaining comment prose as real code, throwing dozens of cascading syntax errors and breaking `ng build` for the entire application, not just this screen.
+
+**Fixed:** replaced `*/` with `*, ` in both comments (pure comment-text change, zero logic touched). Confirmed clean full-project build afterward (`ng build --configuration development`, zero errors beyond the pre-existing, unrelated `bootstrap.min.css` CSS-syntax warnings already known from every prior batch).
+
+**My read:** worth flagging that nobody had run a full `ng build` since whichever batch introduced `role-management` — this class of "each screen compiles in isolation but the whole app doesn't" gap is worth a periodic full-build check across batches going forward.
+
+---
+
+## 93. `genericMaster` (Phase 4 batch 9) — dead `ng-submit` binding, a second confirmed instance of the 406-revert status-toggle bug class, and a disclosed dropdown-accumulation deviation
+
+**Where:** `resources/assets/js/controller/master/pharmacy/genericMasterController.js`, `ToggleStatus` (~305-333); view `generic-master.html:10` (`ng-submit="saveGenericName()"`).
+
+**Three distinct findings:**
+1. The form's `ng-submit="saveGenericName()"` calls a function that does not exist anywhere in the codebase — pressing Enter in any text field would throw. Harmless in practice since the real save path is a separate anchor+modal flow that never triggers native form submission.
+2. `ToggleStatus`'s checkbox is optimistically flipped before the handler runs, and `if (generic.status == false) { ClearFields(); }` unconditionally wipes the add/edit form for any row's deactivation, even one unrelated to whatever record is open for editing.
+3. The 406-error handler always force-reverts to `status: true` regardless of which direction was being attempted — the same bug shape already documented for `assetCategoryMaster` (entry 10, bug 3), a second confirmed occurrence.
+
+**Owner decision, not resolved here.** All three reproduced verbatim for parity.
+
+**Disclosed deviation (not a silent fix):** legacy's combination-sub-form "Generic Name" dropdown accumulates duplicate options on every save/update reload (never cleared before repopulating). The rebuild derives this list reactively instead (never accumulates), following the same precedent as entry 4's insurance-master deviation.
+
+**Confirmed live during Step 5 testing:** `genericMaster`'s Asset Category/Product Category cascading dropdowns are correctly wired to real endpoints (`/api/global/assets/types/1/1`, `/api/global/assets/categories/1/1/1`, both real `200`s) but return empty — no asset categories seeded in this dev environment for asset type 1. A data gap, not a code defect; blocks completing a full save round-trip test here.
+
+---
+
+## 94. `createTabularTemplates` (Phase 4 batch 9) — Cabin-Master copy-paste leftovers, current-page-only search, a shared-object status-toggle race condition, and a 13th confirmed `<modal>`-crash instance
+
+**Where:** `resources/assets/js/controller/template/createTabularTemplatesController.js`, `views/template/create-tabular-templates.html`.
+
+**Four distinct findings:**
+1. **Cosmetic copy-paste leftovers, not functional:** the view's commented-out `<legend>`, `name="cabinMasterForm"`, and a bottom `<script>`'s sidebar-highlight all say "Cabin Master" — confirming this markup was cloned from `cabin-master.html` and never fully renamed. Does not affect real behavior.
+2. **Search filters only the currently-loaded page** — `ng-repeat="info in commonList|orderBy:column:reverse|filter:searchKeyword"` filters the bare in-memory array, no server-side search call exists. Same bug shape as `assetCategoryMaster` (entry 10, bug 2). `column`/`reverse` are never assigned — sort carets are purely decorative no-ops.
+3. **A real, confirmed-via-source race condition:** `updateStatus(id, status)` mutates the SAME `$scope.common` object the create/edit form uses to build its payload, synchronously, before the HTTP call fires. Toggling any row's status while a *different* row's edit form is open corrupts that in-progress edit; a same-window "Update" click would silently save the wrong record's data under the toggled row's id.
+4. **13th confirmed instance of entry 55's shared `<modal>` crash** — this screen's controller defines no `cancel()`. Standing policy applies, not re-litigated (extends the blast-radius count from 12 to 13).
+
+**Owner decision:** findings 1-2 reproduced faithfully. Finding 3 is a **disclosed, deliberate deviation** — the rebuild's `onToggleStatus()` builds an independent payload from the toggled row and never touches the edit-form signal mid-flight, avoiding the corruption window entirely (same precedent as entry 4). The one part of legacy's behavior still reproduced: the edit form unconditionally resets to blank/create-mode after any successful status toggle. Finding 4 covered by entry 55.
+
+**My read:** finding 3 is the most significant of the four (a genuine, if narrow, data-integrity risk) — worth flagging alongside entry 84's `employeeCategory` typo as a fast-track-visibility item, not urgent enough to fix in legacy now but worth keeping visible. Added to the fast-track banner below.
+
+**Confirmed live during Step 5 testing — a real, additional finding beyond the source audit:** both `getTabularTemplateMasterList`/`getTabularTemplateMasterCount` (initial load) and `saveTabularTemplateMaster` fail server-side with `org.hibernate.exception.SQLGrammarException: relation "public.m_tabular_template_master" does not exist` — the underlying Postgres table for this screen was never created in this local dev DB (same class of gap as BR-038/039/043/046: JPA entity and full Controller→Service→DAO chain are genuinely real and correctly implemented; only the table itself is missing here). The frontend defensively shows "No Record Found" on load (masking the underlying 500) and a growled `"Something went wrong!!"` (the literal `COMMON_ERROR_MESSAGE` constant) on save — both are the real, correct error-handling behavior given a genuinely failing backend call, not a rebuild bug. This blocks live save/list verification in this specific environment; not investigated further (DDL creation needs the same owner sign-off BR-038/039/043/046 all required) — see entry 100.
+
+---
+
+## 95. `modalityMaster` (Phase 4 batch 9) — cosmetic disable, no-revert status toggle, silent invalid-form no-op, sticky confirm modal on failure, dead pagination, a dead search handler, and confirmed NOT the same dead-backend class as its sibling `modalityTypeMaster` (entry 67)
+
+**Where:** `resources/assets/js/controller/master/unit/Scheduling/modalityMasterController.js`, `views/master/UnitMaster/Scheduling/modality-master.html`.
+
+**Backend confirmed fully real** (all 9 endpoints, full Controller→Service→DAO chains in `ModalityMasterController.java`/`ModalityMasterServiceImpl.java`/`ModalityMasterDaoImpl.java`) — this is the important negative result given the sibling screen `modalityTypeMaster`'s completely dead backend (entry 67); `modalityMaster` does not share that defect.
+
+**Findings, all reproduced faithfully:**
+- Edit-pencil's `ng-class="{disabled: ...}"` is cosmetic-only — the click handler stays live regardless of status; no real disable exists in legacy.
+- Status toggle never reverts on a failed response, in either direction — the checkbox flips optimistically before the async call starts, and the failure branch only growls, never resets the value.
+- Both `saveModality` and `updateModality` are silent no-ops when the form is invalid — no `growl.error`, unlike sibling `speciality-master`.
+- On a failed (duplicate) create, the confirm modal does not auto-close — the user must explicitly dismiss it before retrying (traced to the shared `<modal>` directive's own `hidden.bs.modal` handler, which does reset the latch on any dismissal — this does **not** become a permanent "confirm never shows again" bug like entry 64's case).
+- Dead pagination scaffold: `noOfRecordsPerPage` hardcoded to `10000`, zero pager markup in the view despite the controller building complete pager machinery — same class as entries 68/75.
+- The search box's `ng-keyup` handler calls a function that exists only in an unrelated LIS controller, copy-pasted into 19+ "Master" screens app-wide — harmless, since the table's own `filter:searchKeyword` performs the real search independently.
+- 13th+ confirmed instance of entry 55's `<modal>`/`cancel()` pattern.
+
+**Sibling comparison against `modalityTypeMaster` (explicitly not treated as a trusted reference, per the recurring "bugs baked into the reference screen" pattern):** `modalityTypeMaster`'s pager/entries-selector are live (unlike `modalityMaster`'s dead ones) but its own search box has zero binding at all (worse than `modalityMaster`'s partially-working search), and its Speciality `ng-change` references a nonexistent copy-paste artifact from an unrelated ADT screen.
+
+**Confirmed live during Step 5 testing:** Speciality dropdown has real seeded data ("General Medicine"); Sub-Speciality and Equipment cascades fire real `200` responses but return empty (no seed data) — a data gap, blocks a full save round-trip test here.
+
+---
+
+## 96. `displayCall` (Phase 4 batch 9) — auto-opening kiosk modal with no close path, a permanently-blank heading, and a dead cookie round-trip
+
+**Where:** `resources/assets/js/controller/master/QMS/QMSTokenDisplayMasterCallController.js`, `views/master/QMSMaster/QMS-display.html`.
+
+**Real/fake verdict:** real — a genuinely thin kiosk-picker launcher for the separate, full-featured `display` state (its own controller, 5 live calls, 2 polled every 2s — out of scope for this batch), not a stripped-down/broken screen. The Phase 0 low field/API count (1/2) is explained, not a red flag.
+
+**Findings, all reproduced faithfully, confirmed live during Step 5 testing (matches source-audit exactly):**
+- The kiosk-selection modal auto-opens the instant the kiosk list loads — no button opens it, confirmed live (page load immediately shows the modal).
+- `$scope.kioskName` (the "Kiosk : {{kioskName}}" heading) is set to `""` at init and never reassigned anywhere else — confirmed always blank live.
+- The modal's × close button is commented out in legacy source, with `data-keyboard="false" data-backdrop="static"` — confirmed live, no way to dismiss without picking a kiosk.
+- `SetCookies()`/`getCookie('kioskIdForDisplay')` round-trips a cookie with no consumer anywhere in this controller, its view, or the real `display` screen (which gets its kiosk id via URL route param instead) — inert, not reproduced.
+- `confirmQMS()` opens the separate `display` state via `window.open` — reproduced using this codebase's `pesapal-process-page` precedent; `display` itself isn't built yet, an expected, disclosed gap.
+
+**Confirmed live:** `getActiveQMSMasterList` returns a real `200` with an empty kiosk list — no kiosks seeded in this dev environment, a data gap not a code defect.
+
+---
+
+## 97. `linenIssue` (Phase 4 batch 9) — a compound-dead "Issuance List" tab (owner decision needed), a phantom-scope Indent No. filter, and a dead-but-unreachable function reference
+
+**Where:** `resources/assets/js/controller/linenlaundry/linenIssueController.js` (194 lines, self-registered state), `legacy/HIS-WAR/src/main/webapp/views/Linen/linen-issue.html` (577 lines).
+
+**Backend confirmed fully real** for all 3 endpoints this screen calls (`LinenIssueController`/`LinenIssueService`/`LinenIssueDao`, full chains). Golden trace confirms exactly 1 real call on load, matching the rebuild exactly.
+
+**Three findings:**
+1. **The "Issuance List" tab (Tab 2) is a compound-dead tab**, confirmed live during Step 5 testing: clicking it calls a bare `setScreen()` that resolves against `$scope`/`vm`, neither of which has it (it's a private JS closure never assigned to scope) — silently fails. Tab 2's own dropdown-fetch (`getDropdownsListIssuList`, a real, backend-confirmed endpoint) never actually executes in real usage. Tab 2's results grid was never live data at all — a single hardcoded `<tr>` row (confirmed live: `IS9120`/`22/04/2018`/`IND-1001`/...), plus a commented-out second row; the search button has no `ng-click`, the Type select has no `ng-model`. The one genuinely live piece of Tab 2 is "Direct Issue" (a real separate self-registered state, `linenIssueDirect`).
+   **Owner decision, NOT resolved here** — unlike `advisedVisits`' pre-approved dead-markup drop, no equivalent approval exists for this screen's Tab 2, so it is reproduced faithfully (shared dropdown signals, static hardcoded row, dead controls, live "Direct Issue" link) rather than unilaterally omitted. Flagged as a decision point: is Tab 2 worth finishing, or should it be formally retired?
+2. **Tab 1's "Indent No." filter is bound to a phantom `self.model.*` scope** under `controllerAs:'vm'` (`ng-model="self.model.indentNo"` vs. every other field's `vm.model.*`) — `self` doesn't exist on scope, so typing it is silently discarded on search. Reproduced faithfully.
+3. **Tab 2's dropdown success handler calls an undefined `initialCall()`** — would throw if ever reached, but Entry finding 1 above already establishes this code path never actually runs in current usage, so this bug is presently inert. Not reproduced (nothing to reproduce).
+
+**My read:** finding 1 (Tab 2) is the most significant — a real, user-facing dead feature, worth a dedicated owner decision on whether to finish or retire it, separate from this batch's normal parity work.
+
+---
+
+## 98. `advisedVisits` (Phase 4 batch 9) — 1105 lines of dead copy-pasted markup dropped (pre-approved), Print/CSV export excluded (owner-approved 2026-07-21, after the fact), and three faithfully-reproduced backend/UX quirks
+
+**Where:** `views/OPD/advised-visits.html` (1261 lines total), `resources/assets/js/controller/OPD/advisedVisitsController.js`.
+
+**Pre-approved scoping decision, executed:** lines 157-1261 (bed-reservation, deposit-matrix/payment-collection with 7 payment-mode sub-tabs, confirmation popup, bed-status/rejection modals, a stray script hardcoding the page title to "Pending Admission Request" — an unrelated IPD screen, confirming wholesale copy-paste — and a stray trailing `</body></html>`), plus the one dead `<modal visible="showModal">` at line 86 (`showModal` is never set anywhere in the controller), were independently re-verified as having zero live bindings (every `ng-click`/`ng-model`/`ng-repeat` target in that range grepped individually against the controller, zero matches for any of them) and dropped from the rebuild, per the same treatment `boxMasters` got. Golden-trace re-audit confirms this drop has zero effect on the captured trace — none of that markup ever fired a network call in legacy either. Confirmed live during Step 5 testing: the rebuilt screen loads clean with just the real follow-up-list surface, no leftover dead markup.
+
+**Print/CSV-export buttons excluded — owner-approved 2026-07-21, after the fact:** `printAdvisedDateAppointment()`, `getReportFormatesList()`, `getExcel()` (wired to real, live, working buttons in the real zone) were excluded from the rebuild. Both hit a generic Crystal-Reports-style reporting subsystem shared across many unrelated billing screens; no Angular-side equivalent exists yet anywhere in `new/src/app/core/`, and building one from scratch to support a single screen's export button was judged materially bigger than this batch's scope. Unlike the dead-modal drop, this scoping call was originally made by the rebuilding agent itself without pre-approval — flagged for explicit confirmation in the batch 9 report, and the owner approved the exclusion as-is (no further code change needed). As a direct consequence, the rebuild's golden-trace re-audit shows 2 of the real controller's 3 on-load calls (list, count), not 3 (the missing one, `getMISReportFormattesMasterforShowReports`, only exists to support the excluded export button).
+
+**Three faithfully-reproduced quirks, all backend/source-confirmed:**
+1. Pagination total is always unfiltered by date range/doctor — the count query (`getAdvisedDateAppointmentListCount`) omits the date/doctor filters the list query applies, a real backend quirk, not a frontend bug.
+2. The search-icon button always resets to a plain 10-row, offset-0 page regardless of the current "Show N entries" selection — `masterList()` is called with zero arguments on search-click, so `offset`/`noOfRecordsPerPage` default to `0`/`10` independent of the selector's actual value.
+3. `initMasterList` fires its list-fetch and count-fetch with no ordering guarantee (a minor race, same class as entry 4's insuranceMaster race, lower stakes).
+
+**"Doctor" clinical-keyword false alarm independently re-confirmed:** the real query selects no diagnosis/medication/treatment/prescription column anywhere; `doctorId`/`doctorName` are purely a filter and display join.
+
+**Confirmed live during Step 5 testing:** date-range search and doctor-name typeahead (`getDoctorMasterListAutoFillSerach`) both fire real `200` responses; empty result set is a data gap (no advised-visit records seeded), not a code defect.
+
+---
+
+## 99. `rackMasters` (Phase 4 batch 9) — a checked-in `proxy.conf.example.json` gap (missing `/mrdrack/**`) masked the screen as backend-broken until traced to its real cause — FIXED 2026-07-21
+
+**Where:** `new/proxy.conf.json` (gitignored, local-only) and `new/proxy.conf.example.json` (tracked template).
+
+**What it was:** unlike sibling screens `rowMasters`/`boxMasters` (whose `/mrdrow/**`/`/mrdbox/**` prefixes were both already present), `rackMasters`' `/mrdrack/**` prefix was never added to either proxy config file. Attempting to save a test record during Step 5 live-testing produced a client-side `404` on `POST /mrdrack/saveMrdRack` — `ng serve`'s own dev server was 404-ing the request itself instead of forwarding it to the real Java backend, since no proxy rule matched. Confirmed via direct Java source read that `MrdRackMasterController.java` genuinely implements `@RequestMapping("/mrdrack")`/`saveMrdRack` correctly — this was a dev-environment routing gap, not a missing backend or a rebuild bug.
+
+**Fixed:** added `/mrdrack/**` to both the local `proxy.conf.json` and the tracked `proxy.conf.example.json` template (matching the existing `/mrdrow/**`/`/mrdbox/**` entries exactly) — config-only, no application code touched.
+
+**My read:** worth a note for whoever adds the next MRD-family screen (or any screen introducing a genuinely new URL prefix) — the proxy config needs a matching entry or the screen will look backend-broken in local dev when it isn't.
+
+---
+
+## 100. `rackMasters` and `createTabularTemplates` (Phase 4 batch 9) — two more local dev-DB tables missing entirely, same class as BR-038/039/043/046 — RESOLVED 2026-07-21, owner-approved
+
+**Where:** `public.m_mrd_rack_master` (backing `rackMasters`) and `public.m_tabular_template_master` (backing `createTabularTemplates`) — confirmed absent via live Tomcat log stack traces during Step 5 testing: `org.postgresql.util.PSQLException: ERROR: relation "..." does not exist` for both, surfacing through `org.hibernate.exception.SQLGrammarException` on every list/save call each screen makes.
+
+**What it was, plainly:** for both screens, the JPA entity (`MrdRackMaster.java`/`TabularTemplateMaster.java`) and the full Controller→Service→DAO chain are genuinely real and correctly implemented (independently confirmed by both the rebuilding agents' source audits and this session's own log analysis) — the Postgres table itself was simply never created in this local dev DB. This is the identical gap class as BR-038 (`m_unit_subscription_config`), BR-039 (`t_unit_subscription_details`), BR-043 (`t_unit_application_registration_configuration`, entry 86), and BR-046 (4 empty master tables) — a real, pre-existing local-environment gap, not a code defect in either the Java backend or the Angular rebuild.
+
+**Resolved, owner-approved ("Yes, create both tables"):** both tables created via plain additive `CREATE TABLE`/`CREATE SEQUENCE`, columns/types derived directly from each entity's own `@Column`/`@NamedNativeQuery`/`@NamedQuery` annotations (confirmed no hidden extra columns beyond what's mapped), matched against `public.m_doctor_category`'s live schema for type conventions. Full detail in `docs/BUSINESS_RULE_MANIFEST.md` under `BR-local-dev-db-drift-mrdrack-tabulartemplate`. **Notable side-finding:** the whole MRD table family turned out to be missing — `m_mrd_row_master`/`m_mrd_box_master` (backing already-built siblings `rowMasters`/`boxMasters`) are also absent from this DB, meaning those two screens have likely never had a live save/list round-trip verified in this exact environment either. Not investigated or fixed here — flagged for whoever next touches those two screens.
+
+**Verified live, not assumed from the DDL alone:** both screens' full save → real "Added Successfully" toast → row appears in list → status-toggle → real "Updated Successfully" toast round-trip confirmed via browser automation, zero console errors on either. Both screens are now fully live-verified, not just code-complete.
+
+---
+
+## 101. `rowMasters`/`boxMasters` (already merged to `main`) — same MRD table-family gap as entry 100, 4th instance of the BR-038/039/043/046 class — RESOLVED 2026-07-21, owner-approved, first genuine live round-trip either screen has ever had in this environment
+
+**Where:** `public.m_mrd_row_master` (backing `rowMasters`, already-built, merged to `main`) and `public.m_mrd_box_master` (backing `boxMasters`, same) — the side-finding entry 100 flagged and deferred. Unlike `rackMasters`/`createTabularTemplates` (newly built in batch 9, never previously tested against a live backend), these two screens are already live in `main` — the owner directed this gap be closed now rather than deferred, since "whoever touches them next" isn't a real plan for already-shipped screens.
+
+**What it was:** both `RowMaster.java`/`BoxMaster.java` entities and their full Controller→Service→DAO chains (`MrdRowMasterController`/`MrdBoxMasterController` etc.) are genuinely real and correctly implemented — confirmed by direct source read, structurally identical to `MrdRackMaster.java` (same field shape, same `@NamedNativeQuery` set, just `row`/`box` in place of `rack`). Neither table existed in this local dev DB at all — confirmed via `pg_tables` (zero matches for `%row_master%`/`%box_master%` in `public`) before this fix. This means `rowMasters`/`boxMasters` had **never** had a genuine live backend round-trip tested in this environment before now — only golden-trace (which runs with no live backend at all, per its own documented limitation) or static code review had ever touched these two screens' actual save/list behavior.
+
+**Resolved, owner-approved:** both tables created via the identical additive approach as entry 100/`BR-local-dev-db-drift-mrdrack-tabulartemplate` — plain `CREATE TABLE`/`CREATE SEQUENCE`, columns/types derived directly from each entity's own `@Column`/`@NamedNativeQuery` annotations (confirmed no hidden extra columns), matched against `public.m_doctor_category`'s live schema for type conventions, sequence names (`mrd_row_master_seq`/`mrd_box_master_seq`) matching each entity's own `@SequenceGenerator` exactly. Full detail in `docs/BUSINESS_RULE_MANIFEST.md` under `BR-local-dev-db-drift-mrdrowbox`.
+
+**Verified live, not assumed from the DDL alone — first genuine live test either screen has had:** both screens' full save → real "Added Successfully" toast → row appears in list → status-toggle → real "Updated Successfully" toast round-trip confirmed via browser automation, zero console errors on either. **No discrepancy surfaced now that live testing is actually possible** — both screens behave exactly as their prior code-review-only characterization described (no confirm-modal step for either, matching this sibling family's established convention, confirmed not a bug).
+
+**My read:** this closes out the 4th confirmed instance of this recurring gap class (BR-038, BR-039, BR-043/entry 86, BR-local-dev-db-drift-mrdrack-tabulartemplate/entry 100, now this one) — worth a standing note that any screen sharing this DB's apparent 2026-07-15-ish reseed/drift event should be treated as suspect for a missing-table gap until actually live-tested, not just code-reviewed, regardless of how long ago it was merged.

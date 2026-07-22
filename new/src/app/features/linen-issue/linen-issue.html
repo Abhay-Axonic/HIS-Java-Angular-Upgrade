@@ -1,0 +1,220 @@
+<div class="container-fluid his-style">
+  <ul class="nav nav-tabs">
+    <li [class.active]="activeTab() === 1"><a href="javascript:void(0)" (click)="selectTab(1)">Pending Issuance</a></li>
+    <li [class.active]="activeTab() === 2"><a href="javascript:void(0)" (click)="selectTab(2)">Issuance List</a></li>
+  </ul>
+
+  <!-- TAB 1: Pending Issuance -- fully real -->
+  @if (activeTab() === 1) {
+    <fieldset class="margin-top10">
+      <div class="row">
+        <div class="col-lg-2">
+          <label>Date (From)</label>
+          <input type="date" class="form-control" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+        </div>
+        <div class="col-lg-2">
+          <label>Date-Till</label>
+          <input type="date" class="form-control" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+        </div>
+        <div class="col-lg-2">
+          <label>Store (Requester)</label>
+          <select class="form-control" [(ngModel)]="fromStore">
+            @for (s of fromStores(); track s) {
+              <option [ngValue]="s">{{ s['store'] ?? 'All Stores' }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-2">
+          <label>Issuing Store</label>
+          <select class="form-control" [(ngModel)]="toStore">
+            @for (s of toStores(); track s) {
+              <option [ngValue]="s">{{ s['store'] ?? 'All Stores' }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-2">
+          <!-- Legacy bug reproduced: this field is bound to a phantom
+               `self.model.indentNo` scope in legacy (controllerAs:'vm' is
+               used everywhere else), so typing here never reaches the
+               search payload -- same here, deliberately not wired. -->
+          <label>Indent No.</label>
+          <input type="text" class="form-control" [(ngModel)]="tab1IndentNo" />
+        </div>
+        <div class="col-lg-1">
+          <label>Status(n)</label>
+          <select class="form-control" [(ngModel)]="status">
+            @for (s of statuses(); track s) {
+              <option [ngValue]="s">{{ s['status'] ?? 'All' }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-1">
+          <a href="javascript:void(0)" id="searchBtn" class="btn btn-primary btn-save-box-shadow" (click)="search()">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="row margin-top4">
+        <div class="col-lg-3 float_right">
+          <input type="text" class="text-search-box" placeholder="Search" [ngModel]="quickFilter()" (ngModelChange)="quickFilter.set($event)" />
+          <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <table class="table table-striped table-hover table-condensed table-bordered margin-top10">
+        <thead>
+          <tr>
+            <th>Indent No.</th>
+            <th>Indent (Date)</th>
+            <th>Store (Requester)</th>
+            <th>Issuing Store</th>
+            <th>Priority</th>
+            <th>Remark</th>
+            <th>Status(n)</th>
+            <th class="text-center">Action taken</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (issue of filteredResults(); track issue.id) {
+            <tr>
+              <td>{{ issue.indentNo }}</td>
+              <td>{{ issue.indentDate | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ issue.fromStoreName }}</td>
+              <td>{{ issue.toStoreName }}</td>
+              <td>{{ issue.priorityName }}</td>
+              <td [title]="issue.remark">{{ !issue.remark ? '-' : issue.remark }}</td>
+              <td>{{ issue.status }}</td>
+              <td class="text-center">
+                <a title="Print"><i class="fa fa-print" aria-hidden="true"></i></a>
+                <span class="padding-left10">
+                  <a href="javascript:void(0)" (click)="openPendingDetails(issue)">Details</a>
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="text-center">No Record Found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </fieldset>
+  }
+
+  <!-- TAB 2: Issuance List -- reproduced as the non-functional tab it
+       actually is in legacy today (real dropdown-fetch code exists in the
+       controller but is unreachable via the view; results grid was
+       always a hardcoded static row). See class-doc / findings entry. -->
+  @if (activeTab() === 2) {
+    <fieldset class="margin-top10">
+      <div class="row">
+        <div class="col-lg-2">
+          <label>Date (From)</label>
+          <input type="date" class="form-control" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+        </div>
+        <div class="col-lg-2">
+          <label>To Date</label>
+          <input type="date" class="form-control" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+        </div>
+        <div class="col-lg-2">
+          <label>Store (Requester)</label>
+          <select class="form-control" [(ngModel)]="fromStore">
+            @for (s of fromStores(); track s) {
+              <option [ngValue]="s">{{ s['store'] ?? 'All Stores' }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-2">
+          <label>Issuing Store</label>
+          <select class="form-control" [(ngModel)]="toStore">
+            @for (s of toStores(); track s) {
+              <option [ngValue]="s">{{ s['store'] ?? 'All Stores' }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-2">
+          <!-- Bound in legacy (vm.model.indentNo, correctly this time) but
+               never actually used by anything -- Tab 2's search button has
+               no click handler at all in legacy. Rendered, non-functional. -->
+          <label>Indent No.</label>
+          <input type="text" class="form-control" [(ngModel)]="tab2IndentNo" />
+        </div>
+        <div class="col-lg-1">
+          <label>Status(n)</label>
+          <select class="form-control" [(ngModel)]="status">
+            @for (s of statuses(); track s) {
+              <option [ngValue]="s">{{ s['status'] ?? 'All' }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-lg-1">
+          <!-- Legacy: static <option>Auto/Manual</option>, no ng-model at all. -->
+          <label>Type</label>
+          <select class="form-control">
+            <option></option>
+            <option>Auto</option>
+            <option>Manual</option>
+          </select>
+        </div>
+        <div class="col-lg-1">
+          <!-- No ng-click in legacy -- decorative only. -->
+          <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="row margin-top4">
+        <div class="col-lg-2">
+          <label>Issued Number</label>
+          <input type="text" class="form-control" [(ngModel)]="issueNo" />
+        </div>
+        <div class="col-lg-2 float_right">
+          <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow" title="Save" (click)="openDirectIssue()">Direct Issue</a>
+        </div>
+        <div class="col-lg-3 float_right">
+          <!-- No ng-model in legacy -- decorative only. -->
+          <input type="text" class="text-search-box" placeholder="Search" />
+          <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <table class="table table-bordered margin-top10">
+        <thead>
+          <tr>
+            <th>Issued Number</th>
+            <th>Issued Date</th>
+            <th>Indent No.</th>
+            <th>Store (From)</th>
+            <th>Store (To)</th>
+            <th>Priority</th>
+            <th>Type</th>
+            <th>Remark</th>
+            <th>Status(n)</th>
+            <th class="text-center">Action taken</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Legacy's own hardcoded mockup row, reproduced verbatim --
+               there is no live data behind this tab's grid in legacy today. -->
+          <tr>
+            <td>IS9120</td>
+            <td>22/04/2018</td>
+            <td>IND-1001</td>
+            <td>ICU Store</td>
+            <td>Main Store</td>
+            <td>Low</td>
+            <td>Bed Linen</td>
+            <td>-</td>
+            <td>Pending</td>
+            <td class="text-center">
+              <a title="Print"><i class="fa fa-print" aria-hidden="true"></i></a>
+              <span class="padding-left10"><a href="javascript:void(0)">Details</a></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </fieldset>
+  }
+</div>

@@ -71,8 +71,16 @@ function startStaticServer() {
 
 // Broad synthetic permission set so this harness's own navigation isn't
 // blocked by the app's real (data-driven) access-control resolve guards --
-// test-harness seeding only, not a real user session. Module IDs 1-999
-// covers every numeric ID this app's resolve blocks were observed to check.
+// test-harness seeding only, not a real user session. Module IDs 1-2000
+// (raised from 1-999 on 2026-07-21, Phase 4 batch 9: `rackMasters`
+// (moduleId 1068) captured a false accessDenied bounce -- zero real
+// $http calls -- purely because its moduleId fell outside the old 1-999
+// seed range, not because of anything wrong with the screen itself
+// (confirmed live and fully wired via source + Java backend read). Its
+// siblings `boxMasters` (1069) and `rowMasters` (1070) share the same gap
+// and were never captured at all under the old range -- no
+// boxMasters.json/rowMasters.json exists in golden-traces/. Raising the
+// ceiling is a test-harness-only change; nothing under legacy/ is touched.
 // isSuperUser: 'Y' added 2026-07-17 after organizationMaster's resolve block
 // (app.js, not its controller) turned out to gate on
 // `$cookies.getObject('cookieObject').isSuperUser` -- without it, that one
@@ -95,7 +103,7 @@ function startStaticServer() {
 const PERMISSIONS_SEED_SCRIPT = `
 try {
   localStorage.setItem('permissions', JSON.stringify({
-    modules: Array.from({length: 999}, (_, i) => ({ id: i + 1 }))
+    modules: Array.from({length: 2000}, (_, i) => ({ id: i + 1 }))
   }));
 } catch (e) {}
 `;

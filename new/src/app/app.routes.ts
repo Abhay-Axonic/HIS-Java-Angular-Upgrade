@@ -700,6 +700,70 @@ export const routes: Routes = [
         data: { moduleId: 455, title: 'Bank Branch' },
         loadComponent: () => import('./features/bank-branch/bank-branch').then((m) => m.BankBranch),
       },
+      // Phase 4 batch 9
+      {
+        path: 'doctorCategoryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 499, title: 'Doctor Category Master' },
+        loadComponent: () =>
+          import('./features/doctor-category-master/doctor-category-master').then((m) => m.DoctorCategoryMaster),
+      },
+      {
+        path: 'roleManagement',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 675, title: 'Role Management' },
+        loadComponent: () => import('./features/role-management/role-management').then((m) => m.RoleManagement),
+      },
+      {
+        path: 'rackMasters',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 1068, title: 'MRD Rack Master' },
+        loadComponent: () => import('./features/rack-masters/rack-masters').then((m) => m.RackMasters),
+      },
+      {
+        path: 'weekendMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 697, title: 'Weekend Master' },
+        loadComponent: () => import('./features/weekend-master/weekend-master').then((m) => m.WeekendMaster),
+      },
+      {
+        path: 'genericMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 463, title: 'Generic Master' },
+        loadComponent: () => import('./features/generic-master/generic-master').then((m) => m.GenericMaster),
+      },
+      {
+        path: 'createTabularTemplates',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 736, title: 'Tabular Template' },
+        loadComponent: () =>
+          import('./features/create-tabular-templates/create-tabular-templates').then(
+            (m) => m.CreateTabularTemplates,
+          ),
+      },
+      {
+        path: 'modalityMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 655, title: 'Modality Master' },
+        loadComponent: () => import('./features/modality-master/modality-master').then((m) => m.ModalityMaster),
+      },
+      {
+        path: 'displayCall',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 794, title: 'QMS Token Display' },
+        loadComponent: () => import('./features/display-call/display-call').then((m) => m.DisplayCall),
+      },
+      {
+        path: 'linenIssue',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 344, title: 'Linen Issue' },
+        loadComponent: () => import('./features/linen-issue/linen-issue').then((m) => m.LinenIssue),
+      },
+      {
+        path: 'advisedVisits',
+        loadComponent: () => import('./features/advised-visits/advised-visits').then((m) => m.AdvisedVisits),
+        data: { title: 'Advised Visits' },
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

@@ -1,0 +1,172 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="weekendDate">Select Year<span class="required">*</span></label>
+        <input
+          id="weekendDate"
+          type="date"
+          [ngModel]="form().weekendDate ? toDateInputValue(form().weekendDate!) : ''"
+          (ngModelChange)="onDateChange($event)"
+          name="weekendDate"
+          [class.invalid]="isRequiredMissing()"
+        />
+        @if (isRequiredMissing()) {
+          <p class="help-block">Year is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="dayDisplay">Select Day</label>
+        <!-- Readonly, mirrors legacy's SEPARATE $scope.dayName variable --
+             deliberately NOT refreshed by edit(), see the class doc comment
+             on the day-display bug. -->
+        <input id="dayDisplay" type="text" [value]="dayName()" readonly />
+      </div>
+
+      <div class="field checkbox-field">
+        <label class="checkbox-inline">
+          <input
+            type="checkbox"
+            [ngModel]="form().isHalfDay === 'Y'"
+            (ngModelChange)="updateFormField('isHalfDay', $event ? 'Y' : 'N')"
+            name="isHalfDay"
+          />
+          Is Halfday
+        </label>
+      </div>
+
+      @if (form().isHalfDay === 'Y') {
+        <div class="field">
+          <label for="fromTime">Time(From)</label>
+          <input
+            id="fromTime"
+            type="time"
+            [ngModel]="form().fromTime"
+            (ngModelChange)="updateFormField('fromTime', $event)"
+            name="fromTime"
+          />
+        </div>
+        <div class="field">
+          <label for="toTime">Time(Till)</label>
+          <input
+            id="toTime"
+            type="time"
+            [ngModel]="form().toTime"
+            (ngModelChange)="updateFormField('toTime', $event)"
+            name="toTime"
+          />
+        </div>
+      }
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <!--
+      Real working filter (see `displayedRows`) AND a faithfully reproduced
+      crash on every keystroke, both live on the same input at once -- see
+      the class doc comment / docs/ANGULAR_PENDING_FINDINGS.md. Legacy's
+      weekend-master.html:107 wires this exact input's ng-keyup to
+      `serachTestmaster`, a function never defined anywhere in
+      weekendMasterController.js.
+    -->
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      name="searchKeyword"
+      autocomplete="off"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+      (keyup)="onSearchKeyup()"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <!-- Both "Year" and "Date" bind the same weekendDate field --
+             reproduced verbatim, see class doc comment. -->
+        <th>Year</th>
+        <th>Day</th>
+        <th>Date</th>
+        <th>Is Halfday</th>
+        <th>Time(From)</th>
+        <th>Time(Till)</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.weekendId) {
+        <tr>
+          <td>{{ row.weekendDate }}</td>
+          <td>{{ row.day }}</td>
+          <td>{{ row.weekendDate }}</td>
+          <td>{{ row.isHalfDay }}</td>
+          <td>{{ row.fromTimeString }}</td>
+          <td>{{ row.toTimeString }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center" [class.disabled]="row.status === 'I'">
+            <i class="icon-edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="8" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

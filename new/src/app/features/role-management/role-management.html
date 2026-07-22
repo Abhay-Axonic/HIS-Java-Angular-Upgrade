@@ -1,0 +1,131 @@
+<section class="page">
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pagination().pageSize" (ngModelChange)="setPageSize()" name="pageSize">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      records
+    </label>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Role Name</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">View User</th>
+        <th class="text-center">Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.roleId) {
+        <tr>
+          <td>{{ row.roleName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <a title="View User" (click)="openUserModal(row)"><i class="fa fa-user" aria-hidden="true"></i></a>
+          </td>
+          <td class="text-center">
+            <a title="View Role" (click)="openViewRoleModal()"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (pagination().totalPages > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+      @for (p of pagesList(); track p) {
+        <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+    </ul>
+  }
+</section>
+
+<!-- View User modal -- fully real/live (see class doc comment: no confirm
+     dialog on removal, and the list is NOT refreshed after a successful
+     removal, matching legacy's own stale-list behavior). -->
+@if (showUserModal()) {
+  <div class="modal-backdrop" (click)="closeUserModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        View User
+        <button type="button" (click)="closeUserModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>User Id</th>
+              <th>User Name</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of userList(); track u.userRoleMpprId) {
+              <tr>
+                <td>{{ u.userId }}</td>
+                <td>{{ u.userName }}</td>
+                <td class="text-center">
+                  <a title="Delete" (click)="removeUserFromRole(u.userRoleMpprId)"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                </td>
+              </tr>
+            }
+            @if (!userList().length) {
+              <tr>
+                <td colspan="3" class="text-center">No Record Found</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- View Role modal -- inert in legacy too (see class doc comment): the
+     info-circle icon opens a static, non-data-bound modal in
+     views/common/add-view-role.html, unrelated to whichever role was
+     actually clicked. Reproduced as an equally inert placeholder, not a
+     real permission-tree feature legacy itself never built. -->
+@if (showViewRoleModal()) {
+  <div class="modal-backdrop" (click)="closeViewRoleModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        View Role
+        <button type="button" (click)="closeViewRoleModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <p>
+          Not wired to real data in legacy either -- see
+          <code>views/common/add-view-role.html</code>'s static
+          <code>#viewRoleModal</code> markup.
+        </p>
+      </div>
+    </div>
+  </div>
+}

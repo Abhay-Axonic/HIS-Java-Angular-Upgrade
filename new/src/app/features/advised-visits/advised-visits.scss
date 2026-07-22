@@ -1,0 +1,51 @@
+// TEMPLATE -- replace with the real screen's audited layout styles.
+// Status-toggle CSS is NOT here on purpose: <app-status-toggle> ships its
+// own (new/src/app/shared/status-toggle/status-toggle.scss), so there's
+// nothing to add or forget for that specific control.
+
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 12px;
+
+  .active {
+    font-weight: bold;
+  }
+}
+
+.typeahead-wrap {
+  position: relative;
+}
+
+.typeahead-list {
+  position: absolute;
+  z-index: 10;
+  background: #fff;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    padding: 4px 8px;
+    cursor: pointer;
+
+    &:hover {
+      background: #eee;
+    }
+  }
+}
