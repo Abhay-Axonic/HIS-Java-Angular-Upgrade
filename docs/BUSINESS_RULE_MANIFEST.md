@@ -1321,3 +1321,31 @@ No schema/structure change, no other rows touched. Verified two ways before repo
 Classification: Neither (pre-existing local-dev-DB gap / environment drift, not a behavioral change — no `legacy/` or `new/` application code touched by the DB fix itself; the separate frontend crash fix is tracked independently on its own branch/finding, not part of this BR entry). Owner Decision: Approved explicitly ("Yes, go ahead and apply it").
 
 **Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope, same as every prior entry in this class). `docs/ANGULAR_PENDING_FINDINGS.md` entry 135 has the related frontend-crash-fix detail.
+
+## BR-local-dev-db-drift-assettype-seq — Local dev DB (`his_local`)'s `m_asset_type_id_seq` was out of sync with `m_asset_type`'s real data, blocking `assetTypeMaster` saves — found during Phase 4 batch 11's Step 5 live testing (2026-07-22)
+
+**Not a business rule — a local-dev-environment gap, same class as `BR-local-dev-db-drift-legacy-login-blocked`'s sibling entry and entry 116 (`m_action_master`/`action_master_seq`, batch 10).** Confirmed via `catalina.out`: a real save attempt on `assetTypeMaster` (after entry 133's severity-1 crash fix let the screen reach its real backend for the first time) threw `org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique constraint "m_asset_type_pkey" — Key (id)=(1) already exists`. Direct query confirmed the sequence's `last_value` was `1` while the table already had 2 real seed rows (`id` 1 and 2, dated 2018-05-29) — `nextval()` was returning an already-taken id.
+
+**Fixed via a single, additive, reversible `setval` call, owner-approved before applying:**
+```sql
+SELECT setval('m_asset_type_id_seq', (SELECT MAX(id) FROM m_asset_type));
+```
+No schema/structure change. Verified live: a real save (`AT2`/`Test Asset Type Two`) after the fix returned `201` / `{"id":3,"message":"Asset Type Inserted Successfully"}` — the code fix from `docs/ANGULAR_PENDING_FINDINGS.md` entry 136 (real session-derived `unitId`/`organizationId`/`userId` instead of hardcoded `0`) was verified together with this DB fix in the same round trip.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched by this fix). Owner Decision: Approved explicitly ("Yes, approve both DB fixes — go ahead and apply them").
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 136 has full detail.
+
+## BR-local-dev-db-drift-systemobservation-specialityids — Local dev DB (`his_local`)'s `emr.m_system_observation_master` was missing its `speciality_ids` column entirely, blocking `systemObservationMaster` saves — found during Phase 4 batch 11's Step 5 live testing (2026-07-22)
+
+**Not a business rule — a local-dev-environment gap, same class as every other `BR-local-dev-db-drift-*` entry this session.** Confirmed via `catalina.out`: a real save attempt on `systemObservationMaster` threw `org.hibernate.exception.SQLGrammarException` / `PSQLException: ERROR: column "speciality_ids" of relation "m_system_observation_master" does not exist`. `SystemObervationMaster.java:65-66` (`@Column(name="speciality_ids") private String specialityIds;`) is real and correctly mapped in Java — the column simply never existed on the live table in this environment (confirmed via `\d emr.m_system_observation_master`).
+
+**Fixed via a single, additive `ALTER TABLE`, owner-approved before applying:**
+```sql
+ALTER TABLE emr.m_system_observation_master ADD COLUMN speciality_ids character varying(255);
+```
+Column type/length derived from the entity's plain `String` field (no explicit `@Column(length=...)`, so JPA's default `varchar(255)` applies), matching the exact methodology of every prior entry in this class. Verified live: a real save (`OBS2`/`Test Observation Two`, System "Duplicate Attempt System", Speciality "General Medicine") after the fix returned `status: success`.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Yes, approve both DB fixes — go ahead and apply them").
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 136 has full detail.
