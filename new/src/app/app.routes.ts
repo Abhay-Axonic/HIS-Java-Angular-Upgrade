@@ -832,6 +832,124 @@ export const routes: Routes = [
             (m) => m.HolidayCalendarMasterUnit,
           ),
       },
+      // Phase 4 batch 11 (size-experiment batch, 15 screens). All confirmed
+      // real, backend-existence-checked per-screen by the parallel audit
+      // agents; moduleId/requireSuperUser values read directly from each
+      // state's own live resolve block in app.js (or, for self-registered
+      // states, the controller's own `.config($stateProvider)` block), not
+      // assumed. `outSideHospitalMaster`, `ICPCMapper`, `icpcCodesConfiguration`
+      // have no `data.moduleId` -- confirmed their legacy states genuinely
+      // have no resolve block at all, same class as billingGroupMaster/
+      // periodicityService above, not a gap this rebuild introduces.
+      {
+        path: 'areaMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 387, title: 'Area Master' },
+        loadComponent: () => import('./features/area-master/area-master').then((m) => m.AreaMaster),
+      },
+      {
+        path: 'holidayCalenderMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 375, title: 'Holiday Calendar Master' },
+        loadComponent: () =>
+          import('./features/holiday-calender-master/holiday-calender-master').then(
+            (m) => m.HolidayCalenderMaster,
+          ),
+      },
+      {
+        path: 'clinicMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 504, title: 'Clinic Master' },
+        loadComponent: () => import('./features/clinic-master/clinic-master').then((m) => m.ClinicMaster),
+      },
+      {
+        path: 'outSideHospitalMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Out Side Hospital Master' },
+        loadComponent: () =>
+          import('./features/out-side-hospital-master/out-side-hospital-master').then(
+            (m) => m.OutSideHospitalMaster,
+          ),
+      },
+      {
+        path: 'reasonMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 495, title: 'Reason Master' },
+        loadComponent: () => import('./features/reason-master/reason-master').then((m) => m.ReasonMaster),
+      },
+      {
+        path: 'reasonTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 494, title: 'Reason Type Master' },
+        loadComponent: () =>
+          import('./features/reason-type-master/reason-type-master').then((m) => m.ReasonTypeMaster),
+      },
+      {
+        path: 'rejectionMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 493, title: 'Rejection Master' },
+        loadComponent: () => import('./features/rejection-master/rejection-master').then((m) => m.RejectionMaster),
+      },
+      {
+        path: 'systemMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 484, title: 'System Master' },
+        loadComponent: () => import('./features/system-master/system-master').then((m) => m.SystemMaster),
+      },
+      {
+        path: 'systemObservationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 485, title: 'System Observations Master' },
+        loadComponent: () =>
+          import('./features/system-observation-master/system-observation-master').then(
+            (m) => m.SystemObservationMaster,
+          ),
+      },
+      {
+        // Legacy's real state/URL uses capital "ICPC" throughout (self-registered
+        // in the controller's own file, not central app.js) -- confirmed via
+        // direct source read, kept for parity.
+        path: 'ICPCMapper',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'ICPC Mapper' },
+        loadComponent: () => import('./features/icpc-mapper/icpc-mapper').then((m) => m.IcpcMapper),
+      },
+      {
+        path: 'icpcCodesConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'ICPC Codes Configuration' },
+        loadComponent: () =>
+          import('./features/icpc-codes-configuration/icpc-codes-configuration').then(
+            (m) => m.IcpcCodesConfiguration,
+          ),
+      },
+      {
+        path: 'instructionMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 501, title: 'Instruction Master' },
+        loadComponent: () => import('./features/instruction-master/instruction-master').then((m) => m.InstructionMaster),
+      },
+      {
+        path: 'assetTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 641, title: 'Asset Type Master' },
+        loadComponent: () => import('./features/asset-type-master/asset-type-master').then((m) => m.AssetTypeMaster),
+      },
+      {
+        path: 'consumableBarcodeConfig',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 636, title: 'Consumable Barcode Configuration' },
+        loadComponent: () =>
+          import('./features/consumable-barcode-config/consumable-barcode-config').then(
+            (m) => m.ConsumableBarcodeConfig,
+          ),
+      },
+      {
+        path: 'fixedAssetMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 644, title: 'Fixed Asset Master' },
+        loadComponent: () => import('./features/fixed-asset-master/fixed-asset-master').then((m) => m.FixedAssetMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

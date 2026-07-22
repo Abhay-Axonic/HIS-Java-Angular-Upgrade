@@ -1,0 +1,121 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="reasonTypeCode">Reason Type Code<span class="required">*</span></label>
+        <input
+          id="reasonTypeCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().reasonTypeCode"
+          (ngModelChange)="updateField('reasonTypeCode', $event)"
+          [class.invalid]="isCodeInvalid()"
+          name="reasonTypeCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="reasonTypeDesc">Reason Type Description<span class="required">*</span></label>
+        <input
+          id="reasonTypeDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().reasonTypeDesc"
+          (ngModelChange)="updateField('reasonTypeDesc', $event)"
+          [class.invalid]="isDescInvalid()"
+          name="reasonTypeDesc"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!-- No search box here: legacy's own search input on this screen has no
+         ng-model and its ng-repeat has no filter -- completely dead. See
+         class doc comment on reason-type-master.ts. -->
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Reason Type Code</th>
+        <th>Reason Type Description</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.reasonTypeId) {
+        <tr>
+          <td>{{ row.reasonTypeCode }}</td>
+          <td>{{ row.reasonTypeDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="4" class="text-center"></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

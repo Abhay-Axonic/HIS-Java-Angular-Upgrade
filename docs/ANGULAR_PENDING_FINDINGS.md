@@ -1846,3 +1846,171 @@ Between the pre-existing entry 113 (`ticketSystemMaster`/`aIButtonMaster`) and t
 **Not independently re-verified to the same depth as entry 102 yet** — entry 102's finding was confirmed via full controller read (save/update payload shapes, field-by-field), while this one is currently based on endpoint-string matching alone during batch 11's proposal research. Flagged here so it's tracked rather than lost, not elevated to a fully-confirmed finding until someone reads the full controller.
 
 **Not built, not selected into batch 11 or any batch.** Flagged for a future owner decision on the same two paths entry 102 raises: faithfully replicate if ever built, or treat as a genuine defect needing its own fix proposal. Excluded from low-risk batch selection until that decision is made (same treatment as `supplyDaysMaster`).
+
+---
+
+## 120. SEVERITY 1 — `areaMaster` (Phase 4 batch 11) — a real, live data-corruption bug: editing an area silently zeroes its `cityId` unless the user manually re-touches the City dropdown
+
+**Where:** `resources/assets/js/controller/master/global/areaMasterController.js`, the edit-populate path (`showUpdateBtn`) vs. the save path (`updateArea`/`UpdateAreaMaster`). Confirmed via direct source read, corroborated by `AreaMasterDaoImpl.java`'s update method, which persists whatever `cityId` the payload sends with no server-side guard.
+
+**What it is, plainly:** opening an existing area for edit populates the visible City dropdown correctly for display, but the underlying `$scope.model.cityId` bound to the actual save payload is not re-populated from the loaded record — it stays at whatever stale value (or `null`) was last in that scope variable. If the user edits any other field and clicks Save without re-selecting a City (a fully plausible, easy-to-miss real-world action, since the dropdown visually looks correct), the update silently sends a `cityId` of `null`/the wrong id, corrupting a real geographic reference on an existing row with no warning, no validation error, and no confirmation prompt calling out the change. Confirmed reproducible in legacy exactly as described.
+
+**Not fixed in legacy — out of scope for this workstream.** The rebuild faithfully reproduces this exact behavior (edit-populate does not set the save-bound city field from the loaded record either), per standing project discipline: rebuild for parity with legacy's current behavior, log real bugs, never fix silently.
+
+**My read:** genuinely severity-1 — silent, undetectable data corruption on save with no error surfaced to the user, on a screen with no unusual preconditions to trigger it (any ordinary edit-without-touching-City workflow hits it). Recommend fast-track owner attention given the blast radius (every area record ever edited without re-selecting City) and the complete absence of any user-facing signal that anything went wrong.
+
+---
+
+## 121. `holidayCalenderMaster` (Phase 4 batch 11) — clean audit, no severity-1; confirmed as a fully distinct screen from the already-shipped `holidayCalendarMasterUnit` despite the near-identical name
+
+**Where:** `holidayCalenderMasterController.js`, self-registered state `holidayCalenderMaster` (moduleId 375, app.js:3258-3284) — confirmed via direct source read to be a genuinely separate state/controller/moduleId from `holidayCalendarMasterUnit` (moduleId 536, already shipped in batch 5), not a duplicate-registration trap in the `addItemPOCreation` shape. The two differ in scope: this screen manages the organization-level holiday calendar; the already-shipped one is unit-level.
+
+**What it is, plainly:** real screen, real fully-implemented backend, standard master-CRUD shape. One note-worthy but non-bug detail preserved for parity: the view's `templateUrl` uses the correct "calendar" spelling while the state name/controller/URL all carry legacy's "Calender" typo throughout — kept as-is, since "fixing" the typo in only one of several places would itself be a divergence.
+
+**Not fixed / no bugs found requiring a decision.** No severity-1 or cross-cutting finding on this screen specifically.
+
+---
+
+## 122. `clinicMaster` (Phase 4 batch 11) — clean audit, no severity-1, standard master-CRUD shape confirmed
+
+**Where:** self-registered state `clinicMaster` (moduleId 504, config/app.js:8164-8190, resolve block read live). Real, fully-implemented backend chain confirmed. `$state` is present in this controller's own DI list, so the missing-`$state`-DI crash pattern recurring elsewhere in this project does not apply here.
+
+**What it is, plainly:** a standard, unremarkable master-data screen. No severity-1 or cross-cutting finding.
+
+---
+
+## 123. `outSideHospitalMaster` (Phase 4 batch 11) — a confirmed instance of the `outSideHospitalMaster`-shaped duplicate-submit bug: a `popUpFlag` confirm-modal gate exists but never resets after a failed save
+
+**Where:** `outSideHospitalMasterController.js` — self-registered state, confirmed via exhaustive grep to be the only registration of this state name anywhere in the codebase. **This self-registered state has no resolve block at all** (no `moduleId` check, no `requireSuperUser`) — a genuine, pre-existing legacy gap, not something this rebuild invents a stricter check for; the route correctly omits `data.moduleId`.
+
+**What it is, plainly:** unlike entry 107's `roleCreation` (no `popUpFlag` gate at all), this screen does have a `popUpFlag` gate on its confirm-save modal — but the flag is only reset to allow the modal to re-arm on a *successful* save. A failed save (validation error or backend failure) leaves `popUpFlag` in its post-first-click state, so the very next Save click on that same page visit skips the confirm dialog and saves immediately, unconfirmed. Same underlying bug family as entry 107, a milder variant (only triggers after at least one failed save attempt, not on every single click).
+
+**Not fixed in legacy — faithfully reproduced in the rebuild** (the flag is only re-armed after a successful save, exactly matching source).
+
+---
+
+## 124. `reasonMaster` (Phase 4 batch 11) — a stuck-loader bug on a failed edit-load, and a harmless dead search handler shadowing a working client-side filter
+
+**Where:** `reasonMasterController.js:276-303` (`showUpdateBtn`) and view:90 (`ng-keyup="serachTestmaster(...)"`).
+
+**What it is, plainly:** (1) `showUpdateBtn` calls `$rootScope.startLoader()` before its GET but only calls `stopLoader()` inside the success branch — a failed/empty response (e.g. editing a row that was deleted from a stale page) shows an `alert("Error!!")` with no `stopLoader()` call at all, leaving the global loading overlay stuck indefinitely. (2) The search box has a genuinely working `ng-model="searchKeyword"` feeding a real `filter:searchKeyword` on the table — but ALSO an `ng-keyup="serachTestmaster(searchKeyword)"` handler calling a function that doesn't exist anywhere in the controller; harmless because the filter does the real work regardless, but throws on every keystroke.
+
+**Not fixed in legacy — both faithfully reproduced.** My read: low-to-moderate severity — the stuck loader only manifests on a rare getById failure, and the dead search handler is invisible to users since the working filter masks it.
+
+---
+
+## 125. SEVERITY 1 — `reasonTypeMaster` (Phase 4 batch 11) — the screen's controller `<script>` include is commented out in legacy's `index.html`, making it completely unreachable today; its backend list endpoint also ignores organization-scoping and pagination entirely, a currently-latent cross-tenant data leak
+
+**Where:** `legacy/HIS-WAR/src/main/webapp/index.html:1571` — `<script src="...reasonTypeMasterController.js?version=3.08"></script>` is wrapped in an HTML comment, while its sibling `reasonMasterController.js`'s include (index.html:1575) is live. Confirmed via exhaustive grep (no build step re-includes it) and reproduced via golden-trace capture: navigating to `/reasonTypeMaster` in legacy throws `Error: [$controller:ctrlreg] Controller 'reasonTypeMasterController' is not a registered controller` — every `ng-model`/`ng-click` in the view is inert, only the static HTML shell loads. Separately, `ReasonTypeMasterDaoImpl.getReasonTypeMasterList()` (`legacy/Global/src/main/java/com/param/global/org/common/dao/ReasonTypeMasterDaoImpl.java:56-72`) has its `.setInteger("orgId",...)`/`.setFirstResult(...)`/`.setMaxResults(...)` calls present in source but **commented out** — every call, any org, any page, returns the entire cross-org table, while the sibling count query IS correctly scoped (so the pager shows a plausible per-org count with the wrong cross-org data behind it). Confirmed via direct HQL + DAO read, contrasted against sibling `reasonMaster`'s correctly-scoped equivalent.
+
+**What it is, plainly:** the screen's own controller and backend are otherwise fully real and correctly written — it was apparently deployed with one forgotten script tag, and has been completely dead in legacy ever since, for as long as this code has existed. The org-scoping/pagination bug on its list endpoint is real but currently invisible to any user, since nobody can reach the screen that would trigger it.
+
+**Owner decision, not resolved here.** Since faithfully reproducing "a script tag was forgotten" has no meaningful Angular equivalent (there's no analogous failure mode to invent), the rebuild was built as a real, working screen rather than an unreproducible dead one — a disclosed, deliberate departure, not a silent one. The backend org-scoping/pagination bug WAS faithfully reproduced (not fixed) — the rebuild calls the real endpoint and inherits the real cross-tenant leak, which will now actually surface for the first time since this screen has never been reachable before.
+
+**My read:** severity-1 on both counts — flagging for fast-track owner consideration on two independent questions: (a) should legacy's script tag be restored (out of scope for this workstream to decide), and (b) the cross-tenant data leak needs its own decision regardless of (a), since the rebuild is about to make this screen reachable for the first time.
+
+---
+
+## 126. `reasonTypeMaster` vs. sibling `reasonMaster` — three further divergences confirmed: no loading-spinner UX at all, no validation-reset broadcast, and a completely dead (non-functional) search box
+
+**Where:** `reasonTypeMasterController.js` (whole file, zero `startLoader`/`stopLoader`/`show-errors-reset` matches) vs. `reasonMasterController.js` (uses both); `reason-type-master.html` search input has no `ng-model` and its `ng-repeat` has no `filter:`, vs. `reason-master.html`'s working equivalent.
+
+**What it is, plainly:** (1) no loading-spinner feedback at all on any of `reasonTypeMaster`'s save/update/edit/toggle actions. (2) no `show-errors-reset` broadcast after a successful save/update (marginal effect in legacy, since the `has-error` class is largely self-correcting). (3) the search box is 100% non-functional — no model binding, no filter — genuinely does nothing, unlike `reasonMaster`'s (which works via the filter pipe despite carrying its own unrelated dead `ng-keyup` handler, see entry 124).
+
+**Not fixed in legacy — all three faithfully reproduced**: no loader calls added, `formSubmitted` not reset after success, and no search box built at all for this screen (matching legacy's non-functional one by omission, not by porting a fake dead handler).
+
+---
+
+## 127. `rejectionMaster` (Phase 4 batch 11) — clean audit, no severity-1, standard master-CRUD shape confirmed
+
+**Where:** self-registered/central state `rejectionMaster` (moduleId 493, app.js:8379-8405, no `requireSuperUser`). `$state` IS in this controller's own DI list, so the missing-`$state`-DI crash pattern does not apply here. Real, fully-implemented backend chain confirmed.
+
+**What it is, plainly:** a standard, unremarkable master-data screen. No severity-1 or cross-cutting finding.
+
+---
+
+## 128. SEVERITY 1 — `systemMaster` (Phase 4 batch 11) — Save, Update, and Status-toggle each leave the global loading overlay stuck permanently, and show no error at all, on any backend failure or non-"success" response
+
+**Where:** `resources/assets/js/controller/opd/global/systemMasterController.js` — `saveSystem()` (~lines 159-207), `updateStatus()` (~253-286), `updateSystem()` (~315-361). Independently confirmed via direct source read (route `/systemMaster`, moduleId 484, app.js:14978-15004).
+
+**What it is, plainly:** all three functions call `$rootScope.startLoader()` immediately before firing their respective POST, then chain a single `.then(successCallback)` with **no error/second callback at all**. Inside that lone success callback, `$rootScope.stopLoader()` only executes when `response.data.status == "success"`. This means: (1) any genuine network/HTTP failure never reaches any callback that stops the loader — nothing rejects the promise chain into a handler, so the loader spins forever; (2) any real backend response where `status !== "success"` (e.g. a duplicate-name validation failure) hits the success callback but skips the `stopLoader()` branch, with the identical stuck-forever effect and no error message shown to the user anywhere. `updateSystem()`'s success branch also calls a dead `$scope.clearData()`, never defined anywhere in the controller — silently swallowed since nothing has a `.catch`.
+
+**Not fixed in legacy — faithfully reproduced in the rebuild**, per standing project discipline.
+
+**My read:** genuinely severity-1 — the global loading overlay blocks all UI interaction app-wide (matching the same "stuck global loader" bug class already documented in entry 83), and this instance affects all three of Save/Update/Status-toggle on one screen, triggered by the completely ordinary case of a validation failure or a flaky network call. Any user who hits a save failure on this screen must reload the entire app to recover. Recommend fast-track owner attention given the app-wide-freeze blast radius.
+
+---
+
+## 129. `systemObservationMaster` (Phase 4 batch 11) — the entire "edit an existing observation" flow is dead, unreachable code, and the dead code itself is separately broken (copy-pasted from a different screen's controller)
+
+**Where:** `systemObservationMasterController.js` — `showUpdateBtn()` is never called from anywhere in `system-observation-master.html` (grepped, zero matches for `ng-click="showUpdateBtn(...)"`), so `updateBtnFlag` stays `false` forever and the entire `ng-if="updateBtnFlag"` Update UI never renders for any user. Independently, `updateSystemObservation()`'s own body (ctrl:521-566) is copy-paste residue from `modalityMasterController` (per the file's own doc-comment header): it reads/writes `$scope.modalityObj` (never defined in this controller — only `$scope.observationObj` is used), POSTs to the wrong endpoint (`UPDATEMODALITYMASTER`), and calls `$scope.initStateMasterList` (also undefined) — calling it would throw immediately.
+
+**What it is, plainly:** this screen has no way to edit an existing observation's code/name/system/speciality once saved (only the status toggles and the create-time property add/remove work). Real, but invisible to any user since the button that would trigger it doesn't exist.
+
+**Not fixed in legacy — the rebuild deliberately implements no edit flow, matching this real, if surprising, legacy behavior**, not fixed or improved. New confirmed instance of entry 55's shared `<modal>` close-button crash also present (`cancel()` never defined) — standing policy applies, working close button shipped.
+
+---
+
+## 130. UNRESOLVED, flagged for owner input — `instructionMaster` (Phase 4 batch 11) likely has a live, undisclosed dependency on a third-party translation service (apertium.org) and the Google Translate widget, loaded on every page visit; live network confirmation was blocked by a real, cross-cutting login crash
+
+**Where:** `instruction-master.html:397` unconditionally `ng-include`s a shared partial, `views/OPD/CoverSheet/customise-language.html`. That partial's own trailing `<script>` block (lines 158-190) contains a live (not commented-out) jQuery/JSONP call to `https://www.apertium.org/apy/translate?q=hello%20world&langpair=en|es`, plus a live `<script src="//translate.google.com/translate_a/element.js...">` (Google Translate widget). (`inspectionMasterController.js`'s own separate, fully commented-out copy of the same apertium call is confirmed dead — this finding is about the partial's independent, live copy, not that one.)
+
+**What it is, plainly:** whether these third-party calls actually fire depends on whether AngularJS/jQuery execute `<script>` tags delivered via `ng-include` — confirmed via source that this app loads jQuery before AngularJS (`index.html:308,345`), and jQuery's DOM-insertion methods do evaluate embedded scripts on insertion (corroborated by an already-relied-upon working pattern elsewhere in this exact codebase: every view template ends with a raw `<script>` block that reliably updates the sidebar title on real navigation, which could not work at all if `ng-include`-delivered scripts were inert). This is strong circumstantial evidence, not yet a definitive live-network capture — an attempt to settle it via a real browser session was blocked by an unrelated, pre-existing crash: `loginController.js:124` throws `TypeError: Cannot read properties of undefined (reading 'organizationLogo')` inside `getUnitByUserCredentials()`, preventing the Unit dropdown from populating for the documented local dev test login, so no session could be established to capture real traffic.
+
+**Decision made for this rebuild, pending owner sign-off:** neither the apertium.org call nor the Google Translate widget is wired into the rebuild's `instructionMaster` — both are documented in the component's own doc comment and flagged here rather than silently ported or silently dropped.
+
+**Not resolved — needs an explicit owner decision** on two independent questions: (1) if confirmed live, is an undisclosed third-party translation-service dependency on an admin screen acceptable, and (2) the `loginController.js:124` crash itself is a real, reproducible, cross-cutting environment blocker — it will likely block Step 5 live-testing for other screens too, independent of this specific investigation, and is not scoped to `instructionMaster` at all.
+
+---
+
+## 131. `instructionMaster` (Phase 4 batch 11) — three further findings: a dead search-keystroke handler shadowed by a working filter (same shape as entry 124), search scoped to the current page only, and a real duplicate-language-entry bug on blur
+
+**Where:** view:90 (`ng-keyup="serachTestmaster(searchKeyword);"`, function undefined, same dead-handler shape as `reasonMaster`'s entry 124 — zero functional effect since the real filtering is done by `ng-model`+`filter:searchKeyword` independent of the keyup handler). This screen paginates server-side, and no "search across all records" endpoint is wired to the search box — search only filters the current page's already-fetched rows, reproduced exactly. Separately, `ng-blur="defaultSet()"` on the Description field pushes a new "English" entry into `addedLanguageList` on *every* blur with none of the duplicate-language check `addLanguageDetails()` performs — tabbing in/out repeatedly stacks duplicate English rows.
+
+**Not fixed in legacy — all three faithfully reproduced.** New confirmed instance of entry 55's shared `<modal>` close-button crash also present; unlike other instances, this modal isn't otherwise wired to anything functional in legacy either, so the rebuild simply doesn't render an equivalent dead modal at all. Also noted: a real, confirmed status/filter-vocabulary divergence vs. sibling `systemObservationMaster` — `systemObservationMaster`'s Speciality multiselect filters to `isClinicalSpeciality=='Y'` only, while `instructionMaster`'s structurally-identical Department multiselect applies no such filter — both preserved as independently-correct legacy behaviors, not normalized.
+
+---
+
+## 132. `ICPCMapper` and `icpcCodesConfiguration` (Phase 4 batch 11) — extra Step 0 scrutiny given the clinical-coding acronym, confirmed safe: pure non-patient-linked configuration metadata, no severity-1 findings
+
+**Where:** `ICPCMapper` is self-registered in its own controller file's `.config($stateProvider)` block (not central app.js), with no resolve block at all on the state — no module gate in legacy, `data.moduleId` intentionally omitted at the route level, not an oversight. `icpcCodesConfiguration` is registered centrally alongside `ICPCMapper`, also with no resolve block.
+
+**What it is, plainly:** ICPC (International Classification of Primary Care) is a real clinical coding standard, so both screens received deliberate extra field-level scrutiny per explicit instruction, beyond the standard Step 0 pass. Confirmed: both screens manage pure coding-system configuration metadata (code lists, mapping tables between coding systems) — no patient identifiers, no encounter/visit data, no clinically-identifying content of any kind flows through either screen's backend calls or persisted fields. This confirms the prior quick-check assessment that flagged these as safe; the deeper scrutiny found nothing to elevate that assessment.
+
+**No severity-1 or cross-cutting finding.** Standard master-CRUD shape for both, no bugs requiring an owner decision beyond routine parity notes (not detailed here since none rise to reportable severity).
+
+---
+
+## 133. SEVERITY 1 — `assetTypeMaster` (Phase 4 batch 11) — the entire backend call layer has been dead in legacy for as long as this code has existed, due to a bare, undefined global `constants` reference; fix implemented in the rebuild, held for review
+
+**Where:** `resources/assets/js/controller/master/AssetManagenent/assetTypeMasterController.js:6` — `var apiUrl = constants.apiurl + constants.unitsApi;` references a lowercase global `constants` that is never defined anywhere in the codebase (confirmed by exhaustive grep across the entire `legacy/HIS-WAR/src/main/webapp` tree — the only `constants` match outside this file is an unrelated bundled math library). The injected Angular constant is `CONSTANTS` (capital), never used in this file.
+
+**What it is, plainly:** throws a `ReferenceError` synchronously at controller construction, before `initializeController()` ever runs — `self.model` is never set, `GetAssetTypeList()` never fires, the list is permanently blank, and clicking Save throws `Cannot read properties of undefined (reading 'Popup')`. Independently confirmed via this batch's golden-trace capture: `assetTypeMaster.json`'s `httpCalls` list contains zero `/api/units/assets/types` calls, only the template fetch (the same "anomalous call-count" methodology used in entry 9) — while the other two screens audited in the same batch correctly show their real backend calls, ruling out an environment/permission problem. The screen is otherwise completely real: real view, real self-registered state (moduleId 641), and a real, fully-implemented backend (`AssetTypeController.java` → `AssetTypeService.java` → `AssetTypeDao.java`) that legacy's own frontend has apparently never once reached.
+
+**Fix implemented in the rebuild, held for review — same tier as entries 40/44/54.** Per this project's established precedent for a straightforward, unrecoverable broken-reference crash, the rebuild calls the real, confirmed backend directly rather than porting a permanent `ReferenceError`.
+
+**My read:** severity-1 given the blast radius (a fully-functional backend that has never once been reachable through the UI, for the entire life of this screen) — flagged for fast-track owner consideration, consistent with how entries 43/44/54 were handled.
+
+---
+
+## 134. `consumableBarcodeConfig` and `fixedAssetMaster` (Phase 4 batch 11) — a real duplicate-row data-integrity bug, a confirmed crash-on-click, two confirmed crash bugs (fixed, held for review), a hardcoded single-option dropdown, and cosmetic-only "disabled" controls
+
+**Where — `consumableBarcodeConfig`:** `SaveConsumableBarcodeConfig` only branches to the update path when `$scope.id` is already set, but `$scope.id` is populated only by the initial load, never by the create success handler — on a unit with no existing config row, clicking Save repeatedly (no reload) creates a new duplicate row every time; the backend DAO has no unique constraint per unit either. Separately, the view's Vendor Name toggle (`ng-change="vm.model.isVendorNameFlag(...)"`) calls a function the controller never defines (it defines `isItemNameFlag`...`isVendorCodeFlag` but the matching `isVendorName` function gets immediately overwritten by the literal string `"false"`) — clicking Vendor Name throws `TypeError` every time in legacy today.
+
+**Where — `fixedAssetMaster`:** `PopulateAssetTypeDropdown` hardcodes `if (value.id == 2)`, so this screen only ever offers ONE real Asset Type choice regardless of how many exist, and computes the follow-on category fetch with `assetTypeId` as `0` on first load (a real bug: the dropdown array, not a single option, is in scope at that point). Save button and the row-level Edit pencil icon are both cosmetic-only "disabled" (`ng-class`, no real `disabled`/click-guard) — clicking either always works regardless of validity/row status. `ToggleStatus` has no revert at all on failure and unconditionally wipes the on-screen form on any row's deactivation, even a different row than the one being edited. Two confirmed crash bugs: the Manufacturer typeahead's `ng-change` references `$index` (not in scope — this input isn't inside an `ng-repeat`) against `vm.model.isManufacturerValid` (never initialized) — throws on every keystroke; `clearSearch()` calls `PaginationService.searchData(self.model.genericList, ...)` where `genericList` is never defined anywhere in this controller (the real list is `fixedAssetList`) — clicking the Clear button crashes every time, traced into the shared pagination service.
+
+**Not fixed in legacy.** `consumableBarcodeConfig`'s duplicate-row bug and `fixedAssetMaster`'s dropdown/cosmetic-disabled/no-revert findings are all faithfully reproduced, not fixed. The two confirmed crash bugs (Vendor Name toggle; Clear button and Manufacturer-field crash) are **fixed in the rebuild, held for review** — same entries-40/44/54 precedent as entry 133, since a guaranteed crash-on-click/keystroke with no legitimate legacy behavior to preserve isn't something worth porting faithfully.
+
+**My read:** the `consumableBarcodeConfig` duplicate-row bug is a real, moderate-severity data-integrity concern (unbounded duplicate rows per unit, no cleanup mechanism) — worth an owner decision on whether to eventually add a real uniqueness constraint, though not elevated to severity-1 since it requires a specific repeated-click workflow to trigger, unlike entry 120's silent-corruption-on-any-edit shape.
+
+---
+
+## Consolidated cross-cutting finding: `.help-block` is set to `display: none !important` app-wide in legacy's CSS, making every Angular "field is required" validation message invisible on every screen that uses this shared pattern — candidate for an entry-55-style standing policy, flagged for owner decision
+
+**Where:** `resources/assets/css/param.common.master.css:8445` — `.help-block{ display: none !important; }`, with no override anywhere raising it back to `display:block` (`.has-error .help-block` rules checked too — only margin/font-size tweaks found, no visibility override). Discovered during batch 11's `reasonMaster`/`reasonTypeMaster` audit.
+
+**What it is, plainly:** every `ng-if="...$error.required"` "X is required" message on every screen using this widely-shared markup pattern is permanently invisible in legacy today, regardless of the `show-errors-check-validity`/`show-errors-reset` broadcasts (those only toggle the separate `has-error` border-highlight class). This is almost certainly true across most or all of the ~90+ already-shipped master screens too, not just batch 11's — a spot-check reference read of an already-shipped screen (`sub-speciality-master.ts`) shows these messages rendered visibly in the rebuild, which is the opposite of legacy's actual (broken) behavior on that exact same markup pattern.
+
+**Not touched in any already-shipped screen — flagged once here rather than re-litigated screen-by-screen**, matching how entry 55 was handled for the shared `<modal>` crash. This needs a single owner decision that then applies consistently: (a) faithfully reproduce the invisibility everywhere (strict parity, but arguably a real, long-standing legacy UX defect nobody intended), or (b) treat it like entry 55/60/61's precedent of disclosed, minor visual improvements and leave validation messages visible going forward (already the de facto behavior across nearly all shipped screens, whether or not each build agent recognized the CSS-suppression cause at the time). No individual screen's rebuild has been altered pending this decision.
+
+**My read:** worth resolving promptly precisely because it's silently already been decided inconsistently, screen by screen, by whichever build agent happened to make its `.help-block` visible or not without knowing about this CSS rule — recommend the same one-time standing-policy treatment entry 55 got, applied retroactively across all shipped screens for consistency, once decided.

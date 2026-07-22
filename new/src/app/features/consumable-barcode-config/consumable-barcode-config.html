@@ -1,0 +1,73 @@
+<section class="page">
+  <fieldset>
+    <legend>Consumable Barcode Configuration</legend>
+    <div class="toggle-grid">
+      <div class="toggle-field">
+        <label>Item Code</label>
+        <app-status-toggle [checked]="itemCode()" (toggled)="itemCode.set(!itemCode())" />
+      </div>
+      <div class="toggle-field">
+        <label>Item Name</label>
+        <app-status-toggle [checked]="itemName()" (toggled)="itemName.set(!itemName())" />
+      </div>
+      <div class="toggle-field">
+        <label>Batch No</label>
+        <app-status-toggle [checked]="batchNo()" (toggled)="batchNo.set(!batchNo())" />
+      </div>
+      <div class="toggle-field">
+        <label>Date of expiry</label>
+        <app-status-toggle [checked]="expiryDate()" (toggled)="expiryDate.set(!expiryDate())" />
+      </div>
+      <div class="toggle-field">
+        <label>Lot No</label>
+        <app-status-toggle [checked]="lotNo()" (toggled)="lotNo.set(!lotNo())" />
+      </div>
+      <div class="toggle-field">
+        <label>MRP</label>
+        <app-status-toggle [checked]="mrp()" (toggled)="mrp.set(!mrp())" />
+      </div>
+      <div class="toggle-field">
+        <label>Sale Price</label>
+        <app-status-toggle [checked]="salePrice()" (toggled)="salePrice.set(!salePrice())" />
+      </div>
+      <div class="toggle-field">
+        <label>GRN No</label>
+        <app-status-toggle [checked]="grnNo()" (toggled)="grnNo.set(!grnNo())" />
+      </div>
+      <div class="toggle-field">
+        <label>Vendor Name</label>
+        <app-status-toggle [checked]="vendorName()" (toggled)="vendorName.set(!vendorName())" />
+      </div>
+      <div class="toggle-field">
+        <label>Vendor Code</label>
+        <app-status-toggle [checked]="vendorCode()" (toggled)="vendorCode.set(!vendorCode())" />
+      </div>
+      <div class="toggle-field">
+        <label>Hospital Name</label>
+        <app-status-toggle [checked]="hospitalName()" (toggled)="hospitalName.set(!hospitalName())" />
+      </div>
+
+      <div class="toggle-field save-field">
+        <button type="button" class="btn-primary" title="Save" (click)="openConfirmModal()">Save</button>
+      </div>
+    </div>
+  </fieldset>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="save()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
