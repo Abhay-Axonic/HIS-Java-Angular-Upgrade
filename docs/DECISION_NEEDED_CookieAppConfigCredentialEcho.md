@@ -46,3 +46,11 @@ Same underlying secret (the unit's `smtp_user_pwd`), same root design flaw (a co
 3. Confirm whether this should block/precede whoever updates the SMTP config with the new password, or whether that update is happening through a channel unaffected by this app (e.g., updated directly at the mail provider only, with this app's stored copy intentionally left stale/disabled) — that would change the urgency calculus in §4.
 
 No code has been touched to produce this document. Awaiting your direction.
+
+## 7. UPDATE — resolved as part of the Refined Option A fix on `fix/unitappconfig-clientfacing-secret-strip`
+
+The owner approved "Refined Option A" for `docs/DECISION_NEEDED_UnitApplicationConfigCredentialDisclosure.md`, which included all 4 call sites in `UserMasterServiceImpl.java` where the login response's `UnitApplicationConfigurationDto` is assembled — the exact object this document's mechanism (§1) copies into the `cookieObjectAppConfig` cookie. Each of the 4 now calls `stripClientFacingSecrets()` before the DTO is attached to `masterDto`/the login response, closing this path directly: the password (and `razorPayKeyId`/`razorPaySecretKey`) will no longer be present in the cookie at all after this fix merges, for any login, any role.
+
+This was verified via code review, not a live login test — entering login credentials is outside what Claude Code will do regardless of authorization. The two paths verified live for the same DTO (the billing-config GET endpoint and the mobile `DoctorAppAPI` endpoint) use identical logic and confirmed cleanly.
+
+Held on the same branch as the parent document's fix, awaiting the same merge approval. This resolves the timing concern in §4 — once this branch merges, the new rotated password can be safely configured into the app without recreating this exposure on the next login.
