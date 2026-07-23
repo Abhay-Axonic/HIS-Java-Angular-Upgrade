@@ -81,3 +81,12 @@ Unlike some "missing role check" findings where the practical impact depends on 
 3. Should this affect `resetPwdconfirmPwd`'s own Angular rebuild scope (not yet started for batch 13)? Per standing project discipline, my default is the rebuild faithfully reproduces legacy's current behavior (same as every other open finding) unless you direct otherwise — flag here if you want this screen's rebuild to omit/alter anything pending your decision, matching how `userAuthentication`'s password-viewing feature was handled.
 
 No code has been touched to produce this document. Awaiting your direction.
+
+## 7. UPDATE — fix applied and live-verified, held on `fix/resetpassword-identity-binding`, not merged
+
+Applied exactly as proposed in §5 option 1 (bind to `SecurityContextHolder`'s JWT-derived identity, ignore the body's `userId`). Live-verified against the real running backend, post-JWT-rotation, with a genuine authenticated session — without ever handling a real password value:
+
+- **Same-user, deliberately wrong `existingPassword`** → `"Existing password is incorrect."` — confirms the authorization check passes for the caller's own ID and the request correctly reaches the DAO's real password-comparison logic (unchanged, already-working code) — i.e., a *correct* password would succeed there.
+- **A different `userId` (not the authenticated session's own)** → `"You are not authorized to change this user's password."` — confirms the new authorization check rejects a mismatched target before the password comparison ever runs.
+
+Held on its own branch, not merged, per Maker-Checker discipline.
