@@ -1,0 +1,96 @@
+<section class="page">
+  <fieldset>
+    <legend>Ward Store Mapper</legend>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>Store<span class="required">*</span></label>
+        <select class="form-control" [ngModel]="selectedStoreId()" (ngModelChange)="selectedStoreId.set($event)" name="storeId">
+          <option [ngValue]="''"></option>
+          @for (store of storeOptions(); track store.id) {
+            <option [ngValue]="store.id">{{ store.store }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label>Ward<span class="required">*</span></label>
+        <select class="form-control" [ngModel]="selectedWardId()" (ngModelChange)="selectedWardId.set($event)" name="wardId">
+          <option [ngValue]="''"></option>
+          @for (ward of wardOptions(); track ward.wardId) {
+            <option [ngValue]="ward.wardId">{{ ward.wardName }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pagination().pageSize" (ngModelChange)="setPageSize()">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      entries
+    </label>
+
+    <button type="button" class="btn-primary icon-btn" [title]="updateMode() ? 'Update' : 'Save'" (click)="updateMode() ? update() : save()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Store</th>
+        <th>Ward</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.wardStoreMapperId) {
+        <tr>
+          <td>{{ row.storeName }}</td>
+          <td>{{ row.wardName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" (click)="edit(row.wardStoreMapperId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (pagination().totalPages > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+      @for (p of pagesList(); track p) {
+        <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+    </ul>
+  }
+</section>

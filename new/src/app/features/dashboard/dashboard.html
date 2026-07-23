@@ -1,0 +1,361 @@
+<!--
+  Rebuild of views/common/dashboard/CEO-dashboard.html. See dashboard.ts's
+  class doc for the modal-sequencing design, the SessionService-based tile
+  gating, and the 2 faithfully-reproduced chart bugs (the omitted Finance
+  5th chart, and the Administration panel's mislabeled 2nd chart).
+-->
+
+<!-- Reusable pie-chart block (CSS conic-gradient, see dashboard.ts). -->
+<ng-template #pieChart let-slices="slices" let-gradient="gradient" let-title="title">
+  <div class="pie-chart-card">
+    <div class="pie-chart" [style.background]="gradient"></div>
+    <div class="pie-chart-title">{{ title }}</div>
+    <ul class="chart-legend">
+      @for (slice of slices; track slice.label) {
+        <li>
+          <span class="legend-swatch" [style.background]="slice.color"></span>{{ slice.label }}:
+          {{ slice.value | number }}
+        </li>
+      } @empty {
+        <li class="chart-empty">No data</li>
+      }
+    </ul>
+  </div>
+</ng-template>
+
+<!-- Reusable stacked-bar-chart block (flex bars, see dashboard.ts). -->
+<ng-template #stackedBar let-groups="groups" let-max="max" let-title="title">
+  <div class="stacked-bar-chart">
+    <div class="stacked-bar-title">{{ title }}</div>
+    <div class="stacked-bar-groups">
+      @for (group of groups; track group.category) {
+        <div class="stacked-bar-group">
+          <div class="stacked-bar-bar" [style.height.%]="(group.total / max) * 100">
+            @for (segment of group.segments; track segment.label) {
+              <div
+                class="stacked-bar-segment"
+                [style.flex]="segment.value || 0.0001"
+                [style.background]="segment.color"
+                [title]="segment.label + ': ' + segment.value"
+              ></div>
+            }
+          </div>
+          <div class="stacked-bar-category">{{ group.category }}</div>
+        </div>
+      } @empty {
+        <div class="chart-empty">No data</div>
+      }
+    </div>
+    <ul class="chart-legend">
+      @for (segment of groups[0]?.segments ?? []; track segment.label) {
+        <li>
+          <span class="legend-swatch" [style.background]="segment.color"></span>{{ segment.label }}
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>
+
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style dashboard">
+    <!-- Quick Links panel (CEO-dashboard.html:216-339) -->
+    <div class="row padding-top5">
+      <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-0">
+        <div class="d-card padding-left5">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                Quick Links
+                <a href="#/dashboardInfo"><i class="fa fa-external-link fa-2x pull-right"></i></a>
+              </h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="card-height col-lg-12 col-md-12 col-sm-12 padding-top4">
+                  @for (tile of quickLinks; track tile.moduleId) {
+                    @if (hasAccess(tile.moduleId)) {
+                      <div class="col-lg-2 col-md-2 col-sm-2 text-center ql-card">
+                        <div class="d-card-small cursor-pointer padding-left-right-5">
+                          <div class="panel panel-default">
+                            <div class="panel-body padding5">
+                              <div class="row">
+                                <div class="card-height">
+                                  <div class="text-center">
+                                    <a class="cursor-pointer" (click)="click(tile.infoCode)">
+                                      <i class="fa" [class]="tile.icon" aria-hidden="true"></i>
+                                    </a>
+                                    <h4>{{ tile.label }}</h4>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finance panel (CEO-dashboard.html:340-456) -- 4 real pies. The
+           5th (broken) chart is deliberately omitted, see dashboard.ts. -->
+      <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-0">
+        <div class="d-card padding-left5 padding-right5">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                Finance<a><i class="fa fa-external-link fa-2x pull-right"></i></a>
+              </h3>
+            </div>
+            <div class="panel-body customScroll fix-height-scroll455">
+              <div class="row finance-charts">
+                <div class="col-lg-3 col-md-3 col-sm-6">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      pieChart;
+                      context: {
+                        slices: financeOP(),
+                        gradient: financeOPGradient(),
+                        title: 'Finance For OP',
+                      }
+                    "
+                  />
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      pieChart;
+                      context: {
+                        slices: financeIP(),
+                        gradient: financeIPGradient(),
+                        title: 'Finance For IP',
+                      }
+                    "
+                  />
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      pieChart;
+                      context: {
+                        slices: financeDC(),
+                        gradient: financeDCGradient(),
+                        title: 'Finance For DC',
+                      }
+                    "
+                  />
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      pieChart;
+                      context: {
+                        slices: financeER(),
+                        gradient: financeERGradient(),
+                        title: 'Finance For ER',
+                      }
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operations panel (CEO-dashboard.html:457-505) -- 2 real charts. -->
+      <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-0">
+        <div class="d-card padding-left5">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                Operations<a><i class="fa fa-external-link fa-2x pull-right"></i></a>
+              </h3>
+            </div>
+            <div class="panel-body customScroll fix-height-scroll380">
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      stackedBar;
+                      context: {
+                        groups: bedOccupancyGroups(),
+                        max: bedOccupancyMax(),
+                        title: 'Bed Occupancy',
+                      }
+                    "
+                  />
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      stackedBar;
+                      context: {
+                        groups: diagnosticsGroups(),
+                        max: diagnosticsMax(),
+                        title: 'Diagnostics',
+                      }
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Administration panel (CEO-dashboard.html:506-548). The 2nd chart
+           is a DELIBERATE, faithfully-reproduced heading/content mismatch
+           -- see dashboard.ts's class doc (BUG 2): it's real content is
+           Visits (Primary/Follow-Up/Secondary), not administration data. -->
+      <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-0">
+        <div class="d-card padding-left5 padding-right5">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                Administration<a><i class="fa fa-external-link fa-2x pull-right"></i></a>
+              </h3>
+            </div>
+            <div class="panel-body customScroll fix-height-scroll380">
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      stackedBar;
+                      context: {
+                        groups: admissionDischargeDeathGroups(),
+                        max: admissionDischargeDeathMax(),
+                        title: 'Admission / Discharge / Death',
+                      }
+                    "
+                  />
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <!-- Faithful bug reproduction, NOT a mistake: this chart
+                       lives under "Administration" but is fed by the
+                       Visits endpoint -- see dashboard.ts BUG 2. -->
+                  <ng-container
+                    *ngTemplateOutlet="
+                      pieChart;
+                      context: {
+                        slices: visitsSlices(),
+                        gradient: visitsGradient(),
+                        title: 'Visits',
+                      }
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Counter Details popup (CEO-dashboard.html:619-649). Shown only when
+     it's this modal's turn -- see activeLocalModal() / class doc. -->
+@if (activeLocalModal() === 'counter') {
+  <div
+    id="counterDetailsModal"
+    class="modal fade in common-small-popup"
+    role="dialog"
+    style="display: block"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">Counter Details</div>
+        </div>
+        <div class="modal-body">
+          <div class="margin-left10 row padding-top10">
+            <div class="col-md-3 col-lg-3 col-sm-3">
+              <span>Select Counter</span>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6">
+              <select
+                class="dirty"
+                style="width: 100%"
+                name="counterMstObj"
+                [ngModel]="counterSelection.selected()"
+                (ngModelChange)="onSelectCounter($event)"
+              >
+                <option [ngValue]="null">Select Counter</option>
+                @for (counter of counterSelection.counterList(); track counter.id) {
+                  <option [ngValue]="counter">{{ counter.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <button
+            type="button"
+            class="btn btn-primary width13"
+            id="otpOk"
+            (click)="confirmCounter()"
+          >
+            Ok
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
+
+<!-- Nursing Station popup (CEO-dashboard.html:588-618). Held until the
+     counter popup (if any) is dismissed -- see activeLocalModal(). -->
+@if (activeLocalModal() === 'nursingStation') {
+  <div
+    id="nursingStationModal"
+    class="modal fade in common-small-popup"
+    role="dialog"
+    style="display: block"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">Select Nursing Station</div>
+        </div>
+        <div class="modal-body">
+          <div class="row padding-top10 padding-bottom10">
+            <div class="col-md-5 col-lg-5 col-sm-5 padding-left-right-5">
+              <span>Select Nursing Station</span>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-set1">
+              <select
+                class="dirty select-box"
+                style="width: 100%; border-radius: 10px; height: 40px"
+                name="departmentNursing"
+                [ngModel]="selectedNursingStation()"
+                (ngModelChange)="selectedNursingStation.set($event)"
+              >
+                <option [ngValue]="null">Select Nursing Station</option>
+                @for (station of nursingStationList(); track station.nursingStationId) {
+                  <option [ngValue]="station">{{ station.nursingStationDesc }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <button
+            type="button"
+            class="btn btn-primary width13"
+            id="otpOk"
+            (click)="selectsetNursingStation()"
+          >
+            Ok
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}

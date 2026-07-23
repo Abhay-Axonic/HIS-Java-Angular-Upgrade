@@ -1,0 +1,143 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="formulationTypeCode">Formulation Type Code<span class="required">*</span></label>
+        <input
+          id="formulationTypeCode"
+          type="text"
+          autocomplete="off"
+          maxlength="10"
+          [ngModel]="form().code"
+          (ngModelChange)="updateCode($event)"
+          name="formulationTypeCode"
+          [class.invalid]="codeInvalid()"
+        />
+        @if (codeInvalid()) {
+          <p class="help-block">Enter Formulation Type Code</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="formulationType">Formulation Type<span class="required">*</span></label>
+        <input
+          id="formulationType"
+          type="text"
+          autocomplete="off"
+          maxlength="100"
+          [ngModel]="form().type"
+          (ngModelChange)="updateType($event)"
+          name="formulationType"
+          [class.invalid]="typeInvalid()"
+        />
+        @if (typeInvalid()) {
+          <p class="help-block">Enter Formulation Type</p>
+        }
+      </div>
+
+      <div class="field">
+        <!-- Dead, decorative-only field in legacy (no ng-model at all) --
+             rendered disabled here for visual parity, not a real editable
+             field. See class doc comment. -->
+        <label for="clinicalUnit">Clinical Unit</label>
+        <input id="clinicalUnit" type="text" disabled placeholder="" />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pagination().pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      (records)
+    </label>
+
+    <!-- Save icon has no real disabled state in legacy -- see class doc
+         comment. Clicking it always opens the confirm-save modal. -->
+    <button type="button" class="btn-primary icon-btn" title="Save" (click)="openSaveConfirm()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+
+    <button type="button" class="btn-secondary" (click)="clearAll()">Clear</button>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="pagination().search"
+      (ngModelChange)="onSearchChange($event)"
+      name="search"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th (click)="sortBy('code')" title="Formulation Type Code">Formulation Type Code</th>
+        <th (click)="sortBy('type')" title="Formulation Type">Formulation Type</th>
+        <!-- Faithful copy-paste quirk: legacy wires this caret to sort by
+             'type' too (the same field as the column above) -- see class
+             doc comment. -->
+        <th (click)="sortBy('type')" title="Unit">Clinical Unit</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of pagination().data; track row.id) {
+        <tr>
+          <td>{{ row.code }}</td>
+          <td>{{ row.type }}</td>
+          <td></td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status" (toggled)="onToggleStatus(row)" />
+          </td>
+          <td class="text-center" [class.disabled]="!row.status">
+            <i class="fa fa-pencil icon-edit" aria-hidden="true" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!pagination().data.length) {
+        <tr>
+          <td colspan="5" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (pagination().totalPages > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+      @for (p of pagesList(); track p) {
+        <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+    </ul>
+  }
+</section>
+
+<!-- confirmSave modal (raw markup in legacy, not the shared <modal> directive) -->
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

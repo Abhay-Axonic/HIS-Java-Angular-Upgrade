@@ -1,0 +1,30 @@
+// Screen-specific layout only -- shared table/pagination/modal styles live
+// in src/styles.scss.
+
+.sort-toggle {
+  float: right;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+  font-size: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  a {
+    cursor: pointer;
+
+    &.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+  }
+}
+
+.pagination li {
+  cursor: pointer;
+}

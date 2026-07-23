@@ -1,0 +1,183 @@
+// Layout styles carried over from CEO-dashboard.html's inline <style> block
+// (legacy), scoped down to this rebuild's markup -- same base conventions
+// already established by doctor-dashboard.scss/dashboard-info.scss
+// (d-card/d-card-small/ql-card/panel-title/customScroll).
+
+.dashboard {
+  background-color: #f6f6f6;
+}
+
+.d-card,
+.d-card-small {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.d-card .panel-title a,
+.d-card-small .panel-title a {
+  color: #337ab7;
+}
+
+.panel-title {
+  font-weight: bold;
+  color: #00003b;
+}
+
+.panel-body {
+  background-color: #fff;
+}
+
+.ql-card {
+  .fa {
+    font-size: 40px !important;
+    padding: 10px;
+    color: #ffb800;
+  }
+
+  h4 {
+    color: #00003b;
+    margin-left: 0 !important;
+  }
+
+  .card-height:hover {
+    background: #e1ebf2;
+    border-radius: 4px;
+  }
+}
+
+.fix-height-scroll455 {
+  height: 455px !important;
+  overflow: auto;
+}
+
+.fix-height-scroll380 {
+  height: 380px !important;
+  overflow: auto;
+}
+
+.customScroll::-webkit-scrollbar {
+  width: 0.4em;
+  height: 0.5em;
+  border-radius: 4px;
+}
+
+.customScroll::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.customScroll::-webkit-scrollbar-thumb {
+  background-color: #1a1a1b7d;
+}
+
+// ---- Hand-rolled charts (no chart library in this app yet, see
+// dashboard.ts's class doc). ----
+
+.chart-empty {
+  color: #888;
+  font-style: italic;
+  padding: 12px 0;
+  text-align: center;
+}
+
+.chart-legend {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  font-size: 12px;
+  color: #333;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0;
+  }
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex: 0 0 auto;
+}
+
+.finance-charts {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pie-chart-card {
+  padding: 8px;
+  text-align: center;
+}
+
+.pie-chart {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.pie-chart-title {
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 13px;
+  color: #00003b;
+}
+
+.stacked-bar-chart {
+  padding: 8px;
+}
+
+.stacked-bar-title {
+  font-weight: bold;
+  font-size: 13px;
+  color: #00003b;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.stacked-bar-groups {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 160px;
+  gap: 12px;
+  padding: 0 8px;
+}
+
+.stacked-bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 0;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.stacked-bar-bar {
+  width: 100%;
+  max-width: 48px;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: hidden;
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+}
+
+.stacked-bar-segment {
+  width: 100%;
+}
+
+.stacked-bar-category {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #333;
+  text-align: center;
+}
