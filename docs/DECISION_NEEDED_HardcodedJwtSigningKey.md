@@ -58,3 +58,60 @@ The natural-looking fix for that document — bind `resetPassword` to "the authe
 3. **Which fix direction to authorize** for the code change itself — my recommendation is (1), the standard env-var externalization pattern already used elsewhere in this codebase.
 
 No code has been touched to produce this document. Awaiting your direction.
+
+## 8. UPDATE — proposed fix diff, migration path, and exposure-history investigation, per owner request (nothing applied)
+
+### 8a. Proposed fix — externalize the key, fail fast if unconfigured
+
+**Blast radius confirmed small:** only 2 files in the entire codebase reference `JwtTokenUtil` at all (`JwtTokenFilter.java`, `UserMasterServiceImpl.java`) — both call its public methods, neither touches `SECRET_KEY` directly. The fix is fully contained to `JwtTokenUtil.java` itself; no other file needs to change.
+
+**File:** `legacy/Global/src/main/java/com/param/security/config/JwtTokenUtil.java`
+
+```diff
+ public class JwtTokenUtil {
+-	private static final String SECRET_KEY = "CliniVantage##2017";
++	private static final String SECRET_KEY = loadSigningKey();
++
++	/**
++	 * Security fix, docs/DECISION_NEEDED_HardcodedJwtSigningKey.md -- the
++	 * signing key must never be a compiled-in literal. Fails fast at class-load
++	 * time if unconfigured, rather than silently falling back to another
++	 * predictable default, since a missing signing key is a deployment error,
++	 * not a condition to degrade gracefully from.
++	 */
++	private static String loadSigningKey() {
++		String key = System.getenv("JWT_SIGNING_KEY");
++		if (key == null || key.trim().isEmpty()) {
++			throw new IllegalStateException(
++				"JWT_SIGNING_KEY environment variable must be set -- refusing to start with no signing key configured.");
++		}
++		return key;
++	}
+ 	private static final long JWT_EXPIRATION = 8 * 60 * 60 * 1000; //valid for 24 hrs
+```
+
+**Operator action required, every environment:** set `JWT_SIGNING_KEY` to a real, cryptographically random value before this deploys anywhere — e.g. `openssl rand -base64 64`, or equivalent. Do **not** reuse the old literal, a variant of it, or anything human-chosen/memorable — this is exactly the class of value a CSPRNG exists for. I have not generated an actual value anywhere in this proposal, deliberately — doing so myself and writing it into any file would just recreate the same problem in a new location.
+
+### 8b. Migration path — yes, this necessarily invalidates every existing session, and that is correct, not a side effect to route around
+
+HS256 is a **symmetric** signing scheme — the same key signs and verifies. The instant `SECRET_KEY` changes, `Jwts.parser().setSigningKey(NEW_KEY).parseClaimsJws(oldToken)` throws a signature-verification failure for **every** token issued under the old key — including any real, legitimately-issued session token currently in use, and (this is the point) any token an attacker may have forged using the compromised old key. There is no way to preserve old sessions through this change without also preserving acceptance of anything forgeable with the old key, which would defeat the fix entirely.
+
+**Explicitly recommend against a "dual-key" transition window** (temporarily accepting both old and new key to ease rollout) — the entire point of rotating is that the old key is compromised; accepting it for any period, however brief, keeps the forgery path open during that window.
+
+**Practical consequence: every real logged-in user gets signed out the moment this deploys, with no exception.** This is the expected, correct behavior of closing this vulnerability, not a bug to work around. For this local dev environment, that's a non-issue (re-login). For any other real environment this codebase is ever deployed to, recommend: deploy during a planned, communicated window, and expect a support-load bump immediately after as users re-authenticate — but do not delay the actual fix to avoid that inconvenience, given the severity in §5.
+
+### 8c. Exposure-history investigation
+
+**Within this specific tracked repository: no evidence of public exposure.**
+- `gh repo view` confirms: **private**, created 2026-07-14, **zero forks**, no parent repository (not itself a fork of anything public).
+- The entire legacy codebase — including this key, already present — entered this repository's history in a single commit, `96b75c4` ("Baseline before upgrade"), authored by the project owner's own account, dated 2026-07-15 (the day after the repo's creation). There is no earlier history, no merge from an external source visible in this repo's git log, and no indication this repository itself has ever been public or shared outside a trusted group.
+
+**What this investigation cannot answer, and why:** the baseline commit's own message ("Baseline before upgrade") indicates this codebase existed somewhere else — a pre-existing production/legacy system — before being imported into this tracked repository. This repo's git history has no visibility into that prior system: whether the original codebase (wherever it was hosted/version-controlled before this migration project began) was ever public, forked, shared with contractors, posted anywhere, or otherwise exposed is a question only whoever managed that original system before this migration can answer — it is genuinely outside what this repository's own history can confirm or rule out.
+
+**Recommendation:** treat the key as compromised regardless (§5 already recommends this, independent of provable exposure — a key this old, this guessable-in-hindsight, and this long unrotated should be rotated on general security hygiene grounds even absent confirmed exposure). If you have access to or knowledge of the original pre-migration system's own access history/hosting, that would be the only way to get a more definitive answer than "not exposed within this repo, unknown before it."
+
+### What we need from you, specifically on this update
+
+1. Approve/reject the fix in 8a.
+2. Confirm you understand and accept the migration consequence in 8b (mass re-login) — my recommendation is to proceed anyway, given the severity, but this needs your explicit sign-off given the operational impact.
+3. Whether the exposure-history answer in 8c is sufficient, or whether you have visibility into the pre-migration system I don't, that would change the urgency further.
