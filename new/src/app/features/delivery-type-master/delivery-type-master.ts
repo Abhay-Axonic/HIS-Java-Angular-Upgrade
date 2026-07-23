@@ -239,18 +239,22 @@ export class DeliveryTypeMaster {
   // fields carry `required`, view:17/32) ----
   private requiredFieldsValid(): boolean {
     const f = this.form();
-    return !!(f.deliveryTypeCode.trim() && f.deliveryTypeName.trim());
+    // Guard against null/undefined, not just empty string -- found live on
+    // the sibling cardTypeMaster screen, where real seed data has a null
+    // code field and editing it crashed validation. Same defensive fix
+    // applied here pre-emptively.
+    return !!((f.deliveryTypeCode ?? '').trim() && (f.deliveryTypeName ?? '').trim());
   }
 
   isCodeInvalid(): boolean {
-    return this.formSubmitted() && !this.form().deliveryTypeCode.trim();
+    return this.formSubmitted() && !(this.form().deliveryTypeCode ?? '').trim();
   }
 
   // Name field's own visual invalid state -- the `show-errors` directive's
   // `has-error` styling genuinely reflects each field's own control state in
   // legacy; only the help-text paragraph below has the copy-paste bug.
   isNameInvalid(): boolean {
-    return this.formSubmitted() && !this.form().deliveryTypeName.trim();
+    return this.formSubmitted() && !(this.form().deliveryTypeName ?? '').trim();
   }
 
   // Faithful copy-paste quirk, deliberately NOT fixed -- see class doc

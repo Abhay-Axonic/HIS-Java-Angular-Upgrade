@@ -218,15 +218,19 @@ export class ConsentTypeMaster {
   // no validation of its own) ----
   private requiredFieldsValid(): boolean {
     const f = this.form();
-    return !!(f.consentCode.trim() && f.consentName.trim());
+    // Guard against null/undefined, not just empty string -- found live on
+    // the sibling cardTypeMaster screen, where real seed data has a null
+    // code field and editing it crashed validation. Same defensive fix
+    // applied here pre-emptively.
+    return !!((f.consentCode ?? '').trim() && (f.consentName ?? '').trim());
   }
 
   isCodeInvalid(): boolean {
-    return this.formSubmitted() && !this.form().consentCode.trim();
+    return this.formSubmitted() && !(this.form().consentCode ?? '').trim();
   }
 
   isDescInvalid(): boolean {
-    return this.formSubmitted() && !this.form().consentName.trim();
+    return this.formSubmitted() && !(this.form().consentName ?? '').trim();
   }
 
   // ---- save / confirm-modal (mirrors saveConsentType/PopupOkBtn, ctrl:197-267) ----

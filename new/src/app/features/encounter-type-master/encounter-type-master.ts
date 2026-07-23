@@ -161,7 +161,11 @@ export class EncounterTypeMaster {
   // both plain `required` inputs, nothing else, see bug #1 in class doc) ----
   private requiredFieldsValid(): boolean {
     const f = this.form();
-    return !!(f.encounterTypeCode.trim() && f.encounterTypeName.trim());
+    // Guard against null/undefined, not just empty string -- found live on
+    // the sibling cardTypeMaster screen, where real seed data has a null
+    // code field and editing it crashed validation. Same defensive fix
+    // applied here pre-emptively.
+    return !!((f.encounterTypeCode ?? '').trim() && (f.encounterTypeName ?? '').trim());
   }
 
   // ---- save (mirrors saveEncounterType's popUpFlag confirm-modal dance,

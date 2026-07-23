@@ -209,15 +209,18 @@ export class CardTypeMaster {
   // this in legacy.
   private requiredFieldsValid(): boolean {
     const f = this.form();
-    return !!(f.cardTypeCode.trim() && f.cardTypeName.trim());
+    // Real seed data in this dev DB has null `cardTypeCode` on every row
+    // (confirmed live) -- guard against null/undefined here, not just empty
+    // string, so editing a real existing row doesn't crash validation.
+    return !!((f.cardTypeCode ?? '').trim() && (f.cardTypeName ?? '').trim());
   }
 
   isCodeInvalid(): boolean {
-    return this.formSubmitted() && !this.form().cardTypeCode.trim();
+    return this.formSubmitted() && !(this.form().cardTypeCode ?? '').trim();
   }
 
   isNameInvalid(): boolean {
-    return this.formSubmitted() && !this.form().cardTypeName.trim();
+    return this.formSubmitted() && !(this.form().cardTypeName ?? '').trim();
   }
 
   // ---- save / confirm-modal (mirrors saveCardType/PopupOkBtn, ctrl:94-160) ----
