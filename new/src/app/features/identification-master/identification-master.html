@@ -1,0 +1,166 @@
+<section class="page">
+  <fieldset>
+    <div class="filter-row">
+      <div class="field">
+        <label for="identificationCode">Code<span class="required">*</span></label>
+        <input
+          id="identificationCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().identificationCode"
+          (ngModelChange)="updateFormField('identificationCode', $event)"
+          name="identificationCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="identificationName">Identification Card<span class="required">*</span></label>
+        <input
+          id="identificationName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().identificationName"
+          (ngModelChange)="updateFormField('identificationName', $event)"
+          name="identificationName"
+          [class.invalid]="isNameInvalid()"
+        />
+        @if (isNameInvalid()) {
+          <p class="help-block">Card is required</p>
+        }
+      </div>
+
+      <div class="field flags">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [ngModel]="form().isExpiryRequired === 'Y'"
+            (ngModelChange)="toggleFlag('isExpiryRequired', $event)"
+            name="isExpiryRequired"
+          />
+          Expiry required
+        </label>
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [ngModel]="form().isNumerical === 'Y'"
+            (ngModelChange)="toggleFlag('isNumerical', $event)"
+            name="isNumerical"
+          />
+          Numerical
+        </label>
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [ngModel]="form().isAlphanumeric === 'Y'"
+            (ngModelChange)="toggleFlag('isAlphanumeric', $event)"
+            name="isAlphanumeric"
+          />
+          Alphanumeric
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" [ngModel]="form().isLength === 'Y'" (ngModelChange)="toggleLength($event)" name="isLength" />
+          Length
+        </label>
+        @if (form().isLength === 'Y') {
+          <input
+            type="number"
+            id="length"
+            class="length-input"
+            autocomplete="off"
+            [ngModel]="form().definedLength"
+            (ngModelChange)="updateFormField('definedLength', $event)"
+            name="definedLength"
+          />
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="save()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Identification Card</th>
+        <th>Expiry required</th>
+        <th>Numerical</th>
+        <th>Alpha Numerical</th>
+        <th>Defined Length</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.identificationId) {
+        <tr>
+          <td>{{ row.identificationCode }}</td>
+          <td>{{ row.identificationName }}</td>
+          <td>{{ row.isExpiryRequired }}</td>
+          <td>{{ row.isNumerical }}</td>
+          <td>{{ row.isAlphanumeric }}</td>
+          <td>{{ row.definedLength }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center"><i class="icon-edit" (click)="edit(row.identificationId)"></i></td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="8" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

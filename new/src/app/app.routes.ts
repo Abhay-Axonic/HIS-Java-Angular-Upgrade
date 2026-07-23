@@ -1132,9 +1132,7 @@ export const routes: Routes = [
       },
       // Phase 4 batch 15 -- first batch in the new clinical/billing risk
       // tier (docs/ANGULAR_REBUILD_PLAYBOOK.md "Clinical/Billing-Tier
-      // Addendum"). identificationMaster is deliberately NOT included here
-      // -- held pending owner review of
-      // docs/DECISION_NEEDED_IdentificationMasterCreateFlagReset.md.
+      // Addendum").
       {
         path: 'cardTypeMaster',
         canActivate: [moduleAccessGuard],
@@ -1158,6 +1156,12 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { moduleId: 399, title: 'Consent Type Master' },
         loadComponent: () => import('./features/consent-type-master/consent-type-master').then((m) => m.ConsentTypeMaster),
+      },
+      {
+        path: 'identificationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 388, title: 'Identification Card Master' },
+        loadComponent: () => import('./features/identification-master/identification-master').then((m) => m.IdentificationMaster),
       },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
