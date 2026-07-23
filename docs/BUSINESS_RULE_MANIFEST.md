@@ -1457,3 +1457,24 @@ No default, no backfill needed (table had zero rows). Type matches the entity's 
 Classification: Neither (pre-existing local-dev-DB gap / environment drift, not a behavioral change — no `legacy/` application code touched, purely additive `ALTER TABLE` on the local dev DB only, matching RULES.md item 1's Expand-only convention and the exact precedent of `BR-local-dev-db-drift-systemobservation-specialityids`/`BR-local-dev-db-drift-qms-prnprintformat`). Owner Decision: N/A (local-dev-only, no sign-off required per this manifest's own scope, same precedent as the two entries above) — resolved same-session, disclosed in the batch 15 report.
 
 **Notes:** No `legacy/` file changed by this specific fix. The separate `/api`-prefix rebuild bug this same investigation uncovered is fixed on `rebuild/phase4-batch15` (own commit, `new/` code, not this manifest's scope) and logged in `docs/ANGULAR_PENDING_FINDINGS.md`'s batch 15 entry, not here. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope).
+
+## BR-local-dev-db-drift-identificationmaster-3columns — Local dev DB (`his_local`)'s `adt.m_identification_master` table was missing 3 columns entirely (`is_numerical`, `is_alphanumeric`, `defined_length`), blocking any live verification of `identificationMaster`'s create-flow flag-reset fix (2026-07-23)
+
+**Not a business rule — a local-dev-environment gap, same class as `BR-local-dev-db-drift-consenttype-admissionconsent`.** Surfaced while live-verifying the owner-approved legacy fix for `identificationMaster`'s CREATE flow (see the `fix/identificationmaster-create-flag-reset` branch and `docs/DECISION_NEEDED_IdentificationMasterCreateFlagReset.md`): after rebuilding and redeploying the ADT module with the fix applied, a real save attempt still failed with legacy's generic "Identification already exits...!!" toast, despite the table having zero rows at the time (confirmed via direct `psql` read before assuming anything).
+
+**Root cause confirmed via live `catalina.out`, not guessed:** two separate errors at the moment of the save attempt — `ERROR: column "defined_length" of relation "m_identification_master" does not exist` (from the insert) and `ERROR: column identifica0_.is_numerical does not exist` (from the duplicate-check query, `GET_IDENTIFICATION_LIST_BY_NAME`, which selects this column). `IdentificationMaster.java`'s `@Column` mappings for `is_numerical`/`is_alphanumeric`/`defined_length` (the exact three fields this session's CREATE-flow fix is about) are real and load-bearing — all three were simply never created on this environment's table, unrelated to the code fix itself.
+
+**Fixed via a single additive `ALTER TABLE`:**
+```sql
+ALTER TABLE adt.m_identification_master
+  ADD COLUMN is_numerical character(1),
+  ADD COLUMN is_alphanumeric character(1),
+  ADD COLUMN defined_length integer;
+```
+Types match the entity's `Character`/`Integer` fields and this table's own `is_expiry_required character(1)` sibling-column convention. No defaults, no backfill needed (table had zero rows).
+
+**Verified via live in-browser navigation, not assumed from the DDL alone:** created a record (`FIXOK`/"Fix Verified OK") with Expiry Required + Numerical checked, Alphanumeric left unchecked, on the real legacy app (`localhost:8080/#/identificationMaster`) after this DB fix — real "Identification Added Successfully...!!" toast, list correctly shows `is_expiry_required=Y`, `is_numerical=Y`, `is_alphanumeric=N`, cross-checked against a direct read-only `psql` query of the same row. This is the same live round trip that confirms the separate CREATE-flow code fix (own commit on `fix/identificationmaster-create-flag-reset`) — prior to that code fix, all three flags would have persisted as `N` regardless of what was checked.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, not a behavioral change — no `legacy/` application code touched by this DB fix, purely additive `ALTER TABLE` on the local dev DB only, matching RULES.md item 1's Expand-only convention and the exact precedent of `BR-local-dev-db-drift-consenttype-admissionconsent`). Owner Decision: N/A (local-dev-only, no sign-off required per this manifest's own scope) — resolved same-session, disclosed alongside the `identificationMaster` fix report.
+
+**Notes:** No `legacy/` file changed by this specific DB fix (the separate, owner-approved `IdentificationMasterDaoImpl.java` code fix is tracked on its own branch/commit, not this manifest's scope). No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope).
