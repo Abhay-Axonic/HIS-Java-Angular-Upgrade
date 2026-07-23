@@ -66,6 +66,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/cityMaster', title: 'City Master' },
       { path: '/encounterTypeMaster', title: 'Encounter Type Master' },
       { path: '/consentTypeMaster', title: 'Consent Type Master' },
+      { path: '/identificationMaster', title: 'Identification Card Master' },
       { path: '/hospitalMaster', title: 'Hospital Master' },
       { path: '/areaMaster', title: 'Area Master' },
       { path: '/holidayCalenderMaster', title: 'Holiday Calendar Master' },
