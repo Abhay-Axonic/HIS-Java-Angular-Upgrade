@@ -195,11 +195,16 @@ export class DoctorDashboard {
 
     // Store popup (ctrl:57-60) -- storePopupAcesss()'s own module-permission
     // filter always passes in practice (see StoreSelectionService's class
-    // doc), so this is unconditionally checkAndFetchStores() + show() the
-    // same call-site contract every screen using this service follows.
+    // doc). Bug fix (found live, Step 5): unlike the ~25 legacy controllers
+    // that call `.modal('show')` synchronously themselves,
+    // doctorDashboardController.js (this screen's own controller) has no
+    // such call -- it relies solely on storePopup()'s internal
+    // `stores.length > 1` gate. Calling show() here unconditionally showed
+    // a permanently stuck, empty modal for 0/1-store accounts, which
+    // legacy never shows at all in that case. checkAndFetchStores() alone
+    // now handles showing the modal only when there are real options.
     if (this.storeSelection.getSelectedStoreId() == null) {
       this.storeSelection.checkAndFetchStores();
-      this.storeSelection.show();
     }
 
     // Counter code (ctrl:63-80).

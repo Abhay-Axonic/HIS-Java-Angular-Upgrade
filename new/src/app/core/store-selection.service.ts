@@ -33,7 +33,16 @@ import { AssetStore } from './store-selection.models';
  * single-store branch never calls setStore()/modal('hide'), only the
  * user clicking Ok in the multi-store path does). A single-store user's
  * first visit this session leaves an empty, seemingly-stuck modal open
- * even though selection succeeded correctly underneath it.
+ * even though selection succeeded correctly underneath it. This
+ * "caller shows synchronously" call-site contract is legacy-faithful
+ * ONLY for the ~25 controllers that themselves call
+ * `.modal('show')` right after `storePopup()` (e.g.
+ * viewAssetSchedulerController.js:19-20) -- NOT universal. `home`/
+ * `doctorDashboard`'s own legacy controllers
+ * (nurseDashboardMasterController.js, doctorDashboardController.js) have
+ * no such synchronous call of their own; they rely solely on the
+ * `stores.length > 1` gate below. Those two callers must NOT call
+ * `show()` themselves -- see this method's own `next` handler.
  */
 @Injectable({ providedIn: 'root' })
 export class StoreSelectionService {
@@ -58,6 +67,11 @@ export class StoreSelectionService {
           const stores = response.stores ?? [];
           if (stores.length > 1) {
             this.storeList.set(stores);
+            // Matches storePopup()'s own internal `.modal('show')`
+            // (app.js:2620-2622) -- needed by callers (home, doctorDashboard)
+            // that don't also show() synchronously themselves. A no-op for
+            // callers that already called show() before this resolved.
+            this.show();
           } else if (stores.length === 1) {
             sessionStorage.setItem('selectedTopStore', JSON.stringify(stores[0]));
             this.session.updateStoreId(stores[0].storeId);

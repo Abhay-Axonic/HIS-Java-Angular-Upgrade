@@ -105,11 +105,16 @@ export class Home {
     // getItem('selectedTopStore')); if undefined -> storePopupAcesss()
     // (:56-59), which (its module-permission filter always passes in
     // practice, see StoreSelectionService's own doc) unconditionally calls
-    // storePopup() -- checkAndFetchStores() + show(), same call-site
-    // contract every other screen using this service already follows.
+    // storePopup(). Bug fix (found live, Step 5): unlike the ~25 legacy
+    // controllers that call `.modal('show')` synchronously themselves,
+    // `nurseDashboardMasterController.js` (this screen's own controller)
+    // has no such call -- it relies solely on storePopup()'s internal
+    // `stores.length > 1` gate. Calling show() here unconditionally showed
+    // a permanently stuck, empty modal for 0/1-store accounts, which
+    // legacy never shows at all in that case. checkAndFetchStores() alone
+    // now handles showing the modal only when there are real options.
     if (this.storeSelection.getSelectedStoreId() == null) {
       this.storeSelection.checkAndFetchStores();
-      this.storeSelection.show();
     }
 
     // Counter code (:61-78).
