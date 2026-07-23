@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.param.global.utility.UserComponent;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -179,9 +180,25 @@ public class UserMasterController implements ICommonConstants
 	@RequestMapping(value = "/resetPassword" , method = RequestMethod.POST , consumes = MediaType.APPLICATION_JSON_VALUE)
 	public  @ResponseBody Response resetPassword(@RequestBody UserMasterDto userMasterDto){
 		try{
+			// Security fix, docs/DECISION_NEEDED_ResetPasswordMissingIdentityBinding.md --
+			// this endpoint is exclusively a self-service "change my own password" flow
+			// (confirmed: the only live frontend caller always sends the caller's own
+			// userId). Never trust the body's userId -- bind to the JWT-authenticated
+			// caller's own identity instead. NOTE: this closes the "just call the API
+			// with someone else's ID" exploit path; it does not by itself address
+			// docs/DECISION_NEEDED_HardcodedJwtSigningKey.md, which undermines the
+			// trustworthiness of the JWT identity this check relies on -- both should
+			// be resolved together.
+			String authenticatedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+			UserMasterDto authenticatedUser = UserComponent.getUsers().stream()
+					.filter(u -> u.getUserName() != null && u.getUserName().equalsIgnoreCase(authenticatedUsername))
+					.findAny().orElse(null);
+			if (authenticatedUser == null || !authenticatedUser.getUserId().equals(userMasterDto.getUserId())) {
+				return new Response(ERROR, null, "You are not authorized to change this user's password.", null, null);
+			}
 			return iUserMasterService.resetPassword(userMasterDto);
 		}catch(Exception e){
-			
+
 			throw e;
 		}
 	}
