@@ -11,7 +11,23 @@ import com.param.global.utility.UserComponent;
 import io.jsonwebtoken.*;
 
 public class JwtTokenUtil {
-	private static final String SECRET_KEY = "CliniVantage##2017";
+	private static final String SECRET_KEY = loadSigningKey();
+
+	/**
+	 * Security fix, docs/DECISION_NEEDED_HardcodedJwtSigningKey.md -- the
+	 * signing key must never be a compiled-in literal. Fails fast at class-load
+	 * time if unconfigured, rather than silently falling back to another
+	 * predictable default, since a missing signing key is a deployment error,
+	 * not a condition to degrade gracefully from.
+	 */
+	private static String loadSigningKey() {
+		String key = System.getenv("JWT_SIGNING_KEY");
+		if (key == null || key.trim().isEmpty()) {
+			throw new IllegalStateException(
+				"JWT_SIGNING_KEY environment variable must be set -- refusing to start with no signing key configured.");
+		}
+		return key;
+	}
 	private static final long JWT_EXPIRATION = 8 * 60 * 60 * 1000; //valid for 24 hrs
 	private static final long JWT_EXPIRATION_EXTERNAL_CALLS = 5 * 60 * 60 * 1000; //valid for 5 hrs for external calls
 	private static final String userForOthers = "ClinivantageAdminUser"; 
