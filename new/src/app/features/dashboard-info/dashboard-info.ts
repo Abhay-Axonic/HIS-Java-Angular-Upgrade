@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { SessionService } from '../../core/session.service';
+import { NotificationService } from '../../core/notification.service';
 import { QuickLinksPanel } from '../../shared/quick-links/quick-links-panel';
 import { DashboardInfoService } from './dashboard-info.service';
 import { NursingStationWard } from './dashboard-info.models';
@@ -75,6 +76,23 @@ import { NursingStationWard } from './dashboard-info.models';
 export class DashboardInfo {
   private readonly session = inject(SessionService);
   private readonly api = inject(DashboardInfoService);
+  private readonly notify = inject(NotificationService);
+
+  /**
+   * Bug fix (found live, Step 5): legacy's back-link was ported as a bare
+   * `<a href="#/dashboard">`, which does not do real Angular navigation
+   * and was observed live to redirect to the app's default route instead.
+   * `dashboard` (the CEO dashboard) is a real legacy screen but is not yet
+   * part of this rebuild (deliberately excluded from batch 13 for being a
+   * ~3x-oversized outlier) -- a disclosed "not yet available" message is
+   * the correct interim behavior, matching this project's established
+   * not-yet-built-destination convention, rather than a silent
+   * mis-navigation. Fixed directly (a rebuild-implementation bug, not a
+   * parity question), not held for approval.
+   */
+  goBack(): void {
+    this.notify.warning('This section is not yet available in the rebuilt app.');
+  }
 
   constructor() {
     const unitId = this.session.unitId ?? 0;

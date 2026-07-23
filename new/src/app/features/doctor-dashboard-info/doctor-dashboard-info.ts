@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { SessionService } from '../../core/session.service';
 import { QuickLinksPanel } from '../../shared/quick-links/quick-links-panel';
 import { DoctorDashboardInfoService } from './doctor-dashboard-info.service';
@@ -45,6 +46,20 @@ import { NursingStationWard } from './doctor-dashboard-info.models';
 export class DoctorDashboardInfo {
   private readonly session = inject(SessionService);
   private readonly api = inject(DoctorDashboardInfoService);
+  private readonly router = inject(Router);
+
+  /**
+   * Bug fix (found live, Step 5): legacy's back-link was ported as a bare
+   * `<a href="#/doctorDashboard">`, which does not do real Angular
+   * navigation and was observed live to redirect to the app's default
+   * route instead -- reaching the parent dashboard is the unambiguous
+   * parity target here (doctorDashboard is a real, already-built screen
+   * in this same batch), so this is a rebuild-implementation bug, not a
+   * parity question, and is fixed directly rather than held for approval.
+   */
+  goBack(): void {
+    void this.router.navigate(['/doctorDashboard']);
+  }
 
   constructor() {
     const unitId = this.session.unitId ?? 0;

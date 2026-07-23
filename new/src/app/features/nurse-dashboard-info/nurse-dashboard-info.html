@@ -12,10 +12,10 @@
               <h3 class="panel-title">
                 <i class="fa fa-stop-circle-o fa-2x pull-left" aria-hidden="true"></i>Quick Links
                 <!-- Targets the legacy `nurseDashboard` state, not yet
-                     built as an Angular route -- same "real target, out of
-                     this batch's scope" convention as asset-scheduler's
-                     assetPMSScheduler link. -->
-                <a href="#/nurseDashboard" title="Dashboard - Nurse">
+                     built as an Angular route. Bug fix: a bare hash anchor
+                     here caused a real, reproducible mis-navigation to the
+                     app's default route -- see goBack()'s doc comment. -->
+                <a href="javascript:void(0)" title="Dashboard - Nurse" (click)="goBack()">
                   <i class="fa fa-expand fa-2x pull-right" aria-hidden="true"></i>
                 </a>
               </h3>

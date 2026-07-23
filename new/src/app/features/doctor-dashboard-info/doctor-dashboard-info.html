@@ -13,11 +13,12 @@
             <div class="panel-heading">
               <h3 class="panel-title">
                 <i class="fa fa-stop-circle-o fa-2x pull-left" aria-hidden="true"></i>Quick Links
-                <!-- Targets the legacy `doctorDashboard` state, not yet
-                     built as an Angular route -- same "real target, out of
-                     this batch's scope" convention as asset-scheduler's
-                     assetPMSScheduler link. -->
-                <a href="#/doctorDashboard" title="Dashboard - Doctor">
+                <!-- Bug fix: a bare hash anchor here caused a real, reproducible
+                     mis-navigation to the app's default route (see goBack() doc
+                     comment). doctorDashboard is a real, already-built screen in
+                     this same batch, so real navigation is the correct parity
+                     target. -->
+                <a href="javascript:void(0)" title="Dashboard - Doctor" (click)="goBack()">
                   <i class="fa fa-expand fa-2x pull-right" aria-hidden="true"></i>
                 </a>
               </h3>
