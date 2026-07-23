@@ -13,9 +13,11 @@ import {
 
 /**
  * Endpoint paths per the completed Step 0/1 audit for this batch -- all six
- * confirmed real, live Controller -> Service -> DAO chains under `/adt`
- * (deployment base `/api/adt/...`, matching every other sibling screen's
- * service in this codebase), taken from
+ * confirmed real, live Controller -> Service -> DAO chains under
+ * `ConsentTypeMasterController`'s class-level `@RequestMapping("/adt")`
+ * (legacy/ADT/.../controller/ConsentTypeMasterController.java:19) -- no
+ * `/api` segment, matching encounterTypeMaster/deliveryTypeMaster's own
+ * services in this batch. Taken from
  * resources/assets/js/controller/adt/global/consentTypeMasterController.js
  * (396 lines, `consentTypeMasterController`, no `controllerAs`). Legacy's
  * own `GenericService.serviceAction("POST", ...)` calls every one of these
@@ -35,7 +37,7 @@ export class ConsentTypeMasterService {
     offset: number,
     noOfRecordsPerPage: number,
   ): Observable<ApiResponse<never, ConsentTypeRow>> {
-    return this.http.post<ApiResponse<never, ConsentTypeRow>>(`${this.base}/api/adt/getConsentTypeMasterList`, {
+    return this.http.post<ApiResponse<never, ConsentTypeRow>>(`${this.base}/adt/getConsentTypeMasterList`, {
       organizationId,
       unitId,
       offset,
@@ -46,7 +48,7 @@ export class ConsentTypeMasterService {
   // ctrl:105-138 (same function, the parallel count call) -- POST
   // {organizationId, unitId}; count returned in `object`.
   getCount(organizationId: number, unitId: number): Observable<ApiResponse<number>> {
-    return this.http.post<ApiResponse<number>>(`${this.base}/api/adt/getConsentTypeCount`, { organizationId, unitId });
+    return this.http.post<ApiResponse<number>>(`${this.base}/adt/getConsentTypeCount`, { organizationId, unitId });
   }
 
   // ctrl:203-267 (saveConsentType) -- POST, real create. The backend's own
@@ -54,13 +56,13 @@ export class ConsentTypeMasterService {
   // as-is against a lowercased stored column) -- NOT fixed here, see the
   // component's class doc comment.
   save(payload: ConsentTypeSavePayload): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${this.base}/api/adt/saveConsentTypeMaster`, payload);
+    return this.http.post<ApiResponse>(`${this.base}/adt/saveConsentTypeMaster`, payload);
   }
 
   // ctrl:270-298 (showUpdateBtn) -- POST {consentTypeMasterId};
   // response.data.listObject[0] is the single record.
   getById(consentTypeMasterId: number): Observable<ApiResponse<never, ConsentTypeDetail>> {
-    return this.http.post<ApiResponse<never, ConsentTypeDetail>>(`${this.base}/api/adt/getConsentTypeById`, {
+    return this.http.post<ApiResponse<never, ConsentTypeDetail>>(`${this.base}/adt/getConsentTypeById`, {
       consentTypeMasterId,
     });
   }
@@ -68,11 +70,11 @@ export class ConsentTypeMasterService {
   // ctrl:342-394 (updateConsentType) -- POST, real update; no `status` field
   // sent, matching legacy exactly.
   update(payload: ConsentTypeUpdatePayload): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${this.base}/api/adt/updateConsentTypeMaster`, payload);
+    return this.http.post<ApiResponse>(`${this.base}/adt/updateConsentTypeMaster`, payload);
   }
 
   // ctrl:301-339 (updateStatus) -- POST, real status toggle.
   updateStatus(payload: ConsentTypeStatusPayload): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${this.base}/api/adt/updateStatusForConsentType`, payload);
+    return this.http.post<ApiResponse>(`${this.base}/adt/updateStatusForConsentType`, payload);
   }
 }
