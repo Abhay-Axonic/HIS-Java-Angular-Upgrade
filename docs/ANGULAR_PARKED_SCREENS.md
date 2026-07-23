@@ -6,7 +6,7 @@
 
 Screens flagged by the automated sweep as either (a) having at least one endpoint that 404'd (a possible missing-backend gap, the `modalityTypeMaster`/entry 67 pattern) or (b) containing clinical-keyword hits in their real API-call/field surface (a possible mistagged-as-low-risk screen, the `doorToNeedle`/entry 66 pattern) — **that have not yet been individually investigated and resolved**. This is explicitly NOT the full sweep output; it excludes every screen this project has already investigated and resolved one way or the other (see "Already-resolved screens excluded from this list" below). Per standing project discipline, none of the screens below should be selected into a batch without first individually verifying them (same treatment the original 2026-07-21 parked list received).
 
-**Sweep population:** 159 screens (built screens, `doorToNeedle`, and shared×353-controller screens excluded from the sweep itself, per the tool's own design). **35 screens remain genuinely unresolved** after excluding everything already investigated: 2 missing-backend hits, 35 clinical-keyword hits (overlap between the two lists: 2 screens).
+**Sweep population:** 159 screens (built screens, `doorToNeedle`, and shared×353-controller screens excluded from the sweep itself, per the tool's own design). **34 screens remain genuinely unresolved** after excluding everything already investigated: 2 missing-backend hits, 34 clinical-keyword hits (overlap between the two lists: 2 screens). (`wardStoreMapper` resolved and removed per entry 143; `aiButtonConfiguration` remains in the table below but is individually resolved — see its row note.)
 
 **Caveat carried over from the original list:** this sweep ran without a live auth token (none could be safely obtained — see prior session notes on why raw token extraction is out of scope). Some endpoint prefixes 401 at a security filter before Spring MVC routing even runs, making 'route missing' and 'route exists, needs auth' indistinguishable — the missing-backend count may under-report. Confirmed via source-level Controller/Service/DAO checks remains the more reliable method for any individual screen, same as every batch's own Step 0 process already does.
 
@@ -21,7 +21,7 @@ Screens flagged by the automated sweep as either (a) having at least one endpoin
 | addNewNabhReporting | Admin - Org/Unit Master |  | patient |  |
 | addNewOrderSetMaster | Admin - Org/Unit Master |  | doctor, medicat |  |
 | adviceTab | OPD |  | encounter, patient, vital | **High-suspicion clinical — likely 8th-14th members of entry 78's OPD tab family, see above** |
-| aiButtonConfiguration | Admin - Org/Unit Master |  | doctor |  |
+| aiButtonConfiguration | Admin - Org/Unit Master |  | doctor | **Individually verified (entry 143): "doctor" hit is a false positive on clinical-data grounds — traces to `DoctorMasterDto`, a doctor master/employee record, not patient/clinical data. Deferred from batch 14 by owner choice (caution around binding a named-practitioner identity), not because verification is still open. Safe for a future batch to pick up directly citing entry 143, no re-verification needed.** |
 | applicationConfiguration | Admin - Configuration |  | bed, consult, patient |  |
 | appointmentScheduling | Appointment Scheduling |  | doctor, patient |  |
 | appointmentSchedulingUnitMaster | Appointment Scheduling |  | doctor |  |
@@ -51,12 +51,11 @@ Screens flagged by the automated sweep as either (a) having at least one endpoin
 | tallyInterfacing | Admin - Unit Master (tally-interfacing.html) |  | doctor |  |
 | userRoleManagement | Admin - User Management |  | clinical |  |
 | vitalsTab | OPD |  | encounter, patient, vital | **High-suspicion clinical — likely 8th-14th members of entry 78's OPD tab family, see above** |
-| wardStoreMapper | Asset Management |  | ward |  |
 | webAppointment | Appointment Scheduling |  | doctor, encounter |  |
 
 ## Already-resolved screens excluded from this list
 
-Every screen this project has already individually investigated and resolved, one way or the other, is deliberately absent from the table above even if the raw sweep still flags it (its own internal risk-tag data hasn't been updated to match these manual corrections): `doorToNeedle` (entry 66), the 4-screen homecare cluster (entry 77), the 15-screen OPD-tab/ADT-bed cluster (entry 78), the `*Dashboard*` family (entry 79, confirmed FINE, stays in the normal pool), the 6-screen disconnected-wiring cluster (entry 80) plus its 8 wider-sweep candidates (entry 85), `serviceMaster` (entry 103) and 6 more mistagged screens (entry 118), `supplyDaysMaster` (entry 102) and `mailConfiguration` (entry 119, both excluded pending an owner decision, not a risk-tag issue), and all 25 screens already selected into batches 9-11.
+Every screen this project has already individually investigated and resolved, one way or the other, is deliberately absent from the table above even if the raw sweep still flags it (its own internal risk-tag data hasn't been updated to match these manual corrections): `doorToNeedle` (entry 66), the 4-screen homecare cluster (entry 77), the 15-screen OPD-tab/ADT-bed cluster (entry 78), the `*Dashboard*` family (entry 79, confirmed FINE, stays in the normal pool), the 6-screen disconnected-wiring cluster (entry 80) plus its 8 wider-sweep candidates (entry 85), `serviceMaster` (entry 103) and 6 more mistagged screens (entry 118), `supplyDaysMaster` (entry 102) and `mailConfiguration` (entry 119, both excluded pending an owner decision, not a risk-tag issue), all 25 screens already selected into batches 9-11, and `wardStoreMapper` (entry 143, verified false positive, selected into batch 14).
 
 ## Regeneration procedure (for whoever runs this next)
 
