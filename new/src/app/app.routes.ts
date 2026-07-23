@@ -1130,6 +1130,35 @@ export const routes: Routes = [
             (m) => m.DetailsCorrectiveMaintenanceScheduleWorklist,
           ),
       },
+      // Phase 4 batch 15 -- first batch in the new clinical/billing risk
+      // tier (docs/ANGULAR_REBUILD_PLAYBOOK.md "Clinical/Billing-Tier
+      // Addendum"). identificationMaster is deliberately NOT included here
+      // -- held pending owner review of
+      // docs/DECISION_NEEDED_IdentificationMasterCreateFlagReset.md.
+      {
+        path: 'cardTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Card Type Master' },
+        loadComponent: () => import('./features/card-type-master/card-type-master').then((m) => m.CardTypeMaster),
+      },
+      {
+        path: 'deliveryTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 506, title: 'Delivery Type Master' },
+        loadComponent: () => import('./features/delivery-type-master/delivery-type-master').then((m) => m.DeliveryTypeMaster),
+      },
+      {
+        path: 'encounterTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 397, title: 'Encounter Type Master' },
+        loadComponent: () => import('./features/encounter-type-master/encounter-type-master').then((m) => m.EncounterTypeMaster),
+      },
+      {
+        path: 'consentTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 399, title: 'Consent Type Master' },
+        loadComponent: () => import('./features/consent-type-master/consent-type-master').then((m) => m.ConsentTypeMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

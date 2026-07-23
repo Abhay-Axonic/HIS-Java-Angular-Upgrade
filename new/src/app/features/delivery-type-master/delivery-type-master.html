@@ -1,0 +1,141 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="deliveryTypeCode">Delivery Type Code<span class="required">*</span></label>
+        <input
+          id="deliveryTypeCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().deliveryTypeCode"
+          (ngModelChange)="updateField('deliveryTypeCode', $event)"
+          name="deliveryTypeCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field wide">
+        <!-- Legacy's visible label is "Delivery Type Description", even
+             though the field is named deliveryTypeName -- label text and
+             field name deliberately diverge, matching legacy verbatim. -->
+        <label for="deliveryTypeName">Delivery Type Description<span class="required">*</span></label>
+        <input
+          id="deliveryTypeName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().deliveryTypeName"
+          (ngModelChange)="updateField('deliveryTypeName', $event)"
+          name="deliveryTypeName"
+          [class.invalid]="isNameInvalid()"
+        />
+        <!-- Faithful copy-paste bug, NOT fixed -- see class doc comment:
+             legacy's own help text here checks the CODE field's validity,
+             not this field's. -->
+        @if (isNameHelpTextVisible()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pagination().pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      entries
+    </label>
+
+    @if (!updateMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!-- Restored, real search -- legacy's own searchKeyword input is dead
+         (no wiring anywhere in the controller). See class doc comment. -->
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="pagination().search"
+      (ngModelChange)="onSearchChange($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Delivery Type Code</th>
+        <th>Delivery Type Description</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of pagination().data; track row.deliveryTypeId) {
+        <tr>
+          <td>{{ row.deliveryTypeCode }}</td>
+          <td>{{ row.deliveryTypeName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="fa fa-pencil icon-edit" aria-hidden="true" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!pagination().data.length) {
+        <tr>
+          <td colspan="4" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (pagination().totalPages > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+      @for (p of pagesList(); track p) {
+        <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+    </ul>
+  }
+</section>
+
+<!-- Confirm-save modal (mirrors the shared legacy <modal> directive's "Are
+     you sure you want to Save?" prompt, PopupOkBtn). Deliberately does NOT
+     auto-close on a failed Save -- see class doc comment. -->
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
