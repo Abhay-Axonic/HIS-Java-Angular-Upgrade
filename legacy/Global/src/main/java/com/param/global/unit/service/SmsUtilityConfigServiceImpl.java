@@ -1376,6 +1376,10 @@ public class SmsUtilityConfigServiceImpl implements ISmsUtilityConfigService, IC
 		}else {
 			res.setMessage("Failed To Send Mail");
 		}
+		// Strip the raw query result (may carry smtp_user_pwd/sender_id and other config-level fields)
+		// before returning -- this Response is forwarded verbatim into several callers' own HTTP responses.
+		res.setListObject(null);
+		res.setObject(null);
 		return res;
 	}
 
@@ -1476,7 +1480,11 @@ public class SmsUtilityConfigServiceImpl implements ISmsUtilityConfigService, IC
 		
 		
 		smsUtility.sendBulkEmailConfig(configInfoList,smsInfo,mailDto);
-			
+
+		// Strip the raw query result (may carry smtp_user_pwd/sender_id and other config-level fields)
+		// before returning -- this Response is forwarded verbatim into several callers' own HTTP responses.
+		res.setListObject(null);
+		res.setObject(null);
 		return res;
 	}
 
