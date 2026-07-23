@@ -89,25 +89,26 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * "already exits" toast exactly as legacy does.
  *
  * ================================================================
- * FLAGGED, NOT silently fixed: a real "stuck confirm-modal" bug, same
- * shape as this batch's cardTypeMaster (which the owner already chose to
- * fix, 2026-07-23 Step 6 review) -- found independently while re-reading
- * this controller, NOT called out in the batch-15 Step 0/1 audit
- * (docs/ANGULAR_PENDING_FINDINGS.md entry 149 doesn't mention it)
+ * FIXED, diverges from legacy: a "stuck confirm-modal" bug, same shape as
+ * this batch's cardTypeMaster (owner-approved fix, 2026-07-23) -- found
+ * independently while re-reading this controller, NOT called out in the
+ * batch-15 Step 0/1 audit (docs/ANGULAR_PENDING_FINDINGS.md entry 149
+ * doesn't mention it); owner explicitly chose the same treatment as
+ * cardTypeMaster for this instance too (entry 151)
  * ================================================================
  * `saveIdentification()`'s (ctrl:201-293) confirm-modal gate (`popUpFlag`)
  * is only ever reset back to `true` inside `init()` (ctrl:28-60), which is
  * called on page load AND inside this same function's OWN success branch
  * (ctrl:273) -- there is NO reset anywhere in the error branch
- * (ctrl:275-282, the duplicate-name case). Net effect: after any FAILED
- * save, `popUpFlag` stays permanently `false`, so every subsequent Save
- * click silently skips the confirm modal and fires the POST immediately,
- * until the page reloads. This is faithfully REPRODUCED here (not fixed)
- * pending an explicit owner decision for THIS screen -- `popupArmed` below
- * is only re-armed by a successful save (`resetForm()`), mirroring
- * `init()`'s real call sites exactly, NOT also re-armed on failure the way
- * `cardTypeMaster`'s was. Whoever reviews this should decide whether to
- * bring the same fix over for consistency, or leave this one alone.
+ * (ctrl:275-282, the duplicate-name case). Legacy's real net effect: after
+ * any FAILED save, `popUpFlag` stays permanently `false`, so every
+ * subsequent Save click silently skips the confirm modal and fires the
+ * POST immediately, until the page reloads -- confirmed live during Step 5
+ * testing (the client-side mutually-exclusive-flags rejection inside
+ * `doSave()` disarms the gate exactly like a server-side duplicate
+ * rejection does). `popupArmed` below is re-armed by BOTH a successful
+ * save (`resetForm()`) AND a failed one (`doSave()`'s error branch) -- see
+ * that branch's own comment.
  *
  * ================================================================
  * Other legacy quirks preserved verbatim
@@ -277,6 +278,8 @@ export class IdentificationMaster {
     if (this.popupArmed()) {
       this.showConfirmModal.set(true); // mirrors `showModal = !showModal` inside the popUpFlag branch
     } else {
+      // Guards only the narrow window while a confirmed save is still
+      // in-flight -- see class doc's "FIXED, diverges from legacy" section.
       this.doSave();
     }
   }
@@ -324,7 +327,11 @@ export class IdentificationMaster {
             this.notify.success('Identification Added Successfully...!!'); // ctrl:264-269, verbatim
             this.resetForm(); // ctrl:273 -- init() runs on success, re-arms popupArmed too
           } else {
-            this.notify.error('Identification already exits...!!'); // ctrl:276-281, verbatim typo -- see class doc's flagged "stuck modal" bug: NOT re-armed here
+            this.notify.error('Identification already exits...!!'); // ctrl:276-281, verbatim typo
+            // Owner-approved fix, same as cardTypeMaster (see class doc):
+            // re-arm the confirm gate on failure too, not just success, so
+            // the modal correctly reappears before every save attempt.
+            this.popupArmed.set(true);
           }
           this.loadList(); // ctrl:283-287 -- reloads unconditionally, success AND failure
         },
