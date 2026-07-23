@@ -51,7 +51,8 @@ import {
  *
  * ================================================================
  * Two-click confirm flow on Save ONLY, plus a real, previously-uncataloged
- * "stuck" bug found while re-verifying this screen's source
+ * "stuck" bug found while re-verifying this screen's source -- FIXED here,
+ * diverging from legacy (owner decision, 2026-07-23 Step 6 review)
  * ================================================================
  * `saveCardType()` (ctrl:100-160) is gated by `$scope.popUpFlag` (`init()`
  * sets it `true`, ctrl:67): the FIRST click, with `popUpFlag` true, just
@@ -62,12 +63,19 @@ import {
  * back by `init()` (ctrl:16-87) -- called on page load and inside
  * `saveCardType`'s OWN success branch (ctrl:143) -- there is NO reset
  * anywhere in its error branch (ctrl:144-152, duplicate-name case).
- * **Net effect, faithfully reproduced below:** after any FAILED save (e.g.
- * duplicate name), `popUpFlag` stays permanently `false` -- so every
- * subsequent Save click silently SKIPS the confirm modal and fires the POST
- * immediately, until the user reloads the page. Modeled via `popupArmed`
- * below; `save()` only shows the modal while `popupArmed()` is true, and
- * only a SUCCESSFUL save (via `resetForm()`) re-arms it.
+ * **Legacy's real net effect:** after any FAILED save (e.g. duplicate
+ * name), `popUpFlag` stays permanently `false` -- so every subsequent Save
+ * click silently skips the confirm modal and fires the POST immediately,
+ * until the user reloads the page. This was verified live against the real
+ * legacy app during Step 6 review (confirmed via direct `popupArmed()`/
+ * `showConfirmModal()` signal reads at each step, not assumed from source
+ * alone) before the owner explicitly chose to diverge from it here rather
+ * than faithfully reproduce it, unlike this batch's other logged-only UI
+ * bugs. Modeled via `popupArmed` below; `save()` only shows the modal while
+ * `popupArmed()` is true, and it is re-armed by BOTH a successful save
+ * (`resetForm()`) and a failed one (`doSave()`'s error branch) -- see that
+ * method's own comment for why only the gate, not the form fields, resets
+ * on failure.
  *
  * ================================================================
  * Discrepancy found on re-verification -- flagged, not silently resolved
@@ -230,8 +238,13 @@ export class CardTypeMaster {
     if (this.popupArmed()) {
       this.showConfirmModal.set(true); // mirrors `showModal = !showModal` inside the popUpFlag branch
     } else {
-      // BUG faithfully reproduced -- popUpFlag stuck false after a prior
-      // failed save; confirm modal is silently skipped. See class doc.
+      // Guards only the narrow window while a confirmed save is still
+      // in-flight (popupArmed is set false synchronously in confirmSave(),
+      // before doSave()'s HTTP call resolves) -- prevents a double-submit
+      // if Save is clicked again before the response comes back. Legacy's
+      // OWN bug (popUpFlag stuck false forever after any FAILED save, so
+      // the modal silently skips on every later attempt) is deliberately
+      // NOT reproduced here -- see doSave()'s failure branch and class doc.
       this.doSave();
     }
   }
@@ -270,7 +283,14 @@ export class CardTypeMaster {
             this.loadList();
           } else {
             this.notify.error('Card Type already exits...!!'); // ctrl:145-150, verbatim typo, not corrected
-            // ctrl:144-152 -- no reset here; popupArmed stays false. See class doc bug.
+            // Owner-approved fix (2026-07-23), diverges from legacy: legacy's
+            // ctrl:144-152 has no reset here at all, leaving popUpFlag stuck
+            // false so the confirm modal silently skips on every subsequent
+            // Save click until one succeeds. Re-arming here instead means the
+            // modal correctly reappears before every save attempt, including
+            // right after a failure -- only the confirm gate is touched, not
+            // the form fields, so a rejected entry stays editable in place.
+            this.popupArmed.set(true);
           }
         },
         error: () => this.loader.stop(),
