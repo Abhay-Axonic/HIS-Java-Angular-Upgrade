@@ -1439,3 +1439,21 @@ No schema/structure change — same cast-to-jsonb-then-back-to-text pattern as t
 Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Grant module 506 to the demo role now").
 
 **Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 149 has full detail.
+
+## BR-local-dev-db-drift-consenttype-admissionconsent — Local dev DB (`his_local`)'s `adt.m_consent_type_master` table was missing its `admission_consent` column entirely, silently breaking every consentTypeMaster save (batch 15's 5th screen), same class as `BR-local-dev-db-drift-systemobservation-specialityids` (2026-07-23)
+
+**Not a business rule — a local-dev-environment gap, same class as `BR-local-dev-db-drift-systemobservation-specialityids`/`BR-local-dev-db-drift-qms-prnprintformat`.** Surfaced during Step 5 live-interaction testing for batch 15's `consentTypeMaster` screen: after fixing an unrelated rebuild bug (an erroneous `/api` prefix on this screen's own endpoint paths, see the sibling commit on `rebuild/phase4-batch15` — not a DB issue), a real save attempt against the corrected endpoint still failed, surfacing legacy's own "Consent type already exits...!!" toast (verbatim, same message the AngularJS original shows for ANY non-`success` response, not specifically duplicates — confirmed by reading `consentTypeMasterController.js:236-256` directly) even though `adt.m_consent_type_master` had zero rows at the time (confirmed via direct `psql` read before assuming anything).
+
+**Root cause confirmed via `catalina.out`, not guessed:** `ERROR: column "admission_consent" of relation "m_consent_type_master" does not exist`. `ConsentTypeMaster.java:91-92` maps this column (`@Column(name="admission_consent")`, `Character` type) as a real, load-bearing field (the screen's own "Admission Consent" checkbox) — the column simply never existed on this environment's table, so every `INSERT` threw a `PSQLException` that `ConsentTypeMasterDaoImpl.addConsentTypeMaster`'s empty `catch (Exception e) {}` block silently swallowed, returning a generic `ERROR` response indistinguishable (by the frontend, faithfully matching legacy) from a real duplicate-name rejection.
+
+**Fixed via a single, additive, reversible `ALTER TABLE`:**
+```sql
+ALTER TABLE adt.m_consent_type_master ADD COLUMN admission_consent character(1);
+```
+No default, no backfill needed (table had zero rows). Type matches the entity's `Character` field and this table's own `status character(1)` column convention.
+
+**Verified via live in-browser navigation, not assumed from the DDL alone:** full create (`CNT1`/"Test Consent Type", Admission Consent checked) → real "Consent type added successfully...!!" toast → row appears in list → edit-load → update (no false duplicate, since `updateConsentTypeMaster` correctly excludes the row's own id via `GET_CONSENT_TYPE_LIST_BY_NAME_NOT_ID`) → real "Consent type updated Successfully...!!" → status toggle → real "Status updated successfully...!!", all round-tripped against the real backend.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, not a behavioral change — no `legacy/` application code touched, purely additive `ALTER TABLE` on the local dev DB only, matching RULES.md item 1's Expand-only convention and the exact precedent of `BR-local-dev-db-drift-systemobservation-specialityids`/`BR-local-dev-db-drift-qms-prnprintformat`). Owner Decision: N/A (local-dev-only, no sign-off required per this manifest's own scope, same precedent as the two entries above) — resolved same-session, disclosed in the batch 15 report.
+
+**Notes:** No `legacy/` file changed by this specific fix. The separate `/api`-prefix rebuild bug this same investigation uncovered is fixed on `rebuild/phase4-batch15` (own commit, `new/` code, not this manifest's scope) and logged in `docs/ANGULAR_PENDING_FINDINGS.md`'s batch 15 entry, not here. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope).
