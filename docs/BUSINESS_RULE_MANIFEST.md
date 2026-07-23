@@ -1423,3 +1423,19 @@ No schema/structure change — `modules` remains a `character varying` column; t
 Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Module 794 grant (QMS fix) — approved, apply it now, verify QMSMasterCall becomes testable.").
 
 **Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 139 (updated) has full detail.
+
+## BR-local-dev-db-drift-role1-module506 — Local dev DB (`his_local`)'s sole seed role (`role_id=1`, "Admin") was missing module 506's privilege grant, blocking `deliveryTypeMaster` live testing — found during Phase 4 batch 15's Step 0/1 audit (2026-07-23)
+
+**Not a business rule — a local-dev-environment gap, same class as every other `BR-local-dev-db-drift-*` entry.** Confirmed via direct query against `privilege.privilege`'s stored `modules` JSON blob for `role_id=1`: module 506 ("Delivery Type Master" — confirmed the real, live moduleId gating `deliveryTypeMaster`'s legacy resolve block, per `legacy/HIS-WAR/.../new-side-bar.html:3786`) was genuinely absent, while the other 4 screens in the same batch (modules 388, 397, 399, and `cardTypeMaster`'s no-gate state) all loaded normally for the same account — isolating the gap to module 506 specifically, not a general clinical/billing-tier lockout. Separately noted (not part of this DB fix): the entire sidebar menu path to this screen, including its parent "Baby Registration" group, is HTML-commented-out in the current legacy app (`new-side-bar.html:3777-3789`) — no real user reaches this screen via navigation today, only a direct URL. This DB grant restores the ability to test the screen live; it does not restore the disabled menu link, which is a separate legacy-side question, not touched here.
+
+**Fixed via a single, additive, reversible JSON-array append, owner-approved before applying:**
+```sql
+UPDATE privilege.privilege
+SET modules = (modules::jsonb || '[{"id":506,"name":"Delivery Type Master","parentId":505,"moduleType":1}]'::jsonb)::text
+WHERE role_id = 1;
+```
+No schema/structure change — same cast-to-jsonb-then-back-to-text pattern as the module-794 fix above. `parentId: 505` matches the commented-out sidebar entry's own `checkAccess(505)` parent group ("Baby Registration"). Verified live: query confirms `modules::jsonb @> '[{"id":506}]'` now returns true for `role_id=1`.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: Approved explicitly ("Grant module 506 to the demo role now").
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 149 has full detail.
