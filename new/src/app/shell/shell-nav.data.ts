@@ -25,6 +25,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/home', title: 'Home' },
       { path: '/doctorDashboard', title: 'Doctor Dashboard' },
+      { path: '/dashboard', title: 'Dashboard' },
     ],
   },
   {
@@ -155,7 +156,10 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   },
   {
     heading: 'Configuration',
-    items: [{ path: '/prefixConfiguration', title: 'Prefix Configuration' }],
+    items: [
+      { path: '/prefixConfiguration', title: 'Prefix Configuration' },
+      { path: '/smsConfiguration', title: 'SMS Configuration' },
+    ],
   },
   {
     heading: 'Reports',
@@ -175,6 +179,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/manufacturerMaster', title: 'Manufacturer Master' },
       { path: '/genericMaster', title: 'Generic Master' },
       { path: '/frequencyMaster', title: 'Frequency Master' },
+      { path: '/pharmacyformulationTypeMaster', title: 'Formulation Type Master' },
     ],
   },
   {
@@ -206,6 +211,9 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/assetTypeMaster', title: 'Asset Type Master' },
       { path: '/consumableBarcodeConfig', title: 'Consumable Barcode Configuration' },
       { path: '/fixedAssetMaster', title: 'Fixed Asset Master' },
+      { path: '/wardStoreMapper', title: 'Ward Store Mapper' },
+      { path: '/addfixedAssetMaster', title: 'Add Fixed Asset Opening Balance' },
+      { path: '/assetReturn', title: 'Asset Return' },
     ],
   },
   {

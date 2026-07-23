@@ -1,0 +1,248 @@
+<div class="container-fluid his-style">
+  <div class="row margin-top10">
+    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+      <label for="fromDate">Date (From)</label>
+      <input type="date" id="fromDate" class="text-input" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+      <label for="toDate">Date-Till</label>
+      <input type="date" id="toDate" class="text-input" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+      <!-- "Accepting Store" label wraps the fromStore model -- verified
+           against asset-return.html:43-49, not swapped here. -->
+      <label for="fromStore">Accepting Store</label>
+      <select id="fromStore" class="text-input" [(ngModel)]="fromStore" name="fromStore">
+        @for (s of fromStoreList(); track s.id) {
+          <option [ngValue]="s">{{ s['store'] }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+      <!-- "Returning Store" label wraps the toStore model -- verified
+           against asset-return.html:58-63. -->
+      <label for="toStore">Returning Store</label>
+      <select id="toStore" class="text-input" [(ngModel)]="toStore" name="toStore">
+        @for (s of toStoreList(); track s.id) {
+          <option [ngValue]="s">{{ s['store'] }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+      <label for="returnNo">Return No.</label>
+      <input type="text" id="returnNo" autocomplete="off" class="text-input" [ngModel]="returnNo" (ngModelChange)="returnNo = $event" name="returnNo" />
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+      <label for="status">Status(n)</label>
+      <select id="status" class="text-input" [(ngModel)]="status" name="status">
+        @for (s of statusFilterList(); track s.id) {
+          <option [ngValue]="s">{{ s['status'] }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 padding-top10">
+      <div class="common-save-button">
+        <a class="btn btn-primary btn-save-box-shadow" id="searchBtn" title="Search" (click)="search()">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row margin-top10 padding-left-right-1">
+    <div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set4">
+      <label class="show-entries">
+        Show
+        <select [ngModel]="pagination().pageSize" (ngModelChange)="onPageSizeChange($event)" name="pageSize" class="search-popUp-ddl">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        (records)
+      </label>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+      <a
+        class="btn btn-primary btn-save-box-shadow"
+        title="Approve"
+        [class.disabled]="!isItemChecked()"
+        (click)="openApproveModal()"
+      >
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </a>
+    </div>
+    <div class="col-md-2 col-sm-2 padding-left-right-set4 float_right text-width-auto">
+      <input type="button" value="Add New" class="btn btn-primary btn-save-box-shadow" (click)="addNew()" />
+    </div>
+  </div>
+
+  <div class="row margin-top8">
+    <div class="col-md-12 col-lg-12 col-sm-12">
+      <table class="table table-striped table-hover table-condensed table-bordered">
+        <thead class="mainServiceTableCommon">
+          <tr>
+            <th class="width2 text-center">
+              <input
+                type="checkbox"
+                [ngModel]="selectAllRows()"
+                (ngModelChange)="selectAllRows.set($event); toggleSelectAll()"
+                [disabled]="!pagination().data.length"
+                name="selectAll"
+              />
+            </th>
+            <th class="width5">
+              Return No.
+              <span class="sort-toggle" (click)="toggleSort('returnNo')"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span>
+            </th>
+            <th class="width7">
+              Return Date
+              <span class="sort-toggle" (click)="toggleSort('returnDate')"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span>
+            </th>
+            <!--
+              KNOWN LEGACY BUG, faithfully reproduced here -- do NOT "fix":
+              this header's sort-icon sorts by the `fromStore` key
+              (asset-return.html:174) but the cell below renders the
+              `toStore` field's value (asset-return.html:265). See
+              AssetReturn's class doc comment #1 for the full verified
+              trace. The "Accepting Store" header below is the mirror
+              image of this swap, not an independent bug.
+            -->
+            <th class="width7">
+              Returning Store
+              <span class="sort-toggle" (click)="toggleSort('fromStore')"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span>
+            </th>
+            <th class="width7">
+              Accepting Store
+              <span class="sort-toggle" (click)="toggleSort('toStore')"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span>
+            </th>
+            <!-- "Type" has no backing field in AssetReturnResponse.java --
+                 always blank, matching legacy's own dead {{item.type}} binding. -->
+            <th class="width4">Type</th>
+            <th class="width7">
+              Returned By
+              <span class="sort-toggle" (click)="toggleSort('returnBy')"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span>
+            </th>
+            <th class="width10">
+              Remarks
+              <span class="sort-toggle" (click)="toggleSort('remark')"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span>
+            </th>
+            <th class="width5">
+              Status(n)
+              <span class="sort-toggle" (click)="toggleSort('status')"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span>
+            </th>
+            <th class="width8">
+              Approval Status
+              <span class="sort-toggle" (click)="toggleSort('approvalStatus')"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span>
+            </th>
+            <th class="width8">Action taken</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of sortedRows(); track row.id) {
+            <tr>
+              <td class="width2 text-center">
+                <input
+                  type="checkbox"
+                  [ngModel]="row.isSelected ?? false"
+                  (ngModelChange)="row.isSelected = $event; toggleSelect(row)"
+                  [disabled]="isDisable(row)"
+                  [name]="'select-' + row.id"
+                />
+              </td>
+              <td class="width5">{{ row.returnNo }}</td>
+              <td class="width7">{{ row.returnDate | date: 'dd/MM/yyyy' }}</td>
+              <td class="width7">{{ row.toStore }}</td>
+              <td class="width7">{{ row.fromStore }}</td>
+              <td class="width4"></td>
+              <td class="width7">{{ row.returnBy }}</td>
+              <td class="width10">{{ row.remark }}</td>
+              <td class="width5">{{ row.status }}</td>
+              <td class="width8">{{ row.approvalStatus }}</td>
+              <td class="actions">
+                <a title="Edit" [class.disabled]="isDisable(row)" (click)="editReturn(row)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a title="Print" (click)="printReturn(row)"><i class="fa fa-print" aria-hidden="true"></i></a>
+                <a title="Cancel" [class.disabled]="isDisable(row)" (click)="openCancelModal(row)"><i class="fa fa-ban" aria-hidden="true"></i></a>
+                <a title="Details" (click)="viewDetails(row)">Details</a>
+              </td>
+            </tr>
+          }
+          @if (!pagination().data.length) {
+            <tr>
+              <td class="text-center" colspan="11"><p>No Record Found</p></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (pagination().totalPages > 1) {
+        <ul class="pagination table-list">
+          <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+          <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+          @for (p of pagesList(); track p) {
+            <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+          }
+          <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+          <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+        </ul>
+      }
+    </div>
+  </div>
+</div>
+
+@if (showApproveModal()) {
+  <div class="modal-backdrop" (click)="closeApproveModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm <button type="button" (click)="closeApproveModal()">&times;</button></header>
+      <div class="modal-body">
+        <span>Are you sure you want to Approve?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="confirmApprove()">Ok</button>
+        <button type="button" class="btn btn-primary" (click)="closeApproveModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCancelModal()) {
+  <div class="modal-backdrop" (click)="closeCancelModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Cancellation <button type="button" (click)="closeCancelModal()">&times;</button></header>
+      <div class="modal-body">
+        <div class="field">
+          <label for="cancelReason">Select Reasons</label>
+          <select id="cancelReason" [ngModel]="cancelReason()" (ngModelChange)="cancelReason.set($event)" name="cancelReason">
+            <option [ngValue]="undefined">Select Reason</option>
+            @for (r of cancelReasons(); track r.id) {
+              <option [ngValue]="r.id">{{ r.reason }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="cancelNote">Note</label>
+          <textarea
+            id="cancelNote"
+            rows="4"
+            maxlength="100"
+            [ngModel]="cancelNote()"
+            (ngModelChange)="cancelNote.set($event)"
+            name="cancelNote"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--
+          BUG, faithfully reproduced (asset-return.html:405) -- do NOT
+          "fix": legacy gates this Save button on the NOTE field being
+          non-empty, not on a reason being selected, even though the
+          reason is what's actually required server-side (see
+          AssetReturn.confirmCancel()'s doc comment). A reason-but-no-note
+          user is blocked here; a note-but-no-reason user is not blocked
+          here (their click will still fail with a growl error).
+        -->
+        <button type="button" class="btn btn-primary" [disabled]="!cancelNote()" (click)="confirmCancel()">Save</button>
+      </div>
+    </div>
+  </div>
+}

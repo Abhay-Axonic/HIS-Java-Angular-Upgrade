@@ -1,0 +1,14 @@
+// `.modal-backdrop`/`.modal`/`header`/`.modal-body` are styled globally
+// (src/styles.scss) -- see that file's comment for why the nested-selector
+// form is required (bootstrap.min.css's own unused `.modal` dialog
+// component otherwise wins the cascade). Only `.modal-footer` needs a
+// local rule; it isn't part of the shared global block.
+.modal-footer {
+  padding: 10px 15px;
+  border-top: 1px solid #e5e5e5;
+  text-align: right;
+}
+
+.modal-body textarea {
+  width: 100%;
+}

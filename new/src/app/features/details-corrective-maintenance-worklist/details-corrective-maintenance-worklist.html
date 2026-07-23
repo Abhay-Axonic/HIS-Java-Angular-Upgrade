@@ -1,0 +1,202 @@
+<div class="container-fluid his-style">
+  <fieldset class="normalRegistration">
+    <legend class="heading-div">Asset Details</legend>
+    <div class="row padding-top5">
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+        <span>
+          <b class="padding-right10">Request Type :</b>
+          <label>
+            @if (detail().requestTypeId === 1) {
+              <div>Breakdown</div>
+            }
+            @if (detail().requestTypeId === 2) {
+              <div>Installation</div>
+            }
+            @if (detail().requestTypeId === 3) {
+              <div>As And When</div>
+            }
+          </label>
+        </span>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+        <span>
+          <b class="padding-right10">Request Criticality :</b>
+          <label>
+            @if (detail().requestCriticalityId === 1) {
+              <div>Normal</div>
+            }
+            @if (detail().requestCriticalityId === 2) {
+              <div>Urgent</div>
+            }
+          </label>
+        </span>
+      </div>
+    </div>
+
+    <div class="row padding-top10">
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+        <span><b class="padding-right10">Asset Category :</b><label>{{ detail().assetcategory }}</label></span>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+        <span><b class="padding-right10">Asset Code :</b><label>{{ detail().assetCode }}</label></span>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+        <span><b class="padding-right10">Asset Name :</b><label>{{ detail().assetName }}</label></span>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+        <span><b class="padding-right10">Serial No. :</b><label>{{ detail().serialNumber }}</label></span>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="normalRegistration margin-top10">
+    <legend class="heading-div">Request Details</legend>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+        <span><b class="padding-right10">Request Date Time :</b><label>{{ detail().requestDateTime }}</label></span>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4">
+        <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10 text-right text-width-auto">
+          <label class="switch">
+            <input type="checkbox" [checked]="detail().isDown" disabled />
+            <div class="slider round"></div>
+          </label>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-set4 padding-top12"><label class="cursor-pointer">Is Non Operative</label></div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+        <span><b class="padding-right10">Down Time Date :</b><label>{{ detail().downDateTime }}</label></span>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+        <span><b class="padding-right10">Down Time :</b><label>{{ detail().downTime }}</label></span>
+      </div>
+    </div>
+
+    <div class="row padding-top10">
+      <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+        <div class="row">
+          <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+            <b class="padding-right10">Request Details:</b>
+          </div>
+          <div class="col-lg-10 col-md-9 col-sm-9 padding-left-right-set4">
+            <textarea rows="8" cols="50" disabled>{{ detail().requestDetails }}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row padding-top5">
+      <div class="col-lg-2 col-md-3 col-sm-3 padding-left-right-set4">
+        <b class="padding-right10">Remarks:</b>
+      </div>
+      <div class="col-lg-10 col-md-9 col-sm-9 padding-left-right-set4">
+        <textarea rows="2" disabled>{{ detail().remark }}</textarea>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 padding-left-right-set4 padding-top10">
+        <span><b class="padding-right10">Resolution Expected By :</b><label>{{ detail().resolutionExpectedDateTime }}</label></span>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="normalRegistration margin-top10">
+    <legend class="heading-div">Allocation Details</legend>
+    <div class="row">
+      <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+        <div class="row input-container">
+          <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"><i class="fa fa-stop-circle-o" aria-hidden="true"></i></div>
+          <div class="col-lg-11 col-sm-11 col-md-11">
+            <select class="text-input floating-label dirty" [ngModel]="assignTo()" (ngModelChange)="assignTo.set($event)" [disabled]="isLocked()">
+              <option value="">Select</option>
+              @for (u of usersList(); track u.userId) {
+                <option [ngValue]="u.userId">{{ u.name }}</option>
+              }
+            </select>
+            <label>Assigned To</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+        <div class="row input-container">
+          <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"><i class="fa fa-calendar" aria-hidden="true"></i></div>
+          <div class="col-lg-11 col-sm-11 col-md-11">
+            <input
+              type="date"
+              autocomplete="off"
+              class="text-input floating-label dirty"
+              [ngModel]="scheduleDateIso()"
+              (ngModelChange)="scheduleDateIso.set($event)"
+              [disabled]="isLocked()"
+            />
+            <label>Schedule Date</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4 padding-top10">
+        <div class="row input-container">
+          <div class="col-lg-1 col-sm-1 col-md-1 polymer-icon"><i class="fa fa-clock-o" aria-hidden="true"></i></div>
+          <div class="col-lg-11 col-sm-11 col-md-11">
+            <input
+              type="text"
+              autocomplete="off"
+              class="text-input floating-label"
+              [ngModel]="scheduleTime()"
+              (ngModelChange)="scheduleTime.set($event)"
+              [disabled]="isLocked()"
+            />
+            <label>Schedule Time</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row padding-top10">
+      <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+        <div class="row">
+          <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4">
+            <b class="padding-right10 padding-left5">Allocation Remarks :</b>
+          </div>
+          <div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-set4">
+            <textarea rows="2" [ngModel]="allocationRemark()" (ngModelChange)="allocationRemark.set($event)" [disabled]="isLocked()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <footer class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set4 padding-right20">
+    <div class="row his-style padding-right20">
+      <div class="col-lg-9 col-md-9 col-sm-9 padding-left-right-set4"></div>
+      @if (!isLocked()) {
+        <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+          <input type="button" value="Save" class="btn btn-primary btn-save-box-shadow" (click)="openSaveConfirm()" />
+        </div>
+      }
+      <div class="col-lg-1 col-md-1 col-sm-1 padding-left-right-set4">
+        <a routerLink="/correctiveMaintenanceWorklist"><input type="button" value="Back" class="btn btn-primary btn-save-box-shadow" /></a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeSaveConfirm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Corrective Maintenance Worklist
+        <button type="button" class="close" (click)="closeSaveConfirm()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <label>Do you want to Save ?</label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn btn-primary" (click)="closeSaveConfirm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SessionService } from '../../core/session.service';
 import { LoaderService } from '../../core/loader.service';
+import { CorrectiveMaintenanceWorklistHandoffService } from '../../core/corrective-maintenance-worklist-handoff.service';
 import { CorrectiveMaintenanceWorklistService } from './corrective-maintenance-worklist.service';
 import { CmwRow, CompletionObj } from './corrective-maintenance-worklist.models';
 import { createPaginationState, PaginationState, searchData, setPage, setFirstPage, setPreviousPage, setNextPage, setLastPage, getPagesList } from '../../core/client-pagination.util';
@@ -57,6 +58,7 @@ export class CorrectiveMaintenanceWorklist {
   private readonly session = inject(SessionService);
   private readonly loader = inject(LoaderService);
   private readonly api = inject(CorrectiveMaintenanceWorklistService);
+  private readonly handoff = inject(CorrectiveMaintenanceWorklistHandoffService);
 
   private unitId = 0;
   private organizationId = 0;
@@ -147,6 +149,7 @@ export class CorrectiveMaintenanceWorklist {
   }
 
   goToDetails(info: CmwRow): void {
+    this.handoff.setObject(info);
     this.router.navigate(['/detailsCorrectiveMaintenanceWorklist']);
   }
 

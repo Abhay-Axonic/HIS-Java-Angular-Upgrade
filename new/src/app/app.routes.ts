@@ -1062,6 +1062,74 @@ export const routes: Routes = [
         data: { moduleId: 644, title: 'Fixed Asset Master' },
         loadComponent: () => import('./features/fixed-asset-master/fixed-asset-master').then((m) => m.FixedAssetMaster),
       },
+      // Phase 4 batch 14. wardStoreMapper/aiButtonConfiguration were the only
+      // parked-list screens in the original proposal; wardStoreMapper was
+      // individually verified as a false-positive keyword hit and kept,
+      // aiButtonConfiguration deferred by owner choice (see
+      // docs/ANGULAR_PENDING_FINDINGS.md entry 143/144). Final composition: 9
+      // screens. No moduleId below matches legacy's own lack of a resolve
+      // block on that state, confirmed per-screen during Step 0/1 audit.
+      {
+        path: 'wardStoreMapper',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Ward Store Mapper' },
+        loadComponent: () => import('./features/ward-store-mapper/ward-store-mapper').then((m) => m.WardStoreMapper),
+      },
+      {
+        path: 'addfixedAssetMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 220, title: 'Add Fixed Asset Opening Balance' },
+        loadComponent: () => import('./features/add-fixed-asset-master/add-fixed-asset-master').then((m) => m.AddFixedAssetMaster),
+      },
+      {
+        path: 'assetReturn',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 216, title: 'Asset Return' },
+        loadComponent: () => import('./features/asset-return/asset-return').then((m) => m.AssetReturn),
+      },
+      {
+        path: 'detailsAssetReturn',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Asset Return' },
+        loadComponent: () => import('./features/details-asset-return/details-asset-return').then((m) => m.DetailsAssetReturn),
+      },
+      {
+        path: 'detailsCorrectiveMaintenanceWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Corrective Maintenance Worklist' },
+        loadComponent: () =>
+          import('./features/details-corrective-maintenance-worklist/details-corrective-maintenance-worklist').then(
+            (m) => m.DetailsCorrectiveMaintenanceWorklist,
+          ),
+      },
+      {
+        path: 'smsConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 774, title: 'SMS Configuration' },
+        loadComponent: () => import('./features/sms-configuration/sms-configuration').then((m) => m.SmsConfiguration),
+      },
+      {
+        path: 'pharmacyformulationTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 459, title: 'Formulation Type' },
+        loadComponent: () =>
+          import('./features/pharmacy-formulation-type-master/pharmacy-formulation-type-master').then((m) => m.PharmacyFormulationTypeMaster),
+      },
+      {
+        path: 'dashboard',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Dashboard' },
+        loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
+      },
+      {
+        path: 'detailsCorrectiveMaintenanceScheduleWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Corrective Maintenance Schedule Worklist' },
+        loadComponent: () =>
+          import('./features/details-corrective-maintenance-schedule-worklist/details-corrective-maintenance-schedule-worklist').then(
+            (m) => m.DetailsCorrectiveMaintenanceScheduleWorklist,
+          ),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

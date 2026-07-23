@@ -1,0 +1,344 @@
+<section class="page">
+  <ul class="tabs nav nav-tabs">
+    <li [class.active]="activeTab() === 1"><a (click)="setTab(1)">Triggered SMS</a></li>
+    <li [class.active]="activeTab() === 2"><a (click)="setTab(2)">Scheduled SMS</a></li>
+  </ul>
+
+  @if (activeTab() === 1) {
+    <fieldset>
+      <div class="filter-row">
+        <div class="field">
+          <label for="triggerId">Trigger Point<span class="required">*</span></label>
+          <select id="triggerId" [ngModel]="triggerId()" (ngModelChange)="triggerId.set($event); onTriggerChange()" name="triggerId">
+            <option [ngValue]="''">Select</option>
+            @for (t of triggerList(); track t.triggerId) {
+              <option [ngValue]="t.triggerId">{{ t.triggerName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="categoryId">Category<span class="required">*</span></label>
+          <select id="categoryId" [ngModel]="categoryId()" (ngModelChange)="categoryId.set($event)" name="categoryId">
+            <option [ngValue]="''">Select</option>
+            @for (c of categoryList(); track c.categoryId) {
+              <option [ngValue]="c.categoryId">{{ c.categoryName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field checkbox-field">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="isSMSSend() === 'Y'"
+              [disabled]="isWhatsappSend() === 'Y' && whatsAppOption === 4"
+              (change)="isSMSSend.set(isSMSSend() === 'Y' ? 'N' : 'Y')"
+            />
+            Is SMS Send
+          </label>
+        </div>
+
+        <div class="field checkbox-field">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="isWhatsappSend() === 'Y'"
+              [disabled]="isSMSSend() === 'Y'"
+              (change)="isWhatsappSend.set(isWhatsappSend() === 'Y' ? 'N' : 'Y'); onWhatsappSendClick()"
+            />
+            Is WhatsApp Send
+          </label>
+        </div>
+
+        @if (isWhatsappSend() === 'Y' && whatsAppOption === 4) {
+          <div class="field">
+            <label for="whatsAppTemplateMasterId">WhatsApp Template<span class="required">*</span></label>
+            <select
+              id="whatsAppTemplateMasterId"
+              [ngModel]="whatsAppTemplateMasterId()"
+              (ngModelChange)="whatsAppTemplateMasterId.set($event)"
+              name="whatsAppTemplateMasterId"
+            >
+              <option [ngValue]="''">Select</option>
+              @for (w of whatsAppTemplateList(); track w.whatsAppTemplateMasterId) {
+                <option [ngValue]="w.whatsAppTemplateMasterId">{{ w.whatsAppTemplateDesc }}</option>
+              }
+            </select>
+          </div>
+        }
+      </div>
+
+      <div class="format-row">
+        <div class="field">
+          <label>Required Data</label>
+          <select [ngModel]="selectedDate()" (ngModelChange)="selectedDate.set($event)" name="selectedDate">
+            <option value="1">User Defined</option>
+            @for (d of dataList(); track $index) {
+              <option [value]="d.data">{{ d.dataDesc }}</option>
+            }
+          </select>
+          @if (selectedDate() === '1') {
+            <input type="text" autocomplete="off" placeholder="Enter Data" [ngModel]="userDefinedString()" (ngModelChange)="userDefinedString.set($event)" name="userDefinedString" />
+          }
+        </div>
+        <div class="field">
+          <button type="button" class="btn-primary" (click)="appendToTab1()">&gt;&gt;</button>
+        </div>
+        <div class="field wide">
+          <label>Template Description<span class="required">*</span></label>
+          <textarea [ngModel]="templateDescription()" (ngModelChange)="templateDescription.set($event)" name="templateDescription"></textarea>
+        </div>
+        <div class="field">
+          <button type="button" class="btn-primary" title="Clear" (click)="clearTemplateFields()"><i class="fa fa-eraser"></i></button>
+        </div>
+      </div>
+
+      @if (showUserDefinedMailSection()) {
+        <div class="format-row">
+          <div class="field">
+            <label>Mobile No</label>
+            <input type="text" autocomplete="off" [ngModel]="mailId()" (ngModelChange)="mailId.set($event)" name="mailId" />
+          </div>
+          <div class="field">
+            <button type="button" class="btn-primary" (click)="addMailNumber()">&gt;&gt;</button>
+          </div>
+          <div class="field wide">
+            <label>Mobile No Description List</label>
+            <ul class="mini-list">
+              @for (m of mailList(); track $index) {
+                <li><span class="fa fa-close" (click)="deleteMailId($index)"></span> {{ m.title }}</li>
+              }
+            </ul>
+          </div>
+          <div class="field">
+            <!--
+              BUG, faithfully reproduced from legacy (see SmsConfiguration
+              class doc comment, bug #2): this button is supposed to clear
+              THIS tab's mailList above, but legacy's duplicate
+              `clearMobileTempFields` definition means both tabs' Clear
+              buttons actually clear Tab-2/Scheduled-SMS mobile-number
+              state instead. Do not "fix" -- wired to clearScheduleMobileList()
+              on purpose, to match legacy exactly.
+            -->
+            <button type="button" class="btn-primary" title="Clear" (click)="clearScheduleMobileList()"><i class="fa fa-eraser"></i></button>
+          </div>
+        </div>
+      }
+    </fieldset>
+
+    <div class="toolbar">
+      <button type="button" class="btn-primary" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o"></i> {{ smsUtilityId() != null ? 'Update' : 'Save' }}
+      </button>
+      <label class="show-entries">
+        Show
+        <select [(ngModel)]="pagination().pageSize" (ngModelChange)="setPageSize()">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        records
+      </label>
+      <input type="text" class="search-box" placeholder="Search" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event); onSearchChange()" name="searchKeyword" />
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Trigger Point</th>
+          <th>Template Description</th>
+          <th>Category</th>
+          <th>Is SMS Send</th>
+          <th>Is WhatsApp Send</th>
+          <th class="text-center">Action taken</th>
+          <th class="text-center">Status(n)</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of pagination().data; track row.smsUtilityId) {
+          <tr>
+            <td>{{ row.triggerName }}</td>
+            <td>{{ row.templateDescription }}</td>
+            <td>{{ row.categoryName }}</td>
+            <td>{{ row.isSMSSend }}</td>
+            <td>{{ row.isWhatsappSend }}</td>
+            <td class="text-center">
+              <a title="Edit"><i class="fa fa-pencil" aria-hidden="true" (click)="editRow(row)"></i></a>
+            </td>
+            <td class="text-center">
+              <label class="switch">
+                <input type="checkbox" [checked]="row.status === 'A'" (change)="toggleStatus(row)" />
+                <span class="slider"></span>
+              </label>
+            </td>
+          </tr>
+        }
+        @if (!pagination().data.length) {
+          <tr>
+            <td colspan="7" class="text-center">No Record Found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (pagination().totalPages > 1) {
+      <div class="row center-block">
+        <ul class="pagination table-list">
+          <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+          <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+          @for (p of pagesList(); track p) {
+            <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+          }
+          <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+          <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+        </ul>
+      </div>
+    }
+  }
+
+  @if (activeTab() === 2) {
+    <fieldset>
+      <div class="filter-row">
+        <div class="field">
+          <label for="scheduleTriggerId">Trigger Point<span class="required">*</span></label>
+          <select id="scheduleTriggerId" [ngModel]="scheduleTriggerId()" (ngModelChange)="scheduleTriggerId.set($event); onScheduleTriggerChange()" name="scheduleTriggerId">
+            <option [ngValue]="''">Select</option>
+            @for (t of scheduleTriggerList(); track t.triggerId) {
+              <option [ngValue]="t.triggerId">{{ t.triggerName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="scheduleCategoryId">Category<span class="required">*</span></label>
+          <select id="scheduleCategoryId" [ngModel]="scheduleCategoryId()" (ngModelChange)="scheduleCategoryId.set($event)" name="scheduleCategoryId">
+            <option [ngValue]="''">Select</option>
+            @for (c of scheduleCategoryList(); track c.categoryId) {
+              <option [ngValue]="c.categoryId">{{ c.categoryName }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="format-row">
+        <div class="field">
+          <label>Required Data</label>
+          <select [ngModel]="selectedDate()" (ngModelChange)="selectedDate.set($event)" name="scheduleSelectedDate">
+            <option value="1">User Defined</option>
+            @for (d of dataList(); track $index) {
+              <option [value]="d.data">{{ d.dataDesc }}</option>
+            }
+          </select>
+          @if (selectedDate() === '1') {
+            <input type="text" autocomplete="off" placeholder="Enter Data" [ngModel]="userDefinedString()" (ngModelChange)="userDefinedString.set($event)" name="scheduleUserDefinedString" />
+          }
+        </div>
+        <div class="field">
+          <button type="button" class="btn-primary" (click)="appendToTab2()">&gt;&gt;</button>
+        </div>
+        <div class="field wide">
+          <label>Template Description<span class="required">*</span></label>
+          <textarea [ngModel]="scheduleTemplateDescription()" (ngModelChange)="scheduleTemplateDescription.set($event)" name="scheduleTemplateDescription"></textarea>
+        </div>
+        <div class="field">
+          <button type="button" class="btn-primary" title="Clear" (click)="clearTemplateFields()"><i class="fa fa-eraser"></i></button>
+        </div>
+      </div>
+
+      @if (showScheduleMobileSection()) {
+        <div class="format-row">
+          <div class="field">
+            <label>Mobile No.</label>
+            <input type="text" autocomplete="off" [ngModel]="newMobileNumber()" (ngModelChange)="newMobileNumber.set($event)" name="newMobileNumber" />
+          </div>
+          <div class="field">
+            <button type="button" class="btn-primary" (click)="addMobileNumber()">&gt;&gt;</button>
+          </div>
+          <div class="field wide">
+            <label>Mobile Number Description</label>
+            <ul class="mini-list">
+              @for (m of mobileNumbers(); track $index) {
+                <li><span class="fa fa-close" (click)="deleteMobileNumber($index)"></span> {{ m.title }}</li>
+              }
+            </ul>
+          </div>
+          <div class="field">
+            <!-- Same shared handler as Tab-1's mobile-list Clear button --
+                 this one correctly clears THIS tab's own list, because
+                 legacy's winning duplicate definition happens to target
+                 Tab-2 state. See SmsConfiguration class doc comment. -->
+            <button type="button" class="btn-primary" title="Clear" (click)="clearScheduleMobileList()"><i class="fa fa-eraser"></i></button>
+          </div>
+        </div>
+      }
+    </fieldset>
+
+    <div class="toolbar">
+      <button type="button" class="btn-primary" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o"></i> {{ scheduleSmsUtilityId() != null ? 'Update' : 'Save' }}
+      </button>
+      <input type="text" class="search-box" placeholder="Search" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" name="scheduleSearchKeyword" />
+    </div>
+
+    <!--
+      Tab 2's grid has NO pagination controls, matching legacy exactly:
+      the schedule table's pagination `<ul>` (view:663) is gated on a
+      `pager` scope variable this controller never populates, so it never
+      renders there either -- see SmsConfiguration class doc comment.
+    -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Trigger Point</th>
+          <th>Template Description</th>
+          <th>Category</th>
+          <th class="text-center">Action taken</th>
+          <th class="text-center">Status(n)</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of scheduleDisplayRows(); track row.smsUtilityId) {
+          <tr>
+            <td>{{ row.triggerName }}</td>
+            <td>{{ row.templateDescription }}</td>
+            <td>{{ row.categoryName }}</td>
+            <td class="text-center">
+              <a title="Edit"><i class="fa fa-pencil" aria-hidden="true" (click)="editScheduleRow(row)"></i></a>
+            </td>
+            <td class="text-center">
+              <label class="switch">
+                <input type="checkbox" [checked]="row.status === 'A'" (change)="toggleStatus(row)" />
+                <span class="slider"></span>
+              </label>
+            </td>
+          </tr>
+        }
+        @if (!scheduleDisplayRows().length) {
+          <tr>
+            <td colspan="5" class="text-center">No Record Found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
