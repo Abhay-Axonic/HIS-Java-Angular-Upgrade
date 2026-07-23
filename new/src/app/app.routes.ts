@@ -164,6 +164,44 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/pesapal-process-page/pesapal-process-page').then((m) => m.PesapalProcessPage),
       },
+      // Phase 4 batch 13 -- dashboard family, none have a data.moduleId (no
+      // resolve block in legacy for any of the 6). home/doctorDashboard are
+      // primary destinations (shell-nav entries below); the 3 *Info screens
+      // are reached from their parent dashboard's quick-links, not top-level
+      // nav, matching the `home` precedent.
+      {
+        path: 'home',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Home' },
+        loadComponent: () => import('./features/home/home').then((m) => m.Home),
+      },
+      {
+        path: 'doctorDashboard',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Dashboard - Doctor' },
+        loadComponent: () =>
+          import('./features/doctor-dashboard/doctor-dashboard').then((m) => m.DoctorDashboard),
+      },
+      {
+        path: 'dashboardInfo',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Dashboard' },
+        loadComponent: () => import('./features/dashboard-info/dashboard-info').then((m) => m.DashboardInfo),
+      },
+      {
+        path: 'doctorDashboardInfo',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Dashboard - Doctor' },
+        loadComponent: () =>
+          import('./features/doctor-dashboard-info/doctor-dashboard-info').then((m) => m.DoctorDashboardInfo),
+      },
+      {
+        path: 'nurseDashboardInfo',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Dashboard - Nurse' },
+        loadComponent: () =>
+          import('./features/nurse-dashboard-info/nurse-dashboard-info').then((m) => m.NurseDashboardInfo),
+      },
       // viewAssetScheduler: no data.moduleId (no resolve block), but a real
       // cookieObject session guard in the controller -- same shape as
       // pesapalProcessPage.
@@ -743,6 +781,15 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { moduleId: 675, title: 'Role Management' },
         loadComponent: () => import('./features/role-management/role-management').then((m) => m.RoleManagement),
+      },
+      // resetPwdconfirmPwd: no data.moduleId (no resolve block) -- self-service
+      // "change my own password", reached via the top bar, not the sidebar.
+      {
+        path: 'resetPwdconfirmPwd',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Reset Password' },
+        loadComponent: () =>
+          import('./features/reset-pwd-confirm-pwd/reset-pwd-confirm-pwd').then((m) => m.ResetPwdConfirmPwd),
       },
       // userAuthentication: moduleId 676, confirmed from the live resolve block.
       // Password-viewing feature (getUserAuthenticationList/sendPasswordToUser/

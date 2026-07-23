@@ -21,6 +21,13 @@ import { ShellNavSection } from './shell.models';
  */
 export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   {
+    heading: 'Dashboard',
+    items: [
+      { path: '/home', title: 'Home' },
+      { path: '/doctorDashboard', title: 'Doctor Dashboard' },
+    ],
+  },
+  {
     heading: 'Billing',
     items: [
       { path: '/billingGroupMaster', title: 'Billing Group Master' },

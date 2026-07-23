@@ -1,0 +1,261 @@
+<!--
+  Rebuild of views/common/dashboard/doctor-dashboard.html. See
+  doctor-dashboard.ts's class doc for the modal-sequencing design decision,
+  the defensive checkAccess() fix, and the CounterSelectionService reuse
+  with this screen's own confirmCounter() wording.
+-->
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style doctor-dashboard">
+    <div class="row padding-top5">
+      <!-- Welcome card (doctor-dashboard.html:171-186) -->
+      <div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-0 welcome-card">
+        <div class="d-card padding-left5">
+          <div class="panel-body">
+            <div class="col-md-1">
+              <img alt="Home" src="resources/assets/images/icon/dashboard/hospital.png" class="welcome-icon" />
+            </div>
+            <div class="col-md-3">
+              <span class="welcome-italic"><b>Welcome</b></span><br />
+              <span><b class="welcome-unit">{{ unitName }}</b></span>
+            </div>
+            <div class="col-md-8">
+              <img
+                id="doctorImage"
+                src="resources/assets/images/icon/dashboard/nurseD.png"
+                class="welcome-doctor-img"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links panel (doctor-dashboard.html:187-271) -->
+      <div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-0 quick-links-card">
+        <div class="d-card padding-left5">
+          <div class="panel panel-default" id="border-R">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                Quick Links
+                <!-- Faithful port of a real legacy quirk, not "fixed" here:
+                     this external-link icon literally points at
+                     `#/nurseDashboardInfo`, not `#/doctorDashboardInfo`, in
+                     the actual doctor-dashboard.html markup (line 191) --
+                     almost certainly copy-pasted from the nurse dashboard's
+                     view without updating the target. Neither destination
+                     is built in this rebuild yet, so this is inert either
+                     way; kept literal rather than silently "corrected" to
+                     the doctor variant, per this project's no-deviation-
+                     without-sign-off policy. -->
+                <a href="#/nurseDashboardInfo"><i class="fa fa-external-link fa-2x pull-right"></i></a>
+              </h3>
+            </div>
+            <div class="panel-body quick-links-body">
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                  @for (tile of quickLinks; track tile.moduleId) {
+                    @if (checkAccess(tile.moduleId)) {
+                      <div class="col-lg-3 col-md-3 col-sm-3 text-center ql-card">
+                        <div class="d-card-small cursor-pointer padding-left-right-5">
+                          <div class="panel panel-default">
+                            <div class="panel-body padding5">
+                              <div class="row">
+                                <div class="card-height">
+                                  <div class="text-center">
+                                    <a class="cursor-pointer" (click)="click(tile.infoCode)">
+                                      <img alt="Home" [src]="tile.icon" [title]="tile.label" class="cursor-pointer" />
+                                    </a>
+                                    <h4>{{ tile.label }}</h4>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operations panel (doctor-dashboard.html:272-289) -- decorative,
+           zero live bindings in legacy itself; reproduced as static
+           images for visual parity, not stubbed as functionality. -->
+      <div class="col-lg-4 col-md-4 col-sm-4 padding-left-right-0 operations-card">
+        <div class="d-card padding-left5">
+          <div class="panel panel-default" id="border-R">
+            <div class="panel-heading">
+              <h3 class="panel-title">Operations<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="text-center operations-images">
+                  <img alt="Home" src="resources/assets/images/icon/dashboard/op1.png" title="Operations" />
+                  <img alt="Home" src="resources/assets/images/icon/dashboard/po2.png" title="Operations" />
+                  <img alt="Home" src="resources/assets/images/icon/dashboard/po3.png" title="Operations" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finance / Administration row (doctor-dashboard.html:291-326) -->
+    <div class="row second-row">
+      <div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-0">
+        <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-0">
+          <div class="d-card padding-left5 padding-right5">
+            <div class="panel panel-default" id="border-R">
+              <div class="panel-heading">
+                <h3 class="panel-title">Finance<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+              </div>
+              <div class="panel-body panel-body-fixed">
+                <div class="row">
+                  <div class="card-height text-center">
+                    <img alt="Home" src="resources/assets/images/icon/dashboard/graph1.png" title="Finance" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-0">
+          <div class="d-card padding-left5 padding-right5">
+            <div class="panel panel-default" id="border-R">
+              <div class="panel-heading">
+                <h3 class="panel-title">Administration<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+              </div>
+              <div class="panel-body panel-body-fixed">
+                <div class="row">
+                  <div class="card-height text-center">
+                    <img alt="Home" src="resources/assets/images/icon/dashboard/graph2.jpg" title="Administration" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task / Notifications row (doctor-dashboard.html:327-362) -->
+    <div class="row third-row">
+      <div class="col-lg-8 col-md-8 col-sm-8 padding-left-right-0">
+        <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-0">
+          <div class="d-card padding-left5">
+            <div class="panel panel-default" id="border-R">
+              <div class="panel-heading">
+                <h3 class="panel-title">Task<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+              </div>
+              <div class="panel-body panel-body-fixed">
+                <div class="row">
+                  <div class="card-height text-center">
+                    <img alt="Home" src="resources/assets/images/icon/dashboard/graph4.png" title="Task" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 padding-left-right-0">
+          <div class="d-card padding-left5 padding-right5">
+            <div class="panel panel-default" id="border-R">
+              <div class="panel-heading">
+                <h3 class="panel-title">Notifications<a><i class="fa fa-external-link fa-2x pull-right"></i></a></h3>
+              </div>
+              <div class="panel-body panel-body-fixed">
+                <div class="row">
+                  <div class="card-height text-center">
+                    <img alt="Home" src="resources/assets/images/icon/dashboard/graph5.jpg" title="Notifications" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Counter Details popup (doctor-dashboard.html:365-396). Shown only when
+     it's this modal's turn -- see activeLocalModal() / class doc. -->
+@if (activeLocalModal() === 'counter') {
+  <div id="counterDetailsModal" class="modal fade in common-small-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">Counter Details</div>
+        </div>
+        <div class="modal-body">
+          <div class="margin-left10 row padding-top10">
+            <div class="col-md-3 col-lg-3 col-sm-3">
+              <span>Select Counter</span>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6">
+              <select
+                class="dirty"
+                style="width: 100%"
+                name="counterMstObj"
+                [ngModel]="counterSelection.selected()"
+                (ngModelChange)="onSelectCounter($event)"
+              >
+                <option [ngValue]="null">Select Counter</option>
+                @for (counter of counterSelection.counterList(); track counter.id) {
+                  <option [ngValue]="counter">{{ counter.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <button type="button" class="btn btn-primary width13" id="otpOk" (click)="confirmCounter()">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
+
+<!-- Nursing Station popup (doctor-dashboard.html:397-427). Held until the
+     counter popup (if any) is dismissed -- see activeLocalModal(). -->
+@if (activeLocalModal() === 'nursingStation') {
+  <div id="nursingStationModal" class="modal fade in common-small-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">Select Nursing Station</div>
+        </div>
+        <div class="modal-body">
+          <div class="row padding-top10 padding-bottom10">
+            <div class="col-md-5 col-lg-5 col-sm-5 padding-left-right-5">
+              <span>Select Nursing Station</span>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-set1">
+              <select
+                class="dirty select-box"
+                style="width: 100%; border-radius: 10px; height: 40px"
+                name="departmentNursing"
+                [ngModel]="selectedNursingStation()"
+                (ngModelChange)="selectedNursingStation.set($event)"
+              >
+                <option [ngValue]="null">Select Nursing Station</option>
+                @for (station of nursingStationList(); track station.nursingStationId) {
+                  <option [ngValue]="station">{{ station.nursingStationDesc }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <button type="button" class="btn btn-primary width13" id="otpOk" (click)="selectsetNursingStation()">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}

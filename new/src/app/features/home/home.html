@@ -1,0 +1,102 @@
+<!--
+  Rebuild of views/common/dashboard/home.html (112 lines). Genuinely thin:
+  a decorative background logo plus the nursing-station and counter
+  session-setup popups. No Quick Links panel, no checkAccess()-gated
+  icons, no Finance/Admin/Task/Notification cards -- those exist in the
+  sibling `nurseDashboard` screen (shared controller, NOT this batch), not
+  in `home` itself. The store-selection popup (`selectedTopStore`) is
+  rendered once, app-shell-wide, in app.html -- nothing to render for it
+  here, matching legacy's own index.html-level placement of
+  `#pharmacyPopupBeforLeftexpand`.
+-->
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style">
+    <div class="row margin-top10">
+      <img alt="Home" src="resources/assets/images/logo/kiosk_bg.png" class="hame-bgimg" />
+    </div>
+  </div>
+</div>
+
+<!-- Nursing Station popup (home.html:28-63) -->
+@if (nursingStationModalVisible()) {
+  <div id="nursingStationModal" class="modal fade in common-small-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">Select Nursing Station</div>
+        </div>
+        <div class="modal-body">
+          <div class="row padding-top10 padding-bottom10">
+            <div class="col-md-5 col-lg-5 col-sm-5 padding-left-right-5">
+              <span>Select Nursing Station</span>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6 padding-left-right-set1">
+              <select
+                class="dirty select-box"
+                style="width: 100%; border-radius: 10px; height: 40px"
+                name="departmentNursing"
+                [ngModel]="selectedNursingStation()"
+                (ngModelChange)="selectedNursingStation.set($event)"
+              >
+                <option [ngValue]="null">Select Nursing Station</option>
+                @for (station of nursingStationList(); track station.nursingStationId) {
+                  <option [ngValue]="station">{{ station.nursingStationDesc }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <div class="row">
+            <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+              <button class="btn btn-primary btn-save-box-shadow width100" title="Ok" id="otpOk" (click)="selectsetNursingStation()">Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
+
+<!-- Counter Details popup (home.html:66-100) -->
+@if (counterSelection.visible()) {
+  <div id="counterDetailsModal" class="modal fade in common-small-popup" role="dialog" style="display: block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title patient-details-row">Counter Details</div>
+        </div>
+        <div class="modal-body">
+          <div class="margin-left10 row padding-top10">
+            <div class="col-md-3 col-lg-3 col-sm-3">
+              <span>Select Counter</span>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6">
+              <select
+                class="dirty"
+                style="width: 100%"
+                name="counterMstObj"
+                [ngModel]="selectedCounterOption()"
+                (ngModelChange)="onSelectCounter($event)"
+              >
+                <option [ngValue]="null">Select Counter</option>
+                @for (counter of counterSelection.counterList(); track counter.id) {
+                  <option [ngValue]="counter">{{ counter.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <div class="row">
+            <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 text-width-auto float-right">
+              <button class="btn btn-primary btn-save-box-shadow width100" title="Ok" id="otpOk" (click)="counterSelection.confirmSelection()">Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade in"></div>
+}
