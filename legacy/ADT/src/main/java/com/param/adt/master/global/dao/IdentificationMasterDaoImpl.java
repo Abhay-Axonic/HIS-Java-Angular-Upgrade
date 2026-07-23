@@ -67,9 +67,12 @@ public class IdentificationMasterDaoImpl extends GenericDao<IdentificationMaster
 			identificationMaster.setCreatedDate(TimeZoneComponent.getDateByzone(0));
 			identificationMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(0));
 			identificationMaster.setStatus('A');
-			identificationMaster.setIsExpiryRequired('N');
-			identificationMaster.setIsAlphanumeric('N');
-			identificationMaster.setIsNumerical('N');
+			// isExpiryRequired/isAlphanumeric/isNumerical are mapped from the
+			// DTO's real submitted values by the Dozer mapper call above --
+			// removed 3 unconditional 'N' overrides that previously discarded
+			// them on every create (see docs/DECISION_NEEDED_IdentificationMasterCreateFlagReset.md,
+			// owner-approved fix). Matches updateIdentificationMaster's
+			// already-correct behavior, which has never had this override.
 			identificationMaster = save(identificationMaster);
 				return new Response(SUCCESS, null, null, null,identificationMaster);
 			}catch(HibernateException he){
