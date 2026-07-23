@@ -98,6 +98,26 @@ Every unit of work stays on its own branch. Merging into the batch/pilot branch 
 
 ---
 
+## Clinical/Billing-Tier Addendum (added 2026-07-23, first applied at batch 15)
+
+The administrative-tier low-risk pool is confirmed exhausted (`docs/ANGULAR_PENDING_FINDINGS.md` entries 142, 146 — a 53%-sample research pass on the remaining `MasterController` cluster found 0% alive, worse than the ~83%-dead partial estimate that preceded it). Starting with batch 15, new batches draw from the clinical/billing risk tier. This is a deliberate policy shift, not a routine batch, and changes the process as follows — these changes apply **only** to clinical/billing-tier batches; admin-tier batches (should any remain or resurface) keep the process as documented above, unchanged.
+
+**Step 6 is mandatory and blocking for this tier, not a best-practice recommendation.** In practice, across every admin-tier batch so far, Step 6 collapsed into "the rebuild agent's own Step 5 interaction testing, summarized in a report the owner approves" — not an independent domain review. That is no longer sufficient for this tier. No screen in this tier merges to `main` without a recorded sign-off distinct from the rebuild agent's own Step 5 testing: who reviewed it, what real data they used, what they specifically confirmed, and any discrepancy they caught that automated testing missed. The sign-off is a real artifact appended to the batch's findings entry — "approved" in chat is not sufficient by itself for this tier, the same way every other finding in this project is expected to leave a record, not just a verbal go-ahead.
+
+**Step 6 splits into two parts for this tier:**
+- **6a** — the existing domain-expert side-by-side review (a reviewer who knows the screen's real business/clinical/billing meaning clicks through the rebuilt screen against legacy, live, with real data), now mandatory and auditable per above, for every screen in the tier.
+- **6b (new)** — for the narrower subset of screens touching an actual billing **calculation** (amount, discount, tax, cap, threshold, rounding) or a clinical **safety-relevant** workflow (dosing/administration, patient identification, critical-value alerting, consent): a named subject-matter expert — a billing/finance lead for the former, a clinician for the latter, not this project's usual code-reading discipline — must explicitly attest that the **observed behavior itself** is correct, not merely that it matches legacy. Steps 0-5 can only establish "matches legacy"; they cannot establish "legacy is right here," and this project's own mission (`CLAUDE.md`) ranks billing accuracy above faithful reproduction of a potentially-wrong legacy calculation. If an SME determines legacy's own behavior is substantively wrong (not cosmetically different), that escalates to a DECISION_NEEDED doc — the same mechanism already used for the JWT-signing-key and resetPassword findings — rather than the standard "log it and faithfully reproduce it" treatment every other bug gets.
+
+**No named SME currently exists on this project for 6b (open dependency, flagged 2026-07-23).** If a screen in this tier requires 6b and no SME is available, **that screen is held — not silently skipped, and not downgraded to a 6a-only review.** A screen requiring 6b is not considered complete through Step 7 until a real sign-off exists. This is a standing gate, not a one-time exception to work around.
+
+**Batch size defaults to 5 for this tier** (not the standard 10), until a track record across 2-3 batches justifies scaling back up — mirroring how the 10-screen standard itself was set empirically after the batch-11 experiment (see the batch-size decision above), not assumed by analogy.
+
+**Composition is deliberately diversified** across clinical-only / billing-only / both risk tags, per the original Phase 2 pilot's own practice — it picked across risk tiers deliberately and explicitly disclosed when the resulting mix skewed (e.g. "the final 5-screen batch has two billing-only picks and no both pick — flagging that trade-off rather than deciding it's fine") rather than silently accepting whatever was easiest to find. Any forced skew in a future batch's actual candidate pool must be disclosed the same way, in that batch's own candidate-research writeup.
+
+**Phase 0's risk tags remain confirmed unreliable in both directions** (module folder names can hide real clinical/billing content, and keyword sweeps can false-positive on aggregate/administrative screens) — this does not relax for this tier. If anything, a false negative here (missing that something is more sensitive than tagged) is more costly than in the admin tier. Every candidate still gets full individual verification before selection, same discipline as every prior batch's candidate research.
+
+---
+
 ## The template scaffold
 
 Built this phase, on branch `rebuild/phase3-template-scaffold` (application code — held for review, not merged anywhere, per Maker-Checker):
