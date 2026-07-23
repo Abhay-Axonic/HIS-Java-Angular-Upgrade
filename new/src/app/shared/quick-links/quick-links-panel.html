@@ -1,0 +1,62 @@
+<!--
+  Level-1 Quick Links tile grid (dashboard-quick-links.html:66-651) --
+  the level-3 sub-menus this expands into in legacy are NOT ported here,
+  see quick-links-panel.ts's class doc for why.
+-->
+@if (!subViewOpen()) {
+  <div class="row quickLinks customScroll fix-height-scroll550">
+    @for (tile of tiles; track $index) {
+      @if (hasAccess(tile)) {
+        <div class="col-lg-2 col-md-2 col-sm-2 text-center ql-card">
+          <div class="d-card-small padding-left-right-5">
+            <div class="panel panel-default">
+              <div class="panel-body padding5">
+                <div class="row">
+                  <div class="card-height">
+                    @if (tile.externalHref) {
+                      <a [href]="tile.externalHref" class="text-center" [class.cursor-pointer]="tile.clickable">
+                        <img alt="Home" [src]="'resources/assets/images/icon/' + tile.icon" [attr.title]="tile.label" />
+                        <h4>{{ tile.label }}</h4>
+                      </a>
+                    } @else {
+                      <div
+                        class="text-center"
+                        [class.cursor-pointer]="tile.clickable"
+                        (click)="onTileClick(tile)"
+                      >
+                        <img alt="Home" [src]="'resources/assets/images/icon/' + tile.icon" [attr.title]="tile.label" />
+                        <h4>{{ tile.label }}</h4>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+} @else {
+  <div class="row">
+    <div class="col-lg-1 col-md-2 col-sm-2 padding-left-right-set4 margin-top0 text-width-auto pull-right">
+      <button
+        type="button"
+        class="btn btn-primary btn-save-box-shadow width-100"
+        title="Back"
+        (click)="backToGrid()"
+      >
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row margin-top10">
+    <div class="col-lg-12 quick-links-scope-note">
+      <!-- Deliberate, disclosed scope limitation -- see quick-links-panel.ts's
+           class doc. Not fabricated legacy content. -->
+      <p class="text-muted">
+        The full navigation menu for this section is not yet part of this rebuild batch.
+      </p>
+    </div>
+  </div>
+}

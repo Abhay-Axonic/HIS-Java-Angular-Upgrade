@@ -35,6 +35,12 @@ export interface CookieObject {
 export interface CookieObjectAppConfig {
   assetMaintenanceSpecialityId?: number;
   radiologySpecialityId?: number;
+  /**
+   * Gates whether `home` (nurseDashboardMasterController.js:41,131) auto-
+   * shows the nursing-station popup on init -- legacy compares
+   * `$scope.nurseRole == 1` loosely; read defensively here too.
+   */
+  nurseRole?: number | string;
   [key: string]: unknown;
 }
 
@@ -104,6 +110,17 @@ export class SessionService {
   updateStoreId(storeId: number): void {
     if (!this.cached) return;
     this.cached['storeId'] = storeId;
+    document.cookie = `cookieObject=${encodeURIComponent(JSON.stringify(this.cached))}; path=/`;
+  }
+
+  /**
+   * Mirrors `$rootScope.selectCounter(obj)`'s `cookieObject.counterId = ...;
+   * $cookies.putObject('cookieObject', cookieObject)` write (app.js:1833-1835)
+   * after a counter is selected -- see CounterSelectionService.
+   */
+  updateCounterId(counterId: number | string): void {
+    if (!this.cached) return;
+    this.cached['counterId'] = counterId;
     document.cookie = `cookieObject=${encodeURIComponent(JSON.stringify(this.cached))}; path=/`;
   }
 

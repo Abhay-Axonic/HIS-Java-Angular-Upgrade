@@ -1,0 +1,69 @@
+<!--
+  Parity rebuild of
+  legacy/HIS-WAR/src/main/webapp/views/reset-password-confirm-pwd.html.
+  Layout simplified to this codebase's shared form conventions (see
+  billing-group-master.html) -- field order, labels, `required` attributes,
+  and the "Show Password" checkbox all match legacy exactly. Submission is a
+  plain button click (`type="button"`, matching legacy's `ng-click="resetPwd()"`
+  on an `<input type="button">`), not a form submit -- the `required`
+  attributes below are cosmetic only, same as legacy's `novalidate` form,
+  since resetPwd() does its own field-by-field JS validation (see
+  reset-pwd-confirm-pwd.ts).
+-->
+<section class="page reset-pwd">
+  <fieldset>
+    <legend>Reset Password</legend>
+
+    <form novalidate class="form-column">
+      <div class="field">
+        <label for="existingPassword">Existing Password</label>
+        <input
+          id="existingPassword"
+          [type]="showPassword() ? 'text' : 'password'"
+          autocomplete="off"
+          [ngModel]="form().existingPassword"
+          (ngModelChange)="updateField('existingPassword', $event)"
+          name="existing_password"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="password">New Password</label>
+        <input
+          id="password"
+          [type]="showPassword() ? 'text' : 'password'"
+          autocomplete="off"
+          [ngModel]="form().password"
+          (ngModelChange)="updateField('password', $event)"
+          name="new_password"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          [type]="showPassword() ? 'text' : 'password'"
+          autocomplete="off"
+          [ngModel]="form().confirmPassword"
+          (ngModelChange)="updateField('confirmPassword', $event)"
+          name="confirm_password"
+          required
+        />
+      </div>
+
+      <div class="field show-password-row">
+        <label>
+          <input type="checkbox" [checked]="showPassword()" (change)="toggleShowPassword()" />
+          Show Password
+        </label>
+      </div>
+
+      <div class="field">
+        <button type="button" class="btn-primary" (click)="resetPwd()">Submit</button>
+      </div>
+    </form>
+  </fieldset>
+</section>

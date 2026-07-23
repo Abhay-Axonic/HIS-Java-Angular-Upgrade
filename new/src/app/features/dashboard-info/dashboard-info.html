@@ -1,0 +1,116 @@
+<!--
+  Rebuild of views/common/dashboard/CEO-dashboard-info.html. See
+  dashboard-info.ts's class doc for the full scope writeup.
+-->
+<div id="page-content-wrapper">
+  <div class="container-fluid his-style customScroll">
+    <div class="row padding-top5">
+      <div class="col-lg-10 col-md-10 col-sm-10 padding-left-right-set0 padding-right0">
+        <div class="d-card-content padding-left5">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <i class="fa fa-stop-circle-o fa-2x pull-left" aria-hidden="true"></i>Quick Links
+                <!-- Targets the legacy `dashboard` state, not yet built as
+                     an Angular route -- same "real target, out of this
+                     batch's scope" convention as asset-scheduler's
+                     assetPMSScheduler link. -->
+                <a href="javascript:void(0)" title="Dashboard" (click)="goBack()"><i class="fa fa-expand fa-2x pull-right" aria-hidden="true"></i></a>
+              </h3>
+            </div>
+            <div class="panel-body padding5">
+              <app-quick-links-panel />
+
+              <!-- finance/administration/operations/task/notification:
+                   all 5 are empty placeholder rows in legacy for this
+                   screen (the Chart.js canvas block is fully commented
+                   out, CEO-dashboard-info.html:202-209) -- kept empty. -->
+              <div class="row finance"></div>
+              <div class="row administration"></div>
+              <div class="row operations"></div>
+              <div class="row task"></div>
+              <div class="row notification"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right-column cards -- NO ng-click anywhere on these in legacy,
+           reproduced as non-interactive/decorative-only. -->
+      <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set0">
+        <div class="col-lg-12 col-md-12 col-sm-12 padding-left-right-set0">
+          <div class="d-card-small padding-left-right-5">
+            <div class="panel panel-default">
+              <div class="panel-body padding5">
+                <div class="row">
+                  <div class="card-height">
+                    <div class="text-center">
+                      <i class="fa fa-balance-scale" style="font-size: 60px" aria-hidden="true"></i>
+                      <h4>Finance</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-card-small padding-left-right-5">
+            <div class="panel panel-default">
+              <div class="panel-body padding5">
+                <div class="row">
+                  <div class="card-height">
+                    <div class="text-center">
+                      <i class="fa fa-cogs" style="font-size: 60px" aria-hidden="true"></i>
+                      <h4>Administration</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-card-small padding-left-right-5">
+            <div class="panel panel-default">
+              <div class="panel-body padding5">
+                <div class="row">
+                  <div class="card-height">
+                    <div class="text-center">
+                      <i class="fa fa-users" style="font-size: 60px" aria-hidden="true"></i>
+                      <h4>Operation</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-card-small padding-left-right-5">
+            <div class="panel panel-default">
+              <div class="panel-body padding5">
+                <div class="row">
+                  <div class="card-height">
+                    <div class="text-center">
+                      <i class="fa fa-tasks" style="font-size: 60px" aria-hidden="true"></i>
+                      <h4>Task</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-card-small padding-left-right-5">
+            <div class="panel panel-default">
+              <div class="panel-body padding5">
+                <div class="row">
+                  <div class="card-height">
+                    <div class="text-center">
+                      <i class="fa fa-bell" style="font-size: 60px" aria-hidden="true"></i>
+                      <h4>Notification</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
