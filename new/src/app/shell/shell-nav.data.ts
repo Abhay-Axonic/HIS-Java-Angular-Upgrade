@@ -38,6 +38,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/cardTypeMaster', title: 'Card Type Master' },
       { path: '/currencyMaster', title: 'Currency Master' },
       { path: '/currencydenomination', title: 'Currency Denomination Master' },
+      { path: '/discountCategoryMaster', title: 'Discount Category Master' },
       { path: '/gradeCreationMaster', title: 'Grade Creation Master' },
       { path: '/qmslogo', title: 'QMS Logo' },
       { path: '/qualityParameterMaster', title: 'Quality Parameter Master' },

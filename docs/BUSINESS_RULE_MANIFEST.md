@@ -1534,3 +1534,19 @@ Same org scoping (`organization_id=1`) as the existing India row, matching this 
 Classification: Neither (pre-existing local-dev-DB gap / environment drift plus an in-memory-cache staleness quirk, not a behavioral change — no `legacy/` application code touched, purely additive `INSERT` + a local dev server restart, matching RULES.md item 1's Expand-only convention and this manifest's established `BR-local-dev-db-drift-*` precedent). Owner Decision: N/A (local-dev-only, no sign-off required per this manifest's own scope) — resolved same-session, directly in response to the owner's own Step 6 review blocker.
 
 **Notes:** No `legacy/` file changed. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). The local Tomcat instance was briefly restarted (~10s) — anyone else actively testing against `localhost:8080` at that exact moment would have seen a brief connection drop; flagged here for completeness, not expected to be an issue in a single-reviewer dev session.
+
+## BR-local-dev-db-drift-role1-module973 — Local dev DB (`his_local`)'s sole seed role (`role_id=1`, "Admin") was missing module 973's privilege grant, blocking `discountCategoryMaster` live testing — found during Phase 4 batch 17's Step 0/1 audit (2026-07-24)
+
+**Not a business rule — a local-dev-environment gap, same class as every other `BR-local-dev-db-drift-*` entry (e.g. `-role1-module794`, `-role1-module506`).** Confirmed via direct query against `privilege.privilege`'s stored `modules` JSON blob for `role_id=1`: module 973 ("Discount Category Master" — confirmed the real, live moduleId gating `discountCategoryMaster`'s legacy resolve block directly in `app.js:19910-19934`, and independently corroborated by `adminPriviledges.json` id 973/`parentId 570` and the real sidebar entry at `new-side-bar.html:4199`) was genuinely absent from the 3028-entry array. Confirmed live on unmodified legacy first: navigating to `#/discountCategoryMaster` with this account returned legacy's own real "Access Denied" page before any fix was applied — this was a genuine, reproducible gate, not a guess.
+
+**Fixed via a single, additive, reversible JSON-array append:**
+```sql
+UPDATE privilege.privilege
+SET modules = (modules::jsonb || '[{"id":973,"name":"Discount Category Master","parentId":570,"moduleType":1}]'::jsonb)::text
+WHERE role_id = 1;
+```
+No schema/structure change — `modules` remains a `character varying` column; the update uses a `::jsonb` cast purely to append safely, then casts back to text to match the column's real type. Verified live on both apps after a fresh login refreshed the session's permissions: legacy's `#/discountCategoryMaster` now loads normally (no access-denied redirect) and the full create/duplicate/confirm-modal/edit/update/status-toggle/search flow was exercised successfully; the rebuilt Angular screen (`localhost:4200/discountCategoryMaster`) was independently re-verified denying access with the module removed again (a synthetic empty-`modules` localStorage write) and allowing it once restored, matching legacy's real gate exactly.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: N/A (local-dev-only, no sign-off required per this manifest's own scope, matching the `-module794`/`-module506` precedent) — resolved same-session.
+
+**Notes:** No `legacy/` or `new/` file changed by this specific fix. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). `docs/ANGULAR_PENDING_FINDINGS.md` entry 159 has full detail.

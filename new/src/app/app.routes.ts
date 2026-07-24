@@ -1211,6 +1211,16 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/nursing-station-master/nursing-station-master').then((m) => m.NursingStationMaster),
       },
+      // Phase 4 batch 17 -- 1st screen, continuing the clinical/billing risk
+      // tier. Real resolve block gates moduleId 973 (app.js:19910-19934,
+      // confirmed directly, no requireSuperUser check).
+      {
+        path: 'discountCategoryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 973, title: 'Discount Category Master' },
+        loadComponent: () =>
+          import('./features/discount-category-master/discount-category-master').then((m) => m.DiscountCategoryMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
