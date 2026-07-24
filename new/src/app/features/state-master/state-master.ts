@@ -26,10 +26,16 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * findings, flagged once there, not re-litigated field-by-field here):**
  * 1. The list/count reload after save/update is UNCONDITIONAL (ctrl:233-266,
  *    ctrl:365-398) -- runs after both success and failure.
- * 2. A failed CREATE permanently disables the confirm modal for the rest of
- *    the session (`init()` -- which resets `popUpFlag`/`showModal` -- runs
- *    only in the success branch, ctrl:247-250). Reproduced identically via
- *    the `popUpFlag` signal below.
+ * 2. FIXED, diverges from legacy (codebase-wide sweep + owner decision,
+ *    2026-07-24, see docs/ANGULAR_PENDING_FINDINGS.md entry 152): a failed
+ *    CREATE does NOT actually leave the confirm modal permanently disabled
+ *    in real legacy, despite `init()` -- which resets `popUpFlag`/`showModal`
+ *    -- only running in the success branch (ctrl:247-250) when read in
+ *    isolation. Legacy's shared `<modal>` directive (`commonPopUpDirectives.js`)
+ *    has its own hardcoded Ok-button reset logic that re-arms `popUpFlag`
+ *    on every click regardless of outcome -- confirmed live against real,
+ *    unmodified legacy (`cardTypeMaster`/`raceMaster`, duplicate-then-retry).
+ *    `popUpFlag` below is now re-armed on both success AND failure to match.
  *
  * **Screen-specific findings, flagged for docs/ANGULAR_PENDING_FINDINGS.md:**
  * - `showUpdateBtn` (ctrl:271-298) uses a native `alert("Error!!")` on a
@@ -123,7 +129,7 @@ export class StateMaster {
   saveMode = signal(true); // true = saveBtnFlag visible (create); false = updateBtnFlag visible
   formSubmitted = signal(false);
   showConfirmModal = signal(false);
-  // mirrors $scope.popUpFlag -- see class doc comment, divergence #2.
+  // mirrors $scope.popUpFlag -- see class doc comment, divergence #2 (fixed).
   private popUpFlag = signal(true);
 
   // ---- list + server-side pagination (mirrors initStateMasterList/PagerService) ----
@@ -227,8 +233,8 @@ export class StateMaster {
     if (this.popUpFlag()) {
       this.showConfirmModal.update((v) => !v); // matches ctrl:229-231 `showModal = !showModal`
     } else {
-      // See class doc comment, divergence #2: only reachable after a prior
-      // failed save this session -- confirm modal is permanently skipped.
+      // Guards only the narrow window while a confirmed save is still
+      // in-flight -- see class doc comment, divergence #2 (fixed).
       this.doSave();
     }
   }
@@ -267,6 +273,9 @@ export class StateMaster {
             this.resetForm();
           } else {
             this.notify.error('State already exits...!!');
+            // Fixed, diverges from legacy (see class doc comment,
+            // divergence #2): re-arm the confirm gate on failure too.
+            this.popUpFlag.set(true);
           }
           // ctrl:259-263 -- unconditional, outside the if/else. See class
           // doc comment, divergence #1.

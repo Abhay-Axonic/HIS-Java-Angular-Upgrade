@@ -21,17 +21,20 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  *   bed-category-master's Create flow; Update has no confirm step at all --
  *   `updateShortLeaveReason()` (ctrl:335) posts directly. Reproduced as two
  *   genuinely different flows, matching legacy's two separate functions.
- * - Genuine legacy quirk, reproduced as-is: after a FAILED save (server
- *   returns status != 'success', i.e. a duplicate code/name -- ctrl:243-251),
- *   `$scope.init()` (which resets `popUpFlag = true`, ctrl:54) is only
- *   called on the SUCCESS branch. `popUpFlag` stays `false` from the
- *   `PopupOkBtn()` click that just ran (ctrl:193-196), so the NEXT click of
- *   the Save button skips the confirm modal entirely and saves directly
- *   (ctrl:216-220's `if ($scope.popUpFlag)` branch is now false). Modeled
- *   here via the `popUpFlag` signal, which is only reset to `true` on a
- *   successful save or on Cancel/&times; -- both of those reset it in
- *   legacy too, via the `<modal>` directive's own `$watch`
- *   (commonPopUpDirectives.js:38-50).
+ * - FIXED, diverges from legacy (codebase-wide sweep + owner decision,
+ *   2026-07-24, see docs/ANGULAR_PENDING_FINDINGS.md entry 152): reading
+ *   `$scope.init()` -- which resets `popUpFlag = true`, ctrl:54 -- as only
+ *   called on the SUCCESS branch suggested a FAILED save (duplicate
+ *   code/name, ctrl:243-251) would leave `popUpFlag` stuck `false` from the
+ *   `PopupOkBtn()` click that just ran (ctrl:193-196), skipping the confirm
+ *   modal on the next Save click. This reading missed that the shared
+ *   `<modal>` directive's own `$watch` (commonPopUpDirectives.js:38-50)
+ *   fires identically whether `showModal` is set to `false` via Cancel/
+ *   &times; OR via the Ok button's own `one-click-only` handler -- both
+ *   paths re-arm `popUpFlag`, not just Cancel. Confirmed live against real,
+ *   unmodified legacy (duplicate-then-retry on `cardTypeMaster`/
+ *   `raceMaster`): the confirm modal correctly reappears after a failure.
+ *   `popUpFlag` below is now re-armed on success AND failure to match.
  * - `showUpdateBtn()`/`edit()`'s loading indicator: legacy calls
  *   `$rootScope.startLoader()` unconditionally but only calls
  *   `stopLoader()` on the SUCCESS branch (ctrl:264-291) -- a real bug that
@@ -187,6 +190,13 @@ export class ShortLeaveReasonMaster {
             this.resetAfterSuccess();
           } else {
             this.notify.error('Short Leave Reason already exits...!!');
+            // Fixed, diverges from legacy (owner decision, 2026-07-24, see
+            // docs/ANGULAR_PENDING_FINDINGS.md entry 152): re-arm the
+            // confirm gate on failure too, matching real legacy's shared
+            // <modal> directive, which resets it on every Ok click
+            // regardless of outcome -- confirmed live, not just reproduced
+            // from a naive reading of this controller's own popUpFlag logic.
+            this.popUpFlag.set(true);
           }
           this.loadList();
         },
