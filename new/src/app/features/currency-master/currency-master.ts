@@ -55,27 +55,30 @@ const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB -- resources/assets/js/servi
  * further rebuild changes.
  *
  * ================================================================
- * Two-click confirm flow on Save ONLY, "stuck after failure" bug --
- * FAITHFULLY REPRODUCED here (NOT fixed, unlike this codebase's
- * card-type-master, where the owner explicitly approved a fix on
- * 2026-07-23) -- flagging for the orchestrating session's cross-codebase
- * tracking rather than fixing without instruction.
+ * Two-click confirm flow on Save ONLY -- FIXED, diverges from legacy
+ * (codebase-wide sweep + owner decision, 2026-07-24, see
+ * docs/ANGULAR_PENDING_FINDINGS.md entry 152), same treatment as
+ * currencydenomination/incidentCategoryMaster/mortuaryBedMaster/
+ * nursingStationMaster on this branch -- applied 2026-07-24 as a
+ * mechanical rebuild-quality fix, not a fresh parity judgment call
  * ================================================================
  * `saveCurrency()` (ctrl:234-293) is gated by `$scope.popUpFlag` (`init()`
  * sets it `true`, ctrl:58): the FIRST click, with `popUpFlag` true, just
  * toggles `showModal` open (ctrl:255-257) -- no API call yet. The modal's Ok
  * button (`PopupOkBtn`, ctrl:227-230) sets `popUpFlag = false` and calls
  * `saveCurrency()` again, which this time (else-branch, ctrl:258-290) fires
- * the actual POST. `popUpFlag` is only ever reset back to `true` by
+ * the actual POST. Reading `popUpFlag` as only ever reset back to `true` by
  * `init()` -- called on page load and inside `saveCurrency`'s OWN success
- * branch (ctrl:267) -- there is NO reset anywhere in its error branch
- * (ctrl:274-281, e.g. duplicate-name case). Legacy's real net effect: after
- * any FAILED save, `popUpFlag` stays permanently `false`, so every
- * subsequent Save click silently skips the confirm modal and fires the POST
- * immediately, until the page is reloaded. Modeled via `popupArmed` below;
- * `save()` only shows the modal while `popupArmed()` is true, and it is
- * ONLY re-armed by a successful save (`resetForm()`), never by a failed one
- * -- see `doSave()`'s failure branch.
+ * branch (ctrl:267), with NO reset anywhere in its error branch
+ * (ctrl:274-281, e.g. duplicate-name case) -- suggested a FAILED save would
+ * leave `popUpFlag` stuck permanently `false`, skipping the confirm modal
+ * on every subsequent Save click. Confirmed live against real, unmodified
+ * legacy (duplicate-then-retry on `cardTypeMaster`/`raceMaster`) that this
+ * does NOT happen: the shared `<modal>` directive's own hardcoded Ok-button
+ * handler (`commonPopUpDirectives.js`) re-arms the gate on every click,
+ * success or failure alike -- the "stuck" bug does NOT exist in real
+ * legacy for any screen sharing this directive (entry 152's "Major
+ * update"). `popupArmed` below is now re-armed on both branches to match.
  *
  * ================================================================
  * List reload semantics -- DIFFERENT shape from card-type-master, verified
@@ -328,13 +331,15 @@ export class CurrencyMaster {
           this.loader.stop();
           if (res.status === 'success') {
             this.notify.success(res.message ?? 'Success!'); // ctrl:268-273, verbatim shape
-            this.resetForm(); // ctrl:267 -- init() runs on success only; re-arms popupArmed
+            this.resetForm(); // ctrl:267 -- init() runs on success; also re-arms popupArmed
           } else {
             this.notify.error(res.message ?? 'Error!'); // ctrl:275-280, verbatim shape
-            // Legacy's real bug, faithfully reproduced (NOT fixed) -- see
-            // class doc comment. popupArmed is deliberately NOT re-armed
-            // here, matching ctrl:274-281 having no reset in this branch.
           }
+          // Fixed, diverges from legacy (see class doc comment): re-arm the
+          // confirm gate on both success and failure, not just once ever --
+          // same treatment as currencydenomination/incidentCategoryMaster/
+          // mortuaryBedMaster/nursingStationMaster on this branch.
+          this.popupArmed.set(true);
           // ctrl:283-289 -- fires UNCONDITIONALLY, success or failure, see class doc.
           this.loadList();
         },
