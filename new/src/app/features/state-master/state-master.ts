@@ -244,7 +244,16 @@ export class StateMaster {
   }
 
   // mirrors PopupOkBtn (ctrl:97-100): flips popUpFlag then re-invokes save().
+  // Corrected 2026-07-24: this method previously never closed
+  // showConfirmModal, so a FAILED save left the modal visually stuck open.
+  // Worse than a cosmetic gap on this screen specifically: save()'s trigger
+  // uses showConfirmModal.update(v => !v) (a toggle, not a direct set(true))
+  // -- so without this fix, the NEXT Save click would have toggled the
+  // still-open modal CLOSED instead of reopening it, requiring an extra,
+  // confusing click to actually see it again. Matches the shared <modal>
+  // directive's real close-on-Ok behavior (see entry 152/154).
   confirmSave(): void {
+    this.showConfirmModal.set(false);
     this.popUpFlag.set(false);
     this.doSave();
   }

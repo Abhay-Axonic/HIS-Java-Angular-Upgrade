@@ -214,7 +214,15 @@ export class RaceMaster {
   }
 
   // mirrors PopupOkBtn (ctrl:195-198): flips popUpFlag then re-invokes save().
+  // Corrected 2026-07-24: same gap and same compounding toggle-vs-set risk
+  // as state-master's confirmSave() -- this method never closed
+  // showConfirmModal, and save()'s trigger here is also a toggle
+  // (showConfirmModal.update(v => !v)), so a failed save followed by
+  // another Save click would have closed the still-open modal instead of
+  // reopening it. Matches the shared <modal> directive's real close-on-Ok
+  // behavior (see entry 152/154).
   confirmSave(): void {
+    this.showConfirmModal.set(false);
     this.popUpFlag.set(false);
     this.doSave();
   }

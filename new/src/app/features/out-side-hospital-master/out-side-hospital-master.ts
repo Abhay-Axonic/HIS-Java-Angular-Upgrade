@@ -245,10 +245,20 @@ export class OutSideHospitalMaster {
   }
 
   // mirrors PopupOkBtn (ctrl:138-141): sets popUpFlag false, re-invokes
-  // save() -- which this time takes the real-POST branch above. Does NOT
-  // close the modal itself (matches ctrl exactly -- nothing in this path
-  // ever sets showConfirmModal/showModal to false).
+  // save() -- which this time takes the real-POST branch above. Corrected
+  // 2026-07-24: this method previously left showConfirmModal untouched on
+  // the theory that "nothing in ctrl's own code closes it" -- but that's
+  // the same isolated-controller-reading trap entry 152 already corrected
+  // for popUpFlag itself: real legacy's shared <modal> directive closes
+  // the modal via its own hardcoded Ok-button handler regardless of what
+  // this controller does or doesn't touch. Without this, a failed save
+  // left the modal visually stuck open (stacked with the error toast), and
+  // -- since this screen's own `save()` gate reads `popUpFlag` freshly each
+  // click -- the modal would still eventually reopen correctly on retry,
+  // but only after an extra, confusing "nothing visibly changes" click.
+  // Closing it here matches the shared directive's real behavior exactly.
   confirmSave(): void {
+    this.showConfirmModal.set(false);
     this.popUpFlag.set(false);
     this.save();
   }
