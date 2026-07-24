@@ -118,6 +118,21 @@ The administrative-tier low-risk pool is confirmed exhausted (`docs/ANGULAR_PEND
 
 ---
 
+## Phase bookkeeping: the substantive transition from Phase 4 to Phase 5 (2026-07-24)
+
+**This document's own title and intro (above) still say "Phase 3" and describe "Phase 4" as scaling the low-risk tier — that framing is now stale and this section corrects it, without changing anything about how batches are actually run.** `docs/ANGULAR_REMAINING_POOL_RECONCILIATION.md` (written 2026-07-24) put a real, sampled number behind what this project had already concluded going into batch 15: the low-risk/administrative tier is confirmed exhausted, not just low-yield. A 53%-sample of its remaining `MasterController`-routed screens came back 0% alive (entry 146); the low-risk tier's real remaining buildable count is now estimated at roughly 5-20 screens project-wide, not the hundreds implied by the original tier-size tag.
+
+**In substance, batches 15 through 17 (and everything after) are Phase 5 work — rebuilding the medium/higher-risk clinical and billing tier — even though batch numbering continues sequentially from Phase 4's batches rather than resetting to "batch 1" under a new phase label.** This is a documentation/bookkeeping acknowledgment, not a process change:
+
+- The Clinical/Billing-Tier Addendum above (added at batch 15) already **is** Phase 5's actual process — nothing in it needs to change because of this section.
+- Branch naming (`rebuild/phase4-batchN`) is **not** being renamed retroactively or going forward — renumbering branch conventions mid-project would cost more in confusion than it buys in accuracy, and batch numbers are already a continuous, unambiguous sequence on their own.
+- The one real, practical implication: **do not go looking for more low-risk-tier batches.** If a future candidate-research pass finds itself reaching for the low-risk tier "because it's easier," that's a signal to stop and re-check against `docs/ANGULAR_REMAINING_POOL_RECONCILIATION.md` first — the ~5-20 remaining real screens there are not confirmed individually yet, and treating that tier as a fallback source of "easy" batches without re-verifying would repeat exactly the mistake entry 146 caught (assuming a shared-controller cluster is a viable pool without sampling it first).
+- The clinical/billing tier's own true remaining size is **not yet reconciled with the same rigor** — `docs/ANGULAR_REMAINING_POOL_RECONCILIATION.md` section 6 flags this as a very-low-confidence estimate (~1,190-1,215, largely untested) pending a comparable sampling pass against that tier's own 283 uncharacterized `MasterController`-routed screens. That research task is proposed, not yet scheduled, as of this writing.
+
+No other part of this playbook changes. Step 0-7, the confirm-modal/validation-visibility/shared-directive standing policies, batch sizing (5 for this tier), and the diversification rule all carry forward unchanged.
+
+---
+
 ## The template scaffold
 
 Built this phase, on branch `rebuild/phase3-template-scaffold` (application code — held for review, not merged anywhere, per Maker-Checker):
