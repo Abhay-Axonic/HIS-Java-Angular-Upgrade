@@ -1,0 +1,178 @@
+<section class="page">
+  <!-- No <legend> here -- legacy's own heading is HTML-commented out
+       (view:6), the shell's `data.title` route property carries the page
+       title instead (same as the rest of this batch). -->
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="currencyId">Currency<span class="required">*</span></label>
+        <select
+          id="currencyId"
+          [ngModel]="form().currencyId"
+          (ngModelChange)="updateField('currencyId', $event)"
+          name="currencyId"
+          [class.invalid]="isCurrencyInvalid()"
+        >
+          <option value=""></option>
+          @for (c of currencyOptions(); track c.currencyId) {
+            <option [value]="c.currencyId">{{ c.currencyName }}</option>
+          }
+        </select>
+        @if (isCurrencyInvalid()) {
+          <p class="help-block">Currency is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="denominationCode">Code<span class="required">*</span></label>
+        <input
+          id="denominationCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().denominationCode"
+          (ngModelChange)="updateField('denominationCode', $event)"
+          name="denominationCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="denominationDesc">Description<span class="required">*</span></label>
+        <input
+          id="denominationDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().denominationDesc"
+          (ngModelChange)="updateField('denominationDesc', $event)"
+          name="denominationDesc"
+          [class.invalid]="isDescriptionInvalid()"
+        />
+        @if (isDescriptionInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="denominatonUnit">Clinical Unit<span class="required">*</span></label>
+        <input
+          id="denominatonUnit"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().denominatonUnit"
+          (ngModelChange)="updateField('denominatonUnit', $event)"
+          name="denominatonUnit"
+          [class.invalid]="isUnitInvalid()"
+        />
+        @if (isUnitInvalid()) {
+          <p class="help-block">Clinical Unit is required</p>
+        }
+      </div>
+
+      <div class="field checkbox-field">
+        <label class="checkbox-inline">
+          <input
+            type="checkbox"
+            [checked]="form().lowestDenomination === 'Y'"
+            (change)="updateField('lowestDenomination', $any($event.target).checked ? 'Y' : 'N')"
+          />
+          Lowest denomination
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!-- Decorative only -- legacy's own search box has no ng-model/ng-change
+         wired to it at all (view:119-121); reproduced unwired. -->
+    <input type="text" class="search-box" placeholder="Search" autocomplete="off" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Currency</th>
+        <th>Code</th>
+        <th>Denomination</th>
+        <th>Unit</th>
+        <th>Lowest Denomination</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.currencyDenominationId) {
+        <tr>
+          <td>{{ row.currencyName }}</td>
+          <td>{{ row.denominationCode }}</td>
+          <td>{{ row.denominationDesc }}</td>
+          <td>{{ row.denominatonUnit }}</td>
+          <td>{{ row.lowestDenomination }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="7" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (p of pageNumbers(); track p) {
+        <li [class.active]="currentPage() === p"><a (click)="goToPage(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

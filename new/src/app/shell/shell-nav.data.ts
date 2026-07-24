@@ -36,6 +36,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/bankMaster', title: 'Bank Master' },
       { path: '/bankBranch', title: 'Bank Branch' },
       { path: '/cardTypeMaster', title: 'Card Type Master' },
+      { path: '/currencyMaster', title: 'Currency Master' },
+      { path: '/currencydenomination', title: 'Currency Denomination Master' },
       { path: '/gradeCreationMaster', title: 'Grade Creation Master' },
       { path: '/qmslogo', title: 'QMS Logo' },
       { path: '/qualityParameterMaster', title: 'Quality Parameter Master' },
@@ -102,6 +104,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/aIButtonMaster', title: 'AI Button Master' },
       { path: '/employeeSurvey', title: 'Employee Satisfaction Survey' },
       { path: '/holidayCalendarMasterUnit', title: 'Holiday Calendar Master' },
+      { path: '/mortuaryBedMaster', title: 'Mortuary Bed Master' },
     ],
   },
   {
@@ -237,5 +240,9 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   {
     heading: 'OPD',
     items: [{ path: '/advisedVisits', title: 'Advised Visits' }],
+  },
+  {
+    heading: 'Incident Reporting',
+    items: [{ path: '/incidentCategoryMaster', title: 'Category Master' }],
   },
 ];
