@@ -180,6 +180,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/GRN', title: 'Good Receipt Note' },
       { path: '/implantMaster', title: 'Implant Master' },
+      { path: '/storeTypeMaster', title: 'Store Type Master' },
     ],
   },
   {

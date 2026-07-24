@@ -1230,6 +1230,20 @@ export const routes: Routes = [
         data: { moduleId: 618, title: 'GL Code' },
         loadComponent: () => import('./features/gl-code-master/gl-code-master').then((m) => m.GlCodeMaster),
       },
+      // Phase 4 batch 17 -- 3rd screen, continuing the clinical/billing risk
+      // tier. Tagged "billing" in the risk-tag data but is actually
+      // Procurement/Inventory-adjacent (tools/angular-audit's own module
+      // classification: "Procurement - Inventory"; feeds inventory
+      // valuation into billing rather than being a direct billing/accounts
+      // screen). Confirmed PURE-LOOKUP -- no Step 6b required. Real resolve
+      // block gates moduleId 805 (app.js:18820-18847, confirmed directly,
+      // no requireSuperUser check).
+      {
+        path: 'storeTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 805, title: 'Store Type Master' },
+        loadComponent: () => import('./features/store-type-master/store-type-master').then((m) => m.StoreTypeMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
