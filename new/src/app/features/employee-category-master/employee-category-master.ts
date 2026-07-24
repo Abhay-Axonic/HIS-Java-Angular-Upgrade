@@ -24,23 +24,24 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  *
  * **Judgment calls / preserved quirks, not bugs introduced by this rebuild:**
  *
- * - **The Save confirm-modal only ever fires ONCE per page load -- a real
- *   legacy bug, not a copy-paste omission.** `$scope.popUpFlag` is
- *   initialized to `true` exactly once at controller construction (ctrl:13)
- *   and is flipped to `false` forever by `PopupOkBtn` (ctrl:139-142) the
- *   first time the confirm modal's "Ok" is clicked. Unlike this same batch's
- *   `qualificationMasterController` (whose `init()` explicitly resets
- *   `popUpFlag = true` on every successful save, ctrl:33-73), this
- *   controller's `initMaster()` (ctrl:35-47, called after every successful
- *   save/update at ctrl:185/273) never touches `popUpFlag` at all. Net
- *   effect: the FIRST "Save" click of a session opens the "Are you sure you
- *   want to Save?" modal as expected; every subsequent "Save" click for the
- *   rest of the page's lifetime (including for brand-new entries after the
- *   form resets) silently skips the modal and saves immediately, because
- *   `popUpFlag` is now permanently `false`. Reproduced verbatim via the
- *   `confirmModalConsumed` signal below -- NOT reset in `resetForm()`,
- *   matching `initMaster()` exactly. `update()` never used a confirm modal
- *   to begin with (ctrl:241-288), so it is unaffected either way.
+ * - **FIXED, diverges from legacy (codebase-wide sweep + owner decision,
+ *   2026-07-24, see docs/ANGULAR_PENDING_FINDINGS.md entry 152).** Reading
+ *   `$scope.popUpFlag` in isolation -- initialized `true` once at controller
+ *   construction (ctrl:13), flipped to `false` forever by `PopupOkBtn`
+ *   (ctrl:139-142) the first time Ok is clicked, and never touched again by
+ *   this controller's own `initMaster()` (ctrl:35-47, unlike this same
+ *   batch's `qualificationMasterController`, whose `init()` explicitly
+ *   resets `popUpFlag = true` on every successful save, ctrl:33-73) --
+ *   suggested the confirm modal would fire at most ONCE per page load,
+ *   ever. Confirmed live against real, unmodified legacy on sibling screens
+ *   using the identical shared `<modal>` directive (duplicate-then-retry on
+ *   `cardTypeMaster`/`raceMaster`) that this does NOT happen: the
+ *   directive's own hardcoded Ok-button handler re-arms the gate on every
+ *   click, unconditionally, regardless of what this controller's own
+ *   `initMaster()` does or doesn't touch. `confirmModalConsumed` below is
+ *   now reset back to `false` after every save attempt (success or
+ *   failure), so the modal correctly reappears every time. `update()` never
+ *   used a confirm modal to begin with (ctrl:241-288), unaffected either way.
  *
  * - `showUpdateBtn` (ctrl:210-238) uses `growl.error` on a failed by-id
  *   fetch (unlike this batch's `qualification-master`, which uses a raw
@@ -225,6 +226,9 @@ export class EmployeeCategoryMaster {
           } else {
             this.notify.error(res.message ?? 'Error!');
           }
+          // Fixed, diverges from legacy (see class doc comment): re-arm the
+          // confirm gate on both success and failure, not just once ever.
+          this.confirmModalConsumed.set(false);
           this.reloadFirstPage();
         },
         error: () => this.notify.error('Error!'),

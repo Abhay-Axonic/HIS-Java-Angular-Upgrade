@@ -60,31 +60,28 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * commented out in legacy itself; the list response's own `object` field
  * carries the count instead, per `OutsideHospitalMasterDaoImpl.getOutsideHospitalMasterList`).
  *
- * **Real bugs/quirks found and faithfully reproduced, not fixed:**
- * - **A genuine, previously-undocumented duplicate-submit risk in the
- *   confirm-modal state machine** (ctrl:8/138-204, the shared `<modal>`
- *   directive's own `$watch`, `commonPopUpDirectives.js:32-45`): `save()`
- *   only opens the confirm modal while `popUpFlag` is `true`; clicking Ok
- *   (`PopupOkBtn`) sets `popUpFlag = false` and re-invokes `save()`, which
- *   this time fires the real POST directly. **Nothing in the save
- *   success/error handler ever resets `popUpFlag` back to `true`** --
- *   only the shared `<modal>` directive's own `$watch` does that, and only
- *   when `showModal` transitions back to `false` (i.e. when the user
- *   explicitly dismisses the modal via Cancel/×). If the modal is left
- *   open after a failed save (a real, live possibility -- e.g. the
- *   backend's own duplicate-description check,
- *   `OutsideHospitalMasterServiceImpl.saveOutsideHospitalMaster`,
- *   `ALREADY_EXIST`) and the user clicks the top-level Save button again
- *   without dismissing the modal, `popUpFlag` is still `false` and the
- *   form still holds the same (rejected) values -- so the SECOND click
- *   fires a real duplicate POST with NO confirm step at all, silently
- *   bypassing the modal entirely. Same underlying bug *class* as entry
- *   107's `roleCreation` finding #2, via a different, more specific
- *   mechanism (a leftover `false` gate flag, not a total absence of
- *   gating). Reproduced verbatim below (`popUpFlag`/`showConfirmModal`
- *   signals mirror ctrl exactly; `closeConfirmModal()` is the only path
- *   that resets `popUpFlag` back to `true`, matching the shared
- *   directive's own reset behavior).
+ * **FIXED, diverges from legacy (codebase-wide sweep + owner decision,
+ *   2026-07-24, see docs/ANGULAR_PENDING_FINDINGS.md entry 152):**
+ * - The confirm-modal state machine (ctrl:8/138-204, the shared `<modal>`
+ *   directive's own `$watch`, `commonPopUpDirectives.js:32-45`) was
+ *   originally read as having a duplicate-submit risk: `save()` only opens
+ *   the confirm modal while `popUpFlag` is `true`; clicking Ok
+ *   (`PopupOkBtn`) sets `popUpFlag = false`, and nothing in the save
+ *   success/error handler resets it back -- suggesting only Cancel/×
+ *   (via the shared directive's `$watch` on `showModal`) could re-arm it,
+ *   so a failed save followed by clicking Save again (without dismissing)
+ *   would silently skip the confirm step. **This reading missed that the
+ *   same `$watch` fires identically when Ok is clicked** -- the directive's
+ *   own `one-click-only` handler (`commonPopUpDirectives.js`) sets
+ *   `showModal = false` synchronously the moment Ok is clicked, before the
+ *   real save even fires, triggering the exact same reset the Cancel path
+ *   does. Confirmed live against real, unmodified legacy (duplicate-then-
+ *   retry on `cardTypeMaster`/`raceMaster`): the confirm modal correctly
+ *   reappears after a failure, every time, not just via Cancel. `popUpFlag`
+ *   below is now re-armed on both success AND failure to match real
+ *   behavior, not just via `closeConfirmModal()`. (The cross-reference to
+ *   entry 107's `roleCreation` finding #2 was this same misreading applied
+ *   to a sibling screen -- worth re-checking separately, not done here.)
  * - **Per entry 55's standing policy**, the confirm modal's × close button
  *   is wired to an ordinary working `closeConfirmModal()` here, NOT a
  *   reproduction of the shared `<modal>` directive's `cancel()` crash
@@ -248,10 +245,20 @@ export class OutSideHospitalMaster {
   }
 
   // mirrors PopupOkBtn (ctrl:138-141): sets popUpFlag false, re-invokes
-  // save() -- which this time takes the real-POST branch above. Does NOT
-  // close the modal itself (matches ctrl exactly -- nothing in this path
-  // ever sets showConfirmModal/showModal to false).
+  // save() -- which this time takes the real-POST branch above. Corrected
+  // 2026-07-24: this method previously left showConfirmModal untouched on
+  // the theory that "nothing in ctrl's own code closes it" -- but that's
+  // the same isolated-controller-reading trap entry 152 already corrected
+  // for popUpFlag itself: real legacy's shared <modal> directive closes
+  // the modal via its own hardcoded Ok-button handler regardless of what
+  // this controller does or doesn't touch. Without this, a failed save
+  // left the modal visually stuck open (stacked with the error toast), and
+  // -- since this screen's own `save()` gate reads `popUpFlag` freshly each
+  // click -- the modal would still eventually reopen correctly on retry,
+  // but only after an extra, confusing "nothing visibly changes" click.
+  // Closing it here matches the shared directive's real behavior exactly.
   confirmSave(): void {
+    this.showConfirmModal.set(false);
     this.popUpFlag.set(false);
     this.save();
   }
@@ -290,8 +297,10 @@ export class OutSideHospitalMaster {
           } else if (res.status === 'error') {
             // ctrl:189-195 -- growl.error fires correctly here (unlike
             // clinicMaster's save/update). Form is NOT reset, list is NOT
-            // reloaded, and popUpFlag stays false -- see class doc comment.
+            // reloaded -- see class doc comment. popUpFlag IS re-armed
+            // (fixed, diverges from legacy per entry 152).
             this.notify.error(res.message ?? 'Error!');
+            this.popUpFlag.set(true);
           }
         },
       });

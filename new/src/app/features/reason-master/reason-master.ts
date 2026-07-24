@@ -46,13 +46,17 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  *   only gates CREATE (ctrl:230-234); `updateReasonMaster()` saves
  *   immediately with no confirm step. Same asymmetry as this codebase's
  *   sub-speciality-master/amenity-master/ward-master/degree-master.
- * - **Shared, non-divergent quirk with sibling `reasonTypeMaster`:**
- *   `$scope.popUpFlag` starts `true`, is permanently disarmed by
- *   `PopupOkBtn`, and is only re-armed by `$scope.init()` -- called again
- *   after a SUCCESSFUL save, but not after a failed one (e.g. a
- *   duplicate-name rejection). So the very next Save click after a failed
- *   save skips the confirm dialog and saves immediately. Reproduced via
- *   `confirmArmed` below.
+ * - **FIXED, diverges from legacy (shared with sibling `reasonTypeMaster`,
+ *   codebase-wide sweep + owner decision, 2026-07-24, see
+ *   docs/ANGULAR_PENDING_FINDINGS.md entry 152):** reading `$scope.popUpFlag`
+ *   as permanently disarmed by `PopupOkBtn` and only re-armed by
+ *   `$scope.init()` on a SUCCESSFUL save suggested a failed save (e.g. a
+ *   duplicate-name rejection) would leave the next Save click skipping the
+ *   confirm dialog. Confirmed live against real, unmodified legacy
+ *   (duplicate-then-retry on `cardTypeMaster`/`raceMaster`) that this does
+ *   NOT happen -- the shared `<modal>` directive's own hardcoded Ok-button
+ *   handler re-arms the gate on every click, success or failure alike.
+ *   `confirmArmed` below is now re-armed on both branches to match.
  * - **Also shared with `reasonTypeMaster`:** a successful status-toggle
  *   calls the FULL `$scope.init()` (ctrl:328), which reloads the list AND
  *   resets the create/edit form to blank -- toggling one row's status
@@ -264,7 +268,10 @@ export class ReasonMaster {
             this.notify.success(res.message ?? 'Success!');
             this.resetForm(); // ctrl:245 -- $scope.init() -- re-arms confirmArmed, resets formSubmitted (show-errors-reset)
           } else {
-            this.notify.error(res.message ?? 'Error!'); // confirmArmed stays disarmed
+            this.notify.error(res.message ?? 'Error!');
+            // Fixed, diverges from legacy (see class doc comment): re-arm
+            // the confirm gate on failure too.
+            this.confirmArmed = true;
           }
           // ctrl:263-267 -- reloads the list unconditionally after both branches.
           this.loadListAndCount();

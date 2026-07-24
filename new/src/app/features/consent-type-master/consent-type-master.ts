@@ -41,20 +41,23 @@ import {
  * `getById` below is POST too, not GET.
  *
  * ================================================================
- * Two-click confirm on Save, none on Update -- with the SAME re-arm
- * asymmetry already established in this codebase's `reason-type-master`
+ * Two-click confirm on Save, none on Update
  * ================================================================
- * `saveConsentType()`'s `$scope.popUpFlag` (ctrl:58,197-267) starts `true`,
- * gates whether clicking Save opens the confirm modal (`showModal =
- * !showModal`) or actually POSTs, and is only flipped back to `true` by a
- * SUCCESSFUL save's `$scope.init()` (ctrl:249) -- a FAILED save (duplicate
- * name) does NOT call `init()`, so `popUpFlag` stays `false` and the very
- * next Save click skips the confirm modal entirely and POSTs immediately.
- * Reproduced below via `confirmArmed`: armed on load, disarmed by the
- * modal's own Ok button (`confirmSave()`), only re-armed by a successful
- * save's `resetForm()`. `updateConsentType()` (ctrl:342-394) has no
- * `popUpFlag`/modal concept at all -- `update()` below always saves
- * directly, gated only by the same required-field check.
+ * `saveConsentType()`'s `$scope.popUpFlag` (ctrl:58,197-267) starts `true`
+ * and gates whether clicking Save opens the confirm modal (`showModal =
+ * !showModal`) or actually POSTs. FIXED, diverges from legacy (codebase-wide
+ * sweep + owner decision, 2026-07-24, see docs/ANGULAR_PENDING_FINDINGS.md
+ * entry 152): reading `popUpFlag` as only flipped back to `true` by a
+ * SUCCESSFUL save's `$scope.init()` (ctrl:249) suggested a FAILED save
+ * (duplicate name) would leave it stuck `false`, skipping the confirm modal
+ * on the next Save click. Confirmed live against real, unmodified legacy
+ * (duplicate-then-retry on `cardTypeMaster`/`raceMaster`) that this does
+ * NOT happen -- the shared `<modal>` directive's own hardcoded Ok-button
+ * handler re-arms the gate on every click, success or failure alike.
+ * `confirmArmed` below is now re-armed on both branches to match.
+ * `updateConsentType()` (ctrl:342-394) has no `popUpFlag`/modal concept at
+ * all -- `update()` below always saves directly, gated only by the same
+ * required-field check.
  *
  * ================================================================
  * BUG faithfully reproduced, NOT fixed: the backend's "case-insensitive"
@@ -281,8 +284,9 @@ export class ConsentTypeMaster {
             // the backend's own "case-insensitive" duplicate check never
             // lowercases the submitted value, only the stored column.
             this.notify.error('Consent type already exits...!!'); // ctrl:251-256, verbatim legacy typo
-            // confirmArmed stays disarmed on failure -- the very next Save
-            // click skips the confirm modal, see class doc comment.
+            // Fixed, diverges from legacy (see class doc comment): re-arm
+            // the confirm gate on failure too.
+            this.confirmArmed = true;
           }
           this.loadList(); // ctrl:258-263 -- reloads unconditionally either way
         },

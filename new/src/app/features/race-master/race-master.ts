@@ -41,19 +41,18 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  *    `if(status=='success')/else` block entirely -- unlike amenity-master
  *    (reload only on success). Reproduced by calling `loadList()`/
  *    `loadCount()` unconditionally in both `confirmSave()` and `update()`.
- * 2. **A failed CREATE permanently disables the confirm modal for the rest
- *    of the session** (a real, subtle sequencing bug, not present in the
- *    amenity-master reference): `init()` -- which resets `popUpFlag` back to
- *    `true` and `showModal` back to `false` -- is called ONLY in the
- *    success branch (ctrl:241-243). On a duplicate-code failure, `growl.error`
- *    fires but `popUpFlag` stays `false` (it was flipped by `PopupOkBtn`,
- *    ctrl:195-198, to make the first confirmed attempt actually POST) and
- *    `showModal` is never reset either. Every subsequent `saveRace()` call
- *    in that session then skips the `if(popUpFlag)` branch entirely and
- *    posts directly, with no confirm dialog, until a save eventually
- *    succeeds (or the page is reloaded). Reproduced verbatim below via the
- *    `popUpFlag` signal, which `resetForm()` (called only on success) is
- *    the only thing that ever sets back to `true`.
+ * 2. FIXED, diverges from legacy (codebase-wide sweep + owner decision,
+ *    2026-07-24, see docs/ANGULAR_PENDING_FINDINGS.md entry 152): reading
+ *    `init()` -- which resets `popUpFlag` back to `true` and `showModal`
+ *    back to `false` -- ONLY in the success branch (ctrl:241-243) suggests
+ *    a failed CREATE would permanently disable the confirm modal for the
+ *    rest of the session. It does NOT in real legacy: the shared `<modal>`
+ *    directive (`commonPopUpDirectives.js`) has its own hardcoded Ok-button
+ *    reset logic that re-arms `popUpFlag` on every click regardless of
+ *    outcome, confirmed live against real, unmodified legacy on this exact
+ *    screen (duplicate-name failure, then a fresh save on the very next
+ *    click -- confirm modal correctly reappeared). `popUpFlag` below is now
+ *    re-armed on both success AND failure to match.
  *
  * - `showUpdateBtn` (ctrl:265-293) uses a native `alert("Error!!")` on a
  *   failed by-id fetch -- NOT `growl.error` like amenity-master's
@@ -118,7 +117,7 @@ export class RaceMaster {
   saveMode = signal(true); // true = saveBtnFlag visible (create); false = updateBtnFlag visible
   formSubmitted = signal(false);
   showConfirmModal = signal(false);
-  // mirrors $scope.popUpFlag -- see class doc comment, divergence #2.
+  // mirrors $scope.popUpFlag -- see class doc comment, divergence #2 (fixed).
   private popUpFlag = signal(true);
   // Dead guard -- see class doc comment. Never set `true` anywhere, matching
   // legacy's own commented-out enabling logic (ctrl:116-121).
@@ -204,8 +203,8 @@ export class RaceMaster {
     if (this.popUpFlag()) {
       this.showConfirmModal.update((v) => !v); // matches ctrl:209-211 `showModal = !showModal`
     } else {
-      // See class doc comment, divergence #2: only reachable after a prior
-      // failed save this session -- confirm modal is permanently skipped.
+      // Guards only the narrow window while a confirmed save is still
+      // in-flight -- see class doc comment, divergence #2 (fixed).
       this.doSave();
     }
   }
@@ -215,7 +214,15 @@ export class RaceMaster {
   }
 
   // mirrors PopupOkBtn (ctrl:195-198): flips popUpFlag then re-invokes save().
+  // Corrected 2026-07-24: same gap and same compounding toggle-vs-set risk
+  // as state-master's confirmSave() -- this method never closed
+  // showConfirmModal, and save()'s trigger here is also a toggle
+  // (showConfirmModal.update(v => !v)), so a failed save followed by
+  // another Save click would have closed the still-open modal instead of
+  // reopening it. Matches the shared <modal> directive's real close-on-Ok
+  // behavior (see entry 152/154).
   confirmSave(): void {
+    this.showConfirmModal.set(false);
     this.popUpFlag.set(false);
     this.doSave();
   }
@@ -244,6 +251,9 @@ export class RaceMaster {
             this.resetForm();
           } else {
             this.notify.error('Race already exits...!!');
+            // Fixed, diverges from legacy (see class doc comment,
+            // divergence #2): re-arm the confirm gate on failure too.
+            this.popUpFlag.set(true);
           }
           // ctrl:252-257 -- unconditional, outside the if/else. See class
           // doc comment, divergence #1.
