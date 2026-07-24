@@ -1244,6 +1244,24 @@ export const routes: Routes = [
         data: { moduleId: 805, title: 'Store Type Master' },
         loadComponent: () => import('./features/store-type-master/store-type-master').then((m) => m.StoreTypeMaster),
       },
+      // Phase 4 batch 17 -- 4th screen, continuing the clinical/billing risk
+      // tier. Confirmed the blood-TYPE classification lookup itself
+      // (A+/B-/O+ etc.), NOT a transfusion/donor-safety workflow -- no
+      // Step 6b required. State has NO `resolve` block at all in app.js
+      // (app.js:16203-16208, confirmed directly, and independently via
+      // tools/angular-audit's `"has_resolve": false`) -- same shape as
+      // billingGroupMaster/periodicityService, so `data.moduleId` is
+      // correctly omitted, matching legacy exactly. The real sidebar link
+      // (`new-side-bar.html:5006`) gates on `checkAccess(982)`, but that
+      // only hides the menu item -- it does not gate the route itself in
+      // legacy, so this rebuild doesn't invent a stricter check either.
+      {
+        path: 'bloodGroupMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Blood Group Master' },
+        loadComponent: () =>
+          import('./features/blood-group-master/blood-group-master').then((m) => m.BloodGroupMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

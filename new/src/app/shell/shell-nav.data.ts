@@ -249,4 +249,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     heading: 'Incident Reporting',
     items: [{ path: '/incidentCategoryMaster', title: 'Category Master' }],
   },
+  {
+    heading: 'Blood Bank',
+    items: [{ path: '/bloodGroupMaster', title: 'Blood Group Master' }],
+  },
 ];
