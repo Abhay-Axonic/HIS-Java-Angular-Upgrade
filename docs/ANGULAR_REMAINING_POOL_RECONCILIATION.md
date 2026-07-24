@@ -110,19 +110,22 @@ Original tag: **345 screens** (22% of 1,567). This project already made a standi
 
 ### Clinical/billing tier
 
+*Updated 2026-07-25 following a 24-screen stratified sampling sweep of the `MasterController`-routed subset, run at the owner's request (`docs/ANGULAR_PENDING_FINDINGS.md` entry 159), same methodology as entry 146. This section previously carried a "very low confidence, largely untested" estimate — the `MasterController`-routed portion is no longer untested; the rest of the tier still is, see below.*
+
 Original tag: **1,204 screens** (81 both + 521 clinical-only + 602 billing-only = 77% of 1,567).
 
 - Minus **10 already built** from this tier (batch 15: `identificationMaster`, `cardTypeMaster`, `deliveryTypeMaster`, `encounterTypeMaster`, `consentTypeMaster`; batch 16: `currencyMaster`, `currencydenomination`, `incidentCategoryMaster`, `mortuaryBedMaster`, `nursingStationMaster`).
 - Plus the **15 (+ up to 7 probable, + ≥1 independent) reclassified-in** screens from Section 4, which were NOT part of the original 1,204 tag (they were miscounted as low-risk at the time) — these add to this tier's real total, not yet reflected in the 1,204 figure anywhere.
-- Includes the **283 uncharacterized `MasterController` screens** tagged clinical/billing (already part of the 1,204) — genuinely unknown aliveness, no sample has been run.
+- The **281 `MasterController`-routed clinical/billing screens** (precisely recomputed from `states_enriched.json`, superseding the earlier ~283 estimate) are **no longer uncharacterized** — a 24-screen stratified sample (entry 159) found **1 ALIVE (4.2%), 7 DECOY-ROUTED (29.2%), 16 DEAD-MOCKUP (66.7%)** — a 95.8% combined dead-or-decoy rate, closely matching entry 146's low-risk finding (94.6%). Extrapolated across all 281: **~10-15 alive** (wide uncertainty, single-hit basis), **~82 decoy-routed** (real functionality exists elsewhere, not independently worth building), **~187 dead-mockup**.
+- The **~913 remaining clinical/billing screens with their own dedicated controllers** (1,204 − 10 built − 281 `MasterController`-routed) remain genuinely uncharacterized by any sample — see caveat below.
 - Includes the **34 parked-list screens** (Section 5) and the **3 SME-blocked screens** (Section 5) — all real, all clinical/billing-tagged, currently un-actionable for different reasons (unverified vs. no-SME) rather than dead.
 
-**Rough estimate: roughly 1,190–1,215 screens, extremely low confidence.** This is barely more than the original 1,204 tag minus what's built — it is **not** a reconciled, trustworthy figure the way the low-risk estimate above is, because:
-1. No representative dead/mockup sample has ever been run against the clinical/billing tier — the 94.6% low-risk dead rate cannot be assumed to transfer (clinical/billing screens are plausibly less likely to be abandoned utility screens, but this is a guess, not evidence).
-2. The 283 `MasterController`-routed clinical/billing screens alone could shift this number by anywhere from a handful to several hundred, entirely depending on an aliveness rate nobody has measured yet.
-3. The 34 parked + up to 22 reclassified screens all need individual Step-0 confirmation before any of them can be called truly "real and buildable" rather than "probably real, not yet checked."
+**Revised estimate: roughly 940-965 screens with a real chance of being buildable, moderate-to-low confidence** — a substantial downward revision from the prior ~1,190-1,215 figure, driven entirely by the `MasterController` subset's newly-measured ~187 dead + ~82 decoy screens (~269 of 281, not ~1,190-1,215's implicit near-100% assumption). This is now a mixed-confidence estimate, not uniformly low:
+1. **The `MasterController`-routed portion (281 screens) is now evidence-based**, same order of confidence as the low-risk tier's own estimate (n=24 sample, dead-or-decoy rate on firm footing; the specific alive-count has a wider interval given only 1 hit).
+2. **The dedicated-controller portion (~913 screens) is still unsampled** and is the dominant remaining unknown. This project's own batch-selection track record (15 of 15 dedicated-controller clinical/billing picks across batches 15-17 turned out real) is a weak positive signal, not proof — those were individually pre-screened before selection, a selection-bias risk this figure does not correct for. Treat ~913 as an upper bound on "plausibly buildable," not a confirmed count.
+3. The 34 parked + up to 22 reclassified screens still need individual Step-0 confirmation.
 
-**If a trustworthy clinical/billing-tier estimate matters before batch 17, running the same kind of stratified sample entry 146 ran on the low-risk `MasterController` slice — but against the 283 clinical/billing-tagged `MasterController` screens specifically — would be the highest-value next research step.** Not done as part of this reconciliation; flagged as a candidate for a future session, not blocking batch 17 (which draws from screens with their own dedicated controllers, verified individually per the existing Step 0 process, not from this uncharacterized bucket).
+**Follow-up sweep, if wanted:** the dedicated-controller ~913-screen population doesn't share `MasterController`'s single-shared-file structural tell, so it can't be sampled the same mechanical way — a future sweep there would look more like a batch of individual Step 0 spot-checks (real-bindings + backend-existence, screen by screen) than a bulk binding-pattern check. Not scoped here; flagged as the next highest-value research step if a tighter clinical/billing estimate is wanted before this tier is substantially built out.
 
 ---
 
@@ -136,15 +139,18 @@ Original tag: **1,204 screens** (81 both + 521 clinical-only + 602 billing-only 
 | — low-risk, unbuilt subset | 70 | High (recomputed, entry 146) |
 | — of which confirmed dead/decoy (sampled 37) | 35 | High (individually sampled) |
 | — of which extrapolated dead (remaining 33) | ~31 | **Extrapolated, not individually verified** |
-| — of which clinical/billing-tagged, uncharacterized | 283 | **Entirely unknown** |
+| — clinical/billing-tagged, unbuilt subset | 281 | High (recomputed, entry 159) |
+| — of which confirmed dead/decoy/alive (sampled 24) | 23 dead-or-decoy, 1 alive | High (individually sampled, entry 159) |
+| — of which extrapolated across all 281 | ~187 dead, ~82 decoy, ~10-15 alive | **Extrapolated; alive-count wide interval (n=1)** |
 | Individually-confirmed dead (own controllers) | 10 | High (individually cited) |
 | Flagged possible overlap w/ MasterController cluster | 3 | Flagged, not summed |
 | Reclassified low-risk→clinical, confirmed | 15 | High (entry 78) |
 | Reclassified low-risk→clinical, probable/unconfirmed | ≤7 | **Unconfirmed** |
+| Dedicated-controller clinical/billing screens (unsampled) | ~913 | **Entirely unknown — highest-value future sweep target** |
 | Parked, needing individual verification | 34 | Open queue |
 | SME-blocked (real, unselectable) | 3 | High (identity), blocked status stable |
 | **Low-risk tier, real remaining buildable** | **~5-20 (rough)** | **Low-moderate confidence, but well-supported directionally** |
-| **Clinical/billing tier, real remaining buildable** | **~1,190-1,215 (rough)** | **Very low confidence — largely untested** |
+| **Clinical/billing tier, real remaining buildable** | **~940-965 (revised)** | **Mixed: `MasterController` portion evidence-based, ~913-screen dedicated-controller portion still unsampled** |
 
 ---
 
