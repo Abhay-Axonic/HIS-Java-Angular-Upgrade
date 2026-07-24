@@ -125,7 +125,7 @@ Original tag: **1,204 screens** (81 both + 521 clinical-only + 602 billing-only 
 2. **The dedicated-controller portion (~913 screens) is still unsampled** and is the dominant remaining unknown. This project's own batch-selection track record (15 of 15 dedicated-controller clinical/billing picks across batches 15-17 turned out real) is a weak positive signal, not proof — those were individually pre-screened before selection, a selection-bias risk this figure does not correct for. Treat ~913 as an upper bound on "plausibly buildable," not a confirmed count.
 3. The 34 parked + up to 22 reclassified screens still need individual Step-0 confirmation.
 
-**Follow-up sweep, if wanted:** the dedicated-controller ~913-screen population doesn't share `MasterController`'s single-shared-file structural tell, so it can't be sampled the same mechanical way — a future sweep there would look more like a batch of individual Step 0 spot-checks (real-bindings + backend-existence, screen by screen) than a bulk binding-pattern check. Not scoped here; flagged as the next highest-value research step if a tighter clinical/billing estimate is wanted before this tier is substantially built out.
+**Follow-up sweep — attempted 2026-07-25, result: no meaningful reduction in uncertainty (entry 160).** A two-layer cheap proxy (free field-based filtering + the existing `check_backend_endpoints.py` live tool) was run against the precise 903-screen population. Findings: the free field filter produces confirmed real false positives on nested child-states (verified via direct spot-check — a screen flagged "no controller" turned out genuinely alive via ordinary AngularJS parent-scope inheritance), and the live backend-check tool's actual coverage turned out to be 122 screens, not 903 — an order of magnitude narrower than hoped, and it surfaced zero new dead-screen findings beyond the already-known homecare cluster. **Conclusion, confirmed empirically rather than just anticipated: there is no cheap, reliable, full-population proxy for this population.** The two things that made `MasterController`'s check cheap (one shared file with zero per-screen logic, and a mechanical "was it overridden" check) don't have an equivalent here. Getting real signal on this ~903-screen bucket requires Step-0-depth work, per screen — the same cost as normal batch candidate research, meaning the true number will keep revealing itself through actual batch-by-batch progress, not through a shortcut. Not attempting a larger-scale version of this sweep.
 
 ---
 
@@ -146,7 +146,7 @@ Original tag: **1,204 screens** (81 both + 521 clinical-only + 602 billing-only 
 | Flagged possible overlap w/ MasterController cluster | 3 | Flagged, not summed |
 | Reclassified low-risk→clinical, confirmed | 15 | High (entry 78) |
 | Reclassified low-risk→clinical, probable/unconfirmed | ≤7 | **Unconfirmed** |
-| Dedicated-controller clinical/billing screens (unsampled) | ~913 | **Entirely unknown — highest-value future sweep target** |
+| Dedicated-controller clinical/billing screens (unsampled) | ~903-913 | **Entirely unknown — cheap-proxy sweep attempted and failed to yield signal (entry 160); only Step-0-depth work will reduce this** |
 | Parked, needing individual verification | 34 | Open queue |
 | SME-blocked (real, unselectable) | 3 | High (identity), blocked status stable |
 | **Low-risk tier, real remaining buildable** | **~5-20 (rough)** | **Low-moderate confidence, but well-supported directionally** |
