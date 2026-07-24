@@ -81,16 +81,22 @@ export interface CurrencySavePayload {
  * ctrl:373-381).
  *
  * *** See docs/DECISION_NEEDED_CurrencyMasterUpdateCountryIdDropped.md ***:
- * `countryId` IS part of this real wire payload (ctrl:377) and the Country
- * dropdown IS editable while updating (same `<select>` as create,
- * currency-master.html:17-23) -- but `CurrencyMasterDaoImpl
- * .updateCurrencyMaster` (legacy/Global/.../dao/CurrencyMasterDaoImpl.java:
- * 120-145) never calls `setCountryId` on the fetched entity before saving,
- * so changing the Country while updating has NO effect on the persisted
- * row -- silently. `countryId` is sent here anyway because that's the real,
- * confirmed wire contract (what a byte-for-byte capture of the real legacy
- * request shows), not a rebuild invention -- and this is disclosed here and
- * in the linked decision doc rather than silently worked around.
+ * decision RECORDED (2026-07-24) -- `countryId` IS part of this real wire
+ * payload (ctrl:377) and the Country dropdown IS editable while updating
+ * (same `<select>` as create, currency-master.html:17-23), matching legacy's
+ * real request shape exactly. The defect was entirely server-side:
+ * `CurrencyMasterDaoImpl.updateCurrencyMaster` (legacy/Global/.../dao/
+ * CurrencyMasterDaoImpl.java:120-145) never called `setCountryId` on the
+ * fetched entity before saving, so a changed Country silently never
+ * persisted. Owner-approved fix proposed on branch
+ * `fix/currencymaster-update-countryid-dropped` (one line, adds the missing
+ * `setCountryId` call mirroring `saveCurrencyMaster`'s existing one) --
+ * held for approval, not yet merged. No change was needed here on the
+ * Angular side: this payload already sent the corrected/intended wire
+ * contract even before the decision was made, since the gap was purely a
+ * missing DAO setter, not a missing field on the wire. Once the legacy fix
+ * merges, this update flow will correctly persist Country with no rebuild
+ * changes required.
  */
 export interface CurrencyUpdatePayload {
   currencyName: string;

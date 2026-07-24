@@ -31,21 +31,28 @@ const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB -- resources/assets/js/servi
  * -- NO `/api` prefix (see currency-master.service.ts's doc comment).
  *
  * ================================================================
- * *** SEVERITY-1 FINDING, escalated, not silently reproduced or fixed ***
+ * *** SEVERITY-1 FINDING, escalated -- decision RECORDED 2026-07-24 ***
  * ================================================================
  * `CurrencyMasterDaoImpl.updateCurrencyMaster` (legacy/Global/.../dao/
- * CurrencyMasterDaoImpl.java:120-145) never calls `setCountryId` on the
+ * CurrencyMasterDaoImpl.java:120-145) never called `setCountryId` on the
  * fetched entity, even though the real update payload (ctrl:373-381)
  * includes `countryId` and the Country dropdown is fully editable while
- * updating. Changing a currency's Country and clicking Update silently has
- * NO effect on the persisted row -- no error, a normal success toast, the
- * list "reloads" showing the OLD country unchanged. See
- * docs/DECISION_NEEDED_CurrencyMasterUpdateCountryIdDropped.md -- awaiting
- * an owner decision on whether to fix legacy, fix only the rebuild, or
- * faithfully reproduce the current (broken) behavior. This rebuild
- * currently sends the real wire payload (matching legacy's actual request
- * shape) while this decision is pending -- see CurrencyUpdatePayload's own
- * doc comment in currency-master.models.ts.
+ * updating -- changing a currency's Country and clicking Update silently
+ * had NO effect on the persisted row -- no error, a normal success toast,
+ * the list "reloads" showing the OLD country unchanged. See
+ * docs/DECISION_NEEDED_CurrencyMasterUpdateCountryIdDropped.md. Owner
+ * decision: fix legacy (one-line `setCountryId` add, proposed on branch
+ * `fix/currencymaster-update-countryid-dropped`, held for approval) and
+ * have this rebuild implement the CORRECTED behavior rather than
+ * faithfully reproducing the drop -- same precedent as batch 15's
+ * identificationMaster CREATE-flag-reset finding. In practice this
+ * rebuild's update flow required NO code change to honor that decision:
+ * it already sends `countryId` on the wire exactly as legacy's real
+ * request does (see CurrencyUpdatePayload's doc comment in
+ * currency-master.models.ts) -- the gap was purely the missing DAO
+ * setter, not a missing/wrong field here. Once the legacy fix branch
+ * merges, Country updates on this screen will persist correctly with no
+ * further rebuild changes.
  *
  * ================================================================
  * Two-click confirm flow on Save ONLY, "stuck after failure" bug --
@@ -376,7 +383,7 @@ export class CurrencyMaster {
         currencyName: f.currencyName,
         currencyCode: f.currencyCode,
         currencyId: f.currencyId as number,
-        countryId: Number(f.countryId), // see CurrencyUpdatePayload's doc comment -- backend silently drops this
+        countryId: Number(f.countryId), // see CurrencyUpdatePayload's doc comment -- correct once legacy fix merges
         updatedBy: this.userId,
         updatedDate: formatDateTime(new Date()),
         orgnisationId: this.orgId,
