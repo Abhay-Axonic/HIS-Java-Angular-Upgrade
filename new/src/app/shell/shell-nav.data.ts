@@ -253,4 +253,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     heading: 'Blood Bank',
     items: [{ path: '/bloodGroupMaster', title: 'Blood Group Master' }],
   },
+  {
+    heading: 'CSSD',
+    items: [{ path: '/sterilizationTypeMaster', title: 'Sterilization Type Master' }],
+  },
 ];

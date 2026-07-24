@@ -1262,6 +1262,25 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/blood-group-master/blood-group-master').then((m) => m.BloodGroupMaster),
       },
+      // Phase 4 batch 17 -- 5th and final screen, closing out the
+      // clinical/billing risk tier for this batch. Real resolve block
+      // gates moduleId 552 (app.js:13798-13808, confirmed directly, no
+      // requireSuperUser check). Confirmed the CSSD sterilization-METHOD
+      // classification lookup itself (Steam/ETO/Plasma/etc.), a 2-field
+      // PURE-LOOKUP master -- no Step 6b required. See this screen's `.ts`
+      // class doc comment for a confirmed, live, unconditional 500 on its
+      // count endpoint (missing @Transactional, not a seed-data artifact)
+      // and a confirmed total absence of any duplicate-check anywhere in
+      // the backend chain, both logged per standing policy, not fixed.
+      {
+        path: 'sterilizationTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 552, title: 'Sterilization Type Master' },
+        loadComponent: () =>
+          import('./features/sterilization-type-master/sterilization-type-master').then(
+            (m) => m.SterilizationTypeMaster,
+          ),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
