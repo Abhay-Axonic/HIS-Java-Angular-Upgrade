@@ -1163,6 +1163,54 @@ export const routes: Routes = [
         data: { moduleId: 388, title: 'Identification Card Master' },
         loadComponent: () => import('./features/identification-master/identification-master').then((m) => m.IdentificationMaster),
       },
+      // Phase 4 batch 16 -- second batch in the clinical/billing risk tier.
+      {
+        path: 'currencyMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 451, title: 'Currency Master' },
+        loadComponent: () => import('./features/currency-master/currency-master').then((m) => m.CurrencyMaster),
+      },
+      // currencydenomination: state name is all-lowercase/merged in legacy
+      // (app.js:7946-7972), kept as the literal identifier for path/folder
+      // (same precedent as this codebase's qmslogo) -- real resolve block
+      // gates on moduleId 452.
+      {
+        path: 'currencydenomination',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 452, title: 'Currency Denomination Master' },
+        loadComponent: () =>
+          import('./features/currencydenomination/currencydenomination').then((m) => m.Currencydenomination),
+      },
+      {
+        path: 'mortuaryBedMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 649, title: 'Mortuary Bed Master' },
+        loadComponent: () => import('./features/mortuary-bed-master/mortuary-bed-master').then((m) => m.MortuaryBedMaster),
+      },
+      // incidentCategoryMaster: no data.moduleId (no resolve block in
+      // legacy's own self-registered state, confirmed absent from app.js
+      // too), real cookieObject + sidebar-gated (id 989) route -- see the
+      // component's class doc comment.
+      {
+        path: 'incidentCategoryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Incident Category Master' },
+        loadComponent: () =>
+          import('./features/incident-category-master/incident-category-master').then((m) => m.IncidentCategoryMaster),
+      },
+      // nursingStationMaster: real resolve block gates moduleId 547
+      // (app.js:8575-8601), confirmed directly. Held pending an owner
+      // decision on a server-side updated_by audit-column bug found during
+      // audit (docs/DECISION_NEEDED_NursingStationMasterUpdatedByCorruption.md)
+      // -- decision recorded: proceed wiring to the endpoint as-is, see the
+      // component's class doc comment.
+      {
+        path: 'nursingStationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 547, title: 'Nursing Station Master' },
+        loadComponent: () =>
+          import('./features/nursing-station-master/nursing-station-master').then((m) => m.NursingStationMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

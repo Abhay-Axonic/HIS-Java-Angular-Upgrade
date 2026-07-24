@@ -1,0 +1,178 @@
+<section class="page">
+  <fieldset>
+    <legend>Currency Master</legend>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="countryId">Choose Country<span class="required">*</span></label>
+        <select
+          id="countryId"
+          [ngModel]="form().countryId"
+          (ngModelChange)="updateField('countryId', $event === '' ? '' : +$event)"
+          (click)="onCountryDropdownClick()"
+          [class.invalid]="isCountryInvalid()"
+          name="countryId"
+        >
+          <option value="">Select Country</option>
+          @for (c of countryList(); track c.countryId) {
+            <option [value]="c.countryId">{{ c.countryName }}</option>
+          }
+        </select>
+        @if (isCountryInvalid()) {
+          <p class="help-block">Country is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="countryCode">Country Code<span class="required">*</span></label>
+        <input
+          id="countryCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().countryCode"
+          (ngModelChange)="updateField('countryCode', $event)"
+          [class.invalid]="isCountryCodeInvalid()"
+          name="countryCode"
+        />
+        @if (isCountryCodeInvalid()) {
+          <p class="help-block">Country Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="currencyCode">Currency Code<span class="required">*</span></label>
+        <input
+          id="currencyCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().currencyCode"
+          (ngModelChange)="updateField('currencyCode', $event)"
+          [class.invalid]="isCurrencyCodeInvalid()"
+          name="currencyCode"
+        />
+        @if (isCurrencyCodeInvalid()) {
+          <p class="help-block">Currency code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="currencyName">Currency Name<span class="required">*</span></label>
+        <input
+          id="currencyName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().currencyName"
+          (ngModelChange)="updateField('currencyName', $event)"
+          [class.invalid]="isCurrencyNameInvalid()"
+          name="currencyName"
+        />
+        @if (isCurrencyNameInvalid()) {
+          <p class="help-block">Currency name is required</p>
+        }
+      </div>
+
+      <!-- "Symbol" upload -- real client-side format/size validation, but
+           wired to nothing else at all (never submitted). See
+           currency-master.ts's class doc comment. -->
+      <div class="field">
+        <label>Symbol</label>
+        <input type="file" (change)="onSymbolFileSelected($event)" />
+        @if (fileError()) {
+          <p class="help-block">{{ fileError() }}</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!-- Decorative only -- legacy's own search box has no ng-model and does
+         nothing (see class doc comment). Not wired to any filtering here. -->
+    <input type="text" class="search-box" placeholder="Search" autocomplete="off" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>Country Code</th>
+        <th>Symbol</th>
+        <th>Currency Code</th>
+        <th>Currency Name</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.currencyId) {
+        <tr>
+          <td>{{ row.countryName }}</td>
+          <td>{{ row.countryCode }}</td>
+          <td>-</td>
+          <td>{{ row.currencyCode }}</td>
+          <td>{{ row.currencyName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="7" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (p of pageNumbers(); track p) {
+        <li [class.active]="currentPage() === p"><a (click)="goToPage(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
