@@ -125,6 +125,7 @@ public class CurrencyMasterDaoImpl extends GenericDao<CurrencyMaster, Integer>
 			currencyMaster.setCurrencyName(currencyMasterDto.getCurrencyName());
 			currencyMaster.setCurrencyCode(currencyMasterDto.getCurrencyCode());
 			currencyMaster.setOrgnisationId(currencyMasterDto.getOrgnisationId());
+			currencyMaster.setCountryId(currencyMasterDto.getCountryId());
 			//currencyMaster.setUnitId(currencyMasterDto.getUnitId()); //dilip
 			//currencyMaster.setCreatedBy(currencyMasterDto.getCreatedBy()); //dilip
 			currencyMaster.setUpdatedBy(currencyMasterDto.getUpdatedBy());
