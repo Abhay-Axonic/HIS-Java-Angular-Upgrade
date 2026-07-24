@@ -1198,6 +1198,19 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/incident-category-master/incident-category-master').then((m) => m.IncidentCategoryMaster),
       },
+      // nursingStationMaster: real resolve block gates moduleId 547
+      // (app.js:8575-8601), confirmed directly. Held pending an owner
+      // decision on a server-side updated_by audit-column bug found during
+      // audit (docs/DECISION_NEEDED_NursingStationMasterUpdatedByCorruption.md)
+      // -- decision recorded: proceed wiring to the endpoint as-is, see the
+      // component's class doc comment.
+      {
+        path: 'nursingStationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 547, title: 'Nursing Station Master' },
+        loadComponent: () =>
+          import('./features/nursing-station-master/nursing-station-master').then((m) => m.NursingStationMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

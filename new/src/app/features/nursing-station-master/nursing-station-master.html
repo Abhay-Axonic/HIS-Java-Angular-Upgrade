@@ -1,0 +1,153 @@
+<section class="page">
+  <fieldset>
+    <legend>Nursing Station Master</legend>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="nursingStationCode">NS Code<span class="required">*</span></label>
+        <input
+          id="nursingStationCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().nursingStationCode"
+          (ngModelChange)="updateFormField('nursingStationCode', $event)"
+          name="nursingStationCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">NS Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="nursingStationDesc">NS Description<span class="required">*</span></label>
+        <input
+          id="nursingStationDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().nursingStationDesc"
+          (ngModelChange)="updateFormField('nursingStationDesc', $event)"
+          name="nursingStationDesc"
+          [class.invalid]="isDescInvalid()"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="storeId">Store<span class="required">*</span></label>
+        <select
+          id="storeId"
+          [ngModel]="form().storeId"
+          (ngModelChange)="updateFormField('storeId', $event === '' ? '' : +$event)"
+          [class.invalid]="isStoreInvalid()"
+          name="storeId"
+        >
+          <option value="">Select Store</option>
+          @for (s of storeList(); track s.id) {
+            <option [value]="s.id">{{ s.storeName }}</option>
+          }
+        </select>
+        @if (isStoreInvalid()) {
+          <p class="help-block">Store is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!-- Real client-side filter over the CURRENT PAGE's already-fetched
+         rows -- see class doc comment (this screen's search box IS
+         functional, unlike currency-master's decorative one). -->
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>NS Code</th>
+        <th>NS Description</th>
+        <th>Store</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.nursingStationId) {
+        <tr>
+          <td>{{ row.nursingStationCode }}</td>
+          <td>{{ row.nursingStationDesc }}</td>
+          <td>{{ row.storeName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row.nursingStationId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

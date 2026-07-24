@@ -105,6 +105,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/employeeSurvey', title: 'Employee Satisfaction Survey' },
       { path: '/holidayCalendarMasterUnit', title: 'Holiday Calendar Master' },
       { path: '/mortuaryBedMaster', title: 'Mortuary Bed Master' },
+      { path: '/nursingStationMaster', title: 'Nursing Station Master' },
     ],
   },
   {
