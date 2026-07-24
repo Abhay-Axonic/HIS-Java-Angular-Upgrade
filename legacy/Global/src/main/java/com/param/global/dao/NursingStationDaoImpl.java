@@ -147,7 +147,7 @@ public class NursingStationDaoImpl extends GenericDao<NursingStationMaster, Inte
 			nuStationMaster.setNursingStationCode(nursingStationMasterDto.getNursingStationCode());
 			nuStationMaster.setNursingStationDesc(nursingStationMasterDto.getNursingStationDesc());	
 			nuStationMaster.setStoreId(nursingStationMasterDto.getStoreId());
-			nuStationMaster.setUpdatedBy(nursingStationMasterDto.getCreatedBy());
+			nuStationMaster.setUpdatedBy(nursingStationMasterDto.getUpdatedBy());
 			nuStationMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(nursingStationMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			update(nuStationMaster);
 			return new Response<>(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, null);
