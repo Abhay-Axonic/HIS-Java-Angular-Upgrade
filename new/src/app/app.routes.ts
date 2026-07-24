@@ -1221,6 +1221,15 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/discount-category-master/discount-category-master').then((m) => m.DiscountCategoryMaster),
       },
+      // Phase 4 batch 17 -- 2nd screen, continuing the clinical/billing risk
+      // tier. Real resolve block gates moduleId 618 (app.js:14891-14918,
+      // confirmed directly, no requireSuperUser check).
+      {
+        path: 'GLcode',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 618, title: 'GL Code' },
+        loadComponent: () => import('./features/gl-code-master/gl-code-master').then((m) => m.GlCodeMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
