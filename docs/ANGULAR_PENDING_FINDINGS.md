@@ -2549,6 +2549,15 @@ This is application code (`legacy/`), not local-dev-DB-only — per `CLAUDE.md`,
 
 **Action taken:** `nursingStationMaster` is through Steps 0-5 on `rebuild/phase4-batch16`. Commit made (see report to orchestrating session for hash). Not merged to `main`, not pushed to GitHub. `fix/nursingstationmaster-updatedby-corruption` (separate legacy branch, untouched) remains held for owner approval as its own, independent decision.
 
+**Update, Step 6 review (2026-07-24):** the owner independently reviewed `nursingStationMaster` live, real click-through, real data, per this tier's mandatory Step 6a gate. Four checks:
+
+1. **Standard checklist** (create, update, status toggle, search filter, page-size change): all confirmed working correctly.
+2. **Server-side duplicate-description rule** (this entry's own finding, above): confirmed triggering the "Already Exists." rejection via the confirm modal on a colliding description. Owner explicitly confirmed this is the *intended* behavior, not a concern to flag -- consistent with this being a real, disclosed backend business rule rather than a rebuild choice.
+3. **Confirm-modal fix** (9th screen on this branch with the corrected pattern, applied directly during the build above): confirmed working -- modal correctly reappears after a rejection on the next Save attempt.
+4. **Status-toggle-wipes-mid-edit-form quirk**: confirmed present, consistent with the same known legacy behavior already documented on `currencyMaster`/`currencydenomination` -- not reported as new, matching expectations.
+
+`nursingStationMaster`'s Step 6a review is complete, all 4 checks pass, no discrepancies found. Confirmed PURE-LOOKUP per the decision doc (the `updated_by` audit-column bug doesn't change this classification), so no Step 6b SME attestation required -- this Step 6a sign-off is sufficient to clear the screen for merge once the owner gives explicit merge approval (not yet given as of this entry -- the Steps 0-5 build commit and confirm-modal fix are held on `rebuild/phase4-batch16`; `fix/nursingstationmaster-updatedby-corruption` held separately, pending the owner's own approval decision on that legacy fix, same treatment as `currencyMaster`'s country-drop fix).
+
 ## 154. `currencyMaster` -- confirm-modal fix applied to close out batch 16, all 5 screens now on the corrected pattern
 
 **Context:** `currencyMaster` was the one screen in batch 16 deliberately left faithfully reproducing the "stuck after failure" confirm-modal bug (see its own class doc comment as originally written) while the owner decided on the unrelated Country-drop severity-1 finding. Once that decision was recorded (entry accompanying `docs/DECISION_NEEDED_CurrencyMasterUpdateCountryIdDropped.md`), the owner explicitly directed this fix be applied too, on the grounds that it's the same mechanical rebuild-quality correction already applied to all 4 sibling batch-16 screens and the 8 screens on `fix/stuck-confirm-modal-8-screens` -- not a fresh parity judgment call requiring separate deliberation.
