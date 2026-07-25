@@ -3036,3 +3036,39 @@ if($scope.allowedOverbookingSlot  == "" || $scope.allowedOverbookingSlots == nul
 **Action taken:** pattern documented, no code changed, no sweep started. All 5 batch-18 duplicate-check findings faithfully reproduced in the rebuild per each screen's own entry above, not silently fixed.
 
 ---
+
+## PENDING-hospitalaccountmaster-default-account-corruption. `hospitalAccountMaster` — CONFIRMED, SEVERITY-1-CALIBER — every single Update silently wipes the org+unit's real default-account designation, regardless of what the user actually changed
+
+**Where:** `HospitalAccountMasterServiceImpl.updateHospitalAccountMaster` (legacy/Billing/.../global/service/HospitalAccountMasterServiceImpl.java:82-101), calling `HospitalAccountMasterDaoImpl.updateAllHospitalAccount` (legacy/Billing/.../global/dao/HospitalAccountMasterDaoImpl.java:213-232).
+
+**Surfaced during Step 3 rebuild** (not the original Step 1 audit — a gap in that pass, caught while reading the full backend source to implement Update faithfully), then independently verified directly against source by the orchestrating session before logging, per this project's standing "verify before claiming parity" discipline.
+
+**Confirmed defect, read directly, not inferred:** `updateAllHospitalAccount` runs this unconditional bulk update on every single call to `updateHospitalAccountMaster`:
+```java
+update HospitalAccountMaster set isDefault='N' WHERE orgnizationId=:orgId and unitId=:unitId
+```
+— **for every account in the org+unit, regardless of the submitted record's own `isDefault` value** — immediately before the specific edited record's own fields (including its own `isDefault`) are applied via the DAO's `updateHospitalAccountMaster`. Contrast with **Create**, which correctly gates this exact same bulk-reset call behind `if(hospitalAccountMasterDto.getIsDefault() == 'Y')` (`HospitalAccountMasterServiceImpl.java:40-43`) — Update has no equivalent gate at all.
+
+**Net, observable effect:** a user editing Account A (e.g., just fixing a typo in its Description, having nothing to do with which account is "default") silently causes the org+unit's actual default account (Account B, untouched by the user) to lose its default flag, with **no error, no warning, no visible signal of any kind** — the edit form and success toast look completely normal. If Account A's own edit-form `isDefault` happens to be `'N'` (the common case — editing a non-default account), the org+unit ends up with **zero** accounts marked default after a routine, unrelated edit.
+
+**This is a genuinely silent/invisible bug** (no observable failure signal reaches the user) — squarely the kind of case this project's own standing policy (established via `identificationMaster`/`currencyMaster`'s precedent) treats as eligible for a **disclosed, corrected-behavior rebuild** rather than mandatory faithful reproduction of an invisible defect. **However, given the severity (a real, guaranteed, silent corruption of a real business flag on a common action) and that this is a BACKEND bug the Angular frontend cannot actually fix on its own**, this is flagged here for the owner's explicit decision rather than unilaterally applying the corrected-behavior carve-out:
+- **Option A** — treat as the "invisible bug" carve-out and note the rebuild *would* need this backend behavior to genuinely change server-side to be truly corrected (a pure-frontend workaround, e.g. re-sending the previous default holder's `isDefault=true` after every update, would be a fragile, easily-broken patch, not a real fix).
+- **Option B** — treat as a full legacy bug requiring its own dedicated Maker-Checker fix branch (per `CLAUDE.md`'s legacy-fixes-are-separate-from-rebuild rule), gating the unconditional reset the same way Create already does (`if isDefault=='Y'`), verified before/after, held for explicit approval, same discipline as this session's other legacy fixes (`fix/currencymaster-update-countryid-dropped`, etc.).
+
+**Currently, the rebuild faithfully reproduces this exact backend behavior** (calls the same real, unmodified endpoint) since no frontend-only compensation is safe or reliable. **Not fixed, not silently worked around — held for owner decision**, per standing policy.
+
+**Action taken:** confirmed via direct source read (both DAO methods quoted above, read in full). No code changed. Flagged to the owner immediately upon discovery, not batched into the end-of-batch report, per standing "severity-1/cross-cutting findings flagged immediately" instruction.
+
+---
+
+## PENDING-hospitalaccountmaster-oneway-button-lock. `hospitalAccountMaster` — CONFIRMED — the Save (create) button permanently disappears after the first Edit click, for the rest of that page view
+
+**Where:** `hospitalAccountMasterController.js:11-12` (`$scope.saveBtnFlag = true; $scope.updateBtnFlag = false;`, initial state) and `:217-219` (inside `showUpdateBtn()`, the only other assignment site in the entire file — confirmed via grep, zero other writes to either flag anywhere).
+
+**Confirmed defect:** `showUpdateBtn()` sets `saveBtnFlag = false; updateBtnFlag = true` when a user clicks Edit on any row — and nothing, anywhere in the controller (not a successful Update, not a failed Update, not any other action), ever resets `saveBtnFlag` back to `true`. Since the view gates the Save button on `ng-if="saveBtnFlag"` and the Update button on `ng-if="updateBtnFlag"`, **once a user clicks Edit once, the Save button is gone for the remainder of that page session** — a user cannot create a new hospital account without a full page reload, even immediately after successfully completing an unrelated Update.
+
+**Faithfully reproduced in the rebuild** (via an `editMode` signal that `edit()` sets `true` and is never reset by `update()`'s success handler) — this is a real, disclosed legacy defect, not silently fixed. Lower severity than the default-account corruption above (annoying/blocking, but not silent data corruption — the user can tell something's wrong, since the Save button is visibly missing), but real and worth its own record.
+
+**Action taken:** confirmed via direct grep (zero other assignment sites). No code changed. Faithfully reproduced in the rebuild per standing policy.
+
+---
