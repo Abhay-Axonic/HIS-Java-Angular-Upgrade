@@ -3293,3 +3293,17 @@ When Spring's interceptor tries to commit/flush on return, the session is alread
 **Action taken:** flagged, not fixed in legacy. Both are observable (non-silent) current legacy behavior, not corrupting. Owner decision pending on whether the pagination bug (a pure, unambiguous mechanical fix -- one variable never being written) should be corrected directly in the rebuild under the same "invisible-to-the-user-so-implement-corrected-behavior" reasoning already applied to `nutritionalMaster`'s count crash, given a user has no way to know which page is actually loaded, or whether it should be faithfully reproduced and logged as a separate legacy-fix candidate instead.
 
 ---
+
+## PENDING-nutritionalmaster-create-endpoint-crash. `nutritionalMaster` -- CONFIRMED, Batch 19 Step 5 (real interaction testing) -- Create (Save) returns HTTP 500 on every attempt against the live, unmodified legacy backend, independent of the rebuild
+
+**Found during:** Batch 19 Step 5 interaction testing (2026-07-25). Confirmed via direct `curl` requests against the real running Tomcat instance, with a valid auth token, using the exact payload shape legacy's own `saveNutrition()` sends -- not through either frontend. Two independent attempts (with and without the date-string fields) both failed with HTTP 500 and different error references, ruling out a single obvious one-field cause.
+
+**Root cause:** NOT fully isolated. The DAO's save path uses a Dozer mapping (`NutritionalMasterDto_to_NutritionalMaster`) configured with a date-only format (`dd-MM-yyyy`) while the app sends full datetime strings everywhere -- a plausible contributor, but omitting the date fields entirely still produced a 500, so this isn't confirmed as the sole cause. Full detail, including what was ruled out and why the exact exception couldn't be captured (no accessible Tomcat application log in this environment), is in `docs/DECISION_NEEDED_NutritionalMasterCreateAlwaysFails.md`.
+
+**Severity and scope:** the entire Create operation for this screen is non-functional in current legacy -- not a silent edge case, the primary "add a new record" path. Edit, Update, and status-toggle are unaffected (confirmed both by source read -- `updateNutritionalMaster` doesn't use the Dozer mapper at all -- and by live interaction testing). The failure is silent to the end user in legacy today: `saveNutrition()`'s promise chain has no failure callback, and no global `$http` error interceptor exists anywhere in this app to catch it generically -- clicking Save today produces no toast, success or error, the record just never saves. Same silent-failure shape as this screen's own already-logged `PENDING-nutritionalmaster-count-endpoint-crash`.
+
+**Rebuild treatment (owner-decided, 2026-07-25):** faithfully reproduce the real, confirmed failure rather than apply the invisible-bug/corrected-behavior precedent, since the actual database write fails server-side and no client-side change can fix that. The rebuild's save path already has no error-path handling (matching legacy's own missing failure callback) -- required zero code changes to already match. Edit/Update/status-toggle are left as their own separately-confirmed-working behavior.
+
+**Action taken:** flagged and escalated to its own DECISION_NEEDED document, per standing severity-1 practice. No application code touched. Root-cause investigation needs real Tomcat log access or a debug-attach session, neither available in this environment -- logged as a follow-up, not resolved here.
+
+---
