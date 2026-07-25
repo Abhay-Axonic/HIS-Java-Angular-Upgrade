@@ -2855,3 +2855,184 @@ This is a genuinely SILENT bug (the success growl still fires; nothing tells the
 **Action taken:** classification corrected here; entry 118 itself left unedited (struck-through/updated corrections are logged as their own entry per this project's established practice, e.g. entry 120's retraction pattern) rather than silently rewritten. `departmentMasterUnit` selected into batch 18 as a clinical-only pick on this corrected basis. No code changed.
 
 ---
+
+## PENDING-batch18-step1-hospitalaccountmaster. Batch 18 Step 1 audit — `hospitalAccountMaster` — real, working duplicate-check, correctly org/unit-scoped, but code-blind (checks description only)
+
+**Where:** `legacy/HIS-WAR/.../controller/billing/unit/hospitalAccountMasterController.js`, `legacy/Billing/.../global/{controller,service,dao}/HospitalAccountMaster*.java`, entity `legacy/Entity/.../global/model/HospitalAccountMaster.java`.
+
+**Module ID: 788, no `requireSuperUser`.** Confirmed directly from the live `.state('hospitalAccountMaster', ...)` resolve block, `app.js:20598-20626`.
+
+**Wiring: classic `$scope.*`, no `vm.*` anywhere** — confirmed both sides (state config has no `controllerAs`, view has zero `vm.` references).
+
+**No missing-`$state`-DI crash bug** — `$state` is injected and the only `$state.go('login')` call is correctly guarded.
+
+**No validation duplication, no race condition** — single HTML5+`show-errors` validation layer; the list/count calls on init are independent, unchained, and write to disjoint scope vars (no cross-request clobbering).
+
+**CONFIRMED — 15th+ instance of the entry-55 shared `<modal>` `cancel()` crash:** `hospital-account-master.html:192` uses `<modal visible="showModal"></modal>`; the directive's hardcoded × close button calls `cancel();stopLoader();`; the controller defines no `cancel()` anywhere (grepped, zero matches). Real, live crash in unmodified legacy today. Per the standing entry-55 policy, the rebuild gets a working close, no new sign-off needed — logging the instance only.
+
+**CONFIRMED, MEDIUM — status-toggle has no error-rollback:** `hospital-account-master.html:160-163` binds the toggle directly to the live row's `info.status` (optimistic client-side flip via `ng-model`); `updateStatus()` (ctrl:296-331) shows `growl.error(...)` on a backend failure but never reverts `info.status` — a failed update leaves the toggle showing the wrong, unpersisted state indefinitely, with only a transient toast as the signal. Legacy bug — **faithfully reproduce**, do not silently fix. Rebuild should still use the scaffold's `<app-status-toggle>`/`signal.update()` pattern (Step 3 policy) while reproducing this exact no-rollback-on-error behavior, not inventing a rollback legacy doesn't have.
+
+**`popUpFlag` confirm-modal re-arm timing — genuinely ambiguous from static reading, NOT asserted either way.** Traced the full click chain through the shared `<modal>`/`oneClickOnly` directives (`commonPopUpDirectives.js`): the directive's own `$watch(attrs.visible)` resets `popUpFlag=true` on every `showModal→false` transition, independent of the controller's own success/error branches, via a jQuery-bound handler racing an async `$http` digest. **This needs a live Step 5 click-test (specifically an error-path click-through) to resolve — do not guess at the timing when building Step 3.**
+
+**Duplicate-check (audit-gap closure, this session) — real and functioning on both Create and Update, correctly scoped, but incomplete:**
+- `HospitalAccountMasterServiceImpl.saveHospitalAccountMaster` (line 35) calls `getHospitalAccountMasterByName` first and rejects with `ALREADY_EXIST` if found; `updateHospitalAccountMaster` (line 84) does the same via `getHospitalAccountMasterByNameNotId`. Both real, both called, both correctly reject before any write.
+- Both named queries (`HospitalAccountMaster.java:29-48`) are cleanly `AND`-chained with **no OR at all** — no operator-precedence trap (unlike `GLcode`/`surgeryGradeMaster`) — and correctly scoped by **both** `orgnizationId` AND `unitId`.
+- **Gap: only `hospitalAccountDesc` (lowercased) is checked — `hospitalAccountCode` is never compared for uniqueness anywhere**, even though the UI presents both Code and Description as identifying fields on this pure-lookup master. Same "field-blind" sub-variant already logged for `bloodGroupMaster` (entry 164, "global+code-blind" — there the gap was combined with a missing-scope issue; here scoping is correct, only the field coverage is incomplete). Two hospital accounts with the same Code but different Description can both be saved with no rejection.
+- **Verdict: WORKING duplicate-check, INCOMPLETE field coverage — not a "no check exists" case.** Faithfully reproduce this exact partial coverage in the rebuild (check Description only, not Code), do not silently add the missing Code check.
+
+**Copy-paste artifact (cosmetic, no behavioral impact):** the paginated-fetch function is named `$scope.PriorityMasterList` — a leftover name from a different master's copy-pasted template. Reproduce faithfully or rename sensibly in the rebuild; either way, no functional effect (it correctly calls the real endpoint).
+
+**Cosmetic-disable gap (low severity):** the edit pencil icon applies a CSS-only `disabled` look on inactive rows (`ng-class`) but has no real `ng-disabled`/click guard — `showUpdateBtn()` still fires and lets a user edit an "inactive" row. Faithfully reproduce (or flag as a disclosed improvement candidate at Step 3 — not a data-safety issue, owner's call).
+
+**Action taken:** Step 1 audit complete for this screen. No code changed. No severity-1 finding.
+
+---
+
+## PENDING-batch18-step1-transactiontypemaster. Batch 18 Step 1 audit — `transactionTypeMaster` — real, working duplicate-check, correctly precedence-safe, but scoped org-only (unit dimension deliberately unused project-wide for this entity) and name-blind on description
+
+**Where:** `legacy/HIS-WAR/.../controller/master/transactionTypeMasterController.js`, `legacy/Global/.../{controller,service,dao}/TransactionTypeMaster*.java`, entity `legacy/Entity/.../billing/global/model/TransactionTypeMaster.java`.
+
+**No module gate at all** — the live `.state('transactionTypeMaster', {...})` block (`app.js:20911-20916`) contains only `url`/`templateUrl`/`controller`/`title`, no `resolve`, no `data`. Confirmed real, pre-existing legacy gap matching the disclosed `billingGroupMaster`/`periodicityService` precedent (playbook caveat #1) — faithfully reproduce (rebuild route omits `data.moduleId` entirely), not an oversight to fix.
+
+**Wiring: classic `$scope.*`**, no `controllerAs` in the state config, zero `vm.*` in the view.
+
+**Risk tag independently re-confirmed at the field level, not just the URL string:** payload fields (`transactionTypeName`, `transactionTypeDesc`, `status`, `transactionTypeId`) carry no rate/amount/tax/discount numeric field — this is billing-metadata (a category/lookup master used to classify billing postings elsewhere), not a billing-calculation screen. Entry 118's Billing-tier tag stands, now confirmed at the field level in addition to its original URL-string basis.
+
+**No missing-`$state`-DI crash bug, no validation duplication, no race condition** — all PASS on direct read.
+
+**CONFIRMED — 16th+ instance of the entry-55 shared `<modal>` `cancel()` crash:** view uses `<modal visible="showModal"></modal>`; `cancel()` is never defined in this controller (grepped, zero matches). Logging the instance per standing policy, no new decision needed.
+
+**Confirm-modal gating — PASS, correctly gated, no duplicate-submit risk:** `saveTransactionType()` is properly gated behind `popUpFlag` (first click only opens the modal, does not POST; the real save fires only via `PopupOkBtn` after modal OK) plus the `one-click-only` directive, which re-arms only on modal reopen — a safer variant than the "reset only on success" pattern flagged elsewhere in this project. No finding here.
+
+**Status-toggle — PASS, no shared-object-aliasing risk (contrast with `operationTableType`'s finding below):** `showUpdateBtn(item)` copies only the three primitive fields it needs onto `$scope.transactionType` — it does not alias the whole row object. Clean.
+
+**Duplicate-check (audit-gap closure, this session) — real and functioning on both Create and Update, correctly precedence-safe, but incompletely scoped and incompletely field-covered:**
+- `TransactionTypeMasterServiceImpl.saveTransactionTypeMaster`/`updateTransactionTypeMaster` both call the real duplicate-check queries first and reject with `ALREADY_EXIST` if found — genuinely functioning, not dead code.
+- Both named queries (`TransactionTypeMaster.java:33-46`) are **correctly parenthesized** — `(LOWER(x)=:p OR x=:p) AND orgId=:orgId` — no operator-precedence trap.
+- **Gap 1 — scoped by `orgId` only, `unitId` is never used.** The entity has a real `unit_id` column and the DTO carries `unitId`, but every query on this entity that could use it has `unitId` either omitted entirely or explicitly commented out (`TransactionTypeMasterDaoImpl.java:46`, `//.setParameter("unitId", unitId)` — confirmed live, not hypothetical). This appears to be a **deliberate, entity-wide design** (transaction-type categories shared org-wide across all units), not a screen-specific scoping bug introduced by this one query — but it diverges from most sibling master screens' unit+org scoping convention and should be disclosed, not silently assumed correct. **Recommend confirming with the owner whether transaction types are genuinely meant to be organization-wide** before the rebuild locks in unit-agnostic behavior as intentional; in the meantime, faithfully reproduce the org-only scoping (matches current, unmodified legacy behavior either way).
+- **Gap 2 — only `transactionTypeName` is checked, `transactionTypeDesc` is never compared for uniqueness**, despite the UI presenting both as fields on this pure-lookup master.
+- **Verdict: WORKING duplicate-check, precedence-safe, but incomplete on two independent axes (scope breadth, field coverage) — not a "no check exists" case.** Faithfully reproduce both gaps as-is.
+
+**`PagerService` is injected but never referenced anywhere in the file** — dead dependency, harmless, not worth reproducing as real behavior.
+
+**Action taken:** Step 1 audit complete for this screen. No code changed. No severity-1 finding.
+
+---
+
+## PENDING-batch18-step1-surgerygrademaster. Batch 18 Step 1 audit — `surgeryGradeMaster` — duplicate-check broken on BOTH paths (Create: cross-organization via operator-precedence bug; Update: permanent no-op, functionally equivalent to no check at all) — plus a live dangling-if bug
+
+**Where:** `legacy/HIS-WAR/.../controller/opd/global/surgeryGradeMasterController.js`, `legacy/Global/.../{controller,service,dao}/SurgeryGradeMaster*.java`, entity `legacy/Entity/.../global/model/SurgeryGradeMaster.java`.
+
+**No module gate at all** — `.state('surgeryGradeMaster', ...)` (`app.js:15470-15475`) has no `resolve` block, confirmed by direct read, single registration (no shadow state). Faithfully reproduce (no `data.moduleId`), real pre-existing legacy gap, same class as `billingGroupMaster`/`transactionTypeMaster` above.
+
+**Wiring: classic `$scope.*`**, confirmed. **No missing-`$state`-DI crash** (`$state` injected but never actually called — dead injection, harmless). **No validation duplication** — single HTML5+`show-errors` layer. **No race condition** — `init()`'s single list request and the synchronous `surgeryGradeObj` reset are not order-dependent.
+
+**Risk tag re-confirmed: Clinical-only**, pure grade-classification lookup, no dosing/administration/patient-ID content.
+
+**CONFIRMED, MEDIUM — dangling `if` with no braces in the list-load callback, `surgeryGradeMasterController.js:98-104`:**
+```js
+if (response.data.status == "success")
+    $scope.pagination.data=[];
+    $scope.surgeryGradeList = response.data.listObject;
+    if($scope.surgeryGradeList.length > 0){ ... }
+```
+Only the first statement is actually gated by the `if` — everything after executes unconditionally, even on a non-success response. If `response.data.listObject` is `undefined` on a failure response, `$scope.surgeryGradeList.length` throws a `TypeError`, silently breaking the list render. Directly reachable — this exact endpoint (`getSurgeryGradeMasterList`) already returned a live 400 during this session's Step 0 backend check. **Faithfully reproduce** (this is legacy's real, current, unconditional-execution behavior) — do not silently add braces/fix the gating as part of the rebuild.
+
+**CONFIRMED — 17th+ instance of the entry-55 shared `<modal>` `cancel()` crash.** Logging per standing policy.
+
+**Status-toggle — same no-rollback-on-error pattern as `hospitalAccountMaster`:** view binds the toggle directly to the live row's `info.status`; `updateStatus()`'s error branch shows `growl.error` but never reverts the checkbox. Faithfully reproduce.
+
+**`popUpFlag` re-arm timing — ambiguous, same shared-directive digest-timing uncertainty as `hospitalAccountMaster`/`operationTableType` below. Flag for live Step 5 verification, do not guess.**
+
+**CONFIRMED, MEDIUM-HIGH SEVERITY — duplicate-check is broken on BOTH Create and Update, in two independently confirmed ways:**
+- **Create — cross-organization false-positive via operator-precedence bug**, same class already logged for `GLcode` (entry 162): `GET_SURGERY_GRADE_LIST_BY_NAME` (`SurgeryGradeMaster.java:40-47`) reads `WHERE LOWER(x)=:p OR x=:p AND orgnisationId=:orgId` — JPQL/SQL `AND` binds tighter than `OR`, so this parses as `LOWER(x)=:p OR (x=:p AND orgId=:orgId)`. Since the DAO always passes the lowercased value, the `LOWER(...)` branch has **no org-scope at all** — the "already exists" check on Create fires for a name match in **any organization**, producing false-positive rejections in a multi-org deployment.
+- **Update — CONFIRMED PERMANENT NO-OP, functionally equivalent to NO duplicate-check existing at all, same class as `sterilizationTypeMaster` (entry 165) — NOT a lesser variant.** `GET_SURGERY_GRADE_LIST_BY_NAME_NOT_ID` (`SurgeryGradeMaster.java:49-55`) is itself correctly parenthesized (`(LOWER(x)=:p OR x=:p) AND surgeryGradeId!=:id AND orgnisationId=:orgId`) — the query logic is fine. But `$scope.updateSurgeryGrade()` (controller.js:247-258) builds its POST payload as `{ surgeryGradeCode, surgeryGrade, surgeryGradeId, updatedBy, updatedDate }` — **`orgnisationId` is never included.** Server-side, `orgId` binds `null`; `orgnisationId=:orgId` with a null parameter matches zero rows under SQL three-valued logic — **the entire duplicate-check query on Update always returns empty, unconditionally, for every update, regardless of any real duplicate.** A user can rename a surgery grade to collide with an existing active name and it silently succeeds, every time, with no exception. This is explicitly logged here as **functionally identical in effect to `sterilizationTypeMaster`'s "no duplicate-check exists anywhere" finding (entry 165)** — the query exists in source but can never return a match given what the frontend actually sends, which is indistinguishable in practice from no check existing at all. Do not treat this as a milder variant.
+- **Faithfully reproduce both defects as currently understood** — the cross-org false-positive on Create, and the permanent no-op on Update — per standing policy (silent/invisible-to-the-user bugs get disclosed correction; this one is NOT invisible — a rejected Create is directly observable by the user attempting it — so faithful reproduction applies, not silent correction).
+- **Recommend Step 5 live-verify both**: attempt a same-name Create from a second organization (expect an incorrect rejection) and a same-name rename via Update within one organization (expect a silent, unblocked success) on real, unmodified legacy, then confirm the rebuild reproduces both exactly.
+
+**Action taken:** Step 1 audit complete for this screen. No code changed. No severity-1 finding (the duplicate-check gap is a real, disclosed data-integrity issue, assessed as Medium-High per this project's severity conventions — reachable but not a crash/silent-total-failure in the stricter sense reserved for severity-1).
+
+---
+
+## PENDING-batch18-step1-operationtabletype. Batch 18 Step 1 audit — `operationTableType` — duplicate-check correctly org/unit-scoped but checks table name only (not code or description); status-update mutates a shared form-scope object
+
+**Where:** `legacy/HIS-WAR/.../controller/otims/global/operationTableTypeMasterController.js`, `legacy/Global/.../otims/{controller,service,dao}/OperationTableType*.java`, entity `legacy/Entity/.../otims/model/OperationTableType.java`.
+
+**Module ID: 523, no `requireSuperUser`.** Confirmed directly from the live resolve block (`app.js:12403-12429`) and independently cross-checked against `adminPriviledges.json:2576`.
+
+**Wiring: classic `$scope.*`**, confirmed. **No missing-`$state`-DI crash** — `$state` injected and correctly used. **No validation duplication, no race condition** — list/count calls are independent and populate disjoint scope vars.
+
+**Risk tag re-confirmed: Clinical-only**, pure 3-field (code/name/description) OT table-type lookup feeding surgery scheduling, no patient-identifying or billing content.
+
+**CONFIRMED — 18th+ instance of the entry-55 shared `<modal>` `cancel()` crash.** Logging per standing policy.
+
+**CONFIRMED, SEVERITY 2 — `updateStatus()` mutates the shared `$scope.common` add/edit-form object instead of building a clean payload** (`operationTableTypeMasterController.js:276-309`): toggling any row's status stamps that row's `operationTableTypeId`/`status` onto `$scope.common` — the same object bound to the add-form's `tableCode`/`tableName`/`tableDesc` inputs — and POSTs whatever stale/in-progress form values happen to be sitting there alongside it. The backend DAO (`updateOperationTableTypeStatus`) only reads `operationTableTypeId`+`status` off the DTO, so no data corruption results in that direction. But `$scope.common.operationTableTypeId` is never cleared afterward (`initMaster()` isn't called by `updateStatus()`), so a subsequent "Save New" before a full save/update cycle resets `common` could submit a stray `operationTableTypeId` left over from a previously-toggled, unrelated row inside the create payload. Whether the create endpoint honors or ignores an incoming id was not independently confirmed against this specific DAO (typical JPA-insert convention would ignore it) — **flagged for Step 5 live verification**, not asserted as confirmed data corruption. Faithfully reproduce the shared-object mutation as-is; do not silently refactor to a clean payload as part of this rebuild.
+
+**`popUpFlag` re-arm timing — ambiguous, same shared-directive uncertainty as `hospitalAccountMaster`/`surgeryGradeMaster`. Flag for live Step 5 verification, do not guess.**
+
+**Positive confirmation — edit does NOT bind to the row reference:** `showUpdateBtn()` does a fresh `GET` and assigns the response to `$scope.common`, not the `ng-repeat` row object directly — this screen does not have `sterilizationTypeMaster`'s live-mutation-of-the-visible-table-cell bug (entry 165).
+
+**CONFIRMED, MEDIUM — duplicate-check correctly org/unit-scoped, but checks `tableName` only:** `saveOperationTableType`/`updateOperationTableType` both run a real, correctly-scoped duplicate-check (`OperationTableType.java:34-46`, `WHERE orgId=:orgId AND unitId=:unitId AND tableName=:tableName`, update variant adds `AND operationTableTypeId != :id`) — better than `bloodGroupMaster` (no scope) and `sterilizationTypeMaster` (no check at all), but **`tableCode` and `tableDesc` are never compared for uniqueness**, even though `tableCode` is a required, UI-presented identifying field. Two rows with the same Code but different Name (or vice versa) can both be saved with no rejection. **Verdict: WORKING, correctly scoped, but code/description-blind — the "scoped-but-field-blind" sub-variant.** Faithfully reproduce.
+
+**Also confirmed (not new, already-known project-wide gap, present here too):** `updateOperationTableTypeStatus` and `getOperationTableTypeListById` both look the row up by ID alone, no org/unit predicate — matches the already-disclosed, project-wide zero-backend-authorization gap noted elsewhere in this project, not a new finding.
+
+**Action taken:** Step 1 audit complete for this screen. No code changed. No severity-1 finding.
+
+---
+
+## PENDING-batch18-step1-departmentmasterunit. Batch 18 Step 1 audit — `departmentMasterUnit` — typo bug on a specific empty-field save path; status-toggle no-rollback; narrow double-click duplicate gap; duplicate-check otherwise the strongest of the batch
+
+**Where:** `legacy/HIS-WAR/.../controller/billing/unit/departmentMasterUnitController.js`, `legacy/ADT/.../master/unit/{controller,service,dao}/UnitSpeciality*.java`, entity `legacy/Entity/.../adt/master/unit/model/UnitSpecialityMapper.java`.
+
+**Module ID: 533, no `requireSuperUser`** — confirmed directly from the live resolve block (`app.js:8443-8468`).
+
+**Risk tag: CORRECTED this session** from entry 118's "Billing-only" (folder-path-only reasoning) to **Clinical-only**, content-verified via the real entity (`is_surgical_code`/`is_clinical_speciality`/`is_rendering_speciality`/`is_nursing_assessment_required` clinical-workflow flags, no billing/financial field anywhere) — logged separately above as `PENDING-departmentmasterunit-billing-mistag`, cross-referenced here.
+
+**Wiring: classic `$scope.*`, no `vm.*`.** **No missing-`$state`-DI crash** — `$state` injected and correctly guarded. **Uses a plain Bootstrap modal (`data-dismiss="modal"`), NOT the shared prototypal `<modal>` directive** — entry 55's `cancel()` crash class does not apply to this screen.
+
+**Confirmed dead, unreachable copy-paste leftover code** (`showUpdateBtn()`, `updateDeptAtUnitLevel()`, `getSpecialityByGroup()`) — the pencil/edit icon that would call these is commented out in the markup. Harmless, not a live bug — noted so it isn't mistaken for something live during Step 3.
+
+**CONFIRMED, MEDIUM — typo bug on a specific empty-field save path, `departmentMasterUnitController.js:181`:**
+```js
+if($scope.allowedOverbookingSlot  == "" || $scope.allowedOverbookingSlots == null || $scope.allowedOverbookingSlots == undefined){
+    data.allowedOverbookingSlots = 0;
+}
+```
+`$scope.allowedOverbookingSlot` (missing the trailing "s") is a never-assigned scope var, always `undefined` — that clause never fires. The real bound variable, `$scope.allowedOverbookingSlots`, is only checked against `null`/`undefined`, **never against `""`**. A user who enables "Is Department wise Scheduling," types a value into Allowed Overbooking Slots, then clears it back to empty and clicks Update sends `data.allowedOverbookingSlots` as `""` to a backend DTO field typed `Integer` — Jackson rejects `""` for a boxed `Integer` on deserialization, producing a 400 before the controller method runs, surfaced to the user only as the generic (also-typo'd) `growl.error('Somethung went wrong.!!')` with no indication of which field caused it. Recoverable (re-enter `0` manually) but a real, live, user-triggerable defect. **Faithfully reproduce** — do not silently fix the typo as part of this rebuild.
+
+**CONFIRMED, MEDIUM — status-toggle no-rollback-on-error, with a twist:** `updateStatus()`'s success handler calls `$scope.initBillingGroupMaster()` (the create-form-reset function, NOT a list reload — confirmed by direct read, this is a naming trap, not an actual reload) — so on success, no re-fetch of the list ever happens (harmless, since the client-side flip already matches). **On failure, there is no rollback of `info.status`** — same no-round-trip-confirmation bug class as the other 3 screens in this batch, now confirmed specifically in this controller. Faithfully reproduce.
+
+**Narrow race condition (severity 3):** `saveDeptAtUnitLevel()`/`updateDetails()` both trigger `initBillingGroupMasterList()` on success, which overwrites `$scope.unitDeptMasterList`/`$scope.commonListCount` unconditionally with no request-token guard — if two invocations overlap (e.g., opening the Details modal on one row while clicking create-Save on another in quick succession), whichever response resolves last wins regardless of which fired last. Narrow trigger (requires near-simultaneous distinct actions), same shape as `insuranceMaster`'s entry-4 race. Faithfully reproduce (do not add request-cancellation logic legacy doesn't have).
+
+**Duplicate-check — the strongest of the batch, but not airtight:** the specialty picker itself is server-side filtered (`GET_ORG_ACTIVE_SPECIALITY_LIST_NOT_MAPPED_TO_UNIT` excludes any specialty already mapped, active or inactive, to the current unit) — a real, working duplicate-prevention mechanism at the candidate-list level, better than every other screen in this batch. **Gap: `saveUnitSpecialtiy` itself has no existence re-check at save time** (plain unconditional Hibernate `save()`), no DB-level `uniqueConstraint` on `(unit_id, speciality_id)` either, and the Save button has no in-flight guard — a rapid double-click before the picker/table refresh completes could submit the same specialty twice, producing two genuinely duplicate rows with no rejection. **Narrower than every other screen's finding** — protected on every normal single-click, sequential-use path; only exposed by a double-click or a truly concurrent second session. Faithfully reproduce (no client-side debounce/guard to add without owner direction).
+
+**Action taken:** Step 1 audit complete for this screen. No code changed. No severity-1 finding.
+
+---
+
+## PENDING-batch18-duplicate-check-pattern-update. Systemic pattern update — the recurring duplicate-check defect class now confirmed in 10 of 10 pure-lookup-master screens sampled across batches 17-18, not 8 of 10 as anticipated going into this session's audit-gap closure
+
+**Context:** batch 17 (entries 161-165) found all 5 of its screens had some form of broken/mis-scoped duplicate-detection logic. Going into batch 18's Step 1, 3 of 5 screens (`surgeryGradeMaster`, `operationTableType`, `departmentMasterUnit`) were checked for this specific defect class and all 3 confirmed a real instance, in three different shapes. The remaining 2 screens (`hospitalAccountMaster`, `transactionTypeMaster`) were not checked in the original Step 1 pass — an audit-coverage gap, caught and disclosed, then closed this session.
+
+**Closing the gap found a real defect on BOTH remaining screens too** — not the "maybe 8 of 10" the pre-closure estimate anticipated. **Corrected tally: 10 of 10 pure-lookup-master screens sampled across both batches have a confirmed duplicate-check defect of some kind:**
+
+| Screen | Batch | Defect shape |
+|---|---|---|
+| `discountCategoryMaster` | 17 | Wrong table entirely |
+| `GLcode` | 17 | Operator-precedence bug + missing org-scope |
+| `storeTypeMaster` | 17 | Missing unit-scope |
+| `bloodGroupMaster` | 17 | No scope at all + code-blind |
+| `sterilizationTypeMaster` | 17 | No duplicate-check exists anywhere |
+| `surgeryGradeMaster` | 18 | Create: cross-org via operator-precedence; Update: permanent no-op (functionally = no check) |
+| `operationTableType` | 18 | Correctly org/unit-scoped, but name-only (code/desc-blind) |
+| `departmentMasterUnit` | 18 | Strongest of the batch (server-filtered picker), but no save-time re-check + narrow double-click TOCTOU gap |
+| `hospitalAccountMaster` | 18 | Correctly org/unit-scoped, precedence-safe, but desc-only (code-blind) |
+| `transactionTypeMaster` | 18 | Precedence-safe, but org-only scoped (unit dimension unused) + name-only (desc-blind) |
+
+**Note on severity distribution:** not all 10 are equally severe — `sterilizationTypeMaster` and `surgeryGradeMaster`'s Update path are functionally equivalent to no protection at all; `hospitalAccountMaster`/`operationTableType`/`transactionTypeMaster`'s "field-blind" gaps are real but narrower (the check works for the one field it covers); `departmentMasterUnit`'s gap is the narrowest (protected on every normal path, only a double-click TOCTOU). The pattern is not uniform severity, but it is a uniform *presence* — 10 for 10.
+
+**This is no longer a "future sweep candidate" — it is approaching a defining characteristic of this codebase's master-data screens.** The previously-proposed scoped research-sweep (20-25 screen sample, ~15-20 min/screen reading actual query logic, ~1 day total, mentioned in the batch-17 write-up as "not urgent, schedule at owner's discretion") should be revisited given this session's evidence. **Flagged for the owner's decision after batch 18 reaches Step 6 review** — not blocking Steps 2-7 of this batch.
+
+**Action taken:** pattern documented, no code changed, no sweep started. All 5 batch-18 duplicate-check findings faithfully reproduced in the rebuild per each screen's own entry above, not silently fixed.
+
+---
