@@ -38,6 +38,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/cardTypeMaster', title: 'Card Type Master' },
       { path: '/currencyMaster', title: 'Currency Master' },
       { path: '/currencydenomination', title: 'Currency Denomination Master' },
+      { path: '/discountCategoryMaster', title: 'Discount Category Master' },
+      { path: '/GLcode', title: 'GL Code' },
       { path: '/gradeCreationMaster', title: 'Grade Creation Master' },
       { path: '/qmslogo', title: 'QMS Logo' },
       { path: '/qualityParameterMaster', title: 'Quality Parameter Master' },
@@ -178,6 +180,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/GRN', title: 'Good Receipt Note' },
       { path: '/implantMaster', title: 'Implant Master' },
+      { path: '/storeTypeMaster', title: 'Store Type Master' },
     ],
   },
   {
@@ -245,5 +248,13 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   {
     heading: 'Incident Reporting',
     items: [{ path: '/incidentCategoryMaster', title: 'Category Master' }],
+  },
+  {
+    heading: 'Blood Bank',
+    items: [{ path: '/bloodGroupMaster', title: 'Blood Group Master' }],
+  },
+  {
+    heading: 'CSSD',
+    items: [{ path: '/sterilizationTypeMaster', title: 'Sterilization Type Master' }],
   },
 ];

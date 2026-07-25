@@ -1,0 +1,132 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="code">Sterilization Type Code<span class="required">*</span></label>
+        <input
+          id="code"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().code"
+          (ngModelChange)="updateField('code', $event)"
+          name="sterilizationCode"
+        />
+        <!-- CORRECTED wiring -- legacy's own equivalent message can never
+             render due to a duplicate name="code" markup bug on both
+             inputs (see class doc comment); this rebuild ties the message
+             to the field it actually describes, per the standing
+             validation-visibility policy. -->
+        @if (codeRequiredError()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="name">Sterilization Type Name</label>
+        <input
+          id="name"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().name"
+          (ngModelChange)="updateField('name', $event)"
+          name="sterilizationName"
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <!-- Legacy has only ONE button here, always titled "Save" -- its own
+         separate "Update" button (ng-if="updateBtnFlag") is dead code,
+         never shown (see class doc comment). The same button below
+         branches internally to Update when editMode() is true, exactly
+         matching legacy's real, current behavior. -->
+    <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="searchText()"
+      (ngModelChange)="searchText.set($event)"
+      name="searchText"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Sterilization Type Code</th>
+        <th>Sterilization Type Name</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredList(); track row.id) {
+        <tr>
+          <td>{{ row.code }}</td>
+          <td>{{ row.name }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="fa fa-pencil" aria-hidden="true" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!filteredList().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <!-- Only ever shown once hasPager() is true -- faithfully matching real
+       legacy's current (broken) behavior: the count endpoint 500s
+       unconditionally there, so its pagination UI never renders at all.
+       See class doc comment / sterilization-type-master.service.ts. -->
+  @if (hasPager()) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (page of pageNumbers(); track page) {
+        <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

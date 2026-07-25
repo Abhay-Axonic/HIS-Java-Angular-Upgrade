@@ -1211,6 +1211,76 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/nursing-station-master/nursing-station-master').then((m) => m.NursingStationMaster),
       },
+      // Phase 4 batch 17 -- 1st screen, continuing the clinical/billing risk
+      // tier. Real resolve block gates moduleId 973 (app.js:19910-19934,
+      // confirmed directly, no requireSuperUser check).
+      {
+        path: 'discountCategoryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 973, title: 'Discount Category Master' },
+        loadComponent: () =>
+          import('./features/discount-category-master/discount-category-master').then((m) => m.DiscountCategoryMaster),
+      },
+      // Phase 4 batch 17 -- 2nd screen, continuing the clinical/billing risk
+      // tier. Real resolve block gates moduleId 618 (app.js:14891-14918,
+      // confirmed directly, no requireSuperUser check).
+      {
+        path: 'GLcode',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 618, title: 'GL Code' },
+        loadComponent: () => import('./features/gl-code-master/gl-code-master').then((m) => m.GlCodeMaster),
+      },
+      // Phase 4 batch 17 -- 3rd screen, continuing the clinical/billing risk
+      // tier. Tagged "billing" in the risk-tag data but is actually
+      // Procurement/Inventory-adjacent (tools/angular-audit's own module
+      // classification: "Procurement - Inventory"; feeds inventory
+      // valuation into billing rather than being a direct billing/accounts
+      // screen). Confirmed PURE-LOOKUP -- no Step 6b required. Real resolve
+      // block gates moduleId 805 (app.js:18820-18847, confirmed directly,
+      // no requireSuperUser check).
+      {
+        path: 'storeTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 805, title: 'Store Type Master' },
+        loadComponent: () => import('./features/store-type-master/store-type-master').then((m) => m.StoreTypeMaster),
+      },
+      // Phase 4 batch 17 -- 4th screen, continuing the clinical/billing risk
+      // tier. Confirmed the blood-TYPE classification lookup itself
+      // (A+/B-/O+ etc.), NOT a transfusion/donor-safety workflow -- no
+      // Step 6b required. State has NO `resolve` block at all in app.js
+      // (app.js:16203-16208, confirmed directly, and independently via
+      // tools/angular-audit's `"has_resolve": false`) -- same shape as
+      // billingGroupMaster/periodicityService, so `data.moduleId` is
+      // correctly omitted, matching legacy exactly. The real sidebar link
+      // (`new-side-bar.html:5006`) gates on `checkAccess(982)`, but that
+      // only hides the menu item -- it does not gate the route itself in
+      // legacy, so this rebuild doesn't invent a stricter check either.
+      {
+        path: 'bloodGroupMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Blood Group Master' },
+        loadComponent: () =>
+          import('./features/blood-group-master/blood-group-master').then((m) => m.BloodGroupMaster),
+      },
+      // Phase 4 batch 17 -- 5th and final screen, closing out the
+      // clinical/billing risk tier for this batch. Real resolve block
+      // gates moduleId 552 (app.js:13798-13808, confirmed directly, no
+      // requireSuperUser check). Confirmed the CSSD sterilization-METHOD
+      // classification lookup itself (Steam/ETO/Plasma/etc.), a 2-field
+      // PURE-LOOKUP master -- no Step 6b required. See this screen's `.ts`
+      // class doc comment for a confirmed, live, unconditional 500 on its
+      // count endpoint (missing @Transactional, not a seed-data artifact)
+      // and a confirmed total absence of any duplicate-check anywhere in
+      // the backend chain, both logged per standing policy, not fixed.
+      {
+        path: 'sterilizationTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 552, title: 'Sterilization Type Master' },
+        loadComponent: () =>
+          import('./features/sterilization-type-master/sterilization-type-master').then(
+            (m) => m.SterilizationTypeMaster,
+          ),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
