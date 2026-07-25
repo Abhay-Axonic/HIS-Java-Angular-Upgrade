@@ -3315,3 +3315,21 @@ When Spring's interceptor tries to commit/flush on return, the session is alread
 **Action taken:** flagged and escalated to its own DECISION_NEEDED document, per standing severity-1 practice, with a confirmed root cause and proposed fix. No application code or schema touched. Needs its own dedicated branch/DB change with live before/after verification covering all three operations, held for explicit owner approval.
 
 ---
+
+## PENDING-batch19-step6-signoff. Batch 19 Step 6 domain-expert sign-off -- all 5 screens, owner-completed, full PASS
+
+**Context:** owner completed the mandatory Step 6 review for all 5 batch-19 screens (`nutritionalMaster`, `bloodBagCapacity`, `ARmaster`, `anaesthesiaType`, `bloodDonortype`), live click-through against `rebuild/phase4-batch19` (working tree confirmed on this branch, `ng serve` and legacy Tomcat both running throughout) and real, unmodified legacy, using the URLs and seed data consolidated in `docs/BATCH19_STEP6_CHECKLIST.md`. This is a clinical/billing-tier batch, so this Step 6 pass is mandatory and blocking per `CLAUDE.md`'s addendum -- confirmed complete.
+
+**1. `nutritionalMaster` -- PASS:** Create, Update, and status-toggle all confirmed working with proper success confirmations. This directly confirms the `is_calories` schema-drift fix (`fix/nutritionalmaster-is-calories-column`, `BR-local-dev-db-drift-nutritionalmaster-iscalories`) fully resolved the write path that was previously broken on real, unmodified legacy for all three operations.
+
+**2. `bloodBagCapacity` -- PASS:** the severity-1 wrong-record-write-race scenario re-confirmed safe under the owner's own test: edited Row A, toggled Row B mid-edit (before saving Row A), then saved Row A -- no corruption; Row A saved with its intended changes, Row B's toggle was unaffected. Independently re-confirms the structural fix already verified during Step 5 (`toggleStatus()` built entirely from the row parameter, never reading the in-progress `form` signal).
+
+**3. `ARmaster` -- PASS:** once-only confirm-modal quirk confirmed exactly as documented -- modal appeared and saved successfully on the first Create, did not reappear on a second Create in the same page session.
+
+**4. `anaesthesiaType` -- PASS:** always-fires confirm-modal quirk confirmed exactly as documented -- modal appeared and saved successfully on both the first and second Create, distinguishing this screen's behavior from `ARmaster`'s.
+
+**5. `bloodDonortype` -- PASS:** toast-style validation confirmed (a blank required field correctly triggers a toast error, not an inline message); a successful save confirmed once the field was corrected.
+
+**All 5 screens PASS, no discrepancies reported.** `rebuild/phase4-batch19` is clear for merge on the domain-review front, pending the owner's explicit merge approval (not yet given as of this entry). Two non-blocking, already-disclosed items remain open, neither found or worsened by this batch's rebuild and neither blocking this sign-off: the backend duplicate-check defects on `bloodBagCapacity` (field mix-up) and `bloodDonortype` (missing org/unit scope), both logged separately with their own DECISION_NEEDED-class proposals pending separate owner approval; and `nutritionalMaster`'s unrelated `getNutritionMasterCount` 500 (stray `session.close()`, already logged, unaffected by the write-path fix, worked around client-side in the rebuild).
+
+---
