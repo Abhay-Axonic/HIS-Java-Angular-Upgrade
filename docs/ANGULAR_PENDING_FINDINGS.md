@@ -3177,3 +3177,25 @@ public Response saveVisitType(VisitTypeMasterDto visitTypeMasterDto) throws Appl
 **Action taken:** confirmed via direct source reading on both apps (frontend and backend), not fixed. Live request/response re-verification is outstanding, blocked on a lost authenticated browser session this session -- flagging this explicitly rather than claiming full live confirmation. No code changed. Awaiting owner direction on whether/how to fix (options would include: a null-guard + proper error response in the DAO, and/or wiring an `error:` handler on both frontends' Update calls) -- not proposed here, matching standing policy of investigation/disclosure before any fix.
 
 ---
+
+## PENDING-batch18-step6-signoff. Batch 18 Step 6 domain-expert sign-off -- all 5 screens, owner-completed, full PASS
+
+**Context:** owner completed the mandatory Step 6 review for all 5 batch-18 screens (`hospitalAccountMaster`, `transactionTypeMaster`, `surgeryGradeMaster`, `operationTableType`, `departmentMasterUnit`), live click-through, real dev data, against `rebuild/phase4-batch18` (freshly restarted `ng serve` this session, confirmed clean build off this exact branch) and real, unmodified legacy. All 5 screens are confirmed PURE-LOOKUP/admin-tier per the original batch-18 approval -- no Step 6b clinical-safety SME attestation required for any of them.
+
+**1. `hospitalAccountMaster` -- 4/4 PASS:**
+- Default-account-preservation fix: confirmed -- setting one account default, then editing a *different* account's description only, no longer wipes the first account's default flag.
+- Regression case: confirmed -- deliberately making the second account the new default still correctly clears the first account's flag.
+- Confirm-modal timing: confirmed -- fires exactly once per page load on Create, silently bypassed on every subsequent Save within the same load, matching the documented `popUpFlag` finding.
+- One-way Save/Update button lock: confirmed, **plus a newly-discovered deeper consequence found during this review** -- a second Update attempt after a successful one (same stuck-mode page load) fails completely silently (no toast, no error, no new row). Investigated same-day and confirmed, via direct reading of both apps' real source, as a faithful reproduction of a genuine pre-existing legacy defect (the form's cleared `hospitalAccountId` plus a DAO method with no null-guard plus neither frontend having an error-path handler for this specific call), not a rebuild regression. Logged separately: `PENDING-hospitalaccountmaster-silent-second-update-failure` (this document). Live request/response re-verification of that specific finding remains outstanding (lost authenticated browser session mid-investigation) but does not block this sign-off -- the behavior is confirmed identical on both sides at the source level, and is a pre-existing legacy defect, not something merging the rebuild would introduce or worsen.
+
+**2. `transactionTypeMaster` -- 2/2 PASS:** duplicate name (`NEFT`) correctly rejected as "already exists"; Update correctly shows no confirm-modal, saves directly, matching the `billingGroupMaster` no-gate precedent.
+
+**3. `surgeryGradeMaster` -- 2/2 PASS:** Create's duplicate-check correctly rejects a genuine duplicate; Update's permanent no-op confirmed live (editing a row to duplicate another row's name still saves successfully with no rejection), matching the documented, faithfully-reproduced `orgnisationId`-never-sent legacy defect.
+
+**4. `operationTableType` -- 3/3 PASS:** duplicate Code across two different Names correctly NOT rejected (confirms the check ignores Code entirely); duplicate Name correctly IS rejected (confirms the Name-only check genuinely works, just incomplete) -- both matching the documented finding exactly.
+
+**5. `departmentMasterUnit` -- 2/2 PASS:** picker exclusion confirmed working correctly and dynamically (a freshly-seeded unmapped specialty appeared in the candidate list, then was correctly excluded after being mapped -- confirms live server-side re-evaluation, not a static/cached list). "Allowed Overbooking Slots" field located and confirmed correctly conditional on "Is Department wise Scheduling" (exact parity with legacy's own `ng-hide="deptWiseAppointment=='N'"`) -- initially reported as apparently missing, resolved as the owner not yet having toggled that checkbox, not a rebuild gap. Retracted-typo-claim behavior confirmed live: clearing the field returns a normal success response, not a 400.
+
+**All 5 screens PASS.** `rebuild/phase4-batch18` is clear for merge on the domain-review front, pending the owner's explicit merge approval (not yet given as of this entry). One open, non-blocking item remains logged for a future decision: `PENDING-hospitalaccountmaster-silent-second-update-failure`'s fix (if any) and `PENDING-nurseallocationmaster-broader-scope-question`'s ward/speciality/doctor/role scoping question -- neither blocks this sign-off, both are pre-existing legacy defects independent of anything this batch's rebuild changed.
+
+---
