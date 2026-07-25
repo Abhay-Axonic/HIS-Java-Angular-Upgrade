@@ -119,27 +119,38 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * "cancel edit" affordance in legacy's view either, so none is added here.
  *
  * ================================================================
- * NEW FINDING, found while building this screen -- `isDefault`'s
- * "only one default account" enforcement is real, but asymmetric between
- * Create and Update, and lives entirely server-side (nothing this
- * Angular-only rebuild can compensate for from the frontend).
+ * DECIDED 2026-07-25 -- `isDefault`'s "only one default account"
+ * enforcement was real, but asymmetric between Create and Update, and
+ * lived entirely server-side. Owner-approved corrected behavior, same
+ * precedent as `currencyMaster`.
  * ================================================================
  * `HospitalAccountMasterDaoImpl.updateAllHospitalAccount` (:213-232) resets
  * EVERY hospital account in the given org+unit to `isDefault='N'` via a
  * bulk update. `HospitalAccountMasterServiceImpl.saveHospitalAccountMaster`
  * (service.java:33-57) only calls it when the INCOMING row's own
  * `isDefault=='Y'` (correctly gated) -- but `.updateHospitalAccountMaster`
- * (service.java:82-101) calls it UNCONDITIONALLY, before checking the
+ * (service.java:82-101) called it UNCONDITIONALLY, before checking the
  * incoming row's `isDefault` value at all. Net effect: editing ANY hospital
  * account's Code/Description via Update -- even with the "is Default"
- * checkbox left unchecked -- silently clears the org+unit's real default
- * flag off whichever OTHER account currently holds it, before writing this
- * account's own (possibly non-default) value back. This is real,
- * server-side, confirmed-by-reading-both-DAO-methods-directly behavior,
- * not something any frontend change can correct -- flagged here for the
- * owner's/orchestrating session's awareness (candidate for
- * docs/ANGULAR_PENDING_FINDINGS.md), not acted on in this Angular-only
- * rebuild.
+ * checkbox left unchecked -- silently cleared the org+unit's real default
+ * flag off whichever OTHER account currently held it, before writing this
+ * account's own (possibly non-default) value back.
+ *
+ * See `docs/DECISION_NEEDED_HospitalAccountMasterDefaultAccountReset.md`.
+ * Owner decision: fix legacy (the same `if(isDefault=='Y')` gate Create
+ * already uses, applied on branch
+ * `fix/hospitalaccountmaster-update-default-reset`, held for merge
+ * approval) AND have this rebuild's Update flow honor the CORRECTED
+ * behavior now, explicitly overriding the doc's own safe-default
+ * recommendation -- same "silent, invisible, no observable failure"
+ * reasoning as `identificationMaster`/`currencyMaster`, regardless of the
+ * downstream trace finding no current automated consumer of this flag.
+ * Exactly like `currencyMaster`, this required NO functional code change
+ * here: `update()` below already calls the real, unmodified
+ * `updateHospitalAccountMaster` endpoint with no separate client-side
+ * logic mirroring the bug, so this screen's Update flow will correctly
+ * preserve other accounts' default status as soon as the legacy fix
+ * branch above merges -- there was never a rebuild-side reset to gate.
  *
  * ================================================================
  * Other faithfully reproduced details
