@@ -109,23 +109,20 @@ export interface UpdateStatusPayload {
 /** POST body for `updateUnitSpecialtyMapperDetails` (ctrl:166-231, the
  * Details-modal Update action).
  *
- * **CONFIRMED, FAITHFULLY-REPRODUCED typo bug on `allowedOverbookingSlots`**
- * (see docs/ANGULAR_PENDING_FINDINGS.md
- * `PENDING-batch18-step1-departmentmasterunit`): legacy's own
- * empty-string-to-zero fallback (ctrl:181-183) reads a MISSPELLED,
- * never-assigned scope var (`$scope.allowedOverbookingSlot`, missing the
- * trailing "s") instead of the real bound one -- so that clause never
- * actually fires for an empty string, only for a literal `null`/
- * `undefined`. A user who clears this field back to empty and clicks
- * Update sends `""` verbatim to a backend DTO field typed boxed `Integer`,
- * which rejects it, surfacing only as a generic error toast with no
- * per-field indication. `allowedOverbookingSlots` is typed `string` here
- * (not `number`) specifically to mirror legacy's own `ng-model` binding to
- * a plain `type="text"` input (ctrl/view:241) -- whatever the field
- * currently holds (including `''`) is sent verbatim, never parsed or
- * defaulted, so this rebuild reproduces the same observable behavior
- * end-to-end rather than silently "fixing" the typo. Do not add a working
- * empty-to-zero fallback here without owner sign-off. */
+ * **RETRACTED typo-bug severity claim, 2026-07-25** (see
+ * docs/ANGULAR_PENDING_FINDINGS.md `PENDING-batch18-step1-departmentmasterunit`):
+ * legacy's own empty-string-to-zero fallback (ctrl:181-183) does read a
+ * MISSPELLED, never-assigned scope var (`$scope.allowedOverbookingSlot`,
+ * missing the trailing "s") -- that dead-code observation is real. But
+ * Step 5 live testing (direct request replay against unmodified legacy)
+ * confirmed sending `""` for this field returns 200, not a rejection --
+ * Spring/Jackson coerces empty string to `0` for this boxed `Integer`
+ * field at the framework level, independent of the app's own dead
+ * fallback. **No observable defect exists; nothing to reproduce.**
+ * `allowedOverbookingSlots` is still typed `string` here (not `number`) to
+ * mirror legacy's own `ng-model` binding to a plain `type="text"` input
+ * (ctrl/view:241) -- sent verbatim, which is fine, since the server
+ * produces the correct value (`0`) either way. */
 export interface UpdateDetailsPayload {
   unitSpecialityMapperId: number;
   isSurgicalCode: 'Y' | 'N';

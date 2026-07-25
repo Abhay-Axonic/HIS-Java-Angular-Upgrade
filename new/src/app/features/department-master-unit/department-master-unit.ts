@@ -81,16 +81,21 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * controller/view rather than the shorthand summary.
  *
  * ================================================================
- * CONFIRMED, MEDIUM -- typo bug on `allowedOverbookingSlots`'
- * empty-field-clear path, FAITHFULLY REPRODUCED (not fixed)
+ * RETRACTED, 2026-07-25 -- the `allowedOverbookingSlots` typo has NO
+ * observable effect; original severity/failure-mode claim was wrong
  * ================================================================
- * See `department-master-unit.models.ts`'s `UpdateDetailsPayload` doc
- * comment for the full mechanism (ctrl:181-183's `$scope
- * .allowedOverbookingSlot` typo, missing the trailing "s", meaning the
- * empty-string fallback-to-zero clause never fires for a real cleared
- * field). This rebuild's `updateDetails()` below sends the field's raw
- * string value verbatim -- including `''` -- with no defaulting, matching
- * the disclosed, owner-visible bug exactly. Do not "fix" this inline.
+ * The typo itself is real (ctrl:181-183's `$scope.allowedOverbookingSlot`,
+ * missing the trailing "s", means the empty-string fallback-to-zero clause
+ * never fires). But Step 5 live testing (direct request replay against
+ * unmodified legacy) confirmed sending `allowedOverbookingSlots: ""`
+ * returns 200, not 400 -- Spring/Jackson coerces the empty string to `0`
+ * for this boxed `Integer` field regardless of the app's own dead client
+ * fallback. The persisted row went from `null` to `0` after the call, same
+ * end result the JS fallback was (uselessly) trying to produce. This
+ * rebuild sends the field's raw string value verbatim, same as legacy --
+ * which is fine, since the server produces the correct result either way.
+ * No fix needed, nothing to reproduce -- this is dead code with no
+ * behavioral consequence, not a live defect.
  *
  * ================================================================
  * CONFIRMED, MEDIUM -- status-toggle has no rollback on error, with a
@@ -179,23 +184,15 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * - Details-modal Update: controller's OWN explicit, hardcoded literals --
  *   `'Updated successfully...!!'` (ctrl:195) on success, `'Somethung went
  *   wrong.!!'` (ctrl:222, legacy's own typo, reproduced verbatim) on a
- *   soft `status !== 'success'` response. **Open discrepancy, disclosed
- *   rather than silently resolved either way:** per the task brief and
- *   docs/ANGULAR_PENDING_FINDINGS.md's own description, a cleared
- *   `allowedOverbookingSlots` produces a hard HTTP 400 that is meant to
- *   surface as this SAME generic error toast. Reading the raw controller
- *   source in isolation (ctrl:188-228, `GenericService.serviceAction(...)
- *   .then(function(response){...})` is a SINGLE-ARGUMENT `.then()` with no
- *   reject handler, and `GenericService.serviceAction` itself has no
- *   auto-toast wrapper) would instead predict a silently-swallowed
- *   rejection with NO visible toast at all for that specific hard-error
- *   path -- a real tension between the static source and the audit's own
- *   live-confirmed description that this rebuild does not attempt to
- *   silently resolve. Built here to match the explicitly-instructed,
- *   live-confirmed observable behavior (same generic toast on both the
- *   soft-failure and hard-HTTP-error paths, see `updateDetails()`'s
- *   `error:` callback below) -- flagged here for anyone reconciling this
- *   later.
+ *   soft `status !== 'success'` response. **RESOLVED, 2026-07-25:** the
+ *   hard-HTTP-400 premise above was wrong (see the retracted finding at the
+ *   top of this file) -- a cleared `allowedOverbookingSlots` returns a real
+ *   200, always taking the soft-success path with its own hardcoded
+ *   `'Updated successfully...!!'` toast. No hard-error path is actually
+ *   reachable via this specific field, so the single-argument-`.then()`
+ *   silent-swallow question is moot for this trigger (it may still apply
+ *   to a genuine network/server error, unrelated to this finding). No
+ *   change needed to the success/error toast wiring below.
  * - Search: no toast of any kind, ever (confirmed: called with no
  *   `notificationStatus` argument at all).
  */
