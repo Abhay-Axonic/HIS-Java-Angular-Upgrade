@@ -155,6 +155,34 @@
 					</webResources>
 				</configuration>
 			</plugin>
+			<!-- Pins the build to JDK 21, this project's declared compiler target (see
+			     maven.compiler.source/target/release=21 in every module's pom.xml). Without
+			     this, a machine whose default JDK has drifted (e.g. a Homebrew openjdk
+			     upgrade to a newer major version) silently compiles fine via the release flag,
+			     but breaks at test time: Mockito's inline mock maker can't instrument
+			     classes under a JDK its bundled byte buddy doesn't support, producing a wall
+			     of confusing MockitoException errors instead of a clear JDK mismatch message.
+			     Requires a jdk-type toolchain entry for version 21 in ~/.m2/toolchains.xml
+			     (machine-local, not tracked in this repo); see docs/SESSION_LOG.md for setup. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>21</version>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
