@@ -217,7 +217,7 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 					.getNamedQuery("GET_WARD_LIST_NOT_MAPPED_TO_NURSING_STATION")
 					.setParameter("orgId", wardMasterDto.getOrganizationId())
 					.setParameter("unitId", wardMasterDto.getUnitId())
-//					.setParameter("nursingId", wardMasterDto.getNursingStationId())
+					.setParameter("nursingId", wardMasterDto.getNursingStationId())
 					.setResultTransformer(Transformers.aliasToBean(WardMasterDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, WardMasterDtoList, null);
 		} catch (HibernateException he) {

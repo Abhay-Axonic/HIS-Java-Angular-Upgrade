@@ -28,15 +28,16 @@ public class NursingStationWardMapperServiceImpl implements INursingStationWardM
 	public Response saveNursingStationWardMapper(NursingStationWardMapperDto nursingStationWardMapperDto)
 			throws ApplicationException {
 		try {
-			Response res=iNursingStationWardMapperDao.checkIsNursingStationAlreadyAssignedOrNot(nursingStationWardMapperDto);
-			if(res.getListObject()!=null && res.getListObject().size()>0){
-				return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
-			}else{
-				return iNursingStationWardMapperDao.saveNursingStationWardMapper(nursingStationWardMapperDto);
-			}
-				
+			// Station-level pre-check removed: it blocked the ENTIRE request whenever the
+			// station had ANY existing mapping, regardless of which ward was being added
+			// (docs/DECISION_NEEDED_NursingStationWardMapperBrokenPicker.md). The DAO's own
+			// saveNursingStationWardMapper already does correct, per-ward duplicate detection
+			// inside its loop (checkIsNursingStationAlreadyAssignedOrNot, called per mapperDto,
+			// now ward-scoped) -- this outer gate was redundant with it and, unlike the loop,
+			// had no way to be ward-specific since it only ever saw the whole-request DTO.
+			return iNursingStationWardMapperDao.saveNursingStationWardMapper(nursingStationWardMapperDto);
 		} catch (Exception e) {
-			
+
 		}
 		return new Response<>(ERROR, ERROR_CODE, null, null, null);
 	}
