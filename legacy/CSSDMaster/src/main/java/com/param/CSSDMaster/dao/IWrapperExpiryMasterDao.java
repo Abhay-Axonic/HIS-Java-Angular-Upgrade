@@ -21,6 +21,9 @@ public interface IWrapperExpiryMasterDao {
 	Response getActiveWrapperExpiryByCode(Integer organizationId,Integer unitId,String code);
 
 	Response getWrapperListcount(WrapperExpiryMasterDto wrapperExpiryMasterDto);
-	
-	
+
+	Response getWrapperExpiryByNameOrCode(WrapperExpiryMasterDto masterDto);
+
+	Response getWrapperExpiryByNameOrCodeNotById(WrapperExpiryMasterDto masterDto);
+
 }

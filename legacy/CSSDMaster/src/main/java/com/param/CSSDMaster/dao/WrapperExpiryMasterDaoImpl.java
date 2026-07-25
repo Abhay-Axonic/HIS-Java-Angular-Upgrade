@@ -212,6 +212,45 @@ public class WrapperExpiryMasterDaoImpl extends GenericDao<WrapperExpiryMaster, 
 	}
 
 	@Override
+	public Response getWrapperExpiryByNameOrCode(WrapperExpiryMasterDto masterDto) {
+		try {
+			Integer id = (Integer) sessionFactory.getCurrentSession().getNamedQuery("GET_WRAPPER_EXPIRY_BY_NAME_OR_CODE")
+					.setParameter("name", masterDto.getName().toLowerCase())
+					.setParameter("code", masterDto.getCode().toLowerCase())
+					.setParameter("organizationId", masterDto.getOrganizationId())
+					.setParameter("unitId", masterDto.getUnitId())
+					.uniqueResult();
+			return new Response(SUCCESS, null, null, null, id);
+		} catch (HibernateException he) {
+			logger.error("getWrapperExpiryByNameOrCode failed", he);
+			throw new ServiceException(he.getMessage());
+		} catch (Exception e) {
+			logger.error("getWrapperExpiryByNameOrCode failed", e);
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
+	@Override
+	public Response getWrapperExpiryByNameOrCodeNotById(WrapperExpiryMasterDto masterDto) {
+		try {
+			Integer id = (Integer) sessionFactory.getCurrentSession().getNamedQuery("GET_WRAPPER_EXPIRY_BY_NAME_OR_CODE_NOT_ID")
+					.setParameter("name", masterDto.getName().toLowerCase())
+					.setParameter("code", masterDto.getCode().toLowerCase())
+					.setParameter("organizationId", masterDto.getOrganizationId())
+					.setParameter("unitId", masterDto.getUnitId())
+					.setParameter("id", masterDto.getId())
+					.uniqueResult();
+			return new Response(SUCCESS, null, null, null, id);
+		} catch (HibernateException he) {
+			logger.error("getWrapperExpiryByNameOrCodeNotById failed", he);
+			throw new ServiceException(he.getMessage());
+		} catch (Exception e) {
+			logger.error("getWrapperExpiryByNameOrCodeNotById failed", e);
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
+	@Override
 	public Response getWrapperListcount(WrapperExpiryMasterDto wrapperExpiryMasterDto) {
 		try {
 			Session session=sessionFactory.getCurrentSession();

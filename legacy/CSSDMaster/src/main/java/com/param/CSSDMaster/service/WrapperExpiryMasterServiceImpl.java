@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.CSSDMaster.dao.IWrapperExpiryMasterDao;
 import com.param.CSSDMaster.dto.WrapperExpiryMasterDto;
@@ -13,7 +14,7 @@ import com.param.global.common.ServiceException;
 
 @Service
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class WrapperExpiryMasterServiceImpl implements IWrapperExpiryMasterService {
+public class WrapperExpiryMasterServiceImpl implements IWrapperExpiryMasterService, ICommonConstants {
 
 	final static Logger logger = Logger.getLogger(WrapperExpiryMasterServiceImpl.class);
 
@@ -25,6 +26,10 @@ public class WrapperExpiryMasterServiceImpl implements IWrapperExpiryMasterServi
 	@Transactional
 	public Response updateMaster(WrapperExpiryMasterDto masterDto) {
 		try {
+			Response dupCheck = iMasterDao.getWrapperExpiryByNameOrCodeNotById(masterDto);
+			if (dupCheck.getObject() != null) {
+				return new Response(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
+			}
 			return iMasterDao.updateWrapperExpiry(masterDto);
 		} catch (Exception e) {
 			logger.error("updateMaster failed", e);
@@ -80,6 +85,10 @@ public class WrapperExpiryMasterServiceImpl implements IWrapperExpiryMasterServi
 	@Transactional
 	public Response createMaster(WrapperExpiryMasterDto masterDto) {
 		try {
+			Response dupCheck = iMasterDao.getWrapperExpiryByNameOrCode(masterDto);
+			if (dupCheck.getObject() != null) {
+				return new Response(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
+			}
 			return iMasterDao.createWrapperExpiry(masterDto);
 		} catch (Exception e) {
 			logger.error("createMaster failed", e);
