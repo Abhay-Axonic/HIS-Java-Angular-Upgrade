@@ -77,6 +77,7 @@ public class SterilizationTypeMasterServiceImpl implements ISterilizationTypeMas
 	}
 
 	@Override
+	@Transactional
 	public Response getSterilizationTypesListCount(SterilizationTypeMasterDto sterilizationTypeMasterDto) {
 		try {
 			return iMasterDao.getSterilizationTypesListCount(sterilizationTypeMasterDto);
