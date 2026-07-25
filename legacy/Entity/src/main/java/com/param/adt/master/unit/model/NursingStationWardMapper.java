@@ -47,10 +47,11 @@ import com.param.adt.master.global.model.UnitMaster;
 			+ " AND organizationId=:orgId "
 			+ " AND unitId=:unitId "
 			 ),
-	
+
 	@NamedQuery(name="CHECK_IS_NURSINGSTATION_ALREADY_ASSIGNED_OR_NOT",
 	query="SELECT mppr.nursingWardId as nursingWardId FROM NursingStationWardMapper mppr "
-			+ "WHERE mppr.nursingStationId=:nursingStationId "
+			+ "WHERE mppr.wardId=:wardId "
+			+ " AND mppr.nursingStationId=:nursingStationId "
 			+ " AND mppr.status='A' "
 			+ " AND mppr.organizationId=:orgId "
 			+ " AND mppr.unitId=:unitId "

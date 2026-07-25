@@ -123,9 +123,9 @@ import com.param.global.model.GenderMaster;
             		+ "wrdMstr.ward_code AS \"wardCode\","
             		+ "wrdMstr.ward_name AS \"wardName\" "
             		+ " FROM adt.m_ward_master wrdMstr "
-//            		+ " WHERE wrdMstr.ward_id NOT IN(SELECT nursingWrdMapper.ward_id FROM adt.t_nursing_station_ward_mapper nursingWrdMapper "
-//            		+ " WHERE nursingWrdMapper.nursing_station_id=:nursingId )"
-            		+ " WHERE wrdMstr.organization_id=:orgId"
+            		+ " WHERE wrdMstr.ward_id NOT IN(SELECT nursingWrdMapper.ward_id FROM adt.t_nursing_station_ward_mapper nursingWrdMapper "
+            		+ " WHERE nursingWrdMapper.nursing_station_id=:nursingId )"
+            		+ " AND wrdMstr.organization_id=:orgId"
             		+ " AND wrdMstr.unit_id=:unitId "
             		+ " AND wrdMstr.status='A'"
             ),

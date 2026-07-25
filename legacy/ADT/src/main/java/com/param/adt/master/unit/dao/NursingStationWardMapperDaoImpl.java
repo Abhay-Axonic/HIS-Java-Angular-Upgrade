@@ -42,7 +42,7 @@ public class NursingStationWardMapperDaoImpl extends GenericDao<NursingStationWa
 				mapperDto.setNursingStationId(nursingStationWardMapperDto.getNursingStationId());
 				mapperDto.setOrganizationId(nursingStationWardMapperDto.getOrganizationId());
 				mapperDto.setUnitId(nursingStationWardMapperDto.getUnitId());
-				Response res = checkIsNursingStationAlreadyAssigned(mapperDto);
+				Response res = checkIsNursingStationAlreadyAssignedOrNot(mapperDto);
 				if((Integer)res.getObject()>0){
 					resString.append(mapperDto.getWardName()+" is already assigned to selected Nursing station...!! \n");
 				}else{
@@ -235,7 +235,7 @@ try{
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, nursingStationWardMapperDtoList,nursingStationWardMapperDtoList.size());
 		} catch (HibernateException he) {
 		} catch (Exception e) {
-			
+
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -264,6 +264,7 @@ try{
 		try {
 			List<NursingStationWardMapperDto>nursingStationWardMapperDtoList=sessionFactory.getCurrentSession()
 					.getNamedQuery("CHECK_IS_NURSINGSTATION_ALREADY_ASSIGNED_OR_NOT")
+					.setParameter("wardId", nursingStationWardMapperDto.getWardId())
 					.setParameter("nursingStationId", nursingStationWardMapperDto.getNursingStationId())
 					.setParameter("orgId", nursingStationWardMapperDto.getOrganizationId())
 					.setParameter("unitId", nursingStationWardMapperDto.getUnitId())
