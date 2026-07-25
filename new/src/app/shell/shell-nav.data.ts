@@ -43,6 +43,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/gradeCreationMaster', title: 'Grade Creation Master' },
       { path: '/qmslogo', title: 'QMS Logo' },
       { path: '/qualityParameterMaster', title: 'Quality Parameter Master' },
+      { path: '/hospitalAccountMaster', title: 'Hospital Account Master' },
+      { path: '/transactionTypeMaster', title: 'Transaction Type Master' },
     ],
   },
   {
@@ -108,6 +110,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/holidayCalendarMasterUnit', title: 'Holiday Calendar Master' },
       { path: '/mortuaryBedMaster', title: 'Mortuary Bed Master' },
       { path: '/nursingStationMaster', title: 'Nursing Station Master' },
+      { path: '/departmentMasterUnit', title: 'Department Master (Unit)' },
     ],
   },
   {
@@ -256,5 +259,12 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   {
     heading: 'CSSD',
     items: [{ path: '/sterilizationTypeMaster', title: 'Sterilization Type Master' }],
+  },
+  {
+    heading: 'OT/Theatre',
+    items: [
+      { path: '/surgeryGradeMaster', title: 'Surgery Grade Master' },
+      { path: '/operationTableType', title: 'Operation Table Type' },
+    ],
   },
 ];

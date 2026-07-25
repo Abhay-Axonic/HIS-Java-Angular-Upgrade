@@ -1,0 +1,47 @@
+// Screen-specific layout only -- shared table/pagination/modal/toolbar/
+// field/status-toggle styles live in src/styles.scss (see that file's
+// header comment) and shared/status-toggle/status-toggle.scss.
+
+.picker-row {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.picker-pane {
+  flex: 1;
+  min-width: 0;
+
+  label.common-lable-color-set {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+}
+
+.picker-scroll {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 8px 12px;
+}
+
+.picker-move {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.muted {
+  color: #777;
+  font-size: 13px;
+  margin: 0;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 24px;
+}

@@ -1,0 +1,135 @@
+<section class="page">
+  <fieldset>
+    <legend>Transaction Type Master</legend>
+
+    <div class="form-grid">
+      <!-- Legacy's own field/label pair: labeled "Transaction Type Code" in
+           both the form and the table header, though the underlying/backend
+           field name is transactionTypeName -- see class doc comment. -->
+      <div class="field">
+        <label for="transactionTypeName">Transaction Type Code<span class="required">*</span></label>
+        <input
+          id="transactionTypeName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().transactionTypeName"
+          (ngModelChange)="updateField('transactionTypeName', $event)"
+          [class.invalid]="isNameInvalid()"
+          name="transactionTypeName"
+        />
+        @if (isNameInvalid()) {
+          <p class="help-block">Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="transactionTypeDesc">Transaction Type Description<span class="required">*</span></label>
+        <input
+          id="transactionTypeDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().transactionTypeDesc"
+          (ngModelChange)="updateField('transactionTypeDesc', $event)"
+          [class.invalid]="isDescInvalid()"
+          name="transactionTypeDesc"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pagination().pageSize" (ngModelChange)="setPageSize()">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Transaction Type Code</th>
+        <th>Transaction Type Description</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.transactionTypeId) {
+        <tr>
+          <td>{{ row.transactionTypeName }}</td>
+          <td>{{ row.transactionTypeDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="fa fa-pencil" aria-hidden="true" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (pagination().totalPages > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+      @for (p of pagesList(); track p) {
+        <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,237 @@
+<section class="page">
+  <fieldset>
+    <legend>Department Master</legend>
+
+    <!-- Two-pane checkbox picker -- "Global Master" (unmapped candidates,
+         left) -> "<<>>" move button -> "Unit Master" (staged for save,
+         right). See department-master-unit.ts's class doc comment for why
+         this 2-step check-then-move flow (not a single-step check-and-save)
+         is the real, source-verified legacy behavior. -->
+    <div class="picker-row">
+      <div class="picker-pane">
+        <label class="common-lable-color-set">Global Master</label>
+        <div class="picker-scroll">
+          @for (candidate of specialityMasterList(); track candidate.specialityId) {
+            <div class="field checkbox-field">
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="checkedCandidateIds().has(candidate.specialityId)"
+                  (change)="toggleCandidate(candidate)"
+                />
+                {{ candidate.specialityName }}
+              </label>
+            </div>
+          }
+          @if (!specialityMasterList().length) {
+            <p class="muted">No unmapped specialities available.</p>
+          }
+        </div>
+      </div>
+
+      <div class="picker-move">
+        <button type="button" class="btn-primary" title="Move checked specialities to Unit Master" (click)="moveToSelected()">
+          &lt;&lt;&gt;&gt;
+        </button>
+      </div>
+
+      <div class="picker-pane">
+        <label class="common-lable-color-set">Unit Master</label>
+        <div class="picker-scroll">
+          @for (staged of selectedSpecialityList(); track staged.specialityId) {
+            <div class="field checkbox-field">
+              <label>{{ staged.specialityName }}</label>
+            </div>
+          }
+          @if (!selectedSpecialityList().length) {
+            <p class="muted">Nothing staged yet.</p>
+          }
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="onSearchChange($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Department Code</th>
+        <th>Department Description</th>
+        <th class="text-center">Details</th>
+        <th class="text-center">Status(n)</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredList(); track row.unitSpecialityMapperId) {
+        <tr>
+          <td>{{ row.specialityCode }}</td>
+          <td>{{ row.specialityName }}</td>
+          <td class="text-center">
+            <i class="fa fa-info-circle" aria-hidden="true" title="Details" (click)="openDetails(row)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+        </tr>
+      }
+      @if (!filteredList().length) {
+        <tr>
+          <td colspan="4" class="text-center">No record found...</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+<!-- Details modal -- plain, normal Angular modal (backdrop + centered
+     card), NOT the shared prototypal <modal> directive legacy's OTHER
+     screens use. Legacy itself uses a plain Bootstrap modal here
+     (data-dismiss="modal") with no cancel()-crash class to preserve --
+     see department-master-unit.ts's class doc comment. -->
+@if (showDetailsModal()) {
+  <div class="modal-backdrop" (click)="closeDetailsModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Details
+        <button type="button" (click)="closeDetailsModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="details-grid">
+          <div class="field checkbox-field">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="detailsForm().isSurgicalCode === 'Y'"
+                (ngModelChange)="updateDetailsField('isSurgicalCode', $event ? 'Y' : 'N')"
+                name="isSurgicalCode"
+              />
+              Is Surgical Department
+            </label>
+          </div>
+          <div class="field checkbox-field">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="detailsForm().isClinicalSpeciality === 'Y'"
+                (ngModelChange)="updateDetailsField('isClinicalSpeciality', $event ? 'Y' : 'N')"
+                name="isClinicalSpeciality"
+              />
+              Is Clinical Department
+            </label>
+          </div>
+          <div class="field checkbox-field">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="detailsForm().isRenderingSpeciality === 'Y'"
+                (ngModelChange)="updateDetailsField('isRenderingSpeciality', $event ? 'Y' : 'N')"
+                name="isRenderingSpeciality"
+              />
+              Is Rendering Department
+            </label>
+          </div>
+          <div class="field checkbox-field">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="detailsForm().isKioskDept === 'Y'"
+                (ngModelChange)="updateDetailsField('isKioskDept', $event ? 'Y' : 'N')"
+                name="isKioskDept"
+              />
+              Is Kiosk Department
+            </label>
+          </div>
+          <div class="field checkbox-field">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="detailsForm().isNursingAssessmentRequired === 'Y'"
+                (ngModelChange)="updateDetailsField('isNursingAssessmentRequired', $event ? 'Y' : 'N')"
+                name="isNursingAssessmentRequired"
+              />
+              Is Nursing Assessment Required
+            </label>
+          </div>
+          <div class="field checkbox-field">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="detailsForm().deptWiseAppointment === 'Y'"
+                (ngModelChange)="updateDetailsField('deptWiseAppointment', $event ? 'Y' : 'N')"
+                name="deptWiseAppointment"
+              />
+              Is Department wise Scheduling
+            </label>
+          </div>
+
+          <!-- Only shown when deptWiseAppointment is 'Y' -- matches
+               view:235's ng-hide="deptWiseAppointment=='N'" exactly. -->
+          @if (detailsForm().deptWiseAppointment === 'Y') {
+            <div class="field">
+              <label for="allowedOverbookingSlots">Allowed Over booking Slots</label>
+              <input
+                id="allowedOverbookingSlots"
+                type="text"
+                autocomplete="off"
+                [ngModel]="detailsForm().allowedOverbookingSlots"
+                (ngModelChange)="updateDetailsField('allowedOverbookingSlots', $event)"
+                name="allowedOverbookingSlots"
+              />
+            </div>
+          }
+
+          <div class="field">
+            <label for="pddDays">Pdd Days</label>
+            <input
+              id="pddDays"
+              type="text"
+              autocomplete="off"
+              [ngModel]="detailsForm().pddDays"
+              (ngModelChange)="updateDetailsField('pddDays', $event)"
+              name="pddDays"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="updateDetails()" id="updateBtn">Update</button>
+        <button type="button" class="btn-primary" (click)="closeDetailsModal()" id="cancelBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
