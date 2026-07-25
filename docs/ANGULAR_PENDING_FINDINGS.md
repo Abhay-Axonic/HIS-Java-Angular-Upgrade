@@ -3100,7 +3100,7 @@ The typo (`allowedOverbookingSlot`, missing the trailing "s") is real — that c
 
 **Full per-screen detail** (file:line citations, exact query text, DAO/service call-site confirmation) is held in the 4 investigating agents' own reports, not reproduced in full here -- this entry consolidates the pattern and tally, not every individual citation.
 
-**Action taken:** investigation complete, nothing fixed, per explicit standing instruction. This is no longer a hypothesis -- 34 of 38 screens sampled confirms this is a systemic, cross-module defect class in this codebase's master-data screens, not a coincidence of the first 10. **Awaiting owner direction on next steps** -- individual fixes would each need their own scoped decision/approval per this project's standing discipline (same as every other legacy bug found), not a bulk fix-everything pass.
+**Action taken:** investigation complete, nothing fixed, per explicit standing instruction. This is no longer a hypothesis -- 33 of 38 screens sampled confirms this is a systemic, cross-module defect class in this codebase's master-data screens, not a coincidence of the first 10. **Three of the highest-priority findings above have since been fast-tracked to their own DECISION_NEEDED documents, per owner direction, with specific proposed fixes (not applied):** `NurseAllocationMaster`'s false-duplicate-rejection (`docs/DECISION_NEEDED_NurseAllocationMasterFalseDuplicateRejection.md`) and `NursingStationWardMapper`'s broken picker + save-time check (`docs/DECISION_NEEDED_NursingStationWardMapperBrokenPicker.md`) -- both Tier 1 "active pain today" findings from the priority-ranking pass. The remaining findings await owner direction on next steps -- individual fixes would each need their own scoped decision/approval per this project's standing discipline (same as every other legacy bug found), not a bulk fix-everything pass.
 
 ---
 
@@ -3137,6 +3137,6 @@ public Response saveVisitType(VisitTypeMasterDto visitTypeMasterDto) throws Appl
 
 **Severity assessment, not a fix decision:** this is a pure UI-trust/observability defect, not a data-integrity defect on its own (no wrong data gets written; the underlying save/update logic is otherwise correct) -- but it is 100% reachable, 100% guaranteed, and directly visible on every interaction, which distinguishes it sharply from the duplicate-check findings' latent-risk profile.
 
-**Action taken:** confirmed directly against source (both methods read in full, not relayed). No code changed. Not live-tested this session (source-level certainty is total here -- both branches are unconditional, no runtime ambiguity to resolve) -- flagged for the owner's own severity read, not a fix proposal.
+**Action taken:** confirmed directly against source (both methods read in full, not relayed). No code changed. **Fast-tracked to its own DECISION_NEEDED document with a proposed minimal fix, per owner direction: `docs/DECISION_NEEDED_VisitTypeMasterAlwaysReportsFailure.md`.**
 
 ---
