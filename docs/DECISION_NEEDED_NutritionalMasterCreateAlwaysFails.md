@@ -1,6 +1,10 @@
 # Decision Needed: `nutritionalMaster`'s Create (Save) operation returns HTTP 500 on every attempt, in the current live legacy backend -- root cause now confirmed: entity/schema drift
 
-**Status: ROOT CAUSE CONFIRMED, not fixed.** Found during Batch 19 Step 5 (real interaction testing) of the Angular rebuild, 2026-07-25. Root cause isolated via direct schema inspection shortly after this document was first drafted (see §2 below, updated). No application code or database schema has been touched to produce this document -- confirmed via direct `curl` requests against the real, running, unmodified legacy backend, independent of the rebuild entirely, and via read-only `psql` schema inspection.
+**Status: RESOLVED, 2026-07-25.** Owner approved Option A below. Fixed on dedicated branch `fix/nutritionalmaster-is-calories-column` via a single additive `ALTER TABLE kitchen.m_nutrition_master ADD COLUMN IF NOT EXISTS is_calories varchar(1);`. Verified live, before and after, covering Create, Update, AND status-toggle on both real legacy (`localhost:8080`) and the rebuild (`localhost:4200`) -- all three now return genuine HTTP 200 successes on both apps, no Angular code changes needed. Full verification detail in §7 below. Held on its fix branch, not yet merged to `main` -- merge requires separate explicit owner approval per standing `CLAUDE.md` discipline. Sections 1-6 below are retained unmodified as the original diagnostic record.
+
+---
+
+**Original status (retained for the record): ROOT CAUSE CONFIRMED, not fixed.** Found during Batch 19 Step 5 (real interaction testing) of the Angular rebuild, 2026-07-25. Root cause isolated via direct schema inspection shortly after this document was first drafted (see §2 below, updated). No application code or database schema has been touched to produce this document -- confirmed via direct `curl` requests against the real, running, unmodified legacy backend, independent of the rebuild entirely, and via read-only `psql` schema inspection.
 
 ---
 
@@ -77,3 +81,31 @@ Option A is lower-risk (purely additive, no behavior change, matches how this ex
 2. Once approved and verified, this closes `nutritionalMaster`'s entire write-path finding and, incidentally, may be worth checking whether any other DietAndKitchen-module entity has the same drift pattern (not checked here, flagging for awareness only).
 
 No code or schema has been touched to produce this document. This finding is logged in `docs/ANGULAR_PENDING_FINDINGS.md` under `PENDING-nutritionalmaster-create-endpoint-crash`.
+
+---
+
+## 7. Resolution and live verification (2026-07-25)
+
+Owner approved Option A. Applied on dedicated branch `fix/nutritionalmaster-is-calories-column`:
+
+```sql
+ALTER TABLE kitchen.m_nutrition_master ADD COLUMN IF NOT EXISTS is_calories varchar(1);
+```
+
+Type/length matched to the entity's `String isCalories` field and this app's convention for other single-character `is_*` flag columns. Schema confirmed via `psql \d kitchen.m_nutrition_master` immediately after: all 10 original columns unchanged, `is_calories` (`character varying(1)`) added, no default, nullable -- purely additive, nothing dropped or altered.
+
+**Verified live on real legacy (`localhost:8080`), via the actual UI (not `curl`), before deleting the test row:**
+- Create: entered code `FIXVERIFY01` / name "Fix Verify Test", clicked Save, confirmed the modal, and got a genuine success toast ("Nutrition Added Successfully...!!"). Network: `POST /api/kitchen/master/nutritionalMaster` -> **200** (previously 500). Row appeared in the list.
+- Update: clicked Edit on that row, changed the name to "Fix Verify Test Updated", saved, confirmed. Network: `PUT /api/kitchen/master/nutritionalMaster` -> **200** (previously 500), genuine "Nutrition Updated Successfully...!!" toast, list reflected the new name.
+- Status-toggle: clicked the status toggle on that row. Network: `PUT /api/kitchen/master/nutritionalMaster/updateStatus` -> **200** (previously 500), toggle visually flipped and persisted.
+- Test row (`FIXVERIFY01`) deleted via `psql` after verification.
+- Note: `getNutritionMasterCount` (a separate, already-logged, unrelated bug -- `PENDING-nutritionalmaster-count-endpoint-crash`) still returns 500 as expected; this fix does not touch it, and legacy's own list rendering doesn't depend on it succeeding.
+
+**Verified live on the rebuild (`localhost:4200`), same three operations, same method:**
+- Create: `POST /api/kitchen/master/nutritionalMaster` -> **200**, real "Nutrition Added Successfully...!!" toast, row appeared.
+- Update: `PUT /api/kitchen/master/nutritionalMaster` -> **200**, real "Nutrition Updated Successfully...!!" toast, name change reflected.
+- Status-toggle: `PUT /api/kitchen/master/nutritionalMaster/updateStatus` -> **200**, toggle flipped and persisted.
+- No Angular code changes were needed -- the rebuild already called the same live endpoints; its lack of `error:` callbacks in `doSave()`/`update()`/`toggleStatus()` is now moot for the success path (those callbacks were only ever needed to *not* silently match legacy's prior broken state, which no longer exists).
+- Test row (`REBUILDFIX01`) deleted via `psql` after verification.
+
+**Held, not merged.** `fix/nutritionalmaster-is-calories-column` awaits explicit owner approval to merge into `main`, per standing `CLAUDE.md` discipline. Full entry in `docs/BUSINESS_RULE_MANIFEST.md` under `BR-local-dev-db-drift-nutritionalmaster-iscalories`. `docs/ANGULAR_PENDING_FINDINGS.md`'s corresponding entry renamed `RESOLVED-nutritionalmaster-create-endpoint-crash`. `docs/BATCH19_STEP6_CHECKLIST.md`'s `nutritionalMaster` section updated to test the now-working flow.

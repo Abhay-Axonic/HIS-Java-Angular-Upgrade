@@ -3294,7 +3294,11 @@ When Spring's interceptor tries to commit/flush on return, the session is alread
 
 ---
 
-## PENDING-nutritionalmaster-create-endpoint-crash. `nutritionalMaster` -- CONFIRMED, Batch 19 Step 5 (real interaction testing) -- ALL THREE write operations (Create, Update, status-toggle) return HTTP 500 on every attempt against the live, unmodified legacy backend, independent of the rebuild -- root cause confirmed: entity/schema drift
+## RESOLVED-nutritionalmaster-create-endpoint-crash. `nutritionalMaster` -- RESOLVED 2026-07-25 -- ALL THREE write operations (Create, Update, status-toggle) previously returned HTTP 500 on every attempt against the live, unmodified legacy backend, independent of the rebuild -- root cause was entity/schema drift, now fixed and verified
+
+**RESOLVED, same session.** Owner approved Option A (add the missing `is_calories` column) from `docs/DECISION_NEEDED_NutritionalMasterCreateAlwaysFails.md`. Fixed on dedicated branch `fix/nutritionalmaster-is-calories-column` via a single additive `ALTER TABLE kitchen.m_nutrition_master ADD COLUMN IF NOT EXISTS is_calories varchar(1);`. Verified live, before and after, covering all three operations on both real legacy (`localhost:8080`) and the rebuild (`localhost:4200`): Create/Update/status-toggle all now return HTTP 200 with genuine success toasts ("Nutrition Added/Updated Successfully...!!") on both apps, no Angular code changes needed. Full detail in `BR-local-dev-db-drift-nutritionalmaster-iscalories` (`docs/BUSINESS_RULE_MANIFEST.md`) and the updated `docs/DECISION_NEEDED_NutritionalMasterCreateAlwaysFails.md`. Held on its fix branch, not yet merged to `main` -- merge requires separate explicit owner approval. The findings below describe the pre-fix state, retained for the audit trail.
+
+**[Pre-fix findings, retained for audit trail:]**
 
 **CORRECTION, same session:** this entry originally reported only Create as broken, stating Update/status-toggle were "confirmed... by live interaction testing" -- that claim was made before Update/status-toggle had actually been tested live (only Edit, which never calls the server, had been). A follow-up live test against a row seeded directly via SQL (Create doesn't work, so this was the only way to get a test row) found Update and status-toggle **also** fail with HTTP 500, same root cause. Corrected below.
 

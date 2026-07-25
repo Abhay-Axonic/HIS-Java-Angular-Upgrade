@@ -96,22 +96,26 @@
 
 ---
 
-## 5. `nutritionalMaster` — expect this one to look broken; that's the confirmed, correct behavior
+## 5. `nutritionalMaster` — write path fixed 2026-07-25; Create/Update/status-toggle now genuinely work
 
 **Paths:** `nutritionalMaster` (legacy / rebuild)
 
-**Test data:** dev DB is currently **empty** for this screen (a SQL-seeded test row used during Step 5 verification was deleted afterward — Create doesn't work, so seeding was the only way to test Edit/Update/toggle at all).
+**Fix applied since this checklist was first drafted:** the entire write path was previously broken (Create/Update/status-toggle all 500'd on real legacy, root cause an entity/schema mismatch — the Java entity expected a column, `is_calories`, that didn't exist in the real table). Owner approved the additive fix (`ALTER TABLE kitchen.m_nutrition_master ADD COLUMN IF NOT EXISTS is_calories varchar(1);`) on dedicated branch `fix/nutritionalmaster-is-calories-column`; applied to the local dev DB and live-verified on both apps — see `docs/DECISION_NEEDED_NutritionalMasterCreateAlwaysFails.md` §7 for the full before/after record. **The DB fix is in place regardless of that branch's merge status** (it's a database change, not application code), so both apps below should now show fully working behavior.
+
+**Test data:** dev DB is currently **empty** for this screen (all test rows created during verification were deleted afterward).
 
 | # | Step | Expected result |
 |---|---|---|
-| 1 | Load the screen | Empty list, "No Records Found" — no error shown, matches legacy |
-| 2 | Fill in a Nutrition Name (Code is optional — not required in legacy), click Save | Confirm modal appears → Ok → **nothing visibly happens**. No success toast, no error toast, no new row. This is the confirmed, correct, faithful match to a real, live legacy bug (see below) — not a rebuild defect |
-| 3 | (Optional, for your own confirmation) Seed one row directly via SQL, then try Edit/Update/status-toggle against it | Edit populates the form (client-side copy, no server call). Update and status-toggle will **also** silently do nothing, for the same underlying reason as step 2 |
+| 1 | Load the screen | Empty list, "No Records Found" |
+| 2 | Fill in a Nutrition Code and Nutrition Name (Code is optional — not required in legacy, but fill it in for a cleaner test), click Save | Confirm modal appears → Ok → **real success toast** ("Nutrition Added Successfully...!!"), new row appears in the list |
+| 3 | Click Edit on that row, change the Nutrition Name, click Save | Form populates from the row (client-side copy, no server call for Edit itself); Update call fires on Save → real success toast ("Nutrition Updated Successfully...!!"), row reflects the new name |
+| 4 | Click the status toggle on that row | Switch flips and persists → real HTTP 200 on `updateStatus` (no explicit toast on this action, matching legacy) |
+| 5 | Reload the page | All changes from steps 2-4 persisted — confirms real database writes, not just optimistic UI updates |
 
 **Needs your explicit sign-off on:**
-- **Severity-1, CONFIRMED root cause, legacy bug, NOT fixed (backend fix requires your separate approval)**: `nutritionalMaster`'s Create, Update, AND status-toggle are all completely non-functional in current legacy — verified independently of the rebuild via direct `curl` testing against the live backend. Root cause confirmed via direct database schema inspection: the Java entity expects a column (`is_calories`) that does not exist in the real table. Every entity-level write references this nonexistent column and fails; only the read-only list queries (which don't touch that column) work. The failure is completely silent to the user in legacy today — no error appears, ever, on any of the three actions. Full detail and a proposed one-line additive fix (add the missing column) are in `docs/DECISION_NEEDED_NutritionalMasterCreateAlwaysFails.md`, awaiting your approval on a dedicated fix branch.
-- **Separately, already logged**: the count endpoint also 500s (a different, already-identified bug — a stray `session.close()` call). The rebuild works around this with corrected, working client-side pagination (owner-approved), independent of whether the write-path fix above is applied.
-- **Net effect for this Step 6 review**: there is currently no way to see a populated, working version of this screen's Create/Update/toggle flow on *either* app. This isn't something Step 6 can "pass" in the usual sense — it's flagging that the screen is faithfully, correctly broken in the same way on both, pending the backend fix.
+- **Confirms resolution of a severity-1 legacy bug**: this screen's entire write path was non-functional in real, unmodified legacy until this session's fix — the above steps should now all succeed genuinely, where they previously silently did nothing. This was a real backend bug (missing database column), not a rebuild-side issue, and not something the Angular rebuild could have worked around on its own.
+- **Fix is held, not yet merged**: `fix/nutritionalmaster-is-calories-column` (the DB-schema fix) awaits your separate, explicit approval to merge into `main`, per standing practice — this Step 6 pass is verifying the fix works, not authorizing the merge.
+- **Separately, already logged, unaffected by this fix**: the count endpoint (`getNutritionMasterCount`) still 500s (a different, already-identified bug — a stray `session.close()` call). The rebuild works around this with corrected, working client-side pagination (owner-approved previously), independent of the write-path fix above.
 
 ---
 
@@ -123,4 +127,4 @@
 | ARmaster | Yes | Corrected pagination | Zero field validation |
 | anaesthesiaType | Yes | None | None |
 | bloodDonortype | Yes | None | Missing org/unit scope on duplicate-check (backend, separate) |
-| nutritionalMaster | **No — all 3 broken in legacy today** | None (nothing to fix client-side) | Entire write path (backend, separate, root cause confirmed) |
+| nutritionalMaster | **Yes — fixed and verified 2026-07-25** | None (fix was DB-schema-only, held on `fix/nutritionalmaster-is-calories-column` pending merge approval) | count endpoint still 500s (separate, already-logged, unaffected by this fix) |
