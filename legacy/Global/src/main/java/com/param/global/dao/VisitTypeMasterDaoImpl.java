@@ -109,7 +109,7 @@ public class VisitTypeMasterDaoImpl extends GenericDao<VisitTypeMaster, Integer>
 			visitTypeMaster.setVisitTypeCode(visitTypeMasterDto.getVisitTypeCode());
 			visitTypeMaster.setVisitTypeName(visitTypeMasterDto.getVisitTypeName());
 			update(visitTypeMaster);
-			return new Response<>(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, visitTypeMaster);
+			return new Response<>(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, null);
 		} catch (HibernateException he) {
 		logger.error("updateVisitType failed", he);
 		} catch (Exception e) {
