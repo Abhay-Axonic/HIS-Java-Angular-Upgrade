@@ -112,6 +112,58 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * ONLY way to create a brand-new hospital account is a full page
  * reload/re-navigation to the state, resetting `$scope` from scratch. This
  * was NOT called out in the original Step 1 audit entry and is flagged
+ *
+ * ================================================================
+ * DEEPER CONSEQUENCE, found during Step 6 owner review 2026-07-25 -- a
+ * SECOND Update attempt after the first one succeeds fails COMPLETELY
+ * SILENTLY, in BOTH legacy and this rebuild. FAITHFULLY REPRODUCED, not a
+ * rebuild regression.
+ * ================================================================
+ * Because the "stuck in Update mode" bug above never resets `editMode`,
+ * a Step 6 tester naturally tried: Update HA4 successfully, then type
+ * genuinely NEW Code/Description and click the Update icon again (still
+ * in Update mode, no page reload). Result: no toast, no error, no new
+ * row, no visible response of any kind. Traced end-to-end, both sides:
+ * - `update()`'s own success branch calls `resetForm()` (legacy:
+ *   `initHospitalAccountMaster()`, ctrl:279), which clears the form's
+ *   `hospitalAccountId` back to empty (`undefined` here; `""` in legacy,
+ *   ctrl:45) -- but, unlike `editMode`, this field is never repopulated
+ *   until the next `edit()`/pencil click. Typing fresh values and
+ *   clicking Update again sends that PAYLOAD's `hospitalAccountId` as
+ *   missing (here -- `JSON.stringify` drops the `undefined` key
+ *   entirely) or as `""` (legacy, ctrl:255) -- either way, an id the
+ *   server cannot resolve to a real row.
+ * - `HospitalAccountMasterDaoImpl.updateHospitalAccountMaster` (:152-164)
+ *   calls `findById(hospitalAccountMasterDto.getHospitalAccountId())` and
+ *   immediately invokes setters on the result with NO null/not-found
+ *   guard anywhere in the method -- a missing/blank id is guaranteed to
+ *   throw here, not silently no-op server-side.
+ * - That exception is NOT one of the two types `BillingExceptionController`
+ *   (the app's only `@ControllerAdvice`) handles (`BillingException`/
+ *   `ServiceException` only) -- it propagates as a raw, uncaught runtime
+ *   exception, producing a generic Spring/Tomcat error response, NOT the
+ *   app's own `{status:'success'|'error', message:...}` contract either
+ *   side's frontend code knows how to read.
+ * - Confirmed by reading BOTH client-side error paths directly: legacy's
+ *   `update()` (ctrl:270) calls `GenericService.serviceAction(...).then(
+ *   function(response){...})` with NO second/rejection argument and no
+ *   `.catch()` -- and `GenericService.serviceAction`'s own error handler
+ *   (GenericService.js:26-40) does NOTHING visible for any status other
+ *   than 401 (no growl, no toast), just `return Promise.reject(error)`,
+ *   silently. This rebuild's `update()` below has the identical shape:
+ *   `subscribe({ next: ... })` with no `error:` handler -- an HTTP error
+ *   response is likewise dropped with zero UI feedback. Same gap, same
+ *   silent outcome, on both sides.
+ * **Net effect: this is a real, confirmed-by-source (live re-verification
+ * blocked this session by a lost authenticated browser session, not
+ * attempted further), pre-existing legacy defect one level deeper than
+ * the button-lock finding above -- the original expectation that a
+ * second Update attempt would "still attempt SOME action, just an
+ * update instead of a create" was right about the MODE but did not
+ * anticipate that the cleared id makes that attempt fail server-side in
+ * a way neither app's error handling surfaces at all.** Not fixed here --
+ * logged in `docs/ANGULAR_PENDING_FINDINGS.md` for the owner's decision,
+ * per standing policy (nothing fixed without explicit approval).
  * here prominently for the orchestrating session's attention before Step
  * 4/5. Reproduced via `editMode` below: set `true` by `edit()`, and never
  * reset back to `false` by `doUpdate()`'s success handler (mirroring
