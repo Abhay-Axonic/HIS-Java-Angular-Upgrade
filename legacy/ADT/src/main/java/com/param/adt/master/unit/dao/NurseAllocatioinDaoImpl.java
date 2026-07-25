@@ -41,7 +41,7 @@ public class NurseAllocatioinDaoImpl  extends GenericDao<NurseAllocationMaster, 
 					.setParameter("userId", nurseAllocationDto.getUserId())
 					.setParameter("orgId", nurseAllocationDto.getOrganizationId())
 					.setParameter("unitId", nurseAllocationDto.getUnitId())
-					//.setParameter("visitTypeId", nurseAllocationDto.getVisitTypeId())
+					.setParameter("visitTypeId", nurseAllocationDto.getVisitTypeId())
 					.setResultTransformer(Transformers.aliasToBean(NurseAllocationDto.class)).list();
 			
 			if(list!=null && list.size()>0) {
@@ -125,7 +125,7 @@ public class NurseAllocatioinDaoImpl  extends GenericDao<NurseAllocationMaster, 
 					.setParameter("nurseAllocationId", nurseAllocationDto.getNurseAllocationId())
 					.setParameter("orgId", nurseAllocationDto.getOrganizationId())
 					.setParameter("unitId", nurseAllocationDto.getUnitId())
-
+					.setParameter("visitTypeId", nurseAllocationDto.getVisitTypeId())
 					.setResultTransformer(Transformers.aliasToBean(NurseAllocationDto.class)).list();
 			 if(list.size()>0) {
 				 return new Response(SUCCESS, SUCCESS_CODE, null, list, null);
