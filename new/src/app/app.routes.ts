@@ -1332,6 +1332,40 @@ export const routes: Routes = [
             (m) => m.DepartmentMasterUnit,
           ),
       },
+      {
+        path: 'ARmaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 616, title: 'AR Master' },
+        loadComponent: () => import('./features/ar-master/ar-master').then((m) => m.ArMaster),
+      },
+      {
+        path: 'anaesthesiaType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 524, title: 'Anaesthesia Type' },
+        loadComponent: () =>
+          import('./features/anaesthesia-type/anaesthesia-type').then((m) => m.AnaesthesiaType),
+      },
+      {
+        path: 'bloodBagCapacity',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 735, title: 'Blood Bag Capacity Master' },
+        loadComponent: () =>
+          import('./features/blood-bag-capacity/blood-bag-capacity').then((m) => m.BloodBagCapacity),
+      },
+      {
+        path: 'nutritionalMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 508, title: 'Nutritional Master' },
+        loadComponent: () =>
+          import('./features/nutritional-master/nutritional-master').then((m) => m.NutritionalMaster),
+      },
+      {
+        path: 'bloodDonortype',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 732, title: 'Blood Donor Type Master' },
+        loadComponent: () =>
+          import('./features/blood-donor-type/blood-donor-type').then((m) => m.BloodDonorType),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

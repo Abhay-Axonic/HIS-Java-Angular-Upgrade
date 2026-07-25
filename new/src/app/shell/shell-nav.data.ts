@@ -45,6 +45,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/qualityParameterMaster', title: 'Quality Parameter Master' },
       { path: '/hospitalAccountMaster', title: 'Hospital Account Master' },
       { path: '/transactionTypeMaster', title: 'Transaction Type Master' },
+      { path: '/ARmaster', title: 'AR Master' },
     ],
   },
   {
@@ -254,7 +255,11 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   },
   {
     heading: 'Blood Bank',
-    items: [{ path: '/bloodGroupMaster', title: 'Blood Group Master' }],
+    items: [
+      { path: '/bloodGroupMaster', title: 'Blood Group Master' },
+      { path: '/bloodDonortype', title: 'Blood Donor Type Master' },
+      { path: '/bloodBagCapacity', title: 'Blood Bag Capacity Master' },
+    ],
   },
   {
     heading: 'CSSD',
@@ -265,6 +270,11 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/surgeryGradeMaster', title: 'Surgery Grade Master' },
       { path: '/operationTableType', title: 'Operation Table Type' },
+      { path: '/anaesthesiaType', title: 'Anaesthesia Type' },
     ],
+  },
+  {
+    heading: 'Diet & Nutrition',
+    items: [{ path: '/nutritionalMaster', title: 'Nutritional Master' }],
   },
 ];

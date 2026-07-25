@@ -1,0 +1,127 @@
+<section class="page">
+  <fieldset>
+    <legend>AR Master</legend>
+
+    <!-- Both fields show a required "*" in legacy's own markup, but legacy
+         has no actual validation anywhere (HTML5 or JS) -- faithfully
+         reproduced as-is; no [class.invalid]/help-block wiring here. See
+         class doc comment. -->
+    <div class="form-grid">
+      <div class="field">
+        <label for="aRCode">AR Code<span class="required">*</span></label>
+        <input
+          id="aRCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().aRCode"
+          (ngModelChange)="updateField('aRCode', $event)"
+          name="aRCode"
+        />
+      </div>
+
+      <div class="field">
+        <label for="aRCodeDesc">AR Description<span class="required">*</span></label>
+        <input
+          id="aRCodeDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().aRCodeDesc"
+          (ngModelChange)="updateField('aRCodeDesc', $event)"
+          name="aRCodeDesc"
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()">
+        @for (size of pageSizes; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>AR Code</th>
+        <th>AR Description</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.aRCodeId) {
+        <tr>
+          <td>{{ row.aRCode }}</td>
+          <td>{{ row.aRCodeDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="fa fa-pencil" aria-hidden="true" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="loadPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="loadPage(currentPage() - 1)">Previous</a></li>
+      @for (p of pagesList(); track p) {
+        <li [class.active]="currentPage() === p"><a (click)="loadPage(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="loadPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="loadPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
