@@ -3243,3 +3243,53 @@ When Spring's interceptor tries to commit/flush on return, the session is alread
 **Separately, proposed as its own narrow legacy fix (not yet applied, awaiting owner approval):** delete the erroneous `session.close()` call at line 218 -- a one-line removal, no design decision, no ambiguity, matching the DAO's own sibling methods' pattern exactly. Needs its own dedicated branch and live before/after verification per `CLAUDE.md`, same as every other legacy fix this session, even though the change itself is trivial.
 
 ---
+
+## PENDING-nutritionalmaster-crossorg-unscoped-write. `nutritionalMaster` -- CONFIRMED, Batch 19 Step 1 audit -- Update and status-toggle load the entity by primary key alone, with NO organization/unit check, allowing a caller to edit or disable a different organization's record
+
+**Found during:** Batch 19 Step 1 audit (2026-07-25), direct source read.
+
+**The bug:** `NutritionalMasterDaoImpl.updateNutritionalMaster` and `.updateNutritionMasterStatus` both call `session.load(NutritionalMaster.class, nutritionalMasterDto.getNutritionId())` -- loading and persisting the entity by primary key only. Neither method checks `organizationId`/`unitId` against the loaded row before writing. Any caller who can supply a `nutritionId` -- including one belonging to a completely different organization -- can edit its code/name or flip its active/inactive status.
+
+**Severity:** genuine data-integrity gap, not a UI concern -- same class of finding as `PENDING-depositmatrixconfigmaster-offbyone` and the already-fixed `RmoAllocationMaster` create-path bug, both already treated with full Maker-Checker rigor this session.
+
+**Related, lower severity:** `unitId` is accepted through the entire controller/service/DAO signature chain for the list endpoints but the named queries' `unitId` predicate is commented out (`model/NutritionalMaster.java:27,32`) -- the screen is functionally org-only scoped despite looking unit-scoped. Not a security gap on its own, but worth the owner confirming this is genuinely intentional (same open question already flagged for `transactionTypeMaster` in batch 18).
+
+**Action taken:** flagged, not fixed. No code touched. This needs its own dedicated legacy-fix branch (add `organizationId`/`unitId` predicates to both write paths) and full Maker-Checker treatment, separate from the Angular rebuild track. Awaiting owner approval before any fix branch is created.
+
+---
+
+## PENDING-blooddonortype-duplicatecheck-missing-scope. `bloodDonortype` -- CONFIRMED, Batch 19 Step 1 audit -- duplicate-check queries have zero organization/unit scope, same class already fixed for BedsideImagingMaster/BedsideProcedureMaster this session
+
+**Found during:** Batch 19 Step 1 audit (2026-07-25), direct source read.
+
+**The bug:** `GET_BLOOD_DONOR_TYPE_MASTER_BY_NAME`/`_NOT_ID` (`BloodDonorTypeMaster.java:50-61`) filter only on `bloodDonorTypeDesc` -- no `organizationId`/`unitId` predicate, unlike every other query on this entity (list/active queries both correctly scope by org+unit). Same over-blocking shape as the already-fixed Bedside Imaging/Procedure finding: a description that legitimately exists in a different org/unit will wrongly block a save/update in this one. Not a missed-duplicate risk (a same-org/unit duplicate is still caught as a subset of "anywhere in the table") and not data corruption -- purely a false-positive/over-blocking defect.
+
+**Action taken:** flagged, not fixed. No code touched. Proposed fix mirrors the already-approved-and-applied Bedside Imaging/Procedure pattern exactly (add `organizationId`/`unitId` to both queries + DAO bindings) -- needs its own dedicated branch and live before/after verification, held for owner approval before applying.
+
+---
+
+## PENDING-bloodbagcapacity-step1-findings. `bloodBagCapacity` -- CONFIRMED, Batch 19 Step 1 audit -- three findings, one a genuine wrong-record write risk
+
+**Found during:** Batch 19 Step 1 audit (2026-07-25), direct source read.
+
+**1. Wrong-record write risk from shared `$scope.common` reuse across the Edit form and status-toggle (most severe of the three).** `updateStatus()` (`bloodBagCapacityMasterController.js:312-320`) mutates the SAME `$scope.common` object the Edit form's `bloodBagCapacityCode`/`bloodBagCapacityDesc` `ng-model`s are bound to -- overwriting only `bloodBagCapacityId`/`status`/`updatedBy`/`updatedDate`. Sequence: user opens Row A for edit (`showUpdateBtn`, line 216, sets `updateBtnFlag=true` and populates `$scope.common` with Row A's code/desc/id) -- then, before saving, clicks Row B's status-toggle checkbox. `updateStatus` overwrites `$scope.common.bloodBagCapacityId`/`status` to Row B's values while the visible Code/Desc form fields still show Row A's text (never touched by `updateStatus`). If the user now clicks "Update," the request carries Row B's id with Row A's code/desc -- silently writing the wrong record with unrelated data. `updateStatus`'s own success callback calls `initMaster()` (line 334), which resets the form and narrows the window, but does not eliminate it (the window is exactly the time between the toggle click firing and its response returning).
+
+**2. Update's duplicate-check compares the wrong field.** `BloodBagCapacityMasterDaoImpl.getBloodBagCapacityMasterByNameNotId` (dao line 222) binds the named-query parameter literally called `bloodBagCapacityCode` to `bloodBagCapacityMasterDto.getBloodBagCapacityDesc()` -- the "code already exists" guard on Update is actually comparing description text against the code column. A real functional bug in the guard itself, not a scoping gap.
+
+**3. Create-time duplicate check has no org/unit scope** -- `GET_BLOOD_BAG_CAPACITY_MASTER_BY_NAME` (model.java:48-52), same over-blocking class as the `bloodDonortype` finding above.
+
+**Action taken:** flagged, not fixed. No code touched. All three need their own dedicated legacy-fix branch(es) and Maker-Checker treatment, held for owner approval. Finding 1 in particular should be treated with the same rigor as this session's other wrong-record-risk findings (`DepositMatrixConfigMaster`, `nutritionalMaster` above) -- not folded in anonymously.
+
+---
+
+## PENDING-armaster-step1-findings. `ARmaster` -- CONFIRMED, Batch 19 Step 1 audit -- dead pagination and zero field validation, both real but non-corrupting
+
+**Found during:** Batch 19 Step 1 audit (2026-07-25), direct source read.
+
+**1. Pagination is functionally dead.** `initMasterList(organizationId, offset, noOfRecordsPerPage, unitId)` is declared with 4 params but called with only 2 (`aRmasterMasterController.js:116`); the actual list-fetch URL build (line 92) reads `$scope.offset` directly rather than its own parameter, and `$scope.offset` is initialized to `0` (line 16) and never reassigned anywhere in the controller. Clicking Next/Previous/a page number updates the pager UI's apparent position but always re-fetches offset 0 -- the table silently keeps showing page 1's rows regardless of which page the UI claims to be on. Purely mechanical (one variable never gets written), no design ambiguity.
+
+**2. Zero validation on AR Code / AR Description despite both being marked required (red `*`) in the UI.** No HTML5 `required`/`ng-required`, no manual JS check in `save()`/`update()` before the POST fires (grepped, confirmed absent). A completely blank form saves successfully today; the only real gate anywhere is the server-side duplicate-description check.
+
+**Action taken:** flagged, not fixed in legacy. Both are observable (non-silent) current legacy behavior, not corrupting. Owner decision pending on whether the pagination bug (a pure, unambiguous mechanical fix -- one variable never being written) should be corrected directly in the rebuild under the same "invisible-to-the-user-so-implement-corrected-behavior" reasoning already applied to `nutritionalMaster`'s count crash, given a user has no way to know which page is actually loaded, or whether it should be faithfully reproduced and logged as a separate legacy-fix candidate instead.
+
+---
