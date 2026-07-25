@@ -3103,3 +3103,40 @@ The typo (`allowedOverbookingSlot`, missing the trailing "s") is real — that c
 **Action taken:** investigation complete, nothing fixed, per explicit standing instruction. This is no longer a hypothesis -- 34 of 38 screens sampled confirms this is a systemic, cross-module defect class in this codebase's master-data screens, not a coincidence of the first 10. **Awaiting owner direction on next steps** -- individual fixes would each need their own scoped decision/approval per this project's standing discipline (same as every other legacy bug found), not a bulk fix-everything pass.
 
 ---
+
+## PENDING-visittypemaster-always-reports-failure. `VisitTypeMaster` -- CONFIRMED, own defect class, separate from the duplicate-check pattern -- literally every create/update, success or not, reports failure to the user
+
+**Where:** `VisitTypeMasterServiceImpl.saveVisitType` (`legacy/Global/src/main/java/com/param/global/service/VisitTypeMasterServiceImpl.java:118-135`) and `.updateVisitType` (`:89-105`).
+
+**Surfaced incidentally** during the systemic duplicate-check sweep (this screen's OWN duplicate-check has a separate, already-logged missing-org-scope defect, see `PENDING-systemic-duplicate-check-sweep`) -- but this is a genuinely different defect class and is escalated here as its own item, per explicit instruction, not folded into that entry.
+
+**Confirmed directly, read in full, no ambiguity:**
+```java
+public Response saveVisitType(VisitTypeMasterDto visitTypeMasterDto) throws ApplicationException {
+    Response res = iVisitTypeMasterDao.getVisitTypeByName(visitTypeMasterDto);
+    try {
+        if (res.getListObject().size() > 0 && res.getListObject() != null) {
+            return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
+        } else {
+            Response saveRes = iVisitTypeMasterDao.saveVisitType(visitTypeMasterDto);
+            if (saveRes.getStatus().equals(SUCCESS)) {
+                vistiTypeMasterCache.invalidateAll();
+            }
+        }
+    } catch (Exception e) {
+        logger.error("saveVisitType failed", e);
+    }
+    return new Response<>(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+}
+```
+`saveRes` (the DAO's real, correct result) is obtained and used ONLY to conditionally invalidate a cache -- it is never returned, never checked for `SUCCESS` to drive the method's own return value. Both branches of the `if/else` fall through to the exact same unconditional `return new Response<>(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null)` at the very end of the method. `updateVisitType` has the byte-identical shape (`updateRes` obtained, used only for the cache-invalidation check, never returned).
+
+**Net effect, no exceptions, no edge cases: every single create or update of a Visit Type reports failure to the user, 100% of the time, regardless of what actually happened.** A genuinely successful save returns `ERROR`. A row that hits the (separately, already-logged) too-permissive duplicate-check and is legitimately rejected ALSO returns this same generic `ERROR` (via the earlier, correct early-return -- that specific path is fine on its own terms, but the user can't tell it apart from the guaranteed-false-failure path either, since both surface as the same class of error). **There is no code path in either method that can ever report success to the caller.**
+
+**Why this is a different, and arguably more actively painful, defect class than the duplicate-check pattern:** every other finding in this sweep is a SILENT gap -- something that doesn't protect the user, but doesn't actively lie to them either. This one is the opposite: it is LOUD and WRONG in the other direction, on literally every use, with no edge case required to trigger it. If this screen sees any real use at all, staff would very likely already have noticed and adapted around it (e.g., learned to ignore the error and just reload the list to check whether their change actually took) -- this is not a latent risk waiting to surface, it is a defect that announces itself on first use and never stops. It also creates a secondary risk: a user who believes their save failed and retries with the same data is relying on the (separately broken, but at least name-matching) duplicate-check to prevent an actual duplicate row -- the two bugs partially, accidentally interact, not by design.
+
+**Severity assessment, not a fix decision:** this is a pure UI-trust/observability defect, not a data-integrity defect on its own (no wrong data gets written; the underlying save/update logic is otherwise correct) -- but it is 100% reachable, 100% guaranteed, and directly visible on every interaction, which distinguishes it sharply from the duplicate-check findings' latent-risk profile.
+
+**Action taken:** confirmed directly against source (both methods read in full, not relayed). No code changed. Not live-tested this session (source-level certainty is total here -- both branches are unconditional, no runtime ambiguity to resolve) -- flagged for the owner's own severity read, not a fix proposal.
+
+---
