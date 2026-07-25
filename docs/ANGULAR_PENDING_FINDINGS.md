@@ -3201,3 +3201,45 @@ public Response saveVisitType(VisitTypeMasterDto visitTypeMasterDto) throws Appl
 **All 5 screens PASS.** `rebuild/phase4-batch18` is clear for merge on the domain-review front, pending the owner's explicit merge approval (not yet given as of this entry). One open, non-blocking item remains logged for a future decision: `PENDING-hospitalaccountmaster-silent-second-update-failure`'s fix (if any) and `PENDING-nurseallocationmaster-broader-scope-question`'s ward/speciality/doctor/role scoping question -- neither blocks this sign-off, both are pre-existing legacy defects independent of anything this batch's rebuild changed.
 
 ---
+
+## PENDING-otherCharges-frontend-route-disabled-and-broken. `otherCharges` -- CONFIRMED, Batch 19 Step 0 check -- the screen has no reachable frontend route at all, and even its commented-out route registration is itself non-functional as written
+
+**Found during:** Batch 19's live-endpoint check (2026-07-25), which was scoped only to confirming backend reachability. A deeper Step 0 check (per `docs/ANGULAR_REBUILD_PLAYBOOK.md`'s "confirm the controller wired to the route" bullet) surfaced two independent, stacked problems, not one.
+
+**Problem 1 -- the route is disabled.** `resources/assets/js/config/app.js` contains exactly one reference to `otherCharges` in the entire file, and it's fully commented out:
+```js
+// .state('otherCharges', {
+// url: '/otherCharges',
+// templateUrl: 'views/master/GlobalMaster/other-charges.html',
+// controller: "MasterController"
+// })
+```
+No other `.state('otherCharges', ...)` registration exists anywhere (confirmed via a whole-file grep). A user cannot navigate to `/otherCharges` in the running legacy app today, regardless of backend status.
+
+**Problem 2 -- even if uncommented verbatim, it would not work.** The commented block wires the route to the generic, 331-times-shared `MasterController` (a thin shell -- confirmed by reading `common-controller.js` in full: it does not dynamically look up or instantiate any screen-specific controller by name or convention). But `views/master/GlobalMaster/other-charges.html` binds extensively to `vm.model.*` (code, description, pagination, `vm.model.SaveOtherCharges()`, etc.) -- bindings that only resolve if the *actual* screen controller, `otherChargesMasterController.js`'s `"OtherCharges.Controller"` (confirmed registered, confirmed loaded in `index.html`), is the one wired to the route with `controllerAs: 'vm'` set. The commented state has neither the correct controller name nor a `controllerAs` declaration. Restoring this route is not a 4-line uncomment -- it requires actually correcting the wiring (right controller name + `controllerAs:'vm'`), which is a real code change requiring its own dedicated branch and live verification per `CLAUDE.md`, not a trivial mechanical fix.
+
+**Action taken:** flagged, not fixed. No code touched. Recommending this screen be swapped out of Batch 19 for a fresh candidate rather than treated as a prerequisite fix blocking the batch -- restoring it correctly is a small but real, standalone piece of work, better tracked on its own timeline than gating this batch. Awaiting owner decision.
+
+---
+
+## PENDING-nutritionalmaster-count-endpoint-crash. `nutritionalMaster` -- CONFIRMED live, Batch 19 Step 0 check -- `getNutritionMasterCount` throws HTTP 500 on every call, silently swallowed at every layer, root-caused to a stray `session.close()` call
+
+**Found during:** Batch 19's live-endpoint check (2026-07-25) against the real running dev backend, authenticated session, org 1 / unit 1. The screen's list endpoint (`getAll`) returns 200 and the screen renders correctly; only the count/pagination-total endpoint fails.
+
+**Root cause, confirmed by direct source read:** `NutritionalMasterDaoImpl.getNutritionMasterCount()` (`legacy/DietAndKitchen/src/main/java/com/param/global/master/dao/NutritionalMasterDaoImpl.java:211-225`) calls `session.close()` on the Hibernate session that Spring's `@Transactional` interceptor is still managing for this same method call:
+```java
+Session session=sessionFactory.getCurrentSession();
+Criteria c=session.createCriteria(NutritionalMaster.class);
+c.add(Restrictions.eq("organizationId", nutritionalMasterDto.getOrganizationId()));
+c.setProjection(Projections.rowCount());
+Long count = (Long)c.uniqueResult();
+session.close();          // closes the Spring-managed transactional session
+return new Response(SUCCESS, null, null, null, count);
+```
+When Spring's interceptor tries to commit/flush on return, the session is already closed and it throws. The sibling `getAllNutritionalMasterList`/`getActiveNutritionalMasterList` methods never call `session.close()` -- that's the exact, isolated delta. The exception is caught and logged (not silently dropped) at the DAO, service, and controller layers, but always re-thrown as a generic `ServiceException` with no `@ControllerAdvice` mapping it to anything friendlier -- it surfaces as a raw 500, and nothing reaches the end user (no toast, no visible error; the list still renders, just with a broken/missing total-record count underneath).
+
+**Why this doesn't block the rebuild:** the failure is entirely invisible to the user in current legacy behavior -- no observable failure signal, matching the established `identificationMaster`/`currencyMaster`/`hospitalAccountMaster` precedent for silent bugs. Per standing project discipline, the Angular rebuild will implement CORRECTED behavior (a working count/pagination total) as a disclosed, approved improvement, not faithfully reproduce the crash.
+
+**Separately, proposed as its own narrow legacy fix (not yet applied, awaiting owner approval):** delete the erroneous `session.close()` call at line 218 -- a one-line removal, no design decision, no ambiguity, matching the DAO's own sibling methods' pattern exactly. Needs its own dedicated branch and live before/after verification per `CLAUDE.md`, same as every other legacy fix this session, even though the change itself is trivial.
+
+---
