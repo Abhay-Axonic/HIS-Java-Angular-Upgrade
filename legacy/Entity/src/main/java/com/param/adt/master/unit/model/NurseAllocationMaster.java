@@ -181,11 +181,11 @@ import com.param.global.org.common.model.DoseMaster;
 			+ " FROM NurseAllocationMaster nurseAllocationMaster "
 			+ " WHERE nurseAllocationMaster.organizationId=:orgId"
 			+ " AND nurseAllocationMaster.unitId=:unitId "
-			+ " AND nurseAllocationMaster.userId=:userId "),
-			//+ " AND nurseAllocationMaster.status='A' "),
-		//	+ " AND nurseAllocationMaster.visitTypeId=:visitTypeId"),
-	
-	
+			+ " AND nurseAllocationMaster.userId=:userId "
+			+ " AND nurseAllocationMaster.visitTypeId=:visitTypeId "
+			+ " AND nurseAllocationMaster.status='A' "),
+
+
 	@NamedQuery(name="GET_NURSE_ALLOCATION_MASTER_BY_NAME_NOT_BY_ID",
 	query="SELECT nurseAllocationMaster.nurseAllocationId AS nurseAllocationId,"
 			+ " nurseAllocationMaster.visitTypeId AS visitTypeId,"
@@ -201,6 +201,8 @@ import com.param.global.org.common.model.DoseMaster;
 			+ " WHERE nurseAllocationMaster.organizationId=:orgId"
 			+ " AND nurseAllocationMaster.unitId=:unitId "
 			+ " AND nurseAllocationMaster.userId=:userId "
+			+ " AND nurseAllocationMaster.visitTypeId=:visitTypeId "
+			+ " AND nurseAllocationMaster.status='A' "
 			+ " AND nurseAllocationMaster.nurseAllocationId!=:nurseAllocationId")
 })
 @Entity
