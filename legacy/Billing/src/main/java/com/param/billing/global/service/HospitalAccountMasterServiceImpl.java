@@ -85,7 +85,10 @@ public class HospitalAccountMasterServiceImpl implements IHospitalAccountMasterS
 			if(response.getListObject().size()>0 && response.getListObject()!=null){
 				return new Response(ERROR, null, ALREADY_EXIST, null, null);
 			}else{
-				iHospitalAccountMasterDao.updateAllHospitalAccount(hospitalAccountMasterDto);
+				if(hospitalAccountMasterDto.getIsDefault() == 'Y')
+				{
+					iHospitalAccountMasterDao.updateAllHospitalAccount(hospitalAccountMasterDto);
+				}
 				Response updateRes = iHospitalAccountMasterDao.updateHospitalAccountMaster(hospitalAccountMasterDto);
 				if(updateRes.getStatus().equals(SUCCESS)) {
 					iBankMasterService.invalidateHospitalBankMasterCache(hospitalAccountMasterDto.getUnitId());
