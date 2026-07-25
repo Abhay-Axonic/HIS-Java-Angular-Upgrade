@@ -96,6 +96,7 @@ public class VisitTypeMasterServiceImpl implements IVisitTypeMasterService, ICom
 				if (updateRes.getStatus().equals(SUCCESS)) {
 					vistiTypeMasterCache.invalidateAll();
 				}
+				return updateRes;
 
 			}
 		} catch (Exception e) {
@@ -126,6 +127,7 @@ public class VisitTypeMasterServiceImpl implements IVisitTypeMasterService, ICom
 				if(saveRes.getStatus().equals(SUCCESS)){
 					vistiTypeMasterCache.invalidateAll();
 				}
+				return saveRes;
 			}
 
 		} catch (Exception e) {
