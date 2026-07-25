@@ -73,22 +73,22 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * NEVER sets it back to `true` anywhere, including inside `save()`'s
  * success branch (ctrl:186-206, which only calls `initHospitalAccountMaster()`
  * -- confirmed by reading that function, ctrl:42-55, that it touches
- * `$scope.common` only, never `popUpFlag`). Per the findings entry, the
- * shared `<modal>` directive's own `$watch(attrs.visible)` is understood to
- * reset `popUpFlag=true` on every `showModal -> false` transition,
- * independent of the controller's own success/error branches, via a
- * jQuery-bound handler racing an async `$http` digest -- this cannot be
- * resolved by static reading and needs a live Step 5 click-test
- * (specifically an error-path click-through) to confirm timing matches
- * real legacy exactly. `confirmArmed` below is reset to `true` ONLY on
- * doCreate()'s SUCCESS branch (not on error) -- the interpretation this
- * rebuild commits to, as currently understood from the controller's own
- * explicit logic, per this batch's standing instruction not to guess at
- * the exact shared-directive race.
- * // TODO(step5-verify): confirm live legacy's actual re-arm timing on both
- * // the success AND (especially) the error path of a real confirm-then-save
- * // click-through, and adjust `confirmArmed`'s reset here if it turns out
- * // to differ from "success-only".
+ * `$scope.common` only, never `popUpFlag`).
+ *
+ * RESOLVED via Step 5 live testing (2026-07-25, real authenticated session
+ * against unmodified legacy): `popUpFlag` has exactly 2 assignment sites in
+ * the entire controller -- `= true` once at init, `= false` inside
+ * `PopupOkBtn()` -- and is NEVER reset back to `true` anywhere else, not on
+ * a successful save, not on a failed one. Live-confirmed by creating `HA1`
+ * (full confirm-modal round trip via `PopupOkBtn`), then creating a second
+ * record `HA2` via a single direct `save()` call with NO confirm-modal
+ * interaction at all -- it saved immediately. **The confirm-before-save
+ * dialog only ever appears once per page load; every subsequent Save for
+ * the rest of that session silently bypasses it, success or failure.**
+ * This is a real, disclosed legacy defect (a data-safety confirmation the
+ * user believes is always there, silently isn't after the first use) --
+ * faithfully reproduced below, not fixed. `confirmArmed` is NEVER re-armed
+ * after `doCreate()`'s success branch, matching this exactly.
  *
  * ================================================================
  * NEW FINDING, found while building this screen (past the original Step 1
@@ -356,7 +356,12 @@ export class HospitalAccountMaster {
             this.notify.success(res.message ?? 'Success!'); // ctrl:190, real server message
             this.resetForm(); // ctrl:195 -- initHospitalAccountMaster()
             this.loadListAndCount(); // ctrl:196 -- reload happens only on success in legacy
-            this.confirmArmed = true; // see class doc comment's TODO(step5-verify)
+            // Step 5 live-verified (2026-07-25): legacy's `popUpFlag` has only 2
+            // assignment sites in the whole controller (`= true` once at init,
+            // `= false` inside PopupOkBtn) -- confirmed empirically that the confirm
+            // dialog fires exactly ONCE per page load, then is silently bypassed for
+            // every subsequent Save (success or failure) until a full page reload.
+            // Do NOT re-arm here -- that was this build's original guess and is wrong.
           } else {
             this.notify.error(res.message ?? 'Error!'); // ctrl:200, real server message
           }

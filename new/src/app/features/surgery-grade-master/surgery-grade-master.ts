@@ -97,34 +97,29 @@ import { SurgeryGradeForm, SurgeryGradeRow, emptySurgeryGradeForm } from './surg
  * correct handling in a language where the bug class doesn't exist.
  *
  * ================================================================
- * `popUpFlag`/confirm-modal re-arm timing -- AMBIGUOUS, flagged for Step 5
- * live verification, same treatment as `hospitalAccountMaster`
+ * `popUpFlag`/confirm-modal re-arm timing -- RESOLVED via Step 5 live testing
  * ================================================================
  * `$scope.popUpFlag` starts `true` (ctrl:61). `saveSurgeryGrade()`
  * (ctrl:125-174): if valid and `popUpFlag` is true, toggles `showModal`
  * instead of saving; `PopupOkBtn()` (ctrl:119-122) sets `popUpFlag=false`
  * then calls `saveSurgeryGrade()` again, which this time falls through to
- * the real POST. Read in isolation, `popUpFlag` is reset back to `true`
- * ONLY inside `init()` (ctrl:33-114), which the save handler's own success
- * branch re-enters (ctrl:161) -- the FAILURE branch (ctrl:163-169) never
- * touches it, so a rejected create would naively appear to leave
- * `popUpFlag` stuck `false` forever, silently skipping the confirm modal on
- * every subsequent Save click. However, this codebase has independently
- * found (entry 152, re-confirmed live on `cardTypeMaster`/`raceMaster`) that
- * the SHARED `<modal>` directive's own Ok-button/`$watch` may re-arm this
- * class of flag on every close, structurally, regardless of what any
- * individual screen's own success/failure branches do -- a digest-timing
- * question this project has NOT independently re-verified for THIS specific
- * screen's markup. Built here, as instructed, "as currently understood":
- * `confirmArmed` is reset to `true` ONLY on a successful create (via
- * `resetForm()`, matching the controller's own explicit, literal `init()`
- * re-entry logic), and deliberately NOT reset in the failure branch.
- * // TODO(step5-verify): confirm live against real, unmodified legacy
- * // whether a rejected Create (e.g. the cross-org false-positive above)
- * // actually leaves the confirm modal permanently skipped on every
- * // subsequent Save click, or whether the shared `<modal>` directive's own
- * // digest-driven re-arm (entry 152) prevents this in practice -- adjust
- * // `doCreate()`'s error handling below to match whichever is confirmed.
+ * the real POST. `popUpFlag` is reset back to `true` ONLY inside `init()`
+ * (ctrl:33-114), which the save handler's own success branch re-enters
+ * (ctrl:161) -- the FAILURE branch (ctrl:163-169) never touches it.
+ *
+ * Live-confirmed (2026-07-25, real authenticated session against
+ * unmodified legacy): created `SG1`/"Grade A Test" (full confirm-modal
+ * round trip), then attempted `SG2`/"Grade A Test" (duplicate name) --
+ * rejected with `ALREADY_EXIST` as expected, and `popUpFlag` stayed `false`
+ * (confirmed via direct scope inspection). A subsequent Save click at that
+ * point silently skips the confirm modal and attempts the real POST
+ * directly -- confirmed by retrying with a genuinely unique name
+ * ("Grade B Unique"), which saved immediately with no confirm dialog, then
+ * correctly re-armed via `init()`. **The interpretation this rebuild
+ * already committed to was correct**: `confirmArmed` resets on success
+ * only, stays false after a failure until the next successful save. No
+ * code change needed here -- this entry now documents confirmation, not an
+ * open question.
  *
  * ================================================================
  * Status-toggle -- no rollback on error, faithfully reproduced

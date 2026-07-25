@@ -78,17 +78,18 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  * time falls through to the real POST. Grepping the whole controller file:
  * `initMaster()` (ctrl:44-53, called after every successful save) does NOT
  * include `popUpFlag` in its reset object -- unlike `sterilizationTypeMaster`,
- * where the equivalent re-init function explicitly does. Taken completely
- * literally, this would mean popUpFlag stays `false` forever after the
- * first confirmed save in a session, and the confirm modal would never
- * reappear for any later save -- but per this batch's standing treatment of
- * this exact shared-directive question (same as `hospitalAccountMaster`/
- * `surgeryGradeMaster`), whether the `<modal>` directive's own `$watch`
- * independently re-arms something equivalent is NOT independently verified
- * here and is left for live Step 5 testing rather than guessed at. Built
- * below using this codebase's now-standard corrected pattern (re-arm
- * `confirmArmed` on both the success and error branches of `doCreate()`),
- * flagged with a `// TODO(step5-verify):` comment at the call site.
+ * where the equivalent re-init function explicitly does.
+ *
+ * RESOLVED via Step 5 live testing (2026-07-25): the literal reading above
+ * was correct. Empirically confirmed on `hospitalAccountMaster` (byte-
+ * identical `popUpFlag`/`PopupOkBtn`/`showModal = !showModal` structure,
+ * confirmed via source diff) that after the first confirmed save, `popUpFlag`
+ * never resets -- a second Save fired via a single direct call with no
+ * confirm-modal interaction saved immediately. This screen's `initMaster()`
+ * omitting `popUpFlag` from its reset is real, not an oversight to "correct"
+ * with the sterilizationTypeMaster-style pattern. `confirmArmed` below is
+ * NEVER re-armed after the first use, on either branch -- faithfully
+ * reproducing this exact defect, not fixed.
  *
  * ================================================================
  * Positive confirmation -- edit does NOT bind to the row reference
@@ -322,15 +323,15 @@ export class OperationTableType {
             // comment: name-only, code/desc-blind.
             this.notify.error(res.message ?? 'Something went wrong');
           }
-          // TODO(step5-verify): see class doc comment's writeup of the
-          // popUpFlag re-arm ambiguity -- confirmArmed is re-armed here on
-          // every resolution per this codebase's now-standard corrected
-          // pattern, but whether real legacy's shared <modal> directive
-          // behaves the same way needs live verification.
-          this.confirmArmed = true;
+          // Step 5 live-verified (2026-07-25), via hospitalAccountMaster's
+          // byte-identical popUpFlag/PopupOkBtn structure confirmed empirically
+          // (2 assignment sites total, no reset anywhere): the literal reading
+          // above was correct all along -- do NOT re-arm confirmArmed here on
+          // either branch. Real legacy's confirm dialog fires once per page
+          // load, full stop, faithfully reproduced by leaving confirmArmed
+          // false for the rest of the session after the first confirm.
         },
         error: () => {
-          this.confirmArmed = true;
           this.showConfirmModal.set(false);
         },
       });
