@@ -43,14 +43,15 @@ import javax.persistence.Table;
 				@NamedQuery(name="GET_OPERATION_THEATRE_TYPE_BY_NAME",
 						query=" SELECT "
 								+ " operationTheatreType.operationTheatreTypeId AS operationTheatreTypeId, operationTheatreType.theatreTypeDesc AS theatreTypeDesc, operationTheatreType.theatreTypeName AS theatreTypeName"
-								+ " FROM OperationTheatreType operationTheatreType WHERE operationTheatreType.orgId= :orgId AND operationTheatreType.unitId= :unitId  AND LOWER(operationTheatreType.theatreTypeDesc)= :theatreTypeDesc  "
+								+ " FROM OperationTheatreType operationTheatreType WHERE operationTheatreType.orgId= :orgId AND operationTheatreType.unitId= :unitId "
+								+ " AND (LOWER(operationTheatreType.theatreTypeDesc)= :theatreTypeDesc OR LOWER(operationTheatreType.theatreTypeName)= :theatreTypeName) "
 								),
-				
+
 				@NamedQuery(name="GET_OPERATION_THEATRE_TYPE_BY_NAME_NOT_ID",
 						query=" SELECT "
 								+ " operationTheatreType.operationTheatreTypeId AS operationTheatreTypeId, operationTheatreType.theatreTypeDesc AS theatreTypeDesc, operationTheatreType.theatreTypeName AS theatreTypeName"
 								+ " FROM OperationTheatreType operationTheatreType WHERE operationTheatreType.orgId= :orgId AND operationTheatreType.unitId= :unitId  AND operationTheatreType.operationTheatreTypeId != :operationTheatreTypeId "
-								+ " AND LOWER(operationTheatreType.theatreTypeDesc)= :theatreTypeDesc "
+								+ " AND (LOWER(operationTheatreType.theatreTypeDesc)= :theatreTypeDesc OR LOWER(operationTheatreType.theatreTypeName)= :theatreTypeName) "
 								)
 })
 @Entity
