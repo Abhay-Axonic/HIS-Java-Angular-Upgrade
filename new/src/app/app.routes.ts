@@ -1281,6 +1281,57 @@ export const routes: Routes = [
             (m) => m.SterilizationTypeMaster,
           ),
       },
+      // Phase 4 batch 18 -- 5 screens, clinical/billing tier, 2 billing-only
+      // / 3 clinical-only. See docs/ANGULAR_PENDING_FINDINGS.md entries
+      // PENDING-batch18-step1-* for each screen's full Step 1 audit
+      // (module ID/superuser confirmed directly from each state's live
+      // resolve block, not guessed) and PENDING-departmentmasterunit-*
+      // for the entry-118 risk-tag correction on departmentMasterUnit.
+      {
+        path: 'hospitalAccountMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 788, title: 'Hospital Account Master' },
+        loadComponent: () =>
+          import('./features/hospital-account-master/hospital-account-master').then(
+            (m) => m.HospitalAccountMaster,
+          ),
+      },
+      {
+        path: 'transactionTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Transaction Type Master' },
+        loadComponent: () =>
+          import('./features/transaction-type-master/transaction-type-master').then(
+            (m) => m.TransactionTypeMaster,
+          ),
+      },
+      {
+        path: 'surgeryGradeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Surgery Grade Master' },
+        loadComponent: () =>
+          import('./features/surgery-grade-master/surgery-grade-master').then(
+            (m) => m.SurgeryGradeMaster,
+          ),
+      },
+      {
+        path: 'operationTableType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 523, title: 'Operation Table Type' },
+        loadComponent: () =>
+          import('./features/operation-table-type/operation-table-type').then(
+            (m) => m.OperationTableType,
+          ),
+      },
+      {
+        path: 'departmentMasterUnit',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 533, title: 'Department Master' },
+        loadComponent: () =>
+          import('./features/department-master-unit/department-master-unit').then(
+            (m) => m.DepartmentMasterUnit,
+          ),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

@@ -1,0 +1,154 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="hospitalAccountCode">Hospital Account Code<span class="required">*</span></label>
+        <input
+          id="hospitalAccountCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().hospitalAccountCode"
+          (ngModelChange)="updateField('hospitalAccountCode', $event)"
+          [class.invalid]="codeRequiredError()"
+          name="hospitalAccountCode"
+        />
+        @if (codeRequiredError()) {
+          <p class="help-block">Hospital Account Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="hospitalAccountDesc">Hospital Account Description<span class="required">*</span></label>
+        <input
+          id="hospitalAccountDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().hospitalAccountDesc"
+          (ngModelChange)="updateField('hospitalAccountDesc', $event)"
+          [class.invalid]="descRequiredError()"
+          name="hospitalAccountDesc"
+        />
+        @if (descRequiredError()) {
+          <p class="help-block">Hospital Account Description is required</p>
+        }
+      </div>
+
+      <div class="field field-checkbox">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [ngModel]="form().isDefault === 'Y'"
+            (ngModelChange)="updateField('isDefault', $event ? 'Y' : 'N')"
+            name="isDefault"
+          />
+          is Default
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <!-- Legacy renders these two as mutually-exclusive buttons
+         (ng-if="saveBtnFlag" / ng-if="updateBtnFlag") -- once editMode is
+         set true by edit(), it is never reset back, matching legacy's own
+         real, one-way behavior (see hospital-account-master.ts class doc
+         comment's "NEW FINDING"). -->
+    @if (editMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <!-- Plain client-side filter over only the currently-loaded page -- no
+         server search call in legacy for this screen. See class doc comment. -->
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Hospital Account Code</th>
+        <th>Hospital Account Description</th>
+        <th>Is Default Account</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.hospitalAccountId) {
+        <tr>
+          <td>{{ row.hospitalAccountCode }}</td>
+          <td>{{ row.hospitalAccountDesc }}</td>
+          <td>{{ row.isDefault }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <!-- Legacy applies a CSS-only "disabled" look on inactive rows
+                 but has no real click guard -- edit() is still callable on
+                 an inactive row here too. See class doc comment. -->
+            <i class="fa fa-pencil" [class.disabled]="row.status === 'I'" aria-hidden="true" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <!-- Working close button -- entry-55 standing improvement, NOT a
+             reproduction of the shared <modal> directive's undefined
+             cancel() crash. See class doc comment. -->
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
