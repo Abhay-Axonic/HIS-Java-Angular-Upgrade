@@ -3156,6 +3156,8 @@ public Response saveVisitType(VisitTypeMasterDto visitTypeMasterDto) throws Appl
 
 **Action taken:** flagged, not resolved. No code changed beyond the already-applied narrow fix. Awaiting owner direction on whether this needs further investigation, a nursing-ops SME's input, or is fine to leave as multi-visit-type-but-single-context-per-visit-type for now.
 
+**OWNER DECISION, 2026-07-25 (Option C — defer to nursing operations):** the owner has explicitly chosen NOT to broaden the check unilaterally from code alone. The already-merged narrow `visitTypeId` fix stands as the interim state — no further code change is authorized by this decision. This is logged as an **open, unresolved, patient-safety-adjacent risk**, not a mere enhancement backlog item: as of today, one nurse CAN be double-booked across two different wards/nursing-stations/specialities/doctors/roles within the same visit-type simultaneously, and the system does not detect or block it. The owner is raising this directly with whoever owns nursing scheduling/operations at their organization, since it is a business/clinical workflow question that cannot be resolved from code alone. This entry remains OPEN until that SME input comes back — do not treat this decision as a closure of the underlying question, only as a decision not to guess at the answer.
+
 ---
 
 ## PENDING-hospitalaccountmaster-silent-second-update-failure. `hospitalAccountMaster` -- CONFIRMED (source-level, both legacy and rebuild traced end-to-end), deeper consequence of the already-documented Update-mode lock -- a second Update attempt after a successful one fails with ZERO user-visible feedback, in BOTH the current legacy backend/frontend and this rebuild
