@@ -8478,10 +8478,14 @@ i{
    			</div>
    			   	<section class="customScroll fix-height-scroll550 margin-top10 padding-left-right-set4">
    			
-   		<fieldset ng-if="checkAccess(677)">
+   		<!-- Fix, fix/accesscontrol-quicklink-permission-id -- was checkAccess(677), which is
+	    	 newAccessControl's real permission id, not this tile's own (href="#/accessControl").
+	    	 Corrected to 676, matching the userAuthentication/accessControl route family's
+	    	 actual intended gate. See docs/DECISION_NEEDED_AccessControlPermissionMisrouting.md. -->
+   		<fieldset ng-if="checkAccess(676)">
 			    <legend> Access Control</legend>
 	    		<div class="row margin-top0 customSubScroll fix-height-scroll165">
-	    			<div class="col-lg-4 col-md-4 col-sm-4 text-center ql-card" ng-if="checkAccess(677)">
+	    			<div class="col-lg-4 col-md-4 col-sm-4 text-center ql-card" ng-if="checkAccess(676)">
 		    			<div class="d-card-small cursor-pointer padding-left-right-5">
 							<div class="panel panel-default">
 							  <div class="panel-body padding5">
