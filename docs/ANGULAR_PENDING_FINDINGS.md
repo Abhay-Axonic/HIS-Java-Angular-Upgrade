@@ -3361,3 +3361,23 @@ When Spring's interceptor tries to commit/flush on return, the session is alread
 **Action taken:** two real bugs found, fixed, and held on `fix/session-token-validation-instability` pending owner merge approval. The core intermittent-logout pattern itself remains open, fully documented here with every ruled-out hypothesis, for a future dedicated investigation -- not silently dropped, not presented as resolved.
 
 ---
+
+## PENDING-batch20-21-unreachable-candidates. 4 of the 10 batch 20/21 candidates -- CONFIRMED disqualified -- Phase 0 "Low-risk" tag, real route/DAO content, and even the earlier deep DAO/entity-content verification pass all missed that these screens have NO real, live entry point anywhere in the app
+
+**Context:** while pivoting Step 0 live-verification from URL-based `navigate` calls to real click-based navigation (working around the automation-specific session-instability issue, see the corrected entry above), the actual sidebar/menu structure was inspected directly for the first time this cycle -- surfacing that route-definition-plus-DAO-content verification (this cycle's prior standard, and the standard used for all earlier batches) is NOT sufficient on its own: a screen can have a fully real, wired, low-risk backend and still be entirely unreachable by any real user. This is a new, general gap in the established Step 0 process, not specific to these 4 screens -- worth applying to future candidate research generally, not just this cycle.
+
+**`display` (was batch 20 candidate #3):** its route requires 4 URL path parameters (`/display/:orgId/:unitId/:cookieskioskId/:userId`) that are supplied nowhere in the entire frontend codebase (confirmed via full-tree search for `state.go('display'`/`href="#/display/`). Its one "quick link" reference (`views/common/dashboard-quick-links.html:8830`) is itself broken -- a bare `href="#/display"` with none of the required params. The sidebar's actual "QMS Token Display"-labeled link goes to a different, unrelated state, `displayCall` (own controller `QMSTokenDisplayMasterCallController`, confusingly sharing the identical `title: 'QMS Token Display'`) -- a real, live, day-to-day operational screen, not a name variant of the `display` master-config screen. `display` itself is orphaned.
+
+**`ambulanceRouting` (was batch 21 candidate #1):** zero references anywhere in the frontend -- no sidebar link, no quick-link, no `ui-sref`, nothing links to it. Confirmed via both a full-tree source search and a live in-app `find` search (which located an unrelated "Ambulance Service" section but nothing named "Ambulance Routing").
+
+**`religionMaster` (was batch 21 candidate #3):** zero real references. A separate, genuine sidebar-markup bug was found while checking: `views/common/new-side-bar.html:3397,3400` both carry a stray, mismatched `ng-if="checkAccess('Religion Master', 'screen')"` condition on two entirely unrelated menu items ("Patient Source of referral Master" and "Referral Type Master") -- almost certainly a copy-paste artifact from wherever the real Religion Master entry once was (or was meant to be), left behind when those two items were added. Logged here as a pointer, not separately investigated or fixed (out of scope for candidate research).
+
+**`bedCategoryMapper` (was batch 21 candidate #4):** its only reference anywhere is commented out (`views/common/new-sidebar-16-10.html:1504`), and in an old/inactive sidebar file, not the live `new-side-bar.html`.
+
+**Screens verified as reachable and kept, with two worth a Step 6 note (not disqualifying):**
+- `accessControl` (batch 20) and `floorMapMaster` (batch 21) are each reachable only via the Dashboard Quick Links widget -- their main-sidebar entries are commented out (`accessControl`'s slot now serves `accessControl1`/"Role Permissions" instead; `floorMapMaster`'s is simply disabled with no replacement). Both have parameter-free URLs, so their quick-link entry points are genuinely functional (unlike `display`'s broken one) -- live-verified with real content screenshots. Worth flagging to the owner at Step 6 that these are secondary-entry-point-only, not primary-navigation screens.
+- `Qmslogo`, `assetPMSScheduler`, `linenReturn`, `call` -- all confirmed reachable via live, active main-sidebar links, and all live-verified with real content screenshots.
+
+**Action taken:** 4 candidates disqualified, logged here rather than silently dropped or silently replaced. Replacement candidates for these 4 slots to be sourced and verified under this same standard (content reading AND reachability), tracked separately once proposed.
+
+---
