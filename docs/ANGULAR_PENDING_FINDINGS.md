@@ -3657,3 +3657,26 @@ if (arr.length <= 0) {
 **2. Update's duplicate-check compares the record being edited against itself, not other records.** `DietUnitMasterDaoImpl.java:250-278` (`checkAvailableUnitById`, called from `updateDietUnitMaster`) filters `WHERE ... uom.uom_id =:uomId` -- `uomId` is bound to the **same record being edited**, not "any other record excluding this one" (the correct shape would be `uom_id <> :uomId`). Net effect: a no-op edit (e.g. only changing the description, name left as-is) on a unit whose stored name happens to be all-lowercase spuriously trips "Already Exists" against itself, wrongly blocking a legitimate save. Conversely, renaming a unit into a name that collides with a genuinely different active unit is never caught, since the check is comparing the wrong row's identity in the first place.
 
 **Action taken:** none -- both faithfully reproduced in the Step 3 rebuild per standing project discipline (visible, non-silent legacy behavior, not silently corrected). Logged here for the record; not blocking Step 3 on `dietUnitMater`, which is itself blocked by the separate SQL injection escalation until that's resolved.
+
+## PENDING-silent-error-swallowing-sweep-phase1. Silent error-swallowing sweep, Phase 1 complete -- 92.5% of 13,857 real call sites across the entire controller tree surface nothing to the user on backend failure, plus a second, previously-unknown wrapper bug found during verification (2026-07-26)
+
+**Full per-call-site data**: `docs/silent-error-swallowing-sweep/census_results.json` (13,857 rows, AST-derived, not regex) -- not reproduced in full here.
+
+**Headline:** confirms the 10/10-screen sample from this session's batch audits generalizes almost exactly across the whole codebase. An AST-based census (Babel parser/traverse) of every `controller/**/*.js` file's `serviceAction(...)` call sites -- 1,205 controller files, 1,175 use `serviceAction`, 13,857 call sites, 0 parse failures -- found:
+
+| Classification | Count | % |
+|---|---|---|
+| (a) no error handler at all | 11,950 | 86.3% |
+| (b) handler exists but shows nothing to the user | 863 | 6.2% |
+| (c) handler visibly surfaces to user (growl/alert) | 1,044 | 7.5% |
+| **Silent (a+b) combined** | **12,813** | **92.5%** |
+
+No global `$httpProvider` interceptor exists anywhere in the app (only hit is `withCredentials = true`) -- confirmed there is no app-wide safety net offsetting any of this.
+
+**Second, previously-unknown bug found during live verification:** `GenericService.js` actually defines 7 wrapper services, not 1. Four of them (`BillingGenericService` -- 3,766 call sites, essentially all of billing -- plus `GenericServiceParamHeader`, `GenericServiceParamHeaderWithouLogin`, `GenericServiceForFormsEngine`) *appear* to have broader error handling than the plain `GenericService` (they attempt a catch-all `growl.error(...)` on real HTTP failures) -- but the error callback's parameter is named `e` while the body references the undefined identifier `error`, throwing `ReferenceError: error is not defined` instead of growling. Confirmed live in the real running app via browser automation (not just isolated reproduction): called `BillingGenericService.serviceAction('POST', '.../createBillingGroupMaster', {}, false)` against the real backend, captured the actual rejection reason as `{isError:true, name:"ReferenceError", message:"error is not defined"}`, growl container stayed empty. `GenericService` (Tier 1, 8,293 sites, only 401 special-cased) was independently confirmed silent the same way on `addAgeGroupMaster`. A positive control (`growl.error('SMOKE TEST', ...)` called directly) confirmed growl itself renders correctly in this environment -- the silence is not an environment artifact.
+
+**By module (silent % = a+b):** billing (1,786 sites), adt (1,391), opd (3,573), lis (1,212), bloodBank (246), dietAndKitchen (106), CSSD, radiologyWkbnch, otims, and most others are all 96-100% silent. `abdm` (9.8% silent) and `Inventory` (43.2%) are the only meaningfully better modules. Billing and ADT -- the two modules handling money and patient-safety-adjacent workflows -- are at or near 100%, not exceptions to the pattern.
+
+**Not fixed, not yet triaged.** Same posture as the schema-drift sweep: this is a raw, empirically-spot-checked inventory, not a fix. 3 call sites were confirmed live via curl (real 400/500s reproduced, DB left clean afterward) and 2 were confirmed fully live via authenticated in-browser execution against the real running app; the remaining ~13,852 sites rest on the AST static classification, which is precise about *shape* (handler present/absent/visible) but was not individually live-triggered.
+
+**Action taken:** investigation only, per explicit owner instruction. Flagged as severity-1/cross-cutting immediately upon Phase 1 completing, not batched -- same discipline as the schema-drift sweep and the dietUnitMater SQL injection escalation. Owner decision needed on fix scope and priority (a single fix to `GenericService.js`'s shared wrappers would address the *architecture*, but 863 call sites in the (b) "handler exists but silent" bucket would need their own review since the bug isn't purely in the shared code there).
