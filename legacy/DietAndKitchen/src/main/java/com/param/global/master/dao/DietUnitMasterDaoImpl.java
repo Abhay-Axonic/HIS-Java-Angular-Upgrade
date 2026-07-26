@@ -228,10 +228,11 @@ public Response checkAvailableUnitByName(UnitOfMeasurmentMasterDto unitOfMeasurm
 				"	kitchen.m_unit_of_measurment_master uom " +
 				"where " +
 				"	uom.organization_id =:organizationId " +
-				"	and lower(uom.uom_name) = '" + unitOfMeasurmentMasterDto.getUomName()+"'"+
+				"	and lower(uom.uom_name) = :uomName "+
 				"	and uom.status = 'A'";
 		List<UnitOfMeasurmentMasterDto> list=sessionFactory.getCurrentSession().createSQLQuery(query)
 				.setParameter("organizationId", unitOfMeasurmentMasterDto.getOrganizationId())
+				.setParameter("uomName", unitOfMeasurmentMasterDto.getUomName().toLowerCase())
 				.setResultTransformer(Transformers.aliasToBean(UnitOfMeasurmentMasterDto.class)).list();
 
 	return new Response(SUCCESS, SUCCESS_CODE, null, list, null);
@@ -258,11 +259,12 @@ public Response checkAvailableUnitById(UnitOfMeasurmentMasterDto unitOfMeasurmen
 				"	kitchen.m_unit_of_measurment_master uom " +
 				"where " +
 				"	uom.organization_id =:organizationId " +
-				"	and lower(uom.uom_name) = '" + unitOfMeasurmentMasterDto.getUomName()+"'"+
+				"	and lower(uom.uom_name) = :uomName "+
 				"	and uom.uom_id =:uomId " +
 				"	and uom.status = 'A'";
 		List<UnitOfMeasurmentMasterDto> list=sessionFactory.getCurrentSession().createSQLQuery(query)
 				.setParameter("organizationId", unitOfMeasurmentMasterDto.getOrganizationId())
+				.setParameter("uomName", unitOfMeasurmentMasterDto.getUomName().toLowerCase())
 				.setParameter("uomId", unitOfMeasurmentMasterDto.getUomId())
 				.setResultTransformer(Transformers.aliasToBean(UnitOfMeasurmentMasterDto.class)).list();
 
